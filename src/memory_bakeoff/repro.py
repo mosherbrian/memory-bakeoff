@@ -36,6 +36,13 @@ SAFE_ENV_KEYS = (
     "HINDSIGHT_API_LLM_PROVIDER",
     "HINDSIGHT_RAW_LLM_PROVIDER",
     "MEMBUKKIT_LLM",
+    "MEMBUKKIT_UPSTREAM_PATH",
+    "MEMBUKKIT_MODEL_DIR",
+    "MEMBUKKIT_ENCODER",
+    "MEMBUKKIT_RERANKER",
+    "MEMBUKKIT_DEVICE",
+    "MEMBUKKIT_SELECT",
+    "MEMBUKKIT_SCAN_BUDGET",
     "OPENAI_BASE_URL",
     "OPENAI_MODEL",
     "ANTHROPIC_MODEL",
@@ -88,11 +95,25 @@ def source_tree_sha256(root: str | Path = ".") -> str:
     return _hash_bytes(parts)
 
 
+def capture_execution_environment() -> dict:
+    """Return a secret-free host fingerprint for newly generated result metadata."""
+    details = {
+        "system": platform.system(),
+        "release": platform.release(),
+        "machine": platform.machine(),
+        "platform": platform.platform(),
+        "python_implementation": platform.python_implementation(),
+        "python_version": platform.python_version(),
+    }
+    raw = json.dumps(details, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {**details, "fingerprint_sha256": hashlib.sha256(raw).hexdigest()}
+
+
 def capture_manifest(root: str | Path = ".", *, llm_label: str | None = None) -> dict:
     root = Path(root).resolve()
     records, cases = build_corpus()
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "python": {
             "version": sys.version,
             "implementation": platform.python_implementation(),
@@ -104,6 +125,7 @@ def capture_manifest(root: str | Path = ".", *, llm_label: str | None = None) ->
             "machine": platform.machine(),
             "platform": platform.platform(),
         },
+        "execution_environment": capture_execution_environment(),
         "packages": {name: _version(name) for name in PACKAGE_NAMES},
         "benchmark": {
             "records": len(records),

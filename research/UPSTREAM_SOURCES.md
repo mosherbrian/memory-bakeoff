@@ -53,7 +53,9 @@ recorded so adapter assumptions can be revalidated when projects change.
 ## Claude-Mem controlled core
 
 Pinned inspection commit: `thedotmack/claude-mem@fa6a1e9ec12d23f98326a9b26e243acb0819e105`
-(package 10.6.1).
+(package 13.18.0). Earlier documentation incorrectly associated this commit with
+10.6.1; that package records git commit `d54e574251d7736cfd6030f8ba86b15fbebd3b50`.
+Archived controlled results were not rewritten or rerun.
 
 Relevant current upstream files:
 - `src/services/sqlite/SessionSearch.ts` — FTS5 schema/query; whole query quoted before MATCH.

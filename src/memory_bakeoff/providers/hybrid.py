@@ -11,6 +11,8 @@ from memory_bakeoff.providers.dense import DenseLSAProvider
 
 class HybridRRFProvider(MemoryProvider):
     name = "hybrid_rrf"
+    raw_experiment_class = "baseline"
+    product_experiment_class = "baseline"
     capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=True, supports_as_of=True, notes="BM25 + dense LSA fused with reciprocal-rank fusion.")
 
     def __init__(self, rrf_k: int = 60):

@@ -18,6 +18,8 @@ def tokenize(text: str) -> list[str]:
 
 class BM25Provider(MemoryProvider):
     name = "bm25"
+    raw_experiment_class = "baseline"
+    product_experiment_class = "baseline"
     capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=True, supports_as_of=True, notes="Pure-Python BM25 baseline. Uses structured as-of cutoff when supplied; scope must be resolved from query text.")
 
     def __init__(self, k1: float = 1.5, b: float = 0.75):

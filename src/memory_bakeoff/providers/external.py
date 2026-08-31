@@ -34,7 +34,7 @@ class Mem0Provider(MemoryProvider):
         t=time.perf_counter(); raw=self.mem.search(case.query,user_id=self.user_id,limit=top_k)
         rows=raw.get("results",raw) if isinstance(raw,dict) else raw; items=[]
         for x in rows[:top_k]:
-            text=x.get("memory") or x.get("text") or str(x); md=x.get("metadata") or {}; rid=md.get("record_id") or self.resolve_record_id(text)
+            text=x.get("memory") or x.get("text") or str(x); md=x.get("metadata") or {}; rid=self.resolve_record_id(text,md.get("record_id"))
             items.append(RetrievalItem(rid,text,x.get("score"),md))
         return RetrievalResult(items,(time.perf_counter()-t)*1000,raw)
 
@@ -75,22 +75,23 @@ class HabitusProvider(MemoryProvider):
         for hit in rr.hits[:top_k]:
             rec=hit.record
             score=max(float(getattr(hit,"dense_score",0.0)),float(getattr(hit,"lexical_score",0.0)),float(getattr(hit,"path_score",0.0)))
-            items.append(RetrievalItem(getattr(rec,"record_id",None),rec.text,score,{"lane":getattr(hit,"lane",None)}))
+            items.append(RetrievalItem(self.resolve_record_id(rec.text,getattr(rec,"record_id",None)),rec.text,score,{"lane":getattr(hit,"lane",None)}))
         return RetrievalResult(items,(time.perf_counter()-t)*1000,rr)
 
 
-class MemBukkitProvider(MemoryProvider):
-    name="membukkit"
+class MemBukkitControlledCoreProvider(MemoryProvider):
+    name="membukkit_core_lsa"
+    raw_experiment_class="controlled_core"
+    product_experiment_class="controlled_core"
     capabilities=ProviderCapabilities(
         raw_ingest=True,
-        product_ingest=True,
-        requires_llm_for_product_ingest=True,
+        product_ingest=False,
         supports_as_of=True,
         notes=(
-            "Vendored raw mode runs the pinned upstream MemorySystem + InMemoryBackend with "
+            "Controlled core runs the vendored pinned MemorySystem + InMemoryBackend with "
             "the same corpus-fit 32-D LSA representation as the benchmark dense baseline. "
             "Default raw select=none isolates MemBukkit bucket routing at ~30% scan; set "
-            "MEMBUKKIT_SELECT=hybrid for the upstream CI lexical-reranker diagnostic. Product weights are separate."
+            "MEMBUKKIT_SELECT=hybrid for the CI lexical-reranker diagnostic. This is not the pretrained product path."
         ),
     )
 
@@ -150,22 +151,12 @@ class MemBukkitProvider(MemoryProvider):
         )
 
     def ingest(self,records:Sequence[MemoryRecord],mode="raw"):
+        if mode != "raw":
+            raise ProviderUnavailable("membukkit_core_lsa is controlled raw/core-only")
         if not self.probe().available:
             raise ProviderUnavailable(self.probe().reason)
         self.reset()
         self.remember_records(records)
-
-        if mode != "raw":
-            # Product mode intentionally requires a full installed MemBukkit package
-            # and model/LLM configuration; the vendored offline core is not presented
-            # as a substitute for its pretrained product path.
-            from membukkit.pipeline import MemorySystem
-            self.mem=MemorySystem.from_pretrained(llm=os.getenv("MEMBUKKIT_LLM","openai:gpt-4o-mini"))
-            sessions=[[{"role":"user","content":r.text}] for r in records]
-            dates=[r.timestamp for r in records]
-            self.mem.ingest(sessions=sessions,dates=dates,subject="memory-bakeoff")
-            return
-
         self.mem=self._raw_system(records)
         # ingest_facts() is MemBukkit's documented no-distiller structured input
         # path. It intentionally does not infer supersession; raw mode preserves that
@@ -194,9 +185,7 @@ class MemBukkitProvider(MemoryProvider):
         items=[]
         for hit in raw.hits[:top_k]:
             text=getattr(hit,"text","") or getattr(hit,"fact","")
-            rid=getattr(hit,"source_ref","") or self.resolve_record_id(text)
-            if rid not in self._records:
-                rid=self.resolve_record_id(text)
+            rid=self.resolve_record_id(text,getattr(hit,"source_ref","") or None)
             items.append(
                 RetrievalItem(
                     rid,
@@ -211,6 +200,136 @@ class MemBukkitProvider(MemoryProvider):
                 )
             )
         return RetrievalResult(items,(time.perf_counter()-t)*1000,raw)
+
+
+class MemBukkitProvider(MemBukkitControlledCoreProvider):
+    """Intended upstream MemBukkit path using its pretrained encoder/reranker."""
+
+    name="membukkit"
+    raw_experiment_class="raw_product"
+    product_experiment_class="product"
+    capabilities=ProviderCapabilities(
+        raw_ingest=True,
+        product_ingest=True,
+        requires_llm_for_product_ingest=True,
+        supports_as_of=True,
+        notes=(
+            "Requires a separately installed upstream MemBukkit package and its intended pretrained encoder/reranker. "
+            "Raw mode uses ingest_facts without distillation; product mode uses normal LLM-backed ingestion. "
+            "The vendored shared-LSA/FakeReranker arm is exposed separately as membukkit_core_lsa."
+        ),
+    )
+
+    @staticmethod
+    def _configured_upstream_path() -> Path | None:
+        raw=os.getenv("MEMBUKKIT_UPSTREAM_PATH")
+        if not raw:
+            return None
+        root=Path(raw).expanduser().resolve()
+        source=root/"src" if (root/"src"/"membukkit").exists() else root
+        if str(source) not in sys.path:
+            sys.path.insert(0,str(source))
+        return source
+
+    @staticmethod
+    def _vendored_root() -> Path:
+        return (Path(__file__).resolve().parents[3]/"vendor"/"membukkit").resolve()
+
+    def probe(self):
+        configured=self._configured_upstream_path()
+        loaded=sys.modules.get("membukkit.pipeline")
+        try:
+            origin=Path(getattr(loaded,"__file__","") or importlib.util.find_spec("membukkit.pipeline").origin).resolve()
+        except (AttributeError, ModuleNotFoundError, TypeError, ValueError):
+            origin=None
+        if origin is None:
+            return ProviderProbe(self.name,False,"upstream membukkit package not installed; install it or set MEMBUKKIT_UPSTREAM_PATH",self.capabilities)
+        if origin == self._vendored_root() or self._vendored_root() in origin.parents:
+            return ProviderProbe(
+                self.name,
+                False,
+                "membukkit resolves to the vendored controlled-core copy; use a fresh process with an installed upstream package or MEMBUKKIT_UPSTREAM_PATH",
+                self.capabilities,
+            )
+        location=f" at {origin}"
+        if configured:
+            location+=f" (configured by MEMBUKKIT_UPSTREAM_PATH={configured})"
+        return ProviderProbe(self.name,True,"upstream membukkit package found"+location,self.capabilities)
+
+    @staticmethod
+    def _models():
+        from membukkit.config import ModelConfig
+        return ModelConfig(
+            model_dir=os.getenv("MEMBUKKIT_MODEL_DIR") or None,
+            encoder=os.getenv("MEMBUKKIT_ENCODER","biencoder_v1"),
+            reranker=os.getenv("MEMBUKKIT_RERANKER","reranker_v2/model"),
+            device=os.getenv("MEMBUKKIT_DEVICE") or None,
+        )
+
+    @staticmethod
+    def _retrieval():
+        from membukkit.config import RetrievalConfig
+        return RetrievalConfig(
+            union=True,
+            union_lanes=("atomic",),
+            bucket_mode="topic",
+            scan_budget=float(os.getenv("MEMBUKKIT_SCAN_BUDGET","0.3")),
+            scan_budget_temporal=None,
+            num_buckets=24,
+            k_proto=0,
+            select=os.getenv("MEMBUKKIT_SELECT","hybrid"),
+            rerank_cap=50,
+            top_k=10,
+            reasoning_top_k=30,
+            k_rrf=60,
+            lexical_lane=False,
+        )
+
+    def _intended_raw_system(self):
+        from membukkit.config import PromptConfig
+        from membukkit.pipeline import MemorySystem
+        from membukkit.models.registry import resolve_encoder_path, resolve_reranker_path
+        from membukkit.models.encoder import Encoder
+        from membukkit.models.reranker import UtilityReranker
+        models=self._models()
+        encoder=Encoder(resolve_encoder_path(models))
+        reranker=UtilityReranker.load(resolve_reranker_path(models),device=models.device)
+        return MemorySystem(
+            encoder=encoder,
+            reranker=reranker,
+            llm_fn=lambda _prompt: "N/I",
+            retrieval=self._retrieval(),
+            prompts=PromptConfig.default(),
+            distiller=None,
+        )
+
+    def ingest(self,records:Sequence[MemoryRecord],mode="raw"):
+        probe=self.probe()
+        if not probe.available:
+            raise ProviderUnavailable(probe.reason)
+        self.reset()
+        self.remember_records(records)
+        if mode == "product":
+            from membukkit.pipeline import MemorySystem
+            self.mem=MemorySystem.from_pretrained(
+                models=self._models(),
+                retrieval=self._retrieval(),
+                llm=os.getenv("MEMBUKKIT_LLM","openai:gpt-4o-mini"),
+            )
+            sessions=[[{"role":"user","content":r.text}] for r in records]
+            dates=[r.timestamp for r in records]
+            self.mem.ingest(sessions=sessions,dates=dates,subject="memory-bakeoff")
+            return
+        self.mem=self._intended_raw_system()
+        for r in sorted(records,key=lambda x:(x.timestamp,x.id)):
+            self.mem.ingest_facts([{
+                "text":r.text,
+                "timestamp":r.timestamp,
+                "source":r.session_id,
+                "fact_id":r.id,
+                "source_ref":r.id,
+                "doc_id":r.scope,
+            }],subject="memory-bakeoff")
 
 
 class AgentMemoryProvider(MemoryProvider):
@@ -254,8 +373,7 @@ class AgentMemoryProvider(MemoryProvider):
             if rid not in self._records:
                 rid=None
             surfaced=(x.get("content") or x.get("text") or x.get("memory") or "") if isinstance(x,dict) else str(x)
-            if not rid:
-                rid=self.resolve_record_id(surfaced)
+            rid=self.resolve_record_id(surfaced,rid)
             # smart-search may return compact rows without content. Once the engine
             # has selected a stable benchmark ID, reconstruct the canonical source
             # text for downstream reader tests; this does not alter the ranking.
@@ -373,13 +491,14 @@ class HindsightProvider(MemoryProvider):
         rows=getattr(raw,"results",None) or getattr(raw,"memories",None) or (raw.get("results") or raw.get("memories",[]) if isinstance(raw,dict) else [])
         items=[]
         for x in list(rows)[:top_k]:
-            if isinstance(x,str): text=x; score=None; md={}
-            elif isinstance(x,dict): text=x.get("content") or x.get("text") or x.get("fact") or str(x); score=x.get("score"); md=x
-            else: text=getattr(x,"content",None) or getattr(x,"text",None) or str(x); score=getattr(x,"score",None); md={}
-            explicit=None
-            if isinstance(md,dict):
+            if isinstance(x,str):
+                text=x; score=None; md={}; explicit=None
+            elif isinstance(x,dict):
+                text=x.get("content") or x.get("text") or x.get("fact") or str(x); score=x.get("score"); md=x
                 explicit=md.get("document_id") or md.get("source_document_id") or (md.get("metadata") or {}).get("record_id")
             else:
+                text=getattr(x,"content",None) or getattr(x,"text",None) or str(x); score=getattr(x,"score",None)
+                md=dict(vars(x)) if hasattr(x,"__dict__") else {}
                 explicit=getattr(x,"document_id",None) or getattr(x,"source_document_id",None)
                 nested=getattr(x,"metadata",None)
                 if not explicit and isinstance(nested,dict): explicit=nested.get("record_id")

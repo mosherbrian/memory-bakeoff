@@ -10,7 +10,10 @@ path for doing so. This isolates storage/retrieval from summarizer quality.
 - dense_lsa: native deterministic offline baseline.
 - hybrid_rrf: native BM25 + dense baseline.
 - Mem0: `add(..., infer=False)`.
-- MemBukkit: `ingest_facts(...)` bypasses the LLM distiller.
+- MemBukkit upstream/product adapter: `ingest_facts(...)` bypasses the LLM distiller
+  but still uses the intended pretrained encoder/reranker (`raw_product`).
+- MemBukkit controlled core: `membukkit_core_lsa` uses the shared corpus-fit LSA
+  encoder and FakeReranker (`controlled_core`), never as a product substitute.
 - agentmemory: `/remember` + `/smart-search`; current keyless mode is BM25/graph without an LLM, with local embeddings an explicit opt-in.
 - Habitus: direct `remember()` / `recall()`.
 - Claude-Mem: **not eligible**; normal observation processing is LLM-backed.
@@ -82,3 +85,6 @@ source provenance surviving that rewrite.
 `MemorySystem.ingest_facts(...)` is a documented direct/no-distiller path. The adapter
 sets `source_ref` to the harness record ID and uses evidence-only `MemorySystem.search`,
 which exposes `source_ref` on each hit and supports as-of filtering/history controls.
+`membukkit` requires a separate upstream install and intended encoder/reranker;
+`membukkit_core_lsa` is the explicitly controlled vendored arm. The upstream adapter
+fails closed if import resolution points at the vendored copy.

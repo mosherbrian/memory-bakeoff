@@ -20,6 +20,8 @@ class TfidfCosineProvider(MemoryProvider):
     """
 
     name = "tfidf_cosine"
+    raw_experiment_class = "baseline"
+    product_experiment_class = "baseline"
     capabilities = ProviderCapabilities(
         raw_ingest=True,
         product_ingest=True,

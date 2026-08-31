@@ -21,6 +21,8 @@ def test_manifest_omits_secrets(monkeypatch, tmp_path: Path):
     assert "OPENAI_API_KEY" not in m["environment"]
     assert "AGENTMEMORY_SECRET" not in m["environment"]
     assert m["llm_label"] == "test-reader"
+    assert m["schema_version"] == 2
+    assert len(m["execution_environment"]["fingerprint_sha256"]) == 64
 
 
 def test_source_hash_changes_when_source_changes(tmp_path: Path):

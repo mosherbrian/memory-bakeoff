@@ -9,6 +9,8 @@ from memory_bakeoff.providers.membukkit_test_doubles import SharedLSAEncoder
 
 class Mem0CoreLSAProvider(MemoryProvider):
     name='mem0_core_lsa'
+    raw_experiment_class='controlled_core'
+    product_experiment_class='controlled_core'
     capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=False,service_required=False,notes='Pinned Mem0 semantic-only search policy with shared LSA; BM25/entity inactive.')
     def __init__(self):
         super().__init__(); self.encoder=None; self.ids=[]; self.vecs=None

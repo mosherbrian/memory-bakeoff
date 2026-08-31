@@ -64,6 +64,7 @@ def test_agentmemory_uses_supported_type_for_provenance_and_reconstructs_compact
     assert posts[-1][1]["format"] == "compact"
     assert result.ids == ["M001"]
     assert result.items[0].text == record().text
+    assert p.provenance_report()["status"] == "verified"
 
 
 def test_claude_mem_search_requests_full_observations(monkeypatch):
@@ -81,6 +82,7 @@ def test_claude_mem_search_requests_full_observations(monkeypatch):
     assert seen["type"] == "observations"
     assert seen["format"] == "full"
     assert result.ids == ["M001"]
+    assert p.provenance_report()["publishable"] is False
 
 
 def test_hindsight_retain_uses_datetime_and_recall_results(monkeypatch):
@@ -114,6 +116,7 @@ def test_hindsight_retain_uses_datetime_and_recall_results(monkeypatch):
     result = p.retrieve(case(), 5)
     assert result.ids == ["M001"]
     assert result.items[0].text == record().text
+    assert p.provenance_report()["status"] == "verified"
 
 
 def test_hindsight_raw_mode_requires_explicit_no_llm_declaration(monkeypatch):

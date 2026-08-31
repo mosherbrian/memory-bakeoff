@@ -20,6 +20,8 @@ class AgentMemoryCoreProvider(MemoryProvider):
     core ablation, not the full iii-engine product.
     """
     name = "agentmemory_core_lsa"
+    raw_experiment_class = "controlled_core"
+    product_experiment_class = "controlled_core"
     apply_supersession = False
     capabilities = ProviderCapabilities(
         raw_ingest=True,

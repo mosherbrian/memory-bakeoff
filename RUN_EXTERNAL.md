@@ -46,6 +46,11 @@ Raw mode calls `MemorySystem.ingest_facts(...)`, which bypasses the LLM fact dis
 then uses the evidence-only `search(...)` API. Encoder/reranker model weights are still
 part of the evaluated configuration and must be recorded.
 
+The `membukkit` provider is the upstream intended-model path and refuses the vendored
+controlled-core package. Set `MEMBUKKIT_UPSTREAM_PATH` to an upstream checkout if
+needed. The historical shared-LSA/FakeReranker arm is separately named
+`membukkit_core_lsa` and classified `controlled_core`.
+
 ### Habitus-AI
 
 Clone/install the current repository:

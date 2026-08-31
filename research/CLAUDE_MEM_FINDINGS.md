@@ -1,7 +1,10 @@
 # Claude-Mem controlled-core findings
 
 Pinned source inspected at `thedotmack/claude-mem` commit
-`fa6a1e9ec12d23f98326a9b26e243acb0819e105` (package version 10.6.1).
+`fa6a1e9ec12d23f98326a9b26e243acb0819e105` (package version **13.18.0**).
+Earlier documentation incorrectly labeled this commit as 10.6.1; npm 10.6.1 records
+commit `d54e574251d7736cfd6030f8ba86b15fbebd3b50`. The completed controlled
+results are preserved as historical evidence and were not rerun for this correction.
 
 ## What is and is not being tested
 

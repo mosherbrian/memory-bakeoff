@@ -150,8 +150,8 @@ match upstream Git blob SHAs byte-for-byte; see `vendor/membukkit/UPSTREAM.md` a
 `scripts/verify_membukkit_vendor.py`. Local shims are limited to packaging, progress,
 usage accounting, and no-op telemetry.
 
-Because the sandbox cannot download MemBukkit's pretrained encoder/reranker weights,
-the primary **raw architecture** arm uses the exact same corpus-fit 32-D LSA
+Because the sandbox could not download MemBukkit's pretrained encoder/reranker weights,
+the completed **controlled-core architecture** arm uses the exact same corpus-fit 32-D LSA
 representation as the `dense_lsa` baseline and MemBukkit's upstream bucketed
 `MemorySystem` with `select=none`. That isolates its scan-budget organization rather
 than pretending a random CI test encoder is a product model.
@@ -174,6 +174,12 @@ A separate diagnostic using MemBukkit's own deterministic CI `FakeEncoder`/
 quality score. With shared LSA plus the CI lexical reranker, hybrid RRF *reduced*
 stress Hit@5 to 0.458; this demonstrates why product-mode testing with the intended
 pretrained reranker remains necessary before judging the shipped hybrid configuration.
+
+The provider names now make this boundary machine-readable: `membukkit_core_lsa` is
+the historical shared-LSA/FakeReranker `controlled_core` arm, while `membukkit` requires
+a separately installed upstream package and its intended encoder/reranker (`raw_product`
+for `ingest_facts`, `product` for normal LLM-backed ingestion). The product adapter
+fails closed if it resolves to the vendored controlled-core copy.
 
 ## Third real core: agentmemory
 
@@ -216,6 +222,12 @@ memory-bakeoff probe
 This reports whether local packages/services are reachable. External adapters fail
 closed: an unavailable engine is recorded as unavailable rather than silently replaced
 with a simulation.
+
+New result metadata records one of `baseline`, `controlled_core`, `raw_product`, or
+`product` while retaining the ingestion mode. Source provenance and publishability are
+also explicit. Fuzzy/subtext reconciliation is exploratory only and is excluded from
+the authoritative `leaderboard.md`/`leaderboard.csv`. Result directories fail closed
+when they already exist; `--allow-overwrite` is reserved for development/debug use.
 
 ## Run the whole raw-mode field
 
@@ -265,7 +277,8 @@ claiming to test Quality-Loop-style retrieval reinforcement.
 
 ## Fifth controlled core: Claude-Mem search policy
 
-Claude-Mem 10.6.1 is currently represented by controlled search-policy arms, not a full
+Claude-Mem 13.18.0 (commit `fa6a1e9ec12d23f98326a9b26e243acb0819e105`) is
+represented by controlled search-policy arms, not a full
 product run: `claude_mem_fts5_core`, `claude_mem_chroma_lsa`, and
 `claude_mem_chroma_lsa_no_recency`. With the shared LSA representation held constant,
 the current Chroma policy scores only **0.208 Hit@5** on both core and stress because its
@@ -273,6 +286,10 @@ implicit 90-day window leaves only 9 benchmark memories eligible. Disabling only
 window restores **0.958 core / 0.583 stress Hit@5**, exactly matching dense LSA on recall.
 The FTS5 whole-query phrase fallback scores zero on these paraphrased queries. See
 `research/CLAUDE_MEM_FINDINGS.md`.
+
+Earlier documentation incorrectly associated that commit with package 10.6.1; npm
+10.6.1 records commit `d54e574251d7736cfd6030f8ba86b15fbebd3b50`. Archived
+controlled result files remain unchanged.
 
 ## Hindsight runtime status
 

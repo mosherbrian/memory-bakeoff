@@ -12,6 +12,7 @@ from memory_bakeoff.corpus import build_corpus
 from memory_bakeoff.llm import LLMBackendError, LLMClient, LLMMessage, LLMRequest
 from memory_bakeoff.providers import PROVIDERS
 from memory_bakeoff.providers.base import ProviderUnavailable
+from memory_bakeoff.repro import capture_execution_environment
 
 
 @dataclass(frozen=True)
@@ -135,14 +136,16 @@ def prepare_reader_requests(provider_names: Sequence[str], mode: str="raw", top_
     requests=[]; contexts=[]; unavailable=[]
     for name in provider_names:
         provider=PROVIDERS[name](); probe=provider.probe()
+        experiment_class=provider.experiment_class(mode)
         if mode=="raw" and not provider.capabilities.raw_ingest:
-            unavailable.append({"provider":name,"status":"ineligible","reason":"provider does not expose a supported raw/no-LLM ingestion path"}); continue
+            unavailable.append({"provider":name,"experiment_class":experiment_class,"publishability":"not_applicable","status":"ineligible","reason":"provider does not expose a supported raw/no-LLM ingestion path"}); continue
         if mode=="product" and not provider.capabilities.product_ingest:
-            unavailable.append({"provider":name,"status":"ineligible","reason":"provider does not expose product-mode ingestion"}); continue
+            unavailable.append({"provider":name,"experiment_class":experiment_class,"publishability":"not_applicable","status":"ineligible","reason":"provider does not expose product-mode ingestion"}); continue
         if not probe.available:
-            unavailable.append({"provider":name,"status":"unavailable","reason":probe.reason}); continue
+            unavailable.append({"provider":name,"experiment_class":experiment_class,"publishability":"not_applicable","status":"unavailable","reason":probe.reason}); continue
         try:
             provider.ingest(records,mode=mode)
+            provider_requests=[]; provider_contexts=[]
             for spec in specs:
                 case=case_by_id[spec.case_id]
                 result=provider.retrieve(case,top_k=top_k)
@@ -156,12 +159,29 @@ def prepare_reader_requests(provider_names: Sequence[str], mode: str="raw", top_
                     request_id=request_id,
                     metadata={"provider":name,"case_id":case.id,"mode":mode,"top_k":top_k,"retrieved_ids":result.ids[:top_k]},
                 )
-                requests.append(req)
-                contexts.append({"provider":name,"case":case,"spec":spec,"result":result,"request_id":request_id})
+                provider_requests.append(req)
+                provider_contexts.append({"provider":name,"case":case,"spec":spec,"result":result,"request_id":request_id})
+            provenance=provider.provenance_report()
+            if not provenance["publishable"]:
+                unavailable.append({
+                    "provider":name,
+                    "experiment_class":experiment_class,
+                    "publishability":"non_publishable",
+                    "status":"non_publishable",
+                    "reason":provenance["reason"],
+                    "provenance":provenance,
+                })
+                continue
+            for ctx in provider_contexts:
+                ctx["experiment_class"]=experiment_class
+                ctx["publishability"]="publishable"
+                ctx["provenance"]=provenance
+            requests.extend(provider_requests)
+            contexts.extend(provider_contexts)
         except ProviderUnavailable as e:
-            unavailable.append({"provider":name,"status":"unavailable","reason":str(e)})
+            unavailable.append({"provider":name,"experiment_class":experiment_class,"publishability":"not_applicable","status":"unavailable","reason":str(e)})
         except Exception as e:
-            unavailable.append({"provider":name,"status":"error","reason":f"{type(e).__name__}: {e}"})
+            unavailable.append({"provider":name,"experiment_class":experiment_class,"publishability":"not_applicable","status":"error","reason":f"{type(e).__name__}: {e}"})
     return requests,contexts,unavailable
 
 
@@ -178,6 +198,9 @@ def run_reader_eval(provider_names: Sequence[str], llm: LLMClient, *, mode: str=
         rows=[s for s in scores if s.provider==name]
         if not rows: continue
         by_provider[name]={
+            "experiment_class":next(ctx["experiment_class"] for ctx in contexts if ctx["provider"] == name),
+            "publishability":"publishable",
+            "provenance":next(ctx["provenance"] for ctx in contexts if ctx["provider"] == name),
             "cases":len(rows),
             "answer_pass_rate":sum(x.pass_answer for x in rows)/len(rows),
             "mean_required_fraction":sum(x.required_fraction for x in rows)/len(rows),
@@ -185,33 +208,40 @@ def run_reader_eval(provider_names: Sequence[str], llm: LLMClient, *, mode: str=
             "insufficient_rate":sum("insufficient_memory" in _norm(x.answer) or "insufficient memory" in _norm(x.answer) for x in rows)/len(rows),
         }
     return {
+        "schema_version":2,
         "mode":mode,
         "top_k":top_k,
         "distractors":distractors,
         "llm_backend":getattr(llm,"name",type(llm).__name__),
+        "execution_environment":capture_execution_environment(),
         "provider_summary":by_provider,
         "unavailable":unavailable,
         "details":[x.to_dict() for x in scores],
     }
 
 
-def write_reader_results(result: dict, outdir: str | Path) -> None:
-    out=Path(outdir); out.mkdir(parents=True,exist_ok=True)
+def write_reader_results(result: dict, outdir: str | Path, *, allow_overwrite: bool = False) -> None:
+    out=Path(outdir)
+    if out.exists() and not allow_overwrite:
+        raise FileExistsError(
+            f"result directory already exists: {out}; choose a new directory or pass --allow-overwrite for development/debug only"
+        )
+    out.mkdir(parents=True,exist_ok=allow_overwrite)
     (out/"reader.json").write_text(json.dumps(result,indent=2,default=str)+"\n")
     pd.DataFrame(result.get("details",[])).to_csv(out/"reader_detail.csv",index=False)
     summary_rows=[]
     for provider,metrics in result.get("provider_summary",{}).items():
         summary_rows.append({"provider":provider,"status":"ok",**metrics})
     for row in result.get("unavailable",[]):
-        summary_rows.append({"provider":row["provider"],"status":row["status"],"reason":row["reason"]})
+        summary_rows.append({"provider":row["provider"],"experiment_class":row.get("experiment_class"),"publishability":row.get("publishability"),"status":row["status"],"reason":row["reason"]})
     pd.DataFrame(summary_rows).to_csv(out/"reader_summary.csv",index=False)
     lines=[
         "# Reader-impact evaluation",
         "",
         f"LLM backend: `{result.get('llm_backend')}`; mode: `{result.get('mode')}`; top-k: {result.get('top_k')}; distractors: {result.get('distractors',0)}",
         "",
-        "| Provider | Status | Cases | Answer pass | Required coverage | Answers with prohibited | Notes |",
-        "|---|---|---:|---:|---:|---:|---|",
+        "| Provider | Class | Publishability | Status | Cases | Answer pass | Required coverage | Answers with prohibited | Notes |",
+        "|---|---|---|---|---:|---:|---:|---:|---|",
     ]
     by=result.get("provider_summary",{})
     unavailable={x["provider"]:x for x in result.get("unavailable",[])}
@@ -219,7 +249,7 @@ def write_reader_results(result: dict, outdir: str | Path) -> None:
     for name in names:
         if name in by:
             m=by[name]
-            lines.append(f"| {name} | ok | {m['cases']} | {m['answer_pass_rate']:.3f} | {m['mean_required_fraction']:.3f} | {m['answers_with_prohibited']:.3f} |  |")
+            lines.append(f"| {name} | {m['experiment_class']} | {m['publishability']} | ok | {m['cases']} | {m['answer_pass_rate']:.3f} | {m['mean_required_fraction']:.3f} | {m['answers_with_prohibited']:.3f} |  |")
         else:
-            row=unavailable[name]; lines.append(f"| {name} | {row['status']} | — | — | — | — | {row['reason'].replace('|','/')} |")
+            row=unavailable[name]; lines.append(f"| {name} | {row.get('experiment_class')} | {row.get('publishability')} | {row['status']} | — | — | — | — | {row['reason'].replace('|','/')} |")
     (out/"reader_summary.md").write_text("\n".join(lines)+"\n")

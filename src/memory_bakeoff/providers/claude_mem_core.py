@@ -20,7 +20,7 @@ from memory_bakeoff.providers.base import MemoryProvider, ProviderUnavailable
 from memory_bakeoff.providers.membukkit_test_doubles import SharedLSAEncoder
 
 
-# Current Claude-Mem source constant at pinned commit fa6a1e9e... .
+# Claude-Mem 13.18.0 source constant at pinned commit fa6a1e9e... .
 # Keep the clock explicit so the 90-day policy is reproducible instead of
 # silently drifting every time this benchmark is rerun months later.
 DEFAULT_EVAL_NOW = datetime(2026, 8, 30, 12, 0, tzinfo=timezone.utc)
@@ -52,6 +52,8 @@ class ClaudeMemFTS5CoreProvider(MemoryProvider):
     """
 
     name = "claude_mem_fts5_core"
+    raw_experiment_class = "controlled_core"
+    product_experiment_class = "controlled_core"
     capabilities = ProviderCapabilities(
         raw_ingest=True,
         product_ingest=False,
@@ -171,6 +173,8 @@ class ClaudeMemChromaLSAProvider(MemoryProvider):
     """
 
     name = "claude_mem_chroma_lsa"
+    raw_experiment_class = "controlled_core"
+    product_experiment_class = "controlled_core"
     apply_default_recency = True
     capabilities = ProviderCapabilities(
         raw_ingest=True,

@@ -13,6 +13,8 @@ from memory_bakeoff.providers.base import MemoryProvider
 
 class DenseLSAProvider(MemoryProvider):
     name = "dense_lsa"
+    raw_experiment_class = "baseline"
+    product_experiment_class = "baseline"
     capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=True, supports_as_of=True, notes="Offline deterministic dense LSA baseline; not a pretrained sentence embedding model. Uses structured as-of cutoff when supplied; scope must be resolved from query text.")
 
     def __init__(self, dimensions: int = 32):

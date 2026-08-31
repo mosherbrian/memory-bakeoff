@@ -168,7 +168,11 @@ See `research/MEM0_FINDINGS.md`.
 
 ### Claude-Mem
 
-Pinned source: `thedotmack/claude-mem` commit `fa6a1e9ec12d23f98326a9b26e243acb0819e105`, package 10.6.1.
+Pinned source inspected for the controlled policy result: `thedotmack/claude-mem`
+commit `fa6a1e9ec12d23f98326a9b26e243acb0819e105`, package **13.18.0**. The prior
+10.6.1 label was a provenance error: npm 10.6.1 instead records git commit
+`d54e574251d7736cfd6030f8ba86b15fbebd3b50`. Historical result artifacts are
+preserved unchanged; this correction does not represent a rerun.
 
 The generated worker bundle was not available in the sandbox, so the current rows are controlled search-policy ablations rather than product runs.
 
@@ -266,4 +270,3 @@ Priority order:
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`
 - `results/repro_manifest.json`
-

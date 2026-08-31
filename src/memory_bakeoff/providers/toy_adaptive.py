@@ -12,6 +12,8 @@ class ToyAdaptiveProvider(HybridRRFProvider):
     can prove the benchmark detects learning over repeated outcomes.
     """
     name = "toy_adaptive_diagnostic"
+    raw_experiment_class = "controlled_core"
+    product_experiment_class = "controlled_core"
     capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=False, supports_as_of=True, supports_feedback=True, notes="Harness diagnostic only; proves feedback/learning measurements work. Not Habitus.")
 
     def __init__(self):

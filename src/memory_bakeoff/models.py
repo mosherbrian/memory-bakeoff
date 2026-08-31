@@ -2,7 +2,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
-from typing import Any, Iterable
+from typing import Any, Iterable, Literal
+
+
+ExperimentClass = Literal["baseline", "controlled_core", "raw_product", "product"]
+EXPERIMENT_CLASSES: tuple[ExperimentClass, ...] = (
+    "baseline",
+    "controlled_core",
+    "raw_product",
+    "product",
+)
 
 
 @dataclass(frozen=True)

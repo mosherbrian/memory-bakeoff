@@ -15,7 +15,7 @@ def main(argv=None):
     sub=p.add_subparsers(dest="cmd",required=True)
     sub.add_parser("providers")
     pp=sub.add_parser("probe")
-    r=sub.add_parser("run"); r.add_argument("--providers",default=",".join(PROVIDERS)); r.add_argument("--mode",choices=["raw","product"],default="raw"); r.add_argument("--top-k",type=int,default=5); r.add_argument("--out",default="results"); r.add_argument("--distractors",type=int,default=0)
+    r=sub.add_parser("run"); r.add_argument("--providers",default=",".join(PROVIDERS)); r.add_argument("--mode",choices=["raw","product"],default="raw"); r.add_argument("--top-k",type=int,default=5); r.add_argument("--out",default="results"); r.add_argument("--distractors",type=int,default=0); r.add_argument("--allow-overwrite",action="store_true",help="development/debug only: allow writing into an existing result directory")
     l=sub.add_parser("learning-diagnostic"); l.add_argument("--epochs",type=int,default=8); l.add_argument("--out",default="results/learning.json")
 
     reader=sub.add_parser("reader-eval",help="Measure whether retrieved context lets an LLM answer correctly")
@@ -30,6 +30,7 @@ def main(argv=None):
     reader.add_argument("--timeout",type=float,default=900)
     reader.add_argument("--out",default="results")
     reader.add_argument("--distractors",type=int,default=0)
+    reader.add_argument("--allow-overwrite",action="store_true",help="development/debug only: allow writing into an existing result directory")
 
     smoke=sub.add_parser("llm-smoke",help="Issue one request through a configured LLM backend")
     smoke.add_argument("--backend",choices=["fake","chatgpt_sidecar","openai_compat","anthropic"],default="fake")
@@ -62,19 +63,27 @@ def main(argv=None):
 
     args=p.parse_args(argv)
     if args.cmd=="providers":
-        for n,c in PROVIDERS.items(): print(f"{n:26} {c.capabilities}")
+        for n,c in PROVIDERS.items():
+            provider=c()
+            print(f"{n:32} raw={provider.experiment_class('raw'):15} product={provider.experiment_class('product'):15} {c.capabilities}")
     elif args.cmd=="probe": print(json.dumps(probe_all(),indent=2))
     elif args.cmd=="run":
         names=[x.strip() for x in args.providers.split(",") if x.strip()]; bad=[n for n in names if n not in PROVIDERS]
         if bad: raise SystemExit(f"Unknown providers: {', '.join(bad)}")
-        results=[run_provider(n,args.mode,args.top_k,args.distractors) for n in names]; write_results(results,Path(args.out)); print((Path(args.out)/"summary.md").read_text())
+        out=Path(args.out)
+        if out.exists() and not args.allow_overwrite:
+            raise FileExistsError(f"result directory already exists: {out}; choose a new directory or pass --allow-overwrite for development/debug only")
+        results=[run_provider(n,args.mode,args.top_k,args.distractors) for n in names]; write_results(results,out,allow_overwrite=args.allow_overwrite); print((out/"summary.md").read_text())
     elif args.cmd=="learning-diagnostic":
         rows=run_learning_diagnostic(epochs=args.epochs); out=Path(args.out); out.parent.mkdir(parents=True,exist_ok=True); out.write_text(json.dumps(rows,indent=2)); print(json.dumps(rows,indent=2))
     elif args.cmd=="reader-eval":
         names=[x.strip() for x in args.providers.split(",") if x.strip()]; bad=[n for n in names if n not in PROVIDERS]
         if bad: raise SystemExit(f"Unknown providers: {', '.join(bad)}")
+        out=Path(args.out)
+        if out.exists() and not args.allow_overwrite:
+            raise FileExistsError(f"result directory already exists: {out}; choose a new directory or pass --allow-overwrite for development/debug only")
         llm=create_llm_backend(args.backend,queue_dir=args.queue_dir,trace_dir=args.replay_dir,timeout_s=args.timeout,model=args.model,base_url=args.base_url)
-        result=run_reader_eval(names,llm,mode=args.mode,top_k=args.top_k,distractors=args.distractors); write_reader_results(result,args.out); print((Path(args.out)/"reader_summary.md").read_text())
+        result=run_reader_eval(names,llm,mode=args.mode,top_k=args.top_k,distractors=args.distractors); write_reader_results(result,out,allow_overwrite=args.allow_overwrite); print((out/"reader_summary.md").read_text())
     elif args.cmd=="llm-smoke":
         llm=create_llm_backend(args.backend,queue_dir=args.queue_dir,timeout_s=args.timeout,model=args.model,base_url=args.base_url)
         response=llm.complete(LLMRequest(messages=(LLMMessage("system",args.system),LLMMessage("user",args.prompt))))
