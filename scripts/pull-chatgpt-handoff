@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REMOTE="${MEMORY_BAKEOFF_DRIVE_REMOTE:-memory-bakeoff-drive}"
+MAILBOX_DIR="${MEMORY_BAKEOFF_DRIVE_FOLDER:-memory-bakeoff-control-plane}"
+DOC_BASENAME="${MEMORY_BAKEOFF_DRIVE_DOC:-CHATGPT_TO_CODEX}"
+
+fail() {
+  printf 'pull-chatgpt-handoff: %s\n' "$*" >&2
+  exit 1
+}
+
+command -v rclone >/dev/null 2>&1 || fail "rclone is not installed"
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || \
+  fail "run this command from inside the memory-bakeoff Git checkout"
+
+DEST_DIR="$REPO_ROOT/.control-plane"
+DEST_FILE="$DEST_DIR/CHATGPT_TO_CODEX.md"
+SOURCE_DIR="$REMOTE:$MAILBOX_DIR"
+SOURCE_FILE="$SOURCE_DIR/$DOC_BASENAME.md"
+
+mkdir -p "$DEST_DIR"
+
+# A failed pull must not leave an older message looking current.
+rm -f -- "$DEST_FILE"
+
+if ! rclone listremotes 2>/dev/null | grep -Fqx "$REMOTE:"; then
+  fail "rclone remote '$REMOTE:' is not configured; run 'rclone config' first"
+fi
+
+listing="$(rclone lsf "$SOURCE_DIR" \
+  --drive-export-formats md \
+  --files-only \
+  --max-depth 1)" || \
+  fail "Google Drive folder '$MAILBOX_DIR' could not be found or listed on '$REMOTE:'"
+
+if ! grep -Fqx "$DOC_BASENAME.md" <<<"$listing"; then
+  fail "native Google Doc '$MAILBOX_DIR/$DOC_BASENAME' was not found or is not exportable as Markdown"
+fi
+
+TEMP_FILE="$(mktemp "$DEST_DIR/.CHATGPT_TO_CODEX.md.tmp.XXXXXX")"
+cleanup() {
+  rm -f -- "$TEMP_FILE"
+}
+trap cleanup EXIT
+
+if ! rclone copyto "$SOURCE_FILE" "$TEMP_FILE" --drive-export-formats md; then
+  fail "Markdown export failed for '$MAILBOX_DIR/$DOC_BASENAME'"
+fi
+
+if [[ ! -s "$TEMP_FILE" ]]; then
+  fail "Markdown export produced an empty document; no local handoff was installed"
+fi
+
+mv -- "$TEMP_FILE" "$DEST_FILE"
+trap - EXIT
+printf '%s\n' "$DEST_FILE"
