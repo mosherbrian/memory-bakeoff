@@ -1,0 +1,142 @@
+[
+  {
+    "name": "bm25",
+    "available": true,
+    "reason": "available",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": false,
+      "supports_as_of": true,
+      "supports_feedback": false,
+      "service_required": false,
+      "notes": "Pure-Python BM25 baseline. Uses structured as-of cutoff when supplied; scope must be resolved from query text."
+    }
+  },
+  {
+    "name": "dense_lsa",
+    "available": true,
+    "reason": "available",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": false,
+      "supports_as_of": true,
+      "supports_feedback": false,
+      "service_required": false,
+      "notes": "Offline deterministic dense LSA baseline; not a pretrained sentence embedding model. Uses structured as-of cutoff when supplied; scope must be resolved from query text."
+    }
+  },
+  {
+    "name": "hybrid_rrf",
+    "available": true,
+    "reason": "available",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": false,
+      "supports_as_of": true,
+      "supports_feedback": false,
+      "service_required": false,
+      "notes": "BM25 + dense LSA fused with reciprocal-rank fusion."
+    }
+  },
+  {
+    "name": "toy_adaptive_diagnostic",
+    "available": true,
+    "reason": "available",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": false,
+      "requires_llm_for_product_ingest": false,
+      "supports_as_of": true,
+      "supports_feedback": true,
+      "service_required": false,
+      "notes": "Harness diagnostic only; proves feedback/learning measurements work. Not Habitus."
+    }
+  },
+  {
+    "name": "mem0",
+    "available": false,
+    "reason": "mem0 Python package not installed",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": true,
+      "supports_as_of": false,
+      "supports_feedback": false,
+      "service_required": false,
+      "notes": "Raw mode uses add(..., infer=False); Python SDK/vector backend still required."
+    }
+  },
+  {
+    "name": "habitus",
+    "available": false,
+    "reason": "habitus-ai package not installed",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": false,
+      "supports_as_of": false,
+      "supports_feedback": false,
+      "service_required": false,
+      "notes": "Stock Habitus recall; stock record_outcome credits output-decision paths, not retrieval paths."
+    }
+  },
+  {
+    "name": "membukkit",
+    "available": false,
+    "reason": "membukkit package not installed",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": true,
+      "supports_as_of": true,
+      "supports_feedback": false,
+      "service_required": false,
+      "notes": "Raw mode uses MemorySystem.ingest_facts(), which bypasses the LLM distiller; encoder/reranker weights are still required."
+    }
+  },
+  {
+    "name": "agentmemory",
+    "available": false,
+    "reason": "service unavailable at http://127.0.0.1:3111: ConnectionError",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": false,
+      "supports_as_of": false,
+      "supports_feedback": false,
+      "service_required": true,
+      "notes": "Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop."
+    }
+  },
+  {
+    "name": "claude_mem",
+    "available": false,
+    "reason": "service unavailable at http://127.0.0.1:37700: ConnectionError",
+    "capabilities": {
+      "raw_ingest": false,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": true,
+      "supports_as_of": false,
+      "supports_feedback": false,
+      "service_required": true,
+      "notes": "Targets thedotmack/claude-mem worker. Normal observation ingestion is processed by Claude Agent SDK; no supported raw/no-LLM ingest path is assumed."
+    }
+  },
+  {
+    "name": "hindsight",
+    "available": false,
+    "reason": "service unavailable at http://127.0.0.1:8888: ConnectionError",
+    "capabilities": {
+      "raw_ingest": true,
+      "product_ingest": true,
+      "requires_llm_for_product_ingest": true,
+      "supports_as_of": true,
+      "supports_feedback": false,
+      "service_required": true,
+      "notes": "Raw mode is supported when the Hindsight server is explicitly launched with HINDSIGHT_API_LLM_PROVIDER=none (chunk storage, no fact extraction). Product mode uses normal LLM-powered retain()."
+    }
+  }
+]

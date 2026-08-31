@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q008",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 2,
+  "created_at": 1788153801.1818118,
+  "fingerprint": "e686832c5eb01b8f6088506ff4a8e34db51ff1398c980b2688549dfafaf539f2",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhat is the current production deployment command?\n\nRETRIEVED MEMORY:\n- [M032] Bob owns the Beacon deployment pipeline.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M022] The media-repair service's replay command is 'media-repair replay --source deadletter'.\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M045] Running the backfill directly in production without EXPLAIN caused a lock spike and the change was rolled back.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q008",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M032",
+      "M031",
+      "M022",
+      "M013",
+      "M045"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q008.json conforming to the ChatGPT sidecar protocol."
+}

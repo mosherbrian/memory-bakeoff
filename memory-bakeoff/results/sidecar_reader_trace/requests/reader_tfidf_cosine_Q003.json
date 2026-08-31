@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q003",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 0,
+  "created_at": 1788153801.1810966,
+  "fingerprint": "a6f486c6c69be05cf8f66b29f2491049ac3a40471a16890728a8b7612139d795",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhich Redis DB does staging use?\n\nRETRIEVED MEMORY:\n- [M005] The staging Redis database number is 6.\n- [M036] The development Redis database number is 3.\n- [M018] The billing-db-dsn secret is owned by the platform-secrets Terraform module.\n- [M035] The frontend preview environment uses Redis database number 2.\n- [M017] The invoice reconciler gets its database DSN from the secret named billing-db-dsn.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q003",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M005",
+      "M036",
+      "M018",
+      "M035",
+      "M017"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q003.json conforming to the ChatGPT sidecar protocol."
+}

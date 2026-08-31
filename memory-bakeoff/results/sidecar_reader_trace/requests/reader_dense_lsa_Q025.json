@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_dense_lsa_Q025",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 26,
+  "created_at": 1788144978.0458155,
+  "fingerprint": "a731a6a0ffb49752c9eb82f60d6ed7ec892cc09fb0eae258168a7ead9706cebf",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhat is the root password for the production database?\n\nRETRIEVED MEMORY:\n- [M005] The staging Redis database number is 6.\n- [M036] The development Redis database number is 3.\n- [M035] The frontend preview environment uses Redis database number 2.\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M014] After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "dense_lsa",
+    "case_id": "Q025",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M005",
+      "M036",
+      "M035",
+      "M013",
+      "M014"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_dense_lsa_Q025.json conforming to the ChatGPT sidecar protocol."
+}

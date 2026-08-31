@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q019",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 9,
+  "created_at": 1788153801.183774,
+  "fingerprint": "9c35bca0e7cf1b43e25594c2782197cf3879d147e83c9cfb59afee3c5913fcf2",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nFor Atlas, what release branch should I target?\n\nRETRIEVED MEMORY:\n- [M029] In repo atlas, the release branch is release/atlas-2.x.\n- [M030] In repo beacon, the release branch is stable.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M033] In repo atlas, integration tests use PostgreSQL 17.\n- [M006] The cache invalidator must release cacheMu before calling broadcastInvalidation because the callback can synchronously re-enter the cache.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q019",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M029",
+      "M030",
+      "M031",
+      "M033",
+      "M006"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q019.json conforming to the ChatGPT sidecar protocol."
+}

@@ -1,0 +1,873 @@
+{
+  "records": [
+    {
+      "id": "M001",
+      "text": "The CI signing failure E_SIG_47 is fixed by refreshing the cosign OIDC token, not by rotating repository secrets.",
+      "timestamp": "2026-01-02T09:00:00+00:00",
+      "session_id": "s01",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M002",
+      "text": "The generated API client lives at internal/gen/payments_client.go and must not be edited by hand.",
+      "timestamp": "2026-01-02T09:05:00+00:00",
+      "session_id": "s01",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M003",
+      "text": "The payment proto source is api/payments/v2/payments.proto.",
+      "timestamp": "2026-01-02T09:06:00+00:00",
+      "session_id": "s01",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M004",
+      "text": "Run 'buf generate' from the repository root to regenerate payment protobuf code.",
+      "timestamp": "2026-01-02T09:07:00+00:00",
+      "session_id": "s01",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": "success"
+    },
+    {
+      "id": "M005",
+      "text": "The staging Redis database number is 6.",
+      "timestamp": "2026-01-03T10:00:00+00:00",
+      "session_id": "s02",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M006",
+      "text": "The cache invalidator must release cacheMu before calling broadcastInvalidation because the callback can synchronously re-enter the cache.",
+      "timestamp": "2026-01-05T13:00:00+00:00",
+      "session_id": "s03",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M007",
+      "text": "When the indexer appears hung with low CPU, inspect the bounded work queue first; producers can block while waiting for a full queue to drain.",
+      "timestamp": "2026-01-05T13:10:00+00:00",
+      "session_id": "s03",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M008",
+      "text": "A zero-length Matrix event body is valid for redactions; validation should inspect the event type before rejecting an empty body.",
+      "timestamp": "2026-01-05T13:20:00+00:00",
+      "session_id": "s03",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M009",
+      "text": "The macOS bridge host speaks newline-delimited JSON over stdin/stdout; stdout must contain protocol frames only.",
+      "timestamp": "2026-01-06T08:00:00+00:00",
+      "session_id": "s04",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M010",
+      "text": "Diagnostic logging for the bridge host belongs on stderr so it cannot corrupt NDJSON framing.",
+      "timestamp": "2026-01-06T08:02:00+00:00",
+      "session_id": "s04",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M011",
+      "text": "The build coordinator is strix03.",
+      "timestamp": "2026-02-01T09:00:00+00:00",
+      "session_id": "s05",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M012",
+      "text": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+      "timestamp": "2026-03-15T09:00:00+00:00",
+      "session_id": "s06",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": "M011",
+      "outcome": null
+    },
+    {
+      "id": "M013",
+      "text": "Production deploys use 'deployctl push --region west'.",
+      "timestamp": "2026-02-02T10:00:00+00:00",
+      "session_id": "s05",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M014",
+      "text": "After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.",
+      "timestamp": "2026-04-10T10:00:00+00:00",
+      "session_id": "s07",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": "M013",
+      "outcome": null
+    },
+    {
+      "id": "M015",
+      "text": "The API rate limit was 120 requests per minute for service accounts.",
+      "timestamp": "2026-02-10T12:00:00+00:00",
+      "session_id": "s05",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M016",
+      "text": "The service-account API limit increased to 300 requests per minute on 2026-05-01.",
+      "timestamp": "2026-05-01T12:00:00+00:00",
+      "session_id": "s08",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": "M015",
+      "outcome": null
+    },
+    {
+      "id": "M017",
+      "text": "The invoice reconciler gets its database DSN from the secret named billing-db-dsn.",
+      "timestamp": "2026-03-01T11:00:00+00:00",
+      "session_id": "s09",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M018",
+      "text": "The billing-db-dsn secret is owned by the platform-secrets Terraform module.",
+      "timestamp": "2026-03-01T11:03:00+00:00",
+      "session_id": "s09",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M019",
+      "text": "Changes to platform-secrets require running the secrets-plan GitHub workflow before merge.",
+      "timestamp": "2026-03-01T11:05:00+00:00",
+      "session_id": "s09",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M020",
+      "text": "The thumbnail worker publishes failed jobs to the image-deadletter topic.",
+      "timestamp": "2026-03-03T14:00:00+00:00",
+      "session_id": "s10",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M021",
+      "text": "The image-deadletter topic is consumed by the media-repair service.",
+      "timestamp": "2026-03-03T14:02:00+00:00",
+      "session_id": "s10",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M022",
+      "text": "The media-repair service's replay command is 'media-repair replay --source deadletter'.",
+      "timestamp": "2026-03-03T14:04:00+00:00",
+      "session_id": "s10",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M023",
+      "text": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+      "timestamp": "2026-04-01T10:00:00+00:00",
+      "session_id": "s11",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "generated-code"
+      },
+      "supersedes_id": null,
+      "outcome": "success"
+    },
+    {
+      "id": "M024",
+      "text": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+      "timestamp": "2026-04-01T10:20:00+00:00",
+      "session_id": "s11",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "generated-code"
+      },
+      "supersedes_id": null,
+      "outcome": "failure"
+    },
+    {
+      "id": "M025",
+      "text": "For flaky cache races: reproduce under -race, add synchronization at the ownership boundary, then rerun the focused race test before the whole package.",
+      "timestamp": "2026-04-02T10:00:00+00:00",
+      "session_id": "s12",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "race"
+      },
+      "supersedes_id": null,
+      "outcome": "success"
+    },
+    {
+      "id": "M026",
+      "text": "Adding sleeps around the cache race reduced failures locally but hidden stress tests still failed; do not use timing sleeps as the fix.",
+      "timestamp": "2026-04-02T10:20:00+00:00",
+      "session_id": "s12",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "race"
+      },
+      "supersedes_id": null,
+      "outcome": "failure"
+    },
+    {
+      "id": "M027",
+      "text": "For NDJSON protocol bugs: capture exact frames, validate one JSON object per line, and keep logs off stdout; this resolved the bridge desynchronization.",
+      "timestamp": "2026-04-03T10:00:00+00:00",
+      "session_id": "s13",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "ndjson"
+      },
+      "supersedes_id": null,
+      "outcome": "success"
+    },
+    {
+      "id": "M028",
+      "text": "Pretty-printing outbound JSON across multiple lines made bridge framing failures worse and was reverted.",
+      "timestamp": "2026-04-03T10:20:00+00:00",
+      "session_id": "s13",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "ndjson"
+      },
+      "supersedes_id": null,
+      "outcome": "failure"
+    },
+    {
+      "id": "M029",
+      "text": "In repo atlas, the release branch is release/atlas-2.x.",
+      "timestamp": "2026-04-05T09:00:00+00:00",
+      "session_id": "s14",
+      "scope": "repo:atlas",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M030",
+      "text": "In repo beacon, the release branch is stable.",
+      "timestamp": "2026-04-05T09:01:00+00:00",
+      "session_id": "s14",
+      "scope": "repo:beacon",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M031",
+      "text": "Alice owns the Atlas deployment pipeline.",
+      "timestamp": "2026-04-05T09:02:00+00:00",
+      "session_id": "s14",
+      "scope": "repo:atlas",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M032",
+      "text": "Bob owns the Beacon deployment pipeline.",
+      "timestamp": "2026-04-05T09:03:00+00:00",
+      "session_id": "s14",
+      "scope": "repo:beacon",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M033",
+      "text": "In repo atlas, integration tests use PostgreSQL 17.",
+      "timestamp": "2026-04-05T09:04:00+00:00",
+      "session_id": "s14",
+      "scope": "repo:atlas",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M034",
+      "text": "In repo beacon, integration tests use PostgreSQL 16.",
+      "timestamp": "2026-04-05T09:05:00+00:00",
+      "session_id": "s14",
+      "scope": "repo:beacon",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M035",
+      "text": "The frontend preview environment uses Redis database number 2.",
+      "timestamp": "2026-04-06T11:00:00+00:00",
+      "session_id": "s15",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M036",
+      "text": "The development Redis database number is 3.",
+      "timestamp": "2026-04-06T11:01:00+00:00",
+      "session_id": "s15",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M037",
+      "text": "Human-readable audit logs are JSONL files compressed daily with zstd.",
+      "timestamp": "2026-04-06T11:02:00+00:00",
+      "session_id": "s15",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M038",
+      "text": "The telemetry collector uses protobuf over gRPC, not NDJSON.",
+      "timestamp": "2026-04-06T11:03:00+00:00",
+      "session_id": "s15",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M039",
+      "text": "The image service's normal work topic is image-jobs.",
+      "timestamp": "2026-04-06T11:04:00+00:00",
+      "session_id": "s15",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M040",
+      "text": "The billing web UI is deployed independently of the invoice reconciler.",
+      "timestamp": "2026-04-06T11:05:00+00:00",
+      "session_id": "s15",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M041",
+      "text": "The test fixture bucket is qa-fixtures-v1.",
+      "timestamp": "2026-05-02T10:00:00+00:00",
+      "session_id": "s16",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M042",
+      "text": "The test fixture bucket was renamed to qa-fixtures-v2; qa-fixtures-v1 is read-only for legacy runs.",
+      "timestamp": "2026-06-10T10:00:00+00:00",
+      "session_id": "s17",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": "M041",
+      "outcome": null
+    },
+    {
+      "id": "M043",
+      "text": "The compatibility test still intentionally reads archived samples from qa-fixtures-v1.",
+      "timestamp": "2026-06-10T10:05:00+00:00",
+      "session_id": "s17",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M044",
+      "text": "A successful schema migration dry-run used a transaction plus EXPLAIN on the backfill query before applying the migration.",
+      "timestamp": "2026-06-12T10:00:00+00:00",
+      "session_id": "s18",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "migration"
+      },
+      "supersedes_id": null,
+      "outcome": "success"
+    },
+    {
+      "id": "M045",
+      "text": "Running the backfill directly in production without EXPLAIN caused a lock spike and the change was rolled back.",
+      "timestamp": "2026-06-12T10:20:00+00:00",
+      "session_id": "s18",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "migration"
+      },
+      "supersedes_id": null,
+      "outcome": "failure"
+    },
+    {
+      "id": "M046",
+      "text": "A successful dependency bump regenerated the lockfile and ran both unit tests and the license-policy check.",
+      "timestamp": "2026-06-13T10:00:00+00:00",
+      "session_id": "s19",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "dependency"
+      },
+      "supersedes_id": null,
+      "outcome": "success"
+    },
+    {
+      "id": "M047",
+      "text": "Hand-editing the lockfile after a dependency bump produced an inconsistent graph and failed CI.",
+      "timestamp": "2026-06-13T10:20:00+00:00",
+      "session_id": "s19",
+      "scope": "repo:demo",
+      "metadata": {
+        "procedure_family": "dependency"
+      },
+      "supersedes_id": null,
+      "outcome": "failure"
+    },
+    {
+      "id": "M048",
+      "text": "The office coffee machine is descaled on the first Monday of each month.",
+      "timestamp": "2026-06-14T10:00:00+00:00",
+      "session_id": "s20",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M049",
+      "text": "The demo dashboard theme was changed from charcoal to slate.",
+      "timestamp": "2026-06-14T10:01:00+00:00",
+      "session_id": "s20",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    },
+    {
+      "id": "M050",
+      "text": "The team's lunch order cutoff on Fridays is 11:15 AM.",
+      "timestamp": "2026-06-14T10:02:00+00:00",
+      "session_id": "s20",
+      "scope": "repo:demo",
+      "metadata": {},
+      "supersedes_id": null,
+      "outcome": null
+    }
+  ],
+  "queries": [
+    {
+      "id": "Q001",
+      "category": "exact",
+      "query": "What does E_SIG_47 mean and what fixed it?",
+      "relevant_ids": [
+        "M001"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q002",
+      "category": "exact",
+      "query": "Which file is the generated payments client?",
+      "relevant_ids": [
+        "M002"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q003",
+      "category": "exact",
+      "query": "Which Redis DB does staging use?",
+      "relevant_ids": [
+        "M005"
+      ],
+      "prohibited_ids": [
+        "M035",
+        "M036"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q004",
+      "category": "semantic",
+      "query": "Why can calling the invalidation callback while holding the cache lock deadlock or recurse?",
+      "relevant_ids": [
+        "M006"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q005",
+      "category": "semantic",
+      "query": "The indexer isn't using CPU and seems frozen. What previously caused this?",
+      "relevant_ids": [
+        "M007"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q006",
+      "category": "semantic",
+      "query": "Can a redaction event legitimately have no body text?",
+      "relevant_ids": [
+        "M008"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q007",
+      "category": "temporal_current",
+      "query": "What machine is the current build coordinator?",
+      "relevant_ids": [
+        "M012"
+      ],
+      "prohibited_ids": [
+        "M011"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q008",
+      "category": "temporal_current",
+      "query": "What is the current production deployment command?",
+      "relevant_ids": [
+        "M014"
+      ],
+      "prohibited_ids": [
+        "M013"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q009",
+      "category": "temporal_current",
+      "query": "What is today's service-account request limit?",
+      "relevant_ids": [
+        "M016"
+      ],
+      "prohibited_ids": [
+        "M015"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q010",
+      "category": "temporal_asof",
+      "query": "As of March 1, 2026, what production deployment command was in use?",
+      "relevant_ids": [
+        "M013"
+      ],
+      "prohibited_ids": [
+        "M014"
+      ],
+      "scope": "repo:demo",
+      "as_of": "2026-03-01T23:59:00+00:00",
+      "notes": ""
+    },
+    {
+      "id": "Q011",
+      "category": "temporal_asof",
+      "query": "As of February 20, 2026, which host coordinated builds?",
+      "relevant_ids": [
+        "M011"
+      ],
+      "prohibited_ids": [
+        "M012"
+      ],
+      "scope": "repo:demo",
+      "as_of": "2026-02-20T23:59:00+00:00",
+      "notes": ""
+    },
+    {
+      "id": "Q012",
+      "category": "multihop",
+      "query": "If I need to change the invoice reconciler's DB credentials, which secret/module/workflow chain matters?",
+      "relevant_ids": [
+        "M017",
+        "M018",
+        "M019"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q013",
+      "category": "multihop",
+      "query": "A thumbnail job landed in dead-letter. Which consumer and replay command handle it?",
+      "relevant_ids": [
+        "M020",
+        "M021",
+        "M022"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q014",
+      "category": "procedure",
+      "query": "Generated Go output is stale. What workflow previously succeeded?",
+      "relevant_ids": [
+        "M023"
+      ],
+      "prohibited_ids": [
+        "M024"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q015",
+      "category": "procedure",
+      "query": "How should I attack a flaky cache race based on prior verified outcomes?",
+      "relevant_ids": [
+        "M025"
+      ],
+      "prohibited_ids": [
+        "M026"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q016",
+      "category": "procedure",
+      "query": "What's the successful way to debug newline-delimited JSON framing?",
+      "relevant_ids": [
+        "M027"
+      ],
+      "prohibited_ids": [
+        "M028"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q017",
+      "category": "procedure",
+      "query": "What is the safer proven approach for a database backfill migration?",
+      "relevant_ids": [
+        "M044"
+      ],
+      "prohibited_ids": [
+        "M045"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q018",
+      "category": "procedure",
+      "query": "What did we learn about safely updating a dependency and lockfile?",
+      "relevant_ids": [
+        "M046"
+      ],
+      "prohibited_ids": [
+        "M047"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q019",
+      "category": "scope",
+      "query": "For Atlas, what release branch should I target?",
+      "relevant_ids": [
+        "M029"
+      ],
+      "prohibited_ids": [
+        "M030"
+      ],
+      "scope": "repo:atlas",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q020",
+      "category": "scope",
+      "query": "Who owns Beacon's deployment pipeline?",
+      "relevant_ids": [
+        "M032"
+      ],
+      "prohibited_ids": [
+        "M031"
+      ],
+      "scope": "repo:beacon",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q021",
+      "category": "scope",
+      "query": "Which PostgreSQL version do Atlas integration tests use?",
+      "relevant_ids": [
+        "M033"
+      ],
+      "prohibited_ids": [
+        "M034"
+      ],
+      "scope": "repo:atlas",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q022",
+      "category": "temporal_current",
+      "query": "Which bucket should new QA fixture runs use now?",
+      "relevant_ids": [
+        "M042"
+      ],
+      "prohibited_ids": [
+        "M041"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q023",
+      "category": "conflict",
+      "query": "Does anything still intentionally use qa-fixtures-v1?",
+      "relevant_ids": [
+        "M043"
+      ],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q024",
+      "category": "protocol",
+      "query": "Where should bridge diagnostic logs go, and why?",
+      "relevant_ids": [
+        "M009",
+        "M010"
+      ],
+      "prohibited_ids": [
+        "M037",
+        "M038"
+      ],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": ""
+    },
+    {
+      "id": "Q025",
+      "category": "negative",
+      "query": "What is the root password for the production database?",
+      "relevant_ids": [],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": "No memory contains this fact."
+    },
+    {
+      "id": "Q026",
+      "category": "negative",
+      "query": "Which engineer is on call tonight?",
+      "relevant_ids": [],
+      "prohibited_ids": [],
+      "scope": "repo:demo",
+      "as_of": null,
+      "notes": "No memory contains an on-call schedule."
+    }
+  ]
+}

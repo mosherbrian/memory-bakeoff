@@ -1,0 +1,966 @@
+{
+  "mode": "raw",
+  "top_k": 5,
+  "distractors": 0,
+  "llm_backend": "chatgpt_sidecar",
+  "provider_summary": {
+    "bm25": {
+      "cases": 14,
+      "answer_pass_rate": 0.8571428571428571,
+      "mean_required_fraction": 0.8571428571428571,
+      "answers_with_prohibited": 0.0,
+      "insufficient_rate": 0.2857142857142857
+    },
+    "tfidf_cosine": {
+      "cases": 14,
+      "answer_pass_rate": 0.8571428571428571,
+      "mean_required_fraction": 0.8571428571428571,
+      "answers_with_prohibited": 0.07142857142857142,
+      "insufficient_rate": 0.21428571428571427
+    },
+    "dense_lsa": {
+      "cases": 14,
+      "answer_pass_rate": 1.0,
+      "mean_required_fraction": 1.0,
+      "answers_with_prohibited": 0.0,
+      "insufficient_rate": 0.14285714285714285
+    },
+    "hybrid_rrf": {
+      "cases": 14,
+      "answer_pass_rate": 1.0,
+      "mean_required_fraction": 1.0,
+      "answers_with_prohibited": 0.0,
+      "insufficient_rate": 0.14285714285714285
+    }
+  },
+  "unavailable": [],
+  "details": [
+    {
+      "case_id": "Q003",
+      "provider": "bm25",
+      "answer": "Staging uses Redis database number 6.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M005",
+        "M036",
+        "M035",
+        "M034",
+        "M033"
+      ],
+      "request_id": "reader_bm25_Q003"
+    },
+    {
+      "case_id": "Q007",
+      "provider": "bm25",
+      "answer": "The current build coordinator is strix07.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M011",
+        "M012",
+        "M048",
+        "M041",
+        "M003"
+      ],
+      "request_id": "reader_bm25_Q007"
+    },
+    {
+      "case_id": "Q008",
+      "provider": "bm25",
+      "answer": "shipit release --cluster pdx",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M022",
+        "M032",
+        "M031",
+        "M014",
+        "M013"
+      ],
+      "request_id": "reader_bm25_Q008"
+    },
+    {
+      "case_id": "Q010",
+      "provider": "bm25",
+      "answer": "deployctl push --region west",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M013",
+        "M015"
+      ],
+      "request_id": "reader_bm25_Q010"
+    },
+    {
+      "case_id": "Q012",
+      "provider": "bm25",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 0.0,
+      "prohibited_hits": [],
+      "insufficient_ok": false,
+      "pass_answer": false,
+      "retrieved_ids": [
+        "M017",
+        "M040",
+        "M039",
+        "M045",
+        "M050"
+      ],
+      "request_id": "reader_bm25_Q012"
+    },
+    {
+      "case_id": "Q013",
+      "provider": "bm25",
+      "answer": "The consumer is media-repair; replay with `media-repair replay --source deadletter`.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M022",
+        "M045",
+        "M046",
+        "M047",
+        "M020"
+      ],
+      "request_id": "reader_bm25_Q013"
+    },
+    {
+      "case_id": "Q014",
+      "provider": "bm25",
+      "answer": "Edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M023",
+        "M024",
+        "M019",
+        "M002",
+        "M011"
+      ],
+      "request_id": "reader_bm25_Q014"
+    },
+    {
+      "case_id": "Q015",
+      "provider": "bm25",
+      "answer": "Reproduce under -race, add synchronization at the ownership boundary, rerun the focused race test, then rerun the whole package.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M025",
+        "M044",
+        "M008",
+        "M026",
+        "M050"
+      ],
+      "request_id": "reader_bm25_Q015"
+    },
+    {
+      "case_id": "Q016",
+      "provider": "bm25",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 0.0,
+      "prohibited_hits": [],
+      "insufficient_ok": false,
+      "pass_answer": false,
+      "retrieved_ids": [
+        "M028",
+        "M009",
+        "M039",
+        "M050",
+        "M022"
+      ],
+      "request_id": "reader_bm25_Q016"
+    },
+    {
+      "case_id": "Q019",
+      "provider": "bm25",
+      "answer": "Target release/atlas-2.x.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M029",
+        "M030",
+        "M008",
+        "M031",
+        "M033"
+      ],
+      "request_id": "reader_bm25_Q019"
+    },
+    {
+      "case_id": "Q022",
+      "provider": "bm25",
+      "answer": "Use qa-fixtures-v2 for new QA fixture runs.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M041",
+        "M042",
+        "M012",
+        "M008",
+        "M034"
+      ],
+      "request_id": "reader_bm25_Q022"
+    },
+    {
+      "case_id": "Q024",
+      "provider": "bm25",
+      "answer": "Put diagnostic logs on stderr; keep them off stdout so stdout remains protocol frames and the logs cannot corrupt NDJSON framing.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M010",
+        "M027",
+        "M028",
+        "M037",
+        "M008"
+      ],
+      "request_id": "reader_bm25_Q024"
+    },
+    {
+      "case_id": "Q025",
+      "provider": "bm25",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M036",
+        "M005",
+        "M004",
+        "M014",
+        "M013"
+      ],
+      "request_id": "reader_bm25_Q025"
+    },
+    {
+      "case_id": "Q026",
+      "provider": "bm25",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M050",
+        "M048",
+        "M016",
+        "M010",
+        "M044"
+      ],
+      "request_id": "reader_bm25_Q026"
+    },
+    {
+      "case_id": "Q003",
+      "provider": "tfidf_cosine",
+      "answer": "Staging uses Redis database number 6.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M005",
+        "M036",
+        "M018",
+        "M035",
+        "M017"
+      ],
+      "request_id": "reader_tfidf_cosine_Q003"
+    },
+    {
+      "case_id": "Q007",
+      "provider": "tfidf_cosine",
+      "answer": "The current build coordinator is strix07.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M011",
+        "M012",
+        "M048"
+      ],
+      "request_id": "reader_tfidf_cosine_Q007"
+    },
+    {
+      "case_id": "Q008",
+      "provider": "tfidf_cosine",
+      "answer": "deployctl push --region west",
+      "required_fraction": 0.0,
+      "prohibited_hits": [
+        "deployctl push --region west"
+      ],
+      "insufficient_ok": true,
+      "pass_answer": false,
+      "retrieved_ids": [
+        "M032",
+        "M031",
+        "M022",
+        "M013",
+        "M045"
+      ],
+      "request_id": "reader_tfidf_cosine_Q008"
+    },
+    {
+      "case_id": "Q010",
+      "provider": "tfidf_cosine",
+      "answer": "deployctl push --region west",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M013"
+      ],
+      "request_id": "reader_tfidf_cosine_Q010"
+    },
+    {
+      "case_id": "Q012",
+      "provider": "tfidf_cosine",
+      "answer": "Use billing-db-dsn, owned by the platform-secrets Terraform module; run the secrets-plan GitHub workflow before merge.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M017",
+        "M040",
+        "M018",
+        "M045",
+        "M019"
+      ],
+      "request_id": "reader_tfidf_cosine_Q012"
+    },
+    {
+      "case_id": "Q013",
+      "provider": "tfidf_cosine",
+      "answer": "The consumer is media-repair; replay with media-repair replay --source deadletter.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M022",
+        "M020"
+      ],
+      "request_id": "reader_tfidf_cosine_Q013"
+    },
+    {
+      "case_id": "Q014",
+      "provider": "tfidf_cosine",
+      "answer": "Edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M023",
+        "M019",
+        "M002",
+        "M024"
+      ],
+      "request_id": "reader_tfidf_cosine_Q014"
+    },
+    {
+      "case_id": "Q015",
+      "provider": "tfidf_cosine",
+      "answer": "Reproduce under -race, add synchronization at the ownership boundary, rerun the focused race test, then rerun the whole package.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M025",
+        "M026",
+        "M006"
+      ],
+      "request_id": "reader_tfidf_cosine_Q015"
+    },
+    {
+      "case_id": "Q016",
+      "provider": "tfidf_cosine",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 0.0,
+      "prohibited_hits": [],
+      "insufficient_ok": false,
+      "pass_answer": false,
+      "retrieved_ids": [
+        "M009",
+        "M028",
+        "M010",
+        "M046",
+        "M044"
+      ],
+      "request_id": "reader_tfidf_cosine_Q016"
+    },
+    {
+      "case_id": "Q019",
+      "provider": "tfidf_cosine",
+      "answer": "Target release/atlas-2.x.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M029",
+        "M030",
+        "M031",
+        "M033",
+        "M006"
+      ],
+      "request_id": "reader_tfidf_cosine_Q019"
+    },
+    {
+      "case_id": "Q022",
+      "provider": "tfidf_cosine",
+      "answer": "Use qa-fixtures-v2 for new QA fixture runs.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M041",
+        "M042",
+        "M043",
+        "M033",
+        "M034"
+      ],
+      "request_id": "reader_tfidf_cosine_Q022"
+    },
+    {
+      "case_id": "Q024",
+      "provider": "tfidf_cosine",
+      "answer": "Put diagnostic logs on stderr; keep them off stdout so stdout remains protocol frames and logs cannot corrupt NDJSON framing.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M010",
+        "M027",
+        "M037",
+        "M028",
+        "M009"
+      ],
+      "request_id": "reader_tfidf_cosine_Q024"
+    },
+    {
+      "case_id": "Q025",
+      "provider": "tfidf_cosine",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M036",
+        "M005",
+        "M004",
+        "M013",
+        "M035"
+      ],
+      "request_id": "reader_tfidf_cosine_Q025"
+    },
+    {
+      "case_id": "Q026",
+      "provider": "tfidf_cosine",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [],
+      "request_id": "reader_tfidf_cosine_Q026"
+    },
+    {
+      "case_id": "Q003",
+      "provider": "dense_lsa",
+      "answer": "Staging uses Redis database number 6.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M036",
+        "M005",
+        "M035",
+        "M017",
+        "M018"
+      ],
+      "request_id": "reader_dense_lsa_Q003"
+    },
+    {
+      "case_id": "Q007",
+      "provider": "dense_lsa",
+      "answer": "The current build coordinator is strix07.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M011",
+        "M012",
+        "M048",
+        "M004",
+        "M006"
+      ],
+      "request_id": "reader_dense_lsa_Q007"
+    },
+    {
+      "case_id": "Q008",
+      "provider": "dense_lsa",
+      "answer": "shipit release --cluster pdx",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M032",
+        "M031",
+        "M013",
+        "M014",
+        "M022"
+      ],
+      "request_id": "reader_dense_lsa_Q008"
+    },
+    {
+      "case_id": "Q010",
+      "provider": "dense_lsa",
+      "answer": "deployctl push --region west",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M013",
+        "M015",
+        "M003",
+        "M019",
+        "M006"
+      ],
+      "request_id": "reader_dense_lsa_Q010"
+    },
+    {
+      "case_id": "Q012",
+      "provider": "dense_lsa",
+      "answer": "Use the billing-db-dsn secret, owned by the platform-secrets Terraform module; run the secrets-plan GitHub workflow before merge.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M017",
+        "M018",
+        "M040",
+        "M045",
+        "M019"
+      ],
+      "request_id": "reader_dense_lsa_Q012"
+    },
+    {
+      "case_id": "Q013",
+      "provider": "dense_lsa",
+      "answer": "The consumer is media-repair; replay with `media-repair replay --source deadletter`.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M022",
+        "M021",
+        "M020",
+        "M003",
+        "M023"
+      ],
+      "request_id": "reader_dense_lsa_Q013"
+    },
+    {
+      "case_id": "Q014",
+      "provider": "dense_lsa",
+      "answer": "Edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M023",
+        "M002",
+        "M019",
+        "M024",
+        "M004"
+      ],
+      "request_id": "reader_dense_lsa_Q014"
+    },
+    {
+      "case_id": "Q015",
+      "provider": "dense_lsa",
+      "answer": "Reproduce under -race, add synchronization at the ownership boundary, rerun the focused race test, then rerun the whole package.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M025",
+        "M026",
+        "M006",
+        "M023",
+        "M019"
+      ],
+      "request_id": "reader_dense_lsa_Q015"
+    },
+    {
+      "case_id": "Q016",
+      "provider": "dense_lsa",
+      "answer": "Capture exact frames, validate one JSON object per line, and keep logs off stdout.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M009",
+        "M027",
+        "M010",
+        "M028",
+        "M044"
+      ],
+      "request_id": "reader_dense_lsa_Q016"
+    },
+    {
+      "case_id": "Q019",
+      "provider": "dense_lsa",
+      "answer": "Target release/atlas-2.x.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M029",
+        "M030",
+        "M014",
+        "M031",
+        "M006"
+      ],
+      "request_id": "reader_dense_lsa_Q019"
+    },
+    {
+      "case_id": "Q022",
+      "provider": "dense_lsa",
+      "answer": "Use qa-fixtures-v2 for new QA fixture runs.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M042",
+        "M041",
+        "M043",
+        "M033",
+        "M034"
+      ],
+      "request_id": "reader_dense_lsa_Q022"
+    },
+    {
+      "case_id": "Q024",
+      "provider": "dense_lsa",
+      "answer": "Put diagnostic logs on stderr; keep them off stdout so stdout remains protocol frames and the logs cannot corrupt NDJSON framing.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M010",
+        "M009",
+        "M027",
+        "M037",
+        "M028"
+      ],
+      "request_id": "reader_dense_lsa_Q024"
+    },
+    {
+      "case_id": "Q025",
+      "provider": "dense_lsa",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M005",
+        "M036",
+        "M035",
+        "M013",
+        "M014"
+      ],
+      "request_id": "reader_dense_lsa_Q025"
+    },
+    {
+      "case_id": "Q026",
+      "provider": "dense_lsa",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [],
+      "request_id": "reader_dense_lsa_Q026"
+    },
+    {
+      "case_id": "Q003",
+      "provider": "hybrid_rrf",
+      "answer": "Staging uses Redis database number 6.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M005",
+        "M036",
+        "M035",
+        "M034",
+        "M033"
+      ],
+      "request_id": "reader_hybrid_rrf_Q003"
+    },
+    {
+      "case_id": "Q007",
+      "provider": "hybrid_rrf",
+      "answer": "The current build coordinator is strix07.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M011",
+        "M012",
+        "M048",
+        "M005",
+        "M018"
+      ],
+      "request_id": "reader_hybrid_rrf_Q007"
+    },
+    {
+      "case_id": "Q008",
+      "provider": "hybrid_rrf",
+      "answer": "shipit release --cluster pdx",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M032",
+        "M031",
+        "M022",
+        "M013",
+        "M014"
+      ],
+      "request_id": "reader_hybrid_rrf_Q008"
+    },
+    {
+      "case_id": "Q010",
+      "provider": "hybrid_rrf",
+      "answer": "deployctl push --region west",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M013",
+        "M015",
+        "M003",
+        "M019",
+        "M006"
+      ],
+      "request_id": "reader_hybrid_rrf_Q010"
+    },
+    {
+      "case_id": "Q012",
+      "provider": "hybrid_rrf",
+      "answer": "Use the billing-db-dsn secret, owned by the platform-secrets Terraform module; run the secrets-plan GitHub workflow before merge.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M017",
+        "M040",
+        "M045",
+        "M019",
+        "M018"
+      ],
+      "request_id": "reader_hybrid_rrf_Q012"
+    },
+    {
+      "case_id": "Q013",
+      "provider": "hybrid_rrf",
+      "answer": "The consumer is media-repair; replay with `media-repair replay --source deadletter`.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M022",
+        "M020",
+        "M046",
+        "M047",
+        "M028"
+      ],
+      "request_id": "reader_hybrid_rrf_Q013"
+    },
+    {
+      "case_id": "Q014",
+      "provider": "hybrid_rrf",
+      "answer": "Edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M023",
+        "M024",
+        "M002",
+        "M019",
+        "M018"
+      ],
+      "request_id": "reader_hybrid_rrf_Q014"
+    },
+    {
+      "case_id": "Q015",
+      "provider": "hybrid_rrf",
+      "answer": "Reproduce under -race, add synchronization at the ownership boundary, rerun the focused race test, then rerun the whole package.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M025",
+        "M026",
+        "M006",
+        "M050",
+        "M046"
+      ],
+      "request_id": "reader_hybrid_rrf_Q015"
+    },
+    {
+      "case_id": "Q016",
+      "provider": "hybrid_rrf",
+      "answer": "Capture exact frames, validate one JSON object per line, and keep logs off stdout.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M009",
+        "M028",
+        "M027",
+        "M044",
+        "M046"
+      ],
+      "request_id": "reader_hybrid_rrf_Q016"
+    },
+    {
+      "case_id": "Q019",
+      "provider": "hybrid_rrf",
+      "answer": "Target release/atlas-2.x.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M029",
+        "M030",
+        "M031",
+        "M014",
+        "M033"
+      ],
+      "request_id": "reader_hybrid_rrf_Q019"
+    },
+    {
+      "case_id": "Q022",
+      "provider": "hybrid_rrf",
+      "answer": "Use qa-fixtures-v2 for new QA fixture runs.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M041",
+        "M042",
+        "M033",
+        "M034",
+        "M014"
+      ],
+      "request_id": "reader_hybrid_rrf_Q022"
+    },
+    {
+      "case_id": "Q024",
+      "provider": "hybrid_rrf",
+      "answer": "Put diagnostic logs on stderr; keep them off stdout so stdout remains protocol frames and the logs cannot corrupt NDJSON framing.",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M010",
+        "M027",
+        "M028",
+        "M037",
+        "M009"
+      ],
+      "request_id": "reader_hybrid_rrf_Q024"
+    },
+    {
+      "case_id": "Q025",
+      "provider": "hybrid_rrf",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M036",
+        "M005",
+        "M004",
+        "M035",
+        "M014"
+      ],
+      "request_id": "reader_hybrid_rrf_Q025"
+    },
+    {
+      "case_id": "Q026",
+      "provider": "hybrid_rrf",
+      "answer": "INSUFFICIENT_MEMORY",
+      "required_fraction": 1.0,
+      "prohibited_hits": [],
+      "insufficient_ok": true,
+      "pass_answer": true,
+      "retrieved_ids": [
+        "M050",
+        "M048",
+        "M016",
+        "M010",
+        "M044"
+      ],
+      "request_id": "reader_hybrid_rrf_Q026"
+    }
+  ]
+}

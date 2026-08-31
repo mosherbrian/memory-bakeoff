@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_hybrid_rrf_Q010",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 31,
+  "created_at": 1788144978.0464184,
+  "fingerprint": "120a2c52a668117233f2783e01bcaecfdf311a7bcc12852390e3648d14800d26",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nAs of March 1, 2026, what production deployment command was in use?\nQuestion as-of timestamp: 2026-03-01T23:59:00+00:00\n\nRETRIEVED MEMORY:\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M015] The API rate limit was 120 requests per minute for service accounts.\n- [M003] The payment proto source is api/payments/v2/payments.proto.\n- [M019] Changes to platform-secrets require running the secrets-plan GitHub workflow before merge.\n- [M006] The cache invalidator must release cacheMu before calling broadcastInvalidation because the callback can synchronously re-enter the cache.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "hybrid_rrf",
+    "case_id": "Q010",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M013",
+      "M015",
+      "M003",
+      "M019",
+      "M006"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_hybrid_rrf_Q010.json conforming to the ChatGPT sidecar protocol."
+}

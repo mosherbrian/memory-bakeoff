@@ -1,0 +1,34 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q007",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 1,
+  "created_at": 1788153801.1816542,
+  "fingerprint": "08d0c873cd6273b8696b1b22ccd93ae915c6f3c6c6995aa9b8d42e7fe5dde9fa",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhat machine is the current build coordinator?\n\nRETRIEVED MEMORY:\n- [M011] The build coordinator is strix03.\n- [M012] The build coordinator moved from strix03 to strix07; strix07 is now authoritative.\n- [M048] The office coffee machine is descaled on the first Monday of each month.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q007",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M011",
+      "M012",
+      "M048"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q007.json conforming to the ChatGPT sidecar protocol."
+}

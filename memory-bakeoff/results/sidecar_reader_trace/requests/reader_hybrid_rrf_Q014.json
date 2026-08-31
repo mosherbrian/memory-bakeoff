@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_hybrid_rrf_Q014",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 34,
+  "created_at": 1788144978.04672,
+  "fingerprint": "eb02a8b62ec4fa2346f3f63874ff1568168b0705cd00484051f20850c581b393",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nGenerated Go output is stale. What workflow previously succeeded?\n\nRETRIEVED MEMORY:\n- [M023] For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.\n- [M024] Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.\n- [M002] The generated API client lives at internal/gen/payments_client.go and must not be edited by hand.\n- [M019] Changes to platform-secrets require running the secrets-plan GitHub workflow before merge.\n- [M018] The billing-db-dsn secret is owned by the platform-secrets Terraform module.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "hybrid_rrf",
+    "case_id": "Q014",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M023",
+      "M024",
+      "M002",
+      "M019",
+      "M018"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_hybrid_rrf_Q014.json conforming to the ChatGPT sidecar protocol."
+}

@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_hybrid_rrf_Q013",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 33,
+  "created_at": 1788144978.0466275,
+  "fingerprint": "7c3a951b255e2a556b14246118b9996ef539540593be4a3fd1c5d0ba05846b55",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nA thumbnail job landed in dead-letter. Which consumer and replay command handle it?\n\nRETRIEVED MEMORY:\n- [M022] The media-repair service's replay command is 'media-repair replay --source deadletter'.\n- [M020] The thumbnail worker publishes failed jobs to the image-deadletter topic.\n- [M046] A successful dependency bump regenerated the lockfile and ran both unit tests and the license-policy check.\n- [M047] Hand-editing the lockfile after a dependency bump produced an inconsistent graph and failed CI.\n- [M028] Pretty-printing outbound JSON across multiple lines made bridge framing failures worse and was reverted.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "hybrid_rrf",
+    "case_id": "Q013",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M022",
+      "M020",
+      "M046",
+      "M047",
+      "M028"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_hybrid_rrf_Q013.json conforming to the ChatGPT sidecar protocol."
+}

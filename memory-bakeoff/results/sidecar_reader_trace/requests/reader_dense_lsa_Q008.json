@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_dense_lsa_Q008",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 16,
+  "created_at": 1788144978.0443115,
+  "fingerprint": "5a215c003a33ec2513e892f719ce2a304d438eab79c38ad950c0e3461a9bb4c5",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhat is the current production deployment command?\n\nRETRIEVED MEMORY:\n- [M032] Bob owns the Beacon deployment pipeline.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M014] After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.\n- [M022] The media-repair service's replay command is 'media-repair replay --source deadletter'.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "dense_lsa",
+    "case_id": "Q008",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M032",
+      "M031",
+      "M013",
+      "M014",
+      "M022"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_dense_lsa_Q008.json conforming to the ChatGPT sidecar protocol."
+}

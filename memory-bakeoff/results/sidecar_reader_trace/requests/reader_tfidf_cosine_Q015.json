@@ -1,0 +1,34 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q015",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 7,
+  "created_at": 1788153801.1831417,
+  "fingerprint": "1e3da11fe09f582590ed0037280a07dca62dd5ef4ac3256c8c94b2d9daf64dd5",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nHow should I attack a flaky cache race based on prior verified outcomes?\n\nRETRIEVED MEMORY:\n- [M025] For flaky cache races: reproduce under -race, add synchronization at the ownership boundary, then rerun the focused race test before the whole package.\n- [M026] Adding sleeps around the cache race reduced failures locally but hidden stress tests still failed; do not use timing sleeps as the fix.\n- [M006] The cache invalidator must release cacheMu before calling broadcastInvalidation because the callback can synchronously re-enter the cache.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q015",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M025",
+      "M026",
+      "M006"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q015.json conforming to the ChatGPT sidecar protocol."
+}

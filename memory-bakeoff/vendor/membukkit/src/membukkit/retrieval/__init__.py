@@ -1,0 +1,1 @@
+"""Vendored MemBukkit retrieval package."""

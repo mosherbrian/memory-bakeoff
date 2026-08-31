@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_bm25_Q019",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 9,
+  "created_at": 1788144978.0435483,
+  "fingerprint": "1861433efb65a385f789498073cf38dbaf66c4f0314a9d04abcd94b0e41b7349",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nFor Atlas, what release branch should I target?\n\nRETRIEVED MEMORY:\n- [M029] In repo atlas, the release branch is release/atlas-2.x.\n- [M030] In repo beacon, the release branch is stable.\n- [M008] A zero-length Matrix event body is valid for redactions; validation should inspect the event type before rejecting an empty body.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M033] In repo atlas, integration tests use PostgreSQL 17.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "bm25",
+    "case_id": "Q019",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M029",
+      "M030",
+      "M008",
+      "M031",
+      "M033"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_bm25_Q019.json conforming to the ChatGPT sidecar protocol."
+}

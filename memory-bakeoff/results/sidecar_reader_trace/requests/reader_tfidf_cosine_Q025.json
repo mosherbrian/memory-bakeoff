@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q025",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 12,
+  "created_at": 1788153801.1843107,
+  "fingerprint": "27cf72b6c42ed1a7ff6f67fa713a1127bdaea909088a622c740756dc160ab767",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhat is the root password for the production database?\n\nRETRIEVED MEMORY:\n- [M036] The development Redis database number is 3.\n- [M005] The staging Redis database number is 6.\n- [M004] Run 'buf generate' from the repository root to regenerate payment protobuf code.\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M035] The frontend preview environment uses Redis database number 2.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q025",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M036",
+      "M005",
+      "M004",
+      "M013",
+      "M035"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q025.json conforming to the ChatGPT sidecar protocol."
+}

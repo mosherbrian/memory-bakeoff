@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_dense_lsa_Q015",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 21,
+  "created_at": 1788144978.0451558,
+  "fingerprint": "1ce8d9977a7eb56b9bc76381d9da3275c1f9b3b003c8c109eaccdea3f415a87f",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nHow should I attack a flaky cache race based on prior verified outcomes?\n\nRETRIEVED MEMORY:\n- [M025] For flaky cache races: reproduce under -race, add synchronization at the ownership boundary, then rerun the focused race test before the whole package.\n- [M026] Adding sleeps around the cache race reduced failures locally but hidden stress tests still failed; do not use timing sleeps as the fix.\n- [M006] The cache invalidator must release cacheMu before calling broadcastInvalidation because the callback can synchronously re-enter the cache.\n- [M023] For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.\n- [M019] Changes to platform-secrets require running the secrets-plan GitHub workflow before merge.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "dense_lsa",
+    "case_id": "Q015",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M025",
+      "M026",
+      "M006",
+      "M023",
+      "M019"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_dense_lsa_Q015.json conforming to the ChatGPT sidecar protocol."
+}

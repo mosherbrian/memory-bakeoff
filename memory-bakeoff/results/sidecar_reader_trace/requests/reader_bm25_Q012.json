@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_bm25_Q012",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 4,
+  "created_at": 1788144978.0430448,
+  "fingerprint": "bd8fd9b4b0101292ba37c9c087180830b300c0b9c5b920f7fc36d24deccf532a",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nIf I need to change the invoice reconciler's DB credentials, which secret/module/workflow chain matters?\n\nRETRIEVED MEMORY:\n- [M017] The invoice reconciler gets its database DSN from the secret named billing-db-dsn.\n- [M040] The billing web UI is deployed independently of the invoice reconciler.\n- [M039] The image service's normal work topic is image-jobs.\n- [M045] Running the backfill directly in production without EXPLAIN caused a lock spike and the change was rolled back.\n- [M050] The team's lunch order cutoff on Fridays is 11:15 AM.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "bm25",
+    "case_id": "Q012",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M017",
+      "M040",
+      "M039",
+      "M045",
+      "M050"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_bm25_Q012.json conforming to the ChatGPT sidecar protocol."
+}

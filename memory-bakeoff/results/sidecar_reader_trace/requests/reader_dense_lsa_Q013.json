@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_dense_lsa_Q013",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 19,
+  "created_at": 1788144978.0448575,
+  "fingerprint": "380b2d6ced243a135b46363db39d434afdb30fd22ece0ffdfc2d0142137821a8",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nA thumbnail job landed in dead-letter. Which consumer and replay command handle it?\n\nRETRIEVED MEMORY:\n- [M022] The media-repair service's replay command is 'media-repair replay --source deadletter'.\n- [M021] The image-deadletter topic is consumed by the media-repair service.\n- [M020] The thumbnail worker publishes failed jobs to the image-deadletter topic.\n- [M003] The payment proto source is api/payments/v2/payments.proto.\n- [M023] For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "dense_lsa",
+    "case_id": "Q013",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M022",
+      "M021",
+      "M020",
+      "M003",
+      "M023"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_dense_lsa_Q013.json conforming to the ChatGPT sidecar protocol."
+}

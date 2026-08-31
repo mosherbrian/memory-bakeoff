@@ -1,0 +1,32 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_tfidf_cosine_Q010",
+  "batch_id": "5427f538b60d4c19b19b57e315ec561b",
+  "batch_index": 3,
+  "created_at": 1788153801.181975,
+  "fingerprint": "425b3437caaf316098022be0db132c5900bab4aec2d0c75aa05d222c9af4f0cd",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nAs of March 1, 2026, what production deployment command was in use?\nQuestion as-of timestamp: 2026-03-01T23:59:00+00:00\n\nRETRIEVED MEMORY:\n- [M013] Production deploys use 'deployctl push --region west'.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "tfidf_cosine",
+    "case_id": "Q010",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M013"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_tfidf_cosine_Q010.json conforming to the ChatGPT sidecar protocol."
+}

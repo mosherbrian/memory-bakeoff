@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_bm25_Q022",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 10,
+  "created_at": 1788144978.0436337,
+  "fingerprint": "dafbf81c93603fe371a1d5b751890eee2dad1d5026789fee3712cbe193b76edf",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhich bucket should new QA fixture runs use now?\n\nRETRIEVED MEMORY:\n- [M041] The test fixture bucket is qa-fixtures-v1.\n- [M042] The test fixture bucket was renamed to qa-fixtures-v2; qa-fixtures-v1 is read-only for legacy runs.\n- [M012] The build coordinator moved from strix03 to strix07; strix07 is now authoritative.\n- [M008] A zero-length Matrix event body is valid for redactions; validation should inspect the event type before rejecting an empty body.\n- [M034] In repo beacon, integration tests use PostgreSQL 16.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "bm25",
+    "case_id": "Q022",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M041",
+      "M042",
+      "M012",
+      "M008",
+      "M034"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_bm25_Q022.json conforming to the ChatGPT sidecar protocol."
+}

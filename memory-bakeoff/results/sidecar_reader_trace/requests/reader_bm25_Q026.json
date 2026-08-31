@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "request_id": "reader_bm25_Q026",
+  "batch_id": "45d559e55ce44faa8039aa780e651da7",
+  "batch_index": 13,
+  "created_at": 1788144978.0439835,
+  "fingerprint": "43596b69b86b9b3cbdda22d1c8ab88734266c25397c7aa4f12a745f1d08403b9",
+  "openai_request": {
+    "model": "chatgpt-sidecar",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess."
+      },
+      {
+        "role": "user",
+        "content": "QUESTION:\nWhich engineer is on call tonight?\n\nRETRIEVED MEMORY:\n- [M050] The team's lunch order cutoff on Fridays is 11:15 AM.\n- [M048] The office coffee machine is descaled on the first Monday of each month.\n- [M016] The service-account API limit increased to 300 requests per minute on 2026-05-01.\n- [M010] Diagnostic logging for the bridge host belongs on stderr so it cannot corrupt NDJSON framing.\n- [M044] A successful schema migration dry-run used a transaction plus EXPLAIN on the backfill query before applying the migration.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise."
+      }
+    ],
+    "temperature": 0.0
+  },
+  "metadata": {
+    "provider": "bm25",
+    "case_id": "Q026",
+    "mode": "raw",
+    "top_k": 5,
+    "retrieved_ids": [
+      "M050",
+      "M048",
+      "M016",
+      "M010",
+      "M044"
+    ]
+  },
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_bm25_Q026.json conforming to the ChatGPT sidecar protocol."
+}
