@@ -1,0 +1,138 @@
+{
+  "mode": "product_diagnostic",
+  "graphiti": {
+    "version": "0.29.3",
+    "commit": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d"
+  },
+  "runtime": {
+    "backend": "FalkorDB Lite 4.18.3",
+    "llm": "qwen3.6-35b-vulkan-nothink",
+    "llm_base_url": "http://strix-halo.local:8080/v1",
+    "embedder": "Ollama nomic-embed-text (768)",
+    "reranker": "OpenAIRerankerClient via qwen3.6-35b-vulkan-nothink",
+    "custom_extraction_instructions": "Extract every explicit fact. For coding memories, create relation edges for every standalone identifier, branch name, path, command, version, and assignment, including short sentences of the form X is Y or X branch is Y. Preserve exact literals. Do not omit a fact because it is brief or lacks prior context."
+  },
+  "written": [
+    {
+      "record_id": "M011",
+      "group_id": "alpha",
+      "episode_uuid": "ef7b3144-9629-4e1d-801d-cdaaea2a8bd4",
+      "native_edge_uuids": []
+    },
+    {
+      "record_id": "M012",
+      "group_id": "alpha",
+      "episode_uuid": "3dfbdb7d-d506-4847-b985-57b1214e674d",
+      "native_edge_uuids": [
+        "02252d9f-eb5b-4a5c-a6ee-7e84b20c0495",
+        "d02990c4-a9f2-4146-ac02-888d1f1ac5ad"
+      ]
+    },
+    {
+      "record_id": "M013",
+      "group_id": "alpha",
+      "episode_uuid": "a15e2a16-1ba4-4e35-ad51-ee1f5643a4bf",
+      "native_edge_uuids": []
+    },
+    {
+      "record_id": "M014",
+      "group_id": "alpha",
+      "episode_uuid": "6d76442d-8c2e-45ae-8fe7-0a56665cc1ae",
+      "native_edge_uuids": [
+        "52045095-7ac1-4ec7-bd4e-3fb3223d04a2",
+        "a9cd2069-d95e-4789-955b-152ead20f853"
+      ]
+    },
+    {
+      "record_id": "M035",
+      "group_id": "alpha",
+      "episode_uuid": "aecdff07-3b2d-47ac-851c-5243bcd7ba4a",
+      "native_edge_uuids": []
+    },
+    {
+      "record_id": "M036",
+      "group_id": "beta",
+      "episode_uuid": "15d73f21-2ec9-405f-ac83-b6161210b80f",
+      "native_edge_uuids": []
+    }
+  ],
+  "queries": {
+    "What machine is the current build coordinator?": [
+      {
+        "edge_uuid": "02252d9f-eb5b-4a5c-a6ee-7e84b20c0495",
+        "fact": "strix03 was replaced by strix07 as the build coordinator",
+        "episode_uuids": [
+          "3dfbdb7d-d506-4847-b985-57b1214e674d"
+        ],
+        "valid_at": null,
+        "invalid_at": "2026-03-15T09:00:00+00:00"
+      },
+      {
+        "edge_uuid": "d02990c4-a9f2-4146-ac02-888d1f1ac5ad",
+        "fact": "strix07 replaced strix03 as the build coordinator",
+        "episode_uuids": [
+          "3dfbdb7d-d506-4847-b985-57b1214e674d"
+        ],
+        "valid_at": "2026-03-15T09:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "a9cd2069-d95e-4789-955b-152ead20f853",
+        "fact": "deployctl is obsolete for production deploys",
+        "episode_uuids": [
+          "6d76442d-8c2e-45ae-8fe7-0a56665cc1ae"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "52045095-7ac1-4ec7-bd4e-3fb3223d04a2",
+        "fact": "production deploys use 'shipit release --cluster pdx'",
+        "episode_uuids": [
+          "6d76442d-8c2e-45ae-8fe7-0a56665cc1ae"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      }
+    ],
+    "What is the alpha release branch?": [
+      {
+        "edge_uuid": "52045095-7ac1-4ec7-bd4e-3fb3223d04a2",
+        "fact": "production deploys use 'shipit release --cluster pdx'",
+        "episode_uuids": [
+          "6d76442d-8c2e-45ae-8fe7-0a56665cc1ae"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "02252d9f-eb5b-4a5c-a6ee-7e84b20c0495",
+        "fact": "strix03 was replaced by strix07 as the build coordinator",
+        "episode_uuids": [
+          "3dfbdb7d-d506-4847-b985-57b1214e674d"
+        ],
+        "valid_at": null,
+        "invalid_at": "2026-03-15T09:00:00+00:00"
+      },
+      {
+        "edge_uuid": "a9cd2069-d95e-4789-955b-152ead20f853",
+        "fact": "deployctl is obsolete for production deploys",
+        "episode_uuids": [
+          "6d76442d-8c2e-45ae-8fe7-0a56665cc1ae"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "d02990c4-a9f2-4146-ac02-888d1f1ac5ad",
+        "fact": "strix07 replaced strix03 as the build coordinator",
+        "episode_uuids": [
+          "3dfbdb7d-d506-4847-b985-57b1214e674d"
+        ],
+        "valid_at": "2026-03-15T09:00:00+00:00",
+        "invalid_at": null
+      }
+    ],
+    "What is the beta release branch?": []
+  }
+}

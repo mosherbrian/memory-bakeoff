@@ -2,6 +2,10 @@
 
 Status: **blocked, no score published** (2026-09-01).
 
+Superseded as the current Generation 18 summary by
+`GRAPHITI_GEN18_LAN_FOLLOWUP.md`: stronger LAN models made native temporal
+edges/provenance work, but exposed a default generic-entity modeling limit.
+
 Graphiti OSS v0.29.3 was verified from `getzep/graphiti` tag commit
 `021d3a57d511f21b10adaf7fa923bd5c1fce5e9d`. The local environment installed
 `graphiti-core[falkordblite]==0.29.3`; its bundled embedded backend is FalkorDB

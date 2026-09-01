@@ -1,0 +1,118 @@
+{
+  "mode": "product_diagnostic",
+  "graphiti": {
+    "version": "0.29.3",
+    "commit": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d"
+  },
+  "runtime": {
+    "backend": "FalkorDB Lite 4.18.3",
+    "llm": "qwen3.8-27b-vulkan",
+    "llm_base_url": "http://strix-halo.local:8080/v1",
+    "embedder": "Ollama nomic-embed-text (768)",
+    "reranker": "OpenAIRerankerClient via qwen3.8-27b-vulkan"
+  },
+  "written": [
+    {
+      "record_id": "M011",
+      "group_id": "alpha",
+      "episode_uuid": "d6d90f1b-5299-49b6-b43f-5c3f93ab21e5",
+      "native_edge_uuids": []
+    },
+    {
+      "record_id": "M012",
+      "group_id": "alpha",
+      "episode_uuid": "ff083992-e5dd-4547-8660-d64f5d2e77b7",
+      "native_edge_uuids": [
+        "77a20f6c-39cc-4008-9fa0-5d312dba8457"
+      ]
+    },
+    {
+      "record_id": "M013",
+      "group_id": "alpha",
+      "episode_uuid": "86c623ea-85de-4b3a-b436-9f8dd2345309",
+      "native_edge_uuids": []
+    },
+    {
+      "record_id": "M014",
+      "group_id": "alpha",
+      "episode_uuid": "5f136288-76ef-497d-9316-17a2113cacaf",
+      "native_edge_uuids": [
+        "eba49266-d69e-48b9-960e-cec941ce133c",
+        "0f95ac34-a3a1-4ba3-817b-ae1ecb245a0e"
+      ]
+    },
+    {
+      "record_id": "M035",
+      "group_id": "alpha",
+      "episode_uuid": "3deeccf5-c956-4eb5-9277-51af22bdfa7a",
+      "native_edge_uuids": []
+    },
+    {
+      "record_id": "M036",
+      "group_id": "beta",
+      "episode_uuid": "0380991f-d57e-4d99-94fa-19355879cd29",
+      "native_edge_uuids": []
+    }
+  ],
+  "queries": {
+    "What machine is the current build coordinator?": [
+      {
+        "edge_uuid": "77a20f6c-39cc-4008-9fa0-5d312dba8457",
+        "fact": "strix07 replaced strix03 as the authoritative build coordinator",
+        "episode_uuids": [
+          "ff083992-e5dd-4547-8660-d64f5d2e77b7"
+        ],
+        "valid_at": "2026-03-15T09:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "eba49266-d69e-48b9-960e-cec941ce133c",
+        "fact": "Production deploys use the command 'shipit release --cluster pdx', meaning shipit is invoked with cluster pdx.",
+        "episode_uuids": [
+          "5f136288-76ef-497d-9316-17a2113cacaf"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "0f95ac34-a3a1-4ba3-817b-ae1ecb245a0e",
+        "fact": "After the deploy service migration, shipit replaced deployctl for production deploys; deployctl is now obsolete.",
+        "episode_uuids": [
+          "5f136288-76ef-497d-9316-17a2113cacaf"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      }
+    ],
+    "What is the alpha release branch?": [
+      {
+        "edge_uuid": "eba49266-d69e-48b9-960e-cec941ce133c",
+        "fact": "Production deploys use the command 'shipit release --cluster pdx', meaning shipit is invoked with cluster pdx.",
+        "episode_uuids": [
+          "5f136288-76ef-497d-9316-17a2113cacaf"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "77a20f6c-39cc-4008-9fa0-5d312dba8457",
+        "fact": "strix07 replaced strix03 as the authoritative build coordinator",
+        "episode_uuids": [
+          "ff083992-e5dd-4547-8660-d64f5d2e77b7"
+        ],
+        "valid_at": "2026-03-15T09:00:00+00:00",
+        "invalid_at": null
+      },
+      {
+        "edge_uuid": "0f95ac34-a3a1-4ba3-817b-ae1ecb245a0e",
+        "fact": "After the deploy service migration, shipit replaced deployctl for production deploys; deployctl is now obsolete.",
+        "episode_uuids": [
+          "5f136288-76ef-497d-9316-17a2113cacaf"
+        ],
+        "valid_at": "2026-04-10T10:00:00+00:00",
+        "invalid_at": null
+      }
+    ],
+    "What is the beta release branch?": []
+  }
+}

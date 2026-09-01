@@ -2,9 +2,11 @@
 """Generation 18 Graphiti OSS provenance/temporal sentinel; not a score run."""
 import asyncio
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+from openai import AsyncOpenAI
 from graphiti_core import Graphiti
 from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
 from graphiti_core.driver.falkordb_driver import FalkorDriver
@@ -16,8 +18,11 @@ from redislite.async_falkordb_client import AsyncFalkorDB
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "results" / "graphiti_gen18_sentinel"
+OUT = ROOT / "results" / os.environ.get("GRAPHITI_SENTINEL_RESULT", "graphiti_gen18_sentinel")
 DB = OUT / "graphiti.falkordb"
+MODEL = os.environ.get("GRAPHITI_MODEL", "qwen2.5:3b")
+BASE_URL = os.environ.get("GRAPHITI_BASE_URL", "http://127.0.0.1:11434/v1")
+EXTRACTION_INSTRUCTIONS = os.environ.get("GRAPHITI_EXTRACTION_INSTRUCTIONS")
 EPISODES = [
     ("M011", "The build coordinator is strix03.", "2026-02-01T09:00:00", "alpha"),
     ("M012", "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.", "2026-03-15T09:00:00", "alpha"),
@@ -32,10 +37,14 @@ async def main() -> None:
     if OUT.exists():
         raise SystemExit(f"refusing to overwrite {OUT}")
     OUT.mkdir(parents=True)
-    llm_config = LLMConfig(api_key="ollama", model="qwen2.5:3b", small_model="qwen2.5:3b", base_url="http://127.0.0.1:11434/v1", temperature=0)
+    llm_config = LLMConfig(api_key="local", model=MODEL, small_model=MODEL, base_url=BASE_URL, temperature=0)
     db = AsyncFalkorDB(dbfilename=str(DB))
     driver = FalkorDriver(falkor_db=db, database="graphiti_gen18")
-    llm = OpenAIGenericClient(config=llm_config, structured_output_mode="json_schema")
+    llm = OpenAIGenericClient(
+        config=llm_config,
+        client=AsyncOpenAI(api_key="local", base_url=BASE_URL, timeout=120),
+        structured_output_mode="json_schema",
+    )
     graphiti = Graphiti(
         graph_driver=driver,
         llm_client=llm,
@@ -45,16 +54,21 @@ async def main() -> None:
     written = []
     try:
         for record_id, text, timestamp, group_id in EPISODES:
-            result = await graphiti.add_episode(name=record_id, episode_body=text, source_description=f"canonical benchmark record {record_id}", reference_time=datetime.fromisoformat(timestamp).replace(tzinfo=timezone.utc), source=EpisodeType.text, group_id=group_id)
+            result = await graphiti.add_episode(name=record_id, episode_body=text, source_description=f"canonical benchmark record {record_id}", reference_time=datetime.fromisoformat(timestamp).replace(tzinfo=timezone.utc), source=EpisodeType.text, group_id=group_id, custom_extraction_instructions=EXTRACTION_INSTRUCTIONS)
             written.append({"record_id": record_id, "group_id": group_id, "episode_uuid": result.episode.uuid, "native_edge_uuids": [edge.uuid for edge in result.edges]})
         queries = {}
         for query, groups in (("What machine is the current build coordinator?", ["alpha"]), ("What is the alpha release branch?", ["alpha"]), ("What is the beta release branch?", ["beta"])):
             edges = await graphiti.search(query, group_ids=groups, num_results=5)
             queries[query] = [{"edge_uuid": edge.uuid, "fact": edge.fact, "episode_uuids": edge.episodes, "valid_at": edge.valid_at.isoformat() if edge.valid_at else None, "invalid_at": edge.invalid_at.isoformat() if edge.invalid_at else None} for edge in edges]
-        (OUT / "evidence.json").write_text(json.dumps({"mode": "product_diagnostic", "graphiti": {"version": "0.29.3", "commit": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d"}, "runtime": {"backend": "FalkorDB Lite 4.18.3", "llm": "Ollama qwen2.5:3b", "embedder": "Ollama nomic-embed-text (768)", "reranker": "OpenAIRerankerClient via qwen2.5:3b"}, "written": written, "queries": queries}, indent=2) + "\n")
+        (OUT / "evidence.json").write_text(json.dumps({"mode": "product_diagnostic", "graphiti": {"version": "0.29.3", "commit": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d"}, "runtime": {"backend": "FalkorDB Lite 4.18.3", "llm": MODEL, "llm_base_url": BASE_URL, "embedder": "Ollama nomic-embed-text (768)", "reranker": f"OpenAIRerankerClient via {MODEL}", "custom_extraction_instructions": EXTRACTION_INSTRUCTIONS}, "written": written, "queries": queries}, indent=2) + "\n")
     finally:
         await graphiti.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as exc:
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "failure.json").write_text(json.dumps({"error_type": type(exc).__name__, "error": str(exc)}, indent=2) + "\n")
+        raise
