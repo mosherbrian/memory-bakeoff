@@ -56,6 +56,10 @@ class MemoryProvider(ABC):
         """
         return None
 
+    def configuration(self) -> dict:
+        """Return non-secret, reproducibility-relevant provider settings."""
+        return {}
+
     def probe(self) -> ProviderProbe:
         return ProviderProbe(self.name, True, "available", self.capabilities)
 

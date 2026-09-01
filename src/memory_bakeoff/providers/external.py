@@ -5,6 +5,7 @@ import os
 import json
 import sys
 from pathlib import Path
+import tempfile
 import time
 import uuid
 from typing import Sequence
@@ -16,26 +17,129 @@ from memory_bakeoff.providers.base import MemoryProvider, ProviderUnavailable
 
 class Mem0Provider(MemoryProvider):
     name="mem0"
-    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,requires_llm_for_product_ingest=True,notes="Raw mode uses add(..., infer=False); Python SDK/vector backend still required.")
-    def __init__(self): super().__init__(); self.mem=None; self.user_id="memory-bakeoff"
+    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,requires_llm_for_product_ingest=True,notes="Raw mode uses upstream add(..., infer=False) with explicit embedded Qdrant + FastEmbed; product mode retains Mem0's LLM extraction/update behavior.")
+    _DEFAULT_EMBEDDER="thenlper/gte-large"
+    _DEFAULT_DIMENSIONS=1024
+
+    def __init__(self):
+        super().__init__()
+        self.mem=None
+        self.user_id="memory-bakeoff"
+        self._qdrant_path=None
+        self._collection_name=None
+
+    @staticmethod
+    def _configured_upstream_path() -> Path | None:
+        raw=os.getenv("MEM0_UPSTREAM_PATH")
+        if not raw:
+            return None
+        root=Path(raw).expanduser().resolve()
+        if str(root) not in sys.path:
+            sys.path.insert(0,str(root))
+        return root
+
+    @staticmethod
+    def _vendored_root() -> Path:
+        return (Path(__file__).resolve().parents[3]/"vendor"/"mem0").resolve()
+
     def probe(self):
-        ok=importlib.util.find_spec("mem0") is not None
-        return ProviderProbe(self.name,ok,"mem0 Python package found" if ok else "mem0 Python package not installed",self.capabilities)
-    def reset(self): self._records.clear(); self.mem=None
+        configured=self._configured_upstream_path()
+        try:
+            spec=importlib.util.find_spec("mem0.memory.main")
+            origin=Path(spec.origin).resolve() if spec and spec.origin else None
+        except (AttributeError, ModuleNotFoundError, TypeError, ValueError):
+            origin=None
+        if origin is None:
+            return ProviderProbe(self.name,False,"upstream mem0ai package not installed; install it or set MEM0_UPSTREAM_PATH",self.capabilities)
+        vendor=self._vendored_root()
+        if origin == vendor or vendor in origin.parents:
+            return ProviderProbe(self.name,False,"mem0 resolves to the vendored controlled-core copy; use an installed upstream package or MEM0_UPSTREAM_PATH",self.capabilities)
+        location=f" at {origin}"
+        if configured:
+            location+=f" (configured by MEM0_UPSTREAM_PATH={configured})"
+        return ProviderProbe(self.name,True,"upstream mem0ai package found"+location,self.capabilities)
+
+    def _config(self):
+        if self._qdrant_path is None or self._collection_name is None:
+            raise ProviderUnavailable("Mem0 storage was not initialized")
+        embedder=os.getenv("MEM0_EMBEDDER",self._DEFAULT_EMBEDDER)
+        dimensions=int(os.getenv("MEM0_EMBEDDER_DIMENSIONS",str(self._DEFAULT_DIMENSIONS)))
+        return {
+            "vector_store":{"provider":"qdrant","config":{
+                "collection_name":self._collection_name,
+                "path":self._qdrant_path,
+                "embedding_model_dims":dimensions,
+                "on_disk":True,
+            }},
+            "embedder":{"provider":"fastembed","config":{"model":embedder,"embedding_dims":dimensions}},
+            # Mem0 constructs an LLM client even in raw mode.  infer=False never
+            # invokes it, and this placeholder is deliberately not a credential.
+            "llm":{"provider":"openai","config":{"api_key":"not-used-in-raw-mode"}},
+            "history_db_path":str(Path(self._qdrant_path)/"history.db"),
+        }
+
+    def configuration(self):
+        config={
+            "upstream_commit":"19cb89aff472325c707f64b2f34ae6afdbf7faf7",
+            "embedding_provider":"fastembed",
+            "embedding_model":os.getenv("MEM0_EMBEDDER",self._DEFAULT_EMBEDDER),
+            "embedding_dimensions":int(os.getenv("MEM0_EMBEDDER_DIMENSIONS",str(self._DEFAULT_DIMENSIONS))),
+            "vector_store":"qdrant embedded/local",
+            "qdrant_on_disk":True,
+            "bm25":"FastEmbed Qdrant/bm25 sparse vector when fastembed loads",
+            "threshold":float(os.getenv("MEM0_THRESHOLD","0.1")),
+            "scope":{"user_id":self.user_id},
+            "raw_ingestion":"Memory.add(..., infer=False)",
+        }
+        if self._collection_name:
+            config["collection_name"]=self._collection_name
+        return config
+
+    def reset(self):
+        self._records.clear()
+        self.close()
+        self.mem=None
+
+    def close(self):
+        vector_store=getattr(getattr(self,"mem",None),"vector_store",None)
+        closer=getattr(getattr(vector_store,"client",None),"close",None)
+        if callable(closer):
+            closer()
+
     def ingest(self,records:Sequence[MemoryRecord],mode="raw"):
-        if not self.probe().available: raise ProviderUnavailable(self.probe().reason)
+        probe=self.probe()
+        if not probe.available: raise ProviderUnavailable(probe.reason)
         from mem0 import Memory
-        self.reset(); self.remember_records(records); self.mem=Memory()
+        self.reset()
+        self.remember_records(records)
+        root=os.getenv("MEM0_QDRANT_PATH")
+        self._qdrant_path=root or tempfile.mkdtemp(prefix="memory-bakeoff-mem0-",dir="/private/tmp")
+        self._collection_name=os.getenv("MEM0_COLLECTION") or f"memory_bakeoff_{uuid.uuid4().hex}"
+        self.mem=Memory.from_config(self._config())
         for r in records:
-            kwargs={"user_id":self.user_id,"metadata":{"record_id":r.id,"scope":r.scope,"timestamp":r.timestamp.isoformat()}}
+            kwargs={"user_id":self.user_id,"metadata":{"record_id":r.id,"source_ref":r.id,"scope":r.scope,"timestamp":r.timestamp.isoformat()}}
             if mode=="raw": kwargs["infer"]=False
             self.mem.add(r.text,**kwargs)
+
     def retrieve(self,case:QueryCase,top_k=5):
-        t=time.perf_counter(); raw=self.mem.search(case.query,user_id=self.user_id,limit=top_k)
-        rows=raw.get("results",raw) if isinstance(raw,dict) else raw; items=[]
+        t=time.perf_counter()
+        raw=self.mem.search(
+            case.query,
+            filters={"user_id":self.user_id},
+            top_k=top_k,
+            threshold=float(os.getenv("MEM0_THRESHOLD","0.1")),
+            explain=True,
+        )
+        rows=raw.get("results",raw) if isinstance(raw,dict) else raw
+        items=[]
         for x in rows[:top_k]:
-            text=x.get("memory") or x.get("text") or str(x); md=x.get("metadata") or {}; rid=self.resolve_record_id(text,md.get("record_id"))
-            items.append(RetrievalItem(rid,text,x.get("score"),md))
+            text=x.get("memory") or x.get("text") or str(x)
+            md=x.get("metadata") or {}
+            rid=md.get("record_id")
+            if rid not in self._records:
+                raise ProviderUnavailable("Mem0 returned a result without native canonical record_id metadata; refusing fuzzy provenance recovery")
+            self._record_provenance("native")
+            items.append(RetrievalItem(rid,text,x.get("score"),{**md,"mem0_memory_id":x.get("id"),"score_details":x.get("score_details")}))
         return RetrievalResult(items,(time.perf_counter()-t)*1000,raw)
 
 

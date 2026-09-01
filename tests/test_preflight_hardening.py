@@ -8,7 +8,7 @@ import pytest
 from memory_bakeoff.models import MemoryRecord, ProviderCapabilities, QueryCase, RetrievalItem, RetrievalResult
 from memory_bakeoff.providers import PROVIDERS
 from memory_bakeoff.providers.base import MemoryProvider
-from memory_bakeoff.providers.external import ClaudeMemProvider, MemBukkitProvider
+from memory_bakeoff.providers.external import ClaudeMemProvider, Mem0Provider, MemBukkitProvider
 from memory_bakeoff.reader_eval import ANSWER_SPECS, prepare_reader_requests, write_reader_results
 from memory_bakeoff.repro import capture_execution_environment
 from memory_bakeoff.runner import run_provider, write_results
@@ -42,6 +42,20 @@ def test_fuzzy_subtext_provenance_is_exploratory_only():
     assert report["methods"] == {"fuzzy_subtext": 1}
     assert report["publishable"] is False
     assert report["status"] == "exploratory_only"
+
+
+def test_mem0_raw_retrieval_fails_closed_without_native_metadata():
+    records, cases = __import__("memory_bakeoff.corpus", fromlist=["build_corpus"]).build_corpus()
+    provider = Mem0Provider()
+    provider.remember_records(records[:1])
+
+    class FakeMemory:
+        def search(self, *_args, **_kwargs):
+            return {"results": [{"id": "foreign", "memory": records[0].text, "metadata": {}}]}
+
+    provider.mem = FakeMemory()
+    with pytest.raises(RuntimeError, match="native canonical record_id"):
+        provider.retrieve(cases[0])
 
 
 def test_run_metadata_and_authoritative_leaderboard_gate(tmp_path: Path):
