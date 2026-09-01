@@ -184,6 +184,15 @@ rejected it before writing any responses.  No reader answers or metrics are
 published; a BOM-free stored JSON bundle or equivalent raw export is required.
 See `research/AGENTMEMORY_READER_GEN16.md`.
 
+Generation 17 resolved the native-Docs BOM transport encoding only, imported
+the unchanged 28 sidecar answers, and graded the frozen Gen13 contexts. Core
+reader success was 12/14 (0.857) and stress 11/14 (0.786); no wrong-scope
+answer was recorded. The sole lexical prohibited-answer count in each arm is
+Q015's explicit rejection of timing sleeps, a documented substring-grader
+false positive rather than semantic failure adoption. Retrieval/lifecycle
+identity remains distinct: 92.9% stress false supersession is not redeemed by
+reader resistance. See `research/AGENTMEMORY_READER_GEN17.md`.
+
 ### Mem0
 
 Pinned scoring policy: `mem0ai/mem0` commit `19cb89aff472325c707f64b2f34ae6afdbf7faf7`.

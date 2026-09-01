@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from memory_bakeoff.sidecar_transport import export_pending_sidecar_requests, import_sidecar_response_bundle
+from memory_bakeoff.sidecar_transport import _read_json, export_pending_sidecar_requests, import_sidecar_response_bundle
 
 
 def _package(root: Path) -> Path:
@@ -59,3 +59,43 @@ def test_transport_rejects_partial_or_fingerprint_mismatched_bundle(tmp_path):
     with pytest.raises(ValueError, match="fingerprint mismatch"):
         import_sidecar_response_bundle(package, path)
     assert not list((package / "core" / "responses").glob("*.json"))
+    missing = {**bad, "responses": [{"request_id": "reader_core_Q007", "fingerprint": "fp-core", "content": "answer", "model": "chatgpt-sidecar", "finish_reason": "stop", "usage": {}, "tool_calls": []}]}
+    path.write_text(json.dumps(missing))
+    with pytest.raises(ValueError, match="must be complete"):
+        import_sidecar_response_bundle(package, path)
+    unexpected = {**missing, "responses": missing["responses"] + [{"request_id": "unknown", "fingerprint": "x", "content": "answer", "model": "chatgpt-sidecar", "finish_reason": "stop", "usage": {}, "tool_calls": []}]}
+    path.write_text(json.dumps(unexpected))
+    with pytest.raises(ValueError, match="unexpected response"):
+        import_sidecar_response_bundle(package, path)
+    duplicate = {**missing, "responses": missing["responses"] + missing["responses"]}
+    path.write_text(json.dumps(duplicate))
+    with pytest.raises(ValueError, match="duplicate"):
+        import_sidecar_response_bundle(package, path)
+
+
+def test_transport_accepts_only_a_leading_utf8_bom_without_changing_bundle_content(tmp_path):
+    payload = {
+        "schema_version": 1,
+        "kind": "memory-bakeoff-sidecar-response-bundle",
+        "request_set_sha256": "set",
+        "responses": [
+            {"request_id": f"r{index}", "fingerprint": f"f{index}", "content": f"exact answer {index}", "model": "chatgpt-sidecar", "finish_reason": "stop", "usage": {}, "tool_calls": []}
+            for index in range(28)
+        ],
+    }
+    plain = tmp_path / "plain.json"
+    bom = tmp_path / "bom.json"
+    raw = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    plain.write_bytes(raw)
+    bom.write_bytes(b"\xef\xbb\xbf" + raw)
+    assert _read_json(plain) == _read_json(bom) == payload
+    assert _read_json(plain)["responses"] == _read_json(bom)["responses"]
+    assert len(_read_json(bom)["responses"]) == 28
+    assert all(set(response) == {"request_id", "fingerprint", "content", "model", "finish_reason", "usage", "tool_calls"} for response in _read_json(bom)["responses"])
+
+
+def test_transport_rejects_malformed_prefix_bytes(tmp_path):
+    malformed = tmp_path / "malformed.json"
+    malformed.write_bytes(b"\xef\xbb\xbe{\"schema_version\": 1}")
+    with pytest.raises(ValueError, match="invalid JSON"):
+        _read_json(malformed)
