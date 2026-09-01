@@ -2,7 +2,7 @@
 
  - generation: 18
  - base_commit: `5fce6b5`
- - result_commit: `a5cfc0e`
+ - result_commit: `a853452`
  - status: blocked_local_llm_extraction
  - objective/summary: Completed the authorized Graphiti OSS source/runtime preflight and first real six-episode temporal/provenance sentinel attempt. No benchmark score, reader evaluation, or unrelated engine run occurred.
  - constraints/results: Exact upstream was Graphiti v0.29.3 / `021d3a57d511f21b10adaf7fa923bd5c1fce5e9d`. `graphiti-core[falkordblite]==0.29.3` installed and its embedded FalkorDB Lite backend (FalkorDB 4.18.3) built native indices successfully on this Mac. The real local composite was Ollama 0.33.2, qwen2.5:3b for `OpenAIGenericClient` and `OpenAIRerankerClient`, and nomic-embed-text (768-D) for `OpenAIEmbedder`; an upstream-client structured JSON probe and native embedding probe passed. The chronological M011/M012/M013/M014/M035/M036 sentinel then failed during upstream graph ingestion with `Target entity not found in nodes for edge relation: IS_BUILD_COORDINATOR_OF`, before evidence export/retrieval. This is a small-local-model extraction/resolution failure, not a harness score. No fake extractor, LSA, hand-authored edges, paid API, or product result was substituted. Full tests: 64 passed, one existing warning. See `research/GRAPHITI_GEN18_PREFLIGHT.md`; the incomplete local backend sidecar is explicitly marked non-result under `results/graphiti_gen18_sentinel/`.
