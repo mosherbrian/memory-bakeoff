@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 17
+ - base_commit: `9ef9d85`
+ - result_commit: `f0e661d`
+ - status: complete
+ - objective/summary: Closed the agentmemory frozen raw-product plus downstream-reader phase. The exact 28 ChatGPT sidecar responses imported after a BOM-only transport fix and were graded once with the unchanged prompt, cases, and deterministic scorer; no agentmemory retrieval/lifecycle action ran.
+ - constraints/results: The narrow `utf-8-sig` input decode accepts one leading UTF-8 BOM from native Google Docs plain-text export and otherwise preserves normal JSON/fail-closed validation. Tests cover BOM/non-BOM equality across 28 response objects and malformed/duplicate/missing/unexpected/fingerprint failure paths; full suite: 64 passed, one existing warning. Import accepted all 28 original IDs/fingerprints and wrote 28 normal responses exactly once. Core reader: 12/14 success (0.857), mean required coverage 0.929, abstention 0.214, lexical prohibited/stale 0.071, wrong-scope 0, lexical harmful conversion 0.071, harmful context successfully ignored 8. Stress: 11/14 (0.786), 0.857, 0.286, 0.071, 0, 0.071, 7. Q010 abstained despite rank-2 historical M013; stress Q012 correctly abstained on missing M018/M019 evidence. Q015 accounts for each lexical prohibited/conversion count even though its answer explicitly rejects timing sleeps; this is a documented substring-grader false positive, not semantic harmful adoption. The reader avoided Q019's wrong-scope Beacon branch. Results: `research/AGENTMEMORY_READER_GEN17.md` and `results/agentmemory_raw_product_gen15_sidecar_transport/reader_results/reader.json`. Lifecycle interpretation remains mandatory: stress Hit@5 1.000/all-relevant 0.958 followed retention of only 82/500 live memories and 418/450 false supersessions (92.9%); reader resilience does not redeem that destructive lifecycle behavior.
+ - questions: No further agentmemory raw-product or frozen-reader action is needed. The next benchmark generation should move to a distinct authorized engine/configuration rather than rerun this completed evidence.
+
+<!-- Historical Gen16 handoff; retained for audit, not current control-plane state.
  - generation: 16
  - base_commit: `fe0357b`
  - result_commit: `c156571`
@@ -7,6 +16,7 @@
  - objective/summary: Retrieved the named complete Gen15 sidecar response bundle from native Google Drive and attempted the unchanged fail-closed importer. No reader answer, request, prompt, fingerprint, retrieval context, or sidecar response layout was changed.
  - constraints/results: The temporary verbatim rclone plain-text export passed semantic preflight: schema 1, `memory-bakeoff-sidecar-response-bundle`, exact request-set hash `9e2dd8955ca9d0eb044f415594b1a9c8e83543de1f58a9955c1c671e2bf6ea5d`, 28 responses; its byte SHA-256 was `34d1b3f1101d8cf5bd84f5239e89e1ab5e563c53d1f26cccf4da219c20cb867b`. Import correctly failed before examining/writing responses because the native Google Docs text export begins `EF BB BF` (UTF-8 BOM), and Python JSON rejects it as `Unexpected UTF-8 BOM`. Both Gen14 response directories remain empty. Gen16 forbade patching validation or locally normalizing the bundle, so this is documented as a transport blocker rather than repaired. Full tests: 62 passed, one existing warning. See `research/AGENTMEMORY_READER_GEN16.md`.
  - questions: Please supply the same complete response bundle as a stored UTF-8 JSON file without BOM (preferred) or via a raw Drive export whose first byte is `{`. Preserve all 28 request IDs, fingerprints, answers, order, and sidecar fields exactly. Codex can then import and grade unchanged.
+-->
 
 <!-- Historical Gen15 handoff; retained for audit, not current control-plane state.
  - generation: 15
