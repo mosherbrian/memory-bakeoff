@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 18
+ - base_commit: `5fce6b5`
+ - result_commit: `a5cfc0e`
+ - status: blocked_local_llm_extraction
+ - objective/summary: Completed the authorized Graphiti OSS source/runtime preflight and first real six-episode temporal/provenance sentinel attempt. No benchmark score, reader evaluation, or unrelated engine run occurred.
+ - constraints/results: Exact upstream was Graphiti v0.29.3 / `021d3a57d511f21b10adaf7fa923bd5c1fce5e9d`. `graphiti-core[falkordblite]==0.29.3` installed and its embedded FalkorDB Lite backend (FalkorDB 4.18.3) built native indices successfully on this Mac. The real local composite was Ollama 0.33.2, qwen2.5:3b for `OpenAIGenericClient` and `OpenAIRerankerClient`, and nomic-embed-text (768-D) for `OpenAIEmbedder`; an upstream-client structured JSON probe and native embedding probe passed. The chronological M011/M012/M013/M014/M035/M036 sentinel then failed during upstream graph ingestion with `Target entity not found in nodes for edge relation: IS_BUILD_COORDINATOR_OF`, before evidence export/retrieval. This is a small-local-model extraction/resolution failure, not a harness score. No fake extractor, LSA, hand-authored edges, paid API, or product result was substituted. Full tests: 64 passed, one existing warning. See `research/GRAPHITI_GEN18_PREFLIGHT.md`; the incomplete local backend sidecar is explicitly marked non-result under `results/graphiti_gen18_sentinel/`.
+ - questions: A faithful continuation needs a larger host / local model that reliably honors Graphiti's extraction schemas, or explicit authorization to try the docs' 7B local example after confirming M1 memory headroom. Do not rerun this attempt as a score.
+
+<!-- Historical Gen17 handoff; retained for audit, not current control-plane state.
  - generation: 17
  - base_commit: `9ef9d85`
  - result_commit: `f0e661d`
@@ -7,6 +16,8 @@
  - objective/summary: Closed the agentmemory frozen raw-product plus downstream-reader phase. The exact 28 ChatGPT sidecar responses imported after a BOM-only transport fix and were graded once with the unchanged prompt, cases, and deterministic scorer; no agentmemory retrieval/lifecycle action ran.
  - constraints/results: The narrow `utf-8-sig` input decode accepts one leading UTF-8 BOM from native Google Docs plain-text export and otherwise preserves normal JSON/fail-closed validation. Tests cover BOM/non-BOM equality across 28 response objects and malformed/duplicate/missing/unexpected/fingerprint failure paths; full suite: 64 passed, one existing warning. Import accepted all 28 original IDs/fingerprints and wrote 28 normal responses exactly once. Core reader: 12/14 success (0.857), mean required coverage 0.929, abstention 0.214, lexical prohibited/stale 0.071, wrong-scope 0, lexical harmful conversion 0.071, harmful context successfully ignored 8. Stress: 11/14 (0.786), 0.857, 0.286, 0.071, 0, 0.071, 7. Q010 abstained despite rank-2 historical M013; stress Q012 correctly abstained on missing M018/M019 evidence. Q015 accounts for each lexical prohibited/conversion count even though its answer explicitly rejects timing sleeps; this is a documented substring-grader false positive, not semantic harmful adoption. The reader avoided Q019's wrong-scope Beacon branch. Results: `research/AGENTMEMORY_READER_GEN17.md` and `results/agentmemory_raw_product_gen15_sidecar_transport/reader_results/reader.json`. Lifecycle interpretation remains mandatory: stress Hit@5 1.000/all-relevant 0.958 followed retention of only 82/500 live memories and 418/450 false supersessions (92.9%); reader resilience does not redeem that destructive lifecycle behavior.
  - questions: No further agentmemory raw-product or frozen-reader action is needed. The next benchmark generation should move to a distinct authorized engine/configuration rather than rerun this completed evidence.
+
+-->
 
 <!-- Historical Gen16 handoff; retained for audit, not current control-plane state.
  - generation: 16
