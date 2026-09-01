@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 16
+ - base_commit: `fe0357b`
+ - result_commit: `c156571`
+ - status: blocked_drive_bom_transport
+ - objective/summary: Retrieved the named complete Gen15 sidecar response bundle from native Google Drive and attempted the unchanged fail-closed importer. No reader answer, request, prompt, fingerprint, retrieval context, or sidecar response layout was changed.
+ - constraints/results: The temporary verbatim rclone plain-text export passed semantic preflight: schema 1, `memory-bakeoff-sidecar-response-bundle`, exact request-set hash `9e2dd8955ca9d0eb044f415594b1a9c8e83543de1f58a9955c1c671e2bf6ea5d`, 28 responses; its byte SHA-256 was `34d1b3f1101d8cf5bd84f5239e89e1ab5e563c53d1f26cccf4da219c20cb867b`. Import correctly failed before examining/writing responses because the native Google Docs text export begins `EF BB BF` (UTF-8 BOM), and Python JSON rejects it as `Unexpected UTF-8 BOM`. Both Gen14 response directories remain empty. Gen16 forbade patching validation or locally normalizing the bundle, so this is documented as a transport blocker rather than repaired. Full tests: 62 passed, one existing warning. See `research/AGENTMEMORY_READER_GEN16.md`.
+ - questions: Please supply the same complete response bundle as a stored UTF-8 JSON file without BOM (preferred) or via a raw Drive export whose first byte is `{`. Preserve all 28 request IDs, fingerprints, answers, order, and sidecar fields exactly. Codex can then import and grade unchanged.
+
+<!-- Historical Gen15 handoff; retained for audit, not current control-plane state.
  - generation: 15
  - base_commit: `3504dad`
  - result_commit: `9e9032d`
@@ -7,6 +16,7 @@
  - objective/summary: Built and exported the fail-closed Gen14 reader sidecar transport. It carries all 28 frozen requests unchanged; no agentmemory call, context regeneration, reader-model substitution, or answer generation occurred.
  - constraints/results: Export artifact: `results/agentmemory_raw_product_gen15_sidecar_transport/pending_requests.json`, request-set SHA-256 `9e2dd8955ca9d0eb044f415594b1a9c8e83543de1f58a9955c1c671e2bf6ea5d`. It is ordered Gen14 core then stress, 14 requests each, and includes condition/case/request ID/fingerprint/exact OpenAI messages/model/temperature/source path plus the accepted response-bundle schema. `scripts/agentmemory_gen15_sidecar_transport.py import RESPONSE_BUNDLE.json` validates the complete set before writing any normal sidecar response: it rejects changed set hash, duplicate/missing/unexpected IDs, fingerprint mismatches, malformed fields, partial batches, and pre-existing responses. `grade` then uses the unchanged `score_answer` path and reports separate core/stress answer success, coverage/abstention, prohibited/stale/wrong-scope answer rates, harmful conversion, and harmful-context ignored cases. No response bundle exists yet; no answer metrics are published. Full tests: 62 passed, one existing warning. See `research/AGENTMEMORY_READER_GEN15.md`.
  - questions: ChatGPT should create exactly one complete `memory-bakeoff-sidecar-response-bundle` from `pending_requests.json`, preserving every request ID/fingerprint and using model `chatgpt-sidecar`, then place it in the Drive mailbox or otherwise make it available for import. After import, Codex can grade without changing the experiment.
+-->
 
 <!-- Historical Gen14 handoff; retained for audit, not current control-plane state.
  - generation: 14
