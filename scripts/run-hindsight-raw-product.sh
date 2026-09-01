@@ -23,13 +23,18 @@ if [[ -e $out ]]; then
   echo "result directory already exists: $out" >&2
   exit 73
 fi
+if lsof -n -iTCP:8891 -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "port 8891 is already occupied; refusing to attach a benchmark run to an existing service" >&2
+  exit 75
+fi
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$repo_root"
 python_bin="$repo_root/.venv/bin/python"
 api_bin="$repo_root/.venv/bin/hindsight-api"
-if [[ ! -x $python_bin || ! -x $api_bin ]]; then
-  echo "expected .venv/bin/python and .venv/bin/hindsight-api" >&2
+pg0_bin="$repo_root/.venv/lib/python3.13/site-packages/pg0/bin/pg0"
+if [[ ! -x $python_bin || ! -x $api_bin || ! -x $pg0_bin ]]; then
+  echo "expected .venv Python, hindsight-api, and bundled pg0 executable" >&2
   exit 69
 fi
 
@@ -43,10 +48,15 @@ fi
 tmp_dir=$(mktemp -d /private/tmp/memory-bakeoff-hindsight.XXXXXX)
 api_log="$tmp_dir/api.log"
 api_pid=''
+pg0_name="memory-bakeoff-gen4-$label"
+pg0_started=0
 cleanup() {
   if [[ -n $api_pid ]]; then
     kill -TERM "$api_pid" 2>/dev/null || true
     wait "$api_pid" 2>/dev/null || true
+  fi
+  if [[ $pg0_started -eq 1 ]]; then
+    "$pg0_bin" stop --name "$pg0_name" >/dev/null 2>&1 || true
   fi
   rm -rf "$tmp_dir"
 }
@@ -55,7 +65,7 @@ trap cleanup EXIT
 export HINDSIGHT_API_LLM_PROVIDER=none
 export HINDSIGHT_API_EMBEDDINGS_PROVIDER=onnx
 export HINDSIGHT_API_EMBEDDINGS_ONNX_MODEL_ID=intfloat/multilingual-e5-small
-export HINDSIGHT_API_EMBEDDINGS_ONNX_MODEL_PATH="$model_dir"
+export HINDSIGHT_API_EMBEDDINGS_ONNX_MODEL_PATH="$model_dir/onnx/model.onnx"
 export HINDSIGHT_API_EMBEDDINGS_ONNX_TOKENIZER_NAME_OR_PATH="$model_dir"
 export HINDSIGHT_API_EMBEDDINGS_ONNX_DIMENSIONS=384
 export HINDSIGHT_API_EMBEDDINGS_ONNX_MAX_TOKENS=512
@@ -64,7 +74,17 @@ export HINDSIGHT_API_EMBEDDINGS_ONNX_NORMALIZE=true
 export HINDSIGHT_API_EMBEDDINGS_ONNX_QUERY_PREFIX='query: '
 export HINDSIGHT_API_EMBEDDINGS_ONNX_PASSAGE_PREFIX='passage: '
 export HINDSIGHT_API_RERANKER_PROVIDER=rrf
-export HINDSIGHT_API_DATABASE_URL="pg0://memory-bakeoff-gen4-$label"
+# Start pg0 explicitly before Hindsight.  Direct pg0 resolution inside the
+# service races its migration connection on this host; the backend remains the
+# same fresh pg0 instance, but the ready PostgreSQL URI avoids that race.
+"$pg0_bin" start --name "$pg0_name" --username hindsight --password hindsight --database hindsight >/dev/null
+pg0_started=1
+pg0_uri=$("$pg0_bin" info --name "$pg0_name" -o json | "$python_bin" -c 'import json, sys; print(json.load(sys.stdin)["uri"])')
+if [[ -z $pg0_uri ]]; then
+  echo "pg0 did not provide a connection URI for $pg0_name" >&2
+  exit 75
+fi
+export HINDSIGHT_API_DATABASE_URL="$pg0_uri"
 export HINDSIGHT_API_HOST=127.0.0.1
 export HINDSIGHT_API_PORT=8891
 export HINDSIGHT_URL=http://127.0.0.1:8891
@@ -72,9 +92,16 @@ export HINDSIGHT_BANK="memory-bakeoff-gen4-$label"
 export HINDSIGHT_RAW_LLM_PROVIDER=none
 export HF_HOME=/private/tmp/hindsight-hf-cache
 
-"$api_bin" --host "$HINDSIGHT_API_HOST" --port "$HINDSIGHT_API_PORT" >"$api_log" 2>&1 &
+# The benchmark shell may run under a transient terminal.  Detach only the
+# service from terminal hangups; cleanup below still owns and terminates it.
+nohup "$api_bin" --host "$HINDSIGHT_API_HOST" --port "$HINDSIGHT_API_PORT" < /dev/null >"$api_log" 2>&1 &
 api_pid=$!
 for _ in $(seq 1 72); do
+  if ! kill -0 "$api_pid" 2>/dev/null; then
+    echo "Hindsight exited before readiness for $label" >&2
+    tail -n 120 "$api_log" >&2
+    exit 75
+  fi
   if curl --fail --silent --show-error "$HINDSIGHT_URL/health/ready" >/dev/null 2>&1; then
     break
   fi
@@ -103,7 +130,11 @@ runtime = {
     "run_label": os.environ["RUN_LABEL"],
     "service": {"package": "hindsight-api-slim", "version": importlib.metadata.version("hindsight-api-slim")},
     "packages": {name: importlib.metadata.version(name) for name in packages},
-    "database": {"backend": "pg0-embedded", "namespace": f"memory-bakeoff-gen4-{os.environ['RUN_LABEL']}"},
+    "database": {
+        "backend": "pg0-embedded",
+        "namespace": f"memory-bakeoff-gen4-{os.environ['RUN_LABEL']}",
+        "startup": "explicit pg0 start before Hindsight; service uses pg0-provided PostgreSQL URI",
+    },
     "raw_ingestion": {"llm_provider": "none"},
     "embeddings": {
         "provider": "onnx",

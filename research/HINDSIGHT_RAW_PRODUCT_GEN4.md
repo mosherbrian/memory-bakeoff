@@ -1,4 +1,13 @@
-# Hindsight raw-product retrieval benchmark (generation 4)
+# Hindsight raw-product retrieval benchmark (generation 4, invalidated)
+
+> **Status: invalidated.** A later service-isolation audit found that all
+> generation-4 repetitions attached to a stale generation-3 process on port
+> 8891. The configured ONNX model path also named a snapshot directory rather
+> than the required `onnx/model.onnx` file, so the intended fresh services would
+> have failed to start. Consequently, none of the scores or aggregates below
+> are publishable product evidence. They are retained only as historical
+> diagnostics; see `research/HINDSIGHT_GEN4_INVALIDATION.md` and the corrected
+> generation-5 result directories.
 
 ## Scope and classification
 
