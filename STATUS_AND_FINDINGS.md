@@ -178,6 +178,12 @@ unchanged deterministic grading path.  No response bundle was available, so
 there is still no answer-propagation result.  See
 `research/AGENTMEMORY_READER_GEN15.md`.
 
+Generation 16 received the complete sidecar bundle but its verbatim native
+Google Docs plain-text export carried a UTF-8 BOM, so the fail-closed importer
+rejected it before writing any responses.  No reader answers or metrics are
+published; a BOM-free stored JSON bundle or equivalent raw export is required.
+See `research/AGENTMEMORY_READER_GEN16.md`.
+
 ### Mem0
 
 Pinned scoring policy: `mem0ai/mem0` commit `19cb89aff472325c707f64b2f34ae6afdbf7faf7`.
