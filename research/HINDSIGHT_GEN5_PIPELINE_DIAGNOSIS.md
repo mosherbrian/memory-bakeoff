@@ -25,22 +25,23 @@ host Python/PostgreSQL-driver failure.
 
 ## Blocker
 
-The primary cause is the per-process descriptor limit, not the macOS TCP PCB
-counter. This host's inherited soft `RLIMIT_NOFILE` was 256 (hard limit
-unlimited): a confirming test failed after 253 listener sockets with
+The inherited soft `RLIMIT_NOFILE=256` is a real configuration defect, not the
+complete pg0 blocker. A confirming test failed after 253 listener sockets with
 `EMFILE`/"Too many open files", while raising that shell's soft limit to 8192
-allowed 2,000 listeners. The wildly fluctuating `net.inet.tcp.pcbcount` cannot
-represent live user sockets—its reported values exceeded `kern.num_files` by
-orders of magnitude—and must not be used as a resource-leak diagnosis.
+allowed 2,000 listeners. However, an immediate pg0 retry in a regular Terminal
+at 8192 still failed while PostgreSQL created its first IPv4/IPv6 listeners
+with `ENOBUFS`/"No buffer space available". The wildly fluctuating
+`net.inet.tcp.pcbcount` cannot represent live user sockets—its reported values
+exceeded `kern.num_files` by orders of magnitude—and must not be used as a
+resource-leak diagnosis. The remaining `ENOBUFS` cause is unresolved.
 
-The launcher now raises its own soft `nofile` limit to 8192 before it starts
-pg0 or Hindsight and records the effective value in `hindsight_runtime.json`.
-The Codex tool-runner still intermittently reports `ENOBUFS` for localhost
-connections even after that raise; this is an execution-environment limitation
-of the tool-runner, distinct from the normal Mac shell reproduction. Complete
-the driver matrix from a regular terminal with `ulimit -n 8192` before treating
-the earlier blank `psycopg2` `OperationalError` as a separate driver defect.
-Starting pg0 inside the restricted sandbox also hangs.
+The launcher raises its own soft `nofile` limit to 8192 before it starts pg0 or
+Hindsight and records the effective value in `hindsight_runtime.json`. This
+prevents the known descriptor ceiling but does not resolve the remaining
+PostgreSQL listener error, which reproduces in a normal Mac shell as well as
+the Codex tool-runner. Diagnose that listener error before treating the earlier
+blank `psycopg2` `OperationalError` as a separate driver defect. Starting pg0
+inside the restricted sandbox also hangs.
 
 The launcher starts the same uniquely named pg0 backend explicitly before
 Hindsight and passes its ready PostgreSQL URI to the service, avoiding the
@@ -55,9 +56,10 @@ candidate-generation or reranking evidence.
 
 ## Next safe action
 
-From a regular terminal, run the disposable driver matrix with `ulimit -n 8192`
-first. If `psycopg2` then connects, run a new fresh RRF stress reference;
-otherwise diagnose the driver separately. Capture native candidate flow from
-that exact bank, followed by native `min_scores` strategy-isolation calls
-(where validated by traces) and the local learned-reranker arm. Do not reuse
-any generation-4 or invalid candidate-flow values.
+First compare a Python listener using PostgreSQL's effective listen backlog
+with the failed pg0 start, then collect a syscall trace of PostgreSQL's failing
+`socket`/`setsockopt`/`bind`/`listen` path. Only after pg0 starts cleanly in a
+regular terminal should the disposable Python driver matrix run. Then run a new
+fresh RRF stress reference, capture native candidate flow from that exact bank,
+and proceed to strategy isolation and the local learned-reranker arm. Do not
+reuse any generation-4 or invalid candidate-flow values.
