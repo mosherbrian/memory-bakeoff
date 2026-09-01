@@ -18,6 +18,9 @@ external/
 .tmp/
 tmp/
 
+# pg0 can leave a local session marker at the process working directory.
+:memory:.ses
+
 # Embedded Postgres runtime/data can be restored on a networked host.
 # Preserve provenance in research/HINDSIGHT_FINDINGS.md, not the ~33MB binary in Git history.
 vendor/pg0-bin/pg0-linux-x86_64-gnu

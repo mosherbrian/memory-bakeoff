@@ -119,6 +119,34 @@ def test_hindsight_retain_uses_datetime_and_recall_results(monkeypatch):
     assert p.provenance_report()["status"] == "verified"
 
 
+def test_hindsight_close_releases_native_client(monkeypatch):
+    closed=[]
+
+    class FakeHindsight:
+        def __init__(self, base_url):
+            self.base_url = base_url
+
+        def retain(self, **kwargs):
+            return None
+
+        def close(self):
+            closed.append(self.base_url)
+
+    module = ModuleType("hindsight_client")
+    module.Hindsight = FakeHindsight
+    monkeypatch.setitem(sys.modules, "hindsight_client", module)
+    real_find_spec = __import__("importlib").util.find_spec
+    monkeypatch.setattr(
+        "memory_bakeoff.providers.external.importlib.util.find_spec",
+        lambda name: object() if name == "hindsight_client" else real_find_spec(name),
+    )
+
+    p = HindsightProvider("http://hindsight")
+    p.ingest([record()], mode="product")
+    p.close()
+    assert closed == ["http://hindsight"]
+
+
 def test_hindsight_raw_mode_requires_explicit_no_llm_declaration(monkeypatch):
     p = HindsightProvider("http://hindsight")
     monkeypatch.delenv("HINDSIGHT_RAW_LLM_PROVIDER", raising=False)

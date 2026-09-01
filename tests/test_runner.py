@@ -13,6 +13,24 @@ def test_hindsight_is_raw_eligible_but_unavailable_without_service():
     assert row["probe"]["capabilities"]["raw_ingest"] is True
 
 
+def test_runner_closes_provider_after_ingest_failure(monkeypatch):
+    from memory_bakeoff.providers.base import ProviderUnavailable
+    from memory_bakeoff.providers.external import HindsightProvider
+    from memory_bakeoff.models import ProviderProbe
+    import memory_bakeoff.runner as runner
+
+    provider = HindsightProvider("http://hindsight")
+    closed=[]
+    monkeypatch.setitem(runner.PROVIDERS, "hindsight", lambda: provider)
+    monkeypatch.setattr(provider, "probe", lambda: ProviderProbe(provider.name, True, "ok", provider.capabilities))
+    monkeypatch.setattr(provider, "ingest", lambda records, mode: (_ for _ in ()).throw(ProviderUnavailable("synthetic failure")))
+    monkeypatch.setattr(provider, "close", lambda: closed.append(True))
+
+    row = run_provider("hindsight", mode="raw", top_k=3)
+    assert row["status"] == "unavailable"
+    assert closed == [True]
+
+
 def test_claude_mem_default_port(monkeypatch):
     from memory_bakeoff.providers.external import _claude_mem_default_url
     monkeypatch.delenv("CLAUDE_MEM_URL", raising=False)

@@ -79,6 +79,8 @@ def run_provider(name: str, mode: str="raw", top_k: int=5, distractors: int=0) -
         return _run_row(provider,name,mode,top_k,distractors,"unavailable",str(e),probe)
     except Exception as e:
         return _run_row(provider,name,mode,top_k,distractors,"error",f"{type(e).__name__}: {e}",probe)
+    finally:
+        provider.close()
 
 
 def run_learning_diagnostic(name: str="toy_adaptive_diagnostic", epochs: int=8, top_k: int=5) -> list[dict]:

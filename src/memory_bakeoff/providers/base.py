@@ -47,6 +47,15 @@ class MemoryProvider(ABC):
     def feedback(self, event: FeedbackEvent) -> None:
         return None
 
+    def close(self) -> None:
+        """Release provider resources after one benchmark run.
+
+        Most in-process providers have nothing to close. Service-backed providers
+        may override this to close client sessions before the harness records its
+        completed result.
+        """
+        return None
+
     def probe(self) -> ProviderProbe:
         return ProviderProbe(self.name, True, "available", self.capabilities)
 

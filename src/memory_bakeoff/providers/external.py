@@ -462,6 +462,10 @@ class HindsightProvider(MemoryProvider):
         except Exception as e: ok=False; reason=f"service unavailable at {self.base}: {type(e).__name__}"
         return ProviderProbe(self.name,ok,reason,self.capabilities)
     def reset(self): self._records.clear()
+    def close(self):
+        client=getattr(self,"client",None)
+        closer=getattr(client,"close",None)
+        if callable(closer): closer()
     def ingest(self,records:Sequence[MemoryRecord],mode="raw"):
         if mode == "raw":
             declared = os.getenv("HINDSIGHT_RAW_LLM_PROVIDER", "").strip().lower()

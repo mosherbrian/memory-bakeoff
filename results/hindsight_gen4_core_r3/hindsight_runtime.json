@@ -1,0 +1,56 @@
+{
+  "experiment_class": "raw_product",
+  "run_label": "core-r3",
+  "service": {
+    "package": "hindsight-api-slim",
+    "version": "0.9.2"
+  },
+  "packages": {
+    "hindsight-api-slim": "0.9.2",
+    "hindsight-client": "0.9.2",
+    "hindsight-embed": "0.9.2",
+    "pg0-embedded": "0.15.1",
+    "asyncpg": "0.31.0",
+    "onnxruntime": "1.29.0",
+    "transformers": "5.15.1",
+    "tokenizers": "0.22.2"
+  },
+  "database": {
+    "backend": "pg0-embedded",
+    "namespace": "memory-bakeoff-gen4-core-r3"
+  },
+  "raw_ingestion": {
+    "llm_provider": "none"
+  },
+  "embeddings": {
+    "provider": "onnx",
+    "model": "intfloat/multilingual-e5-small",
+    "snapshot_revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "dimensions": 384,
+    "pooling": "mean",
+    "normalize": true,
+    "max_tokens": 512,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: "
+  },
+  "reranker": {
+    "provider": "rrf",
+    "learned_reranker_active": false
+  },
+  "retrieval_arms": {
+    "directly_observed": [
+      "semantic",
+      "keyword"
+    ],
+    "configured_but_not_validated_through_extracted_source_facts": [
+      "graph",
+      "temporal"
+    ]
+  },
+  "host": {
+    "system": "Darwin",
+    "release": "25.5.0",
+    "machine": "arm64",
+    "python": "3.13.15"
+  }
+}
