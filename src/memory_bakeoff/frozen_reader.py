@@ -15,7 +15,7 @@ from typing import Any, Sequence
 from memory_bakeoff.corpus import build_corpus
 from memory_bakeoff.llm import LLMMessage, LLMRequest
 from memory_bakeoff.models import RetrievalItem, RetrievalResult
-from memory_bakeoff.reader_eval import ANSWER_SPECS, AnswerSpec, _reader_prompt
+from memory_bakeoff.reader_eval import ANSWER_SPECS, AnswerSpec, _norm, _reader_prompt, score_answer
 
 
 SIDECAR_PROTOCOL_VERSION = 1
@@ -187,3 +187,79 @@ def write_sidecar_request_package(
     )
     _atomic_json(out / "contexts.json", {"cases": list(evidence)})
     _atomic_json(out / "manifest.json", {**manifest, "batch_id": batch_id, "request_ids": request_ids})
+
+
+def grade_frozen_sidecar_responses(package_root: str | Path) -> dict[str, Any]:
+    """Grade complete imported sidecar responses using the existing answer scorer."""
+    root = Path(package_root).resolve()
+    specs = {spec.case_id: spec for spec in ANSWER_SPECS}
+    conditions: dict[str, Any] = {}
+    for condition in ("core", "stress"):
+        base = root / condition
+        manifest = json.loads((base / "manifest.json").read_text())
+        evidence = json.loads((base / "contexts.json").read_text()).get("cases", [])
+        if len(evidence) != manifest.get("case_count"):
+            raise ValueError(f"context/manifest case count mismatch for {condition}")
+        details = []
+        for item in evidence:
+            request_id = item["request_id"]
+            response_path = base / "responses" / f"{request_id}.json"
+            if not response_path.exists():
+                raise ValueError(f"missing sidecar response for {condition}/{request_id}")
+            response = json.loads(response_path.read_text())
+            if response.get("protocol_version") != 1 or response.get("request_id") != request_id:
+                raise ValueError(f"invalid sidecar response for {condition}/{request_id}")
+            spec = specs.get(item["case_id"])
+            if spec is None or not isinstance(response.get("content"), str):
+                raise ValueError(f"invalid frozen answer input for {condition}/{request_id}")
+            score = score_answer(
+                spec,
+                response["content"],
+                provider=manifest["provider_label"],
+                retrieved_ids=item["retrieved_ids"],
+                request_id=request_id,
+            ).to_dict()
+            harmful_answer = bool(score["prohibited_hits"])
+            harmful_context = item["stale_or_prohibited_context_present"]
+            wrong_scope_answer = bool(item["wrong_scope_context_present"] and harmful_answer)
+            abstained = "insufficient_memory" in _norm(response["content"]) or "insufficient memory" in _norm(response["content"])
+            details.append(
+                {
+                    **item,
+                    "answer": response["content"],
+                    "grade": score,
+                    "harmful_answer": harmful_answer,
+                    "stale_answer": harmful_answer,
+                    "wrong_scope_answer": wrong_scope_answer,
+                    "abstained": abstained,
+                    "harmful_context_to_harmful_answer": bool(harmful_context and harmful_answer),
+                    "harmful_context_successfully_ignored": bool(harmful_context and score["pass_answer"] and not harmful_answer),
+                }
+            )
+        count = len(details)
+        conditions[condition] = {
+            "provider_label": manifest["provider_label"],
+            "cases": count,
+            "answer_success_rate": sum(item["grade"]["pass_answer"] for item in details) / count,
+            "mean_required_fraction": sum(item["grade"]["required_fraction"] for item in details) / count,
+            "abstention_rate": sum(item["abstained"] for item in details) / count,
+            "prohibited_answer_rate": sum(item["harmful_answer"] for item in details) / count,
+            "stale_answer_rate": sum(item["stale_answer"] for item in details) / count,
+            "wrong_scope_answer_rate": sum(item["wrong_scope_answer"] for item in details) / count,
+            "harmful_context_to_harmful_answer_rate": sum(item["harmful_context_to_harmful_answer"] for item in details) / count,
+            "harmful_context_cases_successfully_ignored": sum(item["harmful_context_successfully_ignored"] for item in details),
+            "details": details,
+        }
+    return {"schema_version": 1, "reader_identity": "frozen Gen14 ChatGPT sidecar package", "conditions": conditions}
+
+
+def write_frozen_reader_grades(result: dict[str, Any], outdir: str | Path) -> None:
+    out = Path(outdir)
+    if out.exists():
+        raise FileExistsError(f"frozen reader grade result already exists: {out}")
+    out.mkdir(parents=True)
+    _atomic_json(out / "reader.json", result)
+    lines = ["# Frozen reader-impact evaluation", "", "| Condition | Cases | Answer success | Abstention | Prohibited answer | Wrong-scope answer | Harmful conversion | Harmful context ignored |", "|---|---:|---:|---:|---:|---:|---:|---:|"]
+    for condition, metrics in result["conditions"].items():
+        lines.append(f"| {condition} | {metrics['cases']} | {metrics['answer_success_rate']:.3f} | {metrics['abstention_rate']:.3f} | {metrics['prohibited_answer_rate']:.3f} | {metrics['wrong_scope_answer_rate']:.3f} | {metrics['harmful_context_to_harmful_answer_rate']:.3f} | {metrics['harmful_context_cases_successfully_ignored']} |")
+    (out / "reader_summary.md").write_text("\n".join(lines) + "\n")

@@ -172,6 +172,12 @@ request packages, exact contexts, source hashes, and fingerprints are in
 `results/agentmemory_raw_product_gen14_reader_requests/`; see
 `research/AGENTMEMORY_READER_GEN14.md`.
 
+Generation 15 exports those unchanged 28 pending requests as one reviewable
+sidecar transport artifact and adds a fail-closed response importer plus the
+unchanged deterministic grading path.  No response bundle was available, so
+there is still no answer-propagation result.  See
+`research/AGENTMEMORY_READER_GEN15.md`.
+
 ### Mem0
 
 Pinned scoring policy: `mem0ai/mem0` commit `19cb89aff472325c707f64b2f34ae6afdbf7faf7`.
