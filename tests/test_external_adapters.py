@@ -70,6 +70,26 @@ def test_agentmemory_uses_source_observation_ids_for_native_provenance(monkeypat
     assert p.provenance_report()["status"] == "verified"
 
 
+def test_agentmemory_passes_configured_agent_id(monkeypatch):
+    monkeypatch.setenv("AGENTMEMORY_AGENT_ID", "agent-run-1")
+    p = AgentMemoryProvider("http://agentmemory")
+    p.project = "bench-project"
+    monkeypatch.setattr(p, "probe", lambda: ProviderProbe(p.name, True, "ok", p.capabilities))
+    posts = []
+
+    def fake_post(url, json, headers, timeout):
+        posts.append(json)
+        if url.endswith("/remember"):
+            return Resp({"memory": {"id": "mem_native", "sourceObservationIds": ["M001"]}})
+        return Resp({"results": [{"obsId": "mem_native", "score": 0.91}]})
+
+    monkeypatch.setattr("memory_bakeoff.providers.external.requests.post", fake_post)
+    p.ingest([record()])
+    p.retrieve(case(), 5)
+    assert posts[0]["agentId"] == "agent-run-1"
+    assert posts[-1]["agentId"] == "agent-run-1"
+
+
 def test_agentmemory_fails_closed_when_search_returns_a_foreign_native_id(monkeypatch):
     p = AgentMemoryProvider("http://agentmemory")
     p.project = "bench-project"

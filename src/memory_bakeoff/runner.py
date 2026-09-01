@@ -47,6 +47,7 @@ def _run_row(provider, name: str, mode: str, top_k: int, distractors: int, statu
         "provenance": provenance,
         "publishability": _publishability(provenance, status=status),
         "provider_configuration": provider.configuration(),
+        "provider_diagnostics": provider.diagnostics(),
         "execution_environment": capture_execution_environment(),
         "details": details or [],
         "summary": summary or {},

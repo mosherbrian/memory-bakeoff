@@ -60,6 +60,10 @@ class MemoryProvider(ABC):
         """Return non-secret, reproducibility-relevant provider settings."""
         return {}
 
+    def diagnostics(self) -> dict:
+        """Return non-scoring, provider-native diagnostic evidence for this run."""
+        return {}
+
     def probe(self) -> ProviderProbe:
         return ProviderProbe(self.name, True, "available", self.capabilities)
 

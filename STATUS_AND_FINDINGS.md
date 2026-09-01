@@ -152,6 +152,18 @@ This is a lifecycle-safety failure, not a retrieval win. Future leaderboards mus
 
 See `research/AGENTMEMORY_FINDINGS.md`.
 
+Generation 13 additionally completed the first authoritative LLM-free local
+embedding **raw_product** retrieval run under a verified isolated native
+`agentId` deployment (the product's `project` field still does not scope
+search).  Three fresh core runs were identical at Hit@5 1.000 / MRR 0.889 /
+all-relevant@5 1.000 / prohibited@5 0.142; three fresh stress runs were
+identical at 1.000 / 0.847 / 0.958 / 0.133.  Exact native provenance was
+verified for all returned rows.  The lifecycle safety result is unchanged and
+must accompany those scores: each stress run retained only 82/500 live
+memories and falsely superseded 418/450 distinct stress distractors (92.9%),
+with zero legitimate benchmark correction supersessions.  See
+`research/AGENTMEMORY_RAW_PRODUCT_GEN13.md`.
+
 ### Mem0
 
 Pinned scoring policy: `mem0ai/mem0` commit `19cb89aff472325c707f64b2f34ae6afdbf7faf7`.

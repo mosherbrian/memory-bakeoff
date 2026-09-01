@@ -440,7 +440,7 @@ class AgentMemoryProvider(MemoryProvider):
     name="agentmemory"
     capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,service_required=True,notes="Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop.")
     def __init__(self,base_url=None):
-        super().__init__(); self.base=(base_url or os.getenv("AGENTMEMORY_URL","http://127.0.0.1:3111")).rstrip("/"); self.project=os.getenv("AGENTMEMORY_PROJECT") or f"memory-bakeoff-{uuid.uuid4().hex[:8]}"; self._native_record_ids={}
+        super().__init__(); self.base=(base_url or os.getenv("AGENTMEMORY_URL","http://127.0.0.1:3111")).rstrip("/"); self.project=os.getenv("AGENTMEMORY_PROJECT") or f"memory-bakeoff-{uuid.uuid4().hex[:8]}"; self.agent_id=os.getenv("AGENTMEMORY_AGENT_ID"); self._native_record_ids={}; self._ingest_trace=[]
     def _headers(self):
         secret=os.getenv("AGENTMEMORY_SECRET")
         return {"Authorization":f"Bearer {secret}"} if secret else {}
@@ -452,6 +452,17 @@ class AgentMemoryProvider(MemoryProvider):
     def reset(self):
         self._records.clear()
         self._native_record_ids.clear()
+        self._ingest_trace.clear()
+    def configuration(self):
+        return {
+            "api":"/agentmemory/remember + /agentmemory/smart-search",
+            "project":self.project,
+            "agent_id":self.agent_id,
+            "provenance":"sourceObservationIds -> returned mem_* -> smart-search obsId",
+            "retrieval_scope":"native agentId boundary when configured; no harness result filtering",
+        }
+    def diagnostics(self):
+        return {"native_ingest_trace":self._ingest_trace}
     def ingest(self,records:Sequence[MemoryRecord],mode="raw"):
         if not self.probe().available: raise ProviderUnavailable(self.probe().reason)
         self.remember_records(records)
@@ -465,7 +476,11 @@ class AgentMemoryProvider(MemoryProvider):
                 "type":"fact",
                 "sourceObservationIds":[r.id],
             }
-            resp=requests.post(self.base+"/agentmemory/remember",json=payload,headers=self._headers(),timeout=10)
+            if self.agent_id:
+                payload["agentId"]=self.agent_id
+            started=time.perf_counter()
+            resp=requests.post(self.base+"/agentmemory/remember",json=payload,headers=self._headers(),timeout=90)
+            latency_ms=(time.perf_counter()-started)*1000
             if not resp.ok: raise ProviderUnavailable(f"agentmemory remember failed: HTTP {resp.status_code}: {resp.text[:200]}")
             try:
                 memory=resp.json().get("memory",{})
@@ -479,10 +494,17 @@ class AgentMemoryProvider(MemoryProvider):
                     f"sourceObservationIds provenance for {r.id}"
                 )
             self._native_record_ids[native_id]=r.id
+            self._ingest_trace.append({
+                "canonical_record_id":r.id,
+                "native_memory":memory,
+                "latency_ms":latency_ms,
+            })
     def retrieve(self,case:QueryCase,top_k=5):
         t=time.perf_counter()
         payload={"project":self.project,"query":case.query,"limit":top_k,"format":"compact"}
-        r=requests.post(self.base+"/agentmemory/smart-search",json=payload,headers=self._headers(),timeout=10)
+        if self.agent_id:
+            payload["agentId"]=self.agent_id
+        r=requests.post(self.base+"/agentmemory/smart-search",json=payload,headers=self._headers(),timeout=90)
         if not r.ok: raise ProviderUnavailable(f"agentmemory search failed: HTTP {r.status_code}")
         raw=r.json(); rows=raw.get("results",raw if isinstance(raw,list) else []) if isinstance(raw,dict) else raw; items=[]
         for x in rows[:top_k]:
