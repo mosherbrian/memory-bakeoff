@@ -2,7 +2,7 @@
 
 - generation: 5
 - base_commit: `58fd41b28aa2206a62f3339e72ca89c87036a6f3`
-- result_commit: `107bc09`
+- result_commit: `2c7ee7a`
 - status: blocked
 - objective/summary: Generation 4 is invalidated after a service-isolation audit; generation 5 repaired the launcher and began the candidate/final-ranking diagnosis, but no fresh score may be published because Python's PostgreSQL driver cannot connect to a clean pg0 instance.
 - constraints/results: All seven `results/hindsight_gen4_*` directories are preserved but invalidated: they attached to a stale generation-3 service on port 8891 while their intended service had the ONNX snapshot directory instead of `onnx/model.onnx`. The new launcher rejects occupied port 8891, pins the ONNX file, starts a uniquely named pg0 instance explicitly, and records that startup mode. Fresh pg0 starts and bundled `psql` connects, but `psycopg2` under this Python 3.13 environment raises a blank `OperationalError` to the identical URI, causing Hindsight migrations to fail before ingestion. The normal local learned reranker `cross-encoder/ms-marco-MiniLM-L-6-v2` did load and return scores in a sentinel smoke. A stale-server candidate trace capture is also preserved and invalidated. Full suite before the latest launcher-only edits: 55 passed, one existing warning. No reader, LLM ingestion, other engines, or transcript corpus access occurred. Findings: `research/HINDSIGHT_GEN4_INVALIDATION.md` and `research/HINDSIGHT_GEN5_PIPELINE_DIAGNOSIS.md`.
