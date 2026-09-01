@@ -30,6 +30,16 @@ fi
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$repo_root"
+required_nofile=8192
+if ! ulimit -n "$required_nofile"; then
+  echo "cannot raise this benchmark process's nofile limit to $required_nofile" >&2
+  exit 75
+fi
+effective_nofile=$(ulimit -n)
+if [[ $effective_nofile != unlimited && $effective_nofile -lt $required_nofile ]]; then
+  echo "benchmark process nofile limit is too low: $effective_nofile (need $required_nofile)" >&2
+  exit 75
+fi
 python_bin="$repo_root/.venv/bin/python"
 api_bin="$repo_root/.venv/bin/hindsight-api"
 pg0_bin="$repo_root/.venv/lib/python3.13/site-packages/pg0/bin/pg0"
@@ -116,7 +126,7 @@ fi
 PYTHONPATH=src "$python_bin" -m memory_bakeoff.cli run \
   --providers hindsight --mode raw --top-k 5 --distractors "$distractors" --out "$out"
 
-RUN_LABEL="$label" RESULT_DIR="$out" MODEL_REVISION="$model_revision" "$python_bin" - <<'PY'
+RUN_LABEL="$label" RESULT_DIR="$out" MODEL_REVISION="$model_revision" EFFECTIVE_NOFILE="$effective_nofile" "$python_bin" - <<'PY'
 import importlib.metadata
 import json
 import os
@@ -153,6 +163,7 @@ runtime = {
         "configured_but_not_validated_through_extracted_source_facts": ["graph", "temporal"],
     },
     "host": {"system": platform.system(), "release": platform.release(), "machine": platform.machine(), "python": platform.python_version()},
+    "process_limits": {"nofile_soft": os.environ["EFFECTIVE_NOFILE"], "required_by_launcher": 8192},
 }
 (out / "hindsight_runtime.json").write_text(json.dumps(runtime, indent=2) + "\n")
 run = json.loads((out / "run.json").read_text())[0]

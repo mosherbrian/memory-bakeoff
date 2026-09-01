@@ -25,24 +25,27 @@ host Python/PostgreSQL-driver failure.
 
 ## Blocker
 
-In the initial probe, a fresh pg0 PostgreSQL 18.1 instance started normally and
-the bundled `psql` authenticated to its generated `postgresql://hindsight:...`
-URI, while Python 3.13's installed `psycopg2` failed against the same URI with
-an otherwise empty `OperationalError`. That driver conclusion is now
-**provisional**: later disposable pg0 starts failed first with macOS
-`ENOBUFS`/"No buffer space available" while creating their localhost listening
-sockets. At that point no pg0 process remained running, Python itself could
-bind ephemeral IPv4/IPv6 sockets, and the host reported 5,429 TCP control
-blocks. The complete driver matrix cannot run until this intermittent host
-socket-pressure condition is cleared. Hindsight therefore still fails before
-ingestion, but the next diagnosis must separate host socket exhaustion from any
-`psycopg2` incompatibility. Starting pg0 inside the restricted sandbox also
-hangs; outside it, its behavior depends on the host socket state.
+The primary cause is the per-process descriptor limit, not the macOS TCP PCB
+counter. This host's inherited soft `RLIMIT_NOFILE` was 256 (hard limit
+unlimited): a confirming test failed after 253 listener sockets with
+`EMFILE`/"Too many open files", while raising that shell's soft limit to 8192
+allowed 2,000 listeners. The wildly fluctuating `net.inet.tcp.pcbcount` cannot
+represent live user sockets—its reported values exceeded `kern.num_files` by
+orders of magnitude—and must not be used as a resource-leak diagnosis.
 
-The launcher now starts the same uniquely named pg0 backend explicitly before
+The launcher now raises its own soft `nofile` limit to 8192 before it starts
+pg0 or Hindsight and records the effective value in `hindsight_runtime.json`.
+The Codex tool-runner still intermittently reports `ENOBUFS` for localhost
+connections even after that raise; this is an execution-environment limitation
+of the tool-runner, distinct from the normal Mac shell reproduction. Complete
+the driver matrix from a regular terminal with `ulimit -n 8192` before treating
+the earlier blank `psycopg2` `OperationalError` as a separate driver defect.
+Starting pg0 inside the restricted sandbox also hangs.
+
+The launcher starts the same uniquely named pg0 backend explicitly before
 Hindsight and passes its ready PostgreSQL URI to the service, avoiding the
-separate pg0-start race. That does not bypass the `psycopg2` failure, so no
-benchmark has been run on the partially initialized databases.
+separate pg0-start race. No benchmark has been run on the partially initialized
+databases.
 
 ## Preserved invalid artifacts
 
@@ -52,8 +55,9 @@ candidate-generation or reranking evidence.
 
 ## Next safe action
 
-Repair or replace the local Python/PostgreSQL driver stack, then run a new
-fresh RRF stress reference first. Capture native candidate flow from that exact
-bank, followed by native `min_scores` strategy-isolation calls (where validated
-by traces) and the local learned-reranker arm. Do not reuse any generation-4 or
-invalid candidate-flow values.
+From a regular terminal, run the disposable driver matrix with `ulimit -n 8192`
+first. If `psycopg2` then connects, run a new fresh RRF stress reference;
+otherwise diagnose the driver separately. Capture native candidate flow from
+that exact bank, followed by native `min_scores` strategy-isolation calls
+(where validated by traces) and the local learned-reranker arm. Do not reuse
+any generation-4 or invalid candidate-flow values.
