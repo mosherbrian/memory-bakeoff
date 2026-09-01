@@ -25,12 +25,19 @@ host Python/PostgreSQL-driver failure.
 
 ## Blocker
 
-Fresh pg0 PostgreSQL 18.1 instances start normally and the bundled `psql` can
-authenticate to their generated `postgresql://hindsight:...` URIs. In this
-environment, however, Python 3.13's installed `psycopg2` fails to connect to
-the same URI with an otherwise empty `OperationalError`. Hindsight therefore
-fails during migrations before its health endpoint becomes ready. Starting pg0
-inside the restricted sandbox also hangs; outside it, pg0 starts successfully.
+In the initial probe, a fresh pg0 PostgreSQL 18.1 instance started normally and
+the bundled `psql` authenticated to its generated `postgresql://hindsight:...`
+URI, while Python 3.13's installed `psycopg2` failed against the same URI with
+an otherwise empty `OperationalError`. That driver conclusion is now
+**provisional**: later disposable pg0 starts failed first with macOS
+`ENOBUFS`/"No buffer space available" while creating their localhost listening
+sockets. At that point no pg0 process remained running, Python itself could
+bind ephemeral IPv4/IPv6 sockets, and the host reported 5,429 TCP control
+blocks. The complete driver matrix cannot run until this intermittent host
+socket-pressure condition is cleared. Hindsight therefore still fails before
+ingestion, but the next diagnosis must separate host socket exhaustion from any
+`psycopg2` incompatibility. Starting pg0 inside the restricted sandbox also
+hangs; outside it, its behavior depends on the host socket state.
 
 The launcher now starts the same uniquely named pg0 backend explicitly before
 Hindsight and passes its ready PostgreSQL URI to the service, avoiding the
