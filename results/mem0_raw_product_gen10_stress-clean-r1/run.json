@@ -1,0 +1,818 @@
+[
+  {
+    "schema_version": 2,
+    "provider": "mem0",
+    "mode": "raw",
+    "experiment_class": "raw_product",
+    "top_k": 5,
+    "distractors": 450,
+    "status": "ok",
+    "reason": "",
+    "probe": {
+      "name": "mem0",
+      "available": true,
+      "reason": "upstream mem0ai package found at /Users/bmosher/source/repos/memory-bakeoff/external/mem0/mem0/memory/main.py (configured by MEM0_UPSTREAM_PATH=/Users/bmosher/source/repos/memory-bakeoff/external/mem0)",
+      "capabilities": {
+        "raw_ingest": true,
+        "product_ingest": true,
+        "requires_llm_for_product_ingest": true,
+        "supports_as_of": false,
+        "supports_feedback": false,
+        "service_required": false,
+        "notes": "Raw mode uses upstream add(..., infer=False) with explicit embedded Qdrant + FastEmbed; product mode retains Mem0's LLM extraction/update behavior."
+      }
+    },
+    "provenance": {
+      "status": "verified",
+      "publishable": true,
+      "methods": {
+        "native": 130
+      },
+      "reason": "all returned evidence used native IDs or exact canonical markers"
+    },
+    "publishability": {
+      "status": "publishable",
+      "publishable": true,
+      "reasons": []
+    },
+    "provider_configuration": {
+      "upstream_commit": "19cb89aff472325c707f64b2f34ae6afdbf7faf7",
+      "embedding_provider": "fastembed",
+      "embedding_model": "thenlper/gte-large",
+      "embedding_dimensions": 1024,
+      "vector_store": "qdrant embedded/local",
+      "qdrant_on_disk": true,
+      "bm25": "FastEmbed Qdrant/bm25 sparse vector when fastembed loads",
+      "threshold": 0.1,
+      "scope": {
+        "user_id": "memory-bakeoff"
+      },
+      "raw_ingestion": "Memory.add(..., infer=False)",
+      "collection_name": "memory_bakeoff_52b59d8565bc4054849851f4de1ce3bc"
+    },
+    "execution_environment": {
+      "system": "Darwin",
+      "release": "25.5.0",
+      "machine": "arm64",
+      "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+      "python_implementation": "CPython",
+      "python_version": "3.13.15",
+      "fingerprint_sha256": "fd9bab39cd2b40bc17908c4abee5151df4507a8dffd549307274cf9bb23a4279"
+    },
+    "details": [
+      {
+        "query_id": "Q001",
+        "category": "exact",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 653,
+        "returned_words": 94,
+        "latency_ms": 701.416666037403,
+        "retrieved_ids": [
+          "M001",
+          "M492",
+          "M432",
+          "M072",
+          "M312"
+        ],
+        "relevant_ids": [
+          "M001"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q002",
+        "category": "exact",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 502,
+        "returned_words": 74,
+        "latency_ms": 659.1505410615355,
+        "retrieved_ids": [
+          "M002",
+          "M003",
+          "M004",
+          "M259",
+          "M199"
+        ],
+        "relevant_ids": [
+          "M002"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q003",
+        "category": "exact",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 539,
+        "returned_words": 83,
+        "latency_ms": 735.3718749945983,
+        "retrieved_ids": [
+          "M005",
+          "M184",
+          "M412",
+          "M244",
+          "M364"
+        ],
+        "relevant_ids": [
+          "M005"
+        ],
+        "prohibited_ids": [
+          "M035",
+          "M036"
+        ]
+      },
+      {
+        "query_id": "Q004",
+        "category": "semantic",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 677,
+        "returned_words": 106,
+        "latency_ms": 603.0587080167606,
+        "retrieved_ids": [
+          "M006",
+          "M045",
+          "M026",
+          "M025",
+          "M007"
+        ],
+        "relevant_ids": [
+          "M006"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q005",
+        "category": "semantic",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 610,
+        "returned_words": 97,
+        "latency_ms": 570.7124999025837,
+        "retrieved_ids": [
+          "M007",
+          "M045",
+          "M361",
+          "M301",
+          "M121"
+        ],
+        "relevant_ids": [
+          "M007"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q006",
+        "category": "semantic",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 523,
+        "returned_words": 75,
+        "latency_ms": 747.2662921063602,
+        "retrieved_ids": [
+          "M008",
+          "M022",
+          "M021",
+          "M097",
+          "M337"
+        ],
+        "relevant_ids": [
+          "M008"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q007",
+        "category": "temporal_current",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.5,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 0.0,
+        "returned_count": 5,
+        "returned_chars": 403,
+        "returned_words": 56,
+        "latency_ms": 480.2221249556169,
+        "retrieved_ids": [
+          "M011",
+          "M012",
+          "M274",
+          "M454",
+          "M094"
+        ],
+        "relevant_ids": [
+          "M012"
+        ],
+        "prohibited_ids": [
+          "M011"
+        ]
+      },
+      {
+        "query_id": "Q008",
+        "category": "temporal_current",
+        "hit_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "precision_at_k": 0.0,
+        "reciprocal_rank": 0.0,
+        "all_relevant_at_k": 0.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 599,
+        "returned_words": 85,
+        "latency_ms": 508.4407500689849,
+        "retrieved_ids": [
+          "M161",
+          "M401",
+          "M101",
+          "M341",
+          "M221"
+        ],
+        "relevant_ids": [
+          "M014"
+        ],
+        "prohibited_ids": [
+          "M013"
+        ]
+      },
+      {
+        "query_id": "Q009",
+        "category": "temporal_current",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 488,
+        "returned_words": 78,
+        "latency_ms": 536.7682920768857,
+        "retrieved_ids": [
+          "M016",
+          "M015",
+          "M371",
+          "M251",
+          "M311"
+        ],
+        "relevant_ids": [
+          "M016"
+        ],
+        "prohibited_ids": [
+          "M015"
+        ]
+      },
+      {
+        "query_id": "Q010",
+        "category": "temporal_asof",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 529,
+        "returned_words": 73,
+        "latency_ms": 534.8155420506373,
+        "retrieved_ids": [
+          "M013",
+          "M257",
+          "M014",
+          "M137",
+          "M197"
+        ],
+        "relevant_ids": [
+          "M013"
+        ],
+        "prohibited_ids": [
+          "M014"
+        ]
+      },
+      {
+        "query_id": "Q011",
+        "category": "temporal_asof",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 303,
+        "returned_words": 44,
+        "latency_ms": 528.1617500586435,
+        "retrieved_ids": [
+          "M011",
+          "M012",
+          "M005",
+          "M013",
+          "M466"
+        ],
+        "relevant_ids": [
+          "M011"
+        ],
+        "prohibited_ids": [
+          "M012"
+        ]
+      },
+      {
+        "query_id": "Q012",
+        "category": "multihop",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.6,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 462,
+        "returned_words": 62,
+        "latency_ms": 529.003290925175,
+        "retrieved_ids": [
+          "M017",
+          "M019",
+          "M040",
+          "M018",
+          "M489"
+        ],
+        "relevant_ids": [
+          "M017",
+          "M018",
+          "M019"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q013",
+        "category": "multihop",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.6,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 481,
+        "returned_words": 59,
+        "latency_ms": 532.7124170726165,
+        "retrieved_ids": [
+          "M020",
+          "M022",
+          "M021",
+          "M164",
+          "M224"
+        ],
+        "relevant_ids": [
+          "M020",
+          "M021",
+          "M022"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q014",
+        "category": "procedure",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 584,
+        "returned_words": 76,
+        "latency_ms": 545.4181249951944,
+        "retrieved_ids": [
+          "M023",
+          "M024",
+          "M002",
+          "M354",
+          "M114"
+        ],
+        "relevant_ids": [
+          "M023"
+        ],
+        "prohibited_ids": [
+          "M024"
+        ]
+      },
+      {
+        "query_id": "Q015",
+        "category": "procedure",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 662,
+        "returned_words": 99,
+        "latency_ms": 554.8379580723122,
+        "retrieved_ids": [
+          "M025",
+          "M026",
+          "M006",
+          "M181",
+          "M061"
+        ],
+        "relevant_ids": [
+          "M025"
+        ],
+        "prohibited_ids": [
+          "M026"
+        ]
+      },
+      {
+        "query_id": "Q016",
+        "category": "procedure",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 634,
+        "returned_words": 94,
+        "latency_ms": 536.7051250068471,
+        "retrieved_ids": [
+          "M027",
+          "M028",
+          "M009",
+          "M379",
+          "M139"
+        ],
+        "relevant_ids": [
+          "M027"
+        ],
+        "prohibited_ids": [
+          "M028"
+        ]
+      },
+      {
+        "query_id": "Q017",
+        "category": "procedure",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 608,
+        "returned_words": 93,
+        "latency_ms": 531.7192500224337,
+        "retrieved_ids": [
+          "M044",
+          "M045",
+          "M412",
+          "M172",
+          "M052"
+        ],
+        "relevant_ids": [
+          "M044"
+        ],
+        "prohibited_ids": [
+          "M045"
+        ]
+      },
+      {
+        "query_id": "Q018",
+        "category": "procedure",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.5,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 0.0,
+        "returned_count": 5,
+        "returned_chars": 613,
+        "returned_words": 87,
+        "latency_ms": 530.0228330306709,
+        "retrieved_ids": [
+          "M047",
+          "M046",
+          "M408",
+          "M288",
+          "M108"
+        ],
+        "relevant_ids": [
+          "M046"
+        ],
+        "prohibited_ids": [
+          "M047"
+        ]
+      },
+      {
+        "query_id": "Q019",
+        "category": "scope",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 455,
+        "returned_words": 64,
+        "latency_ms": 521.1905830074102,
+        "retrieved_ids": [
+          "M029",
+          "M231",
+          "M051",
+          "M351",
+          "M291"
+        ],
+        "relevant_ids": [
+          "M029"
+        ],
+        "prohibited_ids": [
+          "M030"
+        ]
+      },
+      {
+        "query_id": "Q020",
+        "category": "scope",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 291,
+        "returned_words": 43,
+        "latency_ms": 526.8712500110269,
+        "retrieved_ids": [
+          "M032",
+          "M031",
+          "M030",
+          "M034",
+          "M014"
+        ],
+        "relevant_ids": [
+          "M032"
+        ],
+        "prohibited_ids": [
+          "M031"
+        ]
+      },
+      {
+        "query_id": "Q021",
+        "category": "scope",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 388,
+        "returned_words": 55,
+        "latency_ms": 530.5622080340981,
+        "retrieved_ids": [
+          "M033",
+          "M034",
+          "M166",
+          "M346",
+          "M286"
+        ],
+        "relevant_ids": [
+          "M033"
+        ],
+        "prohibited_ids": [
+          "M034"
+        ]
+      },
+      {
+        "query_id": "Q022",
+        "category": "temporal_current",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.5,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.2,
+        "prohibited_count": 1,
+        "useful_before_harmful": 0.0,
+        "returned_count": 5,
+        "returned_chars": 497,
+        "returned_words": 68,
+        "latency_ms": 538.3982500061393,
+        "retrieved_ids": [
+          "M041",
+          "M042",
+          "M043",
+          "M360",
+          "M420"
+        ],
+        "relevant_ids": [
+          "M042"
+        ],
+        "prohibited_ids": [
+          "M041"
+        ]
+      },
+      {
+        "query_id": "Q023",
+        "category": "conflict",
+        "hit_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 1.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 497,
+        "returned_words": 68,
+        "latency_ms": 521.0075420327485,
+        "retrieved_ids": [
+          "M043",
+          "M042",
+          "M041",
+          "M120",
+          "M300"
+        ],
+        "relevant_ids": [
+          "M043"
+        ],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q024",
+        "category": "protocol",
+        "hit_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 1.0,
+        "all_relevant_at_k": 0.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": 1.0,
+        "returned_count": 5,
+        "returned_chars": 650,
+        "returned_words": 101,
+        "latency_ms": 544.146667001769,
+        "retrieved_ids": [
+          "M010",
+          "M027",
+          "M127",
+          "M427",
+          "M067"
+        ],
+        "relevant_ids": [
+          "M009",
+          "M010"
+        ],
+        "prohibited_ids": [
+          "M037",
+          "M038"
+        ]
+      },
+      {
+        "query_id": "Q025",
+        "category": "negative",
+        "hit_at_k": 0.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.0,
+        "reciprocal_rank": 0.0,
+        "all_relevant_at_k": 0.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 537,
+        "returned_words": 79,
+        "latency_ms": 545.5539589747787,
+        "retrieved_ids": [
+          "M013",
+          "M045",
+          "M413",
+          "M280",
+          "M357"
+        ],
+        "relevant_ids": [],
+        "prohibited_ids": []
+      },
+      {
+        "query_id": "Q026",
+        "category": "negative",
+        "hit_at_k": 0.0,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.0,
+        "reciprocal_rank": 0.0,
+        "all_relevant_at_k": 0.0,
+        "prohibited_at_k": 0.0,
+        "prohibited_count": 0,
+        "useful_before_harmful": null,
+        "returned_count": 5,
+        "returned_chars": 308,
+        "returned_words": 43,
+        "latency_ms": 524.9132909812033,
+        "retrieved_ids": [
+          "M050",
+          "M011",
+          "M032",
+          "M013",
+          "M284"
+        ],
+        "relevant_ids": [],
+        "prohibited_ids": []
+      }
+    ],
+    "summary": {
+      "n_cases": 26.0,
+      "hit@5": 0.9583333333333334,
+      "recall@5": 0.9375,
+      "precision@5": 0.225,
+      "mrr": 0.8958333333333334,
+      "all_relevant@5": 0.9166666666666666,
+      "prohibited@5": 0.1,
+      "harmful_presence_rate": 0.5,
+      "mean_prohibited_count": 0.5,
+      "useful_before_harmful": 0.8,
+      "negative_empty_rate": 0.0,
+      "mean_context_chars": 518.9615384615385,
+      "mean_context_words": 75.23076923076923,
+      "mean_latency_ms": 562.2479919424782
+    }
+  }
+]
