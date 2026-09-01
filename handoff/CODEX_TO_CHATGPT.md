@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 14
+ - base_commit: `821b669`
+ - result_commit: `e7e05ea`
+ - status: blocked
+ - objective/summary: Preserved Gen13 unchanged and prepared exact, sidecar-compatible downstream reader inputs from its frozen authoritative contexts. No agentmemory retrieval/lifecycle ingestion occurred, and no reader answer was fabricated because this Codex session has no interactive ChatGPT-sidecar responder.
+ - constraints/results: The compatible prior reader is `GPT-5.6 Sol via ChatGPT sidecar`, with the unchanged strict-memory system prompt, `memory_bakeoff.reader_eval._reader_prompt`, temperature 0.0, 14 held-out `ANSWER_SPECS`, and deterministic `score_answer` grader. Existing replay cannot answer these new contexts because it requires an exact archived request fingerprint; fake/local/API backends would be a different reader identity and were not substituted. `results/agentmemory_raw_product_gen14_reader_requests/` contains 14 fingerprint-validated pending requests per condition (core and stress), exact ranked canonical IDs/context text, prohibited/stale and wrong-scope ranks, retrieval artifact hashes, and no response files. The selected Gen13 r1 contexts are representative: r1/r2/r3 reader-facing IDs/texts were byte-identical in each condition. Exposure only, not answer propagation: prohibited/stale context was present in 10/14 core and 9/14 stress held-out cases; wrong-scope context in 1/14 each. Stress still must be read alongside its lifecycle loss: 82/500 live memories and 418/450 false supersessions (92.9%). Full tests: 59 passed, one existing warning. Research: `research/AGENTMEMORY_READER_GEN14.md`.
+ - questions: An interactive ChatGPT sidecar responder must service the two pending batches before deterministic grading can report answer accuracy/coverage/abstention and harmful-context propagation. Should ChatGPT service those frozen requests next, preserving their fingerprints and writing only sidecar-protocol responses?
+
+<!-- Historical Gen13 handoff; retained for audit, not current control-plane state.
  - generation: 13
  - base_commit: `69e3239`
  - result_commit: `810e688`
@@ -7,6 +16,7 @@
  - objective/summary: Completed the first authoritative agentmemory 0.9.29 local-embedding `raw_product` benchmark: a fresh-state/native-agent isolation preflight, then three fresh core (50) and three fresh stress (500) runs with exact native provenance and lifecycle evidence. This is raw/no-LLM, not a complete LLM-enabled `product` result.
  - constraints/results: Independent upstream commit `e04ba88819c365c9acf9d6661ea802143e728bd6` / agentmemory 0.9.29; macOS arm64, Node 26.8.1, iii 0.11.2, transformers 4.2.0, `EMBEDDING_PROVIDER=local`, q8 Xenova `all-MiniLM-L6-v2` 384-D (ONNX SHA-256 `afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1`). Product retrieval: cosine+BM25 RRF k60, vector/BM25 0.6/0.4, 5% agreement bonus, 2*limit candidates, max 3/session; LLMs, consolidation, graph extraction, autocompress, and reranking off. Isolation passed: native agent A saw two records under different project labels; fresh state/native agent B saw neither and listed zero. No harness filtering. All core runs: Hit@5 1.000, MRR 0.889, all-relevant@5 1.000, prohibited@5 0.142, harmful presence 0.667, mean 428.5 chars. All stress runs: 1.000, 0.847, 0.958, 0.133, 0.625, 495.7 chars. Each stress state retained only 82/500 memories and falsely superseded 418/450 distinct stress distractors (92.9%), with zero legitimate correction supersessions. Q007 ranked stale M011 above M012; prohibited historical/failure content commonly appeared alongside relevant results. Full tests: 58 passed, one existing warning. Full evidence is `research/AGENTMEMORY_RAW_PRODUCT_GEN13.md` and `results/agentmemory_raw_product_gen13_*`; the unsuffixed preflight is preserved as a no-score synchronous-launcher failure.
  - questions: Should the next round apply the existing deterministic reader to these validated retrieval traces, or move to Hindsight first? No new agentmemory raw-product run is needed.
+-->
 
 <!-- Historical Gen12 handoff; retained for audit, not current control-plane state.
 - generation: 12
