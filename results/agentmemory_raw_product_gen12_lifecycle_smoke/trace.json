@@ -1,0 +1,1970 @@
+{
+  "base_url": "http://127.0.0.1:3311",
+  "config_flags": {
+    "embeddingProvider": "embeddings",
+    "flags": [
+      {
+        "affects": [
+          "Graph",
+          "Dashboard"
+        ],
+        "default": false,
+        "description": "Extracts entities and relations from observations into a knowledge graph.",
+        "docsHref": "https://github.com/rohitg00/agentmemory#knowledge-graph",
+        "enableHow": "Set GRAPH_EXTRACTION_ENABLED=true and provide an LLM key, then restart.",
+        "enabled": false,
+        "key": "GRAPH_EXTRACTION_ENABLED",
+        "label": "Knowledge graph extraction",
+        "needsLlm": true
+      },
+      {
+        "affects": [
+          "Dashboard",
+          "Memories",
+          "Crystals"
+        ],
+        "default": false,
+        "description": "Periodically summarizes sessions into semantic facts + procedures.",
+        "docsHref": "https://github.com/rohitg00/agentmemory#consolidation",
+        "enableHow": "Set CONSOLIDATION_ENABLED=true and provide an LLM key, then restart.",
+        "enabled": false,
+        "key": "CONSOLIDATION_ENABLED",
+        "label": "Memory consolidation",
+        "needsLlm": true
+      },
+      {
+        "affects": [
+          "Memories",
+          "Timeline"
+        ],
+        "default": false,
+        "description": "Every observation is compressed by the LLM for richer summaries (costs tokens). OFF uses zero-LLM synthetic compression.",
+        "docsHref": "https://github.com/rohitg00/agentmemory/issues/138",
+        "enableHow": "Set AGENTMEMORY_AUTO_COMPRESS=true and provide an LLM key.",
+        "enabled": false,
+        "key": "AGENTMEMORY_AUTO_COMPRESS",
+        "label": "LLM-powered observation compression",
+        "needsLlm": true
+      },
+      {
+        "affects": [
+          "Hooks"
+        ],
+        "default": false,
+        "description": "Hooks write recalled context into Claude Code's conversation. OFF captures in the background without injecting.",
+        "docsHref": "https://github.com/rohitg00/agentmemory/issues/143",
+        "enableHow": "Set AGENTMEMORY_INJECT_CONTEXT=true and restart.",
+        "enabled": false,
+        "key": "AGENTMEMORY_INJECT_CONTEXT",
+        "label": "In-conversation context injection",
+        "needsLlm": false
+      }
+    ],
+    "provider": "noop",
+    "version": "0.9.29"
+  },
+  "diagnostic": "agentmemory_raw_product_lifecycle_smoke",
+  "health_before": {
+    "circuitBreaker": {
+      "failures": 0,
+      "lastFailureAt": null,
+      "openedAt": null,
+      "state": "closed"
+    },
+    "functionMetrics": [],
+    "health": {
+      "alerts": [],
+      "connectionState": "connected",
+      "cpu": {
+        "percent": 0.15,
+        "systemMicros": 534581,
+        "userMicros": 1330691
+      },
+      "eventLoopLagMs": 0.04658300001756288,
+      "kvConnectivity": {
+        "latencyMs": 0.7,
+        "status": "ok"
+      },
+      "memory": {
+        "external": 6060114,
+        "heapTotal": 37650432,
+        "heapUsed": 35086808,
+        "rss": 174194688
+      },
+      "notes": [
+        "memory_heap_tight_93%_rss166mb"
+      ],
+      "status": "healthy",
+      "uptimeSeconds": 212.401927,
+      "workers": [
+        {
+          "active_invocations": 1,
+          "connected_at_ms": 1788283890093,
+          "function_count": 272,
+          "functions": [
+            "api::mesh-export",
+            "mem::replay::load",
+            "api::remember",
+            "api::slot-reflect",
+            "api::facet-get",
+            "api::lesson-delete",
+            "mem::routine-create",
+            "mem::checkpoint-expire",
+            "mem::verify",
+            "api::claude-bridge-sync",
+            "mem::flow-compress",
+            "api::config-flags",
+            "mem::get-related",
+            "mem::summarize",
+            "api::mesh-register",
+            "mem::frontier",
+            "api::memory-by-id",
+            "api::facet-untag",
+            "api::migrate",
+            "mem::reflect",
+            "api::routine-run",
+            "mem::observe",
+            "api::session::by-commit",
+            "api::sentinel-list",
+            "api::sketch-promote",
+            "api::snapshots",
+            "api::graph-extract",
+            "api::mesh-sync",
+            "api::claude-bridge-read",
+            "api::snapshot-restore",
+            "mem::forget",
+            "api::liveness",
+            "api::vision-embed",
+            "mem::action-get",
+            "api::audit",
+            "mem::auto-forget",
+            "api::signal-read",
+            "api::routine-status",
+            "api::patterns",
+            "mem::core-remove",
+            "mem::skill-match",
+            "mem::diagnostic::recent-searches-sweep",
+            "api::evict",
+            "mem::consolidate",
+            "mem::graph-reset",
+            "mem::checkpoint-resolve",
+            "event::session::started",
+            "mem::expand-query",
+            "api::semantic-list",
+            "mem::lesson-delete",
+            "api::next",
+            "mem::enrich-window",
+            "api::governance-delete",
+            "mem::replay::import-jsonl",
+            "mem::routine-freeze",
+            "api::action-update",
+            "mem::relate",
+            "api::verify",
+            "mem::graph-stats",
+            "api::search",
+            "mem::sketch-discard",
+            "api::session::end",
+            "mem::lease-acquire",
+            "api::graph-build",
+            "api::viewer",
+            "mem::file-context",
+            "mem::timeline",
+            "api::graph-reset",
+            "api::flow-compress",
+            "api::sketch-gc",
+            "api::action-list",
+            "api::snapshot-create",
+            "api::lesson-save",
+            "event::observation",
+            "api::slot-create",
+            "api::auto-crystallize",
+            "mem::signal-threads",
+            "mcp::prompts::list",
+            "mcp::resources::list",
+            "middleware::api-auth",
+            "mem::sentinel-trigger",
+            "mem::governance-delete",
+            "mem::context",
+            "api::sessions",
+            "mem::sentinel-check",
+            "api::file-context",
+            "api::sentinel-trigger",
+            "mem::diagnose",
+            "mem::temporal-graph-extract",
+            "mem::action-update",
+            "api::team-share",
+            "api::health",
+            "api::session::start",
+            "api::team-profile",
+            "mcp::tools::call",
+            "mem::export",
+            "mem::sketch-gc",
+            "api::evolve",
+            "api::facet-query",
+            "mem::routine-status",
+            "api::sentinel-check",
+            "mem::sketch-create",
+            "mem::skill-extract",
+            "api::lesson-list",
+            "mcp::resources::read",
+            "api::diagnose",
+            "api::reflect",
+            "mem::facet-query",
+            "mem::mesh-sync",
+            "mem::evolve",
+            "mem::signal-send",
+            "mem::detect-worktree",
+            "mem::auto-crystallize",
+            "api::forget",
+            "mem::smart-search",
+            "mem::facet-stats",
+            "api::enrich",
+            "api::facet-tag",
+            "api::cascade-update",
+            "mem::heal",
+            "mem::sketch-promote",
+            "mem::insight-list",
+            "api::graph-snapshot-rebuild",
+            "api::branch-sessions",
+            "mem::core-list",
+            "mem::checkpoint-list",
+            "api::obsidian-export",
+            "mem::checkpoint-create",
+            "api::lease-acquire",
+            "mem::signal-read",
+            "api::insight-list",
+            "api::slot-get",
+            "mem::search",
+            "mem::enrich",
+            "api::sketch-create",
+            "mem::sentinel-create",
+            "api::crystallize",
+            "api::action-get",
+            "api::lease-release",
+            "mem::vision-embed",
+            "mem::routine-run",
+            "mem::routine-list",
+            "api::relations-list",
+            "mem::facet-tag",
+            "api::slot-list",
+            "mem::mesh-receive",
+            "api::observations",
+            "mem::action-create",
+            "mem::evict",
+            "mem::crystal-list",
+            "mem::insight-decay-sweep",
+            "mem::differential-state",
+            "api::diagnostic-followup",
+            "mem::graph::import-graphify",
+            "api::observe",
+            "api::context",
+            "api::replay::import",
+            "mem::profile",
+            "api::replay::sessions",
+            "api::routine-create",
+            "api::lesson-search",
+            "api::team-feed",
+            "api::memories",
+            "mem::compress-file",
+            "api::sketch-add",
+            "mem::generate-rules",
+            "api::action-edge",
+            "api::mesh-receive",
+            "api::lesson-strengthen",
+            "api::graph-import-graphify",
+            "mem::governance-bulk",
+            "api::slot-replace",
+            "api::action-create",
+            "api::checkpoint-resolve",
+            "mem::enrich-session",
+            "api::consolidate-pipeline",
+            "mem::facet-dimensions",
+            "mem::sentinel-cancel",
+            "mem::diagnostic::followup-stats",
+            "api::slot-delete",
+            "api::sketch-discard",
+            "mem::insight-search",
+            "mem::lease-cleanup",
+            "mem::lesson-save",
+            "api::commits",
+            "api::slot-append",
+            "api::replay::load",
+            "api::branch-worktrees",
+            "api::mesh-list",
+            "mem::crystallize",
+            "api::compress-file",
+            "mem::core-add",
+            "api::crystal-list",
+            "mem::sentinel-list",
+            "mem::lesson-strengthen",
+            "api::auto-forget",
+            "mem::branch-sessions",
+            "mem::disk-size-delta",
+            "api::relations",
+            "api::routine-list",
+            "mem::crystal-get",
+            "api::insight-search",
+            "mem::facet-untag",
+            "mem::compress",
+            "mem::privacy",
+            "api::summarize",
+            "mem::sketch-add",
+            "event::session::ended",
+            "mem::import",
+            "mem::temporal-query",
+            "mem::list-worktrees",
+            "mem::action-edge-create",
+            "mem::graph-query",
+            "mem::graph-snapshot-rebuild",
+            "mem::image-quota-cleanup",
+            "mem::lesson-recall",
+            "api::graph-stats",
+            "api::facet-stats",
+            "mem::auto-page",
+            "event::session::observation-count-changed",
+            "mem::sketch-list",
+            "mem::retention-evict",
+            "mem::audit-query",
+            "mem::sentinel-expire",
+            "api::timeline",
+            "api::graph-query",
+            "mem::graph-extract",
+            "api::export",
+            "api::procedural-list",
+            "mem::cascade-update",
+            "mcp::prompts::get",
+            "api::smart-search",
+            "mem::action-list",
+            "api::heal",
+            "mem::retention-score",
+            "mem::vision-search",
+            "api::profile",
+            "api::vision-search",
+            "mem::lease-release",
+            "mem::next",
+            "mem::obsidian-export",
+            "mem::consolidate-pipeline",
+            "mem::patterns",
+            "mem::remember",
+            "mem::lease-renew",
+            "mem::lesson-decay-sweep",
+            "api::session::commit",
+            "api::generate-rules",
+            "api::governance-bulk",
+            "api::signal-send",
+            "api::sentinel-create",
+            "api::sentinel-cancel",
+            "api::lease-renew",
+            "mem::replay::sessions",
+            "api::frontier",
+            "api::sketch-list",
+            "event::session::stopped",
+            "api::checkpoint-create",
+            "mcp::tools::list",
+            "mem::mesh-list",
+            "mem::mesh-register",
+            "api::import",
+            "mem::facet-get",
+            "api::checkpoint-list",
+            "api::branch-detect",
+            "mem::lesson-list",
+            "api::consolidate",
+            "mem::working-context",
+            "mem::migrate",
+            "mem::signal-cleanup",
+            "mem::mesh-remove",
+            "mem::skill-list"
+          ],
+          "id": "d06cf0a0-160a-4451-bec8-0b7bdd9c91ce",
+          "ip_address": "127.0.0.1",
+          "latest_metrics": {
+            "cpu_percent": 0.15251296533947367,
+            "cpu_system_micros": 534429,
+            "cpu_user_micros": 1329628,
+            "event_loop_lag_ms": 20.942707745632426,
+            "memory_external": 6056078,
+            "memory_heap_total": 37650432,
+            "memory_heap_used": 34966200,
+            "memory_rss": 174161920,
+            "runtime": "node",
+            "timestamp_ms": 1788284100081,
+            "uptime_seconds": 209
+          },
+          "name": "agentmemory",
+          "os": "darwin 25.5.0 (arm64)",
+          "pid": 32034,
+          "runtime": "node",
+          "status": "connected",
+          "version": "0.11.2"
+        }
+      ]
+    },
+    "service": "agentmemory",
+    "status": "healthy",
+    "streamsPort": 3312,
+    "version": "0.9.29",
+    "viewerPort": 3313,
+    "viewerSkipped": false
+  },
+  "operations": [
+    {
+      "canonical_record_id": "M011",
+      "label": "old_build_coordinator",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 2
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The build coordinator is strix03.",
+          "createdAt": "2026-09-01T17:35:01.526Z",
+          "files": [],
+          "id": "mem_mtiy6jrq_5696a7841281",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.526Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M011"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The build coordinator is strix03.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.526Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The build coordinator is strix03.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M011"
+        ],
+        "type": "fact"
+      },
+      "sequence": 1
+    },
+    {
+      "canonical_record_id": "M012",
+      "label": "explicit_correction",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 3
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+          "createdAt": "2026-09-01T17:35:01.535Z",
+          "files": [],
+          "id": "mem_mtiy6jrz_f41adc0b3cd9",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.535Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M012"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.535Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M012"
+        ],
+        "type": "fact"
+      },
+      "sequence": 2
+    },
+    {
+      "canonical_record_id": "M012",
+      "label": "exact_duplicate",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.547Z",
+            "files": [],
+            "id": "mem_mtiy6jsb_80222d29c61a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.547Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy6jrz_f41adc0b3cd9"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.547Z",
+            "version": 2
+          }
+        ],
+        "offset": 0,
+        "total": 4
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+          "createdAt": "2026-09-01T17:35:01.547Z",
+          "files": [],
+          "id": "mem_mtiy6jsb_80222d29c61a",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.547Z",
+            "channel": "agent"
+          },
+          "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M012"
+          ],
+          "strength": 7,
+          "supersedes": [
+            "mem_mtiy6jrz_f41adc0b3cd9"
+          ],
+          "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.547Z",
+          "version": 2
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M012"
+        ],
+        "type": "fact"
+      },
+      "sequence": 3
+    },
+    {
+      "canonical_record_id": "M012",
+      "label": "paraphrase_of_correction",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.547Z",
+            "files": [],
+            "id": "mem_mtiy6jsb_80222d29c61a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.547Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy6jrz_f41adc0b3cd9"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.547Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:35:01.557Z",
+            "files": [],
+            "id": "mem_mtiy6jsl_3003a3cbb54f",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.557Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.557Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 5
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+          "createdAt": "2026-09-01T17:35:01.557Z",
+          "files": [],
+          "id": "mem_mtiy6jsl_3003a3cbb54f",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.557Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M012"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.557Z",
+          "version": 1
+        },
+        "similarTo": {
+          "id": "mem_mtiy6jrq_5696a7841281",
+          "similarity": 0.57,
+          "title": "The build coordinator is strix03."
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M012"
+        ],
+        "type": "fact"
+      },
+      "sequence": 4
+    },
+    {
+      "canonical_record_id": "M035",
+      "label": "near_neighbor_preview_redis",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.547Z",
+            "files": [],
+            "id": "mem_mtiy6jsb_80222d29c61a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.547Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy6jrz_f41adc0b3cd9"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.547Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:35:01.557Z",
+            "files": [],
+            "id": "mem_mtiy6jsl_3003a3cbb54f",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.557Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.557Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:35:01.566Z",
+            "files": [],
+            "id": "mem_mtiy6jsu_051795dc8bbb",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.566Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.566Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 6
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The frontend preview environment uses Redis database number 2.",
+          "createdAt": "2026-09-01T17:35:01.566Z",
+          "files": [],
+          "id": "mem_mtiy6jsu_051795dc8bbb",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.566Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M035"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The frontend preview environment uses Redis database number 2.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.566Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The frontend preview environment uses Redis database number 2.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M035"
+        ],
+        "type": "fact"
+      },
+      "sequence": 5
+    },
+    {
+      "canonical_record_id": "M036",
+      "label": "near_neighbor_development_redis",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.547Z",
+            "files": [],
+            "id": "mem_mtiy6jsb_80222d29c61a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.547Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy6jrz_f41adc0b3cd9"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.547Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:35:01.557Z",
+            "files": [],
+            "id": "mem_mtiy6jsl_3003a3cbb54f",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.557Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.557Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:35:01.566Z",
+            "files": [],
+            "id": "mem_mtiy6jsu_051795dc8bbb",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.566Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.566Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The development Redis database number is 3.",
+            "createdAt": "2026-09-01T17:35:01.572Z",
+            "files": [],
+            "id": "mem_mtiy6jt1_d8e97835f306",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.572Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M036"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The development Redis database number is 3.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.572Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 7
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The development Redis database number is 3.",
+          "createdAt": "2026-09-01T17:35:01.572Z",
+          "files": [],
+          "id": "mem_mtiy6jt1_d8e97835f306",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.572Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M036"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The development Redis database number is 3.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.572Z",
+          "version": 1
+        },
+        "similarTo": {
+          "id": "mem_mtiy6jsu_051795dc8bbb",
+          "similarity": 0.44,
+          "title": "The frontend preview environment uses Redis database number 2."
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The development Redis database number is 3.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M036"
+        ],
+        "type": "fact"
+      },
+      "sequence": 6
+    },
+    {
+      "canonical_record_id": "M024",
+      "label": "failed_generated_code_procedure",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.547Z",
+            "files": [],
+            "id": "mem_mtiy6jsb_80222d29c61a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.547Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy6jrz_f41adc0b3cd9"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.547Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:35:01.557Z",
+            "files": [],
+            "id": "mem_mtiy6jsl_3003a3cbb54f",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.557Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.557Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:35:01.566Z",
+            "files": [],
+            "id": "mem_mtiy6jsu_051795dc8bbb",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.566Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.566Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The development Redis database number is 3.",
+            "createdAt": "2026-09-01T17:35:01.572Z",
+            "files": [],
+            "id": "mem_mtiy6jt1_d8e97835f306",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.572Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M036"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The development Redis database number is 3.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.572Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+            "createdAt": "2026-09-01T17:35:01.579Z",
+            "files": [],
+            "id": "mem_mtiy6jt8_f52fe886ff7b",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.579Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M024"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.579Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 8
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+          "createdAt": "2026-09-01T17:35:01.579Z",
+          "files": [],
+          "id": "mem_mtiy6jt8_f52fe886ff7b",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.579Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M024"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.579Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M024"
+        ],
+        "type": "fact"
+      },
+      "sequence": 7
+    },
+    {
+      "canonical_record_id": "M023",
+      "label": "successful_generated_code_procedure",
+      "live_snapshot": {
+        "limit": null,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The auth gateway uses token rotation every 15 minutes.",
+            "createdAt": "2026-09-01T17:32:17.866Z",
+            "files": [],
+            "id": "mem_mtiy31hm_d58542cba79a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:32:17.866Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M001"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The auth gateway uses token rotation every 15 minutes.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:32:17.866Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:35:01.526Z",
+            "files": [],
+            "id": "mem_mtiy6jrq_5696a7841281",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.526Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.526Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.535Z",
+            "files": [],
+            "id": "mem_mtiy6jrz_f41adc0b3cd9",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.535Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.535Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:35:01.547Z",
+            "files": [],
+            "id": "mem_mtiy6jsb_80222d29c61a",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.547Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy6jrz_f41adc0b3cd9",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy6jrz_f41adc0b3cd9"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.547Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:35:01.557Z",
+            "files": [],
+            "id": "mem_mtiy6jsl_3003a3cbb54f",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.557Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.557Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:35:01.566Z",
+            "files": [],
+            "id": "mem_mtiy6jsu_051795dc8bbb",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.566Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.566Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The development Redis database number is 3.",
+            "createdAt": "2026-09-01T17:35:01.572Z",
+            "files": [],
+            "id": "mem_mtiy6jt1_d8e97835f306",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.572Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M036"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The development Redis database number is 3.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.572Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+            "createdAt": "2026-09-01T17:35:01.579Z",
+            "files": [],
+            "id": "mem_mtiy6jt8_f52fe886ff7b",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.579Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M024"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.579Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+            "createdAt": "2026-09-01T17:35:01.588Z",
+            "files": [],
+            "id": "mem_mtiy6jth_c652ae75e5ab",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:35:01.588Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M023"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:35:01.588Z",
+            "version": 1
+          }
+        ],
+        "offset": 0,
+        "total": 9
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+          "createdAt": "2026-09-01T17:35:01.588Z",
+          "files": [],
+          "id": "mem_mtiy6jth_c652ae75e5ab",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:35:01.588Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M023"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:35:01.588Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M023"
+        ],
+        "type": "fact"
+      },
+      "sequence": 8
+    }
+  ],
+  "project": "memory-bakeoff-gen12-lifecycle",
+  "scored": false,
+  "searches": [
+    {
+      "native_response": {
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtiy6jrq_5696a7841281",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.526Z",
+            "title": "The build coordinator is strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jsb_80222d29c61a",
+            "score": 1.026505376344086,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.547Z",
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jsl_3003a3cbb54f",
+            "score": 1.0232258064516129,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.557Z",
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jt1_d8e97835f306",
+            "score": 1.00078125,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.572Z",
+            "title": "The development Redis database number is 3.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jth_c652ae75e5ab",
+            "score": 0.9764265734265736,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.588Z",
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "decision"
+          }
+        ]
+      },
+      "query": "What is the current build coordinator?"
+    },
+    {
+      "native_response": {
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtiy6jsu_051795dc8bbb",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.566Z",
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jt1_d8e97835f306",
+            "score": 1.0330645161290322,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.572Z",
+            "title": "The development Redis database number is 3.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jrq_5696a7841281",
+            "score": 1.004153846153846,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.526Z",
+            "title": "The build coordinator is strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jsl_3003a3cbb54f",
+            "score": 0.9886505681818182,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.557Z",
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jth_c652ae75e5ab",
+            "score": 0.9825852272727272,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.588Z",
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "decision"
+          }
+        ]
+      },
+      "query": "Which Redis database does the preview environment use?"
+    },
+    {
+      "native_response": {
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtiy6jth_c652ae75e5ab",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.588Z",
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jt8_f52fe886ff7b",
+            "score": 1.0330645161290322,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.579Z",
+            "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jsb_80222d29c61a",
+            "score": 0.5809523809523809,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.547Z",
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jsl_3003a3cbb54f",
+            "score": 0.5718749999999999,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.557Z",
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy6jrq_5696a7841281",
+            "score": 0.5630769230769231,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:35:01.526Z",
+            "title": "The build coordinator is strix03.",
+            "type": "decision"
+          }
+        ]
+      },
+      "query": "What workflow succeeded for stale generated Go code?"
+    }
+  ]
+}

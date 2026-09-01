@@ -3,8 +3,10 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from types import ModuleType, SimpleNamespace
 import sys
+import pytest
 
 from memory_bakeoff.models import MemoryRecord, ProviderCapabilities, ProviderProbe, QueryCase
+from memory_bakeoff.providers.base import ProviderUnavailable
 from memory_bakeoff.providers.external import AgentMemoryProvider, ClaudeMemProvider, HindsightProvider
 
 
@@ -34,7 +36,7 @@ class Resp:
         return self._payload
 
 
-def test_agentmemory_uses_supported_type_for_provenance_and_reconstructs_compact_result(monkeypatch):
+def test_agentmemory_uses_source_observation_ids_for_native_provenance(monkeypatch):
     p = AgentMemoryProvider("http://agentmemory")
     p.project = "bench-project"
     monkeypatch.setattr(
@@ -47,8 +49,8 @@ def test_agentmemory_uses_supported_type_for_provenance_and_reconstructs_compact
     def fake_post(url, json, headers, timeout):
         posts.append((url, json))
         if url.endswith("/remember"):
-            return Resp({"ok": True})
-        return Resp({"results": [{"type": "memory-bakeoff:M001", "score": 0.91, "title": "Deploy"}]})
+            return Resp({"memory": {"id": "mem_native", "sourceObservationIds": ["M001"]}})
+        return Resp({"results": [{"obsId": "mem_native", "score": 0.91, "title": "Deploy"}]})
 
     monkeypatch.setattr("memory_bakeoff.providers.external.requests.post", fake_post)
     p.ingest([record()])
@@ -56,7 +58,8 @@ def test_agentmemory_uses_supported_type_for_provenance_and_reconstructs_compact
     assert remember_payload == {
         "project": "bench-project",
         "content": record().text,
-        "type": "memory-bakeoff:M001",
+        "type": "fact",
+        "sourceObservationIds": ["M001"],
     }
     assert "metadata" not in remember_payload
 
@@ -65,6 +68,22 @@ def test_agentmemory_uses_supported_type_for_provenance_and_reconstructs_compact
     assert result.ids == ["M001"]
     assert result.items[0].text == record().text
     assert p.provenance_report()["status"] == "verified"
+
+
+def test_agentmemory_fails_closed_when_search_returns_a_foreign_native_id(monkeypatch):
+    p = AgentMemoryProvider("http://agentmemory")
+    p.project = "bench-project"
+    monkeypatch.setattr(p, "probe", lambda: ProviderProbe(p.name, True, "ok", p.capabilities))
+
+    def fake_post(url, json, headers, timeout):
+        if url.endswith("/remember"):
+            return Resp({"memory": {"id": "mem_native", "sourceObservationIds": ["M001"]}})
+        return Resp({"results": [{"obsId": "mem_foreign", "score": 0.91}]})
+
+    monkeypatch.setattr("memory_bakeoff.providers.external.requests.post", fake_post)
+    p.ingest([record()])
+    with pytest.raises(ProviderUnavailable, match="outside this ingest trace"):
+        p.retrieve(case(), 5)
 
 
 def test_claude_mem_search_requests_full_observations(monkeypatch):

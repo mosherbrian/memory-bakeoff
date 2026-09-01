@@ -1,0 +1,2694 @@
+{
+  "base_url": "http://127.0.0.1:3411",
+  "config_flags": {
+    "embeddingProvider": "embeddings",
+    "flags": [
+      {
+        "affects": [
+          "Graph",
+          "Dashboard"
+        ],
+        "default": false,
+        "description": "Extracts entities and relations from observations into a knowledge graph.",
+        "docsHref": "https://github.com/rohitg00/agentmemory#knowledge-graph",
+        "enableHow": "Set GRAPH_EXTRACTION_ENABLED=true and provide an LLM key, then restart.",
+        "enabled": false,
+        "key": "GRAPH_EXTRACTION_ENABLED",
+        "label": "Knowledge graph extraction",
+        "needsLlm": true
+      },
+      {
+        "affects": [
+          "Dashboard",
+          "Memories",
+          "Crystals"
+        ],
+        "default": false,
+        "description": "Periodically summarizes sessions into semantic facts + procedures.",
+        "docsHref": "https://github.com/rohitg00/agentmemory#consolidation",
+        "enableHow": "Set CONSOLIDATION_ENABLED=true and provide an LLM key, then restart.",
+        "enabled": false,
+        "key": "CONSOLIDATION_ENABLED",
+        "label": "Memory consolidation",
+        "needsLlm": true
+      },
+      {
+        "affects": [
+          "Memories",
+          "Timeline"
+        ],
+        "default": false,
+        "description": "Every observation is compressed by the LLM for richer summaries (costs tokens). OFF uses zero-LLM synthetic compression.",
+        "docsHref": "https://github.com/rohitg00/agentmemory/issues/138",
+        "enableHow": "Set AGENTMEMORY_AUTO_COMPRESS=true and provide an LLM key.",
+        "enabled": false,
+        "key": "AGENTMEMORY_AUTO_COMPRESS",
+        "label": "LLM-powered observation compression",
+        "needsLlm": true
+      },
+      {
+        "affects": [
+          "Hooks"
+        ],
+        "default": false,
+        "description": "Hooks write recalled context into Claude Code's conversation. OFF captures in the background without injecting.",
+        "docsHref": "https://github.com/rohitg00/agentmemory/issues/143",
+        "enableHow": "Set AGENTMEMORY_INJECT_CONTEXT=true and restart.",
+        "enabled": false,
+        "key": "AGENTMEMORY_INJECT_CONTEXT",
+        "label": "In-conversation context injection",
+        "needsLlm": false
+      }
+    ],
+    "provider": "noop",
+    "version": "0.9.29"
+  },
+  "diagnostic": "agentmemory_raw_product_lifecycle_smoke",
+  "health_before": {
+    "circuitBreaker": {
+      "failures": 0,
+      "lastFailureAt": null,
+      "openedAt": null,
+      "state": "closed"
+    },
+    "functionMetrics": [],
+    "health": {
+      "alerts": [],
+      "connectionState": "connected",
+      "cpu": {
+        "percent": 0.51,
+        "systemMicros": 104283,
+        "userMicros": 404179
+      },
+      "eventLoopLagMs": 0.06404099999781465,
+      "kvConnectivity": {
+        "latencyMs": 0.67,
+        "status": "ok"
+      },
+      "memory": {
+        "external": 5002718,
+        "heapTotal": 44318720,
+        "heapUsed": 29118128,
+        "rss": 114950144
+      },
+      "notes": [],
+      "status": "healthy",
+      "uptimeSeconds": 30.849251042,
+      "workers": [
+        {
+          "active_invocations": 1,
+          "connected_at_ms": 1788284142539,
+          "function_count": 272,
+          "functions": [
+            "mem::export",
+            "mem::auto-page",
+            "api::patterns",
+            "api::semantic-list",
+            "api::mesh-register",
+            "api::session::commit",
+            "api::action-update",
+            "mem::vision-search",
+            "api::obsidian-export",
+            "mem::mesh-receive",
+            "api::health",
+            "api::import",
+            "mem::enrich-session",
+            "mem::temporal-graph-extract",
+            "mem::lease-cleanup",
+            "mem::sketch-create",
+            "api::timeline",
+            "api::lesson-search",
+            "mem::migrate",
+            "api::slot-delete",
+            "api::slot-create",
+            "mem::signal-read",
+            "mem::auto-crystallize",
+            "api::diagnose",
+            "api::lesson-delete",
+            "mem::governance-bulk",
+            "mem::frontier",
+            "mem::routine-create",
+            "mem::core-add",
+            "api::replay::import",
+            "api::signal-read",
+            "mem::sentinel-cancel",
+            "mem::list-worktrees",
+            "api::routine-run",
+            "mem::checkpoint-resolve",
+            "mem::skill-list",
+            "api::routine-status",
+            "api::sentinel-check",
+            "mem::retention-evict",
+            "api::graph-extract",
+            "middleware::api-auth",
+            "api::reflect",
+            "api::compress-file",
+            "mem::retention-score",
+            "api::memory-by-id",
+            "mem::timeline",
+            "mem::lease-acquire",
+            "mem::sentinel-create",
+            "mem::sentinel-check",
+            "mem::facet-tag",
+            "mem::search",
+            "mem::lesson-decay-sweep",
+            "mem::crystal-get",
+            "api::search",
+            "mem::diagnose",
+            "mem::lesson-recall",
+            "api::branch-worktrees",
+            "mem::relate",
+            "api::lesson-list",
+            "mem::crystallize",
+            "mem::routine-run",
+            "api::session::end",
+            "api::facet-stats",
+            "mem::verify",
+            "api::relations",
+            "mem::context",
+            "mem::forget",
+            "mem::enrich",
+            "event::session::started",
+            "api::slot-get",
+            "api::flow-compress",
+            "mcp::tools::list",
+            "mcp::resources::read",
+            "mem::facet-get",
+            "mem::insight-list",
+            "mem::diagnostic::followup-stats",
+            "api::team-share",
+            "api::remember",
+            "api::session::by-commit",
+            "mem::expand-query",
+            "api::export",
+            "api::lesson-save",
+            "api::action-create",
+            "mem::cascade-update",
+            "api::replay::load",
+            "mem::sentinel-trigger",
+            "mem::routine-status",
+            "api::action-get",
+            "api::sketch-create",
+            "api::lesson-strengthen",
+            "mem::graph::import-graphify",
+            "mem::graph-snapshot-rebuild",
+            "api::replay::sessions",
+            "api::sketch-add",
+            "mem::evolve",
+            "api::migrate",
+            "api::mesh-sync",
+            "mem::replay::sessions",
+            "mem::signal-cleanup",
+            "api::branch-sessions",
+            "api::facet-get",
+            "api::sketch-discard",
+            "mem::facet-untag",
+            "api::consolidate-pipeline",
+            "api::sessions",
+            "api::procedural-list",
+            "api::liveness",
+            "mem::next",
+            "mem::mesh-list",
+            "api::file-context",
+            "mem::sentinel-list",
+            "mem::sentinel-expire",
+            "api::snapshots",
+            "api::facet-tag",
+            "mem::consolidate-pipeline",
+            "mem::skill-match",
+            "mem::detect-worktree",
+            "api::generate-rules",
+            "api::graph-snapshot-rebuild",
+            "api::next",
+            "mem::diagnostic::recent-searches-sweep",
+            "api::mesh-receive",
+            "api::branch-detect",
+            "api::graph-build",
+            "event::session::observation-count-changed",
+            "api::sentinel-list",
+            "api::governance-delete",
+            "api::sentinel-trigger",
+            "mem::remember",
+            "api::evolve",
+            "api::crystal-list",
+            "mem::graph-extract",
+            "api::mesh-list",
+            "mem::sketch-add",
+            "mem::profile",
+            "api::team-profile",
+            "api::diagnostic-followup",
+            "api::snapshot-restore",
+            "mem::image-quota-cleanup",
+            "api::observe",
+            "mem::auto-forget",
+            "api::checkpoint-list",
+            "mem::obsidian-export",
+            "api::config-flags",
+            "mem::graph-reset",
+            "api::sketch-gc",
+            "event::session::stopped",
+            "api::governance-bulk",
+            "mem::facet-query",
+            "mem::reflect",
+            "mem::replay::import-jsonl",
+            "mcp::tools::call",
+            "mem::import",
+            "mem::routine-freeze",
+            "mem::checkpoint-create",
+            "mem::core-list",
+            "mem::audit-query",
+            "mem::enrich-window",
+            "mem::heal",
+            "api::observations",
+            "api::evict",
+            "api::profile",
+            "api::slot-replace",
+            "api::slot-reflect",
+            "api::commits",
+            "mem::mesh-sync",
+            "api::enrich",
+            "api::snapshot-create",
+            "api::relations-list",
+            "api::team-feed",
+            "mem::sketch-list",
+            "mem::compress-file",
+            "mem::signal-send",
+            "api::mesh-export",
+            "mem::summarize",
+            "mem::action-create",
+            "mem::compress",
+            "mem::flow-compress",
+            "api::forget",
+            "mem::action-edge-create",
+            "mem::checkpoint-list",
+            "api::vision-search",
+            "mem::sketch-promote",
+            "api::auto-crystallize",
+            "api::audit",
+            "api::routine-list",
+            "mem::graph-stats",
+            "mem::action-update",
+            "mem::mesh-remove",
+            "api::lease-renew",
+            "mem::lease-release",
+            "api::graph-stats",
+            "mem::graph-query",
+            "api::insight-search",
+            "mem::differential-state",
+            "mem::routine-list",
+            "mem::get-related",
+            "api::cascade-update",
+            "mem::mesh-register",
+            "api::vision-embed",
+            "api::heal",
+            "mem::smart-search",
+            "api::sentinel-create",
+            "mem::core-remove",
+            "mcp::resources::list",
+            "mem::vision-embed",
+            "mem::lesson-list",
+            "api::graph-reset",
+            "api::graph-query",
+            "api::facet-query",
+            "api::sketch-list",
+            "mem::facet-stats",
+            "api::slot-append",
+            "api::signal-send",
+            "mem::insight-decay-sweep",
+            "event::session::ended",
+            "mem::checkpoint-expire",
+            "mcp::prompts::get",
+            "mem::facet-dimensions",
+            "api::checkpoint-resolve",
+            "api::crystallize",
+            "mem::replay::load",
+            "mem::evict",
+            "api::sentinel-cancel",
+            "mem::consolidate",
+            "mem::generate-rules",
+            "mem::working-context",
+            "api::summarize",
+            "mem::governance-delete",
+            "mem::sketch-discard",
+            "event::observation",
+            "mem::insight-search",
+            "api::auto-forget",
+            "api::consolidate",
+            "api::action-edge",
+            "api::session::start",
+            "mem::action-get",
+            "api::routine-create",
+            "api::lease-acquire",
+            "api::lease-release",
+            "api::sketch-promote",
+            "api::verify",
+            "api::graph-import-graphify",
+            "mem::action-list",
+            "api::smart-search",
+            "mem::patterns",
+            "mem::lesson-delete",
+            "api::frontier",
+            "api::facet-untag",
+            "mem::lesson-strengthen",
+            "api::memories",
+            "mem::sketch-gc",
+            "mem::signal-threads",
+            "api::insight-list",
+            "api::claude-bridge-read",
+            "mem::lease-renew",
+            "api::context",
+            "mem::skill-extract",
+            "mcp::prompts::list",
+            "mem::privacy",
+            "mem::disk-size-delta",
+            "api::viewer",
+            "mem::file-context",
+            "mem::temporal-query",
+            "mem::crystal-list",
+            "mem::observe",
+            "mem::branch-sessions",
+            "api::action-list",
+            "api::slot-list",
+            "mem::lesson-save",
+            "api::claude-bridge-sync",
+            "api::checkpoint-create"
+          ],
+          "id": "d5ed04e9-fdef-4b83-9c62-90e31f00ff64",
+          "ip_address": "127.0.0.1",
+          "latest_metrics": {
+            "cpu_percent": 0.4360291352016,
+            "cpu_system_micros": 103316,
+            "cpu_user_micros": 397246,
+            "event_loop_lag_ms": 21.72208898042059,
+            "memory_external": 4998688,
+            "memory_heap_total": 44318720,
+            "memory_heap_used": 28898344,
+            "memory_rss": 114884608,
+            "runtime": "node",
+            "timestamp_ms": 1788284172527,
+            "uptime_seconds": 29
+          },
+          "name": "agentmemory",
+          "os": "darwin 25.5.0 (arm64)",
+          "pid": 33034,
+          "runtime": "node",
+          "status": "connected",
+          "version": "0.11.2"
+        }
+      ]
+    },
+    "service": "agentmemory",
+    "status": "healthy",
+    "streamsPort": 3412,
+    "version": "0.9.29",
+    "viewerPort": 3413,
+    "viewerSkipped": false
+  },
+  "operations": [
+    {
+      "canonical_record_id": "M011",
+      "label": "old_build_coordinator",
+      "live_snapshot": {
+        "live_count": 1,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 0,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 1
+        },
+        "total": 1
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The build coordinator is strix03.",
+          "createdAt": "2026-09-01T17:36:19.437Z",
+          "files": [],
+          "id": "mem_mtiy87vz_890c01fd0ea2",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.437Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M011"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The build coordinator is strix03.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.437Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The build coordinator is strix03.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M011"
+        ],
+        "type": "fact"
+      },
+      "sequence": 1
+    },
+    {
+      "canonical_record_id": "M012",
+      "label": "explicit_correction",
+      "live_snapshot": {
+        "live_count": 2,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 0,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 2
+        },
+        "total": 2
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+          "createdAt": "2026-09-01T17:36:19.594Z",
+          "files": [],
+          "id": "mem_mtiy880b_3cf8196d8159",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.594Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M012"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.594Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M012"
+        ],
+        "type": "fact"
+      },
+      "sequence": 2
+    },
+    {
+      "canonical_record_id": "M012",
+      "label": "exact_duplicate",
+      "live_snapshot": {
+        "live_count": 2,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.605Z",
+            "files": [],
+            "id": "mem_mtiy880m_08bec6160fb6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.605Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy880b_3cf8196d8159",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy880b_3cf8196d8159"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.605Z",
+            "version": 2
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 1,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": false,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.605Z",
+              "files": [],
+              "id": "mem_mtiy880m_08bec6160fb6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.605Z",
+                "channel": "agent"
+              },
+              "parentId": "mem_mtiy880b_3cf8196d8159",
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [
+                "mem_mtiy880b_3cf8196d8159"
+              ],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.605Z",
+              "version": 2
+            }
+          ],
+          "offset": 0,
+          "total": 3
+        },
+        "total": 3
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+          "createdAt": "2026-09-01T17:36:19.605Z",
+          "files": [],
+          "id": "mem_mtiy880m_08bec6160fb6",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.605Z",
+            "channel": "agent"
+          },
+          "parentId": "mem_mtiy880b_3cf8196d8159",
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M012"
+          ],
+          "strength": 7,
+          "supersedes": [
+            "mem_mtiy880b_3cf8196d8159"
+          ],
+          "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.605Z",
+          "version": 2
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M012"
+        ],
+        "type": "fact"
+      },
+      "sequence": 3
+    },
+    {
+      "canonical_record_id": "M012",
+      "label": "paraphrase_of_correction",
+      "live_snapshot": {
+        "live_count": 3,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.605Z",
+            "files": [],
+            "id": "mem_mtiy880m_08bec6160fb6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.605Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy880b_3cf8196d8159",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy880b_3cf8196d8159"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.605Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:36:19.617Z",
+            "files": [],
+            "id": "mem_mtiy880x_c186eae0ffde",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.617Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.617Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 1,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": false,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.605Z",
+              "files": [],
+              "id": "mem_mtiy880m_08bec6160fb6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.605Z",
+                "channel": "agent"
+              },
+              "parentId": "mem_mtiy880b_3cf8196d8159",
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [
+                "mem_mtiy880b_3cf8196d8159"
+              ],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.605Z",
+              "version": 2
+            },
+            {
+              "concepts": [],
+              "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "createdAt": "2026-09-01T17:36:19.617Z",
+              "files": [],
+              "id": "mem_mtiy880x_c186eae0ffde",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.617Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.617Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 4
+        },
+        "total": 4
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+          "createdAt": "2026-09-01T17:36:19.617Z",
+          "files": [],
+          "id": "mem_mtiy880x_c186eae0ffde",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.617Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M012"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.617Z",
+          "version": 1
+        },
+        "similarTo": {
+          "id": "mem_mtiy87vz_890c01fd0ea2",
+          "similarity": 0.57,
+          "title": "The build coordinator is strix03."
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M012"
+        ],
+        "type": "fact"
+      },
+      "sequence": 4
+    },
+    {
+      "canonical_record_id": "M035",
+      "label": "near_neighbor_preview_redis",
+      "live_snapshot": {
+        "live_count": 4,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.605Z",
+            "files": [],
+            "id": "mem_mtiy880m_08bec6160fb6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.605Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy880b_3cf8196d8159",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy880b_3cf8196d8159"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.605Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:36:19.617Z",
+            "files": [],
+            "id": "mem_mtiy880x_c186eae0ffde",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.617Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.617Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:36:19.625Z",
+            "files": [],
+            "id": "mem_mtiy8816_2fd0484d803e",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.625Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.625Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 1,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": false,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.605Z",
+              "files": [],
+              "id": "mem_mtiy880m_08bec6160fb6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.605Z",
+                "channel": "agent"
+              },
+              "parentId": "mem_mtiy880b_3cf8196d8159",
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [
+                "mem_mtiy880b_3cf8196d8159"
+              ],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.605Z",
+              "version": 2
+            },
+            {
+              "concepts": [],
+              "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "createdAt": "2026-09-01T17:36:19.617Z",
+              "files": [],
+              "id": "mem_mtiy880x_c186eae0ffde",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.617Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.617Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The frontend preview environment uses Redis database number 2.",
+              "createdAt": "2026-09-01T17:36:19.625Z",
+              "files": [],
+              "id": "mem_mtiy8816_2fd0484d803e",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.625Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M035"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The frontend preview environment uses Redis database number 2.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.625Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 5
+        },
+        "total": 5
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The frontend preview environment uses Redis database number 2.",
+          "createdAt": "2026-09-01T17:36:19.625Z",
+          "files": [],
+          "id": "mem_mtiy8816_2fd0484d803e",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.625Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M035"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The frontend preview environment uses Redis database number 2.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.625Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The frontend preview environment uses Redis database number 2.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M035"
+        ],
+        "type": "fact"
+      },
+      "sequence": 5
+    },
+    {
+      "canonical_record_id": "M036",
+      "label": "near_neighbor_development_redis",
+      "live_snapshot": {
+        "live_count": 5,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.605Z",
+            "files": [],
+            "id": "mem_mtiy880m_08bec6160fb6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.605Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy880b_3cf8196d8159",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy880b_3cf8196d8159"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.605Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:36:19.617Z",
+            "files": [],
+            "id": "mem_mtiy880x_c186eae0ffde",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.617Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.617Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:36:19.625Z",
+            "files": [],
+            "id": "mem_mtiy8816_2fd0484d803e",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.625Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.625Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The development Redis database number is 3.",
+            "createdAt": "2026-09-01T17:36:19.633Z",
+            "files": [],
+            "id": "mem_mtiy881d_a3c3aa1f55f6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.633Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M036"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The development Redis database number is 3.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.633Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 1,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": false,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.605Z",
+              "files": [],
+              "id": "mem_mtiy880m_08bec6160fb6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.605Z",
+                "channel": "agent"
+              },
+              "parentId": "mem_mtiy880b_3cf8196d8159",
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [
+                "mem_mtiy880b_3cf8196d8159"
+              ],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.605Z",
+              "version": 2
+            },
+            {
+              "concepts": [],
+              "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "createdAt": "2026-09-01T17:36:19.617Z",
+              "files": [],
+              "id": "mem_mtiy880x_c186eae0ffde",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.617Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.617Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The frontend preview environment uses Redis database number 2.",
+              "createdAt": "2026-09-01T17:36:19.625Z",
+              "files": [],
+              "id": "mem_mtiy8816_2fd0484d803e",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.625Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M035"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The frontend preview environment uses Redis database number 2.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.625Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The development Redis database number is 3.",
+              "createdAt": "2026-09-01T17:36:19.633Z",
+              "files": [],
+              "id": "mem_mtiy881d_a3c3aa1f55f6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.633Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M036"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The development Redis database number is 3.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.633Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 6
+        },
+        "total": 6
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "The development Redis database number is 3.",
+          "createdAt": "2026-09-01T17:36:19.633Z",
+          "files": [],
+          "id": "mem_mtiy881d_a3c3aa1f55f6",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.633Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M036"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "The development Redis database number is 3.",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.633Z",
+          "version": 1
+        },
+        "similarTo": {
+          "id": "mem_mtiy8816_2fd0484d803e",
+          "similarity": 0.44,
+          "title": "The frontend preview environment uses Redis database number 2."
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "The development Redis database number is 3.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M036"
+        ],
+        "type": "fact"
+      },
+      "sequence": 6
+    },
+    {
+      "canonical_record_id": "M024",
+      "label": "failed_generated_code_procedure",
+      "live_snapshot": {
+        "live_count": 6,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.605Z",
+            "files": [],
+            "id": "mem_mtiy880m_08bec6160fb6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.605Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy880b_3cf8196d8159",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy880b_3cf8196d8159"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.605Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:36:19.617Z",
+            "files": [],
+            "id": "mem_mtiy880x_c186eae0ffde",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.617Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.617Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:36:19.625Z",
+            "files": [],
+            "id": "mem_mtiy8816_2fd0484d803e",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.625Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.625Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The development Redis database number is 3.",
+            "createdAt": "2026-09-01T17:36:19.633Z",
+            "files": [],
+            "id": "mem_mtiy881d_a3c3aa1f55f6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.633Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M036"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The development Redis database number is 3.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.633Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+            "createdAt": "2026-09-01T17:36:19.638Z",
+            "files": [],
+            "id": "mem_mtiy881j_6f18adfbddce",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.638Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M024"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.638Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 1,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": false,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.605Z",
+              "files": [],
+              "id": "mem_mtiy880m_08bec6160fb6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.605Z",
+                "channel": "agent"
+              },
+              "parentId": "mem_mtiy880b_3cf8196d8159",
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [
+                "mem_mtiy880b_3cf8196d8159"
+              ],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.605Z",
+              "version": 2
+            },
+            {
+              "concepts": [],
+              "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "createdAt": "2026-09-01T17:36:19.617Z",
+              "files": [],
+              "id": "mem_mtiy880x_c186eae0ffde",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.617Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.617Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The frontend preview environment uses Redis database number 2.",
+              "createdAt": "2026-09-01T17:36:19.625Z",
+              "files": [],
+              "id": "mem_mtiy8816_2fd0484d803e",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.625Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M035"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The frontend preview environment uses Redis database number 2.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.625Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The development Redis database number is 3.",
+              "createdAt": "2026-09-01T17:36:19.633Z",
+              "files": [],
+              "id": "mem_mtiy881d_a3c3aa1f55f6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.633Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M036"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The development Redis database number is 3.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.633Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+              "createdAt": "2026-09-01T17:36:19.638Z",
+              "files": [],
+              "id": "mem_mtiy881j_6f18adfbddce",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.638Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M024"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.638Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 7
+        },
+        "total": 7
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+          "createdAt": "2026-09-01T17:36:19.638Z",
+          "files": [],
+          "id": "mem_mtiy881j_6f18adfbddce",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.638Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M024"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.638Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M024"
+        ],
+        "type": "fact"
+      },
+      "sequence": 7
+    },
+    {
+      "canonical_record_id": "M023",
+      "label": "successful_generated_code_procedure",
+      "live_snapshot": {
+        "live_count": 7,
+        "memories": [
+          {
+            "concepts": [],
+            "content": "The build coordinator is strix03.",
+            "createdAt": "2026-09-01T17:36:19.437Z",
+            "files": [],
+            "id": "mem_mtiy87vz_890c01fd0ea2",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.437Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M011"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator is strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.437Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.594Z",
+            "files": [],
+            "id": "mem_mtiy880b_3cf8196d8159",
+            "isLatest": false,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.594Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.594Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+            "createdAt": "2026-09-01T17:36:19.605Z",
+            "files": [],
+            "id": "mem_mtiy880m_08bec6160fb6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.605Z",
+              "channel": "agent"
+            },
+            "parentId": "mem_mtiy880b_3cf8196d8159",
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [
+              "mem_mtiy880b_3cf8196d8159"
+            ],
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.605Z",
+            "version": 2
+          },
+          {
+            "concepts": [],
+            "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "createdAt": "2026-09-01T17:36:19.617Z",
+            "files": [],
+            "id": "mem_mtiy880x_c186eae0ffde",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.617Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M012"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.617Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The frontend preview environment uses Redis database number 2.",
+            "createdAt": "2026-09-01T17:36:19.625Z",
+            "files": [],
+            "id": "mem_mtiy8816_2fd0484d803e",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.625Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M035"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.625Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "The development Redis database number is 3.",
+            "createdAt": "2026-09-01T17:36:19.633Z",
+            "files": [],
+            "id": "mem_mtiy881d_a3c3aa1f55f6",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.633Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M036"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "The development Redis database number is 3.",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.633Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+            "createdAt": "2026-09-01T17:36:19.638Z",
+            "files": [],
+            "id": "mem_mtiy881j_6f18adfbddce",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.638Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M024"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.638Z",
+            "version": 1
+          },
+          {
+            "concepts": [],
+            "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+            "createdAt": "2026-09-01T17:36:19.649Z",
+            "files": [],
+            "id": "mem_mtiy881u_f635be137d4e",
+            "isLatest": true,
+            "origin": {
+              "capturedAt": "2026-09-01T17:36:19.649Z",
+              "channel": "agent"
+            },
+            "project": "memory-bakeoff-gen12-lifecycle",
+            "sessionIds": [],
+            "sourceObservationIds": [
+              "M023"
+            ],
+            "strength": 7,
+            "supersedes": [],
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "fact",
+            "updatedAt": "2026-09-01T17:36:19.649Z",
+            "version": 1
+          }
+        ],
+        "requested_project": "memory-bakeoff-gen12-lifecycle",
+        "retired_count": 1,
+        "server_response": {
+          "limit": null,
+          "memories": [
+            {
+              "concepts": [],
+              "content": "The build coordinator is strix03.",
+              "createdAt": "2026-09-01T17:36:19.437Z",
+              "files": [],
+              "id": "mem_mtiy87vz_890c01fd0ea2",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.437Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M011"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator is strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.437Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.594Z",
+              "files": [],
+              "id": "mem_mtiy880b_3cf8196d8159",
+              "isLatest": false,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.594Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.594Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The build coordinator moved from strix03 to strix07; strix07 is now authoritative.",
+              "createdAt": "2026-09-01T17:36:19.605Z",
+              "files": [],
+              "id": "mem_mtiy880m_08bec6160fb6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.605Z",
+                "channel": "agent"
+              },
+              "parentId": "mem_mtiy880b_3cf8196d8159",
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [
+                "mem_mtiy880b_3cf8196d8159"
+              ],
+              "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.605Z",
+              "version": 2
+            },
+            {
+              "concepts": [],
+              "content": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "createdAt": "2026-09-01T17:36:19.617Z",
+              "files": [],
+              "id": "mem_mtiy880x_c186eae0ffde",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.617Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M012"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.617Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The frontend preview environment uses Redis database number 2.",
+              "createdAt": "2026-09-01T17:36:19.625Z",
+              "files": [],
+              "id": "mem_mtiy8816_2fd0484d803e",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.625Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M035"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The frontend preview environment uses Redis database number 2.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.625Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "The development Redis database number is 3.",
+              "createdAt": "2026-09-01T17:36:19.633Z",
+              "files": [],
+              "id": "mem_mtiy881d_a3c3aa1f55f6",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.633Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M036"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "The development Redis database number is 3.",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.633Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.",
+              "createdAt": "2026-09-01T17:36:19.638Z",
+              "files": [],
+              "id": "mem_mtiy881j_6f18adfbddce",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.638Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M024"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.638Z",
+              "version": 1
+            },
+            {
+              "concepts": [],
+              "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+              "createdAt": "2026-09-01T17:36:19.649Z",
+              "files": [],
+              "id": "mem_mtiy881u_f635be137d4e",
+              "isLatest": true,
+              "origin": {
+                "capturedAt": "2026-09-01T17:36:19.649Z",
+                "channel": "agent"
+              },
+              "project": "memory-bakeoff-gen12-lifecycle",
+              "sessionIds": [],
+              "sourceObservationIds": [
+                "M023"
+              ],
+              "strength": 7,
+              "supersedes": [],
+              "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+              "type": "fact",
+              "updatedAt": "2026-09-01T17:36:19.649Z",
+              "version": 1
+            }
+          ],
+          "offset": 0,
+          "total": 8
+        },
+        "total": 8
+      },
+      "native_response": {
+        "memory": {
+          "concepts": [],
+          "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+          "createdAt": "2026-09-01T17:36:19.649Z",
+          "files": [],
+          "id": "mem_mtiy881u_f635be137d4e",
+          "isLatest": true,
+          "origin": {
+            "capturedAt": "2026-09-01T17:36:19.649Z",
+            "channel": "agent"
+          },
+          "project": "memory-bakeoff-gen12-lifecycle",
+          "sessionIds": [],
+          "sourceObservationIds": [
+            "M023"
+          ],
+          "strength": 7,
+          "supersedes": [],
+          "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+          "type": "fact",
+          "updatedAt": "2026-09-01T17:36:19.649Z",
+          "version": 1
+        },
+        "success": true
+      },
+      "payload": {
+        "content": "For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.",
+        "project": "memory-bakeoff-gen12-lifecycle",
+        "sourceObservationIds": [
+          "M023"
+        ],
+        "type": "fact"
+      },
+      "sequence": 8
+    }
+  ],
+  "project": "memory-bakeoff-gen12-lifecycle",
+  "scored": false,
+  "searches": [
+    {
+      "native_response": {
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtiy87vz_890c01fd0ea2",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.437Z",
+            "title": "The build coordinator is strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy880m_08bec6160fb6",
+            "score": 1.026505376344086,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.605Z",
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy880x_c186eae0ffde",
+            "score": 1.0232258064516129,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.617Z",
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy881d_a3c3aa1f55f6",
+            "score": 1.00078125,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.633Z",
+            "title": "The development Redis database number is 3.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy8816_2fd0484d803e",
+            "score": 0.9794125874125874,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.625Z",
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "decision"
+          }
+        ]
+      },
+      "query": "What is the current build coordinator?"
+    },
+    {
+      "native_response": {
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtiy8816_2fd0484d803e",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.625Z",
+            "title": "The frontend preview environment uses Redis database number 2.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy881d_a3c3aa1f55f6",
+            "score": 1.0330645161290322,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.633Z",
+            "title": "The development Redis database number is 3.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy87vz_890c01fd0ea2",
+            "score": 1.0103125,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.437Z",
+            "title": "The build coordinator is strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy880x_c186eae0ffde",
+            "score": 0.9946225961538462,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.617Z",
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy881u_f635be137d4e",
+            "score": 0.988939393939394,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.649Z",
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "decision"
+          }
+        ]
+      },
+      "query": "Which Redis database does the preview environment use?"
+    },
+    {
+      "native_response": {
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtiy881u_f635be137d4e",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.649Z",
+            "title": "For stale generated Go code: edit the source schema, run the generator, inspect ",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy881j_6f18adfbddce",
+            "score": 1.0330645161290322,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.638Z",
+            "title": "Editing generated Go files directly made the immediate test pass but failed rege",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy880m_08bec6160fb6",
+            "score": 0.5809523809523809,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.605Z",
+            "title": "The build coordinator moved from strix03 to strix07; strix07 is now authoritativ",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy880x_c186eae0ffde",
+            "score": 0.5718749999999999,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.617Z",
+            "title": "The authoritative build coordinator is strix07; it replaced strix03.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtiy87vz_890c01fd0ea2",
+            "score": 0.5630769230769231,
+            "sessionId": "memory",
+            "timestamp": "2026-09-01T17:36:19.437Z",
+            "title": "The build coordinator is strix03.",
+            "type": "decision"
+          }
+        ]
+      },
+      "query": "What workflow succeeded for stale generated Go code?"
+    }
+  ]
+}

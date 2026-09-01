@@ -440,7 +440,7 @@ class AgentMemoryProvider(MemoryProvider):
     name="agentmemory"
     capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,service_required=True,notes="Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop.")
     def __init__(self,base_url=None):
-        super().__init__(); self.base=(base_url or os.getenv("AGENTMEMORY_URL","http://127.0.0.1:3111")).rstrip("/"); self.project=os.getenv("AGENTMEMORY_PROJECT") or f"memory-bakeoff-{uuid.uuid4().hex[:8]}"
+        super().__init__(); self.base=(base_url or os.getenv("AGENTMEMORY_URL","http://127.0.0.1:3111")).rstrip("/"); self.project=os.getenv("AGENTMEMORY_PROJECT") or f"memory-bakeoff-{uuid.uuid4().hex[:8]}"; self._native_record_ids={}
     def _headers(self):
         secret=os.getenv("AGENTMEMORY_SECRET")
         return {"Authorization":f"Bearer {secret}"} if secret else {}
@@ -449,22 +449,36 @@ class AgentMemoryProvider(MemoryProvider):
             r=requests.get(self.base+"/agentmemory/health",headers=self._headers(),timeout=.5); ok=r.ok; reason=f"HTTP {r.status_code}" if not ok else "service healthy"
         except Exception as e: ok=False; reason=f"service unavailable at {self.base}: {type(e).__name__}"
         return ProviderProbe(self.name,ok,reason,self.capabilities)
-    def reset(self): self._records.clear()
+    def reset(self):
+        self._records.clear()
+        self._native_record_ids.clear()
     def ingest(self,records:Sequence[MemoryRecord],mode="raw"):
         if not self.probe().available: raise ProviderUnavailable(self.probe().reason)
         self.remember_records(records)
         for r in records:
-            # Current agentmemory does not accept arbitrary metadata on /remember.
-            # Carry the benchmark ID in the returned `type` field instead. The query
-            # never contains this marker, so it is provenance transport rather than
-            # an oracle retrieval feature.
+            # The API normalizes unsupported `type` values to `fact`, so `type` is
+            # not a reliable provenance channel.  `sourceObservationIds` is a
+            # supported stored field that the native response returns unchanged.
             payload={
                 "project":self.project,
                 "content":r.text,
-                "type":f"memory-bakeoff:{r.id}",
+                "type":"fact",
+                "sourceObservationIds":[r.id],
             }
             resp=requests.post(self.base+"/agentmemory/remember",json=payload,headers=self._headers(),timeout=10)
             if not resp.ok: raise ProviderUnavailable(f"agentmemory remember failed: HTTP {resp.status_code}: {resp.text[:200]}")
+            try:
+                memory=resp.json().get("memory",{})
+                native_id=memory.get("id")
+                source_ids=memory.get("sourceObservationIds")
+            except (AttributeError, ValueError, TypeError):
+                native_id=source_ids=None
+            if not isinstance(native_id,str) or source_ids != [r.id]:
+                raise ProviderUnavailable(
+                    "agentmemory remember did not return a native ID with exact "
+                    f"sourceObservationIds provenance for {r.id}"
+                )
+            self._native_record_ids[native_id]=r.id
     def retrieve(self,case:QueryCase,top_k=5):
         t=time.perf_counter()
         payload={"project":self.project,"query":case.query,"limit":top_k,"format":"compact"}
@@ -472,15 +486,21 @@ class AgentMemoryProvider(MemoryProvider):
         if not r.ok: raise ProviderUnavailable(f"agentmemory search failed: HTTP {r.status_code}")
         raw=r.json(); rows=raw.get("results",raw if isinstance(raw,list) else []) if isinstance(raw,dict) else raw; items=[]
         for x in rows[:top_k]:
-            marker=x.get("type") if isinstance(x,dict) else None
-            rid=marker.split(":",1)[1] if isinstance(marker,str) and marker.startswith("memory-bakeoff:") else None
-            if rid not in self._records:
-                rid=None
+            native_id=(x.get("obsId") or x.get("id")) if isinstance(x,dict) else None
+            rid=self._native_record_ids.get(native_id) if isinstance(native_id,str) else None
             surfaced=(x.get("content") or x.get("text") or x.get("memory") or "") if isinstance(x,dict) else str(x)
-            rid=self.resolve_record_id(surfaced,rid)
-            # smart-search may return compact rows without content. Once the engine
-            # has selected a stable benchmark ID, reconstruct the canonical source
-            # text for downstream reader tests; this does not alter the ranking.
+            if rid is None:
+                self._record_provenance("unmapped")
+                raise ProviderUnavailable(
+                    "agentmemory smart-search returned a native ID outside this "
+                    "ingest trace; project is not a reliable retrieval scope in "
+                    "this upstream configuration"
+                )
+            else:
+                self._record_provenance("native")
+            # smart-search compact rows omit content.  Once its native ID maps to
+            # the source observation ID returned at ingest, reconstruct canonical
+            # text for downstream reader tests without altering ranking.
             text=self._records[rid].text if rid in self._records else surfaced or str(x)
             score=x.get("score") if isinstance(x,dict) else None
             md=dict(x) if isinstance(x,dict) else {}
