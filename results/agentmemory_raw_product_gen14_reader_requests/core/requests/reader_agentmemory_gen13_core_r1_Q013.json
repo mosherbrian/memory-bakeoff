@@ -1,0 +1,38 @@
+{
+  "batch_id": "210e4c7e4de5a9984e21efbf8f5deea8",
+  "batch_index": 5,
+  "created_at": 1788286990.5435252,
+  "fingerprint": "f21a957166e7cd83b30226baae6887774cb730e1d344b5abb80b11f645d0c378",
+  "metadata": {
+    "case_id": "Q013",
+    "frozen_retrieval_artifact": "/Users/bmosher/source/repos/memory-bakeoff/results/agentmemory_raw_product_gen13_core-r1/run.json",
+    "frozen_retrieval_sha256": "5a026371738611da90715b47d6555cb7a5b6b2462b713918555f8890dae4c347",
+    "mode": "raw",
+    "provider": "agentmemory_gen13_core_r1",
+    "retrieved_ids": [
+      "M020",
+      "M022",
+      "M021",
+      "M039",
+      "M007"
+    ],
+    "top_k": 5
+  },
+  "openai_request": {
+    "messages": [
+      {
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess.",
+        "role": "system"
+      },
+      {
+        "content": "QUESTION:\nA thumbnail job landed in dead-letter. Which consumer and replay command handle it?\n\nRETRIEVED MEMORY:\n- [M020] The thumbnail worker publishes failed jobs to the image-deadletter topic.\n- [M022] The media-repair service's replay command is 'media-repair replay --source deadletter'.\n- [M021] The image-deadletter topic is consumed by the media-repair service.\n- [M039] The image service's normal work topic is image-jobs.\n- [M007] When the indexer appears hung with low CPU, inspect the bounded work queue first; producers can block while waiting for a full queue to drain.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+        "role": "user"
+      }
+    ],
+    "model": "chatgpt-sidecar",
+    "temperature": 0.0
+  },
+  "protocol_version": 1,
+  "request_id": "reader_agentmemory_gen13_core_r1_Q013",
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_agentmemory_gen13_core_r1_Q013.json conforming to the ChatGPT sidecar protocol."
+}

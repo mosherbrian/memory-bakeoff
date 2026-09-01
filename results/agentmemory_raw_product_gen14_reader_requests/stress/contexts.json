@@ -1,0 +1,330 @@
+{
+  "cases": [
+    {
+      "case_id": "Q003",
+      "category": "exact",
+      "prohibited_context_ranks": [
+        3,
+        4
+      ],
+      "prohibited_ids": [
+        "M035",
+        "M036"
+      ],
+      "query": "Which Redis DB does staging use?",
+      "request_fingerprint": "aa59d4fd705e20ee7b516ce7a9cb093c99e8629bf60c632d92413842c650ab14",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q003",
+      "retrieved_context": "QUESTION:\nWhich Redis DB does staging use?\n\nRETRIEVED MEMORY:\n- [M005] The staging Redis database number is 6.\n- [M496] A harbor Redis migration fixture restored staging snapshot database 5; it does not define the platform staging Redis database.\n- [M035] The frontend preview environment uses Redis database number 2.\n- [M036] The development Redis database number is 3.\n- [M465] The glint read-only database credential is secret glint-db-ro, managed by the glint-secrets Terraform module and checked by glint-plan.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M005",
+        "M496",
+        "M035",
+        "M036",
+        "M465"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q007",
+      "category": "temporal_current",
+      "prohibited_context_ranks": [
+        1
+      ],
+      "prohibited_ids": [
+        "M011"
+      ],
+      "query": "What machine is the current build coordinator?",
+      "request_fingerprint": "30dc53fb274f0ece27ea138611492aec599154492699d428b09f649258aca150",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q007",
+      "retrieved_context": "QUESTION:\nWhat machine is the current build coordinator?\n\nRETRIEVED MEMORY:\n- [M011] The build coordinator is strix03.\n- [M012] The build coordinator moved from strix03 to strix07; strix07 is now authoritative.\n- [M490] Repo lumen integration tests currently pin PostgreSQL 14 for the gateway compatibility matrix.\n- [M029] In repo atlas, the release branch is release/atlas-2.x.\n- [M018] The billing-db-dsn secret is owned by the platform-secrets Terraform module.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M011",
+        "M012",
+        "M490",
+        "M029",
+        "M018"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q008",
+      "category": "temporal_current",
+      "prohibited_context_ranks": [
+        1
+      ],
+      "prohibited_ids": [
+        "M013"
+      ],
+      "query": "What is the current production deployment command?",
+      "request_fingerprint": "3c0a2760459abcb9b615c161148cb9cdca5236247c3867fdf5cd0d9b8c6dad8c",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q008",
+      "retrieved_context": "QUESTION:\nWhat is the current production deployment command?\n\nRETRIEVED MEMORY:\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M014] After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.\n- [M497] The reporter canary deployment example uses deployctl preview --region test-5; it is not the production release command.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M032] Bob owns the Beacon deployment pipeline.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M013",
+        "M014",
+        "M497",
+        "M031",
+        "M032"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q010",
+      "category": "temporal_asof",
+      "prohibited_context_ranks": [
+        1
+      ],
+      "prohibited_ids": [
+        "M014"
+      ],
+      "query": "As of March 1, 2026, what production deployment command was in use?",
+      "request_fingerprint": "e6136d6da6d2a6f6266a38c49ebef9bb880110af2481b8d0bac21b2847f77d1b",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q010",
+      "retrieved_context": "QUESTION:\nAs of March 1, 2026, what production deployment command was in use?\nQuestion as-of timestamp: 2026-03-01T23:59:00+00:00\n\nRETRIEVED MEMORY:\n- [M014] After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M497] The reporter canary deployment example uses deployctl preview --region test-5; it is not the production release command.\n- [M459] In repo kestrel, release rehearsals use branch release/kestrel-1.x; this is unrelated to Atlas releases.\n- [M031] Alice owns the Atlas deployment pipeline.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M014",
+        "M013",
+        "M497",
+        "M459",
+        "M031"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q012",
+      "category": "multihop",
+      "prohibited_context_ranks": [],
+      "prohibited_ids": [],
+      "query": "If I need to change the invoice reconciler's DB credentials, which secret/module/workflow chain matters?",
+      "request_fingerprint": "b0ceefdbd568df4dfc94a6f8048c48d214ce1d8d9ced0faa1fee402a7baef9ed",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q012",
+      "retrieved_context": "QUESTION:\nIf I need to change the invoice reconciler's DB credentials, which secret/module/workflow chain matters?\n\nRETRIEVED MEMORY:\n- [M017] The invoice reconciler gets its database DSN from the secret named billing-db-dsn.\n- [M441] The cedar read-only database credential is secret cedar-db-ro, managed by the cedar-secrets Terraform module and checked by cedar-plan.\n- [M040] The billing web UI is deployed independently of the invoice reconciler.\n- [M477] The ion read-only database credential is secret ion-db-ro, managed by the ion-secrets Terraform module and checked by ion-plan.\n- [M489] The kestrel read-only database credential is secret kestrel-db-ro, managed by the kestrel-secrets Terraform module and checked by kestrel-plan.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M017",
+        "M441",
+        "M040",
+        "M477",
+        "M489"
+      ],
+      "stale_or_prohibited_context_present": false,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q013",
+      "category": "multihop",
+      "prohibited_context_ranks": [],
+      "prohibited_ids": [],
+      "query": "A thumbnail job landed in dead-letter. Which consumer and replay command handle it?",
+      "request_fingerprint": "ff59288d69ee4ab699bb681138c1479ca8ed1460e4c093fca622a04f7f1b87d1",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q013",
+      "retrieved_context": "QUESTION:\nA thumbnail job landed in dead-letter. Which consumer and replay command handle it?\n\nRETRIEVED MEMORY:\n- [M020] The thumbnail worker publishes failed jobs to the image-deadletter topic.\n- [M022] The media-repair service's replay command is 'media-repair replay --source deadletter'.\n- [M452] Failed avatar test jobs go to avatar-deadletter-4; the replay helper is avatar-repair replay --source test-deadletter.\n- [M464] Failed scheduler test jobs go to scheduler-deadletter-3; the replay helper is scheduler-repair replay --source test-deadletter.\n- [M021] The image-deadletter topic is consumed by the media-repair service.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M020",
+        "M022",
+        "M452",
+        "M464",
+        "M021"
+      ],
+      "stale_or_prohibited_context_present": false,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q014",
+      "category": "procedure",
+      "prohibited_context_ranks": [
+        2
+      ],
+      "prohibited_ids": [
+        "M024"
+      ],
+      "query": "Generated Go output is stale. What workflow previously succeeded?",
+      "request_fingerprint": "dc6a8c34b5a024629477ce81809942fbfb8d4e51c7ec0158089a8ea089090555",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q014",
+      "retrieved_context": "QUESTION:\nGenerated Go output is stale. What workflow previously succeeded?\n\nRETRIEVED MEMORY:\n- [M023] For stale generated Go code: edit the source schema, run the generator, inspect the generated diff, run package tests, then run the full suite.\n- [M024] Editing generated Go files directly made the immediate test pass but failed regeneration checks in CI.\n- [M019] Changes to platform-secrets require running the secrets-plan GitHub workflow before merge.\n- [M474] Repo fjord generates internal/gen/scheduler_client.go from api/scheduler/v1/scheduler.proto during its own codegen tests.\n- [M450] Repo lumen generates internal/gen/gateway_client.go from api/gateway/v1/gateway.proto during its own codegen tests.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M023",
+        "M024",
+        "M019",
+        "M474",
+        "M450"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q015",
+      "category": "procedure",
+      "prohibited_context_ranks": [
+        2
+      ],
+      "prohibited_ids": [
+        "M026"
+      ],
+      "query": "How should I attack a flaky cache race based on prior verified outcomes?",
+      "request_fingerprint": "5b935e25d6ca5c0ad344b925af4503559ae92076dea6d44761a229fe47d2d5c5",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q015",
+      "retrieved_context": "QUESTION:\nHow should I attack a flaky cache race based on prior verified outcomes?\n\nRETRIEVED MEMORY:\n- [M025] For flaky cache races: reproduce under -race, add synchronization at the ownership boundary, then rerun the focused race test before the whole package.\n- [M026] Adding sleeps around the cache race reduced failures locally but hidden stress tests still failed; do not use timing sleeps as the fix.\n- [M006] The cache invalidator must release cacheMu before calling broadcastInvalidation because the callback can synchronously re-enter the cache.\n- [M493] A race in archive was investigated with tracing and stress tests; adding arbitrary sleeps was documented as unreliable.\n- [M027] For NDJSON protocol bugs: capture exact frames, validate one JSON object per line, and keep logs off stdout; this resolved the bridge desynchronization.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M025",
+        "M026",
+        "M006",
+        "M493",
+        "M027"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q016",
+      "category": "procedure",
+      "prohibited_context_ranks": [
+        1
+      ],
+      "prohibited_ids": [
+        "M028"
+      ],
+      "query": "What's the successful way to debug newline-delimited JSON framing?",
+      "request_fingerprint": "ba7b0af78a2a46f41c15d1c39a4c373ab4bd63a68408a0b7f9b08c84892971b7",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q016",
+      "retrieved_context": "QUESTION:\nWhat's the successful way to debug newline-delimited JSON framing?\n\nRETRIEVED MEMORY:\n- [M028] Pretty-printing outbound JSON across multiple lines made bridge framing failures worse and was reverted.\n- [M009] The macOS bridge host speaks newline-delimited JSON over stdin/stdout; stdout must contain protocol frames only.\n- [M027] For NDJSON protocol bugs: capture exact frames, validate one JSON object per line, and keep logs off stdout; this resolved the bridge desynchronization.\n- [M499] The mailer import utility reads newline-delimited JSON files from disk, while its diagnostic summary is written to a normal log file.\n- [M037] Human-readable audit logs are JSONL files compressed daily with zstd.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M028",
+        "M009",
+        "M027",
+        "M499",
+        "M037"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q019",
+      "category": "scope",
+      "prohibited_context_ranks": [],
+      "prohibited_ids": [
+        "M030"
+      ],
+      "query": "For Atlas, what release branch should I target?",
+      "request_fingerprint": "5e909a0147164002a4f3a312b506ebd7e99cf461f13f98b10614ecfb0174c860",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q019",
+      "retrieved_context": "QUESTION:\nFor Atlas, what release branch should I target?\n\nRETRIEVED MEMORY:\n- [M459] In repo kestrel, release rehearsals use branch release/kestrel-1.x; this is unrelated to Atlas releases.\n- [M029] In repo atlas, the release branch is release/atlas-2.x.\n- [M495] In repo glint, release rehearsals use branch release/glint-1.x; this is unrelated to Atlas releases.\n- [M471] In repo cedar, release rehearsals use branch release/cedar-1.x; this is unrelated to Atlas releases.\n- [M447] In repo ion, release rehearsals use branch release/ion-1.x; this is unrelated to Atlas releases.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M459",
+        "M029",
+        "M495",
+        "M471",
+        "M447"
+      ],
+      "stale_or_prohibited_context_present": false,
+      "wrong_scope_context_present": true,
+      "wrong_scope_context_ranks": [
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "case_id": "Q022",
+      "category": "temporal_current",
+      "prohibited_context_ranks": [
+        1
+      ],
+      "prohibited_ids": [
+        "M041"
+      ],
+      "query": "Which bucket should new QA fixture runs use now?",
+      "request_fingerprint": "d1432584f10c9cf27f797872dbf730b54cad5161a564c0a40763dfdbf37b6b23",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q022",
+      "retrieved_context": "QUESTION:\nWhich bucket should new QA fixture runs use now?\n\nRETRIEVED MEMORY:\n- [M041] The test fixture bucket is qa-fixtures-v1.\n- [M042] The test fixture bucket was renamed to qa-fixtures-v2; qa-fixtures-v1 is read-only for legacy runs.\n- [M043] The compatibility test still intentionally reads archived samples from qa-fixtures-v1.\n- [M492] A delta generated-code incident was fixed by regenerating fixtures and running focused tests; direct edits were rejected during review.\n- [M044] A successful schema migration dry-run used a transaction plus EXPLAIN on the backfill query before applying the migration.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M041",
+        "M042",
+        "M043",
+        "M492",
+        "M044"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q024",
+      "category": "protocol",
+      "prohibited_context_ranks": [
+        5
+      ],
+      "prohibited_ids": [
+        "M037",
+        "M038"
+      ],
+      "query": "Where should bridge diagnostic logs go, and why?",
+      "request_fingerprint": "47520dfe6c3c70adb36b03f18dee073f9343610f4a2d43025d743046173bcfb5",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q024",
+      "retrieved_context": "QUESTION:\nWhere should bridge diagnostic logs go, and why?\n\nRETRIEVED MEMORY:\n- [M010] Diagnostic logging for the bridge host belongs on stderr so it cannot corrupt NDJSON framing.\n- [M028] Pretty-printing outbound JSON across multiple lines made bridge framing failures worse and was reverted.\n- [M027] For NDJSON protocol bugs: capture exact frames, validate one JSON object per line, and keep logs off stdout; this resolved the bridge desynchronization.\n- [M009] The macOS bridge host speaks newline-delimited JSON over stdin/stdout; stdout must contain protocol frames only.\n- [M037] Human-readable audit logs are JSONL files compressed daily with zstd.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M010",
+        "M028",
+        "M027",
+        "M009",
+        "M037"
+      ],
+      "stale_or_prohibited_context_present": true,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q025",
+      "category": "negative",
+      "prohibited_context_ranks": [],
+      "prohibited_ids": [],
+      "query": "What is the root password for the production database?",
+      "request_fingerprint": "b2be199fa8612c303e54205176a713ee4133164bf698e81b6d6912d15444a898",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q025",
+      "retrieved_context": "QUESTION:\nWhat is the root password for the production database?\n\nRETRIEVED MEMORY:\n- [M453] The ember read-only database credential is secret ember-db-ro, managed by the ember-secrets Terraform module and checked by ember-plan.\n- [M441] The cedar read-only database credential is secret cedar-db-ro, managed by the cedar-secrets Terraform module and checked by cedar-plan.\n- [M489] The kestrel read-only database credential is secret kestrel-db-ro, managed by the kestrel-secrets Terraform module and checked by kestrel-plan.\n- [M477] The ion read-only database credential is secret ion-db-ro, managed by the ion-secrets Terraform module and checked by ion-plan.\n- [M465] The glint read-only database credential is secret glint-db-ro, managed by the glint-secrets Terraform module and checked by glint-plan.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M453",
+        "M441",
+        "M489",
+        "M477",
+        "M465"
+      ],
+      "stale_or_prohibited_context_present": false,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    },
+    {
+      "case_id": "Q026",
+      "category": "negative",
+      "prohibited_context_ranks": [],
+      "prohibited_ids": [],
+      "query": "Which engineer is on call tonight?",
+      "request_fingerprint": "75d4a26041763baa41271451f89b80a679495d63e754a8aefe166db93504debf",
+      "request_id": "reader_agentmemory_gen13_stress_r1_Q026",
+      "retrieved_context": "QUESTION:\nWhich engineer is on call tonight?\n\nRETRIEVED MEMORY:\n- [M010] Diagnostic logging for the bridge host belongs on stderr so it cannot corrupt NDJSON framing.\n- [M009] The macOS bridge host speaks newline-delimited JSON over stdin/stdout; stdout must contain protocol frames only.\n- [M011] The build coordinator is strix03.\n- [M027] For NDJSON protocol bugs: capture exact frames, validate one JSON object per line, and keep logs off stdout; this resolved the bridge desynchronization.\n- [M050] The team's lunch order cutoff on Fridays is 11:15 AM.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+      "retrieved_ids": [
+        "M010",
+        "M009",
+        "M011",
+        "M027",
+        "M050"
+      ],
+      "stale_or_prohibited_context_present": false,
+      "wrong_scope_context_present": false,
+      "wrong_scope_context_ranks": []
+    }
+  ]
+}

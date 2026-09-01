@@ -1,0 +1,38 @@
+{
+  "batch_id": "63a293f856db06320d1b98b1f11baf5f",
+  "batch_index": 2,
+  "created_at": 1788286990.5580318,
+  "fingerprint": "3c0a2760459abcb9b615c161148cb9cdca5236247c3867fdf5cd0d9b8c6dad8c",
+  "metadata": {
+    "case_id": "Q008",
+    "frozen_retrieval_artifact": "/Users/bmosher/source/repos/memory-bakeoff/results/agentmemory_raw_product_gen13_stress-r1/run.json",
+    "frozen_retrieval_sha256": "fe72f67efe2651a0ca164c6dfaa0589d799c39d47f08208a378b177bf20fc17c",
+    "mode": "raw",
+    "provider": "agentmemory_gen13_stress_r1",
+    "retrieved_ids": [
+      "M013",
+      "M014",
+      "M497",
+      "M031",
+      "M032"
+    ],
+    "top_k": 5
+  },
+  "openai_request": {
+    "messages": [
+      {
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess.",
+        "role": "system"
+      },
+      {
+        "content": "QUESTION:\nWhat is the current production deployment command?\n\nRETRIEVED MEMORY:\n- [M013] Production deploys use 'deployctl push --region west'.\n- [M014] After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.\n- [M497] The reporter canary deployment example uses deployctl preview --region test-5; it is not the production release command.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M032] Bob owns the Beacon deployment pipeline.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+        "role": "user"
+      }
+    ],
+    "model": "chatgpt-sidecar",
+    "temperature": 0.0
+  },
+  "protocol_version": 1,
+  "request_id": "reader_agentmemory_gen13_stress_r1_Q008",
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_agentmemory_gen13_stress_r1_Q008.json conforming to the ChatGPT sidecar protocol."
+}

@@ -1,0 +1,38 @@
+{
+  "batch_id": "210e4c7e4de5a9984e21efbf8f5deea8",
+  "batch_index": 9,
+  "created_at": 1788286990.5435252,
+  "fingerprint": "04cb4c28d4c6fca9fd0675711c88d6ce8a677540a7e391029402587892e7177b",
+  "metadata": {
+    "case_id": "Q019",
+    "frozen_retrieval_artifact": "/Users/bmosher/source/repos/memory-bakeoff/results/agentmemory_raw_product_gen13_core-r1/run.json",
+    "frozen_retrieval_sha256": "5a026371738611da90715b47d6555cb7a5b6b2462b713918555f8890dae4c347",
+    "mode": "raw",
+    "provider": "agentmemory_gen13_core_r1",
+    "retrieved_ids": [
+      "M029",
+      "M030",
+      "M031",
+      "M033",
+      "M014"
+    ],
+    "top_k": 5
+  },
+  "openai_request": {
+    "messages": [
+      {
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess.",
+        "role": "system"
+      },
+      {
+        "content": "QUESTION:\nFor Atlas, what release branch should I target?\n\nRETRIEVED MEMORY:\n- [M029] In repo atlas, the release branch is release/atlas-2.x.\n- [M030] In repo beacon, the release branch is stable.\n- [M031] Alice owns the Atlas deployment pipeline.\n- [M033] In repo atlas, integration tests use PostgreSQL 17.\n- [M014] After the deploy service migration, production deploys use 'shipit release --cluster pdx'; deployctl is obsolete.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+        "role": "user"
+      }
+    ],
+    "model": "chatgpt-sidecar",
+    "temperature": 0.0
+  },
+  "protocol_version": 1,
+  "request_id": "reader_agentmemory_gen13_core_r1_Q019",
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_agentmemory_gen13_core_r1_Q019.json conforming to the ChatGPT sidecar protocol."
+}

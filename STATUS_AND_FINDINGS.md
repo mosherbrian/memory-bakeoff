@@ -164,6 +164,14 @@ memories and falsely superseded 418/450 distinct stress distractors (92.9%),
 with zero legitimate benchmark correction supersessions.  See
 `research/AGENTMEMORY_RAW_PRODUCT_GEN13.md`.
 
+Generation 14 froze (without rerunning retrieval) the compatible 14-case
+ChatGPT-sidecar reader inputs for both Gen13 core and stress contexts.  The
+interactive sidecar responder is not available in the Codex session, so no
+reader answer or derived propagation rate is published.  The complete pending
+request packages, exact contexts, source hashes, and fingerprints are in
+`results/agentmemory_raw_product_gen14_reader_requests/`; see
+`research/AGENTMEMORY_READER_GEN14.md`.
+
 ### Mem0
 
 Pinned scoring policy: `mem0ai/mem0` commit `19cb89aff472325c707f64b2f34ae6afdbf7faf7`.

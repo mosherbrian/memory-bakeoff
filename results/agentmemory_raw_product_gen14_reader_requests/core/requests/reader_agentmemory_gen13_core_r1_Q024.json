@@ -1,0 +1,38 @@
+{
+  "batch_id": "210e4c7e4de5a9984e21efbf8f5deea8",
+  "batch_index": 11,
+  "created_at": 1788286990.5435252,
+  "fingerprint": "eaed0e7395993b95d0aa96335fb587d3c050ae533ee3a51367c51201c4a63663",
+  "metadata": {
+    "case_id": "Q024",
+    "frozen_retrieval_artifact": "/Users/bmosher/source/repos/memory-bakeoff/results/agentmemory_raw_product_gen13_core-r1/run.json",
+    "frozen_retrieval_sha256": "5a026371738611da90715b47d6555cb7a5b6b2462b713918555f8890dae4c347",
+    "mode": "raw",
+    "provider": "agentmemory_gen13_core_r1",
+    "retrieved_ids": [
+      "M010",
+      "M028",
+      "M027",
+      "M037",
+      "M009"
+    ],
+    "top_k": 5
+  },
+  "openai_request": {
+    "messages": [
+      {
+        "content": "You are a strict memory-grounded coding assistant. Never use outside knowledge or guess.",
+        "role": "system"
+      },
+      {
+        "content": "QUESTION:\nWhere should bridge diagnostic logs go, and why?\n\nRETRIEVED MEMORY:\n- [M010] Diagnostic logging for the bridge host belongs on stderr so it cannot corrupt NDJSON framing.\n- [M028] Pretty-printing outbound JSON across multiple lines made bridge framing failures worse and was reverted.\n- [M027] For NDJSON protocol bugs: capture exact frames, validate one JSON object per line, and keep logs off stdout; this resolved the bridge desynchronization.\n- [M037] Human-readable audit logs are JSONL files compressed daily with zstd.\n- [M009] The macOS bridge host speaks newline-delimited JSON over stdin/stdout; stdout must contain protocol frames only.\n\nAnswer the QUESTION using only RETRIEVED MEMORY. Preserve exact identifiers, commands, paths, and numbers. Prefer the current/correct/verified memory when the context contains conflicting or failed alternatives. Do not mention obsolete or failed alternatives unless the question explicitly asks about history. If the answer is not supported by retrieved memory, output exactly INSUFFICIENT_MEMORY. Be concise.",
+        "role": "user"
+      }
+    ],
+    "model": "chatgpt-sidecar",
+    "temperature": 0.0
+  },
+  "protocol_version": 1,
+  "request_id": "reader_agentmemory_gen13_core_r1_Q024",
+  "worker_instruction": "Answer this LLM request as the model. Write a response JSON file named responses/reader_agentmemory_gen13_core_r1_Q024.json conforming to the ChatGPT sidecar protocol."
+}
