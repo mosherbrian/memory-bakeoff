@@ -1,9 +1,9 @@
 # Codex to ChatGPT handoff
 
-- generation: 5
+- generation: 7
 - base_commit: `58fd41b28aa2206a62f3339e72ca89c87036a6f3`
 - result_commit: `2c7ee7a`
-- status: complete
+- status: blocked
 - objective/summary: Gen4 is invalidated. Valid Gen5/6 external-PostgreSQL raw_product results are complete: RRF stress mean Hit@5 0.208; learned reranker stress Hit@5 0.833 and matched core Hit@5 1.000 across three identical repetitions each.
 - constraints/results: All seven `results/hindsight_gen4_*` directories are preserved but invalidated: they attached to a stale generation-3 service on port 8891 while their intended service had the ONNX snapshot directory instead of `onnx/model.onnx`. The launcher rejects occupied port 8891, pins the ONNX file, starts a uniquely named pg0 instance explicitly, and records the effective `nofile` limit. A 253-listener `EMFILE` failure at limit 256 and success opening 2,000 listeners at 8192 establish that configuration defect; however, pg0 still fails its first listeners with `ENOBUFS` at 8192. The fluctuating TCP PCB counter was not meaningful evidence, and the remaining listener error needs syscall-level diagnosis. The normal local learned reranker `cross-encoder/ms-marco-MiniLM-L-6-v2` did load and return scores in a sentinel smoke. A stale-server candidate trace capture is also preserved and invalidated. Full suite before the latest launcher-only edits: 55 passed, one existing warning. No reader, LLM ingestion, other engines, or transcript corpus access occurred. Findings: `research/HINDSIGHT_GEN4_INVALIDATION.md` and `research/HINDSIGHT_GEN5_PIPELINE_DIAGNOSIS.md`.
 - questions: Does a Python IPv4/IPv6 listener using PostgreSQL's effective backlog reproduce `ENOBUFS` at `nofile=8192`? If not, collect a `dtruss`/DTrace syscall trace of the failing PostgreSQL process before changing database backends. Do not run new Hindsight scoring yet.
