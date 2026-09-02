@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 19
+ - base_commit: `5bd23f9`
+ - result_commit: `a72e78c`
+ - status: blocked_configured_schema_extraction
+ - objective/summary: Froze and exercised the approved general Graphiti configured-product schema, then stopped at its required first extraction gate. No 50/500 score, reader run, lifecycle sentinel, or point-in-time sentinel was run.
+ - constraints/results: The schema uses Graphiti's supported entity/edge customization only: ArtifactResource, SystemComponent, Configuration, Environment, ProcedureCommand, MeasurementResult, DecisionConclusion, and one general relation family. With the real 35B LAN LLM, local Nomic embeddings, and embedded FalkorDB, the publication-safe branch assertion still extracted only `release/alpha` as ArtifactResource and native edge extraction returned `[]`; `alpha` was not modeled as Configuration. This is exact native trace evidence, not a harness repair failure. Per Gen19 stop condition, larger temporal/lifecycle diagnostics were not run. Full tests: 64 passed, one existing warning. See `research/GRAPHITI_GEN19_SCHEMA.md`, `research/GRAPHITI_GEN19_FINDINGS.md`, and `results/graphiti_gen19_schema_trace/trace.json`.
+ - questions: Decide whether a distinct, genuinely general supported structured-episode ingestion profile for single-entity assertions is in scope to evaluate. Do not tune this frozen schema from the observed failure, use hand-authored triples/edges, or run a score.
+
+<!-- Historical Gen18 handoff; retained for audit, not current control-plane state.
  - generation: 18
  - base_commit: `5fce6b5`
  - result_commit: `c01714b`
@@ -7,6 +16,8 @@
  - objective/summary: Completed the authorized Graphiti OSS source/runtime preflight and all approved non-score LAN-model sentinels. No benchmark score, reader evaluation, or unrelated engine run occurred.
  - constraints/results: Exact upstream is Graphiti v0.29.3 / `021d3a57d511f21b10adaf7fa923bd5c1fce5e9d`, with supported embedded FalkorDB Lite (FalkorDB 4.18.3) and local Ollama nomic-embed-text (768-D). LAN `qwen3.8-27b-vulkan` and `qwen3.6-35b-vulkan-nothink` through `http://strix-halo.local:8080/v1` passed Graphiti-native schema extraction. Both stronger models created exact native edge→episode provenance for M012/M014 and showed correction invalidation, but default text ingestion created no fact edges for M011/M013/M035/M036. A separately labeled configured-policy attempt added Graphiti's supported `custom_extraction_instructions` for short coding facts and was indistinguishable. Focused M035 native trace proves node extraction retained only `release/alpha`, while the native edge-extraction response was empty—no edge/node-name mismatch. Default 35B search also returned an invalidated stale edge with current evidence, a harmful-context observation requiring later temporal policy validation. No fake extractor, LSA, hand-authored edges, paid API, or score was substituted. Full tests: 64 passed, one existing warning. See `research/GRAPHITI_GEN18_LAN_FOLLOWUP.md` and the referenced non-score result directories.
  - questions: Approve or revise the proposed pre-scoring, separately labeled Graphiti configured-product ontology (ReleaseChannel/Branch/Host/Repository/Command/FilePath/Credential plus typed relations), including schema-freeze and anti-query-fit rules. Do not use harness-generated fact triples. The default-policy limitation is now documented and should remain a separate result.
+
+-->
 
 <!-- Historical Gen17 handoff; retained for audit, not current control-plane state.
  - generation: 17
