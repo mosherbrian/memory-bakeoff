@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 21
+ - base_commit: `2a96b1cca99694d05dc0b87fd6a62f22704bb48e`
+ - result_commit: `02490da`
+ - status: complete_raw_product_with_lifecycle_caveat
+ - objective/summary: Completed the authorized late Round-1 Perseus Vault v2.23.2 raw-product evaluation only. The frozen corpus/scorer were unchanged; no prior engine, Graphiti, reader, private corpus, or Gen22 fixture was touched.
+ - constraints/results: Official Apple-Silicon v2.23.2 archive SHA-256 matched GitHub (`e9b091…920dcb`), source commit `9c829207…`. Evaluated identity: documented operator CLI `write` seed + native MCP hybrid recall, bundled quantized all-MiniLM-L6-v2 384-D, encrypted SQLite fresh per run, generic `benchmark_record`, key `record-<ID>`, SHA-256 scope workspace, no explicit correction/maintenance/decay/capture. MCP `remember` without admission is non-serveable, so it was not substituted. Exact native ID/body provenance and workspace isolation preflight passed. Three audited core runs: Hit/all-relevant 1.000, prohibited 0.117, 50/50 active. Three audited stress runs: Hit/all-relevant 0.958, prohibited 0.108, but 500 native receipts led to only 393 active records after ordinary writes (107 native write-time consolidations). Explicit `supersede(M011,M012)` and as_of/history, plus valid_at/bitemporal, smoke-tested as real capability only. Tests: 67 passed, one existing warning. See `research/PERSEUS_VAULT_GEN21.md` and audited result directories.
+ - questions: Round 1 can close after this late entrant, but interpret Perseus retrieval alongside its reproducible 107/500 stress state loss. Gen22 should freeze the engine-independent longitudinal/bitemporal fixture; do not credit the Gen21 capability smoke as head-to-head temporal performance.
+
+<!-- Historical Gen20 handoff; retained for audit, not current control-plane state.
  - generation: 20
  - base_commit: `4d1ac23e5e95028c3b23ac6f9b799fee9c18d694`
  - result_commit: `8211596`
@@ -7,6 +16,8 @@
  - objective/summary: Completed the one authorized, separately labeled Graphiti `EpisodeType.json` structured-episode profile. The canonical M035 first gate passed with a native fact edge and exact episode provenance. The required fixed eight-record second gate then failed on false lifecycle behavior and missing procedure evidence. No lifecycle/point-in-time sentinel, 50/500 score, reader run, other engine, or private corpus action occurred.
  - constraints/results: Frozen profile: Graphiti OSS v0.29.3 / Gen19 general schema unchanged; LAN `qwen3.6-35b-vulkan-nothink`, local Ollama `nomic-embed-text` 768-D, embedded FalkorDB Lite. The deterministic JSON envelope copies only canonical ID, assertion text, reference time, scope, and constant source kind—no triples, relation/object/type hints, truth status, correction links, or query terms. M035 native JSON extraction created the exact preview-Redis `USES` fact with native episode provenance. In the second gate, M036 (development Redis DB 3) also invalidated the distinct M035 frontend-preview Redis fact: false cross-environment invalidation. M024 (failed direct-edit procedure) yielded no fact edge. M012 also lacked a stable direct current-coordinator fact. These are native trace observations, not harness filtering or repair. Full tests: 66 passed, one existing warning. See `research/GRAPHITI_GEN20_STRUCTURED_PROFILE.md`, `research/GRAPHITI_GEN20_FINDINGS.md`, `results/graphiti_gen20_json_m035_gate/trace.json`, and `results/graphiti_gen20_json_gate2/trace.json`.
  - questions: Treat Gen20 as a no-score blocked configured-product profile. Do not tune its envelope/schema/model or run its lifecycle/temporal/score phases. Decide whether a distinct future Graphiti profile with independently justified environment/procedure representation is in scope, while preserving this evidence.
+
+-->
 
 <!-- Historical Gen19 handoff; retained for audit, not current control-plane state.
  - generation: 19
