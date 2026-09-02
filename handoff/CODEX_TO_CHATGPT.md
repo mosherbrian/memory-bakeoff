@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 20
+ - base_commit: `4d1ac23e5e95028c3b23ac6f9b799fee9c18d694`
+ - result_commit: `8211596`
+ - status: blocked_structured_episode_second_gate
+ - objective/summary: Completed the one authorized, separately labeled Graphiti `EpisodeType.json` structured-episode profile. The canonical M035 first gate passed with a native fact edge and exact episode provenance. The required fixed eight-record second gate then failed on false lifecycle behavior and missing procedure evidence. No lifecycle/point-in-time sentinel, 50/500 score, reader run, other engine, or private corpus action occurred.
+ - constraints/results: Frozen profile: Graphiti OSS v0.29.3 / Gen19 general schema unchanged; LAN `qwen3.6-35b-vulkan-nothink`, local Ollama `nomic-embed-text` 768-D, embedded FalkorDB Lite. The deterministic JSON envelope copies only canonical ID, assertion text, reference time, scope, and constant source kind—no triples, relation/object/type hints, truth status, correction links, or query terms. M035 native JSON extraction created the exact preview-Redis `USES` fact with native episode provenance. In the second gate, M036 (development Redis DB 3) also invalidated the distinct M035 frontend-preview Redis fact: false cross-environment invalidation. M024 (failed direct-edit procedure) yielded no fact edge. M012 also lacked a stable direct current-coordinator fact. These are native trace observations, not harness filtering or repair. Full tests: 66 passed, one existing warning. See `research/GRAPHITI_GEN20_STRUCTURED_PROFILE.md`, `research/GRAPHITI_GEN20_FINDINGS.md`, `results/graphiti_gen20_json_m035_gate/trace.json`, and `results/graphiti_gen20_json_gate2/trace.json`.
+ - questions: Treat Gen20 as a no-score blocked configured-product profile. Do not tune its envelope/schema/model or run its lifecycle/temporal/score phases. Decide whether a distinct future Graphiti profile with independently justified environment/procedure representation is in scope, while preserving this evidence.
+
+<!-- Historical Gen19 handoff; retained for audit, not current control-plane state.
  - generation: 19
  - base_commit: `5bd23f9`
  - result_commit: `a72e78c`
@@ -7,6 +16,8 @@
  - objective/summary: Froze and exercised the approved general Graphiti configured-product schema, then stopped at its required first extraction gate. No 50/500 score, reader run, lifecycle sentinel, or point-in-time sentinel was run.
  - constraints/results: The schema uses Graphiti's supported entity/edge customization only: ArtifactResource, SystemComponent, Configuration, Environment, ProcedureCommand, MeasurementResult, DecisionConclusion, and one general relation family. With the real 35B LAN LLM, local Nomic embeddings, and embedded FalkorDB, the publication-safe branch assertion still extracted only `release/alpha` as ArtifactResource and native edge extraction returned `[]`; `alpha` was not modeled as Configuration. This is exact native trace evidence, not a harness repair failure. Per Gen19 stop condition, larger temporal/lifecycle diagnostics were not run. Full tests: 64 passed, one existing warning. See `research/GRAPHITI_GEN19_SCHEMA.md`, `research/GRAPHITI_GEN19_FINDINGS.md`, and `results/graphiti_gen19_schema_trace/trace.json`.
  - questions: Decide whether a distinct, genuinely general supported structured-episode ingestion profile for single-entity assertions is in scope to evaluate. Do not tune this frozen schema from the observed failure, use hand-authored triples/edges, or run a score.
+
+-->
 
 <!-- Historical Gen18 handoff; retained for audit, not current control-plane state.
  - generation: 18
