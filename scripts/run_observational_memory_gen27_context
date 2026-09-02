@@ -90,6 +90,7 @@ def main() -> int:
     parser.add_argument("--config-dir", type=Path, default=ROOT / ".control-plane" / "pi-gen27")
     parser.add_argument("--reader-endpoint", default="http://strix-halo.local:8080/v1")
     parser.add_argument("--reader-model", default="qwen3.6-35b-vulkan-nothink")
+    parser.add_argument("--launch-guard-seconds", type=float, default=15.0, help="native observer launch window; recorded for reproducibility")
     args = parser.parse_args()
     if args.repetitions < 1:
         raise SystemExit("--repetitions must be positive")
@@ -106,7 +107,8 @@ def main() -> int:
     identity = {"fixture_version": FIXTURE_VERSION, "fixture_sha256": fixture_sha256(), "scorer_version": SCORER_VERSION,
                 "scorer_contract_sha256": scorer_contract_sha256(), "pi_cli": version(["node", str(cli), "--version"]), "node": version(["node", "--version"]),
                 "extension_source_commit": version(["git", "-C", str(source), "rev-parse", "HEAD"]), "foreground_provider": "lan-openai", "foreground_model": args.reader_model,
-                "reader_endpoint": args.reader_endpoint, "reader_model": args.reader_model, "compaction_event": "om.folded", "operator_compaction": False}
+                "reader_endpoint": args.reader_endpoint, "reader_model": args.reader_model, "compaction_event": "om.folded", "operator_compaction": False,
+                "launch_guard_seconds": args.launch_guard_seconds}
     summary: dict[str, Any] = {"schema_version": 1, "generation": 27, "status": "running", "system_identity": identity, "repetitions": []}
     (args.out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     for rep in range(1, args.repetitions + 1):
@@ -126,7 +128,8 @@ def main() -> int:
                 print(f"Gen27 rep {rep}: turn {order}/40", flush=True)
                 baseline = len(debug_events(debug_path)); before_leaf = rpc.entries()["leafId"]
                 rpc.prompt_until_settled(turn)
-                barrier = observation_barrier(rpc, read_debug=lambda: debug_events(debug_path), baseline_debug_count=baseline)
+                barrier = observation_barrier(rpc, read_debug=lambda: debug_events(debug_path), baseline_debug_count=baseline,
+                                              launch_guard_seconds=args.launch_guard_seconds)
                 snapshot = rpc.entries()
                 if anchor_id:
                     native_id = native_id_for_prompt(snapshot.get("entries", []), turn)
