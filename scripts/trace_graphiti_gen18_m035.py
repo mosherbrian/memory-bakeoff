@@ -13,9 +13,10 @@ from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
 from graphiti_core.llm_client.config import LLMConfig
 from graphiti_core.llm_client.openai_generic_client import OpenAIGenericClient
 from graphiti_core.nodes import EpisodeType
+from memory_bakeoff.graphiti_gen19_schema import EDGE_TYPE_MAP, EDGE_TYPES, ENTITY_TYPES, EXTRACTION_INSTRUCTIONS
 from redislite.async_falkordb_client import AsyncFalkorDB
 
-OUT = Path(__file__).resolve().parents[1] / "results" / "graphiti_gen18_m035_trace"
+OUT = Path(__file__).resolve().parents[1] / "results" / "graphiti_gen19_schema_trace"
 
 class RecordingClient(OpenAIGenericClient):
     def __init__(self, **kwargs):
@@ -34,7 +35,7 @@ async def main():
     db = AsyncFalkorDB(dbfilename=str(OUT / "graphiti.falkordb"))
     graphiti = Graphiti(graph_driver=FalkorDriver(falkor_db=db, database="graphiti_gen18_m035_trace"), llm_client=llm, embedder=OpenAIEmbedder(config=OpenAIEmbedderConfig(api_key="ollama", embedding_model="nomic-embed-text", embedding_dim=768, base_url="http://127.0.0.1:11434/v1")), cross_encoder=OpenAIRerankerClient(client=llm, config=cfg))
     try:
-        result = await graphiti.add_episode(name="M035", episode_body="The alpha release branch is release/alpha.", source_description="canonical benchmark record M035", reference_time=datetime(2026, 2, 4, 10, tzinfo=timezone.utc), source=EpisodeType.text, group_id="alpha")
+        result = await graphiti.add_episode(name="T_BRANCH", episode_body="The alpha release branch is release/alpha.", source_description="publication-safe coding configuration sentinel", reference_time=datetime(2026, 2, 4, 10, tzinfo=timezone.utc), source=EpisodeType.text, group_id="alpha", entity_types=ENTITY_TYPES, edge_types=EDGE_TYPES, edge_type_map=EDGE_TYPE_MAP, custom_extraction_instructions=EXTRACTION_INSTRUCTIONS)
         data = {"nodes": [{"uuid": n.uuid, "name": n.name, "labels": n.labels} for n in result.nodes], "edges": [{"uuid": e.uuid, "fact": e.fact} for e in result.edges], "llm_calls": llm.calls}
         (OUT / "trace.json").write_text(json.dumps(data, indent=2) + "\n")
     finally:
