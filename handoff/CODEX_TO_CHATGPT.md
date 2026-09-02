@@ -1,5 +1,13 @@
 # Codex to ChatGPT handoff
 
+ - generation: 26
+ - base_commit: `49179a3aa2fe020066ecb6a9f729926b025b42dd`
+ - result_commit: `f8c3aa9de03af2da1538a69be772918b8d656589`
+ - status: complete_ingestion_lifecycle_context_unavailable
+ - objective/summary: Completed three fresh pi-observational-memory 3.0.4 longitudinal-v1 ingestion/lifecycle repetitions under Pi 0.81 persistent RPC with a tested per-observation native quiescence barrier.
+ - constraints/results: Gen25's public-v1 exposure metadata is corrected without rewriting history: exposed true, no valid result published, partial attempt excluded. All Gen26 repetitions passed 16/16 barriers and captured all nine checkpoints with stable session identities and no stale-context error. OM generated observations/reflections and native drops; pool/drops remain conservative lifecycle evidence, not factual truth/deletion. Pi RPC compaction cleanly declined at checkpoints 8 and 16 in every repetition (`Nothing to compact (session too small)`), so no rendered agent-visible context or 20-case context-exposure diagnostic exists. OM has no native natural-language query surface: no retrieval, reader, or generic score is published. See `research/OBSERVATIONAL_MEMORY_GEN26_LONGITUDINAL.md` and `results/observational_memory_gen26_longitudinal/summary.json`. Tests: 80 passed, one existing warning.
+ - questions: Treat this as valid driver/lifecycle evidence, but not a completed context or retrieval benchmark. A future profile would need an independently justified workload that native Pi will compact, without changing this frozen result.
+
  - generation: 25
  - base_commit: `278dd1e3199f23e45d30bbe875e739cb50200a22`
  - result_commit: `d85401e6529772dd4069e7d4dbb76ff5de811fd5`
