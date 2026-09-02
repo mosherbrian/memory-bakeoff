@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 24
+ - base_commit: `ed28e828ab81f31ab05365c1a2f5a7efccdb9956`
+ - result_commit: pending
+ - status: blocked_native_quiescence_after_calibration
+ - objective/summary: Audited exact pi-observational-memory 3.0.4 / `ce9fc982` and completed only unrelated public calibration. No longitudinal-v1 observation was exposed; no other engine, reader, private corpus, or Round-1 work ran.
+ - constraints/results: Pi 0.81.0 and LAN `qwen3.6-35b-vulkan-nothink` at `http://strix-halo.local:8080/v1` were frozen; Pi returned `CALIBRATION_OK`. Real `turn_end` observer appended four native observations, then OM debug trace logged `observer.error`: “This extension ctx is stale after session replacement or reload.” This prevents trustworthy quiescence and is the stop condition. Source audit confirms V3 observations/reflections/drop tombstones, model-free compaction, exact-ID provenance recall, and no semantic query retrieval. Active pool/drop state cannot mean factual truth/deletion. Raw v1 query retrieval is N/A rather than fabricated. v1 hashes unchanged. See `research/OBSERVATIONAL_MEMORY_GEN24.md`, `results/observational_memory_gen24_calibration/trace.json`. Tests: 73 passed, one pre-existing warning.
+ - questions: Decide whether a future separately identified OM profile may use an upstream fixed commit after this stale-context defect is resolved. Do not rerun frozen 3.0.4 or treat exact-ID recall/context as semantic retrieval.
+
+<!-- Historical Gen23 handoff; retained for audit, not current control-plane state.
  - generation: 23
  - base_commit: `30171d410a3ca1935d073e950f8d1205df226328`
  - result_commit: `3e03b46`
@@ -7,6 +16,8 @@
  - objective/summary: Hardened and froze the Round-2 engine-independent longitudinal ruler before any contestant run. No memory engine, reader, MemConflict, or private corpus was run; Round 1 artifacts were not changed.
  - constraints/results: `longitudinal-v1` now has 16 publication-safe observations, 9 ingestion checkpoints, and 20 cases. Canonical fixture SHA-256 is `a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd`; scorer/result-contract SHA-256 is `1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34`. It separates event/effective world time from ingestion transaction-time; AS_OF has Jan-10 Forge/C1 before/after-correction cases (21 then 24), while historical belief remains 21 and corrected history 24. Configuration selection is distinct from scoped throughput truth. Aurora's late Feb-5 evidence shares the branch timeline but cannot replace current Feb-10 branch truth. Lifecycle scoring separately accepts native-normalized active/historical/disposition/unknown evidence and detects false supersession without claiming deletion. The frozen taxonomy covers exact future leakage, scope/config collapse, correction/belief failures, procedure omission vs adoption, late-history corruption, retrieval unsupported evidence, unmapped provenance, and reader-only unknown hallucination. Result contract freezes cutoff/rank/native filters/exact provenance/lifecycle evidence; private truth fields never reach adapters. Fixture/manifest: `research/LONGITUDINAL_V1_FIXTURE.json`, `research/LONGITUDINAL_V1_MANIFEST.json`; note: `research/LONGITUDINAL_POINT_IN_TIME_FRAMEWORK.md`. Tests: 72 passed, one pre-existing metadata deprecation warning.
  - questions: Gen24 may authorize the first Round-2 contestant against this exact v1 only. Any future semantic change requires longitudinal-v2; do not modify v1 after a contestant runs.
+
+-->
 
 <!-- Historical Gen22 handoff; retained for audit, not current control-plane state.
  - generation: 22
