@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""Analyze frozen Gen21 audited artifacts; this performs no product interaction."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "results" / "perseus_vault_gen22_lifecycle_analysis.json"
+
+
+def one_run(run: int) -> dict:
+    row = json.loads((ROOT / f"results/perseus_vault_gen21_audited_stress_r{run}/run.json").read_text())[0]
+    diagnostics = row["provider_diagnostics"]
+    receipts = {}
+    for operation in diagnostics["native_operations"]:
+        if operation.get("kind") != "cli_write":
+            continue
+        argv = operation["argv"]
+        key = argv[argv.index("--key") + 1]
+        receipts[key.removeprefix("record-")] = json.loads(operation["stdout"])["id"]
+    active = {
+        item["canonical_record_id"]
+        for items in diagnostics["lifecycle_audit"]["scanned_workspaces"].values()
+        for item in items
+    }
+    lost = sorted(set(receipts) - active, key=lambda value: int(value[1:]))
+    # All lost rows are frozen stress distractors.  They are distinct valid facts by
+    # fixture construction; the native scan reports no archives/history/links.
+    return {
+        "run": run,
+        "receipt_count": len(receipts),
+        "active_count": len(active),
+        "lost_count": len(lost),
+        "lost_canonical_ids": lost,
+        "class_counts": {"false_consolidation_distinct_valid": len(lost)},
+        "historical_recoverability": "unknown_unattributed_state_loss",
+        "native_lineage": "none captured; no source-to-survivor mapping is asserted",
+        "receipt_native_ids": {record_id: receipts[record_id] for record_id in lost},
+    }
+
+
+def main() -> None:
+    runs = [one_run(number) for number in range(1, 4)]
+    common = sorted(set.intersection(*(set(run["lost_canonical_ids"]) for run in runs)), key=lambda value: int(value[1:]))
+    analysis = {
+        "schema_version": 1,
+        "method": "post-run read-only analysis of frozen Gen21 audited run.json artifacts; no product process was invoked",
+        "runs": runs,
+        "stable_lost_id_overlap": {"intersection_count": len(common), "canonical_ids": common},
+        "conclusion": "All 107 stable losses are stress-only distinct valid facts under frozen harness truth. Native artifacts show active-only scans, archived_entities=0, total_history_rows=0, and no captured consolidation lineage; active-state loss is established but deletion versus hidden historical recoverability is unknown.",
+    }
+    OUT.write_text(json.dumps(analysis, indent=2) + "\n")
+    print(OUT)
+
+
+if __name__ == "__main__":
+    main()

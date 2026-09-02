@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 22
+ - base_commit: `0295ca9aefebe7e3e9fedec1dfde9472f7b8c707`
+ - result_commit: pending
+ - status: complete_round1_closure_and_longitudinal_ruler
+ - objective/summary: Completed Generation 22 without a product rerun or private-corpus ingestion. Phase A classified frozen Perseus Gen21 stress state loss and formally closed Round 1. Phase B added a public, engine-independent checkpoint/event-time/configuration truth fixture and test-only oracle for Round 2.
+ - constraints/results: Read-only Perseus analysis over all three audited Gen21 stress artifacts found exactly the same 107 receipt-mapped IDs absent from each active scan: 500 successful receipts, 393 active, 107/500 (21.4%) active-state loss. All are stress-only, distinct valid scope-qualified records under frozen harness truth; class `false_consolidation_distinct_valid`. They are not core correction pairs, required answers, or duplicates. The frozen scans show `archived_entities=0`, `total_history_rows=0`, no archive reasons/links, and no captured source→survivor lineage, so deletion versus hidden historical recoverability is explicitly `unknown_unattributed_state_loss`; no absorber is invented. Retrieval stays unchanged (core 1.000/1.000, stress 0.958/0.958, prohibited 0.108). `research/PERSEUS_VAULT_GEN22_LIFECYCLE_ADDENDUM.md`, `research/ROUND1_FINAL_READOUT.md`, and `results/perseus_vault_gen22_lifecycle_analysis.json` record this without altering Gen21 artifacts. The new `memory_bakeoff.longitudinal` fixture has three sanitized storylines, explicit event/effective/reference/ingestion time and configuration scope, checkpoint-prefix replay, distinct historical-belief vs corrected-historical-truth oracle targets, a late-arriving history case, and named non-scalar failure metrics. No engine adapter is embedded in it. Tests: 70 passed, one pre-existing metadata deprecation warning.
+ - questions: Round 1 is now closed. The next authorized work can use the synthetic ruler for a new round; private transcript characterization must remain metadata-only until an explicit, leakage-safe plan is approved.
+
+<!-- Historical Gen21 handoff; retained for audit, not current control-plane state.
  - generation: 21
  - base_commit: `2a96b1cca99694d05dc0b87fd6a62f22704bb48e`
  - result_commit: `02490da`
@@ -7,6 +16,7 @@
  - objective/summary: Completed the authorized late Round-1 Perseus Vault v2.23.2 raw-product evaluation only. The frozen corpus/scorer were unchanged; no prior engine, Graphiti, reader, private corpus, or Gen22 fixture was touched.
  - constraints/results: Official Apple-Silicon v2.23.2 archive SHA-256 matched GitHub (`e9b091…920dcb`), source commit `9c829207…`. Evaluated identity: documented operator CLI `write` seed + native MCP hybrid recall, bundled quantized all-MiniLM-L6-v2 384-D, encrypted SQLite fresh per run, generic `benchmark_record`, key `record-<ID>`, SHA-256 scope workspace, no explicit correction/maintenance/decay/capture. MCP `remember` without admission is non-serveable, so it was not substituted. Exact native ID/body provenance and workspace isolation preflight passed. Three audited core runs: Hit/all-relevant 1.000, prohibited 0.117, 50/50 active. Three audited stress runs: Hit/all-relevant 0.958, prohibited 0.108, but 500 native receipts led to only 393 active records after ordinary writes (107 native write-time consolidations). Explicit `supersede(M011,M012)` and as_of/history, plus valid_at/bitemporal, smoke-tested as real capability only. Tests: 67 passed, one existing warning. See `research/PERSEUS_VAULT_GEN21.md` and audited result directories.
  - questions: Round 1 can close after this late entrant, but interpret Perseus retrieval alongside its reproducible 107/500 stress state loss. Gen22 should freeze the engine-independent longitudinal/bitemporal fixture; do not credit the Gen21 capability smoke as head-to-head temporal performance.
+-->
 
 <!-- Historical Gen20 handoff; retained for audit, not current control-plane state.
  - generation: 20
