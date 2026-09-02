@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+"""Write the checked-in, canonical longitudinal-v1 fixture and ruler manifest."""
+from __future__ import annotations
+import json
+from pathlib import Path
+from memory_bakeoff.longitudinal import build_longitudinal_fixture, fixture_payload, ruler_manifest
+
+root = Path(__file__).resolve().parents[1]
+fixture = build_longitudinal_fixture()
+(root / "research" / "LONGITUDINAL_V1_FIXTURE.json").write_text(json.dumps(fixture_payload(fixture), indent=2) + "\n")
+(root / "research" / "LONGITUDINAL_V1_MANIFEST.json").write_text(json.dumps(ruler_manifest(fixture), indent=2) + "\n")

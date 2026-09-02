@@ -1,0 +1,686 @@
+{
+  "fixture_version": "longitudinal-v1",
+  "observations": [
+    {
+      "id": "L001",
+      "assertion": "Nimbus Forge C1 measured 21 t/s.",
+      "event_time": "2026-01-10T09:00:00+00:00",
+      "effective_time": "2026-01-10T09:00:00+00:00",
+      "ingestion_order": 1,
+      "ingestion_time": "2026-01-10T09:01:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "provenance": "synthetic_public",
+      "truth_key": "throughput:forge:C1",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L002",
+      "assertion": "Forge selected C1 as active.",
+      "event_time": "2026-01-10T09:02:00+00:00",
+      "effective_time": "2026-01-10T09:02:00+00:00",
+      "ingestion_order": 2,
+      "ingestion_time": "2026-01-10T09:03:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "provenance": "synthetic_public",
+      "truth_key": "active-config:forge",
+      "transition": "CONFIG_SELECTION",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L003",
+      "assertion": "Nimbus Forge C2 measured 29 t/s.",
+      "event_time": "2026-01-12T09:00:00+00:00",
+      "effective_time": "2026-01-12T09:00:00+00:00",
+      "ingestion_order": 3,
+      "ingestion_time": "2026-01-12T09:01:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C2",
+      "provenance": "synthetic_public",
+      "truth_key": "throughput:forge:C2",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L004",
+      "assertion": "Forge selected C2 as active.",
+      "event_time": "2026-01-12T09:02:00+00:00",
+      "effective_time": "2026-01-12T09:02:00+00:00",
+      "ingestion_order": 4,
+      "ingestion_time": "2026-01-12T09:03:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C2",
+      "provenance": "synthetic_public",
+      "truth_key": "active-config:forge",
+      "transition": "SUPERSEDE_CURRENT",
+      "corrects_id": null,
+      "supersedes_id": "L002",
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L005",
+      "assertion": "Audit corrected Forge C1: valid result was 24 t/s, not 21.",
+      "event_time": "2026-01-20T09:00:00+00:00",
+      "effective_time": "2026-01-10T09:00:00+00:00",
+      "ingestion_order": 5,
+      "ingestion_time": "2026-01-20T09:01:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "provenance": "synthetic_public",
+      "truth_key": "throughput:forge:C1",
+      "transition": "CORRECTION",
+      "corrects_id": "L001",
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L006",
+      "assertion": "Nimbus Anvil C2 measured 33 t/s.",
+      "event_time": "2026-01-22T09:00:00+00:00",
+      "effective_time": "2026-01-22T09:00:00+00:00",
+      "ingestion_order": 6,
+      "ingestion_time": "2026-01-22T09:01:00+00:00",
+      "scope": "server:anvil",
+      "configuration": "C2",
+      "provenance": "synthetic_public",
+      "truth_key": "throughput:anvil:C2",
+      "transition": "CONCURRENT_SCOPE",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L007",
+      "assertion": "Forge C2 reproduction without warmup failed.",
+      "event_time": "2026-01-23T09:00:00+00:00",
+      "effective_time": "2026-01-23T09:00:00+00:00",
+      "ingestion_order": 7,
+      "ingestion_time": "2026-01-23T09:01:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C2",
+      "provenance": "synthetic_public",
+      "truth_key": "procedure:forge:C2",
+      "transition": "FAILED_ATTEMPT",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": "failure",
+      "historical_only": false
+    },
+    {
+      "id": "L008",
+      "assertion": "Forge C2 reproduction with warmup and fixed batch succeeded.",
+      "event_time": "2026-01-24T09:00:00+00:00",
+      "effective_time": "2026-01-24T09:00:00+00:00",
+      "ingestion_order": 8,
+      "ingestion_time": "2026-01-24T09:01:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C2",
+      "provenance": "synthetic_public",
+      "truth_key": "procedure:forge:C2",
+      "transition": "SUCCESSFUL_ATTEMPT",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": "success",
+      "historical_only": false
+    },
+    {
+      "id": "L009",
+      "assertion": "Aurora release branch was release/aurora-1.x.",
+      "event_time": "2026-02-01T09:00:00+00:00",
+      "effective_time": "2026-02-01T09:00:00+00:00",
+      "ingestion_order": 9,
+      "ingestion_time": "2026-02-01T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "branch:aurora",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L010",
+      "assertion": "Aurora moved release branch to release/aurora-2.x.",
+      "event_time": "2026-02-10T09:00:00+00:00",
+      "effective_time": "2026-02-10T09:00:00+00:00",
+      "ingestion_order": 10,
+      "ingestion_time": "2026-02-10T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "branch:aurora",
+      "transition": "SUPERSEDE_CURRENT",
+      "corrects_id": null,
+      "supersedes_id": "L009",
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L011",
+      "assertion": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5.",
+      "event_time": "2026-02-05T12:00:00+00:00",
+      "effective_time": "2026-02-05T12:00:00+00:00",
+      "ingestion_order": 11,
+      "ingestion_time": "2026-02-15T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "branch:aurora",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": true
+    },
+    {
+      "id": "L012",
+      "assertion": "Aurora clients were said to live at internal/gen/aurora_client.go.",
+      "event_time": "2026-03-01T09:00:00+00:00",
+      "effective_time": "2026-03-01T09:00:00+00:00",
+      "ingestion_order": 12,
+      "ingestion_time": "2026-03-01T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "client-path:aurora",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L013",
+      "assertion": "Old Aurora client path was invalidated as stale generated artifact.",
+      "event_time": "2026-03-03T09:00:00+00:00",
+      "effective_time": "2026-03-03T09:00:00+00:00",
+      "ingestion_order": 13,
+      "ingestion_time": "2026-03-03T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "client-path:aurora",
+      "transition": "INVALIDATION",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": "L012",
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L014",
+      "assertion": "Aurora clients live at api/gen/aurora/v2/client.go.",
+      "event_time": "2026-03-03T09:02:00+00:00",
+      "effective_time": "2026-03-03T09:02:00+00:00",
+      "ingestion_order": 14,
+      "ingestion_time": "2026-03-03T09:03:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "client-path:aurora",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L015",
+      "assertion": "A temporary Aurora compatibility symlink exposed old client path.",
+      "event_time": "2026-03-04T09:00:00+00:00",
+      "effective_time": "2026-03-04T09:00:00+00:00",
+      "ingestion_order": 15,
+      "ingestion_time": "2026-03-04T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "compat:aurora",
+      "transition": "ADD",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": null,
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    },
+    {
+      "id": "L016",
+      "assertion": "Aurora removed temporary compatibility symlink; claim retracted.",
+      "event_time": "2026-03-05T09:00:00+00:00",
+      "effective_time": "2026-03-05T09:00:00+00:00",
+      "ingestion_order": 16,
+      "ingestion_time": "2026-03-05T09:01:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "provenance": "synthetic_public",
+      "truth_key": "compat:aurora",
+      "transition": "RETRACTION",
+      "corrects_id": null,
+      "supersedes_id": null,
+      "retracts_id": "L015",
+      "invalidates_id": null,
+      "procedure_outcome": null,
+      "historical_only": false
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "CP01",
+      "ingestion_order": 1,
+      "description": "after ingestion 1"
+    },
+    {
+      "id": "CP04",
+      "ingestion_order": 4,
+      "description": "after ingestion 4"
+    },
+    {
+      "id": "CP05",
+      "ingestion_order": 5,
+      "description": "after ingestion 5"
+    },
+    {
+      "id": "CP06",
+      "ingestion_order": 6,
+      "description": "after ingestion 6"
+    },
+    {
+      "id": "CP08",
+      "ingestion_order": 8,
+      "description": "after ingestion 8"
+    },
+    {
+      "id": "CP10",
+      "ingestion_order": 10,
+      "description": "after ingestion 10"
+    },
+    {
+      "id": "CP11",
+      "ingestion_order": 11,
+      "description": "after ingestion 11"
+    },
+    {
+      "id": "CP14",
+      "ingestion_order": 14,
+      "description": "after ingestion 14"
+    },
+    {
+      "id": "CP16",
+      "ingestion_order": 16,
+      "description": "after ingestion 16"
+    }
+  ],
+  "cases": [
+    {
+      "id": "LQ01",
+      "checkpoint_id": "CP01",
+      "target_kind": "current_truth",
+      "truth_key": "throughput:forge:C1",
+      "query": "Forge/C1 throughput",
+      "expected_ids": [
+        "L001"
+      ],
+      "prohibited_ids": [],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ02",
+      "checkpoint_id": "CP04",
+      "target_kind": "current_truth",
+      "truth_key": "active-config:forge",
+      "query": "Active Forge config",
+      "expected_ids": [
+        "L004"
+      ],
+      "prohibited_ids": [
+        "L002"
+      ],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C2",
+      "rationale": ""
+    },
+    {
+      "id": "LQ03",
+      "checkpoint_id": "CP04",
+      "target_kind": "scope_truth",
+      "truth_key": "throughput:forge:C1",
+      "query": "Forge/C1 remains",
+      "expected_ids": [
+        "L001"
+      ],
+      "prohibited_ids": [
+        "L003"
+      ],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ04",
+      "checkpoint_id": "CP04",
+      "target_kind": "as_of_event_truth",
+      "truth_key": "throughput:forge:C1",
+      "query": "As of Jan 10 Forge/C1",
+      "expected_ids": [
+        "L001"
+      ],
+      "prohibited_ids": [],
+      "event_time": "2026-01-10T10:00:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ05",
+      "checkpoint_id": "CP05",
+      "target_kind": "as_of_event_truth",
+      "truth_key": "throughput:forge:C1",
+      "query": "As of Jan 10 corrected Forge/C1",
+      "expected_ids": [
+        "L005"
+      ],
+      "prohibited_ids": [
+        "L001"
+      ],
+      "event_time": "2026-01-10T10:00:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ06",
+      "checkpoint_id": "CP05",
+      "target_kind": "historical_belief",
+      "truth_key": "throughput:forge:C1",
+      "query": "Belief at CP01",
+      "expected_ids": [
+        "L001"
+      ],
+      "prohibited_ids": [
+        "L005"
+      ],
+      "event_time": "2026-01-10T10:00:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ07",
+      "checkpoint_id": "CP05",
+      "target_kind": "corrected_historical_truth",
+      "truth_key": "throughput:forge:C1",
+      "query": "Corrected truth Jan 10",
+      "expected_ids": [
+        "L005"
+      ],
+      "prohibited_ids": [
+        "L001"
+      ],
+      "event_time": "2026-01-10T10:00:00+00:00",
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ08",
+      "checkpoint_id": "CP06",
+      "target_kind": "scope_truth",
+      "truth_key": "throughput:forge:C2",
+      "query": "Forge C2 not Anvil",
+      "expected_ids": [
+        "L003"
+      ],
+      "prohibited_ids": [
+        "L006"
+      ],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C2",
+      "rationale": ""
+    },
+    {
+      "id": "LQ09",
+      "checkpoint_id": "CP06",
+      "target_kind": "scope_truth",
+      "truth_key": "throughput:anvil:C2",
+      "query": "Anvil C2 not Forge",
+      "expected_ids": [
+        "L006"
+      ],
+      "prohibited_ids": [
+        "L003"
+      ],
+      "event_time": null,
+      "scope": "server:anvil",
+      "configuration": "C2",
+      "rationale": ""
+    },
+    {
+      "id": "LQ10",
+      "checkpoint_id": "CP08",
+      "target_kind": "recommended_procedure",
+      "truth_key": "procedure:forge:C2",
+      "query": "Recommended procedure",
+      "expected_ids": [
+        "L008"
+      ],
+      "prohibited_ids": [
+        "L007"
+      ],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C2",
+      "rationale": ""
+    },
+    {
+      "id": "LQ11",
+      "checkpoint_id": "CP10",
+      "target_kind": "current_truth",
+      "truth_key": "branch:aurora",
+      "query": "Current Aurora branch",
+      "expected_ids": [
+        "L010"
+      ],
+      "prohibited_ids": [
+        "L009"
+      ],
+      "event_time": null,
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ12",
+      "checkpoint_id": "CP11",
+      "target_kind": "current_truth",
+      "truth_key": "branch:aurora",
+      "query": "Current after recovered history",
+      "expected_ids": [
+        "L010"
+      ],
+      "prohibited_ids": [
+        "L009",
+        "L011"
+      ],
+      "event_time": null,
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ13",
+      "checkpoint_id": "CP11",
+      "target_kind": "late_arriving_history",
+      "truth_key": "branch:aurora",
+      "query": "Aurora branch Feb 5",
+      "expected_ids": [
+        "L011"
+      ],
+      "prohibited_ids": [],
+      "event_time": "2026-02-05T23:00:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ14",
+      "checkpoint_id": "CP14",
+      "target_kind": "current_truth",
+      "truth_key": "client-path:aurora",
+      "query": "Current Aurora client path",
+      "expected_ids": [
+        "L014"
+      ],
+      "prohibited_ids": [
+        "L012"
+      ],
+      "event_time": null,
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ15",
+      "checkpoint_id": "CP16",
+      "target_kind": "current_truth",
+      "truth_key": "compat:aurora",
+      "query": "Current compat symlink",
+      "expected_ids": [],
+      "prohibited_ids": [
+        "L015"
+      ],
+      "event_time": null,
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ16",
+      "checkpoint_id": "CP04",
+      "target_kind": "negative_unknown",
+      "truth_key": "unknown:oncall",
+      "query": "Nimbus on call",
+      "expected_ids": [],
+      "prohibited_ids": [],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C2",
+      "rationale": ""
+    },
+    {
+      "id": "LQ17",
+      "checkpoint_id": "CP01",
+      "target_kind": "current_truth",
+      "truth_key": "throughput:forge:C1",
+      "query": "Pre-future C1",
+      "expected_ids": [
+        "L001"
+      ],
+      "prohibited_ids": [],
+      "event_time": null,
+      "scope": "server:forge",
+      "configuration": "C1",
+      "rationale": ""
+    },
+    {
+      "id": "LQ18",
+      "checkpoint_id": "CP14",
+      "target_kind": "historical_belief",
+      "truth_key": "client-path:aurora",
+      "query": "Recorded old client path",
+      "expected_ids": [
+        "L012"
+      ],
+      "prohibited_ids": [
+        "L013",
+        "L014"
+      ],
+      "event_time": "2026-03-01T10:00:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ19",
+      "checkpoint_id": "CP14",
+      "target_kind": "corrected_historical_truth",
+      "truth_key": "client-path:aurora",
+      "query": "Verified client path",
+      "expected_ids": [
+        "L014"
+      ],
+      "prohibited_ids": [
+        "L012"
+      ],
+      "event_time": "2026-03-01T10:00:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    },
+    {
+      "id": "LQ20",
+      "checkpoint_id": "CP16",
+      "target_kind": "as_of_event_truth",
+      "truth_key": "branch:aurora",
+      "query": "Aurora Feb 5",
+      "expected_ids": [
+        "L011"
+      ],
+      "prohibited_ids": [
+        "L010"
+      ],
+      "event_time": "2026-02-05T23:00:00+00:00",
+      "scope": "repo:aurora",
+      "configuration": "main",
+      "rationale": ""
+    }
+  ]
+}

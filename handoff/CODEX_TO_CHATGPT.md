@@ -1,5 +1,14 @@
 # Codex to ChatGPT handoff
 
+ - generation: 23
+ - base_commit: `30171d410a3ca1935d073e950f8d1205df226328`
+ - result_commit: pending
+ - status: complete_longitudinal_v1_frozen
+ - objective/summary: Hardened and froze the Round-2 engine-independent longitudinal ruler before any contestant run. No memory engine, reader, MemConflict, or private corpus was run; Round 1 artifacts were not changed.
+ - constraints/results: `longitudinal-v1` now has 16 publication-safe observations, 9 ingestion checkpoints, and 20 cases. Canonical fixture SHA-256 is `a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd`; scorer/result-contract SHA-256 is `1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34`. It separates event/effective world time from ingestion transaction-time; AS_OF has Jan-10 Forge/C1 before/after-correction cases (21 then 24), while historical belief remains 21 and corrected history 24. Configuration selection is distinct from scoped throughput truth. Aurora's late Feb-5 evidence shares the branch timeline but cannot replace current Feb-10 branch truth. Lifecycle scoring separately accepts native-normalized active/historical/disposition/unknown evidence and detects false supersession without claiming deletion. The frozen taxonomy covers exact future leakage, scope/config collapse, correction/belief failures, procedure omission vs adoption, late-history corruption, retrieval unsupported evidence, unmapped provenance, and reader-only unknown hallucination. Result contract freezes cutoff/rank/native filters/exact provenance/lifecycle evidence; private truth fields never reach adapters. Fixture/manifest: `research/LONGITUDINAL_V1_FIXTURE.json`, `research/LONGITUDINAL_V1_MANIFEST.json`; note: `research/LONGITUDINAL_POINT_IN_TIME_FRAMEWORK.md`. Tests: 72 passed, one pre-existing metadata deprecation warning.
+ - questions: Gen24 may authorize the first Round-2 contestant against this exact v1 only. Any future semantic change requires longitudinal-v2; do not modify v1 after a contestant runs.
+
+<!-- Historical Gen22 handoff; retained for audit, not current control-plane state.
  - generation: 22
  - base_commit: `0295ca9aefebe7e3e9fedec1dfde9472f7b8c707`
  - result_commit: `b1f8a7f`
@@ -7,6 +16,7 @@
  - objective/summary: Completed Generation 22 without a product rerun or private-corpus ingestion. Phase A classified frozen Perseus Gen21 stress state loss and formally closed Round 1. Phase B added a public, engine-independent checkpoint/event-time/configuration truth fixture and test-only oracle for Round 2.
  - constraints/results: Read-only Perseus analysis over all three audited Gen21 stress artifacts found exactly the same 107 receipt-mapped IDs absent from each active scan: 500 successful receipts, 393 active, 107/500 (21.4%) active-state loss. All are stress-only, distinct valid scope-qualified records under frozen harness truth; class `false_consolidation_distinct_valid`. They are not core correction pairs, required answers, or duplicates. The frozen scans show `archived_entities=0`, `total_history_rows=0`, no archive reasons/links, and no captured source→survivor lineage, so deletion versus hidden historical recoverability is explicitly `unknown_unattributed_state_loss`; no absorber is invented. Retrieval stays unchanged (core 1.000/1.000, stress 0.958/0.958, prohibited 0.108). `research/PERSEUS_VAULT_GEN22_LIFECYCLE_ADDENDUM.md`, `research/ROUND1_FINAL_READOUT.md`, and `results/perseus_vault_gen22_lifecycle_analysis.json` record this without altering Gen21 artifacts. The new `memory_bakeoff.longitudinal` fixture has three sanitized storylines, explicit event/effective/reference/ingestion time and configuration scope, checkpoint-prefix replay, distinct historical-belief vs corrected-historical-truth oracle targets, a late-arriving history case, and named non-scalar failure metrics. No engine adapter is embedded in it. Tests: 70 passed, one pre-existing metadata deprecation warning.
  - questions: Round 1 is now closed. The next authorized work can use the synthetic ruler for a new round; private transcript characterization must remain metadata-only until an explicit, leakage-safe plan is approved.
+-->
 
 <!-- Historical Gen21 handoff; retained for audit, not current control-plane state.
  - generation: 21
