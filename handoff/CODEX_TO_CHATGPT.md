@@ -2,7 +2,7 @@
 
  - generation: 25
  - base_commit: `278dd1e3199f23e45d30bbe875e739cb50200a22`
- - result_commit: pending
+ - result_commit: `d85401e6529772dd4069e7d4dbb76ff5de811fd5`
  - status: calibration_passed_longitudinal_v1_result_not_published
  - objective/summary: Tested exact pi-observational-memory 3.0.4 under Pi 0.81.0's installed persistent RPC JSONL surface. Three isolated garden-journal calibrations reached native OM quiescence with stable session identities and no Gen24 stale-context error.
  - constraints/results: Pi `agent_settled` preceded OM background work, so the controller retains the same process until observer → reflector → dropper terminal evidence and a stable same-process `get_entries` leaf. All three repetitions passed (`observer.records`, `reflector.result`, `dropper.waiting_for_reflection`); no second Pi inspector ran. The v1 ruler API reverified canonical hashes `a5c67e…` / `1dd831…`; formatted JSON byte hashing is not the frozen identity. A later partial public-observation v1 process was not checkpoint-quiescent and is excluded: no v1 result rows, retrieval, lifecycle, or reader score is published. No PR #58/source change, other engine, or private corpus was used. See `research/OBSERVATIONAL_MEMORY_GEN25_RPC.md` and `results/observational_memory_gen25_rpc_calibration/summary.json`. Tests: 76 passed, one existing warning.
