@@ -7,6 +7,7 @@ from memory_bakeoff.providers.agentmemory_core import AgentMemoryCoreProvider, A
 from memory_bakeoff.providers.mem0_core import Mem0CoreLSAProvider
 from memory_bakeoff.providers.claude_mem_core import (ClaudeMemFTS5CoreProvider, ClaudeMemChromaLSAProvider, ClaudeMemChromaLSANoRecencyProvider)
 from memory_bakeoff.providers.external import Mem0Provider, HabitusProvider, MemBukkitControlledCoreProvider, MemBukkitProvider, AgentMemoryProvider, ClaudeMemProvider, HindsightProvider
+from memory_bakeoff.providers.perseus_vault import PerseusVaultProvider
 
 PROVIDERS = {
     "bm25": BM25Provider,
@@ -27,4 +28,5 @@ PROVIDERS = {
     "claude_mem_chroma_lsa": ClaudeMemChromaLSAProvider,
     "claude_mem_chroma_lsa_no_recency": ClaudeMemChromaLSANoRecencyProvider,
     "hindsight": HindsightProvider,
+    "perseus_vault": PerseusVaultProvider,
 }
