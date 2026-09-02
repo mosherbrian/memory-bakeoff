@@ -1,0 +1,54 @@
+{
+  "generation": 27,
+  "status": "complete_context_production_v1_scored_citation_contract_open",
+  "fixture_exposed": true,
+  "valid_v1_result_published": true,
+  "fixture_version": "om-context-production-v1",
+  "fixture_sha256": "cce9fdf494ad6965897646beff1ef535d4aeb73ba81f3ea83e6fe68e1218acdc",
+  "scorer_version": "om-context-production-scorer-v1",
+  "scorer_contract_sha256": "f69068bbb3a76bf9ca64edeb3a5b14411538d6e4494211d765efa82e50e702bd",
+  "harness_commit": "2e9d1bd3e3049ee0d9889f62dfbb4c173ad0b791",
+  "system_identity": {
+    "product": "pi-observational-memory",
+    "product_version": "3.0.4",
+    "product_commit": "ce9fc982b3a219a7839f07c9f4a3e054e81a2b21",
+    "pi_version": "0.81.0",
+    "node": "v26.8.1",
+    "driver": "persistent_rpc_with_native_fold_capture_barrier",
+    "compaction_event": "om.folded",
+    "operator_compaction": false,
+    "model": "qwen3.6-35b-vulkan-nothink",
+    "reader_model": "qwen3.6-35b-vulkan-nothink",
+    "endpoint": "http://strix-halo.local:8080/v1"
+  },
+  "repetitions": [
+    {"repetition": 1, "run": "gen27-context-valid-r1c", "status": "passed", "turns": 40, "barriers_passed": 40, "native_folds": 23, "full_folds": 2, "rendered_context_chars": 9670, "projection_entries": 43, "anchors_mapped": 16, "reader_cases": 12, "reader_passed": 9, "reader_pass_rate": 0.75, "failed_cases": ["Q05", "Q08", "Q10"]},
+    {"repetition": 2, "run": "gen27-context-valid-r23/rep1", "status": "passed", "turns": 40, "barriers_passed": 40, "native_folds": 23, "full_folds": 3, "rendered_context_chars": 9894, "projection_entries": 45, "anchors_mapped": 16, "reader_cases": 12, "reader_passed": 10, "reader_pass_rate": 0.8333333333333334, "failed_cases": ["Q03", "Q10"]},
+    {"repetition": 3, "run": "gen27-context-valid-r23/rep2", "status": "passed", "turns": 40, "barriers_passed": 40, "native_folds": 21, "full_folds": 3, "rendered_context_chars": 7391, "projection_entries": 34, "anchors_mapped": 16, "reader_cases": 12, "reader_passed": 9, "reader_pass_rate": 0.75, "failed_cases": ["Q03", "Q07", "Q10"]}
+  ],
+  "aggregate": {
+    "graded_cases": 36,
+    "passed": 28,
+    "mean_pass_rate": 0.7777777777777778,
+    "missing_required": 0,
+    "prohibited_hits": 0,
+    "unsupported_citation": 8,
+    "invalid_citations": 5
+  },
+  "session_size_before_fold_tokens": {"min": 20729, "max": 27282, "note": "OM folds continuously, so Pi native auto-compaction is never reached; this explains the Gen26 'session too small' decline."},
+  "citation_contract_defect": {
+    "published": false,
+    "description": "reader_prompt asks for obs-/ref- prefixed OM IDs; grade_reader keys the projection support map by bare native entry id, so a prefixed citation is scored invalid even when the bare id maps to the required anchor.",
+    "diagnostic_regrade": "unchanged grade_reader with obs-/ref- prefix stripped: 11/12 in all three repetitions; remaining genuine unsupported_citation failures Q05 (rep1), Q03 (rep2), Q07 (rep3).",
+    "action": "not applied; the lane is frozen and a grader change invalidates comparability. Control-plane decision required."
+  },
+  "excluded_attempts": [
+    {"run": "gen27-context-r1", "reason": "exited before creating a run directory", "scored": false},
+    {"run": "gen27-context-r1-fresh", "reason": "turn-1 barrier rejected an observer launch detected 2 s after start; guard widened 2 s to 15 s in 2e9d1bd", "scored": false},
+    {"run": "gen27-context-valid-r1", "reason": "runner refused a pre-created output directory", "scored": false},
+    {"run": "gen27-context-valid-r1b", "reason": "launched with & and reaped by the shell; no session created", "scored": false}
+  ],
+  "semantic_retrieval": "not_applicable_native_surface",
+  "lifecycle_scored": false,
+  "raw_trace_location": ".control-plane/gen27-context-valid-r1c and .control-plane/gen27-context-valid-r23 (ignored, not committed)"
+}
