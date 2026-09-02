@@ -2,7 +2,9 @@
 
 A reproducible, coding-flavored benchmark for persistent agent memory systems.
 
-> **Start here for the current handoff:** [`STATUS_AND_FINDINGS.md`](STATUS_AND_FINDINGS.md) summarizes the scoreboard, caveats, and emerging conclusions. [`CODEX_HANDOFF.md`](CODEX_HANDOFF.md) is the execution plan for the next networked real-engine runs.
+> **Start here for the evidence:** [`RESULTS.md`](RESULTS.md) is the maintained index of every measured result, with its experiment class, its caveat, and links to the authoritative write-up and machine-readable artifacts. Prefer it, and [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md), over older score text further down this file.
+>
+> **Current handoff:** [`STATUS_AND_FINDINGS.md`](STATUS_AND_FINDINGS.md) summarizes the scoreboard, caveats, and emerging conclusions. [`CODEX_HANDOFF.md`](CODEX_HANDOFF.md) is the execution plan for the next networked real-engine runs.
 
 Initial field:
 
@@ -291,9 +293,14 @@ Earlier documentation incorrectly associated that commit with package 10.6.1; np
 10.6.1 records commit `d54e574251d7736cfd6030f8ba86b15fbebd3b50`. Archived
 controlled result files remain unchanged.
 
-## Hindsight runtime status
+## Hindsight runtime status (historical sandbox note)
 
-Hindsight is deliberately **not** assigned a pseudo-core score. Its real recall path is a
+**Superseded.** Hindsight v0.9.2 has since been run as `raw_product` on a networked
+host: stress Hit/all-relevant 0.833/0.708 through its raw/no-LLM learned-reranker
+path. See [`RESULTS.md`](RESULTS.md) and `research/HINDSIGHT_FINDINGS.md`. The rest
+of this section records only the earlier sandbox blocker.
+
+Hindsight was deliberately **not** assigned a pseudo-core score. Its real recall path is a
 DB-backed semantic + BM25 + graph + temporal pipeline, so copying the algorithm into a
 local Python provider would measure our reimplementation rather than Hindsight.
 
@@ -308,6 +315,6 @@ The remaining blocker is transfer of compiled Python runtime wheels (notably `as
 into this network-isolated container. Hindsight's one-day release Actions package
 artifact has expired, generic release/PyPI binary downloads cannot cross the current
 connector boundary, and this GitHub installation exposes no writable user repo for a
-temporary Actions relay. Therefore the current honest status is **database proven,
+temporary Actions relay. Therefore the honest status at that time was **database proven,
 embedding seam proven, service runtime dependency-blocked, no score yet**. See
 `research/HINDSIGHT_FINDINGS.md` and `vendor/pg0-bin/UPSTREAM.md`.

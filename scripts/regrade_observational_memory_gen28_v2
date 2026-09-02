@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+"""Regrade the frozen Gen27/v1 reader responses under the v2 citation contract.
+
+Reads only local frozen artifacts. No model call, no Pi/OM call, no rerun of the
+product. v1 is never written to.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import glob
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from memory_bakeoff import om_context_production as v1
+from memory_bakeoff import om_citation_contract_v2 as v2
+
+GEN27_RUNS = (("gen27-context-valid-r1c", 1), ("gen27-context-valid-r23", 1), ("gen27-context-valid-r23", 2))
+
+
+def load_frozen(control_plane: Path, run: str, rep_no: int) -> tuple[dict, dict, str]:
+    summary = json.loads((control_plane / run / "summary.json").read_text())
+    rep = [item for item in summary["repetitions"] if item["rep"] == rep_no][0]
+    entry_id = rep["captured_compaction"]["entry_id"]
+    matches = sorted(glob.glob(str(ROOT / "external/pi-observational-memory/.control-plane" / run / f"rep{rep_no}" / "sessions" / "*.jsonl")))
+    if not matches:
+        raise SystemExit(f"frozen session log for {run} rep{rep_no} is missing; cannot regrade without rerunning the product")
+    for line in open(matches[0]):
+        if entry_id in line:
+            record = json.loads(line)
+            if record.get("id") == entry_id:
+                return summary, rep, record["details"]
+    raise SystemExit(f"frozen fold {entry_id} not found in {matches[0]}")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--control-plane", default=str(ROOT / ".control-plane"))
+    parser.add_argument("--out", default=str(ROOT / "results/observational_memory_gen28_citation_contract_v2/summary.json"))
+    args = parser.parse_args()
+
+    control_plane = Path(args.control_plane)
+    repetitions = []
+    identity = None
+    for index, (run, rep_no) in enumerate(GEN27_RUNS, start=1):
+        summary, rep, details = load_frozen(control_plane, run, rep_no)
+        identity = identity or summary["system_identity"]
+        if summary["system_identity"]["fixture_sha256"] != v1.fixture_sha256():
+            raise SystemExit(f"{run} rep{rep_no} was captured under a different v1 fixture; refusing to regrade")
+        if summary["system_identity"]["scorer_contract_sha256"] != v1.scorer_contract_sha256():
+            raise SystemExit(f"{run} rep{rep_no} was captured under a different v1 scorer; refusing to regrade")
+        projection = v2.typed_projection(details, rep["native_anchor_mapping"])
+        if not v2.reproduces_frozen_support(projection, rep["captured_compaction"]["visible_support"]):
+            raise SystemExit(f"{run} rep{rep_no} typed projection does not reproduce the frozen v1 support map")
+        stored = rep["reader"]["details"]
+        graded = v2.regrade(stored, projection)
+        v1_failed = sorted(item["grade"]["case_id"] for item in stored if not item["grade"]["pass"])
+        v2_failed = sorted(item["grade"]["case_id"] for item in graded["details"] if not item["grade"]["pass"])
+        repetitions.append({
+            "repetition": index,
+            "run": run if len(summary["repetitions"]) == 1 else f"{run}/rep{rep_no}",
+            "session_id": rep["session_id"],
+            "captured_entry_id": rep["captured_compaction"]["entry_id"],
+            "rendered_context_chars": rep["captured_compaction"]["rendered_context_chars"],
+            "rendered_context_sha256": hashlib.sha256(rep["captured_compaction"]["rendered_context"].encode()).hexdigest(),
+            "responses_sha256": v2.responses_fingerprint(stored),
+            "projection_sha256": v2.projection_fingerprint(projection),
+            "projection_reproduces_v1_support": True,
+            "observation_ids": len(projection["observation"]),
+            "reflection_ids": len(projection["reflection"]),
+            "dual_role_ids": len(set(projection["observation"]) & set(projection["reflection"])),
+            "v1": {"case_count": rep["reader"]["case_count"], "passed": rep["reader"]["case_count"] - len(v1_failed), "pass_rate": rep["reader"]["pass_rate"], "failed_cases": v1_failed},
+            "v2": {"case_count": graded["case_count"], "passed": graded["passed"], "pass_rate": graded["pass_rate"], "failed_cases": v2_failed},
+            "recovered_cases": sorted(set(v1_failed) - set(v2_failed)),
+            "regressed_cases": sorted(set(v2_failed) - set(v1_failed)),
+            "v2_failure_reasons": {item["grade"]["case_id"]: {"unsupported_citation": item["grade"]["unsupported_citation"], "invalid_citations": item["grade"]["invalid_citations"]} for item in graded["details"] if not item["grade"]["pass"]},
+            "citation_roles_used": sorted({role for item in graded["details"] for role in item["grade"]["citation_roles"].values()}),
+        })
+
+    v1_total = sum(item["v1"]["passed"] for item in repetitions)
+    v2_total = sum(item["v2"]["passed"] for item in repetitions)
+    cases = sum(item["v2"]["case_count"] for item in repetitions)
+    payload = {
+        "generation": 28,
+        "status": "complete_citation_contract_v2_regrade_over_frozen_gen27_captures",
+        "correction_of": {"generation": 27, "result_commit": "2af7d00c283dc45db00eb606dc84eb1e2498a77c", "contract": v1.FIXTURE_VERSION, "scorer": v1.SCORER_VERSION, "scorer_contract_sha256": v1.scorer_contract_sha256()},
+        "contract_version": v2.CONTRACT_VERSION,
+        "scorer_version": v2.SCORER_VERSION,
+        "contract_sha256": v2.contract_sha256(),
+        "fixture_version": v1.FIXTURE_VERSION,
+        "fixture_sha256": v1.fixture_sha256(),
+        "fixture_unchanged": True,
+        "new_product_run": False,
+        "new_fixture_exposure": False,
+        "model_or_product_calls_in_gen28": False,
+        "evidence_class": "downstream_scorer_correction_over_frozen_full_product_context_production_capture",
+        "system_identity": identity,
+        "repetitions": repetitions,
+        "aggregate": {"graded_cases": cases, "v1_passed": v1_total, "v2_passed": v2_total, "v1_mean_pass_rate": v1_total / cases, "v2_mean_pass_rate": v2_total / cases},
+        "semantic_retrieval": "not_applicable_native_surface",
+        "lifecycle_scored": False,
+        "raw_trace_location": ".control-plane and external/pi-observational-memory/.control-plane (ignored, not committed)",
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {out}")
+    for item in repetitions:
+        print(f"  rep{item['repetition']} {item['run']}: v1 {item['v1']['passed']}/{item['v1']['case_count']} -> v2 {item['v2']['passed']}/{item['v2']['case_count']}; recovered {item['recovered_cases']}; still failing {item['v2']['failed_cases']}")
+    print(f"  aggregate: v1 {v1_total}/{cases} -> v2 {v2_total}/{cases}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

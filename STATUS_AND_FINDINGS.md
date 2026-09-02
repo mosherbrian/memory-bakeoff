@@ -1,7 +1,8 @@
 # Memory Bake-off — Status and Findings
 
-**Snapshot:** 2026-08-30 (America/Los_Angeles)  
-**Harness tests:** 45/45 passing  
+**Snapshot:** 2026-09-02 (America/Los_Angeles)  
+**Harness tests:** 97/97 passing  
+**Evidence index:** [`RESULTS.md`](RESULTS.md) is the maintained map of every measured result; [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md) is the authoritative Round-1 view. Rows below that predate them are historical.  
 **Canonical corpus:** 50 coding-memory records, 26 held-out queries  
 **Stress corpus:** 500 total records = 50 core + 450 deterministic near-neighbor distractors  
 **Real reader trace:** 56/56 archived request/response pairs, replay-verified
@@ -49,7 +50,7 @@ The next phase should run the **complete products with their intended models/ser
 | agentmemory | **controlled real core + lifecycle** | upstream BM25/vector indexes and `/remember` supersession behavior | 92.9% false supersession of distinct stress memories | run full service, graph lane, real embeddings/reranker; lifecycle remains separate score |
 | Mem0 | **controlled search-policy arm** | pinned scoring policy + shared LSA | Positive retrieval ~= dense control; threshold abstains on half of negative cases | run full Qdrant/fastembed/entity/reranker stack |
 | Claude-Mem | **controlled search-policy arms** | current FTS5 and semantic-recency policy, not compression worker | Default 90-day window reduces current semantic Hit@5 to 0.208; disabling it restores dense-LSA result | run actual worker + compression pipeline |
-| Hindsight | **runtime infrastructure proven; no score** | pg0/Postgres 18.1 + pgvector 0.8.5 smoke; official embedding seam inspected | DB blocker solved; Python service dependencies were the remaining sandbox blocker | install v0.9.2 normally and run real DB-backed recall |
+| Hindsight | **raw_product scored** | v0.9.2 raw/no-LLM learned-reranker path on a networked host | stress Hit/all-relevant 0.833/0.708; composite DB/model/runtime identity must travel with the row | run product mode with its normal LLM pipeline |
 
 ---
 

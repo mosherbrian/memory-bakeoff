@@ -6,7 +6,7 @@ Read `STATUS_AND_FINDINGS.md` and `AGENTS.md` before changing code.
 
 Continue the memory-engine bake-off on a **normal networked development host** where packages, model weights, npm artifacts, and GitHub releases can be installed normally.
 
-The next goal is **not** to redesign the harness. The harness is already useful and 45/45 tests pass. The goal is to replace controlled/blocked rows with **faithful real-engine runs**, preserving exact configuration and provenance.
+The next goal is **not** to redesign the harness. The harness is already useful and its full suite passes (97 as of Gen28; `node` must be on PATH). The goal is to replace controlled/blocked rows with **faithful real-engine runs**, preserving exact configuration and provenance.
 
 Do not erase or overwrite existing result directories. Add new timestamped or clearly named result directories and update synthesis docs only after a run is validated.
 
@@ -25,7 +25,7 @@ pytest -q
 memory-bakeoff probe
 ```
 
-Expected harness test gate before external work: **45 passed**.
+Expected harness test gate before external work: **97 passed** as of Gen28.
 
 Then read:
 

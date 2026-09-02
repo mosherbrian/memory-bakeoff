@@ -21,7 +21,7 @@ The handoff snapshot is expected to pass:
 
 ```bash
 pytest -q
-# 45 passed
+# 97 passed (node must be on PATH)
 ```
 
 If that fails on a clean environment, diagnose the environment/setup before modifying benchmark logic.
