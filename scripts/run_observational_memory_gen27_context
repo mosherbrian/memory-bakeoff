@@ -1,0 +1,166 @@
+#!/usr/bin/env python3
+"""Run one or more fresh Gen27 OM context-production repetitions.
+
+The live process sees only ``public_turns``.  Reader questions and truth are
+opened only after the exact final native ``om.folded`` rendered summary has
+been captured from that same persistent Pi RPC process.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from typing import Any
+from urllib import request
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from memory_bakeoff.om_context_production import (
+    CASES, FIXTURE_VERSION, SCORER_VERSION, fixture_sha256, folded_entries,
+    grade_reader, parse_reader_response, projection_support, public_turns,
+    reader_prompt, rendered_context, scorer_contract_sha256,
+)
+from memory_bakeoff.pi_rpc import PiRpc, RpcProtocolError, RpcTrace, observation_barrier
+
+
+def debug_events(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    out = []
+    for line in path.read_text().splitlines():
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            out.append({"event": "malformed_debug_line"})
+    return out
+
+
+def message_text(entry: dict[str, Any]) -> str | None:
+    message = entry.get("message", {})
+    if message.get("role") != "user":
+        return None
+    pieces = message.get("content", [])
+    if not isinstance(pieces, list):
+        return None
+    values = [piece.get("text") for piece in pieces if isinstance(piece, dict) and piece.get("type") == "text"]
+    return "".join(value for value in values if isinstance(value, str))
+
+
+def native_id_for_prompt(entries: list[dict[str, Any]], prompt: str) -> str:
+    matches = [entry.get("id") for entry in entries if message_text(entry) == prompt and isinstance(entry.get("id"), str)]
+    if len(matches) != 1:
+        raise RpcProtocolError(f"could not map one native user entry for fixture prompt (matches={len(matches)})")
+    return matches[0]
+
+
+def ask_reader(endpoint: str, model: str, context: str, question: str) -> dict[str, Any]:
+    body = json.dumps({"model": model, "temperature": 0, "stream": False, "messages": [
+        {"role": "system", "content": "You are a strict memory-grounded coding assistant. Do not use outside knowledge."},
+        {"role": "user", "content": reader_prompt(context, question)},
+    ]}).encode()
+    req = request.Request(endpoint.rstrip("/") + "/chat/completions", data=body, headers={"Content-Type": "application/json"}, method="POST")
+    with request.urlopen(req, timeout=180) as response:  # nosec: endpoint is explicit local/LAN experiment input
+        payload = json.loads(response.read())
+    try:
+        content = payload["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, TypeError) as exc:
+        raise ValueError("reader endpoint response lacks choices[0].message.content") from exc
+    if not isinstance(content, str):
+        raise ValueError("reader endpoint returned non-string content")
+    return parse_reader_response(content)
+
+
+def version(command: list[str]) -> str | None:
+    try:
+        return subprocess.check_output(command, text=True, stderr=subprocess.STDOUT, timeout=10).strip()
+    except Exception:
+        return None
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repetitions", type=int, default=3)
+    parser.add_argument("--out", type=Path, default=ROOT / ".control-plane" / "om-context-production-v1")
+    parser.add_argument("--run-label", default=datetime.now(timezone.utc).strftime("gen27-%Y%m%dT%H%M%SZ"))
+    parser.add_argument("--config-dir", type=Path, default=ROOT / ".control-plane" / "pi-gen27")
+    parser.add_argument("--reader-endpoint", default="http://strix-halo.local:8080/v1")
+    parser.add_argument("--reader-model", default="qwen3.6-35b-vulkan-nothink")
+    args = parser.parse_args()
+    if args.repetitions < 1:
+        raise SystemExit("--repetitions must be positive")
+    if args.out.exists():
+        raise SystemExit(f"refusing to overwrite result directory: {args.out}")
+    source = ROOT / "external" / "pi-observational-memory"
+    config = args.config_dir.resolve()
+    cli = source / "node_modules" / "@earendil-works" / "pi-coding-agent" / "dist" / "cli.js"
+    extension = source / "src" / "index.ts"
+    missing = [str(x) for x in (source, config / "settings.json", config / "models.json", cli, extension) if not x.exists()]
+    if missing:
+        raise SystemExit("Gen27 prerequisites missing: " + ", ".join(missing))
+    args.out.mkdir(parents=True)
+    identity = {"fixture_version": FIXTURE_VERSION, "fixture_sha256": fixture_sha256(), "scorer_version": SCORER_VERSION,
+                "scorer_contract_sha256": scorer_contract_sha256(), "pi_cli": version(["node", str(cli), "--version"]), "node": version(["node", "--version"]),
+                "extension_source_commit": version(["git", "-C", str(source), "rev-parse", "HEAD"]), "foreground_provider": "lan-openai", "foreground_model": args.reader_model,
+                "reader_endpoint": args.reader_endpoint, "reader_model": args.reader_model, "compaction_event": "om.folded", "operator_compaction": False}
+    summary: dict[str, Any] = {"schema_version": 1, "generation": 27, "status": "running", "system_identity": identity, "repetitions": []}
+    (args.out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    for rep in range(1, args.repetitions + 1):
+        session_id = f"{args.run_label}-rep{rep}"
+        session_dir = args.out / f"rep{rep}" / "sessions"
+        trace = RpcTrace()
+        env = {**os.environ, "PI_CODING_AGENT_DIR": str(config)}
+        argv = ["node", str(cli), "--mode", "rpc", "--provider", "lan-openai", "--model", args.reader_model,
+                "--session-dir", str(session_dir), "--session-id", session_id, "--no-tools", "--no-context-files", "--extension", str(extension)]
+        rpc = PiRpc(argv, cwd=source, env=env, trace=trace)
+        result: dict[str, Any] = {"rep": rep, "status": "failed", "session_id_requested": session_id, "turns": [], "native_anchor_mapping": {}}
+        try:
+            print(f"Gen27 rep {rep}: starting fresh Pi session", flush=True)
+            rpc.start(); initial = rpc.state(); result["session_id"] = initial["sessionId"]
+            debug_path = config / "observational-memory" / "debug" / f"{initial['sessionId']}.ndjson"
+            for order, (turn, anchor_id) in enumerate(public_turns(), start=1):
+                print(f"Gen27 rep {rep}: turn {order}/40", flush=True)
+                baseline = len(debug_events(debug_path)); before_leaf = rpc.entries()["leafId"]
+                rpc.prompt_until_settled(turn)
+                barrier = observation_barrier(rpc, read_debug=lambda: debug_events(debug_path), baseline_debug_count=baseline)
+                snapshot = rpc.entries()
+                if anchor_id:
+                    native_id = native_id_for_prompt(snapshot.get("entries", []), turn)
+                    result["native_anchor_mapping"][native_id] = anchor_id
+                result["turns"].append({"order": order, "anchor_id": anchor_id, "before_leaf": before_leaf, "barrier": barrier, "leaf_id": snapshot["leafId"]})
+            final_entries = rpc.entries().get("entries", [])
+            folded = folded_entries(final_entries)
+            if not folded:
+                raise RpcProtocolError("no automatic om.folded record captured; rendered context is unavailable")
+            captured = folded[-1]
+            context = rendered_context(captured)
+            support = projection_support(captured, result["native_anchor_mapping"])
+            result["captured_compaction"] = {"entry_id": captured.get("id"), "timestamp": captured.get("timestamp"), "rendered_context": context,
+                                               "rendered_context_chars": len(context), "visible_support": {k: sorted(v) for k, v in support.items()}}
+            reader_details = []
+            for case in CASES:
+                print(f"Gen27 rep {rep}: reader {case.id}", flush=True)
+                response = ask_reader(args.reader_endpoint, args.reader_model, context, case.question)
+                reader_details.append({"response": response, "grade": grade_reader(case, response, support)})
+            result["reader"] = {"case_count": len(reader_details), "pass_rate": sum(item["grade"]["pass"] for item in reader_details) / len(reader_details), "details": reader_details}
+            result["status"] = "passed"
+        except Exception as exc:
+            result["error"] = f"{type(exc).__name__}: {exc}"; result["stderr_tail"] = trace.stderr[-20:]
+        finally:
+            rpc.stop()
+            trace.save(args.out / f"rep{rep}" / "raw_rpc_trace.json")
+            summary["repetitions"].append(result)
+            (args.out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+        if result["status"] != "passed":
+            summary["status"] = "failed"; (args.out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n"); return 2
+    summary["status"] = "passed"
+    (args.out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

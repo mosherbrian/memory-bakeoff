@@ -29,6 +29,19 @@ CALIBRATION_TURNS = [
 ]
 
 
+def preflight_turns(count: int) -> list[str]:
+    """Public deterministic synthetic coding-agent traffic; unrelated to Gen27 anchors."""
+    turns = []
+    for turn in range(1, count + 1):
+        lines = [f"Review cycle {turn}: fictional Cedar service maintenance note.", "Please acknowledge the review packet in one sentence.", "", "Patch excerpt:"]
+        lines += [f"+ const lane_{turn}_{n:03d} = normalizePacket(packet_{n}, {{ retry: {(n % 4) + 1}, shard: {(turn + n) % 17} }});" for n in range(1, 101)]
+        lines += ["", "Build log:"]
+        lines += [f"[cedar-ci] unit shard={n:03d} elapsed={100 + ((turn * n) % 700)}ms cache={'hit' if n % 3 else 'miss'} status=ok" for n in range(1, 81)]
+        lines += ["", "Review note: formatting is routine; no action is requested beyond acknowledgement."]
+        turns.append("\n".join(lines))
+    return turns
+
+
 def debug_events(path: Path) -> list[dict]:
     if not path.exists():
         return []
@@ -82,9 +95,11 @@ def main() -> int:
     parser.add_argument("--run-label", default=datetime.now(timezone.utc).strftime("gen25-rpc-%Y%m%dT%H%M%SZ"))
     parser.add_argument("--v1-ingestion", action="store_true", help="authorized post-calibration public-observation lane")
     parser.add_argument("--barrier-mini", action="store_true", help="non-v1 live validation of the frozen Gen26 barrier")
+    parser.add_argument("--config-dir", type=Path, default=ROOT / ".control-plane" / "pi-gen24")
+    parser.add_argument("--compaction-preflight-turns", type=int, default=0, help="unrelated deterministic long-session threshold preflight")
     args = parser.parse_args()
     source = ROOT / "external" / "pi-observational-memory"
-    config = ROOT / ".control-plane" / "pi-gen24"
+    config = args.config_dir.resolve()
     cli = source / "node_modules" / "@earendil-works" / "pi-coding-agent" / "dist" / "cli.js"
     extension = source / "src" / "index.ts"
     required = [source, config / "settings.json", config / "models.json", cli, extension]
@@ -92,7 +107,12 @@ def main() -> int:
     if missing:
         raise SystemExit("Frozen Gen24 prerequisites missing: " + ", ".join(missing))
     args.out.mkdir(parents=True, exist_ok=True)
-    if args.v1_ingestion:
+    if args.compaction_preflight_turns:
+        if args.v1_ingestion or args.barrier_mini:
+            raise SystemExit("preflight cannot be combined with v1 or barrier-mini")
+        public_observations = []
+        summary = {"generation": 27, "fixture_exposed": False, "mode": "unrelated_compaction_threshold_preflight", "turn_count": args.compaction_preflight_turns, "repetitions": []}
+    elif args.v1_ingestion:
         from memory_bakeoff.longitudinal import fixture_sha256, scorer_contract_sha256, build_longitudinal_fixture
         frozen_fixture = "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd"
         frozen_contract = "1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34"
@@ -119,7 +139,7 @@ def main() -> int:
             result["pid"] = trace.pid
             initial = rpc.state()
             debug_path = config / "observational-memory" / "debug" / f"{initial['sessionId']}.ndjson"
-            turns = CALIBRATION_TURNS if not args.v1_ingestion else [
+            turns = preflight_turns(args.compaction_preflight_turns) if args.compaction_preflight_turns else CALIBRATION_TURNS if not args.v1_ingestion else [
                 "Please acknowledge this project note for later continuity.\n\n"
                 + "\n".join(f"{key}: {value}" for key, value in observation.items() if key != "canonical_observation_id")
                 for observation in public_observations
@@ -150,6 +170,12 @@ def main() -> int:
                             if "Nothing to compact (session too small)" not in str(exc):
                                 raise
                             result.setdefault("native_compactions", []).append({"order": order, "outcome": "native_clean_decline", "reason": str(exc)})
+                if args.compaction_preflight_turns and order == len(turns):
+                    try:
+                        compact = rpc.command({"type": "compact"}, timeout=180)
+                        result["preflight_compaction"] = {"outcome": "operator_forced_native_compaction", "result": compact}
+                    except RpcProtocolError as exc:
+                        result["preflight_compaction"] = {"outcome": "native_clean_decline", "reason": str(exc)}
             result["debug_path"] = str(debug_path)
             result["status"] = "passed"
         except Exception as exc:
