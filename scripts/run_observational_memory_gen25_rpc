@@ -20,7 +20,7 @@ if sys.version_info < (3, 11):
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from memory_bakeoff.pi_rpc import PiRpc, RpcProtocolError, RpcTrace, require_quiescence
+from memory_bakeoff.pi_rpc import PiRpc, RpcProtocolError, RpcTrace, observation_barrier
 
 CALIBRATION_TURNS = [
     "I keep a garden journal. Today I transplanted basil to a larger pot and watered it lightly. Reply with a one-sentence acknowledgement.",
@@ -81,6 +81,7 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=ROOT / ".control-plane" / "pi-gen25-rpc")
     parser.add_argument("--run-label", default=datetime.now(timezone.utc).strftime("gen25-rpc-%Y%m%dT%H%M%SZ"))
     parser.add_argument("--v1-ingestion", action="store_true", help="authorized post-calibration public-observation lane")
+    parser.add_argument("--barrier-mini", action="store_true", help="non-v1 live validation of the frozen Gen26 barrier")
     args = parser.parse_args()
     source = ROOT / "external" / "pi-observational-memory"
     config = ROOT / ".control-plane" / "pi-gen24"
@@ -100,11 +101,11 @@ def main() -> int:
         # Read only the publication-safe observation fields.  No case, query,
         # expected/prohibited ID, or truth-key data is read by this lane.
         public_observations = [item.public_dict() for item in build_longitudinal_fixture().observations]
-        summary = {"generation": 25, "fixture_exposed": True, "fixture_sha256": frozen_fixture,
+        summary = {"generation": 26, "fixture_exposed": True, "fixture_sha256": frozen_fixture,
                    "scorer_contract_sha256": frozen_contract, "mode": "v1_public_ingestion_only", "repetitions": []}
     else:
         public_observations = []
-        summary = {"generation": 25, "fixture_exposed": False, "mode": "calibration_only", "repetitions": []}
+        summary = {"generation": 26, "fixture_exposed": False, "mode": "barrier_mini" if args.barrier_mini else "calibration_only", "repetitions": []}
     for rep in range(1, args.repetitions + 1):
         session_id = f"{args.run_label}-rep{rep}"
         session_dir = args.out / f"rep{rep}" / "sessions"
@@ -117,32 +118,38 @@ def main() -> int:
             rpc.start()
             result["pid"] = trace.pid
             initial = rpc.state()
+            debug_path = config / "observational-memory" / "debug" / f"{initial['sessionId']}.ndjson"
             turns = CALIBRATION_TURNS if not args.v1_ingestion else [
                 "Please acknowledge this project note for later continuity.\n\n"
                 + "\n".join(f"{key}: {value}" for key, value in observation.items() if key != "canonical_observation_id")
                 for observation in public_observations
             ]
+            if args.barrier_mini:
+                turns = CALIBRATION_TURNS[:2]
             checkpoint_orders = {1, 4, 5, 6, 8, 10, 11, 14, 16}
             result["checkpoints"] = []
+            result["barriers"] = []
             for order, turn in enumerate(turns, start=1):
+                before_debug_count = len(debug_events(debug_path))
+                before_leaf = rpc.entries()["leafId"]
                 rpc.prompt_until_settled(turn)
-                state = rpc.state()
-                if state["sessionId"] != initial["sessionId"]:
-                    raise RpcProtocolError("session ID changed during ordinary calibration prompt")
+                barrier = observation_barrier(rpc, read_debug=lambda: debug_events(debug_path), baseline_debug_count=before_debug_count)
+                if barrier["session_id"] != initial["sessionId"]:
+                    raise RpcProtocolError("session ID changed during ordinary observation prompt")
+                result["barriers"].append({"order": order, "before_leaf": before_leaf, **barrier})
                 if args.v1_ingestion and order in checkpoint_orders:
                     snapshot = rpc.entries()
                     result["checkpoints"].append({"order": order, "leaf_id": snapshot["leafId"], "entry_count": len(snapshot.get("entries", []))})
                     # Exercise the model-free product compaction hook using only
                     # Pi's supported native RPC operation, never a new process.
                     if order in {8, 16}:
-                        compact = rpc.command({"type": "compact"}, timeout=60)
-                        result.setdefault("native_compactions", []).append({"order": order, "result": compact})
-            # The native debug file is keyed by Pi's stable session id.  Pi's
-            # settled event can precede OM's background observer, so retain this
-            # same child and monitor the product-native trace to a terminal stage.
-            debug_path = config / "observational-memory" / "debug" / f"{initial['sessionId']}.ndjson"
-            events = wait_for_terminal_debug(debug_path, timeout=300)
-            result["quiescence"] = require_quiescence(rpc, debug_events=events)
+                        try:
+                            compact = rpc.command({"type": "compact"}, timeout=60)
+                            result.setdefault("native_compactions", []).append({"order": order, "outcome": "completed", "result": compact})
+                        except RpcProtocolError as exc:
+                            if "Nothing to compact (session too small)" not in str(exc):
+                                raise
+                            result.setdefault("native_compactions", []).append({"order": order, "outcome": "native_clean_decline", "reason": str(exc)})
             result["debug_path"] = str(debug_path)
             result["status"] = "passed"
         except Exception as exc:

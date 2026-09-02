@@ -196,3 +196,95 @@ def require_quiescence(rpc: PiRpc, *, debug_events: list[dict[str, Any]], stabil
     if first["leafId"] != second["leafId"] or second.get("entries"):
         raise RpcProtocolError("Pi ledger changed during post-terminal stability window")
     return {"session_id": state["sessionId"], "leaf_id": first["leafId"], "terminal_event": terminal[-1]["event"]}
+
+
+PIPELINE_TERMINALS = {"dropper.waiting_for_reflection", "dropper.not_ready", "dropper.append"}
+PIPELINE_STARTS = {"observer.start", "reflector.agent_start", "dropper.stage_start"}
+
+
+def run_terminal(events: list[dict[str, Any]], run_id: str) -> dict[str, Any] | None:
+    """Return the exact terminal event for one OM run, never a prior run."""
+    scoped = [event for event in events if event.get("runId") == run_id]
+    names = {event.get("event") for event in scoped}
+    errors = [event for event in scoped if "error" in str(event.get("event"))]
+    if errors:
+        return errors[-1]
+    # A reflector that was due must reach its result and the following dropper
+    # decision.  The observer itself is not terminal in that case.
+    if "reflector.agent_start" in names:
+        if "reflector.result" not in names:
+            return None
+        return next((event for event in reversed(scoped) if event.get("event") in PIPELINE_TERMINALS), None)
+    if "dropper.stage_start" in names:
+        return next((event for event in reversed(scoped) if event.get("event") == "dropper.append"), None)
+    return next((event for event in reversed(scoped) if event.get("event") in {"observer.records", "observer.empty"}), None)
+
+
+def observation_barrier(
+    rpc: PiRpc,
+    *,
+    read_debug: callable,
+    baseline_debug_count: int,
+    launch_guard_seconds: float = 2.0,
+    terminal_timeout_seconds: float = 180.0,
+    stability_seconds: float = 1.0,
+    clock: callable = time.monotonic,
+    sleeper: callable = time.sleep,
+) -> dict[str, Any]:
+    """Gen26 per-observation barrier for the just-completed live Pi turn.
+
+    `baseline_debug_count` is captured immediately before that turn.  Therefore
+    a terminal event from any earlier run cannot satisfy this barrier.
+    """
+    initial_state = rpc.state()
+    if initial_state.get("isStreaming") or initial_state.get("isCompacting"):
+        raise RpcProtocolError("Pi has not settled after observation turn")
+    initial_leaf = rpc.entries()["leafId"]
+    session_id = initial_state["sessionId"]
+    guard_deadline = clock() + launch_guard_seconds
+    launched: dict[str, Any] | None = None
+    while clock() < guard_deadline:
+        recent = read_debug()[baseline_debug_count:]
+        starts = [event for event in recent if event.get("event") in PIPELINE_STARTS]
+        if starts:
+            launched = starts[0]
+            break
+        sleeper(0.05)
+    if launched is None:
+        sleeper(stability_seconds)
+        later_state = rpc.state()
+        later = rpc.entries(since=initial_leaf)
+        if later_state["sessionId"] != session_id:
+            raise RpcProtocolError("session changed during no-stage-due barrier")
+        if later_state.get("isStreaming") or later_state.get("isCompacting") or later["leafId"] != initial_leaf or later.get("entries"):
+            raise RpcProtocolError("ledger changed during no-stage-due barrier")
+        return {"outcome": "no_consolidation_due", "session_id": session_id, "leaf_id": initial_leaf}
+
+    run_id = launched.get("runId")
+    if not isinstance(run_id, str):
+        raise RpcProtocolError("native stage-start event lacks runId")
+    terminal_deadline = clock() + terminal_timeout_seconds
+    terminal: dict[str, Any] | None = None
+    while clock() < terminal_deadline:
+        terminal = run_terminal(read_debug()[baseline_debug_count:], run_id)
+        if terminal is not None:
+            break
+        sleeper(0.05)
+    if terminal is None:
+        raise RpcProtocolError(f"timed out awaiting native terminal for run {run_id}")
+    if "error" in str(terminal.get("event")):
+        raise RpcProtocolError(f"OM terminal error for run {run_id}: {terminal}")
+    # The newly completed run may legitimately have appended ledger entries.
+    # Freeze the leaf *after* its terminal evidence, then guard only against a
+    # subsequent race; comparing with the pre-run leaf would reject success.
+    terminal_leaf = rpc.entries()["leafId"]
+    sleeper(stability_seconds)
+    later_state = rpc.state()
+    later = rpc.entries(since=terminal_leaf)
+    if later_state["sessionId"] != session_id:
+        raise RpcProtocolError("session changed during post-terminal barrier")
+    if later_state.get("isStreaming") or later_state.get("isCompacting"):
+        raise RpcProtocolError("Pi active after native terminal")
+    if later["leafId"] != terminal_leaf or later.get("entries"):
+        raise RpcProtocolError("ledger changed during post-terminal stability guard")
+    return {"outcome": "consolidation_terminal", "run_id": run_id, "terminal_event": terminal["event"], "session_id": session_id, "leaf_id": terminal_leaf}
