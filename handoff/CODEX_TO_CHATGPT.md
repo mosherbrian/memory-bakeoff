@@ -2,7 +2,7 @@
 
  - generation: 24
  - base_commit: `ed28e828ab81f31ab05365c1a2f5a7efccdb9956`
- - result_commit: pending
+ - result_commit: `d41759d`
  - status: blocked_native_quiescence_after_calibration
  - objective/summary: Audited exact pi-observational-memory 3.0.4 / `ce9fc982` and completed only unrelated public calibration. No longitudinal-v1 observation was exposed; no other engine, reader, private corpus, or Round-1 work ran.
  - constraints/results: Pi 0.81.0 and LAN `qwen3.6-35b-vulkan-nothink` at `http://strix-halo.local:8080/v1` were frozen; Pi returned `CALIBRATION_OK`. Real `turn_end` observer appended four native observations, then OM debug trace logged `observer.error`: “This extension ctx is stale after session replacement or reload.” This prevents trustworthy quiescence and is the stop condition. Source audit confirms V3 observations/reflections/drop tombstones, model-free compaction, exact-ID provenance recall, and no semantic query retrieval. Active pool/drop state cannot mean factual truth/deletion. Raw v1 query retrieval is N/A rather than fabricated. v1 hashes unchanged. See `research/OBSERVATIONAL_MEMORY_GEN24.md`, `results/observational_memory_gen24_calibration/trace.json`. Tests: 73 passed, one pre-existing warning.
