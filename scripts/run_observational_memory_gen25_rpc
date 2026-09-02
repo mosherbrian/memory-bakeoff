@@ -1,0 +1,162 @@
+#!/usr/bin/env python3
+"""Run the Gen25 publication-safe persistent-RPC calibration only.
+
+No longitudinal fixture, canonical ID, benchmark query, or hidden truth is
+present in this program.  Results are deliberately written outside Git by
+default and are promoted only after review.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+import sys
+import time
+from datetime import datetime, timezone
+
+if sys.version_info < (3, 11):
+    raise SystemExit("requires Python 3.11+; invoke with the benchmark virtualenv, e.g. .venv/bin/python scripts/run_observational_memory_gen25_rpc")
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from memory_bakeoff.pi_rpc import PiRpc, RpcProtocolError, RpcTrace, require_quiescence
+
+CALIBRATION_TURNS = [
+    "I keep a garden journal. Today I transplanted basil to a larger pot and watered it lightly. Reply with a one-sentence acknowledgement.",
+    "Garden journal update: the basil received morning sun and I checked that the soil was damp, not soggy. Reply with a one-sentence acknowledgement.",
+    "Garden journal update: I labeled the basil pot and removed two yellow leaves. Reply with a one-sentence acknowledgement.",
+]
+
+
+def debug_events(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    events = []
+    for line in path.read_text().splitlines():
+        try:
+            events.append(json.loads(line))
+        except json.JSONDecodeError:
+            events.append({"event": "malformed_debug_line", "raw": line})
+    return events
+
+
+def terminal_for_run(events: list[dict]) -> bool:
+    """Return true only when the observer-triggered pipeline has ended."""
+    starts = [event for event in events if event.get("event") == "observer.start"]
+    if not starts:
+        return False
+    run_id = starts[-1].get("runId")
+    scoped = [event for event in events if event.get("runId") == run_id]
+    names = {event.get("event") for event in scoped}
+    if any("error" in str(name) for name in names):
+        return True
+    if "reflector.agent_start" not in names:
+        # Reflector was not due.  The later ledger stability check guards the
+        # small race between the observer and this no-op branch.
+        return bool(names & {"observer.records", "observer.empty"})
+    if "reflector.result" not in names:
+        return False
+    return bool(names & {"dropper.waiting_for_reflection", "dropper.not_ready", "dropper.append"})
+
+
+def wait_for_terminal_debug(path: Path, timeout: float = 180) -> list[dict]:
+    """Monitor native OM evidence after Pi settles; no sleep is completion proof."""
+    terminal = {"observer.records", "reflector.records", "dropper.records", "observer.skipped", "reflector.skipped", "dropper.skipped"}
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        events = debug_events(path)
+        names = {event.get("event") for event in events}
+        if "observer.error" in names or any("error" in str(name) for name in names):
+            return events
+        if terminal_for_run(events):
+            return events
+        time.sleep(0.2)
+    raise RpcProtocolError("timed out awaiting a terminal native OM debug event")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repetitions", type=int, default=3)
+    parser.add_argument("--out", type=Path, default=ROOT / ".control-plane" / "pi-gen25-rpc")
+    parser.add_argument("--run-label", default=datetime.now(timezone.utc).strftime("gen25-rpc-%Y%m%dT%H%M%SZ"))
+    parser.add_argument("--v1-ingestion", action="store_true", help="authorized post-calibration public-observation lane")
+    args = parser.parse_args()
+    source = ROOT / "external" / "pi-observational-memory"
+    config = ROOT / ".control-plane" / "pi-gen24"
+    cli = source / "node_modules" / "@earendil-works" / "pi-coding-agent" / "dist" / "cli.js"
+    extension = source / "src" / "index.ts"
+    required = [source, config / "settings.json", config / "models.json", cli, extension]
+    missing = [str(item) for item in required if not item.exists()]
+    if missing:
+        raise SystemExit("Frozen Gen24 prerequisites missing: " + ", ".join(missing))
+    args.out.mkdir(parents=True, exist_ok=True)
+    if args.v1_ingestion:
+        from memory_bakeoff.longitudinal import fixture_sha256, scorer_contract_sha256, build_longitudinal_fixture
+        frozen_fixture = "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd"
+        frozen_contract = "1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34"
+        if fixture_sha256() != frozen_fixture or scorer_contract_sha256() != frozen_contract:
+            raise SystemExit("Frozen longitudinal-v1 identity mismatch; refusing exposure")
+        # Read only the publication-safe observation fields.  No case, query,
+        # expected/prohibited ID, or truth-key data is read by this lane.
+        public_observations = [item.public_dict() for item in build_longitudinal_fixture().observations]
+        summary = {"generation": 25, "fixture_exposed": True, "fixture_sha256": frozen_fixture,
+                   "scorer_contract_sha256": frozen_contract, "mode": "v1_public_ingestion_only", "repetitions": []}
+    else:
+        public_observations = []
+        summary = {"generation": 25, "fixture_exposed": False, "mode": "calibration_only", "repetitions": []}
+    for rep in range(1, args.repetitions + 1):
+        session_id = f"{args.run_label}-rep{rep}"
+        session_dir = args.out / f"rep{rep}" / "sessions"
+        trace = RpcTrace()
+        env = {**os.environ, "PI_CODING_AGENT_DIR": str(config)}
+        argv = ["node", str(cli), "--mode", "rpc", "--provider", "lan-openai", "--model", "qwen3.6-35b-vulkan-nothink", "--session-dir", str(session_dir), "--session-id", session_id, "--no-tools", "--no-context-files", "--extension", str(extension)]
+        rpc = PiRpc(argv, cwd=source, env=env, trace=trace)
+        result = {"rep": rep, "pid": None, "session_id_requested": session_id, "status": "failed"}
+        try:
+            rpc.start()
+            result["pid"] = trace.pid
+            initial = rpc.state()
+            turns = CALIBRATION_TURNS if not args.v1_ingestion else [
+                "Please acknowledge this project note for later continuity.\n\n"
+                + "\n".join(f"{key}: {value}" for key, value in observation.items() if key != "canonical_observation_id")
+                for observation in public_observations
+            ]
+            checkpoint_orders = {1, 4, 5, 6, 8, 10, 11, 14, 16}
+            result["checkpoints"] = []
+            for order, turn in enumerate(turns, start=1):
+                rpc.prompt_until_settled(turn)
+                state = rpc.state()
+                if state["sessionId"] != initial["sessionId"]:
+                    raise RpcProtocolError("session ID changed during ordinary calibration prompt")
+                if args.v1_ingestion and order in checkpoint_orders:
+                    snapshot = rpc.entries()
+                    result["checkpoints"].append({"order": order, "leaf_id": snapshot["leafId"], "entry_count": len(snapshot.get("entries", []))})
+                    # Exercise the model-free product compaction hook using only
+                    # Pi's supported native RPC operation, never a new process.
+                    if order in {8, 16}:
+                        compact = rpc.command({"type": "compact"}, timeout=60)
+                        result.setdefault("native_compactions", []).append({"order": order, "result": compact})
+            # The native debug file is keyed by Pi's stable session id.  Pi's
+            # settled event can precede OM's background observer, so retain this
+            # same child and monitor the product-native trace to a terminal stage.
+            debug_path = config / "observational-memory" / "debug" / f"{initial['sessionId']}.ndjson"
+            events = wait_for_terminal_debug(debug_path, timeout=300)
+            result["quiescence"] = require_quiescence(rpc, debug_events=events)
+            result["debug_path"] = str(debug_path)
+            result["status"] = "passed"
+        except Exception as exc:
+            result["error"] = f"{type(exc).__name__}: {exc}"
+            result["stderr_tail"] = trace.stderr[-20:]
+        finally:
+            rpc.stop()
+            trace.save(args.out / f"rep{rep}" / "rpc_trace.json")
+            summary["repetitions"].append(result)
+            (args.out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+        if result["status"] != "passed":
+            return 2
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
