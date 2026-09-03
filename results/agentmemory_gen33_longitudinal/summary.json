@@ -1,0 +1,636 @@
+{
+  "adapter_contract": {
+    "adapter_version": "agentmemory-longitudinal-adapter-v1",
+    "disabled": [
+      "LLM provider/extractor",
+      "CONSOLIDATION_ENABLED",
+      "GRAPH_EXTRACTION_ENABLED",
+      "AGENTMEMORY_AUTO_COMPRESS",
+      "learned reranking"
+    ],
+    "forbidden_inputs": [
+      "truth_key",
+      "transition",
+      "corrects_id",
+      "supersedes_id",
+      "retracts_id",
+      "invalidates_id",
+      "historical_only",
+      "procedure_outcome",
+      "expected_ids",
+      "prohibited_ids",
+      "rationale",
+      "configuration",
+      "scope",
+      "event_time",
+      "effective_time"
+    ],
+    "harness_lifecycle_calls": "none; the harness never selects what to retire and never calls an update, delete or supersede API",
+    "isolation": "fresh iii data directory and a distinct agentId per repetition; one project namespace; never a project or agent per scope",
+    "native_lifecycle_rule": {
+      "cross_project": "never supersedes across an explicit project boundary",
+      "mechanism": "write-time supersession during remember",
+      "predecessors_per_write": 1,
+      "retired_state": "isLatest=false; the record stays in KV and leaves the search index; absence from search is not deletion",
+      "similarity": "strict lexical Jaccard over whitespace tokens of length > 2, case- and punctuation-sensitive",
+      "threshold": 0.7
+    },
+    "post_filtering": "none; native order and native limit are preserved",
+    "product": "agentmemory",
+    "product_version": "0.9.29",
+    "profile": "raw_product, native /agentmemory/remember + /agentmemory/smart-search, local q8 all-MiniLM-L6-v2",
+    "provenance_rule": "sourceObservationIds -> mem_* -> obsId, exact",
+    "read_path": "native /agentmemory/smart-search",
+    "routing": "single native operation for every target kind",
+    "temporal_surface": "none; no as-of, date-range or history read exists in this profile",
+    "upstream_commit": "e04ba88819c365c9acf9d6661ea802143e728bd6",
+    "write_path": "native /agentmemory/remember with the product's own write-time supersession ENABLED"
+  },
+  "adapter_contract_sha256": "a06482525d718dd1540c9491c80efe468c5414dcaf0ab6393781ac5254ff9b26",
+  "adapter_version": "agentmemory-longitudinal-adapter-v1",
+  "evidence_class": "raw_product",
+  "failure_totals_all_repetitions": {
+    "belief_truth_confusion": 6,
+    "configuration_collapse": 3,
+    "correction_failure": 3,
+    "failed_procedure_adoption": 3,
+    "false_persistence": 6,
+    "history_erasure": 6,
+    "late_history_corruption": 3,
+    "missing_required_truth": 6,
+    "scope_collapse": 6,
+    "stale_persistence": 12,
+    "unsupported_evidence": 6
+  },
+  "fixture_sha256": "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd",
+  "fixture_version": "longitudinal-v1",
+  "four_engine_contrast": {
+    "absent_from_every_append_only_engine": [],
+    "append_only_gen29_perseus": {
+      "configuration_collapse": 6,
+      "correction_failure": 12,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "history_erasure": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    },
+    "append_only_gen31_hindsight": {
+      "belief_truth_confusion": 6,
+      "configuration_collapse": 6,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 3,
+      "scope_collapse": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    },
+    "append_only_gen32_mem0": {
+      "belief_truth_confusion": 6,
+      "configuration_collapse": 6,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 3,
+      "scope_collapse": 6,
+      "stale_persistence": 15,
+      "unsupported_evidence": 6
+    },
+    "identical_across_all_three_append_only": [
+      "configuration_collapse",
+      "failed_procedure_adoption",
+      "false_persistence",
+      "late_history_corruption",
+      "unsupported_evidence"
+    ],
+    "note": "capability surfaces only; not a numeric leaderboard",
+    "per_class_delta_vs_each_append_only_engine": {
+      "belief_truth_confusion": {
+        "gen29_perseus": 0,
+        "gen31_hindsight": 6,
+        "gen32_mem0": 6,
+        "gen33_agentmemory": 6
+      },
+      "configuration_collapse": {
+        "gen29_perseus": 6,
+        "gen31_hindsight": 6,
+        "gen32_mem0": 6,
+        "gen33_agentmemory": 3
+      },
+      "correction_failure": {
+        "gen29_perseus": 12,
+        "gen31_hindsight": 0,
+        "gen32_mem0": 0,
+        "gen33_agentmemory": 3
+      },
+      "failed_procedure_adoption": {
+        "gen29_perseus": 3,
+        "gen31_hindsight": 3,
+        "gen32_mem0": 3,
+        "gen33_agentmemory": 3
+      },
+      "false_persistence": {
+        "gen29_perseus": 9,
+        "gen31_hindsight": 9,
+        "gen32_mem0": 9,
+        "gen33_agentmemory": 6
+      },
+      "history_erasure": {
+        "gen29_perseus": 9,
+        "gen31_hindsight": 0,
+        "gen32_mem0": 0,
+        "gen33_agentmemory": 6
+      },
+      "late_history_corruption": {
+        "gen29_perseus": 3,
+        "gen31_hindsight": 3,
+        "gen32_mem0": 3,
+        "gen33_agentmemory": 3
+      },
+      "missing_required_truth": {
+        "gen29_perseus": 6,
+        "gen31_hindsight": 3,
+        "gen32_mem0": 3,
+        "gen33_agentmemory": 6
+      },
+      "scope_collapse": {
+        "gen29_perseus": 0,
+        "gen31_hindsight": 6,
+        "gen32_mem0": 6,
+        "gen33_agentmemory": 6
+      },
+      "stale_persistence": {
+        "gen29_perseus": 12,
+        "gen31_hindsight": 12,
+        "gen32_mem0": 15,
+        "gen33_agentmemory": 12
+      },
+      "unsupported_evidence": {
+        "gen29_perseus": 6,
+        "gen31_hindsight": 6,
+        "gen32_mem0": 6,
+        "gen33_agentmemory": 6
+      }
+    },
+    "present_in_perseus_only_among_append_only": [
+      "correction_failure",
+      "history_erasure"
+    ],
+    "reduced_versus_at_least_one": [
+      "configuration_collapse",
+      "false_persistence",
+      "stale_persistence"
+    ],
+    "reduced_versus_every_append_only_engine": [
+      "configuration_collapse",
+      "false_persistence"
+    ],
+    "retiring_gen33_agentmemory": {
+      "belief_truth_confusion": 6,
+      "configuration_collapse": 3,
+      "correction_failure": 3,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 6,
+      "history_erasure": 6,
+      "late_history_corruption": 3,
+      "missing_required_truth": 6,
+      "scope_collapse": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    }
+  },
+  "generated_at": "2026-09-03T07:07:30Z",
+  "generation": 33,
+  "interpretation": "Retirement is a real trade, not an improvement. Native supersession reduced most of the append-only failure classes and introduced false supersession and history erasure in their place, from the same blind lexical rule: an identical Jaccard score of 1.000 produced one correct retirement and one wrong one. Neither architecture is safe; they fail differently. This remains a two-arm architectural contrast across products, not a controlled experiment within one product.",
+  "lifecycle_failure_totals_all_repetitions": {
+    "false_supersession": 3
+  },
+  "model_or_product_llm_calls": false,
+  "repetition_variance": "none; all three repetitions produced identical failure totals and identical supersessions",
+  "repetitions": [
+    {
+      "agent_id": "memory-bakeoff-gen33-r1",
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "expected_prefix": 1,
+          "rows_live": 1,
+          "rows_retired": 0,
+          "rows_total": 1,
+          "supersessions_so_far": 0
+        },
+        "CP04": {
+          "expected_prefix": 4,
+          "rows_live": 2,
+          "rows_retired": 2,
+          "rows_total": 4,
+          "supersessions_so_far": 2
+        },
+        "CP05": {
+          "expected_prefix": 5,
+          "rows_live": 3,
+          "rows_retired": 2,
+          "rows_total": 5,
+          "supersessions_so_far": 2
+        },
+        "CP06": {
+          "expected_prefix": 6,
+          "rows_live": 4,
+          "rows_retired": 2,
+          "rows_total": 6,
+          "supersessions_so_far": 2
+        },
+        "CP08": {
+          "expected_prefix": 8,
+          "rows_live": 6,
+          "rows_retired": 2,
+          "rows_total": 8,
+          "supersessions_so_far": 2
+        },
+        "CP10": {
+          "expected_prefix": 10,
+          "rows_live": 8,
+          "rows_retired": 2,
+          "rows_total": 10,
+          "supersessions_so_far": 2
+        },
+        "CP11": {
+          "expected_prefix": 11,
+          "rows_live": 9,
+          "rows_retired": 2,
+          "rows_total": 11,
+          "supersessions_so_far": 2
+        },
+        "CP14": {
+          "expected_prefix": 14,
+          "rows_live": 12,
+          "rows_retired": 2,
+          "rows_total": 14,
+          "supersessions_so_far": 2
+        },
+        "CP16": {
+          "expected_prefix": 16,
+          "rows_live": 14,
+          "rows_retired": 2,
+          "rows_total": 16,
+          "supersessions_so_far": 2
+        }
+      },
+      "checkpoints": 9,
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 1,
+        "correction_failure": 1,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 2,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 2,
+        "late_history_corruption": 1,
+        "missing_required_truth": 2,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 4,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 1,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 1,
+      "supersession_classification": {
+        "false_supersession": 1,
+        "legitimate_supersession": 1,
+        "unmapped": 0
+      },
+      "supersession_count": 2
+    },
+    {
+      "agent_id": "memory-bakeoff-gen33-r2",
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "expected_prefix": 1,
+          "rows_live": 1,
+          "rows_retired": 0,
+          "rows_total": 1,
+          "supersessions_so_far": 0
+        },
+        "CP04": {
+          "expected_prefix": 4,
+          "rows_live": 2,
+          "rows_retired": 2,
+          "rows_total": 4,
+          "supersessions_so_far": 2
+        },
+        "CP05": {
+          "expected_prefix": 5,
+          "rows_live": 3,
+          "rows_retired": 2,
+          "rows_total": 5,
+          "supersessions_so_far": 2
+        },
+        "CP06": {
+          "expected_prefix": 6,
+          "rows_live": 4,
+          "rows_retired": 2,
+          "rows_total": 6,
+          "supersessions_so_far": 2
+        },
+        "CP08": {
+          "expected_prefix": 8,
+          "rows_live": 6,
+          "rows_retired": 2,
+          "rows_total": 8,
+          "supersessions_so_far": 2
+        },
+        "CP10": {
+          "expected_prefix": 10,
+          "rows_live": 8,
+          "rows_retired": 2,
+          "rows_total": 10,
+          "supersessions_so_far": 2
+        },
+        "CP11": {
+          "expected_prefix": 11,
+          "rows_live": 9,
+          "rows_retired": 2,
+          "rows_total": 11,
+          "supersessions_so_far": 2
+        },
+        "CP14": {
+          "expected_prefix": 14,
+          "rows_live": 12,
+          "rows_retired": 2,
+          "rows_total": 14,
+          "supersessions_so_far": 2
+        },
+        "CP16": {
+          "expected_prefix": 16,
+          "rows_live": 14,
+          "rows_retired": 2,
+          "rows_total": 16,
+          "supersessions_so_far": 2
+        }
+      },
+      "checkpoints": 9,
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 1,
+        "correction_failure": 1,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 2,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 2,
+        "late_history_corruption": 1,
+        "missing_required_truth": 2,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 4,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 1,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 2,
+      "supersession_classification": {
+        "false_supersession": 1,
+        "legitimate_supersession": 1,
+        "unmapped": 0
+      },
+      "supersession_count": 2
+    },
+    {
+      "agent_id": "memory-bakeoff-gen33-r3",
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "expected_prefix": 1,
+          "rows_live": 1,
+          "rows_retired": 0,
+          "rows_total": 1,
+          "supersessions_so_far": 0
+        },
+        "CP04": {
+          "expected_prefix": 4,
+          "rows_live": 2,
+          "rows_retired": 2,
+          "rows_total": 4,
+          "supersessions_so_far": 2
+        },
+        "CP05": {
+          "expected_prefix": 5,
+          "rows_live": 3,
+          "rows_retired": 2,
+          "rows_total": 5,
+          "supersessions_so_far": 2
+        },
+        "CP06": {
+          "expected_prefix": 6,
+          "rows_live": 4,
+          "rows_retired": 2,
+          "rows_total": 6,
+          "supersessions_so_far": 2
+        },
+        "CP08": {
+          "expected_prefix": 8,
+          "rows_live": 6,
+          "rows_retired": 2,
+          "rows_total": 8,
+          "supersessions_so_far": 2
+        },
+        "CP10": {
+          "expected_prefix": 10,
+          "rows_live": 8,
+          "rows_retired": 2,
+          "rows_total": 10,
+          "supersessions_so_far": 2
+        },
+        "CP11": {
+          "expected_prefix": 11,
+          "rows_live": 9,
+          "rows_retired": 2,
+          "rows_total": 11,
+          "supersessions_so_far": 2
+        },
+        "CP14": {
+          "expected_prefix": 14,
+          "rows_live": 12,
+          "rows_retired": 2,
+          "rows_total": 14,
+          "supersessions_so_far": 2
+        },
+        "CP16": {
+          "expected_prefix": 16,
+          "rows_live": 14,
+          "rows_retired": 2,
+          "rows_total": 16,
+          "supersessions_so_far": 2
+        }
+      },
+      "checkpoints": 9,
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 1,
+        "correction_failure": 1,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 2,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 2,
+        "late_history_corruption": 1,
+        "missing_required_truth": 2,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 4,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 1,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 3,
+      "supersession_classification": {
+        "false_supersession": 1,
+        "legitimate_supersession": 1,
+        "unmapped": 0
+      },
+      "supersession_count": 2
+    }
+  ],
+  "scorer_contract_sha256": "1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34",
+  "scorer_streams": "case failures come from score_longitudinal_case; lifecycle failures from score_lifecycle_state; they are separate scorer outputs and must never be merged or read for each other",
+  "scorer_version": "longitudinal-scorer-v1",
+  "status": "complete_raw_product_longitudinal_native_retirement_activated",
+  "system_identity": {
+    "disabled": [
+      "LLM provider/extractor",
+      "CONSOLIDATION_ENABLED",
+      "GRAPH_EXTRACTION_ENABLED",
+      "AGENTMEMORY_AUTO_COMPRESS",
+      "learned reranking"
+    ],
+    "embeddings": "local q8 Xenova/all-MiniLM-L6-v2, 384-D, @huggingface/transformers 4.2.0",
+    "endpoints": "/agentmemory/remember + /agentmemory/smart-search",
+    "inference_server": "none",
+    "isolation": "fresh iii data directory and distinct agentId per repetition; one project namespace",
+    "product": "agentmemory",
+    "product_version": "0.9.29",
+    "reader": "none",
+    "requested_limit": 5,
+    "retrieval": "native in-memory cosine + BM25 RRF k=60, vector 0.6 / BM25 0.4, 5% stream-agreement bonus, <=3 per session",
+    "upstream_commit": "e04ba88819c365c9acf9d6661ea802143e728bd6"
+  },
+  "treatment_activation": {
+    "activated": true,
+    "classification_is_harness_judgement_of_product_retirements_not_a_scorer_output": true,
+    "classification_per_repetition": [
+      {
+        "false_supersession": 1,
+        "legitimate_supersession": 1,
+        "unmapped": 0
+      },
+      {
+        "false_supersession": 1,
+        "legitimate_supersession": 1,
+        "unmapped": 0
+      },
+      {
+        "false_supersession": 1,
+        "legitimate_supersession": 1,
+        "unmapped": 0
+      }
+    ],
+    "events_repetition_1": [
+      {
+        "at_ingestion_order": 3,
+        "classification": "false_supersession",
+        "predecessor_canonical_id": "L001",
+        "successor_canonical_id": "L003"
+      },
+      {
+        "at_ingestion_order": 4,
+        "classification": "legitimate_supersession",
+        "predecessor_canonical_id": "L002",
+        "successor_canonical_id": "L004"
+      }
+    ],
+    "predicted_before_running": "L001/L003 and L002/L004 were the only fixture pairs above 0.7; both fired, as predicted",
+    "preflight_validation": {
+      "retired_row_absent_from_search": true,
+      "retired_row_still_in_kv": true,
+      "synthetic_pair_superseded": true
+    },
+    "question": "does native write-time supersession fire on longitudinal-v1 at all?",
+    "rule": {
+      "cross_project": "never supersedes across an explicit project boundary",
+      "mechanism": "write-time supersession during remember",
+      "predecessors_per_write": 1,
+      "retired_state": "isLatest=false; the record stays in KV and leaves the search index; absence from search is not deletion",
+      "similarity": "strict lexical Jaccard over whitespace tokens of length > 2, case- and punctuation-sensitive",
+      "threshold": 0.7
+    },
+    "supersessions_per_repetition": [
+      2,
+      2,
+      2
+    ],
+    "why_it_fired": "the tokenizer drops whitespace tokens of two characters or fewer, so C1/C2 and 21/29 vanish and the surviving token sets are identical, scoring Jaccard 1.000"
+  }
+}

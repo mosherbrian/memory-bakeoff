@@ -61,6 +61,7 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 30 | Perseus Vault v2.23.2, agent-facing MCP `remember` + admission review | `no-score diagnostic` | post-hoc write-surface ablation, **blocked**: `remember` honours a retroactive `valid_from`, but the approval that makes a record serveable resets it to the approval instant | serveable and retroactive are mutually exclusive in this version, so no independent application-time axis exists to score; Gen29 stands unchanged | [gen30](research/PERSEUS_VAULT_GEN30_MCP_VALID_TIME_ABLATION.md) | [admission probe](results/perseus_vault_gen30_mcp_valid_time) |
 | 31 | Hindsight v0.9.2, raw/no-LLM retain + native hybrid recall with learned CPU reranker | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, and **zero correction failure and zero history erasure** — a vantage-point query reaches the earlier state | scope collapse and belief/truth confusion appear where Perseus had none; the event-time axis (`occurred_*`) is unreachable in the raw profile, so mention time is the only axis | [gen31](research/HINDSIGHT_GEN31_LONGITUDINAL.md) | [longitudinal](results/hindsight_gen31_longitudinal) |
 | 32 | Mem0 2.0.19, raw `Memory.add(infer=False)` + embedded Qdrant dense+BM25 | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance, and **all seven cross-engine failure classes reproduced in an engine with no temporal retrieval surface at all** | one extra `stale_persistence` (LQ20) is the direct cost of having no as-of filter; Mem0 can filter on scope metadata but the scored Gen10 identity deliberately does not | [gen32](research/MEM0_GEN32_LONGITUDINAL.md) | [longitudinal](results/mem0_gen32_longitudinal) |
+| 33 | agentmemory 0.9.29, native remember + smart-search with **write-time supersession enabled** | `raw_product` | 3 identical repetitions: retirement activates twice per run and **halves configuration collapse** (6→3) and reduces false persistence (9→6) | it is the only engine that falsely supersedes (lifecycle `false_supersession` 3); the rule is lexical Jaccard >0.7 over tokens longer than two characters, so `C1`/`C2` are invisible to it | [gen33](research/AGENTMEMORY_GEN33_LONGITUDINAL.md) | [longitudinal](results/agentmemory_gen33_longitudinal) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -69,16 +70,26 @@ Gen29 is the first Round-2 contestant run against the frozen ruler. Its numbers
 answer a different question from Gen27/28 and are not comparable to them: OM has
 no query surface and Perseus does.
 
-Gen29, Gen31 and Gen32 are the Round-2 contestants so far. Hindsight repairs
+Gen29, Gen31, Gen32 and Gen33 are the Round-2 contestants so far. Hindsight repairs
 exactly what Perseus's collapsed time axis broke and breaks two things Perseus got
 right; Mem0, which has no temporal retrieval surface at all, then reproduces all
 seven of the classes the first two shared — five of them at identical counts.
 
-That is three-engine evidence **consistent with** an append-only-without-retirement
-explanation, not proof of causation: the three profiles also share this harness,
-this ruler, and a no-retirement constraint the generations imposed. Testing the
-retirement half needs an engine that retires on its own, which is why agentmemory
-is the informative counterexample.
+Gen33 moved the one variable the other three held fixed. agentmemory retires on its
+own, and the trade is visible: configuration collapse halves, false persistence
+falls, stale persistence is unchanged, and it becomes the only engine that falsely
+supersedes a record that was still true. Neither architecture is safe — append
+everything and you cannot say what is current; retire on similarity and you delete
+what was true. This is a contrast across products, not a controlled experiment
+within one.
+
+**Correction, 2026-09-03.** Gen31's originally published lifecycle numbers were
+fabricated by three silently failing SQL queries in its collector, and the
+"false supersession 0" claim for the append-only engines was read from the
+case-level stream, which never carries that class. Gen31 has been re-run with a
+collector that fails loudly; its case results are byte-identical and its lifecycle
+is genuinely clean. All summaries now carry both scorer streams separately, with a
+regression test enforcing that they are never merged.
 
 ## Reading rules
 
