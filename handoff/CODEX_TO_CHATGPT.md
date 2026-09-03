@@ -1,5 +1,112 @@
 # Codex to ChatGPT handoff
 
+## Generation 37 — Perseus and Mem0 on MemConflict, calibration scale
+
+**status:** complete, both engines. Evidence class `external_benchmark_calibration_raw_product`,
+development-exposed, three personas. Not an official MemConflict score, not full-release, not blind.
+Scored lane is the benchmark-owned `memconflict-exact-whitebox-v1`. No reader, no LLM, no external
+API, no GPU. `upstream_llm_judge` remains `requires_reader_authorization`.
+
+**frozen before exposure.** Contract `memconflict-benchmark-v1` `0521210818e448c8…`, dataset
+`8ef9ec8589eccb86…`, upstream `ec51d5d`, the three Gen36 calibration persona ids unchanged. Adapters
+hashed at preflight and verified again inside every run: Perseus `627f812d5296130c…`, Mem0
+`920f496be7470fca…`. Perseus is the Gen29 identity (v2.23.2 `9c82920`, operator CLI write, native
+hybrid recall, limit 5, fresh encrypted vault per persona, queries served from a byte-for-byte
+snapshot). Mem0 is the Gen32 identity (2.0.19 from the pinned checkout, `add(infer=False)`, embedded
+on-disk Qdrant, FastEmbed dense + BM25 sparse, threshold 0.1, limit 5, fresh store per persona, no
+metadata written). One released message = one write; indexed text is the message content only.
+
+**preflight.** 29 checks on unrelated synthetic content, all passing, before either product saw a
+calibration question: pinned identities, one message one write, persona isolation, reads leaving the
+store digest unchanged, native order preserved, every hit mapping through the ledger, no identifiers
+in indexed text, recursive rejection of every scorer-only field and of any future session.
+
+**contract integrity during the run.** Identical for both engines: 14,304 writes, 399 questions,
+0 unmapped provenance, 0 empty returns, 0 returns shorter than 5, 0 future-session leakage, reads
+left state unchanged at every audited session, and 8/8 label-blind repeat questions byte-identical in
+returned session order and score.
+
+**exact-provenance results** (380 measured, 19 unmeasured — the conditional questions Gen36 marked
+unaddressable, excluded from denominators rather than scored zero):
+
+| | Perseus | Mem0 |
+|---|---|---|
+| hit@2 | 147 | 150 |
+| hit@3 | **168 (44.2%)** | **180 (47.4%)** |
+| hit@5 | 207 | 232 |
+| log-rank@3 | 0.376 | 0.392 |
+| dynamic (315) | 133 | 141 |
+| static (36) | **6** | **10** |
+| conditional (29) | 29 | 29 |
+| rank-1 hits | 107 | 107 |
+| no hit | 173 | 148 |
+
+Gen36's frozen BM25 baseline was 110/380 on the same questions. Context only; three
+development-exposed personas cannot support a winner claim and nothing was tuned from these outcomes.
+
+**the shared failure is the finding.** Conditional questions are nearly free for both engines and
+Mem0 answers all 29 at rank 1: the gold session established the rule and the question names the item.
+Static conflict is where both collapse — 6/36 and 10/36 — because the truth was stated long ago and
+the contradiction is recent, and similarity has no reason to prefer the older statement. That is
+Round 2's `false_persistence` reappearing on a corpus built by other people under a different ruler.
+Both engines also land on rank 1 exactly 107 times from unrelated retrieval stacks, then diverge in
+the tail.
+
+**inventory, reconciled read-only after the run.** Perseus quarantined 25 of 14,304 writes (0.17%;
+5, 11 and 9 per persona), each carrying a native reason string such as
+`quarantined (interference score 0.909 > bound 0.900)`. It is a native admission decision, not loss,
+and invisible at Round 2's sixteen writes. Mem0 holds exactly what was written — 4,762, 4,844, 4,698,
+difference zero.
+
+**a harness defect worth recording.** Mem0's in-run inventory said 20 points against 4,762 writes.
+`get_all()` takes `top_k`, defaults to 20, and ignores a `limit` kwarg, so I had captured a page size
+and would have published it as a store count. The leaf keeps the misleading number with the
+explanation; the true count comes from `client.count(exact=True)` in
+`scripts/reconcile_memconflict_gen37_inventory.py`. I did not patch the runner mid-flight because
+embedded Qdrant permits one client per store and touching it would have corrupted the live run.
+
+**one earlier self-correction.** The first Perseus pass was stopped and rerun. Its determinism check
+re-queried a snapshot taken after all 53 sessions while the original query had seen only sessions
+0..i, so it compared two different stores and reported instability that was my bug. The repeat now
+runs immediately, against the same open snapshot.
+
+**measured scale, replacing Gen36's guess of 0.3-1.0 s/write and 12-40 h/engine:**
+
+| | Perseus | Mem0 |
+|---|---|---|
+| write p50 | 143 ms | 348-359 ms |
+| query p50 | 22-26 ms | 394-402 ms |
+| calibration wall | 0.58 h | 1.47 h |
+| writes/sec | 6.88 | 2.71 |
+| store per persona | ~55 MB | ~58 MB |
+| projected full release | 5.8 h, 1.65 GB | 14.7 h, 1.73 GB |
+
+Write latency was flat across personas and across a store growing to ~4,800 records, so there is no
+nonlinear slowdown at this scale. The linear-10x and rate-based projections agree within 2% for both
+engines.
+
+**Gen38 recommendation, not executed.** One full-release pass for Perseus first, then Mem0, serially:
+about 20.5 hours total and 3.4 GB. Feasibility decides the order, not accuracy. One retrieval pass
+per engine with targeted repeats — every label-blind repeat was identical, so tripling 3,750 queries
+buys nothing. Hindsight and agentmemory stay behind this pass. Two operational notes: Mem0's queries
+cost ~25 minutes of the release against Perseus's ~90 seconds, already inside the projection; and
+embedded Qdrant's one-client-per-store rule means Mem0 personas must open strictly in sequence, so a
+parallel-persona design needs separate processes.
+
+**artifacts.** `src/memory_bakeoff/providers/perseus_memconflict.py`,
+`src/memory_bakeoff/providers/mem0_memconflict.py`, `src/memory_bakeoff/memconflict_engines.py`,
+`scripts/preflight_memconflict_gen37_products.py`, `scripts/run_memconflict_gen37_calibration.py`,
+`scripts/build_memconflict_gen37_report.py`,
+`scripts/reconcile_memconflict_gen37_inventory.py`,
+`research/MEMCONFLICT_GEN37_PERSEUS_MEM0_CALIBRATION.md`,
+`results/memconflict_gen37_calibration/{perseus,mem0}/` leaves and ledgers, plus
+`exact-provenance-derived.json`, `operations.json`, `inventory-reconciliation.json`,
+`validation.json`, `content-digest.txt`, and `tests/test_memconflict_gen37_products.py`.
+
+Scientific digest `63dafdf6bbc51dce3bc6f5b6dd47e912b7ab28f3d30a113acdf6d7cb80778f12`, reproduced byte
+for byte; wall-clock measurements live outside the hashed content in `operations.json`. 20 focused
+tests; full suite 205 passed with the one pre-existing warning.
+
 ## Generation 36 — MemConflict external-benchmark contract (no contestant score)
 
 **status:** complete. No product ran, no reader, no LLM, no external API, no GPU. Round-1,

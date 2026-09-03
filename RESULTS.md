@@ -65,6 +65,8 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 34 | Round-2 reporting-layer integrity audit (no product run) | `no-score diagnostic` | every cross-engine number rebuilt from leaf evidence through a fail-closed reporting layer; **all Round-2 conclusions survive independent derivation unchanged** | the old summarisers carry 45 default-fallback patterns where missing evidence becomes a number; historical scripts left intact, future publication routes through the common reporter | [gen34](research/ROUND2_REPORTING_INTEGRITY_GEN34.md) | [ledger](results/round2_gen34_integrity) |
 | 35 | agentmemory 0.9.29 from one patched build, automatic Jaccard retirement **ON vs OFF** | `controlled_core` (modified-product ablation) | 6 fresh runs, 3 per arm, counterbalanced: the enabled arm reproduces Gen33 exactly and the disabled arm **removes every false supersession** (lifecycle 3 -> 0) and every `history_erasure` and `correction_failure` | with retirement off, `configuration_collapse` returns to 6 and `false_persistence` to 9 — the append-only figures — so retirement traded those failures rather than fixing them; 13 of 20 cases differ and every difference traces to `L001`/`L002`, zero confounds | [gen35](research/AGENTMEMORY_GEN35_RETIREMENT_ABLATION.md) | [ablation](results/agentmemory_gen35_retirement_ablation) |
 | 36 | MemConflict `ec51d5d` external-benchmark contract (no product run) | `external-benchmark contract / no contestant score` | released benchmark pinned and measured locally: 30 personas, 1,579 sessions, 3,750 questions, 142,093 ingestible messages; public/scorer-only registry, chronology boundary and three scoring lanes frozen | upstream white-box scoring is LLM-judged, and four paths in its scorer turn an unmeasured metric into 0.0; exact ID-level support is derivable for 3,569 of 3,750 questions and the other 181 are UNMEASURED, not guessed | [gen36](research/MEMCONFLICT_GEN36_CONTRACT.md) | [contract](results/memconflict_gen36_contract) |
+| 37 | Perseus Vault v2.23.2 Gen29 identity on MemConflict, 3-persona calibration | `external_benchmark_calibration_raw_product` (development-exposed) | 14,304 writes and 399 questions with zero unmapped provenance, zero empty returns, zero future-session leakage; exact-provenance hit@3 168/380 measured, log-rank@3 0.376 | static conflict is where it fails (6/36) while conditional is free (29/29); the product quarantined 25 writes under its own interference bound, with a native reason on every one | [gen37](research/MEMCONFLICT_GEN37_PERSEUS_MEM0_CALIBRATION.md) | [calibration](results/memconflict_gen37_calibration/perseus) |
+| 37 | Mem0 2.0.19 Gen32 raw `infer=False` identity on MemConflict, 3-persona calibration | `external_benchmark_calibration_raw_product` (development-exposed) | same 14,304 writes and 399 questions, same clean contract record; exact-provenance hit@3 180/380 measured, log-rank@3 0.392, and the store holds exactly what was written | static conflict fails here too (10/36); both engines land on rank 1 exactly 107 times from unrelated retrieval stacks, and Mem0 costs 394-402 ms per query against Perseus's 22-26 ms | [gen37](research/MEMCONFLICT_GEN37_PERSEUS_MEM0_CALIBRATION.md) | [calibration](results/memconflict_gen37_calibration/mem0) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -121,6 +123,21 @@ published as a retrieval miss. Our lanes are kept separate and unmeasured stays
 unmeasured. A benchmark-owned exact-provenance lane credits retrieval by released
 session identity for 95% of questions; the rest are marked unmeasurable rather
 than assigned a plausible number.
+
+Gen37 put two real products against that frozen contract at calibration scale —
+three personas, 14,304 writes and 399 questions each, development-exposed and
+deliberately not an official score. The contract held: no gold reached either
+product, every returned item mapped through its own write receipt, nothing was
+retrieved from a session the question could not see, and reads left both stores
+byte-identical. The failure both engines share is the interesting part. Questions
+that bind a preference to a condition are almost free (29/29 for both), while
+questions that ask which of two contradictory statements is true are where both
+collapse: 6/36 and 10/36. That is Round 2's `false_persistence` reappearing on a
+corpus built by other people, with a different ruler.
+
+The scale guess is also now a measurement. Gen36 estimated 12-40 hours per engine
+for the full release; measured, it is 5.8 hours for Perseus and 14.7 hours for
+Mem0, with the linear and rate-based projections agreeing to within 2%.
 
 ## Reading rules
 

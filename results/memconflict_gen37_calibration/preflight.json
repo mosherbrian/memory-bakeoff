@@ -1,0 +1,121 @@
+{
+  "adapter_contracts": {
+    "mem0": {
+      "payload": {
+        "adapter_version": "mem0-memconflict-adapter-v1",
+        "embedding_dims": 1024,
+        "embedding_snapshot": "qdrant/gte-large-onnx 770e825c74a004f165b78793f7c8fc4a95280878",
+        "forbidden_inputs": [
+          "answer",
+          "conflict_type",
+          "ability_target",
+          "difficulty",
+          "Session_Type",
+          "Updated_Attributes",
+          "Static_Conflict_Information",
+          "Conditional_Conflict_Information",
+          "gold_support_sessions"
+        ],
+        "indexed_content_rule": "released message text only; no metadata, no identifiers, no labels",
+        "ingestion_unit": "one well-formed released dialogue message = one add",
+        "isolation": "fresh on-disk Qdrant path and collection per persona, plus an opaque per-persona user_id",
+        "lifecycle_calls": "none; no update, delete, reset or history rewrite is issued",
+        "metadata_fields": [],
+        "post_filtering": "none; native order, native score and native limit are preserved",
+        "product": "mem0ai",
+        "product_version": "2.0.19",
+        "profile": "raw_product, Gen32 identity: Memory.add(infer=False), embedded on-disk Qdrant, FastEmbed dense + BM25 sparse",
+        "provenance_rule": "native id returned by add -> harness ledger -> released persona/session/turn/message",
+        "query_rule": "released question text, byte for byte, with no prefix or rewrite",
+        "read_path": "Memory.search(query, filters={user_id}, limit=5, threshold=0.1)",
+        "sparse_snapshot": "Qdrant/bm25 22b8d2af71a76161e18dd432d2cee0eefa66e412",
+        "temporal_surface": "none; no date filter, no as-of read, no ranking on time",
+        "threshold": 0.1,
+        "upstream_commit": "19cb89aff472325c707f64b2f34ae6afdbf7faf7",
+        "write_path": "upstream Memory.add(text, user_id, infer=False)"
+      },
+      "sha256": "920f496be7470fca3bb5da4fb26b6bde6b9a13214ba5b934d875b06e97e0d190",
+      "version": "mem0-memconflict-adapter-v1"
+    },
+    "perseus": {
+      "payload": {
+        "adapter_version": "perseus-memconflict-adapter-v1",
+        "forbidden_inputs": [
+          "answer",
+          "conflict_type",
+          "ability_target",
+          "difficulty",
+          "Session_Type",
+          "Updated_Attributes",
+          "Static_Conflict_Information",
+          "Conditional_Conflict_Information",
+          "gold_support_sessions"
+        ],
+        "indexed_content_rule": "released message text only; no persona/session/turn id, no role, no date, no label",
+        "indexed_fields": [
+          "assertion",
+          "source_kind"
+        ],
+        "ingestion_unit": "one well-formed released dialogue message = one write",
+        "isolation": "fresh encrypted SQLite vault and key per persona",
+        "key_rule": "msg- + zero-padded per-persona write ordinal",
+        "lifecycle_calls": "none; no supersede, update, delete or maintenance is issued",
+        "post_filtering": "none; native order, native score and native limit are preserved",
+        "product": "perseus-vault",
+        "product_build": "9c82920",
+        "product_version": "2.23.2",
+        "profile": "raw_product, Gen29 identity: operator CLI write + native hybrid recall",
+        "provenance_rule": "native write receipt id -> harness ledger -> released persona/session/turn/message",
+        "query_rule": "released question text, byte for byte, with no prefix or rewrite",
+        "read_isolation": "queries run against a byte-for-byte vault snapshot; the write vault only receives writes",
+        "read_path": "perseus_vault_recall(mode=hybrid, limit=5)",
+        "release_tag": "4f405f53f4c9b6a403df0d42cf0d59bf80c64da4",
+        "source_commit": "9c829207a4b44a8e679ba912b4c1c5608c8f1e36",
+        "tarball_sha256": "e9b0912c5a2279f84d59a5ec8fb98e437a8f0feea8dac63dbca36759ff920dcb",
+        "temporal_arguments": "none; ordinary writes carry product transaction time, exactly as Gen29",
+        "workspace_rule": "sha256 of memconflict-persona:<released persona id>; one workspace per persona vault",
+        "write_path": "perseus-vault write --category --key --body --workspace-hash"
+      },
+      "sha256": "627f812d5296130cdee5062ee48a9690a8873e635ee5683c8dd51432fd0e2c99",
+      "version": "perseus-memconflict-adapter-v1"
+    }
+  },
+  "mem0": {
+    "every_hit_maps_through_ledger": true,
+    "indexed_text_is_message_only": true,
+    "loaded_from_pinned_checkout": true,
+    "native_order_preserved": true,
+    "no_metadata_written": true,
+    "one_message_one_write": true,
+    "persona_isolation": true,
+    "pinned_package_version": true,
+    "reads_leave_state_unchanged": true,
+    "repeat_read_is_stable": true,
+    "retrieval_is_non_empty": true,
+    "write_count_matches_inventory": true
+  },
+  "passed": true,
+  "perseus": {
+    "binary_version_string": "perseus-vault 2.23.2 (9c82920)",
+    "every_hit_maps_through_ledger": true,
+    "identifier_leak_is_rejected": true,
+    "native_order_preserved": true,
+    "no_identifier_in_indexed_body": true,
+    "one_message_one_write": true,
+    "persona_isolation": true,
+    "pinned_binary_identity": true,
+    "reads_leave_state_unchanged": true,
+    "repeat_read_is_stable": true,
+    "retrieval_is_non_empty": true,
+    "write_count_matches_inventory": true
+  },
+  "shared": {
+    "calibration_manifest_unchanged": true,
+    "contract_hash_unchanged": true,
+    "dataset_hash_unchanged": true,
+    "future_session_rejected": true,
+    "no_openai_key_in_environment": true,
+    "scorer_only_fields_rejected": true
+  },
+  "state_dir": "/private/tmp/memconflict-gen37-preflight-dr8u3e6u"
+}
