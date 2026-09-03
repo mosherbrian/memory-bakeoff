@@ -1,5 +1,88 @@
 # Codex to ChatGPT handoff
 
+## Generation 35 — agentmemory retirement ablation (controlled_core)
+
+**status:** complete. Both gates passed; the causal claim is scoped to this pinned engine.
+
+**what varied.** One runtime gate around the three supersession-state assignments in
+`src/functions/remember.ts` (`supersededId`, `supersededVersion`, `supersededMemory`),
+keyed on `AGENTMEMORY_EXPERIMENT_DISABLE_AUTO_SUPERSESSION`. Candidate scan, Jaccard
+computation, the >0.7 threshold, the loop `break`, memory creation, indexing,
+embeddings, retrieval and service architecture are untouched. Patch artifact
+`research/patches/agentmemory-gen35-retirement-flag.patch`, sha256
+`1aee426efd2460f4f2b77094082b8442ec44bc0ec9017d06c2b3d9d417b57c6d`; pre-patch source
+`e14b5c946d08843a…`, post-patch `a1e4d56aab1be354…`; upstream commit
+`e04ba88819c365c9acf9d6661ea802143e728bd6`, package 0.9.29. Both arms execute one
+built artifact in `external/agentmemory-gen35`; the runner fails if any environment
+variable other than `AGENT_ID` and the flag differs, and fails if the flag never varies.
+Adapter contract `a06482525d718dd…`, fixture `a5c67e7b2677dff…` and scorer
+`1dd831e80b3769a…` unchanged.
+
+**preflight, unrelated synthetic content.** 12/12 pass. Above-threshold pair: ON retires
+exactly one row, OFF retires nothing and leaves no parent, no supersedes, version 1. ON
+on the patched build is row-for-row identical to the *unpatched* pinned build on the same
+pair. Below-threshold pair: identical shape, identical ranking, identical scores in both
+arms. OFF still writes and indexes normally. No LLM credentials, local embeddings, no GPU.
+
+**gates.** Manipulation: every ON repetition reproduces the Gen33 pattern natively — two
+supersessions, `L001 -> L003` false, `L002 -> L004` legitimate, 14 live / 2 retired at
+CP16; every OFF repetition has zero supersessions, zero retired, 16 live. Control
+replication: the fresh ON repetitions match Gen33 leaf evidence on product events and
+classification, case classes per case, case totals, lifecycle totals, and canonical
+returned-id ordering for all 20 cases.
+
+**result** (per repetition; all three repetitions per arm identical, so aggregate is 3x):
+
+| stream | class | ON | OFF | delta |
+|---|---|---|---|---|
+| lifecycle | `false_supersession` | 1 | 0 | -1 |
+| case | `history_erasure` | 2 | 0 | -2 |
+| case | `correction_failure` | 1 | 0 | -1 |
+| case | `missing_required_truth` | 2 | 1 | -1 |
+| case | `configuration_collapse` | 1 | 2 | +1 |
+| case | `false_persistence` | 2 | 3 | +1 |
+| case | `stale_persistence` | 4 | 5 | +1 |
+| case | `belief_truth_confusion` | 2 | 2 | 0 |
+| case | `scope_collapse` | 2 | 2 | 0 |
+| case | `failed_procedure_adoption` | 1 | 1 | 0 |
+| case | `late_history_corruption` | 1 | 1 | 0 |
+| case | `unsupported_evidence` | 2 | 2 | 0 |
+
+**hypotheses.** H1 supported: lifecycle `false_supersession` 3 -> 0 in aggregate. H2
+supported in direction: with retirement off, `configuration_collapse` returns to 6 and
+`false_persistence` to 9 in aggregate — exactly the append-only engines' figures, so
+retirement was buying those reductions. H3 traced case by case: `history_erasure` and
+`correction_failure` exist only in ON and are caused by `L001`/`L002` becoming
+unreachable. H4 measured: `stale_persistence` 4 -> 5 per repetition. H5: five classes are
+unchanged across arms and are not attributable to retirement in this engine.
+
+**difference trace.** 13 of 20 cases differ in returned sequence or classification.
+Every one is explained by the presence in OFF of `L001` or `L002`. Zero possible
+confounds. LQ04 and LQ06 stop failing in OFF because corrected history is reachable;
+LQ02, LQ05 and LQ07 start failing because the superseded configuration and the stale
+fact still compete.
+
+**reading.** Retirement did not fix the append-only failures, it traded them. Every
+failure it removed from the current-state classes it re-created in the history classes,
+on the same fixture, on the same ruler, in the same engine. Similarity is not
+supersession.
+
+**reporting.** Gen34 primitives throughout: typed CASE/LIFECYCLE/PRODUCT_EVENT streams,
+no summary.json consumed, missing evidence raises. `false_supersession` comes only from
+the lifecycle scorer replay, reconciled against the product's own retirement events.
+Ablation contract `gen35-ablation-v1`; content digest
+`073baaab3ac3c6eaac084c3f96d264c37acc974c514d2aa8185f1725a9b81e52`, reproduced byte for
+byte across two completely independent sets of six runs. Gen33 and the Gen34 four-engine
+ledger are untouched.
+
+**tests.** 16 focused Gen35 tests; full suite 164 passed, 1 pre-existing warning.
+
+**notes for the next generation.** The patch leaves one benign asymmetry worth recording:
+`nearMatch` is reported in the response when a sub-threshold candidate was seen before the
+>0.7 candidate broke the loop. In ON it is suppressed by `!supersededId`; in OFF it can
+surface. It is a response hint only, never acted on, and it does not touch storage,
+indexing or ranking.
+
  - generation: 34
  - base_commit: `bbfc8c99573c61408f5c5e26d6bd4e11d0119a36`
  - result_commit: `60d86874f6df8b4e852b80d9727c7050c64b4568`

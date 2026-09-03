@@ -63,6 +63,7 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 32 | Mem0 2.0.19, raw `Memory.add(infer=False)` + embedded Qdrant dense+BM25 | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance, and **all seven cross-engine failure classes reproduced in an engine with no temporal retrieval surface at all** | one extra `stale_persistence` (LQ20) is the direct cost of having no as-of filter; Mem0 can filter on scope metadata but the scored Gen10 identity deliberately does not | [gen32](research/MEM0_GEN32_LONGITUDINAL.md) | [longitudinal](results/mem0_gen32_longitudinal) |
 | 33 | agentmemory 0.9.29, native remember + smart-search with **write-time supersession enabled** | `raw_product` | 3 identical repetitions: retirement activates twice per run and **halves configuration collapse** (6→3) and reduces false persistence (9→6) | it is the only engine that falsely supersedes (lifecycle `false_supersession` 3); the rule is lexical Jaccard >0.7 over tokens longer than two characters, so `C1`/`C2` are invisible to it | [gen33](research/AGENTMEMORY_GEN33_LONGITUDINAL.md) | [longitudinal](results/agentmemory_gen33_longitudinal) |
 | 34 | Round-2 reporting-layer integrity audit (no product run) | `no-score diagnostic` | every cross-engine number rebuilt from leaf evidence through a fail-closed reporting layer; **all Round-2 conclusions survive independent derivation unchanged** | the old summarisers carry 45 default-fallback patterns where missing evidence becomes a number; historical scripts left intact, future publication routes through the common reporter | [gen34](research/ROUND2_REPORTING_INTEGRITY_GEN34.md) | [ledger](results/round2_gen34_integrity) |
+| 35 | agentmemory 0.9.29 from one patched build, automatic Jaccard retirement **ON vs OFF** | `controlled_core` (modified-product ablation) | 6 fresh runs, 3 per arm, counterbalanced: the enabled arm reproduces Gen33 exactly and the disabled arm **removes every false supersession** (lifecycle 3 -> 0) and every `history_erasure` and `correction_failure` | with retirement off, `configuration_collapse` returns to 6 and `false_persistence` to 9 — the append-only figures — so retirement traded those failures rather than fixing them; 13 of 20 cases differ and every difference traces to `L001`/`L002`, zero confounds | [gen35](research/AGENTMEMORY_GEN35_RETIREMENT_ABLATION.md) | [ablation](results/agentmemory_gen35_retirement_ablation) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -98,6 +99,16 @@ including the five identical classes and the retirement trade. The append-only
 engines' `false_supersession 0` is now MEASURED_ZERO from the lifecycle scorer
 rather than absent from the wrong table: the statement is the same, its evidential
 basis is entirely different.
+
+Gen35 turned that cross-product contrast into a within-engine intervention. One
+runtime gate around three assignments in agentmemory's `remember` path, one built
+artifact, both arms run from it, everything else held constant. The enabled arm
+reproduces Gen33 case for case; the disabled arm retires nothing. **Retirement did
+not fix the append-only failures, it traded them.** Turning it off removes all
+three false supersessions and both history classes, and puts configuration
+collapse and false persistence back at exactly the numbers the three append-only
+engines produced. This is the project's first causal claim, and it is scoped to
+this pinned agentmemory system only.
 
 ## Reading rules
 

@@ -1,0 +1,32 @@
+diff --git a/src/functions/remember.ts b/src/functions/remember.ts
+index 9422269..6ad56d7 100644
+--- a/src/functions/remember.ts
++++ b/src/functions/remember.ts
+@@ -108,6 +108,12 @@ export function registerRememberFunction(sdk: ISdk, kv: StateKV): void {
+         let supersededId: string | undefined;
+         let supersededVersion = 1;
+         let supersededMemory: Memory | undefined;
++        // memory-bakeoff Gen35 ablation seam: when this experiment flag is
++        // set, the >0.7 Jaccard decision is still computed and still breaks
++        // the loop, but no supersession state is established. Nothing else
++        // in this function changes.
++        const retirementEnabled =
++          process.env.AGENTMEMORY_EXPERIMENT_DISABLE_AUTO_SUPERSESSION !== "1";
+         // Track the closest sub-threshold match: not similar enough to
+         // supersede, but similar enough that the caller may want to
+         // consolidate. Reported back as a hint; never acted on here.
+@@ -127,9 +133,11 @@ export function registerRememberFunction(sdk: ISdk, kv: StateKV): void {
+             existing.content.toLowerCase(),
+           );
+           if (similarity > 0.7) {
+-            supersededId = existing.id;
+-            supersededVersion = existing.version ?? 1;
+-            supersededMemory = existing;
++            if (retirementEnabled) {
++              supersededId = existing.id;
++              supersededVersion = existing.version ?? 1;
++              supersededMemory = existing;
++            }
+             break;
+           }
+           if (
