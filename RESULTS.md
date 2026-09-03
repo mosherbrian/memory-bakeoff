@@ -43,7 +43,7 @@ largest unexplained active-state loss. Both halves are the result. The frozen
 Gen21 artifacts lack the lineage to call that loss destructive deletion, so it
 is reported as loss with unknown historical recoverability.
 
-## Round 2 — the point-in-time ruler and pi-observational-memory
+## Round 2 — the point-in-time ruler, pi-observational-memory, and Perseus
 
 The engine-independent ruler is frozen as `longitudinal-v1`:
 [framework](research/LONGITUDINAL_POINT_IN_TIME_FRAMEWORK.md),
@@ -57,9 +57,14 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 26 | OM 3.0.4 longitudinal-v1 ingestion | `raw_product` | 3/3 repetitions, 16/16 barriers, all nine checkpoints | Pi compaction declined; no agent-visible context, no retrieval score | [gen26](research/OBSERVATIONAL_MEMORY_GEN26_LONGITUDINAL.md) | [longitudinal](results/observational_memory_gen26_longitudinal) |
 | 27 | OM 3.0.4 `om-context-production-v1` | `full_product_context_production` | 3 repetitions, 40/40 barriers each, 67 native `om.folded` folds; reader 28/36 under the v1 contract | zero wrong answers and zero prohibited hits; all 8 failures were citation-provenance failures under a defective citation contract | [gen27](research/OBSERVATIONAL_MEMORY_GEN27_CONTEXT_PRODUCTION.md) | [context production](results/observational_memory_gen27_context_production) |
 | 28 | `om-context-production-v2` citation contract | scorer correction over Gen27 captures | same frozen responses regraded: **33/36**, 11/12 in each repetition | not a new product run and not new fixture exposure; v1 remains 28/36 as historical evidence | [gen28](research/OBSERVATIONAL_MEMORY_GEN28_CITATION_CONTRACT_V2.md) | [citation contract v2](results/observational_memory_gen28_citation_contract_v2) |
+| 29 | Perseus Vault v2.23.2, operator CLI write + native hybrid recall | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, transaction-time belief answered correctly | valid-time is collinear with transaction time in this write path, so every corrected-history and late-history case fails; configuration collapse and stale persistence are real; nothing was lost at 16 records | [gen29](research/PERSEUS_VAULT_GEN29_LONGITUDINAL.md) | [longitudinal](results/perseus_vault_gen29_longitudinal) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
+
+Gen29 is the first Round-2 contestant run against the frozen ruler. Its numbers
+answer a different question from Gen27/28 and are not comparable to them: OM has
+no query surface and Perseus does.
 
 ## Reading rules
 

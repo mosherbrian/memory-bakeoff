@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+"""Gen29 preflight: what Perseus v2.23.2's native read/time surfaces actually do.
+
+Unrelated synthetic facts only. No longitudinal-v1 vocabulary, values, queries,
+IDs or transition labels. Purpose is to determine semantics, never to tune
+scoring.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import sqlite3
+import subprocess
+import sys
+import tempfile
+import time
+
+BIN = Path.home() / ".local/perseus-2.23.2/perseus-vault"
+CATEGORY = "preflight_record"
+DAY = 86_400_000
+
+# Unrelated synthetic domain: greenhouse sensors.
+GREENHOUSE = "ws-greenhouse"
+ORCHARD = "ws-orchard"
+
+
+def sh(args, timeout=90):
+    done = subprocess.run([str(x) for x in args], text=True, capture_output=True, timeout=timeout)
+    if done.returncode != 0:
+        raise SystemExit(f"command failed: {args[1:3]}\n{done.stderr[-400:]}")
+    return done.stdout
+
+
+class Vault:
+    def __init__(self, root: Path, name: str):
+        self.root = root / name
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.db = self.root / "vault.sqlite"
+        self.key = self.root / "vault.key"
+        sh([BIN, "keygen", "--key-file", self.key])
+        self.server = None
+        self._id = 0
+
+    def write(self, key: str, body: dict, workspace: str):
+        out = sh([BIN, "write", "--db", self.db, "--encryption-key", self.key,
+                  "--category", CATEGORY, "--key", key,
+                  "--body", json.dumps(body, sort_keys=True, separators=(",", ":")),
+                  "--workspace-hash", workspace])
+        return json.loads(out)
+
+    def rows(self):
+        con = sqlite3.connect(f"file:{self.db}?mode=ro", uri=True)
+        try:
+            cur = con.execute("SELECT key, id, status, archived, retrieval_count, last_accessed_unix_ms, "
+                              "created_at_unix_ms, valid_from_unix_ms, valid_to_unix_ms, layer, decay_score, source "
+                              "FROM entities ORDER BY key")
+            cols = [d[0] for d in cur.description]
+            return [dict(zip(cols, r)) for r in cur.fetchall()]
+        finally:
+            con.close()
+
+    def file_sha(self):
+        return hashlib.sha256(self.db.read_bytes()).hexdigest()
+
+    def snapshot(self, into: Path) -> "Vault":
+        into.mkdir(parents=True, exist_ok=True)
+        copy = Vault.__new__(Vault)
+        copy.root, copy.db, copy.key, copy.server, copy._id = into, into / "vault.sqlite", into / "vault.key", None, 0
+        for suffix in ("", "-wal", "-shm"):
+            src = Path(str(self.db) + suffix)
+            if src.exists():
+                shutil.copy2(src, str(copy.db) + suffix)
+        shutil.copy2(self.key, copy.key)
+        return copy
+
+    def start(self):
+        self.server = subprocess.Popen([str(BIN), "serve", "--db", str(self.db), "--encryption-key", str(self.key)],
+                                       text=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                       stderr=subprocess.DEVNULL, bufsize=1)
+        return self.rpc("initialize", {"protocolVersion": "2025-03-26", "capabilities": {},
+                                       "clientInfo": {"name": "memory-bakeoff", "version": "gen29-preflight"}})
+
+    def rpc(self, method, params):
+        self._id += 1
+        self.server.stdin.write(json.dumps({"jsonrpc": "2.0", "id": self._id, "method": method, "params": params}) + "\n")
+        self.server.stdin.flush()
+        line = self.server.stdout.readline()
+        if not line:
+            raise SystemExit("MCP server closed unexpectedly")
+        response = json.loads(line)
+        if "error" in response:
+            return {"__error__": response["error"]}
+        return response["result"]
+
+    def tool(self, name, arguments):
+        result = self.rpc("tools/call", {"name": name, "arguments": arguments})
+        if "__error__" in result:
+            return result
+        payload = result.get("structuredContent")
+        if isinstance(payload, dict):
+            return payload
+        content = result.get("content", [])
+        if len(content) == 1 and isinstance(content[0], dict) and isinstance(content[0].get("text"), str):
+            try:
+                return json.loads(content[0]["text"])
+            except json.JSONDecodeError:
+                return {"__text__": content[0]["text"]}
+        return {"__raw__": result}
+
+    def stop(self):
+        if self.server:
+            self.server.terminate()
+            try:
+                self.server.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                self.server.kill()
+            self.server = None
+
+
+def hits(payload):
+    return [(h.get("key"), h.get("id")) for h in payload.get("items", [])] if isinstance(payload, dict) else []
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--out", default=None)
+    args = ap.parse_args()
+    findings: dict = {"binary_sha256": hashlib.sha256(BIN.read_bytes()).hexdigest(),
+                      "version": sh([BIN, "--version"]).strip()}
+    temp = tempfile.TemporaryDirectory(prefix="gen29-preflight-", dir="/private/tmp")
+    root = Path(temp.name)
+    v = Vault(root, "primary")
+
+    now = int(time.time() * 1000)
+
+    # 1. two versions of one fact, written in place through ordinary CLI write
+    v.write("humidity-target", {"assertion": "Greenhouse humidity target is 55 percent.", "marker": "P001"}, GREENHOUSE)
+    time.sleep(1.1)
+    v.write("humidity-target", {"assertion": "Greenhouse humidity target is 62 percent.", "marker": "P002"}, GREENHOUSE)
+    # 2. a fact whose world-time is earlier than when it was learned
+    v.write("backdated-frost", {"assertion": "A frost event affected the seedling bench last winter.", "marker": "P003"}, GREENHOUSE)
+    # 3. a second scope
+    v.write("humidity-target-orchard", {"assertion": "Orchard humidity target is 40 percent.", "marker": "P004"}, ORCHARD)
+    # 4. an unrelated distractor
+    v.write("irrigation-note", {"assertion": "Drip irrigation runs at dawn on the seedling bench.", "marker": "P005"}, GREENHOUSE)
+
+    findings["write_receipt_source"] = v.rows()[0]["source"]
+    findings["valid_time_populated_by_cli_write"] = any(r["valid_from_unix_ms"] is not None for r in v.rows())
+    findings["rows_after_writes"] = v.rows()
+
+    # side-effect probe: does an ordinary recall mutate ranking state?
+    before_sha, before_rows = v.file_sha(), {r["key"]: r for r in v.rows()}
+    v.start()
+    recall = v.tool("perseus_vault_recall", {"query": "humidity target", "workspace_hash": GREENHOUSE,
+                                             "limit": 5, "mode": "hybrid"})
+    findings["recall_hits"] = hits(recall)
+    v.stop()
+    after_sha, after_rows = v.file_sha(), {r["key"]: r for r in v.rows()}
+    mutated = {k: {"retrieval_count": [before_rows[k]["retrieval_count"], after_rows[k]["retrieval_count"]],
+                   "last_accessed": [before_rows[k]["last_accessed_unix_ms"], after_rows[k]["last_accessed_unix_ms"]],
+                   "layer": [before_rows[k]["layer"], after_rows[k]["layer"]],
+                   "decay_score": [before_rows[k]["decay_score"], after_rows[k]["decay_score"]]}
+               for k in before_rows if before_rows[k] != after_rows[k]}
+    findings["recall_mutates_db_file"] = before_sha != after_sha
+    findings["recall_mutated_rows"] = mutated
+
+    # snapshot isolation: recall against a byte copy must leave the original alone
+    snap_sha_before = v.file_sha()
+    snap = v.snapshot(root / "snapshot-1")
+    snap.start()
+    snap_recall = snap.tool("perseus_vault_recall", {"query": "humidity target", "workspace_hash": GREENHOUSE,
+                                                     "limit": 5, "mode": "hybrid"})
+    findings["snapshot_recall_hits"] = hits(snap_recall)
+    # temporal operations, on the snapshot
+    probes = {}
+    probes["recall_as_of_before_second_write"] = v_as_of = snap.tool(
+        "perseus_vault_recall", {"query": "humidity target", "workspace_hash": GREENHOUSE, "limit": 5,
+                                 "mode": "hybrid", "as_of_unix_ms": now - DAY})
+    probes["recall_valid_at_last_winter"] = snap.tool(
+        "perseus_vault_recall", {"query": "frost seedling bench", "workspace_hash": GREENHOUSE, "limit": 5,
+                                 "mode": "hybrid", "valid_at": now - 200 * DAY})
+    probes["as_of_tool"] = snap.tool("perseus_vault_as_of", {"category": CATEGORY, "key": "humidity-target",
+                                                             "as_of_unix_ms": now + DAY})
+    probes["valid_at_tool"] = snap.tool("perseus_vault_valid_at", {"category": CATEGORY, "key": "humidity-target",
+                                                                   "valid_at_unix_ms": now})
+    probes["bitemporal_tool"] = snap.tool("perseus_vault_bitemporal", {"category": CATEGORY, "key": "humidity-target",
+                                                                       "as_of_unix_ms": now + DAY,
+                                                                       "valid_at_unix_ms": now})
+    probes["cross_scope_leak"] = snap.tool("perseus_vault_recall", {"query": "humidity target", "workspace_hash": ORCHARD,
+                                                                    "limit": 5, "mode": "hybrid"})
+    probes["negative_query"] = snap.tool("perseus_vault_recall", {"query": "wind turbine gearbox lubrication schedule",
+                                                                  "workspace_hash": GREENHOUSE, "limit": 5,
+                                                                  "mode": "hybrid"})
+    snap.stop()
+    findings["temporal_probes"] = probes
+    findings["original_unchanged_by_snapshot_reads"] = v.file_sha() == snap_sha_before
+    findings["snapshot_rows_after"] = snap.rows()
+
+    out = json.dumps(findings, indent=2, sort_keys=True, default=str)
+    if args.out:
+        Path(args.out).write_text(out + "\n")
+        print(f"wrote {args.out}")
+    else:
+        print(out)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

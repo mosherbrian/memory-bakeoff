@@ -1,0 +1,315 @@
+#!/usr/bin/env python3
+"""Gen29: Perseus Vault v2.23.2 against the frozen longitudinal-v1 ruler.
+
+Ordinary CLI writes only. Every checkpoint's queries run against a byte-for-byte
+snapshot of the vault, so a scored read can never bias a later one.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import sqlite3
+import subprocess
+import sys
+import tempfile
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from memory_bakeoff import longitudinal as L
+from memory_bakeoff.providers import perseus_longitudinal as A
+
+BIN = Path.home() / ".local/perseus-2.23.2/perseus-vault"
+PINNED_VERSION = "2.23.2"
+PINNED_TARBALL_SHA = "e9b0912c5a2279f84d59a5ec8fb98e437a8f0feea8dac63dbca36759ff920dcb"
+LIMIT = 5
+
+
+def sh(args, timeout=120):
+    done = subprocess.run([str(x) for x in args], text=True, capture_output=True, timeout=timeout)
+    if done.returncode != 0:
+        raise SystemExit(f"perseus command failed {args[1:3]}: {done.stderr[-400:]}")
+    return done.stdout
+
+
+def rows_of(db: Path):
+    con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    try:
+        cur = con.execute("SELECT key,id,status,archived,retrieval_count,created_at_unix_ms,"
+                          "valid_from_unix_ms,valid_to_unix_ms,layer,workspace_hash FROM entities ORDER BY created_at_unix_ms")
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, r)) for r in cur.fetchall()]
+    finally:
+        con.close()
+
+
+class Server:
+    def __init__(self, db: Path, key: Path):
+        self.proc = subprocess.Popen([str(BIN), "serve", "--db", str(db), "--encryption-key", str(key)],
+                                     text=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                     stderr=subprocess.DEVNULL, bufsize=1)
+        self._id = 0
+        info = self.rpc("initialize", {"protocolVersion": "2025-03-26", "capabilities": {},
+                                       "clientInfo": {"name": "memory-bakeoff", "version": "generation-29"}})
+        if info.get("serverInfo", {}).get("version") != PINNED_VERSION:
+            raise SystemExit(f"MCP server version drift: {info.get('serverInfo')}")
+
+    def rpc(self, method, params):
+        self._id += 1
+        self.proc.stdin.write(json.dumps({"jsonrpc": "2.0", "id": self._id, "method": method, "params": params}) + "\n")
+        self.proc.stdin.flush()
+        line = self.proc.stdout.readline()
+        if not line:
+            raise SystemExit("Perseus MCP server closed unexpectedly")
+        response = json.loads(line)
+        if "error" in response:
+            raise SystemExit(f"Perseus MCP error: {response['error']}")
+        return response["result"]
+
+    def recall(self, arguments):
+        result = self.rpc("tools/call", {"name": "perseus_vault_recall", "arguments": arguments})
+        payload = result.get("structuredContent")
+        if not isinstance(payload, dict):
+            content = result.get("content", [])
+            if len(content) == 1 and isinstance(content[0], dict) and isinstance(content[0].get("text"), str):
+                payload = json.loads(content[0]["text"])
+            else:
+                raise SystemExit("Perseus recall response lacks structured content")
+        return payload
+
+    def stop(self):
+        self.proc.terminate()
+        try:
+            self.proc.wait(timeout=15)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+
+
+def snapshot(db: Path, key: Path, into: Path):
+    into.mkdir(parents=True, exist_ok=True)
+    copy_db, copy_key = into / "vault.sqlite", into / "vault.key"
+    for suffix in ("", "-wal", "-shm"):
+        src = Path(str(db) + suffix)
+        if src.exists():
+            shutil.copy2(src, str(copy_db) + suffix)
+    shutil.copy2(key, copy_key)
+    return copy_db, copy_key
+
+
+def run_repetition(fixture, repetition: int, root: Path, identity: dict) -> dict:
+    home = root / f"rep{repetition}"
+    home.mkdir(parents=True)
+    db, key = home / "vault.sqlite", home / "vault.key"
+    sh([BIN, "keygen", "--key-file", key])
+
+    checkpoints = {c.ingestion_order: c for c in fixture.checkpoints}
+    cases_by_checkpoint: dict[str, list] = {}
+    for case in fixture.cases:
+        cases_by_checkpoint.setdefault(case.checkpoint_id, []).append(case)
+
+    native_to_canonical: dict[str, str] = {}
+    receipts: list[dict] = []
+    write_instants: list[int] = []
+    fixture_iso: list[str] = []
+    records: list[L.LongitudinalResultRecord] = []
+    checkpoint_state: dict[str, dict] = {}
+    lifecycle_by_checkpoint: dict[str, list[L.LifecycleEvidence]] = {}
+
+    for observation in fixture.observations:
+        body = A.body_for_observation(observation)
+        A.assert_public_only(body)
+        receipt = json.loads(sh([BIN, "write", "--db", db, "--encryption-key", key,
+                                 "--category", A.CATEGORY, "--key", A.key_for_observation(observation.id),
+                                 "--body", json.dumps(body, sort_keys=True, separators=(",", ":")),
+                                 "--workspace-hash", A.workspace_for_scope(observation.scope)]))
+        native_id = receipt.get("id")
+        if not receipt.get("ok") or not isinstance(native_id, str):
+            raise SystemExit(f"write receipt lacks native id for {observation.id}: {receipt}")
+        native_to_canonical[native_id] = observation.id
+        receipts.append({"canonical_observation_id": observation.id, "native_id": native_id})
+        row = {r["id"]: r for r in rows_of(db)}[native_id]
+        write_instants.append(int(row["created_at_unix_ms"]))
+        fixture_iso.append(observation.ingestion_time.isoformat())
+        time.sleep(0.05)
+
+        checkpoint = checkpoints.get(observation.ingestion_order)
+        if checkpoint is None:
+            continue
+
+        time_base = A.TimeBase(tuple(fixture_iso), tuple(write_instants))
+        snap_db, snap_key = snapshot(db, key, home / f"snap-{checkpoint.id}")
+        state_rows = rows_of(snap_db)
+        prefix_ids = {o.id for o in fixture.prefix(checkpoint.id)}
+        by_key = {r["key"]: r for r in state_rows}
+        lifecycle = []
+        for canonical_id in sorted(prefix_ids):
+            row = by_key.get(A.key_for_observation(canonical_id))
+            if row is None:
+                lifecycle.append(L.LifecycleEvidence(canonical_id, active_current=False, historically_recoverable=None,
+                                                     evidence_strength="native_row_absent",
+                                                     native_evidence="no entity row for this receipt at this checkpoint"))
+                continue
+            active = row["status"] == "active" and not row["archived"]
+            lifecycle.append(L.LifecycleEvidence(
+                canonical_id, active_current=active,
+                historically_recoverable=True if active else None,
+                disposition=L.LifecycleDisposition.ACTIVE_CURRENT if active else L.LifecycleDisposition.UNKNOWN,
+                evidence_strength="native_entity_row",
+                native_evidence=f"status={row['status']} archived={row['archived']} valid_from={row['valid_from_unix_ms']}"))
+        lifecycle_by_checkpoint[checkpoint.id] = lifecycle
+        checkpoint_state[checkpoint.id] = {
+            "entities_total": len(state_rows),
+            "entities_active": sum(1 for r in state_rows if r["status"] == "active" and not r["archived"]),
+            "entities_archived": sum(1 for r in state_rows if r["archived"]),
+            "workspaces": sorted({r["workspace_hash"] for r in state_rows}),
+            "distinct_valid_from": len({r["valid_from_unix_ms"] for r in state_rows}),
+            "receipts_mapped": len(native_to_canonical),
+        }
+
+        prefix_sha = hashlib.sha256(L.canonical_json([o.public_dict() for o in fixture.prefix(checkpoint.id)]).encode()).hexdigest()
+        server = Server(snap_db, snap_key)
+        try:
+            for case in cases_by_checkpoint.get(checkpoint.id, []):
+                arguments = A.recall_arguments(case, time_base, LIMIT)
+                started = time.perf_counter()
+                payload = server.recall(arguments)
+                latency_ms = (time.perf_counter() - started) * 1000
+                items = []
+                for rank, hit in enumerate(payload.get("items", [])[:LIMIT], start=1):
+                    native_id = hit.get("id")
+                    canonical = native_to_canonical.get(native_id) if isinstance(native_id, str) else None
+                    body_id = None
+                    try:
+                        body_id = json.loads(hit.get("body_json", "{}")).get("canonical_observation_id")
+                    except json.JSONDecodeError:
+                        body_id = None
+                    exact = canonical is not None and body_id == canonical
+                    items.append(L.LongitudinalResultItem(native_id=native_id, native_rank=rank,
+                                                          text=hit.get("assertion", ""), canonical_id=canonical if exact else None,
+                                                          provenance_exact=exact, score=hit.get("score")))
+                records.append((L.LongitudinalResultRecord(
+                    fixture_version=L.FIXTURE_VERSION, fixture_sha256=L.fixture_sha256(),
+                    scorer_contract_sha256=L.scorer_contract_sha256(), system_identity=identity,
+                    repetition=repetition, checkpoint_id=checkpoint.id, ingested_prefix_sha256=prefix_sha,
+                    case_id=case.id, requested_limit=LIMIT,
+                    native_scope_filter=arguments.get("workspace_hash"),
+                    native_temporal_operation=A.native_operation(case), items=tuple(items),
+                    lifecycle=tuple(lifecycle)), latency_ms, arguments))
+        finally:
+            server.stop()
+        shutil.rmtree(home / f"snap-{checkpoint.id}", ignore_errors=True)
+
+    case_scores = []
+    for record, _latency, _args in records:
+        case = next(c for c in fixture.cases if c.id == record.case_id)
+        returned = tuple(i.canonical_id for i in record.items if i.canonical_id)
+        case_scores.append(L.score_longitudinal_case(fixture, case, returned))
+    lifecycle_scores = [L.score_lifecycle_state(fixture, cid, evidence) for cid, evidence in lifecycle_by_checkpoint.items()]
+
+    return {
+        "repetition": repetition,
+        "receipts": receipts,
+        "checkpoint_state": checkpoint_state,
+        "cases": [{"case_id": r.case_id, "checkpoint_id": r.checkpoint_id,
+                   "native_temporal_operation": r.native_temporal_operation,
+                   "native_scope_filter": r.native_scope_filter,
+                   "requested_limit": r.requested_limit,
+                   "temporal_argument": {k: v for k, v in a.items() if k in ("as_of_unix_ms", "valid_at")},
+                   "latency_ms": round(lat, 2),
+                   "returned": [{"rank": i.native_rank, "native_id": i.native_id, "canonical_id": i.canonical_id,
+                                 "provenance_exact": i.provenance_exact} for i in r.items],
+                   "provenance_exact_all": all(i.provenance_exact for i in r.items),
+                   "failure_classes": next(s.failure_classes for s in case_scores if s.case_id == r.case_id)}
+                  for r, lat, a in records],
+        "lifecycle": {cid: [{"canonical_id": e.canonical_id, "active_current": e.active_current,
+                             "historically_recoverable": e.historically_recoverable,
+                             "disposition": str(e.disposition), "evidence_strength": e.evidence_strength}
+                            for e in evidence] for cid, evidence in lifecycle_by_checkpoint.items()},
+        "lifecycle_failures": {s.checkpoint_id: list(s.failure_classes) for s in lifecycle_scores},
+        "failure_totals": L.aggregate_failure_classes(case_scores),
+        "lifecycle_failure_totals": L.aggregate_failure_classes(lifecycle_scores),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repetitions", type=int, default=3)
+    parser.add_argument("--out", default=str(ROOT / "results/perseus_vault_gen29_longitudinal"))
+    args = parser.parse_args()
+
+    if not BIN.exists():
+        raise SystemExit(f"Perseus binary missing at {BIN}")
+    version = sh([BIN, "--version"]).strip()
+    if PINNED_VERSION not in version:
+        raise SystemExit(f"binary version drift: {version}")
+    fixture = L.build_longitudinal_fixture()
+    if L.fixture_sha256() != "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd":
+        raise SystemExit("longitudinal-v1 fixture hash drift; refusing to run")
+    if L.scorer_contract_sha256() != "1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34":
+        raise SystemExit("longitudinal scorer contract hash drift; refusing to run")
+
+    identity = {
+        "product": "perseus-vault", "product_version": PINNED_VERSION,
+        "reported_version": version, "source_commit": "9c829207a4b44a8e679ba912b4c1c5608c8f1e36",
+        "release_tarball_sha256": PINNED_TARBALL_SHA,
+        "binary_sha256": hashlib.sha256(BIN.read_bytes()).hexdigest(),
+        "embedding": "bundled quantized all-MiniLM-L6-v2, 384 dimensions",
+        "recall_mode": "hybrid (FTS5 + dense cosine RRF)",
+        "storage": "fresh encrypted SQLite and fresh AES-256-GCM key per repetition",
+        "write_path": "documented operator CLI write",
+        "read_isolation": "byte-for-byte vault snapshot per checkpoint",
+        "adapter_version": A.ADAPTER_VERSION, "adapter_contract_sha256": A.adapter_contract_sha256(),
+        "reader": "none", "llm": "none", "inference_server": "none",
+    }
+
+    temp = tempfile.TemporaryDirectory(prefix="memory-bakeoff-gen29-", dir="/private/tmp")
+    repetitions = [run_repetition(fixture, n, Path(temp.name), identity) for n in range(1, args.repetitions + 1)]
+
+    if L.fixture_sha256() != "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd":
+        raise SystemExit("fixture hash drifted during the run")
+
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    for rep in repetitions:
+        (out / f"repetition-{rep['repetition']}.json").write_text(json.dumps(rep, indent=2, sort_keys=True) + "\n")
+    totals = {}
+    for rep in repetitions:
+        for name, count in rep["failure_totals"].items():
+            totals[name] = totals.get(name, 0) + count
+    lifecycle_totals = {}
+    for rep in repetitions:
+        for name, count in rep["lifecycle_failure_totals"].items():
+            lifecycle_totals[name] = lifecycle_totals.get(name, 0) + count
+    summary = {
+        "generation": 29, "evidence_class": "raw_product",
+        "fixture_version": L.FIXTURE_VERSION, "fixture_sha256": L.fixture_sha256(),
+        "scorer_version": L.SCORER_VERSION, "scorer_contract_sha256": L.scorer_contract_sha256(),
+        "result_schema_version": L.RESULT_SCHEMA_VERSION,
+        "system_identity": identity, "requested_limit": LIMIT,
+        "repetitions": [{"repetition": r["repetition"],
+                         "cases": len(r["cases"]),
+                         "checkpoints": len(r["checkpoint_state"]),
+                         "provenance_exact_all_cases": all(c["provenance_exact_all"] for c in r["cases"]),
+                         "failure_totals": r["failure_totals"],
+                         "lifecycle_failure_totals": r["lifecycle_failure_totals"],
+                         "checkpoint_state": r["checkpoint_state"]} for r in repetitions],
+        "failure_totals_all_repetitions": {k: v for k, v in sorted(totals.items()) if v},
+        "lifecycle_failure_totals_all_repetitions": {k: v for k, v in sorted(lifecycle_totals.items()) if v},
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+    (out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {out}/summary.json")
+    for rep in repetitions:
+        failing = {k: v for k, v in rep["failure_totals"].items() if v}
+        print(f"  rep{rep['repetition']}: {len(rep['cases'])} cases, failures {failing or 'none'}; "
+              f"lifecycle {[f for f in rep['lifecycle_failure_totals'].items() if f[1]] or 'clean'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
