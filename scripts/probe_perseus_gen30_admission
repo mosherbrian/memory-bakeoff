@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""Gen30: can the agent-facing MCP path give Perseus an independent application-time axis?
+
+Unrelated synthetic data only. Establishes the documented remember/admission
+chain, then measures whether a retroactive `valid_from_unix_ms` survives into
+serveable native state.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import sqlite3
+import subprocess
+import sys
+import tempfile
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+BIN = Path.home() / ".local/perseus-2.23.2/perseus-vault"
+AGENT = "memory-bakeoff"
+CATEGORY = "gen30_probe_record"
+WORKSPACE = hashlib.sha256(b"probe:greenhouse").hexdigest()
+CAPABILITIES = ["memory.read", "memory.write", "memory.propose", "memory.commit",
+                "memory.admission.review", "memory.admission.source"]
+HMAC_ENV = "PERSEUS_VAULT_ADMISSION_SOURCE_HMAC_KEY"
+RETRO_DAYS = 200
+
+
+class Session:
+    def __init__(self, root: Path):
+        self.db, self.key = root / "vault.sqlite", root / "vault.key"
+        subprocess.run([str(BIN), "keygen", "--key-file", str(self.key)], check=True, capture_output=True, timeout=60)
+        self.proc = subprocess.Popen([str(BIN), "serve", "--db", str(self.db), "--encryption-key", str(self.key)],
+                                     text=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                     stderr=subprocess.DEVNULL, bufsize=1)
+        self._id = 0
+        self.rpc("initialize", {"protocolVersion": "2025-03-26", "capabilities": {},
+                                "clientInfo": {"name": "memory-bakeoff", "version": "generation-30"}})
+
+    def rpc(self, method, params):
+        self._id += 1
+        self.proc.stdin.write(json.dumps({"jsonrpc": "2.0", "id": self._id, "method": method, "params": params}) + "\n")
+        self.proc.stdin.flush()
+        line = self.proc.stdout.readline()
+        if not line:
+            raise SystemExit("Perseus MCP server closed unexpectedly")
+        return json.loads(line).get("result", {})
+
+    def tool(self, name, arguments):
+        result = self.rpc("tools/call", {"name": name, "arguments": arguments})
+        payload = result.get("structuredContent")
+        if isinstance(payload, dict):
+            return payload
+        content = result.get("content", [])
+        if len(content) == 1 and isinstance(content[0], dict) and isinstance(content[0].get("text"), str):
+            text = content[0]["text"]
+            if result.get("isError"):
+                return {"error": text}
+            try:
+                return json.loads(text)
+            except json.JSONDecodeError:
+                return {"text": text}
+        return result
+
+    def row(self, key):
+        con = sqlite3.connect(f"file:{self.db}?mode=ro", uri=True)
+        try:
+            cur = con.execute("SELECT key,id,status,archived,valid_from_unix_ms,created_at_unix_ms "
+                              "FROM entities WHERE key=?1", (key,))
+            cols = [d[0] for d in cur.description]
+            found = cur.fetchone()
+            return dict(zip(cols, found)) if found else None
+        finally:
+            con.close()
+
+    def stop(self):
+        self.proc.terminate()
+        try:
+            self.proc.wait(timeout=15)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+
+
+def admission_envelope(body: str, valid_from: int, marker: str) -> dict:
+    """One uniform policy for every record. No field varies with content."""
+    return {"record_digest": hashlib.sha256(body.encode()).hexdigest(),
+            "source_identity": "memory-bakeoff-longitudinal", "authorization_scope": WORKSPACE,
+            "ingestion_channel": "memory-bakeoff-channel", "workspace_hash": WORKSPACE,
+            "source_trust": "authoritative", "valid_from_unix_ms": valid_from,
+            "recorded_at_unix_ms": int(time.time() * 1000), "task_relevance_bps": 10000,
+            "instruction_bearing": False, "contradicts_authoritative": False,
+            "source_event_id": f"memory-bakeoff-source-{marker}", "actor_kind": "operator",
+            "actor_identity": AGENT, "validated": True}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default=None)
+    args = parser.parse_args()
+    os.environ.setdefault(HMAC_ENV, "memory-bakeoff-gen30-admission-source-key")
+
+    temp = tempfile.TemporaryDirectory(prefix="memory-bakeoff-gen30-", dir="/private/tmp")
+    session = Session(Path(temp.name))
+    steps: list[dict] = []
+    retro = int(time.time() * 1000) - RETRO_DAYS * 86_400_000
+
+    session.tool("perseus_vault_agent", {"agent_id": AGENT, "name": AGENT, "trust_tier": 3, "fleet_id": AGENT})
+    steps.append({"step": "agent_register", "required": True, "note": "authority manifest requires a registered agent"})
+    session.tool("perseus_vault_authority_set", {
+        "agent_id": AGENT, "workspace_hash": WORKSPACE, "allowed_capabilities": CAPABILITIES,
+        "approval_required_capabilities": [], "scope_anchors": [WORKSPACE], "approver_principals": [AGENT],
+        "allowed_inbound_principals": [AGENT], "permitted_external_ref_prefixes": [],
+        "capability_constraints_json": "{}", "mode": "enforce", "author_agent_id": AGENT})
+    steps.append({"step": "authority_set", "required": True, "mode": "enforce",
+                  "note": "admission review requires an active enforce manifest for agent and workspace"})
+    steps.append({"step": "server_env", "required": True, "variable": HMAC_ENV,
+                  "note": "admission source attestation refuses to sign without this key"})
+
+    body = json.dumps({"assertion": "A frost event affected the seedling bench.", "marker": "R001"},
+                      sort_keys=True, separators=(",", ":"))
+    session.tool("perseus_vault_remember", {
+        "category": CATEGORY, "key": "retroactive-probe", "body_json": body, "workspace_hash": WORKSPACE,
+        "valid_from_unix_ms": retro, "admission": admission_envelope(body, retro, "R001"),
+        "entity_type": "insight", "agent_id": AGENT, "requesting_agent_id": AGENT, "actor_kind": "operator"})
+    after_remember = session.row("retroactive-probe")
+    steps.append({"step": "remember", "required": True, "resulting_status": after_remember["status"],
+                  "note": "record persists with the requested retroactive valid_from, but is not serveable"})
+
+    approval = session.tool("perseus_vault_admission_decide", {
+        "category": CATEGORY, "key": "retroactive-probe", "workspace_hash": WORKSPACE,
+        "requesting_agent_id": AGENT, "decision": "approve", "reason": "uniform benchmark ingest policy"})
+    after_approval = session.row("retroactive-probe")
+    recall_after_approval = session.tool("perseus_vault_recall", {
+        "query": "frost event seedling", "workspace_hash": WORKSPACE, "limit": 5, "mode": "hybrid"})
+    steps.append({"step": "admission_decide_approve", "required": True, "ok": "error" not in approval,
+                  "resulting_status": after_approval["status"],
+                  "note": "record becomes serveable and its valid_from is reset to the approval instant"})
+
+    body2 = body
+    session.tool("perseus_vault_remember", {
+        "category": CATEGORY, "key": "retroactive-probe", "body_json": body2, "workspace_hash": WORKSPACE,
+        "valid_from_unix_ms": retro, "admission": admission_envelope(body2, retro, "R001"),
+        "entity_type": "insight", "agent_id": AGENT, "requesting_agent_id": AGENT, "actor_kind": "operator"})
+    after_second = session.row("retroactive-probe")
+    recall_after_second = session.tool("perseus_vault_recall", {
+        "query": "frost event seedling", "workspace_hash": WORKSPACE, "limit": 5, "mode": "hybrid"})
+    steps.append({"step": "remember_again", "required": False, "resulting_status": after_second["status"],
+                  "note": "re-ingesting restores the retroactive valid_from but returns the record to proposed"})
+    session.stop()
+
+    findings = {
+        "generation": 30, "status": "blocked_valid_time_reset_by_admission_approval",
+        "post_hoc_ablation": True, "scored_longitudinal_result_published": False,
+        "model_or_product_llm_calls": False, "inference_server_used": False,
+        "system_identity": {
+            "product": "perseus-vault", "product_version": "2.23.2",
+            "release_tarball_sha256": "e9b0912c5a2279f84d59a5ec8fb98e437a8f0feea8dac63dbca36759ff920dcb",
+            "binary_sha256": hashlib.sha256(BIN.read_bytes()).hexdigest(),
+            "source_commit": "9c829207a4b44a8e679ba912b4c1c5608c8f1e36",
+            "ingest_path": "perseus_vault_remember + perseus_vault_admission_decide(approve)",
+            "trust_class": "agent-facing write under an enforce authority manifest, reviewed by a registered operator principal",
+        },
+        "documented_admission_chain": steps,
+        "requested_valid_from_unix_ms": retro,
+        "measured": {
+            "after_remember": after_remember,
+            "after_approval": after_approval,
+            "after_second_remember": after_second,
+            "valid_from_preserved_by_remember": after_remember["valid_from_unix_ms"] == retro,
+            "valid_from_preserved_by_approval": after_approval["valid_from_unix_ms"] == retro,
+            "approval_reset_delta_ms": after_approval["valid_from_unix_ms"] - retro,
+            "recallable_after_approval": bool(recall_after_approval.get("items")),
+            "recallable_after_second_remember": bool(recall_after_second.get("items")),
+        },
+        "root_cause": ("models::Entity carries no valid_from_unix_ms/valid_to_unix_ms field. "
+                       "admission_decide clones the stored entity, flips status to active and re-persists it, "
+                       "so the application-time columns are rewritten to the write default."),
+        "conclusion": ("In v2.23.2 a record is either serveable with valid_from collapsed onto the approval instant, "
+                       "or retroactive but proposed and invisible to recall. The two states are mutually exclusive, "
+                       "so the agent-facing path cannot establish the independent application-time axis Gen30 exists to test."),
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+    out = json.dumps(findings, indent=2, sort_keys=True)
+    if args.out:
+        target = Path(args.out)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(out + "\n")
+        print(f"wrote {target}")
+        print(f"  valid_from preserved by remember: {findings['measured']['valid_from_preserved_by_remember']}")
+        print(f"  valid_from preserved by approval: {findings['measured']['valid_from_preserved_by_approval']}")
+        print(f"  recallable after approval: {findings['measured']['recallable_after_approval']}")
+        print(f"  recallable after re-ingest: {findings['measured']['recallable_after_second_remember']}")
+    else:
+        print(out)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

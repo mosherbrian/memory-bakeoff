@@ -1,0 +1,90 @@
+{
+  "conclusion": "In v2.23.2 a record is either serveable with valid_from collapsed onto the approval instant, or retroactive but proposed and invisible to recall. The two states are mutually exclusive, so the agent-facing path cannot establish the independent application-time axis Gen30 exists to test.",
+  "documented_admission_chain": [
+    {
+      "note": "authority manifest requires a registered agent",
+      "required": true,
+      "step": "agent_register"
+    },
+    {
+      "mode": "enforce",
+      "note": "admission review requires an active enforce manifest for agent and workspace",
+      "required": true,
+      "step": "authority_set"
+    },
+    {
+      "note": "admission source attestation refuses to sign without this key",
+      "required": true,
+      "step": "server_env",
+      "variable": "PERSEUS_VAULT_ADMISSION_SOURCE_HMAC_KEY"
+    },
+    {
+      "note": "record persists with the requested retroactive valid_from, but is not serveable",
+      "required": true,
+      "resulting_status": "proposed",
+      "step": "remember"
+    },
+    {
+      "note": "record becomes serveable and its valid_from is reset to the approval instant",
+      "ok": true,
+      "required": true,
+      "resulting_status": "active",
+      "step": "admission_decide_approve"
+    },
+    {
+      "note": "re-ingesting restores the retroactive valid_from but returns the record to proposed",
+      "required": false,
+      "resulting_status": "proposed",
+      "step": "remember_again"
+    }
+  ],
+  "generated_at": "2026-09-03T00:47:18Z",
+  "generation": 30,
+  "inference_server_used": false,
+  "measured": {
+    "after_approval": {
+      "archived": 0,
+      "created_at_unix_ms": 1788396438338,
+      "id": "mem-24372a9ae653",
+      "key": "retroactive-probe",
+      "status": "active",
+      "valid_from_unix_ms": 1788396438351
+    },
+    "after_remember": {
+      "archived": 0,
+      "created_at_unix_ms": 1788396438338,
+      "id": "mem-24372a9ae653",
+      "key": "retroactive-probe",
+      "status": "proposed",
+      "valid_from_unix_ms": 1771116438331
+    },
+    "after_second_remember": {
+      "archived": 0,
+      "created_at_unix_ms": 1788396438338,
+      "id": "mem-24372a9ae653",
+      "key": "retroactive-probe",
+      "status": "proposed",
+      "valid_from_unix_ms": 1771116438331
+    },
+    "approval_reset_delta_ms": 17280000020,
+    "recallable_after_approval": true,
+    "recallable_after_second_remember": false,
+    "valid_from_preserved_by_approval": false,
+    "valid_from_preserved_by_remember": true
+  },
+  "model_or_product_llm_calls": false,
+  "post_hoc_ablation": true,
+  "requested_valid_from_unix_ms": 1771116438331,
+  "root_cause": "models::Entity carries no valid_from_unix_ms/valid_to_unix_ms field. admission_decide clones the stored entity, flips status to active and re-persists it, so the application-time columns are rewritten to the write default.",
+  "scored_longitudinal_result_published": false,
+  "status": "blocked_valid_time_reset_by_admission_approval",
+  "system_identity": {
+    "binary_sha256": "49a44809611729e4fb35f62f788d94038bdc9c7e2819bbb3bf0119c7f608e315",
+    "ingest_path": "perseus_vault_remember + perseus_vault_admission_decide(approve)",
+    "product": "perseus-vault",
+    "product_version": "2.23.2",
+    "release_tarball_sha256": "e9b0912c5a2279f84d59a5ec8fb98e437a8f0feea8dac63dbca36759ff920dcb",
+    "source_commit": "9c829207a4b44a8e679ba912b4c1c5608c8f1e36",
+    "trust_class": "agent-facing write under an enforce authority manifest, reviewed by a registered operator principal"
+  }
+}
