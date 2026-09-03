@@ -1,0 +1,565 @@
+{
+  "adapter_contract": {
+    "adapter_version": "mem0-longitudinal-adapter-v1",
+    "embedding_dims": 1024,
+    "forbidden_inputs": [
+      "truth_key",
+      "transition",
+      "corrects_id",
+      "supersedes_id",
+      "retracts_id",
+      "invalidates_id",
+      "historical_only",
+      "procedure_outcome",
+      "expected_ids",
+      "prohibited_ids",
+      "rationale",
+      "configuration",
+      "event_time",
+      "effective_time"
+    ],
+    "lifecycle_calls": "none; no update, delete, reset or history rewrite is issued",
+    "metadata_fields": [
+      "record_id",
+      "scope",
+      "source_ref",
+      "timestamp"
+    ],
+    "post_filtering": "none; native order and native limit are preserved",
+    "product": "mem0ai",
+    "product_version": "2.0.19",
+    "profile": "raw_product, Memory.add(infer=False), embedded on-disk Qdrant, FastEmbed dense + BM25 sparse",
+    "read_path": "Memory.search(query, filters={user_id}, limit, threshold)",
+    "routing": "single native operation for every target kind; no vantage-point read exists",
+    "scored_filter": "constant user_id only, exactly as Gen10",
+    "temporal_surface": "none; update/_update_memory/history are mutation and audit, not retrieval",
+    "threshold": 0.1,
+    "timestamp_rule": "public ingestion_time as opaque ISO metadata; Mem0 does not rank on it",
+    "unscored_capability": "Mem0 can also filter on metadata such as scope; deliberately NOT used in the scored identity",
+    "upstream_commit": "19cb89aff472325c707f64b2f34ae6afdbf7faf7",
+    "write_path": "upstream Memory.add(text, user_id, metadata, infer=False)"
+  },
+  "adapter_contract_sha256": "f41e15212b435346fb50b7794ead1bd00898a4bf89db433cb89b98891502ac6d",
+  "adapter_version": "mem0-longitudinal-adapter-v1",
+  "evidence_class": "raw_product",
+  "failure_totals_all_repetitions": {
+    "belief_truth_confusion": 6,
+    "configuration_collapse": 6,
+    "failed_procedure_adoption": 3,
+    "false_persistence": 9,
+    "late_history_corruption": 3,
+    "missing_required_truth": 3,
+    "scope_collapse": 6,
+    "stale_persistence": 15,
+    "unsupported_evidence": 6
+  },
+  "failures_by_case_repetition_1": {
+    "LQ02": [
+      "configuration_collapse"
+    ],
+    "LQ03": [
+      "configuration_collapse"
+    ],
+    "LQ05": [
+      "stale_persistence"
+    ],
+    "LQ06": [
+      "belief_truth_confusion"
+    ],
+    "LQ07": [
+      "false_persistence"
+    ],
+    "LQ08": [
+      "scope_collapse"
+    ],
+    "LQ09": [
+      "scope_collapse"
+    ],
+    "LQ10": [
+      "failed_procedure_adoption"
+    ],
+    "LQ11": [
+      "stale_persistence"
+    ],
+    "LQ12": [
+      "late_history_corruption",
+      "missing_required_truth",
+      "stale_persistence"
+    ],
+    "LQ14": [
+      "false_persistence"
+    ],
+    "LQ15": [
+      "stale_persistence",
+      "unsupported_evidence"
+    ],
+    "LQ16": [
+      "unsupported_evidence"
+    ],
+    "LQ18": [
+      "belief_truth_confusion"
+    ],
+    "LQ19": [
+      "false_persistence"
+    ],
+    "LQ20": [
+      "stale_persistence"
+    ]
+  },
+  "fixture_sha256": "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd",
+  "fixture_version": "longitudinal-v1",
+  "generated_at": "2026-09-03T03:57:53Z",
+  "generation": 32,
+  "model_or_product_llm_calls": false,
+  "native_semantics": {
+    "dedup_or_merge_on_raw_add": false,
+    "history_rows_per_add": 1,
+    "metadata_timestamp": "opaque payload; not used in ranking",
+    "reads_identical_on_repeat": true,
+    "reproducibility_hazard": "FastEmbed 0.8.0 warns thenlper/gte-large now uses mean pooling rather than CLS; identity holds only at this pinned FastEmbed version",
+    "searches_changed_state": false,
+    "temporal_retrieval_surface": "none; only update/_update_memory/history exist, which are mutation and audit",
+    "unscored_capability": "Mem0 can filter on metadata such as scope; deliberately excluded from the scored Gen10 identity"
+  },
+  "preregistered_hypothesis": {
+    "engine_specific_extra": {
+      "LQ20": "stale_persistence in Mem0 only; an as_of_event_truth case that Perseus answered with valid_at and Hindsight with query_timestamp, so the extra failure is the direct cost of having no temporal filter"
+    },
+    "interpretation": "Mem0 has no temporal retrieval surface at all, and still reproduces every one of the seven. That is three-engine evidence CONSISTENT WITH an append-only-without-retirement explanation. It is not proof of causation: the three profiles also share this harness, this ruler and a no-retirement constraint imposed by the generation itself.",
+    "question": "do the seven classes shared by Gen29 Perseus and Gen31 Hindsight recur in a third architecture?",
+    "reproduced_all_seven": true,
+    "reproduced_in_gen32": [
+      "configuration_collapse",
+      "failed_procedure_adoption",
+      "false_persistence",
+      "late_history_corruption",
+      "missing_required_truth",
+      "stale_persistence",
+      "unsupported_evidence"
+    ],
+    "shared_seven": [
+      "stale_persistence",
+      "configuration_collapse",
+      "failed_procedure_adoption",
+      "late_history_corruption",
+      "false_persistence",
+      "missing_required_truth",
+      "unsupported_evidence"
+    ]
+  },
+  "repetition_variance": "none; all three repetitions produced identical failure totals",
+  "repetitions": [
+    {
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "expected_prefix": 1,
+          "history": {
+            "history": 1,
+            "messages": 0
+          },
+          "points": 1
+        },
+        "CP04": {
+          "expected_prefix": 4,
+          "history": {
+            "history": 4,
+            "messages": 0
+          },
+          "points": 4
+        },
+        "CP05": {
+          "expected_prefix": 5,
+          "history": {
+            "history": 5,
+            "messages": 0
+          },
+          "points": 5
+        },
+        "CP06": {
+          "expected_prefix": 6,
+          "history": {
+            "history": 6,
+            "messages": 0
+          },
+          "points": 6
+        },
+        "CP08": {
+          "expected_prefix": 8,
+          "history": {
+            "history": 8,
+            "messages": 0
+          },
+          "points": 8
+        },
+        "CP10": {
+          "expected_prefix": 10,
+          "history": {
+            "history": 10,
+            "messages": 0
+          },
+          "points": 10
+        },
+        "CP11": {
+          "expected_prefix": 11,
+          "history": {
+            "history": 11,
+            "messages": 0
+          },
+          "points": 11
+        },
+        "CP14": {
+          "expected_prefix": 14,
+          "history": {
+            "history": 14,
+            "messages": 0
+          },
+          "points": 14
+        },
+        "CP16": {
+          "expected_prefix": 16,
+          "history": {
+            "history": 16,
+            "messages": 0
+          },
+          "points": 16
+        }
+      },
+      "checkpoints": 9,
+      "collection": "memory-bakeoff-gen32-r1",
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 2,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 3,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 1,
+        "missing_required_truth": 1,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 5,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 1
+    },
+    {
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "expected_prefix": 1,
+          "history": {
+            "history": 1,
+            "messages": 0
+          },
+          "points": 1
+        },
+        "CP04": {
+          "expected_prefix": 4,
+          "history": {
+            "history": 4,
+            "messages": 0
+          },
+          "points": 4
+        },
+        "CP05": {
+          "expected_prefix": 5,
+          "history": {
+            "history": 5,
+            "messages": 0
+          },
+          "points": 5
+        },
+        "CP06": {
+          "expected_prefix": 6,
+          "history": {
+            "history": 6,
+            "messages": 0
+          },
+          "points": 6
+        },
+        "CP08": {
+          "expected_prefix": 8,
+          "history": {
+            "history": 8,
+            "messages": 0
+          },
+          "points": 8
+        },
+        "CP10": {
+          "expected_prefix": 10,
+          "history": {
+            "history": 10,
+            "messages": 0
+          },
+          "points": 10
+        },
+        "CP11": {
+          "expected_prefix": 11,
+          "history": {
+            "history": 11,
+            "messages": 0
+          },
+          "points": 11
+        },
+        "CP14": {
+          "expected_prefix": 14,
+          "history": {
+            "history": 14,
+            "messages": 0
+          },
+          "points": 14
+        },
+        "CP16": {
+          "expected_prefix": 16,
+          "history": {
+            "history": 16,
+            "messages": 0
+          },
+          "points": 16
+        }
+      },
+      "checkpoints": 9,
+      "collection": "memory-bakeoff-gen32-r2",
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 2,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 3,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 1,
+        "missing_required_truth": 1,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 5,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 2
+    },
+    {
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "expected_prefix": 1,
+          "history": {
+            "history": 1,
+            "messages": 0
+          },
+          "points": 1
+        },
+        "CP04": {
+          "expected_prefix": 4,
+          "history": {
+            "history": 4,
+            "messages": 0
+          },
+          "points": 4
+        },
+        "CP05": {
+          "expected_prefix": 5,
+          "history": {
+            "history": 5,
+            "messages": 0
+          },
+          "points": 5
+        },
+        "CP06": {
+          "expected_prefix": 6,
+          "history": {
+            "history": 6,
+            "messages": 0
+          },
+          "points": 6
+        },
+        "CP08": {
+          "expected_prefix": 8,
+          "history": {
+            "history": 8,
+            "messages": 0
+          },
+          "points": 8
+        },
+        "CP10": {
+          "expected_prefix": 10,
+          "history": {
+            "history": 10,
+            "messages": 0
+          },
+          "points": 10
+        },
+        "CP11": {
+          "expected_prefix": 11,
+          "history": {
+            "history": 11,
+            "messages": 0
+          },
+          "points": 11
+        },
+        "CP14": {
+          "expected_prefix": 14,
+          "history": {
+            "history": 14,
+            "messages": 0
+          },
+          "points": 14
+        },
+        "CP16": {
+          "expected_prefix": 16,
+          "history": {
+            "history": 16,
+            "messages": 0
+          },
+          "points": 16
+        }
+      },
+      "checkpoints": 9,
+      "collection": "memory-bakeoff-gen32-r3",
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 2,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 3,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 1,
+        "missing_required_truth": 1,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 5,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 3
+    }
+  ],
+  "round1_contrast": {
+    "note": "same Mem0 identity, different question",
+    "reading": "strong retrieval relevance coexists with seven longitudinal failure classes; Round-1 metrics could not see them",
+    "round1_stress_hit_all_relevant": "0.958 / 0.917"
+  },
+  "scorer_contract_sha256": "1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34",
+  "scorer_version": "longitudinal-scorer-v1",
+  "status": "complete_raw_product_longitudinal_no_temporal_surface",
+  "system_identity": {
+    "dense_embedding": "FastEmbed 0.8.0 thenlper/gte-large -> qdrant/gte-large-onnx snapshot 770e825c74a004f165b78793f7c8fc4a95280878, 1024-D",
+    "inference_server": "none",
+    "ingestion": "Memory.add(..., infer=False); no LLM extraction, update or supersession",
+    "llm_client": "constructed with a placeholder key, never called; proven by socket refusal in preflight",
+    "onnxruntime": "1.29.0",
+    "product": "mem0ai",
+    "product_version": "2.0.19",
+    "reader": "none",
+    "requested_limit": 5,
+    "scope": "constant user_id=memory-bakeoff",
+    "spacy": "absent; entity boosts inactive",
+    "sparse": "FastEmbed Qdrant/bm25 snapshot 22b8d2af71a76161e18dd432d2cee0eefa66e412",
+    "threshold": 0.1,
+    "upstream_commit": "19cb89aff472325c707f64b2f34ae6afdbf7faf7",
+    "vector_store": "embedded qdrant-client 1.19.0, on-disk, fresh path and collection per repetition"
+  },
+  "three_engine_contrast": {
+    "gen29_perseus": {
+      "configuration_collapse": 6,
+      "correction_failure": 12,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "history_erasure": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    },
+    "gen31_hindsight": {
+      "belief_truth_confusion": 6,
+      "configuration_collapse": 6,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 3,
+      "scope_collapse": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    },
+    "gen32_mem0": {
+      "belief_truth_confusion": 6,
+      "configuration_collapse": 6,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 3,
+      "scope_collapse": 6,
+      "stale_persistence": 15,
+      "unsupported_evidence": 6
+    },
+    "note": "capability surfaces only; not a numeric leaderboard"
+  }
+}

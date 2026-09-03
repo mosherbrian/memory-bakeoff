@@ -60,6 +60,7 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 29 | Perseus Vault v2.23.2, operator CLI write + native hybrid recall | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, transaction-time belief answered correctly | valid-time is collinear with transaction time in this write path, so every corrected-history and late-history case fails; configuration collapse and stale persistence are real; nothing was lost at 16 records | [gen29](research/PERSEUS_VAULT_GEN29_LONGITUDINAL.md) | [longitudinal](results/perseus_vault_gen29_longitudinal) |
 | 30 | Perseus Vault v2.23.2, agent-facing MCP `remember` + admission review | `no-score diagnostic` | post-hoc write-surface ablation, **blocked**: `remember` honours a retroactive `valid_from`, but the approval that makes a record serveable resets it to the approval instant | serveable and retroactive are mutually exclusive in this version, so no independent application-time axis exists to score; Gen29 stands unchanged | [gen30](research/PERSEUS_VAULT_GEN30_MCP_VALID_TIME_ABLATION.md) | [admission probe](results/perseus_vault_gen30_mcp_valid_time) |
 | 31 | Hindsight v0.9.2, raw/no-LLM retain + native hybrid recall with learned CPU reranker | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, and **zero correction failure and zero history erasure** — a vantage-point query reaches the earlier state | scope collapse and belief/truth confusion appear where Perseus had none; the event-time axis (`occurred_*`) is unreachable in the raw profile, so mention time is the only axis | [gen31](research/HINDSIGHT_GEN31_LONGITUDINAL.md) | [longitudinal](results/hindsight_gen31_longitudinal) |
+| 32 | Mem0 2.0.19, raw `Memory.add(infer=False)` + embedded Qdrant dense+BM25 | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance, and **all seven cross-engine failure classes reproduced in an engine with no temporal retrieval surface at all** | one extra `stale_persistence` (LQ20) is the direct cost of having no as-of filter; Mem0 can filter on scope metadata but the scored Gen10 identity deliberately does not | [gen32](research/MEM0_GEN32_LONGITUDINAL.md) | [longitudinal](results/mem0_gen32_longitudinal) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -68,10 +69,16 @@ Gen29 is the first Round-2 contestant run against the frozen ruler. Its numbers
 answer a different question from Gen27/28 and are not comparable to them: OM has
 no query surface and Perseus does.
 
-Gen29 and Gen31 are the first paired Round-2 contestants. Hindsight repairs
-exactly what Perseus's collapsed time axis broke, and breaks two things Perseus
-got right. Seven failure classes appear in both, so those look like properties of
-append-only ingestion without retirement rather than of either engine.
+Gen29, Gen31 and Gen32 are the Round-2 contestants so far. Hindsight repairs
+exactly what Perseus's collapsed time axis broke and breaks two things Perseus got
+right; Mem0, which has no temporal retrieval surface at all, then reproduces all
+seven of the classes the first two shared — five of them at identical counts.
+
+That is three-engine evidence **consistent with** an append-only-without-retirement
+explanation, not proof of causation: the three profiles also share this harness,
+this ruler, and a no-retirement constraint the generations imposed. Testing the
+retirement half needs an engine that retires on its own, which is why agentmemory
+is the informative counterexample.
 
 ## Reading rules
 
