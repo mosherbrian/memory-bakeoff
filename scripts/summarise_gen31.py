@@ -48,6 +48,11 @@ preflight = json.loads(PREFLIGHT.read_text()) if PREFLIGHT.exists() else {}
 gen29 = json.loads(GEN29.read_text()) if GEN29.exists() else {}
 gen29_totals = gen29.get("failure_totals_all_repetitions", {})
 
+lifecycle_totals: dict[str, int] = {}
+for rep in reps:
+    for name, count in rep.get("lifecycle_failure_totals", {}).items():
+        lifecycle_totals[name] = lifecycle_totals.get(name, 0) + count
+
 summary = {
     "generation": 31,
     "status": "complete_raw_product_longitudinal_mention_time_axis_only",
@@ -77,6 +82,8 @@ summary = {
                      "checkpoint_state": r["checkpoint_state"]} for r in reps],
     "repetition_variance": "none; all three repetitions produced identical failure totals" if identical else "repetitions differ",
     "failure_totals_all_repetitions": {k: v for k, v in sorted(totals.items()) if v},
+    "lifecycle_failure_totals_all_repetitions": {k: v for k, v in sorted(lifecycle_totals.items()) if v},
+    "scorer_streams": ("case failures come from score_longitudinal_case; lifecycle failures from score_lifecycle_state; they are separate scorer outputs and must never be merged or read for each other"),
     "failures_by_case_repetition_1": {k: v for k, v in sorted(by_case.items()) if v},
     "query_side_effects": {
         "measured": True,

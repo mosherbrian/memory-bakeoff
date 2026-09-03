@@ -20,8 +20,11 @@ LIMIT = 5
 
 
 def sql(pgbin: str, db: str, query: str) -> str:
+    """Raise on a failed query. A broken query must never look like an empty result."""
     done = subprocess.run([f"{pgbin}/psql", "-h", "127.0.0.1", "-d", db, "-Atc", query],
                           text=True, capture_output=True, timeout=60)
+    if done.returncode != 0:
+        raise SystemExit(f"state query failed ({done.returncode}): {query}\n{done.stderr.strip()[:300]}")
     return done.stdout.strip()
 
 
@@ -94,12 +97,20 @@ def main() -> int:
             "chunks": sql(args.pgbin, args.db, "select count(*) from chunks"),
             "memory_links": sql(args.pgbin, args.db, "select count(*) from memory_links"),
             "entities": sql(args.pgbin, args.db, "select count(*) from entities"),
-            "invalidated": sql(args.pgbin, args.db,
-                               "select count(*) from memory_units where state is not null and state <> 'active'") or "0",
+            # curation state is a side table in this schema, not a column on memory_units
+            "invalidated": sql(args.pgbin, args.db, "select count(*) from invalidated_memory_units"),
         }
         checkpoint_state[checkpoint.id] = state
-        present = sql(args.pgbin, args.db, "select string_agg(distinct document_id, ',') from documents")
+        # document_id lives on memory_units, not documents; the marker is record-<canonical id>
+        present = sql(args.pgbin, args.db,
+                      "select string_agg(distinct document_id, ',') from memory_units "
+                      "where document_id is not null")
         present_ids = {p for p in (present or "").split(",") if p}
+        expected_ids = {H.document_id_for(o.id) for o in fixture.prefix(checkpoint.id)}
+        if not expected_ids <= present_ids:
+            raise SystemExit(
+                f"lifecycle membership check failed at {checkpoint.id}: "
+                f"missing {sorted(expected_ids - present_ids)}; saw {sorted(present_ids)[:4]}")
         lifecycle_by_checkpoint[checkpoint.id] = [
             L.LifecycleEvidence(canonical_id,
                                 active_current=H.document_id_for(canonical_id) in present_ids,

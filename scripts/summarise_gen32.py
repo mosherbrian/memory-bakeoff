@@ -35,9 +35,14 @@ for label, path in PRIOR.items():
     if path.exists():
         data = json.loads(path.read_text())
         prior[label] = {k: v for k, v in data.get("failure_totals_all_repetitions", {}).items() if v}
-
 preflight = json.loads(PREFLIGHT.read_text()) if PREFLIGHT.exists() else {}
 reproduced = sorted(c for c in SHARED_SEVEN if nonzero.get(c))
+
+
+lifecycle_totals: dict[str, int] = {}
+for rep in reps:
+    for name, count in rep.get("lifecycle_failure_totals", {}).items():
+        lifecycle_totals[name] = lifecycle_totals.get(name, 0) + count
 
 summary = {
     "generation": 32,
@@ -69,6 +74,8 @@ summary = {
     "repetition_variance": "none; all three repetitions produced identical failure totals"
                             if all(r["failure_totals"] == reps[0]["failure_totals"] for r in reps) else "repetitions differ",
     "failure_totals_all_repetitions": nonzero,
+    "lifecycle_failure_totals_all_repetitions": {k: v for k, v in sorted(lifecycle_totals.items()) if v},
+    "scorer_streams": ("case failures come from score_longitudinal_case; lifecycle failures from score_lifecycle_state; they are separate scorer outputs and must never be merged or read for each other"),
     "failures_by_case_repetition_1": {c["case_id"]: c["failure_classes"] for c in reps[0]["cases"] if c["failure_classes"]},
     "native_semantics": {
         "temporal_retrieval_surface": "none; only update/_update_memory/history exist, which are mutation and audit",
