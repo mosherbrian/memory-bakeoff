@@ -1,0 +1,570 @@
+{
+  "adapter_contract": {
+    "adapter_version": "hindsight-longitudinal-adapter-v1",
+    "document_id_rule": "record- + canonical observation id",
+    "forbidden_inputs": [
+      "truth_key",
+      "transition",
+      "corrects_id",
+      "supersedes_id",
+      "retracts_id",
+      "invalidates_id",
+      "historical_only",
+      "procedure_outcome",
+      "expected_ids",
+      "prohibited_ids",
+      "rationale"
+    ],
+    "lifecycle_calls": "none; no curate, invalidate, revert, update or delete call is issued",
+    "metadata_fields": [
+      "configuration",
+      "effective_time",
+      "event_time",
+      "provenance",
+      "record_id",
+      "scope",
+      "source_kind"
+    ],
+    "occurred_range": "not set; reachable only via LLM fact extraction or the curate endpoint, both excluded",
+    "post_filtering": "none; native order and native limit are preserved",
+    "product": "hindsight",
+    "product_version": "0.9.2",
+    "profile": "raw_product, no-LLM ingestion, ONNX multilingual-e5-small, local CPU cross-encoder reranker",
+    "read_paths": {
+      "recall_current": "recall(query)",
+      "recall_query_timestamp": "recall(query, query_timestamp=public event time)"
+    },
+    "routing": {
+      "current_state": [
+        "current_truth",
+        "scope_truth",
+        "recommended_procedure",
+        "negative_unknown"
+      ],
+      "vantage_point": [
+        "historical_belief",
+        "as_of_event_truth",
+        "corrected_historical_truth",
+        "late_arriving_history"
+      ]
+    },
+    "routing_inputs": [
+      "target_kind",
+      "event_time",
+      "scope"
+    ],
+    "scope_rule": "one bank per repetition; scope and configuration are ordinary metadata, never a bank boundary",
+    "timestamp_rule": "public ingestion_time -> native mentioned_at",
+    "write_path": "hindsight_client.retain (raw, HINDSIGHT_API_LLM_PROVIDER=none)"
+  },
+  "adapter_contract_sha256": "c9025733aa894fa5abac43632e9dc916c37e526065d089a882257427c14d60ff",
+  "adapter_version": "hindsight-longitudinal-adapter-v1",
+  "evidence_class": "raw_product",
+  "failure_totals_all_repetitions": {
+    "belief_truth_confusion": 6,
+    "configuration_collapse": 6,
+    "failed_procedure_adoption": 3,
+    "false_persistence": 9,
+    "late_history_corruption": 3,
+    "missing_required_truth": 3,
+    "scope_collapse": 6,
+    "stale_persistence": 12,
+    "unsupported_evidence": 6
+  },
+  "failures_by_case_repetition_1": {
+    "LQ02": [
+      "configuration_collapse"
+    ],
+    "LQ03": [
+      "configuration_collapse"
+    ],
+    "LQ05": [
+      "stale_persistence"
+    ],
+    "LQ06": [
+      "belief_truth_confusion"
+    ],
+    "LQ07": [
+      "false_persistence"
+    ],
+    "LQ08": [
+      "scope_collapse"
+    ],
+    "LQ09": [
+      "scope_collapse"
+    ],
+    "LQ10": [
+      "failed_procedure_adoption"
+    ],
+    "LQ11": [
+      "stale_persistence"
+    ],
+    "LQ12": [
+      "late_history_corruption",
+      "missing_required_truth",
+      "stale_persistence"
+    ],
+    "LQ14": [
+      "false_persistence"
+    ],
+    "LQ15": [
+      "stale_persistence",
+      "unsupported_evidence"
+    ],
+    "LQ16": [
+      "unsupported_evidence"
+    ],
+    "LQ18": [
+      "belief_truth_confusion"
+    ],
+    "LQ19": [
+      "false_persistence"
+    ]
+  },
+  "fixture_sha256": "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd",
+  "fixture_version": "longitudinal-v1",
+  "generated_at": "2026-09-03T02:34:47Z",
+  "generation": 31,
+  "model_or_product_llm_calls": false,
+  "paired_contrast_gen29_perseus": {
+    "clean_in_both": [
+      "false_supersession",
+      "future_leakage",
+      "procedure_recommendation_missing",
+      "unknown_hallucination",
+      "unmapped_provenance"
+    ],
+    "gen29_perseus_totals": {
+      "configuration_collapse": 6,
+      "correction_failure": 12,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "history_erasure": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    },
+    "gen31_hindsight_totals": {
+      "belief_truth_confusion": 6,
+      "configuration_collapse": 6,
+      "failed_procedure_adoption": 3,
+      "false_persistence": 9,
+      "late_history_corruption": 3,
+      "missing_required_truth": 3,
+      "scope_collapse": 6,
+      "stale_persistence": 12,
+      "unsupported_evidence": 6
+    },
+    "in_both": [
+      "configuration_collapse",
+      "failed_procedure_adoption",
+      "false_persistence",
+      "late_history_corruption",
+      "missing_required_truth",
+      "stale_persistence",
+      "unsupported_evidence"
+    ],
+    "note": "qualitative capability contrast only; not a numeric leaderboard",
+    "only_in_gen29_perseus": [
+      "correction_failure",
+      "history_erasure"
+    ],
+    "only_in_gen31_hindsight": [
+      "belief_truth_confusion",
+      "scope_collapse"
+    ]
+  },
+  "query_side_effects": {
+    "database_changed_by_reads": "no change",
+    "identical_result_order_on_repeat": true,
+    "isolation": "scored queries ran against the live checkpoint store; reads measured side-effect-free on unrelated data first",
+    "max_fused_score_drift": 8.450942390325622e-09,
+    "measured": true
+  },
+  "repetition_variance": "none; all three repetitions produced identical failure totals",
+  "repetitions": [
+    {
+      "bank": "memory-bakeoff-gen31r127993",
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "chunks": "1",
+          "documents": "1",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "1",
+          "memory_units": "1"
+        },
+        "CP04": {
+          "chunks": "4",
+          "documents": "4",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "16",
+          "memory_units": "4"
+        },
+        "CP05": {
+          "chunks": "5",
+          "documents": "5",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "25",
+          "memory_units": "5"
+        },
+        "CP06": {
+          "chunks": "6",
+          "documents": "6",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "36",
+          "memory_units": "6"
+        },
+        "CP08": {
+          "chunks": "8",
+          "documents": "8",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "64",
+          "memory_units": "8"
+        },
+        "CP10": {
+          "chunks": "10",
+          "documents": "10",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "100",
+          "memory_units": "10"
+        },
+        "CP11": {
+          "chunks": "11",
+          "documents": "11",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "121",
+          "memory_units": "11"
+        },
+        "CP14": {
+          "chunks": "14",
+          "documents": "14",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "196",
+          "memory_units": "14"
+        },
+        "CP16": {
+          "chunks": "16",
+          "documents": "16",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "256",
+          "memory_units": "16"
+        }
+      },
+      "checkpoints": 9,
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 2,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 3,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 1,
+        "missing_required_truth": 1,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 4,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 9,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 1
+    },
+    {
+      "bank": "memory-bakeoff-gen31r228269",
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "chunks": "1",
+          "documents": "1",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "1",
+          "memory_units": "1"
+        },
+        "CP04": {
+          "chunks": "4",
+          "documents": "4",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "16",
+          "memory_units": "4"
+        },
+        "CP05": {
+          "chunks": "5",
+          "documents": "5",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "25",
+          "memory_units": "5"
+        },
+        "CP06": {
+          "chunks": "6",
+          "documents": "6",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "36",
+          "memory_units": "6"
+        },
+        "CP08": {
+          "chunks": "8",
+          "documents": "8",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "64",
+          "memory_units": "8"
+        },
+        "CP10": {
+          "chunks": "10",
+          "documents": "10",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "100",
+          "memory_units": "10"
+        },
+        "CP11": {
+          "chunks": "11",
+          "documents": "11",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "121",
+          "memory_units": "11"
+        },
+        "CP14": {
+          "chunks": "14",
+          "documents": "14",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "196",
+          "memory_units": "14"
+        },
+        "CP16": {
+          "chunks": "16",
+          "documents": "16",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "256",
+          "memory_units": "16"
+        }
+      },
+      "checkpoints": 9,
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 2,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 3,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 1,
+        "missing_required_truth": 1,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 4,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 9,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 2
+    },
+    {
+      "bank": "memory-bakeoff-gen31r328497",
+      "cases": 20,
+      "checkpoint_state": {
+        "CP01": {
+          "chunks": "1",
+          "documents": "1",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "1",
+          "memory_units": "1"
+        },
+        "CP04": {
+          "chunks": "4",
+          "documents": "4",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "16",
+          "memory_units": "4"
+        },
+        "CP05": {
+          "chunks": "5",
+          "documents": "5",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "25",
+          "memory_units": "5"
+        },
+        "CP06": {
+          "chunks": "6",
+          "documents": "6",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "36",
+          "memory_units": "6"
+        },
+        "CP08": {
+          "chunks": "8",
+          "documents": "8",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "64",
+          "memory_units": "8"
+        },
+        "CP10": {
+          "chunks": "10",
+          "documents": "10",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "100",
+          "memory_units": "10"
+        },
+        "CP11": {
+          "chunks": "11",
+          "documents": "11",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "121",
+          "memory_units": "11"
+        },
+        "CP14": {
+          "chunks": "14",
+          "documents": "14",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "196",
+          "memory_units": "14"
+        },
+        "CP16": {
+          "chunks": "16",
+          "documents": "16",
+          "entities": "0",
+          "invalidated": "0",
+          "memory_links": "256",
+          "memory_units": "16"
+        }
+      },
+      "checkpoints": 9,
+      "failure_totals": {
+        "belief_truth_confusion": 2,
+        "configuration_collapse": 2,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 1,
+        "false_persistence": 3,
+        "false_supersession": 0,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 1,
+        "missing_required_truth": 1,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 2,
+        "stale_persistence": 4,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 2
+      },
+      "lifecycle_failure_totals": {
+        "belief_truth_confusion": 0,
+        "configuration_collapse": 0,
+        "correction_failure": 0,
+        "failed_procedure_adoption": 0,
+        "false_persistence": 0,
+        "false_supersession": 9,
+        "future_leakage": 0,
+        "history_erasure": 0,
+        "late_history_corruption": 0,
+        "missing_required_truth": 0,
+        "procedure_recommendation_missing": 0,
+        "scope_collapse": 0,
+        "stale_persistence": 0,
+        "unknown_hallucination": 0,
+        "unmapped_provenance": 0,
+        "unsupported_evidence": 0
+      },
+      "provenance_exact_all_cases": true,
+      "repetition": 3
+    }
+  ],
+  "result_schema_version": "longitudinal-result-v1",
+  "scorer_contract_sha256": "1dd831e80b3769af01db01b3acf642ed5f7e0dc2ca1ccf4c37d6c03773759c34",
+  "scorer_version": "longitudinal-scorer-v1",
+  "status": "complete_raw_product_longitudinal_mention_time_axis_only",
+  "system_identity": {
+    "database": "Homebrew PostgreSQL 17.11 + pgvector 0.8.6, fresh database and bank per repetition",
+    "embeddings": "intfloat/multilingual-e5-small ONNX, snapshot 614241f622f53c4eeff9890bdc4f31cfecc418b3, 384 dims, mean pooling, normalized, E5 query/passage prefixes",
+    "inference_server": "none",
+    "llm_provider": "none",
+    "nofile": 8192,
+    "packages": [
+      "hindsight-all 0.9.2",
+      "hindsight-api-slim 0.9.2",
+      "hindsight-client 0.9.2",
+      "hindsight-embed 0.9.2"
+    ],
+    "product": "hindsight",
+    "product_version": "0.9.2",
+    "raw_declaration": "HINDSIGHT_RAW_LLM_PROVIDER=none",
+    "reader": "none",
+    "requested_limit": 5,
+    "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2, local CPU",
+    "source_commit": "ebad478240d3171bb88201ececda5e8d9883d22d"
+  },
+  "temporal_axis": {
+    "native_axis_used": "mentioned_at (raw retain timestamp), preserved exactly",
+    "occurred_start_end": "never populated in the raw profile",
+    "time_base": "none needed; raw retain accepts an explicit per-item timestamp so the store timeline is the fixture timeline",
+    "vantage_point_read": "recall(query_timestamp=public event time)",
+    "why": "occurred_* is written only by LLM fact extraction, by the transfer importer replaying already-extracted facts, or by the PATCH curate endpoint that also carries invalidate/revert; all three are excluded from this profile"
+  }
+}

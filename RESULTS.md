@@ -59,6 +59,7 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 28 | `om-context-production-v2` citation contract | scorer correction over Gen27 captures | same frozen responses regraded: **33/36**, 11/12 in each repetition | not a new product run and not new fixture exposure; v1 remains 28/36 as historical evidence | [gen28](research/OBSERVATIONAL_MEMORY_GEN28_CITATION_CONTRACT_V2.md) | [citation contract v2](results/observational_memory_gen28_citation_contract_v2) |
 | 29 | Perseus Vault v2.23.2, operator CLI write + native hybrid recall | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, transaction-time belief answered correctly | valid-time is collinear with transaction time in this write path, so every corrected-history and late-history case fails; configuration collapse and stale persistence are real; nothing was lost at 16 records | [gen29](research/PERSEUS_VAULT_GEN29_LONGITUDINAL.md) | [longitudinal](results/perseus_vault_gen29_longitudinal) |
 | 30 | Perseus Vault v2.23.2, agent-facing MCP `remember` + admission review | `no-score diagnostic` | post-hoc write-surface ablation, **blocked**: `remember` honours a retroactive `valid_from`, but the approval that makes a record serveable resets it to the approval instant | serveable and retroactive are mutually exclusive in this version, so no independent application-time axis exists to score; Gen29 stands unchanged | [gen30](research/PERSEUS_VAULT_GEN30_MCP_VALID_TIME_ABLATION.md) | [admission probe](results/perseus_vault_gen30_mcp_valid_time) |
+| 31 | Hindsight v0.9.2, raw/no-LLM retain + native hybrid recall with learned CPU reranker | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, and **zero correction failure and zero history erasure** — a vantage-point query reaches the earlier state | scope collapse and belief/truth confusion appear where Perseus had none; the event-time axis (`occurred_*`) is unreachable in the raw profile, so mention time is the only axis | [gen31](research/HINDSIGHT_GEN31_LONGITUDINAL.md) | [longitudinal](results/hindsight_gen31_longitudinal) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -66,6 +67,11 @@ score exists for it in any generation.
 Gen29 is the first Round-2 contestant run against the frozen ruler. Its numbers
 answer a different question from Gen27/28 and are not comparable to them: OM has
 no query surface and Perseus does.
+
+Gen29 and Gen31 are the first paired Round-2 contestants. Hindsight repairs
+exactly what Perseus's collapsed time axis broke, and breaks two things Perseus
+got right. Seven failure classes appear in both, so those look like properties of
+append-only ingestion without retirement rather than of either engine.
 
 ## Reading rules
 
