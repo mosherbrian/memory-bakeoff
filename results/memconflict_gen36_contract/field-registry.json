@@ -1,0 +1,36 @@
+{
+  "public_input_fields": {
+    "Dynamic_Profile": "initial profile state; later sessions update it in dialogue",
+    "Fixed_Profile": "profile known before the interaction begins",
+    "Full_Session_Chain[].Date": "session date, the only timestamp a product may stamp",
+    "Full_Session_Chain[].Session_Dialogue": "the conversation itself; the ingestion surface",
+    "Full_Session_Chain[].Session_ID": "chronological session identifier",
+    "ID": "persona identifier, needed to isolate one run per persona",
+    "Life_Goal": "persona colour, present before interaction",
+    "Others_Profile": "third-party profiles the dialogue refers to",
+    "Personality": "persona colour, present before interaction",
+    "Preference_Profile": "initial preference state"
+  },
+  "public_question_fields": [
+    "question",
+    "question_id"
+  ],
+  "rule": "no scorer-only field may enter product writes, query text, metadata, ranking or filters",
+  "scorer_only_fields": {
+    "Full_Session_Chain[].Conditional_Conflict_Information": "rule identities, items and conditions",
+    "Full_Session_Chain[].Event_Types": "construction labels",
+    "Full_Session_Chain[].Others_Dynamic_Information": "third-party construction metadata",
+    "Full_Session_Chain[].Question_Trigger_Types": "why this session carries questions",
+    "Full_Session_Chain[].Revealed_Attributes": "construction metadata for the initial reveal",
+    "Full_Session_Chain[].Session_Outline": "generator instruction for the dialogue",
+    "Full_Session_Chain[].Session_Questions[].ability_target": "construction label",
+    "Full_Session_Chain[].Session_Questions[].answer": "gold answer",
+    "Full_Session_Chain[].Session_Questions[].conflict_type": "conflict label; upstream gives it to the scorer, not to the system",
+    "Full_Session_Chain[].Session_Questions[].difficulty": "construction label",
+    "Full_Session_Chain[].Session_Type": "construction label naming the session's role",
+    "Full_Session_Chain[].Static_Conflict_Information": "conflict roles and truth values",
+    "Full_Session_Chain[].Updated_Attributes": "before/after truth for dynamic conflicts",
+    "metadata": "generator seed",
+    "token_cost": "generation cost accounting"
+  }
+}

@@ -1,5 +1,92 @@
 # Codex to ChatGPT handoff
 
+## Generation 36 — MemConflict external-benchmark contract (no contestant score)
+
+**status:** complete. No product ran, no reader, no LLM, no external API, no GPU. Round-1,
+Round-2, `longitudinal-v1`, the Gen34 ledger and the Gen35 ablation are untouched.
+
+**pin.** `TaoZhen1110/MemConflict@ec51d5d36e87f7665d1337f3a88cbde95fc2a964`, checked out under
+gitignored `external/` (39 MB dataset not vendored). `Data/Step4_4.jsonl` blob
+`6dcbf9e536ea3e5d…`, sha256 `8ef9ec8589eccb86f63ab3a819a9180217405351a8d5846866721ea74babe092`.
+Evaluation files we depend on are hashed in `research/MEMCONFLICT_PIN.json`:
+`eval_scoring.py` blob `6a763871a7d6ca6c…`, `eval_memzero.py` blob `d66a6b2abf4d5f96…`,
+`llm_request.py` blob `145cc2261c45820c…`. Construction/generation stages were not run.
+
+**measured locally.** 30 personas; 1,579 sessions (900 update, 510 chitchat, 139 initial_reveal,
+30 future_plan); 3,750 questions (2,946 dynamic, 360 static, 444 conditional); 51–54 sessions and
+107–144 questions per persona; 71,060 turns; 142,093 well-formed dialogue messages; 28,623,378
+characters. Token counts omitted as tokenizer-specific rather than repeated from the paper.
+
+**a defect in the release, counted not dropped.** 36 dialogue messages are malformed — 29 use the
+role name as the key so carry neither `role` nor `content`, 5 lack a role, 2 lack content. They are
+excluded from ingestion with their exact provenance IDs listed. A silently shrinking corpus is
+indistinguishable from a system that forgot.
+
+**registry.** Public: profile blocks, `Session_ID`, `Date`, `Session_Dialogue`, question text.
+Scorer-only: `answer`, `conflict_type`, `ability_target`, `difficulty`, `Updated_Attributes`,
+`Revealed_Attributes`, `Static_Conflict_Information`, `Conditional_Conflict_Information`,
+`Others_Dynamic_Information`, `Question_Trigger_Types`, `Event_Types`, `Session_Outline`,
+`Session_Type`, `metadata`, `token_cost`. `Session_Type` is scorer-only deliberately: update versus
+chitchat tells a system which sessions carry state changes, which is the measurement.
+`assert_public_only()` walks payloads recursively; five adversarial injections are tested.
+
+**chronology, from source not assumption.** `eval_memzero.py` adds session i's dialogue then answers
+session i's questions, so the allowed prefix is sessions 0..i inclusive. A future-session unit is
+rejected by `assert_within_boundary()`, proven in the pilot.
+
+**upstream scoring audit — the important part.** Primary K 3, variants 2 and 5; two black-box and two
+white-box metrics per conflict type; log-rank is `1/log2(rank+1)`. The white-box metrics are
+LLM-JUDGED: the judge sees retrieved memory strings and `created_at` values and returns a support
+rank, so no released identifier enters that decision. Four fail-open paths turn "not measured" into a
+number: `build_missing_answer_result` returns all metrics 0.0; `evaluate_question_with_llm` catches
+every exception and returns None, and the rule-based fallback then leaves ALL white-box metrics at
+0.0 — an API outage is published as a retrieval miss; `parse_llm_metric_result` uses
+`.get(metric_key, 0)`; `parse_support_rank` returns 0 on any parse failure. This is the Gen31 defect
+in upstream code, on the metric the benchmark exists to measure. We do not reproduce it: all four are
+UNMEASURED here, and the lanes `upstream_llm_judge`, `upstream_rule_fallback` and
+`exact_provenance_whitebox` are never merged. The official lane is
+`requires_reader_authorization` and was not run.
+
+**exact-provenance fork, resolved per conflict type.** 3,569 of 3,750 questions (95.2%) map to gold
+support sessions using released identifiers only. Dynamic 2,946/2,946: the updated state is
+established by the question's own session via `Updated_Attributes`. Static 360/360: each question
+session holds exactly one `Point_B`, whose `Conflict_ID` names exactly one `Point_A` truth session.
+Conditional 263 exact: the session establishes rule `R_n` and the question addresses `R_{n-1}`,
+located by released `Rule_ID` order. Conditional 181 UNMEASURED: multi-rule sessions where the
+question-to-rule pairing is not determined by any released identifier — I did not invent one. The
+predecessor rule is corroborated 263/263 by the predecessor `Item` string appearing in the question
+or gold answer, used as an independent check and never as the mapping mechanism. A unit with
+identical text under a different session earns nothing; that is a test.
+
+**diagnostic pilot, no contestant.** Calibration subset only, seven checks passing: null gives
+MEASURED_ZERO where gold exists and UNMEASURED only where it does not; the existing BM25 baseline
+earns hit@3 on 110/380 scored questions, so the metric is reachable and unsaturated; a future-session
+provider is rejected; a gold answer in a payload is rejected; a conflict label in a payload is
+rejected. An oracle exists only inside scorer unit tests, proving rank 1 / hit 1.0 / log-rank 1.0.
+
+**calibration.** Personas whose SHA-256 digest is divisible by 5, chosen with no reference to any
+label: 3 of 30, about 380 questions, frozen before any outcome was inspected and permanently
+development-exposed. The release itself is unmodified; held-out is a reporting slice.
+
+**Gen37 proposal, not executed.** Scale is the finding: 4,736 messages and 125 questions per persona
+means 142,093 writes and 3,750 queries per engine, against Round 2's 16 writes. At 0.3–1.0 s per
+write — an estimate, since the products were never timed per write — that is 12–40 hours per engine
+for the full release, 2–7 days for four. Recommended order: Perseus Gen29 and Mem0 Gen32 first (both
+ingest plain text, identity carries over unchanged), then Hindsight Gen31 (carries over, `occurred_*`
+still unreachable), then agentmemory Gen33, which is the interesting one because its Jaccard
+retirement will fire far more often at 4,736 messages than at 16. OM excluded: no natural semantic
+query surface, so forcing it would measure the adapter. One retrieval pass per engine with targeted
+repeats, not mechanical tripling: all four were deterministic at retrieval level across Round 2.
+
+**artifacts.** `src/memory_bakeoff/memconflict.py`, `scripts/build_memconflict_contract.py`,
+`scripts/preflight_memconflict_gen36.py`, `research/MEMCONFLICT_GEN36_CONTRACT.md`,
+`research/MEMCONFLICT_PIN.json`, `results/memconflict_gen36_contract/`,
+`results/memconflict_gen36_pilot/`, `tests/test_memconflict_gen36_contract.py`. Contract
+`memconflict-benchmark-v1` hash `0521210818e448c8f189dacc33e287b15525f89d63f39cb627f9cdc7a3dccd28`;
+contract digest `057dd9587f61ce5e9d2100ec21e3bd7800d8115a091626384afd9efa9900410e`; pilot digest
+`68ca5fcfa360e4b655dca71c304f909481713b0465fcd5061defe79aa7a788e7`. Both reproduce byte for byte.
+21 focused tests; full suite 185 passed, one pre-existing warning.
+
 ## Generation 35 — agentmemory retirement ablation (controlled_core)
 
 **status:** complete. Both gates passed; the causal claim is scoped to this pinned engine.

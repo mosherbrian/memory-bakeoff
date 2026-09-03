@@ -1,0 +1,34 @@
+{
+  "upstream_repo": "https://github.com/TaoZhen1110/MemConflict",
+  "upstream_commit": "ec51d5d36e87f7665d1337f3a88cbde95fc2a964",
+  "checkout": "external/MemConflict (gitignored; not vendored)",
+  "dataset": {
+    "path": "Data/Step4_4.jsonl",
+    "git_blob": "6dcbf9e536ea3e5d52f015ba75b15bdcd3377c94",
+    "sha256": "8ef9ec8589eccb86f63ab3a819a9180217405351a8d5846866721ea74babe092",
+    "bytes": 39671712,
+    "lines": 30
+  },
+  "evaluation_files_we_depend_on": {
+    "Evaluation/eval_scoring.py": {
+      "git_blob": "6a763871a7d6ca6c2467b3b33482540b22b4ce07",
+      "sha256": "dea71ccb9058a5652ccf267143630851c7deffefeee5dde4c3b86386875d63f2",
+      "why": "metric definitions, top-K, LLM judge contract, fallback and missing-value semantics"
+    },
+    "Evaluation/eval_memzero.py": {
+      "git_blob": "d66a6b2abf4d5f962cb273f7b318ad5df72ae642",
+      "sha256": "38d44bc4c796f2850ffcc9cf15f7aeff09607dfca518e5aaa88aa1e6dcafd5e3",
+      "why": "the ingest-then-ask loop that defines each question's allowed history prefix"
+    },
+    "Evaluation/llm_request.py": {
+      "git_blob": "145cc2261c45820c400b940932c7d20aae51ed1a",
+      "sha256": "01142a2b9d40c5456ac0e883324b7e6dc77872af0ea6b9d767d0689ae30eaca3",
+      "why": "the judge transport; establishes that the official lane requires an external LLM"
+    }
+  },
+  "not_run": [
+    "Code/ construction and generation stages",
+    "Ablation/ variants",
+    "every eval_*.py product harness"
+  ]
+}

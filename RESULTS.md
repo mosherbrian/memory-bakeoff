@@ -64,6 +64,7 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 33 | agentmemory 0.9.29, native remember + smart-search with **write-time supersession enabled** | `raw_product` | 3 identical repetitions: retirement activates twice per run and **halves configuration collapse** (6→3) and reduces false persistence (9→6) | it is the only engine that falsely supersedes (lifecycle `false_supersession` 3); the rule is lexical Jaccard >0.7 over tokens longer than two characters, so `C1`/`C2` are invisible to it | [gen33](research/AGENTMEMORY_GEN33_LONGITUDINAL.md) | [longitudinal](results/agentmemory_gen33_longitudinal) |
 | 34 | Round-2 reporting-layer integrity audit (no product run) | `no-score diagnostic` | every cross-engine number rebuilt from leaf evidence through a fail-closed reporting layer; **all Round-2 conclusions survive independent derivation unchanged** | the old summarisers carry 45 default-fallback patterns where missing evidence becomes a number; historical scripts left intact, future publication routes through the common reporter | [gen34](research/ROUND2_REPORTING_INTEGRITY_GEN34.md) | [ledger](results/round2_gen34_integrity) |
 | 35 | agentmemory 0.9.29 from one patched build, automatic Jaccard retirement **ON vs OFF** | `controlled_core` (modified-product ablation) | 6 fresh runs, 3 per arm, counterbalanced: the enabled arm reproduces Gen33 exactly and the disabled arm **removes every false supersession** (lifecycle 3 -> 0) and every `history_erasure` and `correction_failure` | with retirement off, `configuration_collapse` returns to 6 and `false_persistence` to 9 — the append-only figures — so retirement traded those failures rather than fixing them; 13 of 20 cases differ and every difference traces to `L001`/`L002`, zero confounds | [gen35](research/AGENTMEMORY_GEN35_RETIREMENT_ABLATION.md) | [ablation](results/agentmemory_gen35_retirement_ablation) |
+| 36 | MemConflict `ec51d5d` external-benchmark contract (no product run) | `external-benchmark contract / no contestant score` | released benchmark pinned and measured locally: 30 personas, 1,579 sessions, 3,750 questions, 142,093 ingestible messages; public/scorer-only registry, chronology boundary and three scoring lanes frozen | upstream white-box scoring is LLM-judged, and four paths in its scorer turn an unmeasured metric into 0.0; exact ID-level support is derivable for 3,569 of 3,750 questions and the other 181 are UNMEASURED, not guessed | [gen36](research/MEMCONFLICT_GEN36_CONTRACT.md) | [contract](results/memconflict_gen36_contract) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -109,6 +110,17 @@ three false supersessions and both history classes, and puts configuration
 collapse and false persistence back at exactly the numbers the three append-only
 engines produced. This is the project's first causal claim, and it is scoped to
 this pinned agentmemory system only.
+
+Gen36 opens a second evidence lane and deliberately scores nothing in it. Before
+any product meets MemConflict, the benchmark's own meaning is frozen: which fields
+a system may see, where each question's history stops, and which of its numbers
+were measured. The audit found the same failure the project keeps meeting, this
+time in the external scorer: when its LLM judge is unavailable it falls back to a
+rule-based path that leaves every retrieval metric at 0.0, so an outage is
+published as a retrieval miss. Our lanes are kept separate and unmeasured stays
+unmeasured. A benchmark-owned exact-provenance lane credits retrieval by released
+session identity for 95% of questions; the rest are marked unmeasurable rather
+than assigned a plausible number.
 
 ## Reading rules
 

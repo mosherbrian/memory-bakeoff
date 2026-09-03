@@ -1,0 +1,72 @@
+{
+  "audited_files": [
+    "Evaluation/eval_scoring.py",
+    "Evaluation/eval_memzero.py"
+  ],
+  "chronology": "eval_memzero.py Generate_Single_Persona_Evaluation iterates the session chain in order, adds session i's dialogue, then answers session i's questions; the allowed history for a question is sessions 0..i inclusive",
+  "failure_semantics": {
+    "judge_omits_a_metric_key": {
+      "is_measured_zero": false,
+      "our_treatment": "UNMEASURED",
+      "upstream_behaviour": "parse_llm_metric_result reads parsed_result.get(metric_key, 0), so a missing key scores zero"
+    },
+    "llm_judge_unavailable_or_raising": {
+      "is_measured_zero": false,
+      "our_treatment": "UNMEASURED, and the lane is named upstream_rule_fallback, never merged with upstream_llm_judge",
+      "upstream_behaviour": "evaluate_question_with_llm catches every exception and returns None; Evaluate_Single_Question then falls back to build_rule_based_result, which leaves all white-box metrics at 0.0 although nothing was measured"
+    },
+    "missing_model_answer": {
+      "is_measured_zero": false,
+      "our_treatment": "UNMEASURED",
+      "upstream_behaviour": "build_missing_answer_result returns every metric as 0.0 with Error_Tags=['missing_model_answer']"
+    },
+    "unparsable_support_rank": {
+      "is_measured_zero": false,
+      "our_treatment": "UNMEASURED",
+      "upstream_behaviour": "parse_support_rank returns 0 on any parse failure, which reads as a miss"
+    }
+  },
+  "log_rank_formula": "1/log2(rank+1) for 1<=rank<=K, else 0.0",
+  "metrics_by_conflict_type": {
+    "conditional_conflict": {
+      "black_box": [
+        "conditional_answer_accuracy"
+      ],
+      "white_box": [
+        "correct_condition_evidence_hit_at_3",
+        "correct_condition_evidence_log_rank_score_at_3"
+      ]
+    },
+    "dynamic_conflict": {
+      "black_box": [
+        "dynamic_answer_accuracy",
+        "update_awareness_and_order_consistency_score"
+      ],
+      "white_box": [
+        "updated_evidence_hit_at_3",
+        "updated_evidence_log_rank_score_at_3"
+      ]
+    },
+    "static_conflict": {
+      "black_box": [
+        "static_answer_accuracy",
+        "conflict_recognition_score"
+      ],
+      "white_box": [
+        "truth_evidence_hit_at_3",
+        "truth_evidence_log_rank_score_at_3"
+      ]
+    }
+  },
+  "official_result_requires_llm_judge": true,
+  "primary_top_k": 3,
+  "reader_status_in_gen36": "requires_reader_authorization: no LLM, no external API, no GPU was used",
+  "retrieved_memory_timestamps_affect_scoring": true,
+  "top_k_variants": [
+    2,
+    3,
+    5
+  ],
+  "white_box_is_llm_judged": true,
+  "white_box_support_decision": "the judge is shown the top-K retrieved memory strings with their created_at values and returns a support rank; there is no released identifier in that decision, so upstream white-box scoring is semantic, not exact (eval_scoring.py build_llm_judge_prompt, parse_llm_metric_result, derive_white_box_metrics_from_rank)"
+}
