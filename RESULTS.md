@@ -62,6 +62,7 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 31 | Hindsight v0.9.2, raw/no-LLM retain + native hybrid recall with learned CPU reranker | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance on every hit, and **zero correction failure and zero history erasure** — a vantage-point query reaches the earlier state | scope collapse and belief/truth confusion appear where Perseus had none; the event-time axis (`occurred_*`) is unreachable in the raw profile, so mention time is the only axis | [gen31](research/HINDSIGHT_GEN31_LONGITUDINAL.md) | [longitudinal](results/hindsight_gen31_longitudinal) |
 | 32 | Mem0 2.0.19, raw `Memory.add(infer=False)` + embedded Qdrant dense+BM25 | `raw_product` | 3 identical repetitions against `longitudinal-v1`: zero future leakage, exact provenance, and **all seven cross-engine failure classes reproduced in an engine with no temporal retrieval surface at all** | one extra `stale_persistence` (LQ20) is the direct cost of having no as-of filter; Mem0 can filter on scope metadata but the scored Gen10 identity deliberately does not | [gen32](research/MEM0_GEN32_LONGITUDINAL.md) | [longitudinal](results/mem0_gen32_longitudinal) |
 | 33 | agentmemory 0.9.29, native remember + smart-search with **write-time supersession enabled** | `raw_product` | 3 identical repetitions: retirement activates twice per run and **halves configuration collapse** (6→3) and reduces false persistence (9→6) | it is the only engine that falsely supersedes (lifecycle `false_supersession` 3); the rule is lexical Jaccard >0.7 over tokens longer than two characters, so `C1`/`C2` are invisible to it | [gen33](research/AGENTMEMORY_GEN33_LONGITUDINAL.md) | [longitudinal](results/agentmemory_gen33_longitudinal) |
+| 34 | Round-2 reporting-layer integrity audit (no product run) | `no-score diagnostic` | every cross-engine number rebuilt from leaf evidence through a fail-closed reporting layer; **all Round-2 conclusions survive independent derivation unchanged** | the old summarisers carry 45 default-fallback patterns where missing evidence becomes a number; historical scripts left intact, future publication routes through the common reporter | [gen34](research/ROUND2_REPORTING_INTEGRITY_GEN34.md) | [ledger](results/round2_gen34_integrity) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -83,13 +84,20 @@ everything and you cannot say what is current; retire on similarity and you dele
 what was true. This is a contrast across products, not a controlled experiment
 within one.
 
-**Correction, 2026-09-03.** Gen31's originally published lifecycle numbers were
-fabricated by three silently failing SQL queries in its collector, and the
-"false supersession 0" claim for the append-only engines was read from the
-case-level stream, which never carries that class. Gen31 has been re-run with a
-collector that fails loudly; its case results are byte-identical and its lifecycle
-is genuinely clean. All summaries now carry both scorer streams separately, with a
-regression test enforcing that they are never merged.
+**Correction, 2026-09-03, verified in Gen34.** Gen31's originally published
+lifecycle numbers were never measured: three SQL queries in its collector failed
+silently and returned plausible empty answers, and the "false supersession 0"
+claim for the append-only engines was read from the case-level stream, where that
+class cannot appear. Gen31 was re-run with a collector that fails loudly — its
+case results are byte-identical and its lifecycle is genuinely clean.
+
+Gen34 then rebuilt every Round-2 cross-engine number from committed leaf evidence
+through a fail-closed reporting layer, replaying the frozen lifecycle scorer and
+reconciling against stored aggregates. **Every conclusion survived unchanged**,
+including the five identical classes and the retirement trade. The append-only
+engines' `false_supersession 0` is now MEASURED_ZERO from the lifecycle scorer
+rather than absent from the wrong table: the statement is the same, its evidential
+basis is entirely different.
 
 ## Reading rules
 
