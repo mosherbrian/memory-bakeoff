@@ -135,8 +135,14 @@ function applyOps(base: State, ops: any[]): State {
     if (typeof field !== "string" || !(field in next)) throw new Error(`unknown field ${field}`);
     if (field === "phase") throw new Error("phase changes go through request_transition");
     if (op.op === "set") {
-      if (Array.isArray(next[field]) !== Array.isArray(op.value)) {
-        throw new Error(`${field} type mismatch`);
+      if (Array.isArray(next[field]) && !Array.isArray(op.value)) {
+        throw new Error(
+          `${field} holds a list; send {"op":"append","field":"${field}","value":<one item>} ` +
+          `to add a single entry, or set it with a JSON array`,
+        );
+      }
+      if (!Array.isArray(next[field]) && Array.isArray(op.value)) {
+        throw new Error(`${field} holds a single value, not a list`);
       }
       next[field] = op.value;
     } else if (op.op === "append") {
@@ -298,7 +304,9 @@ export default function pilot(pi: any) {
       "next_actions, open_questions, blockers, validated_artifact_refs, last_observation_ref. " +
       "The value must match that field's type: a string for goal and " +
       "current_process_or_tool, a list otherwise, and for append or remove a single element. " +
-      "phase is NOT patchable; use request_transition. Rejected patches change nothing.",
+      "phase is NOT patchable; use request_transition. Rejected patches change nothing. " +
+      "Example: {\"base_revision\": 0, \"ops\": [{\"op\": \"append\", \"field\": " +
+      "\"important_findings\", \"value\": \"the parser ignores its second argument\"}]}",
     parameters: Type.Object({
       base_revision: Type.Number(),
       ops: Type.Array(Type.Object({
