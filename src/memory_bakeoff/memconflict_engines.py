@@ -257,9 +257,9 @@ class Mem0Engine:
     def inventory(self) -> dict[str, Any]:
         import sqlite3
 
-        stored = self.memory.get_all(filters={"user_id": self.A.user_id_for_persona(self.persona_id)},
-                                     limit=1000000)
-        rows = stored.get("results") if isinstance(stored, dict) else stored
+        # Gen38 instrumentation fix: get_all() takes top_k (default 20) and ignores
+        # `limit`, so its length is a page size, not an inventory. The count is left
+        # UNMEASURED here and reconciled read-only after the store is closed.
         history = {}
         db = self.home / "history.db"
         if db.exists():
@@ -269,7 +269,10 @@ class Mem0Engine:
                 history = {t: con.execute(f"select count(*) from {t}").fetchone()[0] for t in tables}
             finally:
                 con.close()
-        return {"points": len(rows or []), "history": history}
+        return {"points": None, "points_status": "UNMEASURED",
+                "points_note": "Memory.get_all() returns a top_k page, not a count; "
+                               "reconciled after close with client.count(exact=True)",
+                "history": history}
 
     def store_bytes(self) -> int:
         return dir_size(self.home)

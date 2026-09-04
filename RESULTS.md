@@ -67,6 +67,9 @@ The engine-independent ruler is frozen as `longitudinal-v1`:
 | 36 | MemConflict `ec51d5d` external-benchmark contract (no product run) | `external-benchmark contract / no contestant score` | released benchmark pinned and measured locally: 30 personas, 1,579 sessions, 3,750 questions, 142,093 ingestible messages; public/scorer-only registry, chronology boundary and three scoring lanes frozen | upstream white-box scoring is LLM-judged, and four paths in its scorer turn an unmeasured metric into 0.0; exact ID-level support is derivable for 3,569 of 3,750 questions and the other 181 are UNMEASURED, not guessed | [gen36](research/MEMCONFLICT_GEN36_CONTRACT.md) | [contract](results/memconflict_gen36_contract) |
 | 37 | Perseus Vault v2.23.2 Gen29 identity on MemConflict, 3-persona calibration | `external_benchmark_calibration_raw_product` (development-exposed) | 14,304 writes and 399 questions with zero unmapped provenance, zero empty returns, zero future-session leakage; exact-provenance hit@3 168/380 measured, log-rank@3 0.376 | static conflict is where it fails (6/36) while conditional is free (29/29); the product quarantined 25 writes under its own interference bound, with a native reason on every one | [gen37](research/MEMCONFLICT_GEN37_PERSEUS_MEM0_CALIBRATION.md) | [calibration](results/memconflict_gen37_calibration/perseus) |
 | 37 | Mem0 2.0.19 Gen32 raw `infer=False` identity on MemConflict, 3-persona calibration | `external_benchmark_calibration_raw_product` (development-exposed) | same 14,304 writes and 399 questions, same clean contract record; exact-provenance hit@3 180/380 measured, log-rank@3 0.392, and the store holds exactly what was written | static conflict fails here too (10/36); both engines land on rank 1 exactly 107 times from unrelated retrieval stacks, and Mem0 costs 394-402 ms per query against Perseus's 22-26 ms | [gen37](research/MEMCONFLICT_GEN37_PERSEUS_MEM0_CALIBRATION.md) | [calibration](results/memconflict_gen37_calibration/mem0) |
+| 38 | Perseus Vault v2.23.2 on MemConflict, **full release**, 27-persona held-out primary | `external_benchmark_full_release_raw_product_exact_provenance` | 30 personas, 142,093 writes, 3,750 questions; held-out exact-provenance hit@3 1,484/3,189 (0.465), log-rank 0.385, and zero unmapped provenance, empty returns or future-session leakage | static conflict is its weakest class at 0.343; its replication gate exposed tie-ordering instability in hybrid RRF (77/399 reorderings, all tie-explained, 2/380 hit@3 changes) | [gen38](research/MEMCONFLICT_GEN38_FULL_RELEASE.md) | [full release](results/memconflict_gen38_full_release/perseus) |
+| 38 | Mem0 2.0.19 raw `infer=False` on MemConflict, **full release**, 27-persona held-out primary | `external_benchmark_full_release_raw_product_exact_provenance` | same 30 personas and 142,093 writes; held-out hit@3 1,455/3,189 (0.456), log-rank 0.386; replicated its Gen37 calibration leaves byte-for-byte with zero ordering, score or hit-class differences | static conflict is also its weakest substantive class (0.383 vs dynamic 0.419); it quarantines nothing and still misses 200 static questions whose support was fully admitted | [gen38](research/MEMCONFLICT_GEN38_FULL_RELEASE.md) | [full release](results/memconflict_gen38_full_release/mem0) |
+| 38 | Frozen Gen36 BM25 baseline over the full release | `baseline` (context only) | held-out hit@3 909/3,189 (0.285) on the same questions and the same lane | **on static conflict it reaches 0.312 against Perseus's 0.343** — the engines beat it by ~20 points on dynamic questions and by at most 3 on static | [gen38](research/MEMCONFLICT_GEN38_FULL_RELEASE.md) | [baseline](results/memconflict_gen38_full_release/bm25) |
 
 OM exposes no natural-language semantic query surface, so no Hit@k or ranking
 score exists for it in any generation.
@@ -123,6 +126,25 @@ published as a retrieval miss. Our lanes are kept separate and unmeasured stays
 unmeasured. A benchmark-owned exact-provenance lane credits retrieval by released
 session identity for 95% of questions; the rest are marked unmeasurable rather
 than assigned a plausible number.
+
+Gen38 ran the whole release: 30 personas, 142,093 writes and 3,750 questions per
+engine, with the 27 personas outside the calibration subset as the primary slice.
+Both engines had to reproduce their Gen37 calibration leaves before touching it.
+Mem0 reproduced them exactly; Perseus did not, and the reason turned out to be its
+own hybrid RRF returning tied scores whose order is stable within a run but not
+across runs — 77 reorderings, every one explained by identical tied scores, worth
+2 of 380 hit@3 classes. The gate was given an explicit tolerance for that before
+any held-out persona ran, and the instability is published as its own number.
+
+The pre-registered generalization hypothesis holds: static conflict — an old truth
+against a newer contradiction — is the weakest class for Perseus (0.343) and the
+weakest substantive class for Mem0 (0.383). The mechanism diagnostic then splits
+that failure in two: about a quarter of static misses return the contradiction
+without the truth, and a third return neither. Only the first is `false_persistence`;
+the rest is simple unreachability. And the frozen BM25 baseline reaches 0.312 on
+static against Perseus's 0.343, so on the class the benchmark exists to probe, two
+production memory systems are within a few points of a lexical index over the same
+history.
 
 Gen37 put two real products against that frozen contract at calibration scale —
 three personas, 14,304 writes and 399 questions each, development-exposed and

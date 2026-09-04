@@ -1,5 +1,108 @@
 # Codex to ChatGPT handoff
 
+## Generation 38 — MemConflict at full release: Perseus and Mem0, exact provenance
+
+**status:** complete, both engines plus the frozen BM25 baseline. Evidence class
+`external_benchmark_full_release_raw_product_exact_provenance`. Not an upstream/official
+MemConflict white-box score; `upstream_llm_judge` remains `requires_reader_authorization` and was
+not run. No reader, no LLM, no external API, no GPU.
+
+**scale.** Each engine: 30 personas, 142,093 well-formed message writes, 3,750 questions, fresh
+persona-isolated stores. Primary slice is the 27 personas outside the calibration subset; the fresh
+30 is secondary; the calibration 3 exists only for replication.
+
+**pins.** Contract `0521210818e448c8…`, dataset `8ef9ec8589eccb86…` at upstream `ec51d5d`, Gen36
+calibration manifest, adapters byte-for-byte from Gen37 (`627f812d5296130c…`, `920f496be7470fca…`),
+all re-asserted inside every persona run. 36 malformed messages excluded by the frozen list; 181
+conditional questions remain UNMEASURED. Two declared instrumentation fixes, neither touching writes,
+queries or ranking: Mem0's in-run inventory is explicitly UNMEASURED rather than a `get_all` page,
+and Perseus repeats use the same session-boundary snapshot (with a regression test rejecting the old
+final-snapshot design). Persona is the atomic restart unit; leaves are temp-then-rename with their own
+digest and are only skipped when every pin, count and digest validates.
+
+**replication gate — the interesting part.** Mem0 reproduced its Gen37 calibration leaves EXACTLY:
+zero ordering differences, zero score mismatches, zero hit@3 class changes over 380 measured
+questions. Perseus did not: 77 of 399 questions returned a different order, every one with a
+byte-identical score vector containing ties. Perseus's hybrid RRF produces tied scores whose order is
+stable within a run but not across runs against a fresh vault, and at the rank-5 cutoff that also
+changes which tied item survives. Measured effect: 2 of 380 measured questions changed hit@3 class
+(0.53%), calibration hit@3 0.4421 -> 0.4474. Before any held-out persona ran I declared a tolerance —
+ordering differences must be fully tie-explained, scores and applicability must match exactly, hit@3
+class changes must stay under 1% — and the gate passes on that basis with the instability published
+as its own quantity. That is a deviation from the gate as literally written; the same harness
+producing a byte-identical Mem0 replication is what identifies the instability as the product's.
+
+**primary result, 27 held-out personas, 3,189 measured / 162 unmeasured:**
+
+| | hit@2 | hit@3 | hit@5 | log-rank@3 | dynamic | static | conditional |
+|---|---|---|---|---|---|---|---|
+| Perseus | 1,267 (0.397) | **1,484 (0.465)** | 1,814 (0.569) | 0.385 | 0.434 | **0.343** | 0.987 |
+| Mem0 | — | **1,455 (0.456)** | — | 0.386 | 0.419 | **0.383** | 0.974 |
+| BM25 | — | 909 (0.285) | — | 0.237 | 0.226 | 0.312 | 0.914 |
+
+Contract integrity for all three: zero unmapped provenance, zero empty returns, zero returns under
+five, zero future-session leakage, zero write failures.
+
+**H1 holds** (contract clean). **H2 holds**: static is Perseus's weakest class outright and Mem0's
+weakest substantive class. **H3 holds**: conditional is near ceiling for both. **H5 respected**: see
+the interval below. **H6 holds**: Mem0's inventory reconciles exactly on all 30 personas. **H7**:
+Perseus quarantined 224 writes across the release, measured not predicted. **H8** needs its two parts
+separated — see determinism.
+
+**slice agreement.** Perseus 0.447 calibration / 0.465 held-out / 0.463 full; Mem0 0.474 / 0.456 /
+0.458. Development exposure of the three calibration personas did not inflate them.
+
+**static mechanism diagnostic (scorer-side, posthoc).** Perseus, of 324 static questions: 60 return
+truth and contradiction, 82 truth only, 86 contradiction without truth, 96 neither. Mem0: 43 / 81 /
+78 / 122. So "retrieval prefers the newer contradiction" describes about a quarter of static
+failures; a third return neither session at all, which is unreachability rather than competition. A
+bare hit rate would have merged two different problems.
+
+**admission diagnostic.** Perseus quarantined 199 writes across the 27 held-out personas, in every
+one, each with a native reason string (`quarantined (interference score 0.9xx > bound 0.900)`).
+Static misses: 197 with gold support fully admitted, 16 partly quarantined. Mem0 quarantines nothing
+and still misses 200 static questions with fully admitted support. Static failure is a ranking
+problem in both engines, not an availability problem.
+
+**paired analysis, 27 held-out personas.** At K=3: both 1,117, Perseus-only 367, Mem0-only 338,
+neither 1,367 — they disagree on 705 of 3,189 questions. Persona-block bootstrap with the contract
+frozen before reading outcomes (seed 20260903, 10,000 resamples, resampling personas): Mem0 minus
+Perseus hit@3 mean −0.0097, median −0.0089, 95% interval **[−0.0273, +0.0095]**. The interval
+straddles zero; no winner on this lane.
+
+**BM25 context.** The engines beat the lexical baseline by ~20 points on dynamic questions and by at
+most 3 on static (0.343 and 0.383 against 0.312). On the class this benchmark exists to probe,
+embeddings buy very little.
+
+**operations, versus Gen37's projections.** Perseus 5.69 h / 1.64 GB against 5.8 / 1.65 projected
+(ratio 0.981); Mem0 14.97 h / 1.71 GB against 14.7 / 1.73 (ratio 1.018). No nonlinear slowdown at
+all: write p50 first third versus rest is 141.82/141.83 ms (Perseus) and 361.33/361.20 ms (Mem0). The
+BM25 baseline took 173 s for the whole release. Zero write failures anywhere.
+
+**determinism.** Returned session order was identical in 84 of 84 repeats for both engines. In 4 of
+Mem0's 84 the float scores differed while the order held; re-running one afterwards against the
+persisted store reproduces the scores exactly, so it is float non-determinism in the ONNX embedding
+path under CPU load and changes no hit, rank or log-rank. Validation reports order stability and
+score identity separately rather than collapsing them into one "stable" boolean.
+
+**artifacts.** `scripts/run_memconflict_gen38_full_release.py`,
+`scripts/gate_memconflict_gen38_replication.py`, `scripts/run_memconflict_gen38_bm25.py`,
+`scripts/build_memconflict_gen38_report.py`, `research/MEMCONFLICT_GEN38_FULL_RELEASE.md`,
+`results/memconflict_gen38_full_release/{perseus,mem0,bm25}/` (90 leaves + ledgers) plus
+`heldout-27-derived.json`, `full-30-derived.json`, `calibration-replication.json`,
+`static-mechanism-diagnostic.json`, `paired-analysis.json`, `inventory-reconciliation.json`,
+`operations.json`, `validation.json`, `content-digest.txt`, and
+`tests/test_memconflict_gen38_full_release.py`. Scientific digest
+`aff8855d35d139ae59eb532fa7141f6d98279ddc15d666feb906a58238609fb7`, rebuilt byte-identically. 20
+focused tests; full suite 225 passed with the one pre-existing warning.
+
+**Gen39 recommendation, not executed.** Hindsight Gen31 and agentmemory Gen33 at CALIBRATION scale
+first, never straight to full release. agentmemory is the sharp test: its Jaccard retirement fired
+twice on a 16-message fixture and will fire constantly at 4,700 messages per persona, and Gen35
+showed retirement trades current-state failures for history failures — MemConflict's static class is
+exactly a history question. The reader lane is the alternative if answer-level metrics are wanted;
+its constraints are already in the Gen36 contract.
+
 ## Generation 37 — Perseus and Mem0 on MemConflict, calibration scale
 
 **status:** complete, both engines. Evidence class `external_benchmark_calibration_raw_product`,
