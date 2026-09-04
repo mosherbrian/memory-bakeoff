@@ -308,6 +308,7 @@ Priority order:
 - `research/CLAUDE_MEM_FINDINGS.md`
 - `research/MEM0_FINDINGS.md`
 - `research/HINDSIGHT_FINDINGS.md`
+- `research/MEMBUKKIT_INTENDED_MODEL_GEN40.md` — intended-model path reproduced (no score)
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

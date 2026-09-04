@@ -1,5 +1,113 @@
 # Codex to ChatGPT handoff
 
+## Generation 40 — MemBukkit intended-model path reproduced (no score)
+
+**status:** complete, and the historical blocker is closed. Evidence class
+`product_identity_reproduction_no_score`. No benchmark corpus, no reader, no external LLM, no
+GPU, no product database. Base `c4e49bb`, full suite 243 passed (225 baseline + 18 new) with the
+one pre-existing warning.
+
+**the historical question, answered on the historical source.** The checkout used is the exact
+Gen7 pin `f28a2e58cdc0e77758c0f6d9a1e050f80dcad807`, verified by `git rev-parse` inside the run
+and recorded in the leaf. The intended-model names are still at
+`src/membukkit/models/registry.py:23-26`, with the fallback branches at lines 97 and 120; those
+exact lines are quoted in the report. No newer MemBukkit revision was substituted and none was
+needed, so the `current_upstream_compatibility_diagnostic` that Gen40 reserved for a failure was
+not run.
+
+**both model repositories are now public and pinned.**
+`MemseekAI/membukkit-biencoder-v1` at revision `50ab0a1fefa47c44d6d66f530dea2d3ea426f5b3`,
+sentence-transformers / sentence-similarity, apache-2.0, 12 files.
+`MemseekAI/membukkit-reranker-v2` at revision `0b46ab535caa4044542889dd76a15868799aabbe`,
+no library or pipeline tag and no license on the card — recorded as absent, not inferred, 7 files.
+Neither is private or gated. Weight identity: bi-encoder `model.safetensors` 437,967,672 bytes
+sha256 `92deea14f506ebfd…`, reranker 90,866,412 bytes sha256 `038f449571ac2716…`. Every file in
+both snapshots was reconciled to its published revision — large files by LFS sha256, small files
+by recomputing the git blob object id locally, so no file is pinned by name alone. Zero
+mismatched, zero local-only, zero missing.
+
+**fallback cannot be mistaken for success.** The resolver, the hub client and both model
+constructors are wrapped as observers; every wrapper forwards to the original and records only
+what passed through it, so embeddings and ranking cannot be altered. The run fails if a
+substitute repo is requested, downloaded or loaded, or if either model loads from anywhere but
+the pinned snapshot directory. Result: zero fallback events, both models loaded from the pinned
+snapshots, zero LLM invocations in both phases.
+
+**offline repeat is proof, not assertion.** The second phase runs in a fresh process with
+outbound connections blocked at the socket layer, so a silent re-download raises. It downloaded
+nothing, resolved the same two revisions, and returned an identical ordered id list on 8 of 8
+queries with identical probe values.
+
+**synthetic preflight.** 60 invented facts about a fictional preservation society and 8 fixed
+queries, written before any model output was observed and unrelated to every corpus here.
+Bi-encoder loads and embeds: shape [4, 768], all finite, rows normalised. Reranker loads and
+scores: 4 finite scores. End to end: 60 written, 60 new, backend count 60, all 8 queries served
+through both intended models. Provenance is exact — every returned item maps to its synthetic
+write receipt, zero unmapped ids. Repeat over unchanged state: order stable and selection stable,
+reported as separate quantities per Gen38.
+
+**things worth your attention, none of which I tuned.** The two off-topic queries return a full
+top_k of 10 like every other query; the product applies no relevance floor on this surface. I did
+not invent a pass threshold after seeing that — it is recorded as behaviour. `ModelConfig.device`
+reaches the reranker but not the bi-encoder: the encoder wrapper passes only a path to
+`SentenceTransformer`, which picks its own device, so one `device="cpu"` request produced encoder
+on `mps:0` and reranker on `cpu` in the same process. Recorded, not overridden. And the lifecycle
+answer to your question: on this direct fact-ingest path the product is append-and-dedupe only.
+Re-offering the identical 60 facts wrote 0 new rows, while one dated fact contradicting a stored
+one was appended as row 61 with **both** left `current` and zero superseded hits. MemBukkit's
+supersession machinery sits on the LLM distiller path, which Gen40 deliberately did not exercise.
+
+**pipeline characterization** (source read alongside runtime observation): the same bi-encoder
+embeds writes and queries; routing partitions into 24 topic buckets and opens a scan budget,
+measured at 18-20 facts scanned of 60, scan fraction 0.30-0.33; the cross-encoder acts after
+candidate generation over the opened region only; `candidate_pool=50`, `rerank_cap=50`,
+`top_k=10`; fusion is `select="hybrid"`, RRF over cross-encoder rank and cosine rank with
+`k_rrf=60`, so cosine and cross-encoder scores are **not** directly comparable — only ranks are
+combined; the optional lexical lane is off. Selection is by relevance but presentation is
+temporal, so returned order is a presentation property. Store is the in-memory backend.
+
+**determinism.** The offline digest rebuilds byte-identically across a second complete run into a
+scratch directory. The online digest is deliberately not stable across cache states: the
+committed leaf was produced after deleting the model cache so it records the real acquisition,
+and a warm repeat differs in exactly `load_trace` and `snapshot_cached_before_run` and nothing
+else. Every measured quantity is identical in both.
+
+**files.** `src/memory_bakeoff/membukkit_gen40.py` (contract: fixture, fallback detection,
+content identity, digest), `scripts/run_membukkit_gen40_preflight.py`,
+`scripts/build_membukkit_gen40_report.py`, `tests/test_membukkit_gen40_intended_model.py` (18),
+`research/MEMBUKKIT_INTENDED_MODEL_GEN40.md`, `results/membukkit_gen40_intended_model/`
+(model_pins.json, online.json, offline.json, comparison.json). No model weights and no product DB
+are committed. `research/MEMBUKKIT_INTENDED_MODEL_GEN7.md` is untouched; Gen40 links backward to
+it. RESULTS.md and STATUS_AND_FINDINGS.md gain clearly-labelled no-score pointers.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen41 recommendation — do not execute.**
+
+Re-enter the **frozen Round1 raw-product ruler** with the intended models, at the existing
+configuration scope, adding no new lane.
+
+It is the smallest fair step. Round1 is where MemBukkit already has a row and where every other
+engine has a comparable one, so the reproduction converts directly into the comparison it was
+always meant to support, with no new contract, no new evidence class and no reader.
+MemConflict calibration is the larger move — a new adapter plus the three-persona calibration —
+and it should follow, not precede, the ruler MemBukkit was originally measured against.
+longitudinal-v1 I would put last: Gen40 just measured that this ingest path performs no
+supersession at all, so a lifecycle ruler would mostly measure the absence of a mechanism.
+
+I checked the condition rather than leaving it to you. Round1's MemBukkit `raw_product` row is
+the Gen8 documented-fallback run, and `research/MEMBUKKIT_FALLBACK_GEN8.md` records that it
+ingested through upstream `MemorySystem.ingest_facts` with no distiller and no LLM — the exact
+surface Gen40 exercised, on the same pinned upstream commit. So re-entry needs no reader and no
+authorization decision: it is a single-variable swap of the model weights on a frozen ruler, the
+cleanest comparison this project has had available.
+
+Two scope details Gen41 must match or the swap stops being single-variable. Gen8 ran the atomic
+lane only, while Gen40 used the shipped default of both union lanes; Gen41 should hold Gen8's
+`union_lanes` scope. And Gen8 ran both models on CPU, whereas Gen40 measured the encoder ignoring
+`ModelConfig.device` and selecting `mps:0`; Gen41 needs an explicit lever for that, outside
+product semantics, or device becomes a second variable.
+
 ## Generation 39 — architecture synthesis (documentation only)
 
 **status:** complete. No benchmark exposure, no contestant score, no MemConflict run, no reader

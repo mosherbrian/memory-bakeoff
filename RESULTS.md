@@ -161,6 +161,28 @@ The scale guess is also now a measurement. Gen36 estimated 12-40 hours per engin
 for the full release; measured, it is 5.8 hours for Perseus and 14.7 hours for
 Mem0, with the linear and rate-based projections agreeing to within 2%.
 
+## MemBukkit intended-model path — identity evidence, no score
+
+`product_identity_reproduction_no_score`. Not a result row, not comparable with
+anything above it.
+
+MemBukkit was the intended default engine and has carried an asterisk since
+Gen7, when its two fine-tuned models were private, the resolver silently
+substituted off-the-shelf ones, and the harness failed closed rather than score
+a fallback. Both repositories are now public. On the original pinned upstream
+commit, with no source change, the intended path loads
+`MemseekAI/membukkit-biencoder-v1` at revision `50ab0a1f` and
+`MemseekAI/membukkit-reranker-v2` at revision `0b46ab53`, every snapshot file
+reconciling to those revisions, and runs a synthetic fixture end to end with
+exact provenance and no substitute model anywhere in the trace. A second
+process with the network blocked at the socket layer reproduces all eight
+queries in identical order from the frozen snapshot, and a whole fresh run
+rebuilds both leaf digests byte-identically.
+
+That retires the blocker. It says nothing about quality: no score was produced
+and the fixture was built to exercise the path, not to measure it. See
+`research/MEMBUKKIT_INTENDED_MODEL_GEN40.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

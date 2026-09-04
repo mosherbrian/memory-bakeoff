@@ -1,0 +1,1118 @@
+{
+  "contract_sha256": "f24418c6dd3cbe2a1204b3209560202763beb2982cbdd8864b7a58f286c73faa",
+  "digest": "4c2a41846208a75da2d48faefcf4b90625820b5232feace3f5653f33ee79ff16",
+  "evidence_class": "product_identity_reproduction_no_score",
+  "ingest": {
+    "backend_count": 60,
+    "n_facts_offered": 60,
+    "n_new_written": 60,
+    "n_receipts": 60
+  },
+  "lifecycle": {
+    "count_after_duplicate_offer": 60,
+    "count_after_update": 61,
+    "count_before": 60,
+    "duplicate_offer_new_rows": 0,
+    "n_hits": 10,
+    "n_superseded_hits": 0,
+    "statuses_seen": [
+      "current"
+    ],
+    "update_offer_new_rows": 1
+  },
+  "llm_invocations": 0,
+  "load_trace": {
+    "downloads": [],
+    "fallback_events": [],
+    "loads": [
+      {
+        "kind": "reranker",
+        "target": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2"
+      },
+      {
+        "kind": "biencoder",
+        "target": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1"
+      }
+    ],
+    "resolver_calls": [
+      {
+        "intended_repo": "MemseekAI/membukkit-biencoder-v1",
+        "returned": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1",
+        "role": "encoder"
+      },
+      {
+        "intended_repo": "MemseekAI/membukkit-reranker-v2",
+        "returned": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2",
+        "role": "reranker"
+      }
+    ]
+  },
+  "membukkit_source": {
+    "checkout": "/Users/bmosher/source/repos/memory-bakeoff/external/membukkit",
+    "head": "f28a2e58cdc0e77758c0f6d9a1e050f80dcad807",
+    "matches_gen7_pin": true,
+    "resolver_file": "src/membukkit/models/registry.py",
+    "resolver_lines": {
+      "23": "_HUB_ENCODER_REPO = \"MemseekAI/membukkit-biencoder-v1\"",
+      "24": "_HUB_RERANKER_REPO = \"MemseekAI/membukkit-reranker-v2\"",
+      "25": "_FALLBACK_ENCODER = \"sentence-transformers/all-mpnet-base-v2\"",
+      "26": "_FALLBACK_RERANKER = \"cross-encoder/ms-marco-MiniLM-L-6-v2\"",
+      "93": "    hub = _hub_download(_HUB_ENCODER_REPO)",
+      "97": "    return _FALLBACK_ENCODER",
+      "116": "    hub = _hub_download(_HUB_RERANKER_REPO)",
+      "120": "    return _FALLBACK_RERANKER"
+    },
+    "version": "0.1.0"
+  },
+  "model_pins": {
+    "encoder": {
+      "files": {
+        ".gitattributes": {
+          "lfs_sha256": null,
+          "oid": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+          "size": 1519
+        },
+        "1_Pooling/config.json": {
+          "lfs_sha256": null,
+          "oid": "9213783a33aa495a3c2d3791c7c5888d90607a4e",
+          "size": 296
+        },
+        "README.md": {
+          "lfs_sha256": null,
+          "oid": "1452a960a1189347d079efa950d3c87d5706c0d6",
+          "size": 11612
+        },
+        "config.json": {
+          "lfs_sha256": null,
+          "oid": "eb52e697a8cc0e93853c1ef581671fcc8c53a504",
+          "size": 545
+        },
+        "config_sentence_transformers.json": {
+          "lfs_sha256": null,
+          "oid": "134b78eb05ae5811af1b960dc7e7ee009a244a5c",
+          "size": 199
+        },
+        "model.safetensors": {
+          "lfs_sha256": "92deea14f506ebfdc44a726463e93577b6fb36a644c3972dc82d4a60784259f9",
+          "oid": "864b5df57996b24aed7d87a9a342ca1cf08005d0",
+          "size": 437967672
+        },
+        "modules.json": {
+          "lfs_sha256": null,
+          "oid": "952a9b81c0bfd99800fabf352f69c7ccd46c5e43",
+          "size": 349
+        },
+        "sentence_bert_config.json": {
+          "lfs_sha256": null,
+          "oid": "4eb670bb4e7f34e9031acec2b86d39e5c921198e",
+          "size": 53
+        },
+        "special_tokens_map.json": {
+          "lfs_sha256": null,
+          "oid": "f8b386f07f964a5431cc027051fa4487d8b3141c",
+          "size": 964
+        },
+        "tokenizer.json": {
+          "lfs_sha256": null,
+          "oid": "d23abac75905b66d87ca0f291ae40e3c08135954",
+          "size": 710932
+        },
+        "tokenizer_config.json": {
+          "lfs_sha256": null,
+          "oid": "eb9f2089e707fcf3fc2d690f420dd362b0d7ef23",
+          "size": 1615
+        },
+        "vocab.txt": {
+          "lfs_sha256": null,
+          "oid": "1c51ab79a2298a340952d3e6012042a9c84bbe4d",
+          "size": 231536
+        }
+      },
+      "gated": false,
+      "library_name": "sentence-transformers",
+      "license": "apache-2.0",
+      "pipeline_tag": "sentence-similarity",
+      "private": false,
+      "repo": "MemseekAI/membukkit-biencoder-v1",
+      "revision": "50ab0a1fefa47c44d6d66f530dea2d3ea426f5b3"
+    },
+    "reranker": {
+      "files": {
+        ".gitattributes": {
+          "lfs_sha256": null,
+          "oid": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+          "size": 1519
+        },
+        "config.json": {
+          "lfs_sha256": null,
+          "oid": "7cbbb3a6ee69dc092e87fb6dd861495094955968",
+          "size": 787
+        },
+        "model.safetensors": {
+          "lfs_sha256": "038f449571ac2716159f9160da61f3d2fa2651410d6d6b91a462c5a7be0f610e",
+          "oid": "91c1b37b16c31048157173e9517876c00f8c34ca",
+          "size": 90866412
+        },
+        "special_tokens_map.json": {
+          "lfs_sha256": null,
+          "oid": "9bbecc17cabbcbd3112c14d6982b51403b264bfa",
+          "size": 695
+        },
+        "tokenizer.json": {
+          "lfs_sha256": null,
+          "oid": "4eade387f6f3ade6a663a25642ed27843081a772",
+          "size": 711649
+        },
+        "tokenizer_config.json": {
+          "lfs_sha256": null,
+          "oid": "31829927df30321fe664067e7378d4a48e1de9a3",
+          "size": 1272
+        },
+        "vocab.txt": {
+          "lfs_sha256": null,
+          "oid": "fb140275c155a9c7c5a3b3e0e77a9e839594a938",
+          "size": 231508
+        }
+      },
+      "gated": false,
+      "library_name": null,
+      "license": null,
+      "pipeline_tag": null,
+      "private": false,
+      "repo": "MemseekAI/membukkit-reranker-v2",
+      "revision": "0b46ab535caa4044542889dd76a15868799aabbe"
+    }
+  },
+  "phase": "offline",
+  "probes": {
+    "encoder_all_finite": true,
+    "encoder_device": "mps:0",
+    "encoder_first_row_head": [
+      0.025214,
+      0.04892,
+      0.014586,
+      -0.026203,
+      -0.050432,
+      0.001191,
+      -0.049682,
+      -0.037121
+    ],
+    "encoder_row_norms": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "encoder_shape": [
+      4,
+      768
+    ],
+    "reranker_all_finite": true,
+    "reranker_device": "cpu",
+    "reranker_n_scores": 4,
+    "reranker_order": [
+      0,
+      1,
+      3,
+      2
+    ],
+    "reranker_scores": [
+      -4.492805,
+      -5.063917,
+      -5.454099,
+      -5.255797
+    ]
+  },
+  "provenance": {
+    "all_returns_mapped": true,
+    "unmapped_returned_ids": []
+  },
+  "repeat": [
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 20,
+      "qid": "Q1",
+      "refs": [
+        "mem:27a8085caae3",
+        "mem:c92a9a71136c",
+        "mem:db2aea40326e",
+        "mem:557d14dca81f",
+        "mem:29f3f4bb2dd2",
+        "mem:0c9c20339a83",
+        "mem:9337bc7e2f41",
+        "mem:7cbe34867b69",
+        "mem:7b5654346a2f",
+        "mem:b689ad37b65f"
+      ],
+      "returned_ids": [
+        "27a8085caae3bff3f4de8bc8b2b2b0ec",
+        "c92a9a71136c0cbb0b69d4a873e2dacb",
+        "db2aea40326e68158fe1204912ba88a3",
+        "557d14dca81f53a9b07e2b3438324dd3",
+        "29f3f4bb2dd20e3ef15a645eef17ae6b",
+        "0c9c20339a83712f18e4e1f49fb48778",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "7cbe34867b69c43b1d73519cf74bcc2e",
+        "7b5654346a2f9dc98c9efd085e396935",
+        "b689ad37b65f428bbf7490206520cb8c"
+      ],
+      "scan_fraction": 0.333333,
+      "texts": [
+        "Marek Olsztyn keeps the society's lamp-oil ledger.",
+        "The society stores rottenstone in the tool crib behind the boat shed.",
+        "Wren is hauled out for scraping every March.",
+        "The lamp fund pays for wick trimming supplies and lens cleaning.",
+        "The society bans adhesive tape anywhere near the archive.",
+        "The society records humidity with a hair hygrometer in the lamp room.",
+        "Calibration records live in the same attic archive.",
+        "Minutes are typed and countersigned by the chair.",
+        "The chair serves a two-year term.",
+        "The society keeps a spare lens prism in a padded case."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q2",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:8e807ddeb4ad",
+        "mem:2c2f41d82d88",
+        "mem:512009e66973",
+        "mem:fb686c286d8e",
+        "mem:2fa53ded4299",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:9337bc7e2f41",
+        "mem:aab31a3466f4"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "8e807ddeb4add1a7ad9a55115710325a",
+        "2c2f41d82d882f5dfdb9762ce5ff28c1",
+        "512009e6697344dc3de2b2f7b2b80c52",
+        "fb686c286d8e0153c1f0f1c7bc8fa80c",
+        "2fa53ded42994c9253d68d54838073f1",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "aab31a3466f46b5390e6acf3e0be0c0f"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The archive contains keeper's logs from 1874 onward.",
+        "The 1874 logs record a three-week fog in November.",
+        "The archive fund pays for document conservation.",
+        "The bindery repairs the logs with Japanese tissue and wheat starch paste.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Calibration records live in the same attic archive.",
+        "The society's insurance covers the archive at replacement value."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q3",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:ea574663df98",
+        "mem:8109731c61fc",
+        "mem:b71687ca2c71",
+        "mem:2fa53ded4299",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:998b3b7dd053",
+        "mem:9337bc7e2f41",
+        "mem:4838f05f25c8"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "ea574663df986d53589b3cf86352884b",
+        "8109731c61fc64b158ea9f858436caba",
+        "b71687ca2c719ef47e6f30113a950b56",
+        "2fa53ded42994c9253d68d54838073f1",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "998b3b7dd053a59fdbecac21b610cfdb",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "4838f05f25c8c882e1ed84620f59b823"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The ventilation survey found the flue draught weakest in still weather.",
+        "Ida Vensdal drafted the lamp-room ventilation survey.",
+        "A copper cowl was fitted to the flue to correct the draught.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "The hygrometer is calibrated against a sling psychrometer each spring.",
+        "Calibration records live in the same attic archive.",
+        "Cottage electrics were rewired in armoured cable."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q4",
+      "refs": [
+        "mem:bd9aaf26b9b9",
+        "mem:a0b7df8062f8",
+        "mem:732da5fca3ed",
+        "mem:1f2959e315c9",
+        "mem:db2aea40326e",
+        "mem:d06cd8256eec",
+        "mem:2fa53ded4299",
+        "mem:39cd26fcebde",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a"
+      ],
+      "returned_ids": [
+        "bd9aaf26b9b970a4c71d5635570f69b9",
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "732da5fca3edbcc197ad621aa31d2215",
+        "1f2959e315c9d042e73fa5539c31146d",
+        "db2aea40326e68158fe1204912ba88a3",
+        "d06cd8256eeca74a1095403372c30e18",
+        "2fa53ded42994c9253d68d54838073f1",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "The lens was re-bedded in cork gaskets during the winter overhaul.",
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "Slate for repairs comes from the Braedon quarry.",
+        "The keeper's cottage roof is slate laid in diminishing courses.",
+        "Wren is hauled out for scraping every March.",
+        "Conservation work is done by a bindery in the cathedral quarter.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 18,
+      "qid": "Q5",
+      "refs": [
+        "mem:8109731c61fc",
+        "mem:557d14dca81f",
+        "mem:0c3c714aa159",
+        "mem:caba988eec88",
+        "mem:9274a426df07",
+        "mem:7cbe34867b69",
+        "mem:7b5654346a2f",
+        "mem:b705b5566cfa",
+        "mem:22b9c567b008",
+        "mem:4838f05f25c8"
+      ],
+      "returned_ids": [
+        "8109731c61fc64b158ea9f858436caba",
+        "557d14dca81f53a9b07e2b3438324dd3",
+        "0c3c714aa1592d32906da6a14e9cde7f",
+        "caba988eec88e793a495c644baf07da2",
+        "9274a426df070d884790973313b388e0",
+        "7cbe34867b69c43b1d73519cf74bcc2e",
+        "7b5654346a2f9dc98c9efd085e396935",
+        "b705b5566cfa49c6015746d676508ae7",
+        "22b9c567b0085608788fbf2f1c8dccae",
+        "4838f05f25c8c882e1ed84620f59b823"
+      ],
+      "scan_fraction": 0.3,
+      "texts": [
+        "Ida Vensdal drafted the lamp-room ventilation survey.",
+        "The lamp fund pays for wick trimming supplies and lens cleaning.",
+        "Votes on capital spending require a two-thirds majority.",
+        "The society's constitution requires a quorum of seven for votes.",
+        "A capital vote approved the cowl and the ladder in one motion.",
+        "Minutes are typed and countersigned by the chair.",
+        "The chair serves a two-year term.",
+        "Insurance renewal falls due in September.",
+        "The renewal survey inspects the cottage electrics.",
+        "Cottage electrics were rewired in armoured cable."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 18,
+      "qid": "Q6",
+      "refs": [
+        "mem:bd9aaf26b9b9",
+        "mem:a0b7df8062f8",
+        "mem:ea574663df98",
+        "mem:b71687ca2c71",
+        "mem:39cd26fcebde",
+        "mem:2fa53ded4299",
+        "mem:cac5c5533655",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:4838f05f25c8"
+      ],
+      "returned_ids": [
+        "bd9aaf26b9b970a4c71d5635570f69b9",
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "ea574663df986d53589b3cf86352884b",
+        "b71687ca2c719ef47e6f30113a950b56",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "2fa53ded42994c9253d68d54838073f1",
+        "cac5c55336554b5d8bb3a92c8568bc7f",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "4838f05f25c8c882e1ed84620f59b823"
+      ],
+      "scan_fraction": 0.3,
+      "texts": [
+        "The lens was re-bedded in cork gaskets during the winter overhaul.",
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The ventilation survey found the flue draught weakest in still weather.",
+        "A copper cowl was fitted to the flue to correct the draught.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "The tower is painted with two coats of oil-based enamel.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Cottage electrics were rewired in armoured cable."
+      ]
+    },
+    {
+      "kind": "unrelated",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 18,
+      "qid": "Q7",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:c92a9a71136c",
+        "mem:ea574663df98",
+        "mem:b71687ca2c71",
+        "mem:39cd26fcebde",
+        "mem:2fa53ded4299",
+        "mem:4c0053da146a",
+        "mem:9337bc7e2f41",
+        "mem:998b3b7dd053",
+        "mem:e4bff1e3395a"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "c92a9a71136c0cbb0b69d4a873e2dacb",
+        "ea574663df986d53589b3cf86352884b",
+        "b71687ca2c719ef47e6f30113a950b56",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "2fa53ded42994c9253d68d54838073f1",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "998b3b7dd053a59fdbecac21b610cfdb",
+        "e4bff1e3395a7b588f131c94568c933b"
+      ],
+      "scan_fraction": 0.3,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The society stores rottenstone in the tool crib behind the boat shed.",
+        "The ventilation survey found the flue draught weakest in still weather.",
+        "A copper cowl was fitted to the flue to correct the draught.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Calibration records live in the same attic archive.",
+        "The hygrometer is calibrated against a sling psychrometer each spring.",
+        "Accession labels are written in pencil, never ink."
+      ]
+    },
+    {
+      "kind": "unrelated",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q8",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:8109731c61fc",
+        "mem:2c2f41d82d88",
+        "mem:1b66627283d7",
+        "mem:2fa53ded4299",
+        "mem:39cd26fcebde",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:9337bc7e2f41",
+        "mem:8d7f47d57cff"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "8109731c61fc64b158ea9f858436caba",
+        "2c2f41d82d882f5dfdb9762ce5ff28c1",
+        "1b66627283d7fd7705a58a350ad37751",
+        "2fa53ded42994c9253d68d54838073f1",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "8d7f47d57cffb802b69125f9a0200b58"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "Ida Vensdal drafted the lamp-room ventilation survey.",
+        "The 1874 logs record a three-week fog in November.",
+        "The lamp-room ladder has forty-one rungs.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Calibration records live in the same attic archive.",
+        "The rewiring included a dedicated circuit for the lamp room."
+      ]
+    }
+  ],
+  "retrieval_defaults": {
+    "bm25_lane": true,
+    "bucket_mode": "topic",
+    "candidate_pool": 50,
+    "k_proto": 0,
+    "k_rrf": 60,
+    "lexical_lane": false,
+    "lexical_top_k": 20,
+    "num_buckets": 24,
+    "pool_size": 128,
+    "reasoning_top_k": 30,
+    "rerank_cap": 50,
+    "retrieval_mode": "gated",
+    "scan_budget": 0.3,
+    "scan_budget_reason": 0.45,
+    "scan_budget_temporal": null,
+    "select": "hybrid",
+    "top_k": 10,
+    "union": true,
+    "union_lanes": [
+      "verbatim",
+      "atomic"
+    ],
+    "union_recommendation_verbatim_only": true
+  },
+  "searches": [
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 20,
+      "qid": "Q1",
+      "refs": [
+        "mem:27a8085caae3",
+        "mem:c92a9a71136c",
+        "mem:db2aea40326e",
+        "mem:557d14dca81f",
+        "mem:29f3f4bb2dd2",
+        "mem:0c9c20339a83",
+        "mem:9337bc7e2f41",
+        "mem:7cbe34867b69",
+        "mem:7b5654346a2f",
+        "mem:b689ad37b65f"
+      ],
+      "returned_ids": [
+        "27a8085caae3bff3f4de8bc8b2b2b0ec",
+        "c92a9a71136c0cbb0b69d4a873e2dacb",
+        "db2aea40326e68158fe1204912ba88a3",
+        "557d14dca81f53a9b07e2b3438324dd3",
+        "29f3f4bb2dd20e3ef15a645eef17ae6b",
+        "0c9c20339a83712f18e4e1f49fb48778",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "7cbe34867b69c43b1d73519cf74bcc2e",
+        "7b5654346a2f9dc98c9efd085e396935",
+        "b689ad37b65f428bbf7490206520cb8c"
+      ],
+      "scan_fraction": 0.333333,
+      "texts": [
+        "Marek Olsztyn keeps the society's lamp-oil ledger.",
+        "The society stores rottenstone in the tool crib behind the boat shed.",
+        "Wren is hauled out for scraping every March.",
+        "The lamp fund pays for wick trimming supplies and lens cleaning.",
+        "The society bans adhesive tape anywhere near the archive.",
+        "The society records humidity with a hair hygrometer in the lamp room.",
+        "Calibration records live in the same attic archive.",
+        "Minutes are typed and countersigned by the chair.",
+        "The chair serves a two-year term.",
+        "The society keeps a spare lens prism in a padded case."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q2",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:8e807ddeb4ad",
+        "mem:2c2f41d82d88",
+        "mem:512009e66973",
+        "mem:fb686c286d8e",
+        "mem:2fa53ded4299",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:9337bc7e2f41",
+        "mem:aab31a3466f4"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "8e807ddeb4add1a7ad9a55115710325a",
+        "2c2f41d82d882f5dfdb9762ce5ff28c1",
+        "512009e6697344dc3de2b2f7b2b80c52",
+        "fb686c286d8e0153c1f0f1c7bc8fa80c",
+        "2fa53ded42994c9253d68d54838073f1",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "aab31a3466f46b5390e6acf3e0be0c0f"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The archive contains keeper's logs from 1874 onward.",
+        "The 1874 logs record a three-week fog in November.",
+        "The archive fund pays for document conservation.",
+        "The bindery repairs the logs with Japanese tissue and wheat starch paste.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Calibration records live in the same attic archive.",
+        "The society's insurance covers the archive at replacement value."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q3",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:ea574663df98",
+        "mem:8109731c61fc",
+        "mem:b71687ca2c71",
+        "mem:2fa53ded4299",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:998b3b7dd053",
+        "mem:9337bc7e2f41",
+        "mem:4838f05f25c8"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "ea574663df986d53589b3cf86352884b",
+        "8109731c61fc64b158ea9f858436caba",
+        "b71687ca2c719ef47e6f30113a950b56",
+        "2fa53ded42994c9253d68d54838073f1",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "998b3b7dd053a59fdbecac21b610cfdb",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "4838f05f25c8c882e1ed84620f59b823"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The ventilation survey found the flue draught weakest in still weather.",
+        "Ida Vensdal drafted the lamp-room ventilation survey.",
+        "A copper cowl was fitted to the flue to correct the draught.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "The hygrometer is calibrated against a sling psychrometer each spring.",
+        "Calibration records live in the same attic archive.",
+        "Cottage electrics were rewired in armoured cable."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q4",
+      "refs": [
+        "mem:bd9aaf26b9b9",
+        "mem:a0b7df8062f8",
+        "mem:732da5fca3ed",
+        "mem:1f2959e315c9",
+        "mem:db2aea40326e",
+        "mem:d06cd8256eec",
+        "mem:2fa53ded4299",
+        "mem:39cd26fcebde",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a"
+      ],
+      "returned_ids": [
+        "bd9aaf26b9b970a4c71d5635570f69b9",
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "732da5fca3edbcc197ad621aa31d2215",
+        "1f2959e315c9d042e73fa5539c31146d",
+        "db2aea40326e68158fe1204912ba88a3",
+        "d06cd8256eeca74a1095403372c30e18",
+        "2fa53ded42994c9253d68d54838073f1",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "The lens was re-bedded in cork gaskets during the winter overhaul.",
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "Slate for repairs comes from the Braedon quarry.",
+        "The keeper's cottage roof is slate laid in diminishing courses.",
+        "Wren is hauled out for scraping every March.",
+        "Conservation work is done by a bindery in the cathedral quarter.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 18,
+      "qid": "Q5",
+      "refs": [
+        "mem:8109731c61fc",
+        "mem:557d14dca81f",
+        "mem:0c3c714aa159",
+        "mem:caba988eec88",
+        "mem:9274a426df07",
+        "mem:7cbe34867b69",
+        "mem:7b5654346a2f",
+        "mem:b705b5566cfa",
+        "mem:22b9c567b008",
+        "mem:4838f05f25c8"
+      ],
+      "returned_ids": [
+        "8109731c61fc64b158ea9f858436caba",
+        "557d14dca81f53a9b07e2b3438324dd3",
+        "0c3c714aa1592d32906da6a14e9cde7f",
+        "caba988eec88e793a495c644baf07da2",
+        "9274a426df070d884790973313b388e0",
+        "7cbe34867b69c43b1d73519cf74bcc2e",
+        "7b5654346a2f9dc98c9efd085e396935",
+        "b705b5566cfa49c6015746d676508ae7",
+        "22b9c567b0085608788fbf2f1c8dccae",
+        "4838f05f25c8c882e1ed84620f59b823"
+      ],
+      "scan_fraction": 0.3,
+      "texts": [
+        "Ida Vensdal drafted the lamp-room ventilation survey.",
+        "The lamp fund pays for wick trimming supplies and lens cleaning.",
+        "Votes on capital spending require a two-thirds majority.",
+        "The society's constitution requires a quorum of seven for votes.",
+        "A capital vote approved the cowl and the ladder in one motion.",
+        "Minutes are typed and countersigned by the chair.",
+        "The chair serves a two-year term.",
+        "Insurance renewal falls due in September.",
+        "The renewal survey inspects the cottage electrics.",
+        "Cottage electrics were rewired in armoured cable."
+      ]
+    },
+    {
+      "kind": "on_topic",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 18,
+      "qid": "Q6",
+      "refs": [
+        "mem:bd9aaf26b9b9",
+        "mem:a0b7df8062f8",
+        "mem:ea574663df98",
+        "mem:b71687ca2c71",
+        "mem:39cd26fcebde",
+        "mem:2fa53ded4299",
+        "mem:cac5c5533655",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:4838f05f25c8"
+      ],
+      "returned_ids": [
+        "bd9aaf26b9b970a4c71d5635570f69b9",
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "ea574663df986d53589b3cf86352884b",
+        "b71687ca2c719ef47e6f30113a950b56",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "2fa53ded42994c9253d68d54838073f1",
+        "cac5c55336554b5d8bb3a92c8568bc7f",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "4838f05f25c8c882e1ed84620f59b823"
+      ],
+      "scan_fraction": 0.3,
+      "texts": [
+        "The lens was re-bedded in cork gaskets during the winter overhaul.",
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The ventilation survey found the flue draught weakest in still weather.",
+        "A copper cowl was fitted to the flue to correct the draught.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "The tower is painted with two coats of oil-based enamel.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Cottage electrics were rewired in armoured cable."
+      ]
+    },
+    {
+      "kind": "unrelated",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 18,
+      "qid": "Q7",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:c92a9a71136c",
+        "mem:ea574663df98",
+        "mem:b71687ca2c71",
+        "mem:39cd26fcebde",
+        "mem:2fa53ded4299",
+        "mem:4c0053da146a",
+        "mem:9337bc7e2f41",
+        "mem:998b3b7dd053",
+        "mem:e4bff1e3395a"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "c92a9a71136c0cbb0b69d4a873e2dacb",
+        "ea574663df986d53589b3cf86352884b",
+        "b71687ca2c719ef47e6f30113a950b56",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "2fa53ded42994c9253d68d54838073f1",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "998b3b7dd053a59fdbecac21b610cfdb",
+        "e4bff1e3395a7b588f131c94568c933b"
+      ],
+      "scan_fraction": 0.3,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "The society stores rottenstone in the tool crib behind the boat shed.",
+        "The ventilation survey found the flue draught weakest in still weather.",
+        "A copper cowl was fitted to the flue to correct the draught.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Calibration records live in the same attic archive.",
+        "The hygrometer is calibrated against a sling psychrometer each spring.",
+        "Accession labels are written in pencil, never ink."
+      ]
+    },
+    {
+      "kind": "unrelated",
+      "n_facts": 60,
+      "n_hits": 10,
+      "n_scanned": 19,
+      "qid": "Q8",
+      "refs": [
+        "mem:a0b7df8062f8",
+        "mem:8109731c61fc",
+        "mem:2c2f41d82d88",
+        "mem:1b66627283d7",
+        "mem:2fa53ded4299",
+        "mem:39cd26fcebde",
+        "mem:7658dc19deff",
+        "mem:4c0053da146a",
+        "mem:9337bc7e2f41",
+        "mem:8d7f47d57cff"
+      ],
+      "returned_ids": [
+        "a0b7df8062f8bb2fbded54e67cbe4d63",
+        "8109731c61fc64b158ea9f858436caba",
+        "2c2f41d82d882f5dfdb9762ce5ff28c1",
+        "1b66627283d7fd7705a58a350ad37751",
+        "2fa53ded42994c9253d68d54838073f1",
+        "39cd26fcebdeffc21bde0d12edb3196b",
+        "7658dc19deff9ea5b9b922ff763dde7d",
+        "4c0053da146abbd5d4898a9827aa8777",
+        "9337bc7e2f419edecc907205e2a2f946",
+        "8d7f47d57cffb802b69125f9a0200b58"
+      ],
+      "scan_fraction": 0.316667,
+      "texts": [
+        "Brass fittings in the lamp room are polished with rottenstone paste.",
+        "Ida Vensdal drafted the lamp-room ventilation survey.",
+        "The 1874 logs record a three-week fog in November.",
+        "The lamp-room ladder has forty-one rungs.",
+        "The rungs were replaced in oak after the iron ones pitted.",
+        "Salt spray is the main cause of corrosion on the tower ironwork.",
+        "Ironwork is repainted every third summer.",
+        "Enamel is applied only when humidity stays below seventy percent.",
+        "Calibration records live in the same attic archive.",
+        "The rewiring included a dedicated circuit for the lamp room."
+      ]
+    }
+  ],
+  "snapshot_cached_before_run": {
+    "encoder": true,
+    "reranker": true
+  },
+  "snapshots": {
+    "encoder": {
+      "local_dir": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1",
+      "local_files": {
+        ".gitattributes": {
+          "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+          "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+          "size": 1519
+        },
+        "1_Pooling/config.json": {
+          "git_oid": "9213783a33aa495a3c2d3791c7c5888d90607a4e",
+          "sha256": "1c8bc7bd750c5c20d8707f1c5c578f5d69bb3d1d5ebcf4b2fde5128de154ec1c",
+          "size": 296
+        },
+        "README.md": {
+          "git_oid": "1452a960a1189347d079efa950d3c87d5706c0d6",
+          "sha256": "89a1a9c3290fe58e76c939b578c48a14331dc7bfcaaf5a53102adb183da6f96a",
+          "size": 11612
+        },
+        "config.json": {
+          "git_oid": "eb52e697a8cc0e93853c1ef581671fcc8c53a504",
+          "sha256": "29fcaa64f8e726882c9b3ceac659038ea4f7cb4f339fdaffbf102e2868b54005",
+          "size": 545
+        },
+        "config_sentence_transformers.json": {
+          "git_oid": "134b78eb05ae5811af1b960dc7e7ee009a244a5c",
+          "sha256": "d4abee0ea51ebfd75bdc8aaa4107aee5d23de35108455791637fbbcc0b2fd17d",
+          "size": 199
+        },
+        "model.safetensors": {
+          "git_oid": "c86ee85a9318d5bce812ed3b44d05a8165be6492",
+          "sha256": "92deea14f506ebfdc44a726463e93577b6fb36a644c3972dc82d4a60784259f9",
+          "size": 437967672
+        },
+        "modules.json": {
+          "git_oid": "952a9b81c0bfd99800fabf352f69c7ccd46c5e43",
+          "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+          "size": 349
+        },
+        "sentence_bert_config.json": {
+          "git_oid": "4eb670bb4e7f34e9031acec2b86d39e5c921198e",
+          "sha256": "cabfacded9272091a06ff595a46ef027a76ddf4ac9e77d0fcf11c605748f1667",
+          "size": 53
+        },
+        "special_tokens_map.json": {
+          "git_oid": "f8b386f07f964a5431cc027051fa4487d8b3141c",
+          "sha256": "ee4a0725232fc563c865a9a1014f7eae985a6efbe44c58a35f46cd5e878aeed4",
+          "size": 964
+        },
+        "tokenizer.json": {
+          "git_oid": "d23abac75905b66d87ca0f291ae40e3c08135954",
+          "sha256": "46fb1f735006f52c1f9744bb05f7bc1544ec8475955af30396212c7737558d1e",
+          "size": 710932
+        },
+        "tokenizer_config.json": {
+          "git_oid": "eb9f2089e707fcf3fc2d690f420dd362b0d7ef23",
+          "sha256": "45f20fc622b2f3ff126c9954203e73e2d58bc859a20664296a0a8fb345670d06",
+          "size": 1615
+        },
+        "vocab.txt": {
+          "git_oid": "1c51ab79a2298a340952d3e6012042a9c84bbe4d",
+          "sha256": "dbd90cb94e2247bd4d4ccaecbf616d2290e66691d7d5e5bb81f063c2d0649ada",
+          "size": 231536
+        }
+      },
+      "reconciliation": {
+        "all_match": true,
+        "local_only": [],
+        "matched": [
+          ".gitattributes",
+          "1_Pooling/config.json",
+          "README.md",
+          "config.json",
+          "config_sentence_transformers.json",
+          "model.safetensors",
+          "modules.json",
+          "sentence_bert_config.json",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "vocab.txt"
+        ],
+        "mismatched": [],
+        "remote_only": []
+      },
+      "repo": "MemseekAI/membukkit-biencoder-v1",
+      "revision": "50ab0a1fefa47c44d6d66f530dea2d3ea426f5b3"
+    },
+    "reranker": {
+      "local_dir": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2",
+      "local_files": {
+        ".gitattributes": {
+          "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+          "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+          "size": 1519
+        },
+        "config.json": {
+          "git_oid": "7cbbb3a6ee69dc092e87fb6dd861495094955968",
+          "sha256": "db0c02d5ad2dc84ac6c890d5273dba1991d8cd9c9d62d35f8d427b54f6c5e18b",
+          "size": 787
+        },
+        "model.safetensors": {
+          "git_oid": "34726ce78f8364ed0b5f41dc7d94e07b405af16e",
+          "sha256": "038f449571ac2716159f9160da61f3d2fa2651410d6d6b91a462c5a7be0f610e",
+          "size": 90866412
+        },
+        "special_tokens_map.json": {
+          "git_oid": "9bbecc17cabbcbd3112c14d6982b51403b264bfa",
+          "sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+          "size": 695
+        },
+        "tokenizer.json": {
+          "git_oid": "4eade387f6f3ade6a663a25642ed27843081a772",
+          "sha256": "851ca67100d372ca3ae031a6abd168f53489eebfd7d89523f35c5c9b4d372c3c",
+          "size": 711649
+        },
+        "tokenizer_config.json": {
+          "git_oid": "31829927df30321fe664067e7378d4a48e1de9a3",
+          "sha256": "7b082b48a08a0b5c5939d99472e33addce3d96202155e33f7928cecd171186a0",
+          "size": 1272
+        },
+        "vocab.txt": {
+          "git_oid": "fb140275c155a9c7c5a3b3e0e77a9e839594a938",
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "size": 231508
+        }
+      },
+      "reconciliation": {
+        "all_match": true,
+        "local_only": [],
+        "matched": [
+          ".gitattributes",
+          "config.json",
+          "model.safetensors",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "vocab.txt"
+        ],
+        "mismatched": [],
+        "remote_only": []
+      },
+      "repo": "MemseekAI/membukkit-reranker-v2",
+      "revision": "0b46ab535caa4044542889dd76a15868799aabbe"
+    }
+  },
+  "stability": {
+    "repeats_order_stable": true,
+    "repeats_selection_stable": true
+  },
+  "wall_clock_seconds": 7.64
+}
