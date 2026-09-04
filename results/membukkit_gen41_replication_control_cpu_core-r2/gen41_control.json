@@ -1,0 +1,77 @@
+{
+  "condition": "core",
+  "configuration": "fallback_control",
+  "cpu_shim": true,
+  "device_proof": [
+    {
+      "all_cpu": true,
+      "devices": [
+        "cpu"
+      ],
+      "kind": "reranker",
+      "target": "/Users/bmosher/.membukkit-gen41/fallback/ms-marco-MiniLM-L-6-v2"
+    },
+    {
+      "all_cpu": true,
+      "devices": [
+        "cpu"
+      ],
+      "kind": "biencoder",
+      "target": "/Users/bmosher/.membukkit-gen41/fallback/all-mpnet-base-v2"
+    }
+  ],
+  "load_trace": {
+    "downloads": [],
+    "fallback_events": [],
+    "loads": [
+      {
+        "kind": "reranker",
+        "target": "/Users/bmosher/.membukkit-gen41/fallback/ms-marco-MiniLM-L-6-v2"
+      },
+      {
+        "kind": "biencoder",
+        "target": "/Users/bmosher/.membukkit-gen41/fallback/all-mpnet-base-v2"
+      }
+    ],
+    "resolver_calls": [
+      {
+        "intended_repo": "MemseekAI/membukkit-biencoder-v1",
+        "returned": "/Users/bmosher/.membukkit-gen41/fallback/all-mpnet-base-v2",
+        "role": "encoder"
+      },
+      {
+        "intended_repo": "MemseekAI/membukkit-reranker-v2",
+        "returned": "/Users/bmosher/.membukkit-gen41/fallback/ms-marco-MiniLM-L-6-v2",
+        "role": "reranker"
+      }
+    ]
+  },
+  "model_paths": {
+    "encoder": "/Users/bmosher/.membukkit-gen41/fallback/all-mpnet-base-v2",
+    "reranker": "/Users/bmosher/.membukkit-gen41/fallback/ms-marco-MiniLM-L-6-v2"
+  },
+  "retrieval_config": {
+    "bm25_lane": true,
+    "bucket_mode": "topic",
+    "candidate_pool": 50,
+    "k_proto": 0,
+    "k_rrf": 60,
+    "lexical_lane": false,
+    "lexical_top_k": 20,
+    "num_buckets": 24,
+    "pool_size": 128,
+    "reasoning_top_k": 30,
+    "rerank_cap": 50,
+    "retrieval_mode": "gated",
+    "scan_budget": 0.3,
+    "scan_budget_reason": 0.45,
+    "scan_budget_temporal": null,
+    "select": "hybrid",
+    "top_k": 10,
+    "union": true,
+    "union_lanes": [
+      "atomic"
+    ],
+    "union_recommendation_verbatim_only": true
+  }
+}

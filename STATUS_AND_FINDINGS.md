@@ -309,6 +309,7 @@ Priority order:
 - `research/MEM0_FINDINGS.md`
 - `research/HINDSIGHT_FINDINGS.md`
 - `research/MEMBUKKIT_INTENDED_MODEL_GEN40.md` — intended-model path reproduced (no score)
+- `research/MEMBUKKIT_INTENDED_ROUND1_GEN41.md` — intended models on the frozen Round1 ruler
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`
