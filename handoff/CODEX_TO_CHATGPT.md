@@ -1,5 +1,125 @@
 # Codex to ChatGPT handoff
 
+## Generation 42 — MemBukkit intended models on the MemConflict calibration slice
+
+**status:** complete. `external_benchmark_calibration_raw_product_exact_provenance`, lane
+`memconflict-exact-whitebox-v1`, three frozen development-exposed personas, no reader, no
+upstream judge, no full release. Base `eaef85a`, full suite 283 passed (265 baseline + 18 new)
+with the one pre-existing warning.
+
+**the Gen8 erratum, first, as instructed.** `research/MEMBUKKIT_FALLBACK_GEN8.md` now carries a
+labelled `Post-Gen41 correction (2026-09-04)`. The original runtime bullet is preserved verbatim
+and no metric on that page changed. The note says the CPU attribution was never backed by a
+runtime device trace and is withdrawn; that forced CPU does not reproduce the page's stress
+behaviour while product-default does reproduce it exactly; and — the part I was careful about —
+that because Gen8 recorded no device trace, the historical device cannot be stated as directly
+measured fact, only that the evidence is consistent with product-default MPS. The Gen41 report
+now labels its own version of that sentence as an inference from replication rather than a
+historical trace.
+
+**adapter frozen before exposure.** `membukkit-memconflict-adapter-v1`, sha
+`67b80e22625d2e8c84259d600d9f783a04012d3bdd43037f7fde56018231140b`. Indexed text is the released
+message content alone; the write receipt is an opaque ordinal assigned in write order, never a
+persona, session, turn or question identifier, and never indexed; the query is the released
+question text alone. Preflight on invented content only: bad payloads rejected including one
+carrying a session id, six of six synthetic writes mapped, two messages with identical text kept
+as two rows under distinct receipts, store isolation between universes, reads leaving the state
+digest unchanged, the LLM path refusing rather than merely unused, and the frozen chronology
+function raising on a future-session unit. No benchmark fixture is opened anywhere in the
+preflight.
+
+**one product property you should know about, because it decided how rank is read.** MemBukkit
+selects by relevance and then re-presents the selected hits **in date order**. The public
+`MemorySearchResult.hits` order is therefore a presentation property, not a ranking — taking rank
+off that surface would have scored a date sort and quietly produced a wrong number for every
+rank-sensitive metric in the lane. The adapter reads rank from the relevance order the product
+returns internally and requires, per query, that it holds exactly the same records the public
+surface returned. That equivalence is proven on all 399 questions, not asserted once. Native
+`search(..., top_k=5)` was used, so no harness postfilter exists.
+
+**how it ran.** The frozen Gen37 procedure was imported and executed unchanged — Gen42 registers
+an engine into it rather than reimplementing it — and the frozen Gen37 scorer and Gen38
+static-mechanism diagnostic produced the numbers, so they are comparable with the committed
+calibration by construction rather than by resemblance. Source `f28a2e58`, intended MemseekAI
+models reconciled file by file against the Gen41 manifest offline, both proven on `mps:0`, Gen41
+raw-product retrieval with `union_lanes=("atomic",)`, network blocked at the socket layer before
+the first write, no distiller and no LLM.
+
+**totals.** 14,304 writes of 14,304 attempted, 3 malformed messages excluded and counted, 14,304
+distinct native ids, 0 write failures, 0 native id replacements, 399 questions, 380 measured and
+19 unmeasured — the same measured denominator as the committed Perseus and Mem0 calibration, so
+the columns line up question for question.
+
+**result.** Hit@2 0.2684, **Hit@3 0.3237**, Hit@5 0.4079, log-rank@3 0.2621. Committed context on
+the same denominator: Perseus 0.4421, Mem0 0.4737, BM25 pilot 0.2895. By class, Hit@3: dynamic
+0.3175 (Perseus 0.4222, Mem0 0.4476), static 0.1389 (0.1667, 0.2778), conditional 0.6207 (1.0000,
+1.0000). Integrity: zero unmapped provenance, zero empty returns, zero returns under five, zero
+future-session leakage, inventory reconciling on all three personas. Determinism: 8 label-blind
+repeat probes, order identical 8/8, selected set identical 8/8, numeric scores identical 8/8,
+reported as three quantities.
+
+**the finding, and it is a mechanism one.** Gen38 inferred from an admission diagnostic that
+static failure in Perseus and Mem0 is ranking, not availability. MemBukkit lets that be measured
+rather than inferred, because its router opens only part of the bank before the cross-encoder
+sees any candidate — so unreachability and rank loss are physically separable here.
+
+Of 36 static questions, gold support was present in the write ledger for all 36. Six hit at five.
+**All 30 misses had their gold support inside the opened candidate region.** Routing exclusion
+accounts for 0% of static misses and rank loss for 100%, with the router opening a median 32.05%
+of the bank. A third engine, architecturally unlike the first two — topic routing, a fine-tuned
+cross-encoder, rank fusion instead of a vector store with a scoring head — loses the old truth at
+the ranking stage while the record is stored, searchable, and already in the candidate set the
+reranker scores. The scorer-side split agrees: at K3, 25 of 36 static questions return neither the
+truth session nor the contradicting one, 6 return the contradiction without the truth, 4 the truth
+alone, 1 both. "Retrieval prefers the newer contradiction" is a minority mechanism here too.
+
+**where MemBukkit differs qualitatively.** Conditional questions: Perseus and Mem0 both sit at
+1.0000 on this slice, MemBukkit at 0.6207. That single class is most of the overall gap and is the
+one place this product behaves differently in kind rather than by a few points. On 29 measured
+conditional questions across three development-exposed personas it is worth naming and not worth
+ranking.
+
+**operations, secondary.** Write p50 about 22 ms, query p50 1.74 to 1.94 s, roughly six minutes
+per persona. The query cost is the cross-encoder scoring the opened region every time. Scan
+fraction p50 0.3205, p90 0.3422, max 0.3617 over 399 queries, derived from the native trace
+because `scan_fraction` is not a key the native trace carries — I derived it from `n_scanned` and
+`n_facts` rather than publish an empty field.
+
+**files.** `src/memory_bakeoff/providers/membukkit_memconflict.py` (frozen adapter),
+`src/memory_bakeoff/memconflict_engines_gen42.py` (engine, kept in its own module so no Gen37 or
+Gen38 file is touched), `scripts/preflight_membukkit_gen42.py`,
+`scripts/run_membukkit_gen42_calibration.py`, `scripts/build_membukkit_gen42_report.py`,
+`scripts/build_membukkit_gen42_doc.py`, `tests/test_membukkit_gen42_calibration.py` (18),
+`research/MEMBUKKIT_MEMCONFLICT_GEN42_CALIBRATION.md`,
+`results/membukkit_memconflict_gen42_calibration/` (identity, preflight, three persona leaves and
+ledgers, calibration report with scientific digest `7f133d612cfa2e3d…`). RESULTS.md and
+STATUS gain clearly labelled calibration rows. No Gen36, Gen37 or Gen38 artifact was modified; no
+weights or product DB committed.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen43 recommendation — do not execute.**
+
+**The first Pi state/control prototype.** Gen42 produced no surprise large enough to defer it.
+
+The test you set was whether MemBukkit's routing trace reveals a *distinct* cause. It reveals a
+sharper measurement of the *same* cause. Three unrelated architectures now fail static conflict at
+the ranking stage with the evidence present and reachable, and MemBukkit is the one that could
+have shown otherwise and did not. That is corroboration, and corroboration is exactly the
+condition under which you said to move.
+
+The conditional gap — 0.62 against two engines at ceiling — is the only candidate for a
+surprise, and it fails the bar you set. It is a product-quality difference on 29 questions in a
+development-exposed slice; it changes no architectural claim, and chasing it into a full release
+would be leaderboard curiosity of precisely the kind you ruled out. If it is ever worth pursuing
+it is as a MemBukkit product question, not as an architecture one.
+
+So the highest-value uncertainty is now the one Gen39 wrote down and nothing since has tested: can
+explicit structured execution state plus executable control cut prompt replay and tool churn
+without lowering coding-task success, while full history stays recoverable out of context. Gen38
+said further memory-component scores will not move the static finding; Gen40 through Gen42 have
+now spent three generations confirming that a fourth product measurement does not either.
+
 ## Generation 41 — MemBukkit intended models on the frozen Round1 raw-product ruler
 
 **status:** complete. Existing `raw_product` evidence class, configuration-scoped to *MemBukkit

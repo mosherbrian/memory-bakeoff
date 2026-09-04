@@ -1,0 +1,74 @@
+{
+  "adapter_version": "membukkit-memconflict-adapter-v1",
+  "calibration_persona_ids": [
+    "40a79d0c-6a9e-9eec-a9d7-7b99ec26c489",
+    "737e8d59-3789-bead-c328-51faed940aef",
+    "e02dd733-a7b5-a87b-522d-5119f87c158d"
+  ],
+  "development_exposed": true,
+  "device_proof": [
+    {
+      "all_cpu": false,
+      "devices": [
+        "mps:0"
+      ],
+      "kind": "biencoder",
+      "target": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1"
+    },
+    {
+      "all_cpu": false,
+      "devices": [
+        "mps:0"
+      ],
+      "kind": "reranker",
+      "target": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2"
+    }
+  ],
+  "evidence_class": "external_benchmark_calibration_raw_product_exact_provenance",
+  "lane": "memconflict-exact-whitebox-v1",
+  "membukkit_source": "f28a2e58cdc0e77758c0f6d9a1e050f80dcad807",
+  "models": {
+    "encoder": {
+      "files_reconciled": 12,
+      "local": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1",
+      "repo": "MemseekAI/membukkit-biencoder-v1",
+      "revision": "50ab0a1fefa47c44d6d66f530dea2d3ea426f5b3"
+    },
+    "reranker": {
+      "files_reconciled": 7,
+      "local": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2",
+      "repo": "MemseekAI/membukkit-reranker-v2",
+      "revision": "0b46ab535caa4044542889dd76a15868799aabbe"
+    }
+  },
+  "native_top_k": 5,
+  "preflight": {
+    "adapter_sha256": "67b80e22625d2e8c84259d600d9f783a04012d3bdd43037f7fde56018231140b",
+    "engine_module_sha256": "a009dedcc0de5c5e1214ac355558f470a84c353f0d3835767dafac10e152670d"
+  },
+  "required_devices": {
+    "biencoder": [
+      "mps:0"
+    ],
+    "reranker": [
+      "mps:0"
+    ]
+  },
+  "retrieval": {
+    "bucket_mode": "topic",
+    "k_proto": 0,
+    "k_rrf": 60,
+    "lexical_lane": false,
+    "num_buckets": 24,
+    "reasoning_top_k": 30,
+    "rerank_cap": 50,
+    "scan_budget": 0.3,
+    "scan_budget_temporal": null,
+    "select": "hybrid",
+    "top_k": 10,
+    "union": true,
+    "union_lanes": [
+      "atomic"
+    ]
+  }
+}

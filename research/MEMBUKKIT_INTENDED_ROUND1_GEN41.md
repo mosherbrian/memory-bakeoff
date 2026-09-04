@@ -31,8 +31,16 @@ force both models onto CPU.
 The replication control says that plan was built on a wrong premise. Under a forced CPU the
 stress condition does **not** reproduce Gen8: MRR 0.5535 to 0.5431, and 9 of 26 queries come back
 reordered. Under the product's own device selection it reproduces Gen8's committed metrics
-exactly, in both conditions. Gen8's models therefore ran on the accelerator, whatever its
-document says. The claim was never checked at the time because nothing depended on it until now.
+exactly, in both conditions.
+
+Stated precisely, because the distinction matters: this is an **inference from replication**, not
+a historical device trace. Gen8 recorded no device trace, so its actual device cannot be
+established as measured fact. What is measured is that forced CPU fails to reproduce Gen8 and
+product-default MPS reproduces it exactly. The CPU attribution in that document is therefore
+withdrawn — see the labelled correction appended to
+`research/MEMBUKKIT_FALLBACK_GEN8.md` — and the best available evidence is consistent with
+product-default behaviour. The claim was never checked at the time because nothing depended on
+it until now.
 
 Device therefore cannot be both "equal to Gen8" and "CPU". Rather than pick one and lose the
 other, Gen41 runs **both policies**, each internally matched across the two model

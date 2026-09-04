@@ -184,6 +184,25 @@ That retires the blocker. It says nothing about quality: no score was produced
 and the fixture was built to exercise the path, not to measure it. See
 `research/MEMBUKKIT_INTENDED_MODEL_GEN40.md`.
 
+## MemBukkit on the MemConflict calibration slice — development-exposed, not a full release
+
+`external_benchmark_calibration_raw_product_exact_provenance`, three personas, 14,304 writes and
+399 questions. Not an official MemConflict score and not comparable with a full-release row.
+
+Hit@3 0.3237 measured over 380 questions, against the committed calibration figures of 0.4421 for
+Perseus, 0.4737 for Mem0 and 0.2895 for the BM25 pilot on the same denominator. By class:
+conditional 0.6207, dynamic 0.3175, static 0.1389. Contract integrity clean — zero unmapped
+provenance, zero future-session leakage, zero write failures, inventory reconciling on all three
+personas.
+
+The mechanism result is the reason this ran. MemBukkit opens only part of the bank before its
+cross-encoder sees anything, so unreachability and rank loss are separable here in a way they were
+not for the first two engines. Of 36 static questions, 6 hit at five and **all 30 misses had their
+gold support inside the opened candidate region** — routing exclusion explains none of them. A
+third engine, with a different architecture, loses the old truth at the ranking stage while the
+record is stored, searchable and already in the candidate set. See
+`research/MEMBUKKIT_MEMCONFLICT_GEN42_CALIBRATION.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

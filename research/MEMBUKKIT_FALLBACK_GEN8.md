@@ -47,3 +47,26 @@ and 397.7 ms across the stress repetitions.  These are documented-fallback
 raw-product results only: they must remain distinct from both the controlled
 LSA arm and any future run with MemBukkit's unavailable intended pretrained
 weights.
+
+
+## Post-Gen41 correction (2026-09-04)
+
+The runtime bullet above states that this run used `torch` 2.13.0 **on CPU**. That attribution is
+withdrawn. It is preserved above as historical text, not deleted, and no metric or result on this
+page changes.
+
+Gen41 re-ran this exact configuration — same pinned MemBukkit source, same fallback model
+revisions, same frozen Round1 corpus, scorer and retrieval settings — under two device policies,
+with the device read off each constructed model rather than off the request:
+
+- forcing both models onto CPU does **not** reproduce this page's stress behaviour: MRR moves
+  0.5535 to 0.5431 and 9 of 26 stress queries come back in a different order;
+- letting the product select the device, which loads both models on `mps:0`, reproduces the
+  committed metrics on this page **exactly**, in both the core and stress conditions.
+
+Two things follow, and only two. The CPU attribution was never backed by a runtime device trace
+and should not be relied on. And because Gen8 recorded no device trace of its own, the historical
+device cannot be stated as directly measured fact — what can be said is that the best available
+evidence is consistent with the product-default MPS behaviour and inconsistent with forced CPU.
+
+See `research/MEMBUKKIT_INTENDED_ROUND1_GEN41.md`.

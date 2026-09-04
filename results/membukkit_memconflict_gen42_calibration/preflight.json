@@ -1,0 +1,132 @@
+{
+  "adapter": {
+    "engine_module_sha256": "a009dedcc0de5c5e1214ac355558f470a84c353f0d3835767dafac10e152670d",
+    "sha256": "67b80e22625d2e8c84259d600d9f783a04012d3bdd43037f7fde56018231140b",
+    "version": "membukkit-memconflict-adapter-v1"
+  },
+  "adapter_payload": {
+    "accepted": {
+      "fact_id": "m000007",
+      "text": "a fact"
+    },
+    "all_bad_payloads_rejected": true,
+    "rejections": [
+      {
+        "payload": {
+          "fact_id": "S1-turn2",
+          "text": "x"
+        },
+        "rejected": true
+      },
+      {
+        "payload": {
+          "fact_id": "m000001",
+          "text": ""
+        },
+        "rejected": true
+      },
+      {
+        "payload": {
+          "fact_id": "m000001",
+          "session_id": "S1",
+          "text": "x"
+        },
+        "rejected": true
+      }
+    ]
+  },
+  "benchmark_fixture_touched": false,
+  "duplicate_text_not_collapsed": {
+    "distinct_ids": 6,
+    "distinct_texts": 5,
+    "kept_both": true,
+    "rows": 6,
+    "shared_text_occurrences": 2
+  },
+  "end_to_end": {
+    "deterministic_repeats": [],
+    "distinct_native_ids": 6,
+    "duplicate_message_texts": 1,
+    "inventory": {
+      "backend_count": 6,
+      "distinct_ids": 6,
+      "distinct_texts": 5,
+      "reconciliation": "count == rows == distinct ids when no write collapsed",
+      "rows": 6,
+      "superseded_rows": 0
+    },
+    "malformed_excluded": 1,
+    "messages_offered": 6,
+    "native_id_replacements": [],
+    "questions_executed": 4,
+    "read_side_effect_audit": [],
+    "successful_writes": 6,
+    "unmapped_items": 0
+  },
+  "future_session_guard": {
+    "allowed_prefix_accepted": true,
+    "every_return_within_the_allowed_prefix": true,
+    "frozen_boundary_function_raises": true,
+    "message": "SYN-PREFLIGHT|SSYN-S1|SYN-Q1: units from future sessions [1] were offered; the allowed prefix ends at session index 0",
+    "note": "an in-order run cannot place a future session in the ledger, so the inline check is a backstop; the boundary itself is proven on the frozen function",
+    "returns_inspected_by_the_inline_check": 17,
+    "returns_with_a_mapped_session": 17
+  },
+  "identity": {
+    "device_proof": [
+      {
+        "all_cpu": false,
+        "devices": [
+          "mps:0"
+        ],
+        "kind": "biencoder",
+        "target": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1"
+      },
+      {
+        "all_cpu": false,
+        "devices": [
+          "mps:0"
+        ],
+        "kind": "reranker",
+        "target": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2"
+      }
+    ],
+    "model_paths": {
+      "encoder": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-biencoder-v1",
+      "reranker": "/Users/bmosher/.membukkit/models/MemseekAI__membukkit-reranker-v2"
+    },
+    "native_top_k": 5,
+    "required_devices": {
+      "biencoder": [
+        "mps:0"
+      ],
+      "reranker": [
+        "mps:0"
+      ]
+    }
+  },
+  "llm_refused": {
+    "message": "Gen42 must not call an LLM",
+    "refused": true
+  },
+  "native_rank_equivalence": {
+    "checked_per_query": true,
+    "mechanism": "public surface id set must equal the observed relevance order's id set",
+    "raises": "NativeRankMismatch"
+  },
+  "passed": true,
+  "repeat_probe": {
+    "numeric_scores_identical": true,
+    "returned_order_identical": true,
+    "selected_set_identical": true,
+    "state_digest_unchanged_by_reads": true
+  },
+  "store_isolation": {
+    "a_returns": 1,
+    "a_rows": 1,
+    "b_returns": 1,
+    "b_rows": 1,
+    "b_started_empty": true,
+    "no_cross_universe_ids": true
+  }
+}
