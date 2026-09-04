@@ -1,0 +1,236 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 2,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 2,
+      "tool_calls": 12,
+      "total_repeated_or_redundant": 2
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "floor": {
+      "active_requests": 2,
+      "cumulative_floor_bytes": 580,
+      "exposed": true,
+      "first_activation_request": 7,
+      "floor_bytes_per_request": 290,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda"
+    },
+    "harness": {
+      "derivation_events": 24,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 1,
+      "state_bytes": 1187,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000006",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000014",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000023",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000024",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6839,
+      8078,
+      8914,
+      10734,
+      11581,
+      12303,
+      12871,
+      13966
+    ],
+    "payload_bytes_total": 85286,
+    "payload_captures": 8,
+    "request_bytes_by_turn": [
+      1288,
+      3020,
+      4250,
+      6655,
+      8254,
+      9656,
+      10288,
+      11323
+    ],
+    "request_bytes_max": 11323,
+    "request_bytes_median": 8254,
+    "request_bytes_total": 54734,
+    "request_count": 8,
+    "task_prompt_aged_out": null,
+    "tool_calls": 12
+  },
+  "requests": [
+    {
+      "bytes": 1288,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 2,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 344,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 3020,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 5,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 1827,
+      "state_bytes": 369
+    },
+    {
+      "bytes": 4250,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 7,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 2835,
+      "state_bytes": 369
+    },
+    {
+      "bytes": 6655,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 12,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 5046,
+      "state_bytes": 615
+    },
+    {
+      "bytes": 8254,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 14,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 6656,
+      "state_bytes": 701
+    },
+    {
+      "bytes": 9656,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 16,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 7974,
+      "state_bytes": 782
+    },
+    {
+      "bytes": 10288,
+      "composed": true,
+      "first_activation_request": 7,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 16,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 9505,
+      "state_bytes": 782
+    },
+    {
+      "bytes": 11323,
+      "composed": true,
+      "first_activation_request": 7,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 15,
+      "original_prompt_sha256": "460d96867df5bc485387d4476d1eeee6464bb80e47202b8307d7fca330759cda",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 10931,
+      "state_bytes": 1191
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1147164,
+    "wall_seconds": 40.6
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_task_floor_v1",
+    "index": 14,
+    "position_in_pair": 2,
+    "repetition": 2,
+    "task": "IP3"
+  },
+  "task": {
+    "final_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+    "id": "IP3",
+    "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+    "verifier_sha256": "cc20fac9391678bed381da444a2f906bbf5469daab7559937999abb911be6c90"
+  },
+  "verifier": {
+    "failed_requirement": null,
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}

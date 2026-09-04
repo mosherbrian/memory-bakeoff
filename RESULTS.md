@@ -297,6 +297,24 @@ ceiling-limited for C — including one task whose shipped check is deliberately
 partial fix provably passes the project's own test and fails the hidden verifier. See
 `research/PI_HUMAN_DIRECTION_FLOOR_GEN48_DESIGN.md`.
 
+## The human-direction floor, live — a reported negative
+
+`architecture_human_direction_floor_ablation_paired_live`. 24 live runs, four intent-persistence
+tasks, three stochastic samples per cell.
+
+Both arms passed 11/12 hidden verifiers. Arm D, carrying the original instruction verbatim once the
+recent window drops it, cost more provider bytes (84,911 against 78,682 median) and bought no
+task-success improvement. That is the preregistered H3, reported rather than rescued with a
+friendlier ruler.
+
+Two things did move without being a success claim: D had zero timeouts against C's two, and reached
+control-valid `done` 12/12 against 10/12. The floor was exposed in only 9 of 12 D runs, so a third
+of the arm never met the intervention at all — which makes the null weaker evidence than 24 runs
+suggests. Both arms recorded one `visible_receipt_false_assurance`, and neither was on the task
+built for it: on IP1 the agent updated the stale shipped test, earned a current-tree receipt and
+reached control-valid `done` while still failing the hidden requirement. See
+`research/PI_HUMAN_DIRECTION_FLOOR_GEN49_LIVE.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

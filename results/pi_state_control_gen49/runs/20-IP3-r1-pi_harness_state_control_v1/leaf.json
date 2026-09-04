@@ -1,0 +1,197 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 0,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 2,
+      "tool_calls": 11,
+      "total_repeated_or_redundant": 0
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "floor": null,
+    "harness": {
+      "derivation_events": 22,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 1,
+      "state_bytes": 1187,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000005",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000014",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000019",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000022",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6839,
+      8064,
+      13680,
+      13205,
+      13087,
+      10724,
+      13099,
+      12655
+    ],
+    "payload_bytes_total": 91353,
+    "payload_captures": 8,
+    "request_bytes_by_turn": [
+      1288,
+      2935,
+      8945,
+      9125,
+      9336,
+      7259,
+      10057,
+      9801
+    ],
+    "request_bytes_max": 10057,
+    "request_bytes_median": 9125,
+    "request_bytes_total": 58746,
+    "request_count": 8,
+    "task_prompt_aged_out": null,
+    "tool_calls": 11
+  },
+  "requests": [
+    {
+      "bytes": 1288,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 344,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 2935,
+      "composed": true,
+      "messages": 4,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 1482,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 8945,
+      "composed": true,
+      "messages": 6,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 4961,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 9125,
+      "composed": true,
+      "messages": 12,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 7516,
+      "state_bytes": 615
+    },
+    {
+      "bytes": 9336,
+      "composed": true,
+      "messages": 11,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 9219,
+      "state_bytes": 701
+    },
+    {
+      "bytes": 7259,
+      "composed": true,
+      "messages": 11,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 10537,
+      "state_bytes": 782
+    },
+    {
+      "bytes": 10057,
+      "composed": true,
+      "messages": 13,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 12110,
+      "state_bytes": 1191
+    },
+    {
+      "bytes": 9801,
+      "composed": true,
+      "messages": 14,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 13300,
+      "state_bytes": 1191
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1199520,
+    "wall_seconds": 44.46
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_v1",
+    "index": 20,
+    "position_in_pair": 2,
+    "repetition": 1,
+    "task": "IP3"
+  },
+  "task": {
+    "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+    "id": "IP3",
+    "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+    "verifier_sha256": "cc20fac9391678bed381da444a2f906bbf5469daab7559937999abb911be6c90"
+  },
+  "verifier": {
+    "failed_requirement": null,
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}

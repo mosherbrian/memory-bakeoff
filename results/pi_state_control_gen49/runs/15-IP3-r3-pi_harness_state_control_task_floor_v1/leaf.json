@@ -1,0 +1,432 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 16,
+      "redundant_file_reads": 1,
+      "redundant_verifier_invocations": 13,
+      "repo_mutations": 2,
+      "tool_calls": 27,
+      "total_repeated_or_redundant": 30
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "floor": {
+      "active_requests": 19,
+      "cumulative_floor_bytes": 5510,
+      "exposed": true,
+      "first_activation_request": 4,
+      "floor_bytes_per_request": 290,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88"
+    },
+    "harness": {
+      "derivation_events": 54,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 14,
+      "state_bytes": 1245,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000003",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000012",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000017",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000054",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6839,
+      13038,
+      12401,
+      13592,
+      11156,
+      13353,
+      12637,
+      13808,
+      13457,
+      14249,
+      14554,
+      14525,
+      14646,
+      14532,
+      14532,
+      14532,
+      13801,
+      13961,
+      14825,
+      14669,
+      14231,
+      14829
+    ],
+    "payload_bytes_total": 298167,
+    "payload_captures": 22,
+    "request_bytes_by_turn": [
+      1288,
+      7909,
+      7927,
+      9865,
+      7688,
+      10307,
+      9776,
+      11192,
+      10686,
+      11403,
+      11422,
+      11365,
+      11465,
+      11322,
+      11321,
+      11320,
+      10363,
+      10533,
+      11427,
+      10994,
+      10565,
+      11468
+    ],
+    "request_bytes_max": 11468,
+    "request_bytes_median": 10994,
+    "request_bytes_total": 221606,
+    "request_count": 22,
+    "task_prompt_aged_out": null,
+    "tool_calls": 27
+  },
+  "requests": [
+    {
+      "bytes": 1288,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 2,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 344,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 7909,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 4,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 3925,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 7927,
+      "composed": true,
+      "first_activation_request": null,
+      "floor_active": false,
+      "floor_bytes": 0,
+      "messages": 10,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 6480,
+      "state_bytes": 615
+    },
+    {
+      "bytes": 9865,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 11,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 8292,
+      "state_bytes": 700
+    },
+    {
+      "bytes": 7688,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 11,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 9611,
+      "state_bytes": 782
+    },
+    {
+      "bytes": 10307,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 11005,
+      "state_bytes": 1191
+    },
+    {
+      "bytes": 9776,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 14,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 12243,
+      "state_bytes": 1191
+    },
+    {
+      "bytes": 11192,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 14,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 13724,
+      "state_bytes": 1211
+    },
+    {
+      "bytes": 10686,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 12,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 15063,
+      "state_bytes": 1231
+    },
+    {
+      "bytes": 11403,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 16402,
+      "state_bytes": 1251
+    },
+    {
+      "bytes": 11422,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 17741,
+      "state_bytes": 1250
+    },
+    {
+      "bytes": 11365,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 19079,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 11465,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 20417,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 11322,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 21755,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 11321,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 23093,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 11320,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 24431,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 10363,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 26520,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 10533,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 28212,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 11427,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 29891,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 10994,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 12,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 31351,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 10565,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 12,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 32689,
+      "state_bytes": 1249
+    },
+    {
+      "bytes": 11468,
+      "composed": true,
+      "first_activation_request": 4,
+      "floor_active": true,
+      "floor_bytes": 290,
+      "messages": 13,
+      "original_prompt_sha256": "6b3ddfdece95a99ee87c487d996cc18c830ab96ca3b37dfd6f47c7a0c7d1ed88",
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 34027,
+      "state_bytes": 1249
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 3426557,
+    "wall_seconds": 128.79
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_task_floor_v1",
+    "index": 15,
+    "position_in_pair": 1,
+    "repetition": 3,
+    "task": "IP3"
+  },
+  "task": {
+    "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+    "id": "IP3",
+    "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+    "verifier_sha256": "cc20fac9391678bed381da444a2f906bbf5469daab7559937999abb911be6c90"
+  },
+  "verifier": {
+    "failed_requirement": null,
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}

@@ -1,5 +1,84 @@
 # Codex to ChatGPT handoff
 
+## Generation 49 — the human-direction floor, live: a reported negative
+
+**status:** complete, 24 live runs in the frozen order. `architecture_human_direction_floor_ablation_paired_live`.
+Base `247741c`, full suite 393 passed (383 baseline + 10 new) with the one pre-existing warning.
+Run under Brian's standing local-GPU authorization; no per-generation ask, and the runtime is
+reported below as agreed.
+
+**pre-run gates, all clean.** HEAD at the frozen base, arm C and arm D hashes matching Gen48
+exactly, the Gen48 floor preflight re-verified before the first task request, Pi 0.73.0 in the same
+isolated agent configuration, the Gen47 model and sampling identity unchanged, no seed injection,
+payload observer observation-only, local endpoint only.
+
+**the headline is the preregistered H3, and I am reporting it rather than rescuing it.** Both arms
+passed **11/12** hidden verifiers. Arm D cost more provider bytes — median 84,911 against 78,682 —
+and bought no task-success improvement on this ruler. There is no evidence here that an
+always-present human-direction floor earns its cost.
+
+**two things moved that are not success claims.** D had **0 timeouts against C's 2**, and reached
+control-valid `done` **12/12 against 10/12**. Median requests 7.5 against 6.5, median
+repeated-or-redundant calls 1 against 0. Ten of twelve pairs agreed on outcome.
+
+**exposure matters for how weak that null is.** The floor activated in only **9 of 12** D runs, at
+a median request 5, costing 290 bytes per request and 1,160 cumulative in the median exposed run.
+Three runs finished before the window would have dropped the task; they are `floor_not_exposed` and
+are not evidence either way. I kept them in the primary analysis and labelled them, as you
+required. On a ruler where a quarter of the treated arm never meets the treatment, a null result is
+weaker evidence than "24 runs" sounds.
+
+**the one difference I will not dress up.** Each arm failed exactly once, and the failures differ in
+kind: C failed requirement **B**, the constraint stated only in the human instruction; D failed
+requirement **A**, the part visible in the code. That is the exact shape this ablation was built to
+detect — and it is one run each, so it is an anecdote. It is a reason to keep the ruler, not a
+result.
+
+**the completion gate disagreed with task truth, naturally, on the task not designed for it.** Both
+arms recorded one `visible_receipt_false_assurance`, and neither was on IP4. Both were on IP1,
+where the shipped test encodes the old firmware ratio: the agent updated that test, made it pass,
+earned a current-tree receipt and reached control-valid `done` while still failing the hidden
+requirement. Your frozen semantics handled it exactly as written — the artifact was valid evidence
+for what it checked and incomplete evidence for the task, a limit of artifact authority rather than
+a control failure, and the hidden result never touched the control layer. I had flagged IP1's stale
+test in Gen48 as realistic task behaviour; it turned out to be the thing that produced the
+diagnostic.
+
+**operations.** C 2,194 seconds, D 592 seconds, about 46 minutes of GPU-attached execution in
+total. C's figure is dominated by its two timeouts; median run time is 41 s against 43 s, which is
+not a difference worth reading.
+
+**files.** `research/PI_HUMAN_DIRECTION_FLOOR_GEN49_LIVE.md`, `results/pi_state_control_gen49/`
+(24 run leaves with requests, payloads, tools, derivation and floor metrics, pairs, aggregate,
+scientific_digest `4fd91e505b80f12a…`, raw_stream_manifest), `scripts/run_pi_pilot_gen49.py`,
+`tests/test_pi_gen49.py` (10). No Gen45-48 leaf was altered.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen50 recommendation — do not execute.**
+
+**Stop adding context mechanisms and go and look at the transcripts.**
+
+Three generations have now moved a context knob and measured the outcome. Gen47 found a large
+effect; Gen49 found none. What no generation has done is read what the agent actually did on the
+runs that failed. I have four failures across 48 live runs — two of a named requirement, two false
+assurances — and their full streams are sitting on the workstation, hashed and unexamined.
+
+I would spend Gen50 on a **no-model failure audit**: take the six most informative leaves from
+Gen47 and Gen49, reconstruct each run from its own logs, and answer concretely what the agent had
+in context at the moment it went wrong, what it did instead, and whether any of the mechanisms we
+have built would have caught it. No new arm, no new ruler, no GPU.
+
+The case against another live ablation right now is that I cannot currently predict which knob
+would matter, and building a ruler until one does is the failure mode I flagged in Gen48. The case
+for the audit is that it is cheap, uses evidence already paid for, and would tell us whether the
+next intervention should be about context at all — the T2-style failures may turn out to be about
+tool sequencing or verification habits, which no amount of prompt floor would fix.
+
+If you would rather keep moving live, the honest alternative is a ruler where the instruction ages
+out early and often, so the floor is exposed in 12 of 12 rather than 9. But I would want the audit
+first, so that ruler is designed from observed failure rather than from my guess about it.
+
 ## Generation 48 — the human-direction floor, frozen
 
 **status:** complete, design and preflight only.
