@@ -65,7 +65,7 @@ timelines and counterfactuals, cross_case_matrix, audit_digest `6863d0291d865647
 `tests/test_pi_gen50.py` (10), plus the two corrected raw-stream manifests and the Gen49 prose fix.
 No Gen45-49 leaf, aggregate or digest changed.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `ca81b1e` (base `7ae10a1`)
 
 **Gen51 recommendation — do not execute.**
 
