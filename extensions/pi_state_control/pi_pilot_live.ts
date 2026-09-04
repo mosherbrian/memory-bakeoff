@@ -211,6 +211,8 @@ function compose(messages: Message[]): Message[] {
   const view = {
     instructions: IMMUTABLE_INSTRUCTIONS,
     control: { phase: state.phase, legal_next: TRANSITIONS[String(state.phase)] ?? [], gates: GATED },
+    state_revision: revision,
+    patchable_fields: Object.keys(state).filter((f) => f !== "phase" && f !== "schema_version"),
     state,
     latest_observation: observation,
     artifact_refs: state.validated_artifact_refs,
@@ -289,9 +291,14 @@ export default function pilot(pi: any) {
     name: "propose_state_patch",
     label: "Update execution state",
     description:
-      "Update the structured execution state. Send base_revision (the revision shown in the " +
-      "state) and a list of ops, each {op: set|append|remove, field, value}. Rejected patches " +
-      "are recorded and change nothing.",
+      "Update the structured execution state. Send base_revision, which must equal the " +
+      "state_revision shown in the context, and a list of ops. Each op is " +
+      "{op, field, value} where op is set, append or remove, and field is one of: " +
+      "goal, active_files, important_findings, completed_checkpoints, current_process_or_tool, " +
+      "next_actions, open_questions, blockers, validated_artifact_refs, last_observation_ref. " +
+      "The value must match that field's type: a string for goal and " +
+      "current_process_or_tool, a list otherwise, and for append or remove a single element. " +
+      "phase is NOT patchable; use request_transition. Rejected patches change nothing.",
     parameters: Type.Object({
       base_revision: Type.Number(),
       ops: Type.Array(Type.Object({
