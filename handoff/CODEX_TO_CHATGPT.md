@@ -1,5 +1,99 @@
 # Codex to ChatGPT handoff
 
+## Generation 45 — the first live paired Pi coding pilot
+
+**status:** complete, 24 live runs executed in the frozen order. `architecture_pilot_paired_live`.
+Base `30c4b59`, full suite 340 passed (329 baseline + 11 new) with the one pre-existing warning.
+Brian authorized the smoke and the pilot directly before anything live ran; I asked him rather than
+acting on the relayed authorization in your brief.
+
+**seed policy resolved to NO before any task was exposed.** Pi 0.73.0 exposes no seed in
+`ProviderConfig`, `ProviderModelConfig` or `SimpleStreamOptions`; the only `seed` strings in
+`pi-ai` are model identifiers. The one injection point is `before_provider_request`, and using it
+would put an extension in front of arm A's requests — precisely the baseline contamination your
+rule forbids. So sampling stayed exactly as pinned and **all three repetitions are stochastic
+samples, not reproductions.** No patch was applied.
+
+**smoke passed on the third attempt, and the two failures were mine.** Attempt 1: arm B's patch
+rejected because the composed view never showed the `state_revision` the protocol requires nor
+which fields were patchable, so the model guessed. Attempt 2: rejected again because it sent an
+object where a list was expected and my error said only "type mismatch" — an error that names the
+fault without naming the remedy is half an interface. Before attempt 3 I declared the cap in the
+commit message: one more repair, then publish `compatibility_blocked`. Attempt 3 passed all six of
+your requirements, including a state patch accepted through normal validation with nothing
+coerced, and no exposed `thinking`/`reasoning`/`reasoning_content` field in either arm's stream —
+stated about exposed fields only, no claim about hidden reasoning.
+
+**one setup decision you should know about.** The installed Pi carries the pi-lcm package, a tuned
+compaction configuration and `thinking: high`. Running arm A against that would not have been
+stock Pi at all, so both arms ran in an isolated agent directory with only the local provider and
+`--no-extensions --no-skills --no-context-files --thinking off`. Recorded in the execution
+identity.
+
+**result. Arm A 12/12 verifier passes, arm B 7/12 with three timeouts.** Median cumulative request
+bytes 52,638 for A against 64,757 for B; means 65,450 against 321,832. Medians: requests 7 vs 9,
+tool calls 8 vs 11, repeated-or-redundant calls 0.5 vs 1.0. Seven of twelve pairs agreed on
+outcome. By task — A passes / A bytes / B passes / B bytes / B timeouts: T1 3/3 26,291 / 3/3
+65,804 / 0; T2 3/3 52,938 / **0/3** 26,591 / 0; T3 3/3 126,929 / 1/3 **1,164,745** / 3; T4 3/3
+43,215 / 3/3 63,711 / 0.
+
+**the mechanism, which is worth more than the score. H2 holds and H1 fails, and they do not
+contradict each other.** Arm A's per-request size grows steeply because the transcript is
+replayed: on T3, 208 bytes to 43,477 across six requests, 209-fold. Arm B's does not: 1,538 to
+4,074 across **337** requests, 2.6-fold. The bounded view does exactly what it was designed to do.
+It loses anyway, because bounding each request did not bound the run. Arm B needs far more turns —
+a higher floor per request, about 1.5 KB against 200 bytes, and no memory beyond two interaction
+units plus whatever state the model chose to write. On T3 that becomes a loop: 337 requests, 591
+tool calls, 900 seconds, timeout, three times out of three.
+
+**the finding that reframes everything else: the control layer never ran.** Across all twelve arm
+B runs — transitions accepted **0**, completions blocked 0, artifact revalidations 0, receipts 0,
+Pi compactions cancelled 0. Every run ended in phase `inspect`. Six patches accepted and three
+rejected is the entire use the model made of the control layer. So arm B as executed was not
+"state and control"; it was a bounded context window plus three tools it largely ignored. Its
+failures cannot be attributed to control gating, because nothing was ever gated, and **H5 is
+untested rather than supported** — the artifact gate never fired because no completion was ever
+attempted through it. Pi's own compaction never triggered either; these runs are far too short to
+reach it, so that half of the treatment boundary was inert too.
+
+**H6 taken literally, not tuned around.** T2 failed 0/3 while using *half* arm A's bytes, with
+zero repository mutations in the run I inspected — it never made the coordinated edit at all. T3
+looped. I did not touch the window, the caps, the prompts or the sampling afterwards, and the
+three timeouts are recorded as `abandoned_or_timeout` leaves rather than retried; the retry policy
+only permits a retry before the first provider response.
+
+**files.** `research/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md`,
+`results/pi_state_control_gen45/` (execution_identity, seed_policy, compatibility_smoke with all
+three attempts, 24 run leaves with requests/tools/control logs, pairs, aggregate,
+scientific_digest `630dd36904a9bfbc…`), `scripts/{run_pi_pilot_gen45,build_pi_pilot_gen45_report}.py`,
+`extensions/pi_state_control/pi_pilot_live.ts`, `tests/test_pi_pilot_gen45.py` (11). The raw Pi
+streams total 168 MB, dominated by the T3 loops; they are retained on the Linux workstation and
+sha256-hashed in `raw_stream_manifest.json` rather than committed, and nothing needed to rebuild
+the aggregate was removed.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen46 recommendation — do not execute.**
+
+**Isolate the state/control mechanism before touching retrieval.** Your own branch rule points
+here: B did not fail because older information was missing from a working control loop, it failed
+with the control loop switched off, because the model never drove it. Adding Arm C retrieval now
+would be repairing a mechanism that has not yet been shown to run.
+
+The smallest next ablation is a **harness-written state** arm: identical bounded composition, but
+the state and the phase are maintained by the harness from observed tool activity rather than
+volunteered by the model, and completion is still artifact-gated. That tests the architecture's
+actual claim — that explicit state and control help — without depending on a 35B model choosing to
+call three unfamiliar tools. If state is maintained for it and B still loses, the bounded view
+itself is the problem and retrieval becomes the right next move. If it wins, the Gen45 result was
+about tool adoption rather than about architecture, which is worth knowing before anything larger.
+
+Two smaller things I would fold in. Give the recent window a floor of the current task prompt,
+because arm B's first request already costs 1.5 KB and the prompt falls out of the window within
+two turns. And measure tool adoption directly — how often each arm-B tool is called per run —
+because that turned out to be the variable that decided this pilot, and it was not on the
+measurement list.
+
 ## Generation 44 — the paired Pi coding pilot, designed and frozen
 
 **status:** complete. `architecture_pilot_design_no_score`. No model, no inference, no GPU, no

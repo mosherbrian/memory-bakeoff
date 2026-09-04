@@ -1,0 +1,83 @@
+{
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "cause": "the composed view never showed state_revision or which fields were patchable",
+      "class": "harness interface omission, not model behaviour",
+      "fix": "9911e82",
+      "outcome": "arm B state patch rejected"
+    },
+    {
+      "attempt": 2,
+      "cause": "the model sent an object where a list field was expected and the rejection said only 'type mismatch'",
+      "class": "harness interface omission",
+      "fix": "69894e3 - actionable rejection text plus one worked example",
+      "outcome": "arm B state patch rejected"
+    },
+    {
+      "attempt": 3,
+      "cause": null,
+      "class": null,
+      "fix": null,
+      "outcome": "passed"
+    }
+  ],
+  "attempts": 3,
+  "cap_declared_before_attempt_3": "one more interface repair only; a third failure would have been published as compatibility_blocked with the four tasks unexposed",
+  "note": "arm B did not finish the synthetic edit on the passing attempt. The smoke tests compatibility, not task success, and arm B behaviour varied across the three attempts, which is what temperature 0.6 without a seed looks like.",
+  "passed": true,
+  "raw": {
+    "pi_default_v1": {
+      "counters": {
+        "artifact_failures": 0,
+        "artifact_revalidations": 0,
+        "blocked_completions": 0,
+        "compaction_cancelled": 0,
+        "patches_accepted": 0,
+        "patches_rejected": 0,
+        "transitions_accepted": 0,
+        "transitions_rejected": 0
+      },
+      "edited": true,
+      "exit": 0,
+      "phase": "inspect",
+      "requests": 3,
+      "seconds": 3.33,
+      "status": "completed",
+      "tools": 2
+    },
+    "pi_state_control_v1": {
+      "counters": {
+        "artifact_failures": 0,
+        "artifact_revalidations": 0,
+        "blocked_completions": 0,
+        "compaction_cancelled": 0,
+        "patches_accepted": 1,
+        "patches_rejected": 0,
+        "transitions_accepted": 0,
+        "transitions_rejected": 0
+      },
+      "edited": false,
+      "exit": 0,
+      "phase": "inspect",
+      "requests": 3,
+      "seconds": 5.28,
+      "status": "completed",
+      "tools": 2
+    }
+  },
+  "requirement_evidence": {
+    "2": "arm A read then edited the file and returned a final response; both arms round-tripped tools",
+    "3": "arm B emitted propose_state_patch with base_revision 0 and an append to important_findings, which the extension accepted through normal validation",
+    "4": "no thinking, reasoning or reasoning_content key appears anywhere in either arm's captured stream; this is a statement about exposed fields only and makes no claim about hidden internal reasoning",
+    "5": "Gen44 proved arm A's handler leaves Pi's message array byte-identical"
+  },
+  "requirements": {
+    "1_model_completes_a_pi_turn": true,
+    "2_standard_coding_tool_round_trip": true,
+    "3_arm_b_control_operation_accepted_through_validation": true,
+    "4_no_exposed_reasoning_channel": true,
+    "5_instrumentation_does_not_alter_arm_semantics": true,
+    "6_seed_policy_resolved": true
+  }
+}

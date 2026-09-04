@@ -1,0 +1,20 @@
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_05/tests/test_rounding.py"}}
+{"phase":"call","tool":"bash","args":{"command":"find /var/home/bmosher/pilot-gen45-work/run_05 -type f -name \"*.py\" | head -30"}}
+{"phase":"result","tool":"bash","bytes":223}
+{"phase":"result","tool":"read","bytes":241}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_05/tidewatch/rounding.py"}}
+{"phase":"result","tool":"read","bytes":745}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_05/tidewatch/rounding.py","edits":[{"oldText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    return round(reading_m, 2)","newText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    d = Decimal(str(reading_m))\n    if d < 0:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_DOWN)\n    else:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    return float(rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":1800}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_05/tidewatch/rounding.py","edits":[{"oldText":"from decimal import Decimal, ROUND_HALF_UP","newText":"from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_DOWN"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":1303}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_05 && python3 -c \"\nfrom decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_DOWN\nd = Decimal(str(-1.005))\nprint(f'd = {d}')\nprint(f'd < 0: {d < 0}')\nr = d.quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN)\nprint(f'ROUND_HALF_DOWN: {r}')\nr2 = d.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\nprint(f'ROUND_HALF_UP: {r2}')\nr3 = d.quantize(Decimal('0.01'), rounding=ROUND_HALF_EVEN)\nprint(f'ROUND_HALF_EVEN: {r3}')\n\""}}
+{"phase":"result","tool":"bash","bytes":418}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_05/tidewatch/rounding.py","edits":[{"oldText":"from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_DOWN","newText":"from decimal import Decimal, ROUND_HALF_UP"},{"oldText":"    d = Decimal(str(reading_m))\n    if d < 0:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_DOWN)\n    else:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    return float(rounded)","newText":"    d = Decimal(str(reading_m))\n    rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    return float(rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":726}

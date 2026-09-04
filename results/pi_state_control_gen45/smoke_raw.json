@@ -1,0 +1,88 @@
+{
+  "pi_default_v1": {
+    "file_after": "def greet(name: str) -> str:\n    \"\"\"Return a greeting for the caller.\"\"\"\n    return f\"hello {name}\"\n",
+    "greet_now_uses_the_name": true,
+    "measured": {
+      "churn": {
+        "exact_repeated_tool_calls": 0,
+        "redundant_file_reads": 0,
+        "redundant_verifier_invocations": 0,
+        "repo_mutations": 1,
+        "tool_calls": 2,
+        "total_repeated_or_redundant": 0
+      },
+      "control_events": 4,
+      "counters": {
+        "artifact_failures": 0,
+        "artifact_revalidations": 0,
+        "blocked_completions": 0,
+        "compaction_cancelled": 0,
+        "patches_accepted": 0,
+        "patches_rejected": 0,
+        "transitions_accepted": 0,
+        "transitions_rejected": 0
+      },
+      "final_phase": "inspect",
+      "request_bytes_by_turn": [
+        325,
+        1138,
+        2227
+      ],
+      "request_bytes_max": 2227,
+      "request_bytes_median": 1138,
+      "request_bytes_total": 3690,
+      "request_count": 3,
+      "tool_calls": 2
+    },
+    "run": {
+      "exit_code": 0,
+      "status": "completed",
+      "stderr_bytes": 0,
+      "stdout_bytes": 130818,
+      "wall_seconds": 3.33
+    }
+  },
+  "pi_state_control_v1": {
+    "file_after": "def greet(name: str) -> str:\n    \"\"\"Return a greeting for the caller.\"\"\"\n    return \"hello\"\n",
+    "greet_now_uses_the_name": false,
+    "measured": {
+      "churn": {
+        "exact_repeated_tool_calls": 0,
+        "redundant_file_reads": 0,
+        "redundant_verifier_invocations": 0,
+        "repo_mutations": 0,
+        "tool_calls": 2,
+        "total_repeated_or_redundant": 0
+      },
+      "control_events": 5,
+      "counters": {
+        "artifact_failures": 0,
+        "artifact_revalidations": 0,
+        "blocked_completions": 0,
+        "compaction_cancelled": 0,
+        "patches_accepted": 1,
+        "patches_rejected": 0,
+        "transitions_accepted": 0,
+        "transitions_rejected": 0
+      },
+      "final_phase": "inspect",
+      "request_bytes_by_turn": [
+        1733,
+        2914,
+        3976
+      ],
+      "request_bytes_max": 3976,
+      "request_bytes_median": 2914,
+      "request_bytes_total": 8623,
+      "request_count": 3,
+      "tool_calls": 2
+    },
+    "run": {
+      "exit_code": 0,
+      "status": "completed",
+      "stderr_bytes": 0,
+      "stdout_bytes": 295602,
+      "wall_seconds": 5.28
+    }
+  }
+}

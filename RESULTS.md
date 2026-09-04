@@ -230,6 +230,23 @@ than smoothed: sampling is stochastic with no pinned seed, so repetitions are sa
 is fixed before the first live run. See
 `research/PI_STATE_CONTROL_GEN44_PILOT_DESIGN.md`.
 
+## First live paired Pi coding pilot — mechanism evidence, four tasks
+
+`architecture_pilot_paired_live`. Twenty-four live runs on a pinned local model. A mechanism
+pilot, not a coding benchmark; nothing generalises past these four invented tasks.
+
+Arm A, stock Pi, passed 12/12 verifiers at a 52,638-byte median. Arm B, bounded composed context
+plus executable control, passed 7/12 at 64,757 bytes, with three timeouts. So the treatment as
+configured cost both success and context.
+
+Two findings matter more than that score. Bounding each request did **not** bound the run: arm B's
+per-request context grew 2.6x over 337 requests where arm A's grew 209x over six, and arm B still
+used more in total because it needed far more turns. And the control half of the treatment never
+ran — zero transitions accepted across all twelve runs, every run ending in phase `inspect`, the
+artifact gate never reached — so arm B was in practice a bounded window plus three tools the model
+ignored, and its failures cannot be blamed on control gating. See
+`research/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

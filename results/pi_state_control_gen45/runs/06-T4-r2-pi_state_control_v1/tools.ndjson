@@ -1,0 +1,26 @@
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_06"}}
+{"phase":"call","tool":"bash","args":{"command":"cat /var/home/bmosher/pilot-gen45-work/run_06/tests/test_rounding.py"}}
+{"phase":"result","tool":"bash","bytes":56}
+{"phase":"result","tool":"bash","bytes":241}
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_06/tidewatch/"}}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/test_rounding.py -v 2>&1"}}
+{"phase":"result","tool":"bash","bytes":53}
+{"phase":"result","tool":"bash","bytes":1303}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_06/tidewatch/rounding.py"}}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_06/tidewatch/__init__.py"}}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_06/README.md"}}
+{"phase":"result","tool":"read","bytes":745}
+{"phase":"result","tool":"read","bytes":66}
+{"phase":"result","tool":"read","bytes":27}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_06/tidewatch/rounding.py","edits":[{"oldText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    return round(reading_m, 2)","newText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    d = Decimal(str(reading_m))\n    # ROUND_HALF_UP rounds half towards positive infinity, but we need\n    # \"away from zero\" (half towards +/- infinity depending on sign).\n    # So we round the absolute value with ROUND_HALF_UP, then restore sign.\n    rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    if rounded < 0:\n        return float(-rounded)\n    return float(rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":1303}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_06 && python3 -c \"\nfrom decimal import Decimal, ROUND_HALF_UP\nd = Decimal(str(-1.005))\nprint(f'd = {d}')\nrounded = d.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\nprint(f'rounded = {rounded}')\nprint(f'rounded < 0: {rounded < 0}')\nprint(f'-rounded = {-rounded}')\n\""}}
+{"phase":"result","tool":"bash","bytes":92}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_06/tidewatch/rounding.py","edits":[{"oldText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    d = Decimal(str(reading_m))\n    # ROUND_HALF_UP rounds half towards positive infinity, but we need\n    # \"away from zero\" (half towards +/- infinity depending on sign).\n    # So we round the absolute value with ROUND_HALF_UP, then restore sign.\n    rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    if rounded < 0:\n        return float(-rounded)\n    return float(rounded)","newText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    d = Decimal(str(reading_m))\n    rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    return float(rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":726}
+{"phase":"call","tool":"record_receipt","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_06/tidewatch/rounding.py","kind":"validation_receipt","passed":true}}
+{"phase":"result","tool":"record_receipt","bytes":2}

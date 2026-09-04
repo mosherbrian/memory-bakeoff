@@ -1,0 +1,123 @@
+{
+  "measured": {
+    "churn": {
+      "exact_repeated_tool_calls": 0,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 0,
+      "tool_calls": 9,
+      "total_repeated_or_redundant": 0
+    },
+    "control_events": 12,
+    "counters": {
+      "artifact_failures": 0,
+      "artifact_revalidations": 0,
+      "blocked_completions": 0,
+      "compaction_cancelled": 0,
+      "patches_accepted": 0,
+      "patches_rejected": 1,
+      "transitions_accepted": 0,
+      "transitions_rejected": 0
+    },
+    "final_phase": "inspect",
+    "final_state": {
+      "active_files": [],
+      "blockers": [],
+      "completed_checkpoints": [],
+      "current_process_or_tool": "",
+      "goal": "Station levels are currently always computed against the station datum. Add an optional `datum` argument to `Station.level`, `Fleet.level` and `summarise` so a caller can pass an alternative datum in metres for a single call, while every existing caller that passes no datum keeps its current behaviour exactly. Keep the change small and consistent across the three files.",
+      "important_findings": [],
+      "last_observation_ref": "e000010",
+      "next_actions": [],
+      "open_questions": [],
+      "phase": "inspect",
+      "schema_version": 1,
+      "validated_artifact_refs": []
+    },
+    "request_bytes_by_turn": [
+      2028,
+      4406,
+      7403,
+      9086,
+      8954
+    ],
+    "request_bytes_max": 9086,
+    "request_bytes_median": 7403,
+    "request_bytes_total": 31877,
+    "request_count": 5,
+    "tool_calls": 9
+  },
+  "requests": [
+    {
+      "bytes": 2028,
+      "composed": true,
+      "history_bytes": 673,
+      "history_only_bytes": 0,
+      "messages": 2,
+      "pi_would_have_sent_bytes": 453,
+      "state_bytes": 625
+    },
+    {
+      "bytes": 4406,
+      "composed": true,
+      "history_bytes": 1887,
+      "history_only_bytes": 0,
+      "messages": 5,
+      "pi_would_have_sent_bytes": 2369,
+      "state_bytes": 632
+    },
+    {
+      "bytes": 7403,
+      "composed": true,
+      "history_bytes": 4339,
+      "history_only_bytes": 0,
+      "messages": 11,
+      "pi_would_have_sent_bytes": 5402,
+      "state_bytes": 632
+    },
+    {
+      "bytes": 9086,
+      "composed": true,
+      "history_bytes": 5240,
+      "history_only_bytes": 0,
+      "messages": 13,
+      "pi_would_have_sent_bytes": 6755,
+      "state_bytes": 632
+    },
+    {
+      "bytes": 8954,
+      "composed": true,
+      "history_bytes": 7071,
+      "history_only_bytes": 0,
+      "messages": 13,
+      "pi_would_have_sent_bytes": 8696,
+      "state_bytes": 632
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1887294,
+    "wall_seconds": 28.18
+  },
+  "slot": {
+    "arm": "pi_state_control_v1",
+    "index": 22,
+    "position_in_pair": 2,
+    "repetition": 2,
+    "task": "T2"
+  },
+  "task": {
+    "final_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+    "id": "T2",
+    "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+    "verifier_sha256": "55181890463dc4fb5e7a901b04848ee300061d05f2f0db707524c3850903f28a"
+  },
+  "verifier": {
+    "passed": false,
+    "tail": [
+      "TypeError: Fleet.level() got an unexpected keyword argument 'datum'"
+    ]
+  }
+}

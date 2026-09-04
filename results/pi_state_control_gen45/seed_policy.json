@@ -1,0 +1,12 @@
+{
+  "consequence": "Sampling stays exactly as Gen44 pinned it: temperature 0.6, top_p 0.8, top_k 20, min_p 0. The three repetitions per cell are stochastic SAMPLES, not reproductions, and every comparison in this report is read that way.",
+  "decision": "NO_SEED",
+  "evidence": [
+    "Pi 0.73.0 ProviderConfig and ProviderModelConfig expose api, baseUrl, reasoning, thinkingLevelMap, input, cost, contextWindow and maxTokens; there is no sampling block and no seed field.",
+    "SimpleStreamOptions extends StreamOptions with reasoning and thinkingBudgets only.",
+    "The only 'seed' strings in @mariozechner/pi-ai are model identifiers such as bytedance-seed/seed-1.6, not a request parameter.",
+    "The one injection point is before_provider_request, whose handler replaces the outgoing payload. Using it would put an extension in front of arm A's requests, and arm A is defined as stock Pi with nothing in front of the request."
+  ],
+  "no_patch_applied": true,
+  "resolved_before_any_frozen_task": true
+}

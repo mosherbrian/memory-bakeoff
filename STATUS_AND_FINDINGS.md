@@ -313,6 +313,7 @@ Priority order:
 - `research/MEMBUKKIT_MEMCONFLICT_GEN42_CALIBRATION.md` — MemConflict calibration (development-exposed)
 - `research/PI_STATE_CONTROL_GEN43_PROTOTYPE.md` — first Pi state/control prototype (no score)
 - `research/PI_STATE_CONTROL_GEN44_PILOT_DESIGN.md` — paired pilot design, frozen (no score)
+- `research/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md` — first live paired pilot, 24 runs
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

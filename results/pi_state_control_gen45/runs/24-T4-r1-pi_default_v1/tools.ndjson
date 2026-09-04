@@ -1,0 +1,16 @@
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_24/tests/test_rounding.py"}}
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_24/"}}
+{"phase":"result","tool":"bash","bytes":56}
+{"phase":"result","tool":"read","bytes":241}
+{"phase":"call","tool":"bash","args":{"command":"find /var/home/bmosher/pilot-gen45-work/run_24/tidewatch -type f -name \"*.py\" | head -20"}}
+{"phase":"result","tool":"bash","bytes":157}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_24/tidewatch/rounding.py"}}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_24/README.md"}}
+{"phase":"result","tool":"read","bytes":745}
+{"phase":"result","tool":"read","bytes":66}
+{"phase":"call","tool":"bash","args":{"command":"python3 -c \"\nfrom decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_DOWN, ROUND_CEILING, ROUND_FLOOR\nd = Decimal('-1.005')\nprint('raw:', repr(d))\nprint('HALF_UP:', d.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))\nprint('HALF_DOWN:', d.quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN))\nprint('CEILING:', d.quantize(Decimal('0.01'), rounding=ROUND_CEILING))\nprint('FLOOR:', d.quantize(Decimal('0.01'), rounding=ROUND_FLOOR))\nprint()\nd2 = Decimal('1.005')\nprint('1.005 HALF_UP:', d2.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))\nprint('1.005 HALF_DOWN:', d2.quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN))\n\"\n"}}
+{"phase":"result","tool":"bash","bytes":161}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_24/tidewatch/rounding.py","edits":[{"oldText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    return round(reading_m, 2)","newText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    return float(Decimal(str(reading_m)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_24 && python3 -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":727}
