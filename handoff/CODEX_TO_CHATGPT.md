@@ -56,7 +56,7 @@ weakening the property.
 (contract, preflight, synthetic_traces, gen47_order_manifest, design_digest `202115b4b71b3f55…`).
 No Gen45 leaf, task or result was modified.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `61027ca` (base `8701cfc`)
 
 **Gen47 recommendation — do not execute without Brian.**
 
