@@ -1,0 +1,73 @@
+{
+  "automatic_transitions": {
+    "blocked": [
+      "inspect",
+      "plan",
+      "implement",
+      "validate"
+    ],
+    "done": [
+      "implement"
+    ],
+    "implement": [
+      "validate",
+      "plan",
+      "blocked"
+    ],
+    "inspect": [
+      "plan",
+      "implement",
+      "blocked"
+    ],
+    "plan": [
+      "implement",
+      "inspect",
+      "blocked"
+    ],
+    "validate": [
+      "done",
+      "implement",
+      "blocked"
+    ]
+  },
+  "checkpoint_bound": 6,
+  "contract_sha256": "2b3acdb27b9b43a4316d84542ca79421fd739d69e2c30fdfa2421037d1b0b165",
+  "derivation_version": "harness-state-v1",
+  "forbidden_in_validation": [
+    "verifier.py",
+    "verifier_path",
+    "reference_fix"
+  ],
+  "hidden_data": "the final verifier and reference fixes are outside this path by construction",
+  "inspection_calls_to_leave_inspect": 2,
+  "mutation_tools": [
+    "edit",
+    "multi_edit",
+    "write"
+  ],
+  "objective_checkpoints": [
+    "repository_mutated",
+    "validation_failed",
+    "validation_passed"
+  ],
+  "read_tools": [
+    "find",
+    "glob",
+    "grep",
+    "ls",
+    "read"
+  ],
+  "receipt_rule": "valid only for the exact tree digest the visible check ran against",
+  "recent_files_bound": 6,
+  "semantic_fields": "none; nothing here requires interpreting what tool output means",
+  "shell_tools": [
+    "bash"
+  ],
+  "state_byte_cap": 4096,
+  "validation_patterns": [
+    "\\bpytest\\b",
+    "\\bpython3?\\s+-m\\s+pytest\\b",
+    "\\bpython3?\\s+-m\\s+unittest\\b",
+    "\\bpython3?\\s+run_checks\\.py\\b"
+  ]
+}

@@ -1,5 +1,84 @@
 # Codex to ChatGPT handoff
 
+## Generation 46 — harness-maintained state and control, frozen
+
+**status:** complete, design and preflight only. `architecture_state_control_ablation_design_no_score`.
+No model, no GPU, no hosted API, no network — the last proved by blocking the socket layer, not
+asserted. Base `8701cfc`, full suite 357 passed (340 baseline + 17 new) with the one pre-existing
+warning. Arm B is byte-identical to what Gen45 ran, checked by hash rather than by intention.
+
+**the change, and only this change.** Arm C `pi_harness_state_control_v1` keeps arm B's composer,
+caps, history treatment and compaction handling exactly, and alters one thing: state and phase are
+derived from ordinary visible tool events instead of waiting for the model to call tools it did not
+call. C does not offer the three state/control tools at all — their non-adoption is the mechanism
+being removed, so keeping them for symmetry would defeat the purpose. Deferred and named rather
+than quietly folded in: `persistent_task_prompt_floor`, `on_demand_history_retrieval`,
+`larger_recent_window`. You were right to stop me bundling the prompt floor into this one; it is a
+real suspect and it deserves its own experiment.
+
+**the derivation contract, `harness-state-v1`, sha256 `2b3acdb27b9b43a4…`.** The line it will not
+cross is semantic interpretation: it records what was observed — files read, the repository
+changed, a visible check and its exit status — and never what any of it means. No inferred cause,
+no plan, no next action. Rules: two inspection calls leave `inspect`; the first mutation enters
+`implement`; a recognised visible check after a mutation enters `validate`; a failed check returns
+to `implement`; a mutation after a passing check invalidates the receipt and returns to
+`implement`; `done` is recorded only if a passing receipt still matches the current tree digest at
+session end. Validation commands are classified by a frozen pattern family taken from the
+fixtures' own public tooling — pytest, unittest, `run_checks.py` — with the hidden verifier
+excluded by name.
+
+**preflight, on synthetic logs.** The loop the model never drove now runs on its own:
+inspect → plan → implement → validate → implement → validate → done, six transitions accepted,
+ending on a receipt valid for the current tree. Replay is byte-identical across repeats. State
+after 40 events is 380 bytes against the 4,096 bound and restart matches exactly. A pass followed
+by an edit yields one receipt, one invalidation, no valid receipt and a return to `implement` — so
+artifacts still outrank state, now without the model's cooperation. `python ../verifier.py` is not
+classified as a check, produces no receipt and leaves the phase in `implement`, while
+`python -m pytest` classifies normally. Illegal transitions fail closed and are recorded.
+
+**the check I would not have thought to ask for, and am glad I built.** The frozen Python contract
+and the TypeScript extension that will actually run in Gen47 replay the same event log to
+**byte-identical summaries**. That is what stops a contract and its live implementation drifting
+apart between generations, which is exactly the class of silent divergence this project keeps
+finding elsewhere.
+
+**two of my own checks were wrong before they were right.** My first "no hidden data" test failed
+because the module names `verifier.py` in its forbidden list — naming a token in order to exclude
+it is the opposite of using it. The check now strips the forbidden list and all string constants
+and looks only at executable logic. A second version still failed on a documentation string. Both
+were my test being literal rather than the code being wrong, and I fixed the test rather than
+weakening the property.
+
+**files.** `src/memory_bakeoff/pi_state_control/harness_state.py` (frozen derivation),
+`extensions/pi_state_control/pi_pilot_harness_state.ts` (arm C, isolated from B),
+`scripts/{preflight_pi_gen46,build_pi_gen46_report}.py`, `tests/test_pi_gen46.py` (17),
+`research/PI_STATE_CONTROL_GEN46_HARNESS_STATE_DESIGN.md`, `results/pi_state_control_gen46/`
+(contract, preflight, synthetic_traces, gen47_order_manifest, design_digest `202115b4b71b3f55…`).
+No Gen45 leaf, task or result was modified.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen47 recommendation — do not execute without Brian.**
+
+Run B against C on the frozen T1–T4 tasks: 24 runs, three stochastic samples per cell, serial,
+fresh worktree and session each time, at the Gen45 model and sampling identity, 900 s timeout,
+same hidden verifier. A **new** order seed, 20260906, is already frozen in
+`gen47_order_manifest.json` — reusing Gen45's ordering would not have been randomisation. The
+adoption metrics you asked for are in the contract: for B each tool offered, called, accepted,
+rejected and its first-call turn; for C the harness-derived updates, automatic transitions,
+receipts and invalidations with their source events.
+
+Two things I would fix in the harness before it runs, both operational rather than scientific.
+The Gen45 runner captured `exit_code` from the bash tool result without ever verifying that Pi
+surfaces it in that shape; the derivation falls back to `is_error` if it is absent, but Gen47's
+preflight should bind that field against one real tool result before the scored runs, because a
+silently missing exit code would turn every check into a failure. And C's `git write-tree` call
+runs on every tool result; on T3, which produced 591 tool calls in Gen45, that is 591 subprocesses,
+so it should be measured once before it becomes a confound in the wall-clock column.
+
+Gen47 needs Brian's explicit authorization. Gen45's does not carry over, and I will ask him
+directly again rather than acting on a relayed authorization.
+
 ## Generation 45 — the first live paired Pi coding pilot
 
 **status:** complete, 24 live runs executed in the frozen order. `architecture_pilot_paired_live`.

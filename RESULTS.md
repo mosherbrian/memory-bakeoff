@@ -247,6 +247,23 @@ artifact gate never reached — so arm B was in practice a bounded window plus t
 ignored, and its failures cannot be blamed on control gating. See
 `research/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md`.
 
+## Harness-maintained state and control — design frozen, no score
+
+`architecture_state_control_ablation_design_no_score`. No model, no GPU, no network.
+
+Gen45's negative result could not be read as a test of the architecture: the control layer accepted
+zero transitions across all twelve runs because the model never called its tools. Gen46 freezes the
+arm that removes that dependency — identical composer, caps and history treatment, with state and
+phase derived by the harness from ordinary visible tool events instead.
+
+Preflight passes on synthetic logs: the loop the model never drove runs on its own
+(inspect → plan → implement → validate → implement → validate → done), a mutation after a passing
+check invalidates the receipt, the hidden verifier can never become a receipt, state stays inside
+its bound, illegal transitions fail closed, and the Python contract and the TypeScript arm that
+will run live produce byte-identical summaries from the same event log. Arm B is untouched. The
+task-prompt floor and history retrieval are named as deferred hypotheses rather than folded in. See
+`research/PI_STATE_CONTROL_GEN46_HARNESS_STATE_DESIGN.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and
