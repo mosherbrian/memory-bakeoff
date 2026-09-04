@@ -319,6 +319,7 @@ Priority order:
 - `research/PI_HUMAN_DIRECTION_FLOOR_GEN48_DESIGN.md` — human-direction floor arm, frozen (no score)
 - `research/PI_HUMAN_DIRECTION_FLOOR_GEN49_LIVE.md` — the floor, live: no task-success gain, reported as such
 - `research/PI_FAILURE_AUDIT_GEN50.md` — failure audit: none of five failures was a context problem
+- `research/PI_EVIDENCE_AND_QUIESCENCE_GEN51.md` — evidence retention fixed; quiescent stop calibrated offline, K=3
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

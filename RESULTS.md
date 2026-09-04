@@ -335,6 +335,29 @@ Also recorded here: the Gen47 and Gen49 raw provider streams were deleted by the
 them, and both manifests wrongly claimed they were retained. Corrected, and the audit was completed
 on the committed harness logs. See `research/PI_FAILURE_AUDIT_GEN50.md`.
 
+## Gen51 - evidence retention, and when a run has nothing left to do
+
+`raw-evidence-retention-v1` closes the hole that lost Gen47 and Gen49: archiving and hashing are
+separate, hashing never touches the archived bytes, and a manifest may not claim retention until
+every file has been re-read after cleanup. Deleting or altering one archived stream now fails the
+generation. The only raw streams the programme still holds - Gen45's 24, 176 MB - were re-read
+under the new contract and all 24 match their committed digests. Gen47's and Gen49's stay recorded
+as lost.
+
+Replaying `normalized_quiescent_completion(K)` offline over all 48 Gen47 and Gen49 runs: **K = 3 is
+the most conservative value that never truncates observed progress**, and at every K the rule
+catches all five timeout runs while firing on none of the five wrong ones. Those five timeouts kept
+going for 56 to 433 tool calls after the point a receipt already said they were done, and all five
+ended with a correct tree - so stopping them would have turned five timeouts into five successes
+and saved roughly a thousand provider requests, changing no outcome. The savings are concentrated:
+between K = 1 and K = 10 the runs that fire drop from 23 to 6 while the work downstream barely
+moves.
+
+Arm B had no harness derivation, so its receipts are rebuilt offline and labelled
+`offline_reconstructed_observable_receipt` throughout. The reconstruction agrees with all 36
+recorded harness receipts, and its call/result pairing matches the harness attribution on
+1055 of 1081 results. See `research/PI_EVIDENCE_AND_QUIESCENCE_GEN51.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

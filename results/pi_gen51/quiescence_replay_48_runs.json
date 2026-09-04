@@ -1,0 +1,2514 @@
+{
+  "contract": {
+    "clock_substitution": "the brief counts K in provider requests. The committed logs order tool events and provider requests in separate files with no joint sequence, so K is counted in tool calls after the qualifying check and provider requests after the trigger are reported as a proportional estimate. This is a deviation from the frozen brief, stated rather than hidden.",
+    "eligibility": [
+      "at least one repository mutation has occurred in the run",
+      "the most recent recognized visible check PASSED",
+      "no repository mutation since that passing check",
+      "no later recognized visible check FAILED before the next mutation",
+      "K further tool calls have elapsed with no mutation"
+    ],
+    "hidden_verifier_exclusion": [
+      "verifier.py",
+      "verifier_path",
+      "reference_fix"
+    ],
+    "hidden_verifier_is_never_an_input": true,
+    "k_sweep": [
+      1,
+      2,
+      3,
+      5,
+      10
+    ],
+    "mutation_tools": [
+      "edit",
+      "multi_edit",
+      "write"
+    ],
+    "name": "normalized_quiescent_completion",
+    "no_k_baked_into_any_arm": true,
+    "no_live_tuning": true,
+    "recognized_checks": "harness-state-v1 VALIDATION_RE, reused unchanged"
+  },
+  "derivation_version": "harness-state-v1",
+  "evidence_class": "architecture_evidence_retention_and_quiescence_offline_calibration_no_score",
+  "instrumentation_blocker": false,
+  "k_with_zero_progress_truncation": [
+    3,
+    5,
+    10
+  ],
+  "most_conservative_zero_truncation_k": 3,
+  "per_k": {
+    "1": {
+      "by_arm": {
+        "pi_harness_state_control_task_floor_v1": 3,
+        "pi_harness_state_control_v1": 11,
+        "pi_state_control_v1": 9
+      },
+      "estimated_provider_requests_after_trigger": 1022.4,
+      "later_visible_contradiction": 0,
+      "max_tool_calls_after_trigger": 433,
+      "median_tool_calls_after_trigger": 2,
+      "of_runs": 48,
+      "runs_triggered": 23,
+      "timeout_runs_triggered": 5,
+      "total_tool_calls_after_trigger": 1349,
+      "truncated_runs": [
+        "16-IP3-r3-pi_harness_state_control_v1"
+      ],
+      "would_stop_wrong_tree": 0,
+      "would_truncate_observed_progress": 1
+    },
+    "10": {
+      "by_arm": {
+        "pi_harness_state_control_task_floor_v1": 1,
+        "pi_harness_state_control_v1": 2,
+        "pi_state_control_v1": 3
+      },
+      "estimated_provider_requests_after_trigger": 1002.1,
+      "later_visible_contradiction": 0,
+      "max_tool_calls_after_trigger": 433,
+      "median_tool_calls_after_trigger": 268,
+      "of_runs": 48,
+      "runs_triggered": 6,
+      "timeout_runs_triggered": 5,
+      "total_tool_calls_after_trigger": 1323,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 0,
+      "would_truncate_observed_progress": 0
+    },
+    "2": {
+      "by_arm": {
+        "pi_harness_state_control_task_floor_v1": 2,
+        "pi_harness_state_control_v1": 6,
+        "pi_state_control_v1": 6
+      },
+      "estimated_provider_requests_after_trigger": 1015.0,
+      "later_visible_contradiction": 0,
+      "max_tool_calls_after_trigger": 433,
+      "median_tool_calls_after_trigger": 3,
+      "of_runs": 48,
+      "runs_triggered": 14,
+      "timeout_runs_triggered": 5,
+      "total_tool_calls_after_trigger": 1340,
+      "truncated_runs": [
+        "16-IP3-r3-pi_harness_state_control_v1"
+      ],
+      "would_stop_wrong_tree": 0,
+      "would_truncate_observed_progress": 1
+    },
+    "3": {
+      "by_arm": {
+        "pi_harness_state_control_task_floor_v1": 2,
+        "pi_harness_state_control_v1": 2,
+        "pi_state_control_v1": 3
+      },
+      "estimated_provider_requests_after_trigger": 1003.9,
+      "later_visible_contradiction": 0,
+      "max_tool_calls_after_trigger": 433,
+      "median_tool_calls_after_trigger": 161,
+      "of_runs": 48,
+      "runs_triggered": 7,
+      "timeout_runs_triggered": 5,
+      "total_tool_calls_after_trigger": 1326,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 0,
+      "would_truncate_observed_progress": 0
+    },
+    "5": {
+      "by_arm": {
+        "pi_harness_state_control_task_floor_v1": 1,
+        "pi_harness_state_control_v1": 2,
+        "pi_state_control_v1": 3
+      },
+      "estimated_provider_requests_after_trigger": 1002.1,
+      "later_visible_contradiction": 0,
+      "max_tool_calls_after_trigger": 433,
+      "median_tool_calls_after_trigger": 268,
+      "of_runs": 48,
+      "runs_triggered": 6,
+      "timeout_runs_triggered": 5,
+      "total_tool_calls_after_trigger": 1323,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 0,
+      "would_truncate_observed_progress": 0
+    }
+  },
+  "receipt_reconstruction": {
+    "agreement_with_recorded_harness_receipts": {
+      "agree": 36,
+      "compared": 36
+    },
+    "arms_reconstructed_offline": [
+      "pi_state_control_v1"
+    ],
+    "arms_with_authoritative_receipts": [
+      "pi_harness_state_control_v1",
+      "pi_harness_state_control_task_floor_v1"
+    ],
+    "disagreements": [],
+    "pairing_fidelity": {
+      "command_attribution_agrees": 1055,
+      "fidelity": 0.9759,
+      "note": "measured on arms C and D, where the harness recorded the true attribution; arm B's pairing cannot be checked directly and is assumed to share this fidelity",
+      "results_compared": 1081
+    },
+    "runs_with_unknown_check_outcomes": [
+      {
+        "checks": 104,
+        "run": "01-T3-r3-pi_state_control_v1",
+        "unknown": 9
+      },
+      {
+        "checks": 133,
+        "run": "12-T3-r1-pi_state_control_v1",
+        "unknown": 22
+      },
+      {
+        "checks": 140,
+        "run": "20-T3-r2-pi_state_control_v1",
+        "unknown": 12
+      }
+    ]
+  },
+  "runs": [
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 104,
+      "checks_with_unknown_outcome": 9,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 33.0,
+          "qualifying_command": "python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 56,
+          "trigger_call_index": 500,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 33.0,
+          "qualifying_command": "python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 56,
+          "trigger_call_index": 500,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 33.0,
+          "qualifying_command": "python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 56,
+          "trigger_call_index": 500,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 33.0,
+          "qualifying_command": "python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 56,
+          "trigger_call_index": 500,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 33.0,
+          "qualifying_command": "python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 56,
+          "trigger_call_index": 500,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 328,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "01-T3-r3-pi_state_control_v1",
+      "status": "timeout",
+      "task": "T3",
+      "total_tool_calls": 556,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 8,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_02 && python run_checks.py",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 11,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_02 && python run_checks.py",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 11,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 12,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "02-T3-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T3",
+      "total_tool_calls": 13,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 9,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.9,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/test_rounding.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 14,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 13,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "03-T4-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T4",
+      "total_tool_calls": 15,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_04 && python -m pytest tests/test_rounding.py -v",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 7,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_04 && python -m pytest tests/test_rounding.py -v",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 7,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 8,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "04-T4-r3-pi_state_control_v1",
+      "status": "completed",
+      "task": "T4",
+      "total_tool_calls": 9,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 0,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 4,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": false,
+      "repetition": 1,
+      "run": "05-T2-r1-pi_state_control_v1",
+      "status": "completed",
+      "task": "T2",
+      "total_tool_calls": 8,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "06-T2-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T2",
+      "total_tool_calls": 10,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "07-T4-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T4",
+      "total_tool_calls": 5,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 2,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_rounding.py -v",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 15,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 13,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "08-T4-r1-pi_state_control_v1",
+      "status": "completed",
+      "task": "T4",
+      "total_tool_calls": 16,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/test_gauge.py -v",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 7,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "09-T1-r3-pi_state_control_v1",
+      "status": "completed",
+      "task": "T1",
+      "total_tool_calls": 9,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "10-T1-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T1",
+      "total_tool_calls": 7,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 102,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.2,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python run_checks.py 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 104,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.2,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python run_checks.py 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 104,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 65,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "11-T3-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T3",
+      "total_tool_calls": 106,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 133,
+      "checks_with_unknown_outcome": 22,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 148.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 268,
+          "trigger_call_index": 316,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 148.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 268,
+          "trigger_call_index": 316,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 148.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 268,
+          "trigger_call_index": 316,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 148.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 268,
+          "trigger_call_index": 316,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 148.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 268,
+          "trigger_call_index": 316,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 324,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "12-T3-r1-pi_state_control_v1",
+      "status": "timeout",
+      "task": "T3",
+      "total_tool_calls": 584,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 4,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.9,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_rounding.py -v 2>&1",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 13,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 13,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "13-T4-r2-pi_state_control_v1",
+      "status": "completed",
+      "task": "T4",
+      "total_tool_calls": 14,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "14-T4-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T4",
+      "total_tool_calls": 5,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "15-T1-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T1",
+      "total_tool_calls": 6,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 3,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 7,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 7,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 8,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "16-T1-r1-pi_state_control_v1",
+      "status": "completed",
+      "task": "T1",
+      "total_tool_calls": 9,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 3,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 9,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "17-T1-r2-pi_state_control_v1",
+      "status": "completed",
+      "task": "T1",
+      "total_tool_calls": 10,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "18-T1-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T1",
+      "total_tool_calls": 9,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 23,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_19 && python run_checks.py",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 27,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 22,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "19-T3-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T3",
+      "total_tool_calls": 28,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 140,
+      "checks_with_unknown_outcome": 12,
+      "generation": 47,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 216.5,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 387,
+          "trigger_call_index": 185,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 216.5,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 387,
+          "trigger_call_index": 185,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 216.5,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 387,
+          "trigger_call_index": 185,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 216.5,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 387,
+          "trigger_call_index": 185,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 216.5,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+          "receipt_source": "offline_reconstructed_observable_receipt",
+          "tool_calls_after_trigger": 387,
+          "trigger_call_index": 185,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 320,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "20-T3-r2-pi_state_control_v1",
+      "status": "timeout",
+      "task": "T3",
+      "total_tool_calls": 572,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 0,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 4,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": false,
+      "repetition": 2,
+      "run": "21-T2-r2-pi_state_control_v1",
+      "status": "completed",
+      "task": "T2",
+      "total_tool_calls": 8,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "22-T2-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T2",
+      "total_tool_calls": 10,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "23-T2-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "T2",
+      "total_tool_calls": 11,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 0,
+      "checks_with_unknown_outcome": 0,
+      "generation": 47,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 4,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "reconstructed_valid_receipt_at_end": false,
+      "repetition": 3,
+      "run": "24-T2-r3-pi_state_control_v1",
+      "status": "completed",
+      "task": "T2",
+      "total_tool_calls": 8,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 6,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 14,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 10,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "01-IP1-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP1",
+      "total_tool_calls": 15,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 5,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 11,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "02-IP1-r2-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP1",
+      "total_tool_calls": 17,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "03-IP2-r3-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP2",
+      "total_tool_calls": 8,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "04-IP2-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP2",
+      "total_tool_calls": 9,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "05-IP4-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP4",
+      "total_tool_calls": 6,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 2,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.9,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/test_valve.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 6,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "06-IP4-r1-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP4",
+      "total_tool_calls": 7,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 6,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 3,
+          "trigger_call_index": 14,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 3,
+          "trigger_call_index": 14,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.8,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 3,
+          "trigger_call_index": 14,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 10,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "07-IP1-r1-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP1",
+      "total_tool_calls": 17,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "08-IP1-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP1",
+      "total_tool_calls": 10,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "09-IP2-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP2",
+      "total_tool_calls": 9,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "10-IP2-r2-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP2",
+      "total_tool_calls": 10,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 4,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 4,
+      "provider_requests": 10,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP1",
+      "total_tool_calls": 14,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 5,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.3,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 12,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.3,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/test_gauge.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 12,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 9,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "12-IP1-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP1",
+      "total_tool_calls": 14,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 162,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 159.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 161,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 159.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 161,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 159.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 161,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 159.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 161,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 159.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 161,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 167,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "13-IP3-r2-pi_harness_state_control_v1",
+      "status": "timeout",
+      "task": "IP3",
+      "total_tool_calls": 169,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "14-IP3-r2-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP3",
+      "total_tool_calls": 12,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 19,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 14.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 18,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 14.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 18,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 14.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 18,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 14.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 18,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 14.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 18,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 22,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "15-IP3-r3-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP3",
+      "total_tool_calls": 27,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 4,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": 9,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.4,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/ -v 2>&1 || true",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": true
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "first_later_mutation_call": 9,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 1.4,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/ -v 2>&1 || true",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 2,
+          "trigger_call_index": 8,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": true
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "16-IP3-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP3",
+      "total_tool_calls": 10,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "17-IP4-r2-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP4",
+      "total_tool_calls": 7,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 2,
+      "run": "18-IP4-r2-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP4",
+      "total_tool_calls": 6,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "19-IP3-r1-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP3",
+      "total_tool_calls": 11,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.7,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/ -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 10,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "20-IP3-r1-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP3",
+      "total_tool_calls": 11,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.9,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/test_valve.py -v",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 1,
+          "trigger_call_index": 6,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "status": "completed",
+      "task": "IP4",
+      "total_tool_calls": 7,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP4",
+      "total_tool_calls": 7,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "triggered": false
+        },
+        "10": {
+          "triggered": false
+        },
+        "2": {
+          "triggered": false
+        },
+        "3": {
+          "triggered": false
+        },
+        "5": {
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "23-IP2-r1-pi_harness_state_control_task_floor_v1",
+      "status": "completed",
+      "task": "IP2",
+      "total_tool_calls": 11,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 434,
+      "checks_with_unknown_outcome": 0,
+      "generation": 49,
+      "k": {
+        "1": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 430.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 433,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 430.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 433,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 430.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 433,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 430.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 433,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "first_later_mutation_call": null,
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 430.1,
+          "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+          "receipt_source": "harness_validation_record",
+          "tool_calls_after_trigger": 433,
+          "trigger_call_index": 9,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 439,
+      "receipt_source": "harness_validation_record",
+      "reconstructed_valid_receipt_at_end": true,
+      "recorded_valid_receipt_at_end": true,
+      "repetition": 1,
+      "run": "24-IP2-r1-pi_harness_state_control_v1",
+      "status": "timeout",
+      "task": "IP2",
+      "total_tool_calls": 442,
+      "verifier_passed": true
+    }
+  ],
+  "timeout_runs": [
+    {
+      "arm": "pi_state_control_v1",
+      "k1": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 33.0,
+        "qualifying_command": "python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 56,
+        "trigger_call_index": 500,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k10": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 33.0,
+        "qualifying_command": "python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 56,
+        "trigger_call_index": 500,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k3": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 33.0,
+        "qualifying_command": "python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 56,
+        "trigger_call_index": 500,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "run": "01-T3-r3-pi_state_control_v1",
+      "total_tool_calls": 556,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "k1": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 148.7,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 268,
+        "trigger_call_index": 316,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k10": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 148.7,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 268,
+        "trigger_call_index": 316,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k3": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 148.7,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 268,
+        "trigger_call_index": 316,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "run": "12-T3-r1-pi_state_control_v1",
+      "total_tool_calls": 584,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "k1": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 216.5,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 387,
+        "trigger_call_index": 185,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k10": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 216.5,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 387,
+        "trigger_call_index": 185,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k3": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 216.5,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python run_checks.py",
+        "receipt_source": "offline_reconstructed_observable_receipt",
+        "tool_calls_after_trigger": 387,
+        "trigger_call_index": 185,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "run": "20-T3-r2-pi_state_control_v1",
+      "total_tool_calls": 572,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "k1": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 159.1,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+        "receipt_source": "harness_validation_record",
+        "tool_calls_after_trigger": 161,
+        "trigger_call_index": 8,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k10": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 159.1,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+        "receipt_source": "harness_validation_record",
+        "tool_calls_after_trigger": 161,
+        "trigger_call_index": 8,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k3": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 159.1,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_counter.py -v",
+        "receipt_source": "harness_validation_record",
+        "tool_calls_after_trigger": 161,
+        "trigger_call_index": 8,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "run": "13-IP3-r2-pi_harness_state_control_v1",
+      "total_tool_calls": 169,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "k1": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 430.1,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+        "receipt_source": "harness_validation_record",
+        "tool_calls_after_trigger": 433,
+        "trigger_call_index": 9,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k10": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 430.1,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+        "receipt_source": "harness_validation_record",
+        "tool_calls_after_trigger": 433,
+        "trigger_call_index": 9,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "k3": {
+        "first_later_mutation_call": null,
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 430.1,
+        "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1",
+        "receipt_source": "harness_validation_record",
+        "tool_calls_after_trigger": 433,
+        "trigger_call_index": 9,
+        "triggered": true,
+        "would_stop_wrong_tree": false,
+        "would_truncate_observed_progress": false
+      },
+      "run": "24-IP2-r1-pi_harness_state_control_v1",
+      "total_tool_calls": 442,
+      "verifier_passed": true
+    }
+  ]
+}

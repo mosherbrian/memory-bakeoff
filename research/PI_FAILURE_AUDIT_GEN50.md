@@ -113,3 +113,26 @@ runs actually expose is about **knowing when to stop and how broadly to verify**
 the model can see.
 
 Audit digest `6863d0291d865647bc81dab857cae76fcaaabdbecf0d29c168e809f5c7531744`.
+
+## Post-Gen50 quiescent-completion clarification (2026-09-04)
+
+Prose only. No observed timeline, outcome or taxonomy count above changes.
+
+The proposal section says `quiescent_completion` "would have affected `gen47-T3-r1-B`,
+`gen49-IP2-r1-C`", and that both quantities it needs are "already computed and recorded by
+`harness-state-v1`". That second claim is true of one run and not of the other.
+
+`gen49-IP2-r1-C` ran arm C, so the harness derivation was active. It really did hold a
+harness-recorded validation receipt bound to the then-current tree digest while it went on looping,
+and `harness_state.json` for that run records it. For that run the statement stands as written.
+
+`gen47-T3-r1-B` ran arm B. Arm B had no harness derivation at all: its run directory contains no
+`derivation.ndjson` and no `harness_state.json`, and its `harness` field is `null` with
+`derivation_events: 0`. No receipt was ever computed for it while it ran. A receipt-based stop rule
+is therefore **unmeasured** on that run, not merely unimplemented, and the Gen50 text overstated
+what the record supports.
+
+Arm B may still be evaluated, but only through an explicitly labelled
+`offline_reconstructed_observable_receipt` rebuilt after the fact from its recorded tool calls and
+tool outputs — never presented as a harness receipt. Gen51 does exactly that, reports the measured
+fidelity of the reconstruction, and keeps the two receipt sources separately labelled throughout.

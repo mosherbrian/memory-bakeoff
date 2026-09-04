@@ -1,0 +1,66 @@
+{
+  "cleanup": {
+    "kept_because_unverified": [],
+    "removed_capture_files": [
+      "01-IP1-r1-arm_c.stdout.txt",
+      "02-IP2-r2-arm_d.stdout.txt",
+      "03-T3-r1-arm_b.stdout.txt",
+      "04-IP4-r3-arm_harness_state_control_task_floor_v1.stdout.txt"
+    ]
+  },
+  "contract": {
+    "contract_sha256": "bcc0482d821f5264a8f8e84a272b7c3ab388abe93cd864b422d518d321695e67",
+    "contract_version": "raw-evidence-retention-v1",
+    "historical_note": "the Gen47 and Gen49 manifests are left corrected as lost; this contract is not applied retroactively to them",
+    "properties": [
+      "streams are archived outside ephemeral worktrees before any cleanup runs",
+      "manifest generation is read-only with respect to archived bytes",
+      "cleanup removes only ephemeral captures, and only once the archive holds them",
+      "finalization is copy, fsync, atomic rename, then hash",
+      "retention_verified is false until every archived file is re-read after cleanup",
+      "a missing or changed stream is a hard generation-completion failure"
+    ],
+    "retention_policies": [
+      "archive_and_retain",
+      "temporary_capture_only"
+    ]
+  },
+  "fails_closed_when_a_stream_is_deleted": {
+    "assert_raises": true,
+    "failures": [
+      "01-IP1-r1-arm_c/stdout.txt"
+    ],
+    "retention_verified": false
+  },
+  "fails_closed_when_a_stream_is_modified": {
+    "failures": [
+      "01-IP1-r1-arm_c/stdout.txt"
+    ],
+    "retention_verified": false
+  },
+  "fixtures": {
+    "01-IP1-r1-arm_c": "ordinary",
+    "02-IP2-r2-arm_d": "empty",
+    "03-T3-r1-arm_b": "multi_megabyte",
+    "04-IP4-r3-arm_harness_state_control_task_floor_v1": "long_run_id"
+  },
+  "historical_manifests_left_as_lost": {
+    "pi_state_control_gen47": false,
+    "pi_state_control_gen49": false
+  },
+  "manifest_generation_is_read_only": {
+    "inode_unchanged": true,
+    "second_manifest_identical": true,
+    "sha256_unchanged": true,
+    "size_unchanged": true
+  },
+  "no_network": true,
+  "passed": true,
+  "survives_cleanup": {
+    "all_exist_after_cleanup": true,
+    "all_hashes_match": true,
+    "captures_kept_because_unverified": [],
+    "ephemeral_captures_removed": 4,
+    "retention_verified": true
+  }
+}
