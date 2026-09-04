@@ -1,0 +1,217 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 2,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 2,
+      "tool_calls": 13,
+      "total_repeated_or_redundant": 2
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "floor": null,
+    "harness": {
+      "derivation_events": 26,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 1,
+      "state_bytes": 1252,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000003",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000014",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000023",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000026",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6915,
+      13451,
+      13253,
+      12611,
+      12340,
+      13170,
+      14359,
+      11245
+    ],
+    "payload_bytes_total": 97344,
+    "payload_captures": 8,
+    "quiescent_stop": {
+      "became_eligible": true,
+      "contract": "quiescent-completion-toolcall-k3-v1",
+      "effective_stop_tool_index": null,
+      "k": 3,
+      "k_count_at_stop": 1,
+      "mutations_before_trigger": 2,
+      "qualifying_command": "cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/ -v 2>&1",
+      "qualifying_tree_digest": "2a14709a8a6fe746a35de526df88636f8ca9771a",
+      "reason": "",
+      "same_batch_overshoot_calls": 0,
+      "trigger_tool_index": null,
+      "triggered": false
+    },
+    "request_bytes_by_turn": [
+      1364,
+      8322,
+      8850,
+      8610,
+      8738,
+      9972,
+      11159,
+      8185
+    ],
+    "request_bytes_max": 11159,
+    "request_bytes_median": 8738,
+    "request_bytes_total": 65200,
+    "request_count": 8,
+    "task_prompt_aged_out": null,
+    "tool_calls": 13
+  },
+  "requests": [
+    {
+      "bytes": 1364,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 420,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 8322,
+      "composed": true,
+      "messages": 4,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 4173,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 8850,
+      "composed": true,
+      "messages": 11,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 7246,
+      "state_bytes": 677
+    },
+    {
+      "bytes": 8610,
+      "composed": true,
+      "messages": 10,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 11122,
+      "state_bytes": 762
+    },
+    {
+      "bytes": 8738,
+      "composed": true,
+      "messages": 11,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 12469,
+      "state_bytes": 847
+    },
+    {
+      "bytes": 9972,
+      "composed": true,
+      "messages": 13,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 14009,
+      "state_bytes": 847
+    },
+    {
+      "bytes": 11159,
+      "composed": true,
+      "messages": 10,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 15430,
+      "state_bytes": 1256
+    },
+    {
+      "bytes": 8185,
+      "composed": true,
+      "messages": 11,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 16228,
+      "state_bytes": 1256
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "raw_stream": {
+      "archive_relative_path": "19-IP1-r3-pi_harness_state_control_quiescent_k3_v1/stdout.txt",
+      "bytes": 3988449,
+      "sha256": "b8a7885f43993b8408e22477a0be7d1955fb12940be88f484fce25cf9915299c"
+    },
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 3974837,
+    "wall_seconds": 52.35
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_quiescent_k3_v1",
+    "index": 19,
+    "position_in_pair": 1,
+    "repetition": 3,
+    "task": "IP1"
+  },
+  "task": {
+    "final_tree": "d72fda40c119abdf37e4f6f291a752f2acef5fe2",
+    "id": "IP1",
+    "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+    "verifier_sha256": "caf44769f7c631836935ec8af059972ef84ba290db35378650c41d44416f3d77"
+  },
+  "termination_class": "model_completed",
+  "verifier": {
+    "failed_requirement": null,
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}

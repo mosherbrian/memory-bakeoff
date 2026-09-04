@@ -152,3 +152,13 @@ more; the receipt was already on the record every time.
 Artifacts: `results/pi_gen51/raw_evidence_retention_contract.json`,
 `results/pi_gen51/quiescence_contract.json`, `results/pi_gen51/quiescence_replay_48_runs.json`,
 `tests/test_gen51_evidence_and_quiescence.py`.
+
+## Post-Gen51 wording clarification (2026-09-04)
+
+Prose only. No replay leaf, count, digest input or K-selection history changes.
+
+The report calls K = 3 "the most conservative value that never truncates observed progress". That
+is backwards if conservative means waiting longer: K = 5 and K = 10 wait longer and are more
+conservative in delay. K = 3 is the **smallest, earliest** calibrated K with zero observed progress
+truncations. That is why it was selected — it is the earliest stop the historical evidence
+supports, not the safest-by-waiting one.

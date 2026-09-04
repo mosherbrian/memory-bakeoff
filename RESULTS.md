@@ -358,6 +358,36 @@ Arm B had no harness derivation, so its receipts are rebuilt offline and labelle
 recorded harness receipts, and its call/result pairing matches the harness attribution on
 1055 of 1081 results. See `research/PI_EVIDENCE_AND_QUIESCENCE_GEN51.md`.
 
+## Gen52 - the stop rule meets runs it was not calibrated on
+
+Gen51 calibrated a rule for ending a run that has nothing left to do: if the project's own tests
+passed, nothing has changed since, and three more actions go by without changing anything, stop.
+Gen52 let it actually stop things - 24 live runs, arm C against arm E, where E is C plus that rule
+and nothing else. The two arms compose byte-identical context; E's file is generated from C's.
+
+It fired once in twelve runs, and both interesting runs are failures of the rule's definition
+rather than of its implementation.
+
+`11-IP1-r1-E` is the task whose shipped test still encodes the old firmware ratio. The agent made
+the correct fix, the stale test failed, so it **reverted its own correct fix**, the stale test
+passed, and the rule stopped the run on a tree byte-identical to the one it started with. The rule
+kept every promise it made - valid receipt, tree unchanged between receipt and stop, no tool killed.
+Eligibility just asks that a mutation happened, not that the tree actually changed.
+
+`23-IP1-r2-E` ran the **same passing test command 144 times in a row on an unchanged tree** and
+timed out after 900 seconds. The rule never fired, because a passing check re-arms the receipt and
+resets the count. A run that idles by repeating the check it already passed is invisible to it.
+Gen51's replay over 48 historical runs has the same blind spot and could not have found it: none of
+those runs looped on the check itself.
+
+Arm E passed 8 of 12 hidden verifiers to arm C's 11 of 12, but three of E's four failures had no
+trigger at all, so in those runs E is C. Medians are indistinguishable - 9.5 against 10 tool calls,
+39.4 against 38.5 seconds. Nothing was tuned after exposure.
+
+All 24 raw provider streams are retained: 59,097,996 bytes, archived, verified after cleanup. The
+first generation whose model output survives by contract rather than by luck.
+See `research/PI_QUIESCENT_COMPLETION_GEN52_LIVE.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

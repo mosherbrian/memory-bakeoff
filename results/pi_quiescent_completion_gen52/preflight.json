@@ -1,0 +1,109 @@
+{
+  "arm_hashes": {
+    "pi_harness_state_control_quiescent_k3_v1": "bb76f46bcb1367fb581419db68e7d66664c18229b2976ae41709f76c0cd3913c",
+    "pi_harness_state_control_v1": "205279d9c1db4659459ccd9e504421f21623c6d9a74c14142b322450bad848df"
+  },
+  "contract": "quiescent-completion-toolcall-k3-v1",
+  "e_generated_from_c": true,
+  "hidden_verifier_excluded": true,
+  "k": 3,
+  "k_source": "Gen51 offline calibration, smallest tested K with zero observed progress truncations",
+  "model_facing_identity": {
+    "composed_context_identical": true,
+    "compositions_compared": 3
+  },
+  "no_in_flight_tool_killed": {
+    "aborted_exactly_once": true,
+    "batch_stop_deferred_to_batch_drain": true,
+    "same_batch_overshoot_calls": 1,
+    "stop_deferred_until_batch_drained": true
+  },
+  "order_seed": 20260909,
+  "passed": true,
+  "raw_evidence_retention": {
+    "archive_is_outside_every_worktree": true,
+    "archive_is_outside_the_repository": true,
+    "archive_root": "/home/bmosher/gen52-raw-archive",
+    "archiving_happens_after_the_pi_process_exits": true,
+    "contract_sha256": "bcc0482d821f5264a8f8e84a272b7c3ab388abe93cd864b422d518d321695e67",
+    "no_extension_writes_into_the_archive": true
+  },
+  "raw_triggers": {
+    "batch_overshoot": true,
+    "fail_resets": false,
+    "hidden_excluded": false,
+    "identity_C": false,
+    "identity_E": false,
+    "k1": false,
+    "k2": false,
+    "k3": true,
+    "mutation_resets": false,
+    "pass_before_mutation": false,
+    "rearm": true
+  },
+  "ruler": {
+    "manifest_digest": "582cf11f2a6596bcece096eca065a234887250388a2d79fd72ee21e32cdab0e2",
+    "source": "results/pi_state_control_gen48/task_manifest.json",
+    "tasks": [
+      "IP1",
+      "IP2",
+      "IP3",
+      "IP4"
+    ],
+    "unchanged": true
+  },
+  "stop_summaries": {
+    "batch_overshoot": {
+      "became_eligible": true,
+      "contract": "quiescent-completion-toolcall-k3-v1",
+      "effective_stop_tool_index": 6,
+      "k": 3,
+      "k_count_at_stop": 3,
+      "mutations_before_trigger": 1,
+      "qualifying_command": "cd . && python -m pytest tests/ -q",
+      "qualifying_tree_digest": "cf56f08c9cd93aebc5ea343452df08c5e44a8c40",
+      "reason": "quiescent_stop",
+      "same_batch_overshoot_calls": 1,
+      "trigger_tool_index": 6,
+      "triggered": true
+    },
+    "k2": null,
+    "k3": {
+      "became_eligible": true,
+      "contract": "quiescent-completion-toolcall-k3-v1",
+      "effective_stop_tool_index": 7,
+      "k": 3,
+      "k_count_at_stop": 3,
+      "mutations_before_trigger": 1,
+      "qualifying_command": "cd . && python -m pytest tests/ -q",
+      "qualifying_tree_digest": "cf56f08c9cd93aebc5ea343452df08c5e44a8c40",
+      "reason": "quiescent_stop",
+      "same_batch_overshoot_calls": 0,
+      "trigger_tool_index": 7,
+      "triggered": true
+    },
+    "rearm": {
+      "became_eligible": true,
+      "contract": "quiescent-completion-toolcall-k3-v1",
+      "effective_stop_tool_index": 10,
+      "k": 3,
+      "k_count_at_stop": 3,
+      "mutations_before_trigger": 2,
+      "qualifying_command": "cd . && python -m pytest tests/ -q",
+      "qualifying_tree_digest": "5d2cc5ab2a53b329ee9d6b271688460d74da127f",
+      "reason": "quiescent_stop",
+      "same_batch_overshoot_calls": 0,
+      "trigger_tool_index": 10,
+      "triggered": true
+    }
+  },
+  "trigger_semantics": {
+    "failing_visible_check_resets": true,
+    "k1_does_not_stop": true,
+    "k2_does_not_stop": true,
+    "k3_stops": true,
+    "mutation_resets_the_count": true,
+    "new_pass_after_mutation_rearms": true,
+    "pass_before_any_mutation_is_ineligible": true
+  }
+}

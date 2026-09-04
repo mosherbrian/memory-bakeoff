@@ -1,0 +1,163 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 0,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 0,
+      "tool_calls": 8,
+      "total_repeated_or_redundant": 0
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "plan",
+    "final_state": {},
+    "floor": null,
+    "harness": {
+      "derivation_events": 16,
+      "phase_path": [
+        "plan"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 1,
+      "state_bytes": 1038,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000003",
+          "from": "inspect",
+          "to": "plan"
+        }
+      ],
+      "transitions_accepted": 1,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6839,
+      13040,
+      12565,
+      13982,
+      14788
+    ],
+    "payload_bytes_total": 61214,
+    "payload_captures": 5,
+    "quiescent_stop": {
+      "became_eligible": false,
+      "contract": "quiescent-completion-toolcall-k3-v1",
+      "effective_stop_tool_index": null,
+      "k": 3,
+      "k_count_at_stop": 0,
+      "mutations_before_trigger": 0,
+      "qualifying_command": "",
+      "qualifying_tree_digest": null,
+      "reason": "check passed before any mutation",
+      "same_batch_overshoot_calls": 0,
+      "trigger_tool_index": null,
+      "triggered": false
+    },
+    "request_bytes_by_turn": [
+      1288,
+      7911,
+      8091,
+      9943,
+      10785
+    ],
+    "request_bytes_max": 10785,
+    "request_bytes_median": 8091,
+    "request_bytes_total": 38018,
+    "request_count": 5,
+    "task_prompt_aged_out": null,
+    "tool_calls": 8
+  },
+  "requests": [
+    {
+      "bytes": 1288,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 344,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 7911,
+      "composed": true,
+      "messages": 4,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 3927,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 8091,
+      "composed": true,
+      "messages": 10,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 6482,
+      "state_bytes": 615
+    },
+    {
+      "bytes": 9943,
+      "composed": true,
+      "messages": 12,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 7815,
+      "state_bytes": 929
+    },
+    {
+      "bytes": 10785,
+      "composed": true,
+      "messages": 12,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 9092,
+      "state_bytes": 1038
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "raw_stream": {
+      "archive_relative_path": "06-IP3-r1-pi_harness_state_control_quiescent_k3_v1/stdout.txt",
+      "bytes": 1114051,
+      "sha256": "6d056fd87b9e89e9adf81d0d27dc1c369398f84ff2934c6e87457186551a97e3"
+    },
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1110067,
+    "wall_seconds": 32.28
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_quiescent_k3_v1",
+    "index": 6,
+    "position_in_pair": 2,
+    "repetition": 1,
+    "task": "IP3"
+  },
+  "task": {
+    "final_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+    "id": "IP3",
+    "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+    "verifier_sha256": "cc20fac9391678bed381da444a2f906bbf5469daab7559937999abb911be6c90"
+  },
+  "termination_class": "model_completed",
+  "verifier": {
+    "failed_requirement": null,
+    "passed": false,
+    "tail": [
+      "KeyError: 'hold'"
+    ]
+  }
+}

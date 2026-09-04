@@ -1,0 +1,69 @@
+{
+  "authorized_by": "Brian's standing local-GPU authorization, 2026-09-04; local Strix Halo pinned path only",
+  "evidence_class": "architecture_quiescent_completion_ablation_paired_live",
+  "executed_on": {
+    "host": "strix-halo",
+    "kernel": "7.0.14-101.fc43.x86_64"
+  },
+  "live_props": {
+    "build": "b385-2041049",
+    "model_alias": "/home/bmosher/models/qwen3.6-35b/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf",
+    "n_ctx": 131072
+  },
+  "matches_frozen_identity": {
+    "local_endpoint_only": true,
+    "model_bytes": true,
+    "model_sha256": true,
+    "sampling_unchanged": true,
+    "server_binary_sha256": true,
+    "timeout_unchanged": true
+  },
+  "model": {
+    "architecture": "qwen35moe",
+    "bytes": 22360456160,
+    "bytes_now": 22360456160,
+    "name": "Qwen3.6-35B-A3B",
+    "path": "/home/bmosher/models/qwen3.6-35b/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf",
+    "quantization": "UD-Q4_K_XL (general.file_type 15, quantization_version 2)",
+    "sha256": "707a55a8a4397ecde44de0c499d3e68c1ad1d240d1da65826b4949d1043f4450",
+    "sha256_now": "707a55a8a4397ecde44de0c499d3e68c1ad1d240d1da65826b4949d1043f4450"
+  },
+  "network": "PI_OFFLINE=1; the only endpoint used is the local llama-swap on this host",
+  "passed": true,
+  "pi": {
+    "flags": [
+      "--print",
+      "--mode json",
+      "--thinking off",
+      "--no-extensions",
+      "--no-skills",
+      "--no-context-files",
+      "--no-prompt-templates",
+      "--no-session"
+    ],
+    "isolated_agent_dir": "/home/bmosher/.pi-pilot-gen45",
+    "package": "@mariozechner/pi-coding-agent",
+    "version": "0.73.0",
+    "why_isolated": "the installed Pi carries the pi-lcm package, a tuned compaction configuration and thinking high; arm A is defined as stock Pi, so running against that configuration would have contaminated the baseline"
+  },
+  "reasoning": "off",
+  "repo_head": "a38da3b50fa59fcc5414d03252340f3bd51e0de2",
+  "run_timeout_seconds": 900,
+  "sampling": {
+    "min_p": 0.0,
+    "temperature": 0.6,
+    "top_k": 20,
+    "top_p": 0.8
+  },
+  "server": {
+    "backend": "Vulkan",
+    "binary": "/var/home/bmosher/nathanw-v04/vulkan/bin/llama-server",
+    "binary_bytes": 17920,
+    "binary_note": "a small launcher; the Vulkan runtime libraries sit beside it on LD_LIBRARY_PATH",
+    "binary_sha256": "3b84a431ce531a9dfd05b55c4e4d91c50a0716fa420f75bbfe8fa8f2f912093b",
+    "binary_sha256_now": "3b84a431ce531a9dfd05b55c4e4d91c50a0716fa420f75bbfe8fa8f2f912093b",
+    "built_with": "GNU 13.3.0 for Linux x86_64",
+    "device": "Vulkan0: AMD Radeon 8060S Graphics (RADV GFX1151), 127488 MiB total",
+    "version_line": "version: 385 (2041049)"
+  }
+}
