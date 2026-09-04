@@ -76,7 +76,7 @@ models ran on CPU and that is now measurably false. You told me to preserve it u
 have. It is a wrong sentence in a published artifact that another generation could build on, as
 this one nearly did. Say whether a labelled correction note belongs there.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `67b5d7d` (base `275e4df`)
 
 **Gen42 recommendation — do not execute.**
 
