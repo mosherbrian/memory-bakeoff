@@ -1,0 +1,112 @@
+{
+  "analysis": {
+    "context_sufficiency": {
+      "absent_everywhere": false,
+      "discoverable_in_code": true,
+      "only_in_history": false,
+      "requirement_A": "present in the task prompt, which was still in the window at four requests",
+      "requirement_B": "present in the task prompt"
+    },
+    "counterfactuals": {
+      "bounded_recent_window": "no_mechanical_effect",
+      "harness_maintained_state_control": "mechanically_surfaces_information",
+      "human_direction_floor": "no_mechanical_effect",
+      "visible_check_receipt_semantics": "no_mechanical_effect"
+    },
+    "critical_point": {
+      "certain": true,
+      "locator": "no mutation was ever made"
+    },
+    "lesson": "a run that terminates having mutated nothing is objectively detectable from the harness's own mutation count; nothing in the architecture currently treats it as abnormal",
+    "primary_mechanism": "tool_sequence_or_verification_gap",
+    "reasoning": "nothing about context explains this: the instruction was present and the code was readable. The agent simply stopped before attempting the work, and arm B's control layer - which it never drove - recorded no phase beyond inspect, so nothing in the run said 'no change has been made yet'",
+    "secondary_mechanisms": [
+      "state_control_representation_gap"
+    ],
+    "what_it_did_instead": "it ended the session in phase inspect without editing a single file",
+    "what_it_was_doing": "inspecting the repository; it made four provider requests and eight tool calls"
+  },
+  "case": {
+    "anomaly": "hidden verifier FAIL, completed",
+    "arm": "pi_state_control_v1",
+    "generation": 47,
+    "id": "gen47-T2-r1-B",
+    "repetition": 1,
+    "task": "T2",
+    "why": "lowest repetition of B's 3/3 T2 failures while C passed 3/3"
+  },
+  "derivation_events": 0,
+  "floor": null,
+  "harness": null,
+  "mutations": [],
+  "outcome": {
+    "failed_requirement": null,
+    "final_phase": "inspect",
+    "requests": 4,
+    "status": "completed",
+    "tool_calls": 8,
+    "verifier_passed": false,
+    "verifier_tail": [
+      "TypeError: Fleet.level() got an unexpected keyword argument 'datum'"
+    ],
+    "wall_seconds": 23.79
+  },
+  "phases": [
+    null,
+    null,
+    null,
+    null
+  ],
+  "prompt": "Station levels are currently always computed against the station datum. Add an optional `datum` argument to `Station.level`, `Fleet.level` and `summarise` so a caller can pass an alternative datum in metres for a single call, while every existing caller that passes no datum keeps its current behaviour exactly. Keep the change small and consistent across the three files.",
+  "public_requirements": null,
+  "raw_stream_available": false,
+  "request_bytes": [
+    2028,
+    4316,
+    7312,
+    9824
+  ],
+  "run_dir_name": "05-T2-r1-pi_state_control_v1",
+  "timeline": [
+    {
+      "command": "find /var/home/bmosher/pilot-gen45-work/run_05 -type f -name \"*.py\" | head -30",
+      "n": 1,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_05/",
+      "n": 2,
+      "tool": "bash"
+    },
+    {
+      "n": 3,
+      "path": "station.py",
+      "tool": "read"
+    },
+    {
+      "n": 4,
+      "path": "fleet.py",
+      "tool": "read"
+    },
+    {
+      "n": 5,
+      "path": "summary.py",
+      "tool": "read"
+    },
+    {
+      "n": 6,
+      "path": "__init__.py",
+      "tool": "read"
+    },
+    {
+      "n": 7,
+      "path": "test_levels.py",
+      "tool": "read"
+    },
+    {
+      "n": 8,
+      "tool": "propose_state_patch"
+    }
+  ],
+  "visible_checks": []
+}

@@ -1,0 +1,4946 @@
+{
+  "analysis": {
+    "context_sufficiency": {
+      "absent_everywhere": false,
+      "discoverable_in_code": true,
+      "only_in_history": false,
+      "requirement_A": "present",
+      "requirement_B": "not applicable"
+    },
+    "counterfactuals": {
+      "bounded_recent_window": "no_mechanical_effect",
+      "harness_maintained_state_control": "mechanically_surfaces_information",
+      "human_direction_floor": "no_mechanical_effect",
+      "visible_check_receipt_semantics": "mechanically_surfaces_information"
+    },
+    "critical_point": {
+      "certain": true,
+      "locator": "tool call 314 of 584 - the single mutation, which was the correct fix"
+    },
+    "lesson": "a passing visible check on a tree that then never changes is a deterministic stop condition the harness could already evaluate",
+    "primary_mechanism": "termination_detection_loop",
+    "reasoning": "the repository was already correct for the final 46 percent of the run and was never touched again. This is not a context failure in any form",
+    "secondary_mechanisms": [],
+    "task_truth_reached_point": "tool call 314; the hidden verifier passes on the tree from that point on",
+    "what_it_did_instead": "269 further tool calls, 261 of them bash, with zero mutations, until the 900-second timeout",
+    "what_it_was_doing": "re-running the project's visible check, repeatedly"
+  },
+  "case": {
+    "anomaly": "hidden verifier PASS with TIMEOUT",
+    "arm": "pi_state_control_v1",
+    "generation": 47,
+    "id": "gen47-T3-r1-B",
+    "repetition": 1,
+    "task": "T3",
+    "why": "lowest repetition of B's 3/3 T3 timeouts while C completed 3/3"
+  },
+  "derivation_events": 0,
+  "floor": null,
+  "harness": null,
+  "mutations": [
+    {
+      "edits": [
+        {
+          "new": "    return f\"{hour:02d}:{'30' if half else '00'}\"",
+          "old": "    return f\"{hour:02d}:{'00' if half else '30'}\""
+        }
+      ],
+      "n": 315,
+      "path": "tide_table.py",
+      "tool": "edit"
+    }
+  ],
+  "outcome": {
+    "failed_requirement": null,
+    "final_phase": "inspect",
+    "requests": 324,
+    "status": "timeout",
+    "tool_calls": 584,
+    "verifier_passed": true,
+    "verifier_tail": [
+      "VERIFIER OK"
+    ],
+    "wall_seconds": 900.09
+  },
+  "phases": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "prompt": "`python run_checks.py` fails. Find and fix the defect in the tidewatch package so the checks pass. Do not change run_checks.py.",
+  "public_requirements": null,
+  "raw_stream_available": false,
+  "request_bytes": [
+    1538,
+    1404,
+    4429,
+    1404,
+    4080,
+    1404,
+    4073,
+    5937,
+    1404,
+    4080,
+    1404,
+    4429,
+    1404,
+    4080,
+    5371,
+    6546,
+    1404,
+    4080,
+    5371,
+    6546,
+    1404,
+    4080,
+    1404,
+    4073,
+    6027,
+    1404,
+    4080,
+    6284,
+    1404,
+    4436,
+    1404,
+    4429,
+    1404,
+    4429,
+    4501,
+    5975,
+    1404,
+    4080,
+    1404,
+    4429,
+    1404,
+    1404,
+    4080,
+    1404,
+    4429,
+    1404,
+    4080,
+    1404,
+    4436,
+    1404,
+    4080,
+    1404,
+    4080,
+    1404,
+    4080,
+    5237,
+    6658,
+    1404,
+    1404,
+    1404,
+    1404,
+    1404,
+    1404,
+    1404,
+    4436,
+    1404,
+    1404,
+    4073,
+    1404,
+    3448,
+    1404,
+    4073,
+    5792,
+    1404,
+    1404,
+    4080,
+    1404,
+    4436,
+    5608,
+    1404,
+    1404,
+    1404,
+    4429,
+    1404,
+    3448,
+    5055,
+    6223,
+    1404,
+    4429,
+    4855,
+    1404,
+    1404,
+    1404,
+    4073,
+    5792,
+    1404,
+    4080,
+    1404,
+    4080,
+    1404,
+    1404,
+    4080,
+    1404,
+    4073,
+    1404,
+    4080,
+    1404,
+    1404,
+    1404,
+    1404,
+    4073,
+    5937,
+    1404,
+    4429,
+    1404,
+    1404,
+    4080,
+    5371,
+    6546,
+    1404,
+    4073,
+    5792,
+    1404,
+    4429,
+    1404,
+    1404,
+    1404,
+    4080,
+    1404,
+    4073,
+    5230,
+    6651,
+    1404,
+    4073,
+    5792,
+    1404,
+    4080,
+    1404,
+    4080,
+    1404,
+    4073,
+    1404,
+    1404,
+    4073,
+    1404,
+    1404,
+    4073,
+    1404,
+    4447,
+    1404,
+    1404,
+    4080,
+    1404,
+    4080,
+    1404,
+    4080,
+    5237,
+    6658,
+    1404,
+    1404,
+    4080,
+    1404,
+    1404,
+    4080,
+    5917,
+    1404,
+    4080,
+    1404,
+    15690,
+    3930,
+    5097,
+    6475,
+    1404,
+    4073,
+    1404,
+    1404,
+    4080,
+    5024,
+    6192,
+    1404,
+    4080,
+    1404,
+    4091,
+    1404,
+    1404,
+    4080,
+    1404,
+    1404,
+    1404,
+    4080,
+    1404,
+    4080,
+    5371,
+    6546,
+    1404,
+    1404,
+    4091,
+    1404,
+    4080,
+    5386,
+    6561,
+    1404,
+    4080,
+    1404,
+    1404,
+    4080,
+    1404,
+    4080,
+    1404,
+    4073,
+    1404,
+    4073,
+    1404,
+    4080,
+    1404,
+    1404,
+    4081,
+    1404,
+    4073,
+    5364,
+    6539,
+    1404,
+    4081,
+    1404,
+    4080,
+    1404,
+    4080,
+    5237,
+    6658,
+    1404,
+    4073,
+    1404,
+    4080,
+    5024,
+    6192,
+    1404,
+    4073,
+    1404,
+    4091,
+    5955,
+    1404,
+    4073,
+    5379,
+    6554,
+    1404,
+    4080,
+    1404,
+    1404,
+    4080,
+    1404,
+    4080,
+    1404,
+    4073,
+    1404,
+    4080,
+    1404,
+    4080,
+    5371,
+    6546,
+    1404,
+    4073,
+    5792,
+    1404,
+    4080,
+    5371,
+    6546,
+    1404,
+    4073,
+    5364,
+    6539,
+    1404,
+    4080,
+    1404,
+    4073,
+    1404,
+    4080,
+    1404,
+    17862,
+    1404,
+    4073,
+    1404,
+    4073,
+    1404,
+    4073,
+    5364,
+    6532,
+    1404,
+    4073,
+    1404,
+    4073,
+    5846,
+    7014,
+    1404,
+    4073,
+    6516,
+    1404,
+    4073,
+    5230,
+    6651,
+    1404,
+    4080,
+    1404,
+    4429,
+    1404,
+    4073,
+    1404,
+    4429,
+    1404,
+    4073,
+    5379,
+    6554,
+    1404,
+    4436,
+    1404,
+    4429,
+    1404,
+    4073,
+    5790,
+    1404,
+    4073,
+    5379,
+    6547,
+    1404,
+    4073
+  ],
+  "run_dir_name": "12-T3-r1-pi_state_control_v1",
+  "timeline": [
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 1,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 2,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 3,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 4,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 5,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 6,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 7,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 8,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 9,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 10,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 11,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 12,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 13,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 14,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 15,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 16,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 17,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 18,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 19,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 20,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 21,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 22,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 23,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 24,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 25,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 26,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 27,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 28,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 29,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 30,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 31,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 32,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 33,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 34,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 35,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 36,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 37,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 38,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 39,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 40,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 41,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 42,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 43,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 44,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 45,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 46,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 47,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 48,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; find /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/ -name \"*.py\" -exec echo \"=== {} ===\" \\; -exec cat {} \\;",
+      "n": 49,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 50,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 51,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 52,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 53,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 54,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 55,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 56,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 57,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 58,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 59,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 60,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 61,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 62,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 63,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 64,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 65,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 66,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 67,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 68,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 69,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 70,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 71,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 72,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 73,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 74,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 75,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 76,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 77,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 78,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 79,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 80,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 81,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 82,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 83,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 84,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 85,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 86,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 87,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 88,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 89,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 90,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 91,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 92,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 93,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 94,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 95,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 96,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 97,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 98,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 99,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 100,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 101,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 102,
+      "tool": "bash"
+    },
+    {
+      "n": 103,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 104,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 105,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 106,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 107,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 108,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 109,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 110,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 111,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 112,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 113,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 114,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 115,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 116,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 117,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 118,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 119,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 120,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 121,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 122,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 123,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 124,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 125,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 126,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 127,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 128,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 129,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 130,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 131,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 132,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 133,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 134,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 135,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 136,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 137,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 138,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 139,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 140,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 141,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 142,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 143,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 144,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 145,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 146,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 147,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 148,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 149,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 150,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 151,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 152,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 153,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 154,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 155,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 156,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 157,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 158,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 159,
+      "tool": "bash"
+    },
+    {
+      "n": 160,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 161,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 162,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 163,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 164,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 165,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 166,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 167,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -200",
+      "n": 168,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 169,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 170,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 171,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 172,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 173,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 174,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 175,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 176,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 177,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 178,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py 2>&1",
+      "n": 179,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 180,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 181,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 182,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 183,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 184,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 185,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 186,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 187,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 188,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 189,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 190,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 191,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 192,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 193,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 194,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 195,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 196,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 197,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 198,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 199,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 200,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 201,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 202,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 203,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 204,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 205,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 206,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 207,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 208,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 209,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 210,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 211,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 212,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 213,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 214,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 215,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 216,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 217,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 218,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 219,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 220,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 221,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 222,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 223,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 224,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 225,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 226,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 227,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 228,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 229,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 230,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 231,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 232,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 233,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 234,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 235,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 236,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 237,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 238,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 239,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 240,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 241,
+      "tool": "bash"
+    },
+    {
+      "n": 242,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 243,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 244,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 245,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 246,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 247,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 248,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 249,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 250,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 251,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 252,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 253,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 254,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 255,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 256,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 257,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 258,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 259,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 260,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 261,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 262,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 263,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 264,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 265,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 266,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 267,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 268,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 269,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 270,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 271,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 272,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 273,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 274,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 275,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 276,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 277,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 278,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 279,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 280,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 281,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 282,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 283,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 284,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 285,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 286,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 287,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 288,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 289,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 290,
+      "tool": "bash"
+    },
+    {
+      "n": 291,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 292,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 293,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 294,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 295,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 296,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 297,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 298,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 299,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 300,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 301,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 302,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 303,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 304,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 305,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 306,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 307,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 308,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 309,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 310,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -80",
+      "n": 311,
+      "tool": "bash"
+    },
+    {
+      "n": 312,
+      "path": "run_checks.py",
+      "tool": "read"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 313,
+      "tool": "bash"
+    },
+    {
+      "n": 314,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "edits": [
+        {
+          "new": "    return f\"{hour:02d}:{'30' if half else '00'}\"",
+          "old": "    return f\"{hour:02d}:{'00' if half else '30'}\""
+        }
+      ],
+      "n": 315,
+      "path": "tide_table.py",
+      "tool": "edit"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 316,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 317,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 318,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 319,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 320,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 321,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1 | head -100",
+      "n": 322,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 323,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 324,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 325,
+      "tool": "bash"
+    },
+    {
+      "n": 326,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 327,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 328,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 329,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 330,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 331,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 332,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 333,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 334,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 335,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 336,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 337,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 338,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 339,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 340,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 341,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 342,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 343,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 344,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 345,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 346,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 347,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 348,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 349,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 350,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 351,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 352,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 353,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 354,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 355,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 356,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 357,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 358,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 359,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 360,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 361,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 362,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 363,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 364,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/README.md",
+      "n": 365,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 366,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 367,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 368,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 369,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 370,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 371,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 372,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 373,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 374,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 375,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 376,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 377,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 378,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 379,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 380,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 381,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 382,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 383,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 384,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 385,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 386,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 387,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 388,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 389,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 390,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 391,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 392,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 393,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 394,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 395,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 396,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 397,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 398,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 399,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 400,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 401,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 402,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 403,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 404,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 405,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 406,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 407,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 408,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 409,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 410,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 411,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 412,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 413,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 414,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 415,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 416,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 417,
+      "tool": "bash"
+    },
+    {
+      "n": 418,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 419,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 420,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 421,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 422,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 423,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 424,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 425,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 426,
+      "tool": "bash"
+    },
+    {
+      "n": 427,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 428,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 429,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 430,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 431,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 432,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 433,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 434,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 435,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 436,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 437,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 438,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 439,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 440,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/README.md",
+      "n": 441,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 442,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 443,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 444,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 445,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 446,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 447,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 448,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 449,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 450,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 451,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 452,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 453,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 454,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 455,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 456,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 457,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 458,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 459,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 460,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 461,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 462,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 463,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 464,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 465,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 466,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 467,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 468,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 469,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 470,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 471,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 472,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 473,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 474,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py 2>/dev/null",
+      "n": 475,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 476,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 477,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 478,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 479,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 480,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 481,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 482,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 483,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 484,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 485,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 486,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 487,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 488,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 489,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 490,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 491,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 492,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 493,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 494,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 495,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 496,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 497,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 498,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 499,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 500,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 501,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 502,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 503,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 504,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 505,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 506,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 507,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 508,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 509,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 510,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 511,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 512,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 513,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 514,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 515,
+      "tool": "bash"
+    },
+    {
+      "n": 516,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 517,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 518,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 519,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 520,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 521,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 522,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 523,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 524,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 525,
+      "tool": "bash"
+    },
+    {
+      "command": "find /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/ -type f -name \"*.py\"",
+      "n": 526,
+      "tool": "bash"
+    },
+    {
+      "n": 527,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 528,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 529,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 530,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 531,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py",
+      "n": 532,
+      "tool": "bash"
+    },
+    {
+      "command": "find /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/ -name \"*.py\" -exec echo \"=== {} ===\" \\; -exec cat {} \\;",
+      "n": 533,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 534,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 535,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 536,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 537,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 538,
+      "tool": "bash"
+    },
+    {
+      "n": 539,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 540,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 541,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 542,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 543,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 544,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 545,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 546,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 547,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 548,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 549,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 550,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 551,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 552,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 553,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 554,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 555,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 556,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 557,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 558,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 559,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/README.md",
+      "n": 560,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/tide_table.py",
+      "n": 561,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 562,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 563,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 564,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 565,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 566,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 567,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 568,
+      "tool": "bash"
+    },
+    {
+      "command": "ls /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 569,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 570,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 571,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 572,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 573,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/__init__.py 2>/dev/null; echo \"---\"; find /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/ -type f",
+      "n": 574,
+      "tool": "bash"
+    },
+    {
+      "n": 575,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 576,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 577,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 578,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/tidewatch/",
+      "n": 579,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/README.md",
+      "n": 580,
+      "tool": "bash"
+    },
+    {
+      "n": 581,
+      "path": "tide_table.py",
+      "tool": "read"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 582,
+      "tool": "bash"
+    },
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_12/",
+      "n": 583,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 584,
+      "tool": "bash"
+    }
+  ],
+  "visible_checks": [
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 2,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 4,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 6,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 8,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 10,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 12,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 15,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 17,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 19,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 21,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 23,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 25,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 29,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 31,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 35,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 37,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 39,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 41,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 45,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 47,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 50,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 52,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 54,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 56,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 58,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 60,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 64,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 66,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 68,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 70,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 72,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 74,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 76,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 78,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 80,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 82,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 84,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 86,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 88,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 90,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 92,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 94,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 96,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 98,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 100,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 104,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 106,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 108,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 110,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 112,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 114,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 116,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 118,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 120,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 122,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 124,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 126,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 128,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 130,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 132,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 135,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 137,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 139,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 141,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 143,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 147,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 149,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 151,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 153,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 155,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 157,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 161,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 163,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 166,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -200",
+      "n": 168,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 170,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 172,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 175,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 177,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py 2>&1",
+      "n": 179,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 181,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 183,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 185,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 187,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 189,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 191,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 193,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 195,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 197,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 199,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 201,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 203,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 205,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 208,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 210,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 212,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 214,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 216,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 220,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 222,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 225,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 227,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 229,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 231,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 233,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 235,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 237,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 239,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 243,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 245,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 248,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 250,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 252,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 254,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 256,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 258,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 260,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 262,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 264,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 266,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 268,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 270,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 272,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 274,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 276,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 278,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 280,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 282,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 284,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 286,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 288,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 292,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 294,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 296,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 298,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 300,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 302,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 305,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 307,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 309,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -80",
+      "n": 311,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 316,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 318,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 320,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1 | head -100",
+      "n": 322,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 324,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 327,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 329,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 331,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 333,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 335,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 337,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 339,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 341,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 343,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 345,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 347,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 349,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 351,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 355,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 357,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 359,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 361,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 363,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 367,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 369,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 371,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | head -100",
+      "n": 373,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 375,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 377,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 379,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 381,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 383,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 385,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 387,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 389,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 391,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 393,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 395,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 397,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 399,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 401,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 405,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 407,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 409,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 411,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 413,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 415,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 419,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 421,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 423,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 425,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 428,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 430,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 432,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 434,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 437,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 439,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 443,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 445,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 447,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 449,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 451,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 453,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 455,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 457,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 459,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 461,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 463,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 465,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 467,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 471,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 473,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 476,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 478,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 482,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 484,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 488,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 490,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 492,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 494,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 496,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 498,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 500,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1 | tail -100",
+      "n": 502,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py 2>&1",
+      "n": 503,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 505,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 507,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 509,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 511,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 513,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 517,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 519,
+      "tool": "bash"
+    },
+    {
+      "command": "python /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 521,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 523,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 528,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 530,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 534,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 536,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 540,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 542,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 544,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 546,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 548,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 550,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 552,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 554,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 556,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 558,
+      "tool": "bash"
+    },
+    {
+      "command": "python run_checks.py",
+      "n": 562,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 564,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 566,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 568,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 570,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 572,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py 2>&1",
+      "n": 576,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 578,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python run_checks.py",
+      "n": 582,
+      "tool": "bash"
+    },
+    {
+      "command": "cat /var/home/bmosher/pilot-gen45-work/run_12/run_checks.py",
+      "n": 584,
+      "tool": "bash"
+    }
+  ]
+}

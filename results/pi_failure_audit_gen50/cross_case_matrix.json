@@ -1,0 +1,79 @@
+{
+  "cases_needing_unavailable_old_history": [],
+  "context_problems": [],
+  "counterfactual_summary": {
+    "mechanically_prevents": [
+      "gen49-IP2-r1-C via visible_check_receipt_semantics"
+    ],
+    "mechanically_surfaces_information": [
+      "gen47-T2-r1-B",
+      "gen47-T3-r1-B",
+      "gen49-IP2-r1-C"
+    ],
+    "no_mechanical_effect_for_the_floor": [
+      "gen47-T2-r1-B",
+      "gen47-T3-r1-B",
+      "gen49-IP1-r1-C",
+      "gen49-IP1-r3-D",
+      "gen49-IP2-r1-C"
+    ]
+  },
+  "failure_cases": 5,
+  "false_assurance_cause": "in both Gen49 false-assurance cases the instruction was present. The receipt was earned by a visible check narrower than the task: one test file in IP1-r1-C, and in IP1-r3-D a suite that passed while the requirement was inverted",
+  "focal_cases": 6,
+  "minimal_candidate_invariant": {
+    "caveat": "this would end runs sooner, not make them more correct; on IP1-r1-C it would have stopped a run that was already wrong",
+    "name": "quiescent_completion",
+    "not_implemented_in_gen50": true,
+    "statement": "when a valid visible receipt exists for the current tree digest and K consecutive provider requests produce no repository mutation, the run has nothing left to do",
+    "would_have_affected": [
+      "gen47-T3-r1-B",
+      "gen49-IP2-r1-C"
+    ]
+  },
+  "primary_mechanism_cases": {
+    "coding_or_reasoning_error_with_sufficient_evidence": [
+      "gen49-IP1-r3-D"
+    ],
+    "present_but_not_used": [
+      "gen49-IP1-r1-C"
+    ],
+    "termination_detection_loop": [
+      "gen47-T3-r1-B",
+      "gen49-IP2-r1-C"
+    ],
+    "tool_sequence_or_verification_gap": [
+      "gen47-T2-r1-B"
+    ]
+  },
+  "primary_mechanism_counts": {
+    "coding_or_reasoning_error_with_sufficient_evidence": 1,
+    "present_but_not_used": 1,
+    "termination_detection_loop": 2,
+    "tool_sequence_or_verification_gap": 1
+  },
+  "retrieval_evidence": "none. In all five failures the relevant public information was in the live context or in a file the agent had already read; no case required anything that had aged out of the window",
+  "timeout_cases": {
+    "gen47-T3-r1-B": {
+      "calls_after_last_mutation": 269,
+      "mutation_call": 314,
+      "mutations_after": 0,
+      "total_calls": 584
+    },
+    "gen49-IP2-r1-C": {
+      "calls_after_last_mutation": 435,
+      "mutation_call": 6,
+      "mutations_after": 0,
+      "total_calls": 442,
+      "valid_receipt_held": true
+    },
+    "observable_stop_signal": "a receipt that is valid for the current tree digest, plus N further requests with no repository mutation. Both quantities are already computed and recorded by harness-state-v1; neither needs the hidden verifier"
+  },
+  "verification_control_or_reasoning_problems": [
+    "gen47-T2-r1-B",
+    "gen47-T3-r1-B",
+    "gen49-IP1-r1-C",
+    "gen49-IP1-r3-D",
+    "gen49-IP2-r1-C"
+  ]
+}

@@ -318,6 +318,7 @@ Priority order:
 - `research/PI_STATE_CONTROL_GEN47_HARNESS_STATE_LIVE.md` — harness-maintained state, live: 12/12 against 9/12
 - `research/PI_HUMAN_DIRECTION_FLOOR_GEN48_DESIGN.md` — human-direction floor arm, frozen (no score)
 - `research/PI_HUMAN_DIRECTION_FLOOR_GEN49_LIVE.md` — the floor, live: no task-success gain, reported as such
+- `research/PI_FAILURE_AUDIT_GEN50.md` — failure audit: none of five failures was a context problem
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

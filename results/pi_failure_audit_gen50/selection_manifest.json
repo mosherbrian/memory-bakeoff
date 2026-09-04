@@ -1,0 +1,61 @@
+{
+  "cases": [
+    {
+      "anomaly": "hidden verifier FAIL, completed",
+      "arm": "pi_state_control_v1",
+      "generation": 47,
+      "id": "gen47-T2-r1-B",
+      "repetition": 1,
+      "task": "T2",
+      "why": "lowest repetition of B's 3/3 T2 failures while C passed 3/3"
+    },
+    {
+      "anomaly": "hidden verifier PASS with TIMEOUT",
+      "arm": "pi_state_control_v1",
+      "generation": 47,
+      "id": "gen47-T3-r1-B",
+      "repetition": 1,
+      "task": "T3",
+      "why": "lowest repetition of B's 3/3 T3 timeouts while C completed 3/3"
+    },
+    {
+      "anomaly": "verifier FAIL requirement B with visible_receipt_false_assurance",
+      "arm": "pi_harness_state_control_v1",
+      "generation": 49,
+      "id": "gen49-IP1-r1-C",
+      "repetition": 1,
+      "task": "IP1",
+      "why": "the instruction-only requirement failed while the paired D passed"
+    },
+    {
+      "anomaly": "paired successful floor-exposed counterpart",
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "generation": 49,
+      "id": "gen49-IP1-r1-D",
+      "repetition": 1,
+      "task": "IP1",
+      "why": "divergence comparator for the case above"
+    },
+    {
+      "anomaly": "verifier FAIL requirement A with visible_receipt_false_assurance",
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "generation": 49,
+      "id": "gen49-IP1-r3-D",
+      "repetition": 3,
+      "task": "IP1",
+      "why": "the floor arm failed the code-visible requirement while the paired C passed"
+    },
+    {
+      "anomaly": "hidden verifier PASS with TIMEOUT",
+      "arm": "pi_harness_state_control_v1",
+      "generation": 49,
+      "id": "gen49-IP2-r1-C",
+      "repetition": 1,
+      "task": "IP2",
+      "why": "C timeout whose paired D completed with the floor exposed"
+    }
+  ],
+  "frozen_before_any_raw_transcript_was_read": true,
+  "rule": "outcome-based and fixed in advance: the lowest repetition of each anomaly class, plus the paired counterparts named by the brief; no substitution after reading",
+  "secondary_comparators_rule": "a paired counterpart may be consulted only after the focal timeline is reconstructed, and only to answer a named divergence question"
+}

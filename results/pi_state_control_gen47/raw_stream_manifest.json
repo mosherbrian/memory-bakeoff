@@ -1,4 +1,5 @@
 {
+  "correction": "CORRECTION 2026-09-04 (Gen50): this note previously said the raw streams were retained on the Linux workstation. They are not. The script that computed these hashes deleted the files it had just hashed, and for this generation it ran against the workstation copy, so no copy survives anywhere. The hashes below are therefore a record of streams that no longer exist. Nothing else changed: every committed leaf, log and aggregate is intact, and the Gen50 audit was carried out on those. Gen45's streams do survive, because that manifest was computed on the Mac copy only.",
   "note": "Raw Pi JSON streams are retained on the Linux workstation under ~/pilot-gen45/results/pi_state_control_gen47/runs/<slot>/stdout.txt and hashed here. Everything needed to rebuild the aggregate is committed; history logs are gzipped.",
   "streams": {
     "01-T3-r3-pi_state_control_v1": {
@@ -97,5 +98,6 @@
       "bytes": 2310417,
       "sha256": "20f7089e5ef2598e4f14eab749782e3cdf8bb9e52e92b9d3742ff1280bb74110"
     }
-  }
+  },
+  "streams_still_exist": false
 }

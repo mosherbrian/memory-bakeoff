@@ -1,0 +1,184 @@
+{
+  "analysis": {
+    "context_sufficiency": {
+      "absent_everywhere": false,
+      "discoverable_in_code": true,
+      "only_in_history": false,
+      "requirement_A": "present in the prompt, still inside the window at six requests",
+      "requirement_B": "present in the prompt AND telemetry.py was read at tool call 4"
+    },
+    "counterfactuals": {
+      "bounded_recent_window": "no_mechanical_effect",
+      "harness_maintained_state_control": "no_mechanical_effect",
+      "human_direction_floor": "no_mechanical_effect",
+      "visible_check_receipt_semantics": "no_mechanical_effect"
+    },
+    "critical_point": {
+      "certain": true,
+      "locator": "mutation 1 of 2 - STEPS_PER_MM = 4 changed to 8 in units.py"
+    },
+    "lesson": "this is the case Gen49 was built to test, and it answers it: the instruction had not aged out, so a floor could not have helped. The receipt was valid for what it checked and silent about the rest",
+    "primary_mechanism": "present_but_not_used",
+    "reasoning": "the constraint was in the instruction and the file it protects had been read four calls earlier. The agent then validated with a single test file that cannot observe requirement B, earned a valid receipt and reached control-valid done",
+    "secondary_mechanisms": [
+      "artifact_coverage_gap",
+      "tool_sequence_or_verification_gap"
+    ],
+    "what_it_did_instead": "changed the one constant that both to_millimetres and to_steps consume, breaking telemetry; then edited the visible test to match the new behaviour and ran only that one test file",
+    "what_it_was_doing": "applying the firmware ratio change after reading all four source files"
+  },
+  "case": {
+    "anomaly": "verifier FAIL requirement B with visible_receipt_false_assurance",
+    "arm": "pi_harness_state_control_v1",
+    "generation": 49,
+    "id": "gen49-IP1-r1-C",
+    "repetition": 1,
+    "task": "IP1",
+    "why": "the instruction-only requirement failed while the paired D passed"
+  },
+  "derivation_events": 20,
+  "floor": null,
+  "harness": {
+    "receipts": [
+      {
+        "command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_gauge.py -v",
+        "event": "e000019",
+        "kind": "validation_receipt",
+        "passed": true,
+        "tree_digest": "8db4c3f3e6fd6727b95928abfadeb52861dbb622"
+      }
+    ],
+    "transitions_accepted": 4,
+    "valid_receipt_at_end": true
+  },
+  "mutations": [
+    {
+      "edits": [
+        {
+          "new": "STEPS_PER_MM = 8",
+          "old": "STEPS_PER_MM = 4"
+        }
+      ],
+      "n": 8,
+      "path": "units.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "    assert position_mm(40) == 5",
+          "old": "    assert position_mm(40) == 10"
+        }
+      ],
+      "n": 9,
+      "path": "test_gauge.py",
+      "tool": "edit"
+    }
+  ],
+  "outcome": {
+    "failed_requirement": "B",
+    "final_phase": "done",
+    "requests": 6,
+    "status": "completed",
+    "tool_calls": 10,
+    "verifier_passed": false,
+    "verifier_tail": [
+      "AssertionError: B: frame(10) -> {'steps': 80, 'unit': 'steps'}, expected 40 steps"
+    ],
+    "wall_seconds": 40.88
+  },
+  "phases": [
+    "inspect",
+    "inspect",
+    "plan",
+    "implement",
+    "implement",
+    "validate"
+  ],
+  "prompt": "The controller firmware changed: it now reports 8 steps per millimetre instead of 4. Update the package so gate positions are correct again. The control room's telemetry frames must keep reporting the same steps value for a given millimetre position as they do today, because the display upstream is calibrated to it and cannot be changed.",
+  "public_requirements": {
+    "A": "the new steps-per-millimetre ratio",
+    "B": "telemetry steps unchanged for a given position"
+  },
+  "raw_stream_available": false,
+  "request_bytes": [
+    1364,
+    8330,
+    9006,
+    9835,
+    8034,
+    10625
+  ],
+  "run_dir_name": "08-IP1-r1-pi_harness_state_control_v1",
+  "timeline": [
+    {
+      "command": "find /var/home/bmosher/pilot-gen45-work/run_08 -type f | head -50",
+      "n": 1,
+      "tool": "bash"
+    },
+    {
+      "n": 2,
+      "path": "__init__.py",
+      "tool": "read"
+    },
+    {
+      "n": 3,
+      "path": "gauge.py",
+      "tool": "read"
+    },
+    {
+      "n": 4,
+      "path": "telemetry.py",
+      "tool": "read"
+    },
+    {
+      "n": 5,
+      "path": "units.py",
+      "tool": "read"
+    },
+    {
+      "n": 6,
+      "path": "test_gauge.py",
+      "tool": "read"
+    },
+    {
+      "n": 7,
+      "path": "README.md",
+      "tool": "read"
+    },
+    {
+      "edits": [
+        {
+          "new": "STEPS_PER_MM = 8",
+          "old": "STEPS_PER_MM = 4"
+        }
+      ],
+      "n": 8,
+      "path": "units.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "    assert position_mm(40) == 5",
+          "old": "    assert position_mm(40) == 10"
+        }
+      ],
+      "n": 9,
+      "path": "test_gauge.py",
+      "tool": "edit"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_gauge.py -v",
+      "n": 10,
+      "tool": "bash"
+    }
+  ],
+  "visible_checks": [
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_gauge.py -v",
+      "n": 10,
+      "tool": "bash"
+    }
+  ]
+}

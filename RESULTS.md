@@ -315,6 +315,26 @@ built for it: on IP1 the agent updated the stale shipped test, earned a current-
 reached control-valid `done` while still failing the hidden requirement. See
 `research/PI_HUMAN_DIRECTION_FLOOR_GEN49_LIVE.md`.
 
+## Failure audit — what actually went wrong, and it was not context
+
+`architecture_failure_mechanism_audit_posthoc_no_score`. No model, no GPU, no new runs. Six focal
+runs from Gen47 and Gen49, selected by outcome rule and frozen before anything was read.
+
+**Across five failures, none was caused by missing context.** Two runs finished the work and could
+not stop — one made its correct fix at tool call 314 of 584 and never mutated again, the other at
+call 6 of 442 while holding a receipt valid for the current tree. One never started, ending with
+zero mutations. Two had everything they needed and used it wrongly, including one where the
+human-direction floor was active and carrying the instruction verbatim.
+
+That explains Gen49's null directly: in the case the floor was built for, the instruction had not
+aged out, so no floor could have helped. The gap these runs expose is knowing when to stop and how
+broadly to verify, not what the model can see. Retrieval stays deferred; no failure needed history
+that had aged out.
+
+Also recorded here: the Gen47 and Gen49 raw provider streams were deleted by the script that hashed
+them, and both manifests wrongly claimed they were retained. Corrected, and the audit was completed
+on the committed harness logs. See `research/PI_FAILURE_AUDIT_GEN50.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

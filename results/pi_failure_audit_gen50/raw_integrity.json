@@ -1,0 +1,161 @@
+{
+  "all_found": true,
+  "all_streams_verified": false,
+  "cases": {
+    "gen47-T2-r1-B": {
+      "available_logs": [
+        "history.ndjson.gz",
+        "leaf.json",
+        "payloads.ndjson",
+        "requests.ndjson",
+        "state.json",
+        "stderr.txt",
+        "tools.ndjson"
+      ],
+      "committed_stream": {
+        "bytes": 3392086,
+        "sha256": "a47d871cfdec851bf4dc48a93d757e4d340ac55145c25994b20c35971979e8fc"
+      },
+      "failed_requirement": null,
+      "found": true,
+      "hash_matches_manifest": false,
+      "local_stream": null,
+      "local_stream_present": false,
+      "run_dir_name": "05-T2-r1-pi_state_control_v1",
+      "slot_index": 5,
+      "status": "completed",
+      "verifier_passed": false
+    },
+    "gen47-T3-r1-B": {
+      "available_logs": [
+        "history.ndjson.gz",
+        "leaf.json",
+        "payloads.ndjson",
+        "requests.ndjson",
+        "state.json",
+        "stderr.txt",
+        "tools.ndjson"
+      ],
+      "committed_stream": {
+        "bytes": 42401483,
+        "sha256": "d35ad8bb45e4f65dd2d5ccb7f7784d99689f4fc50f5ab1eaac4fd6cfea572183"
+      },
+      "failed_requirement": null,
+      "found": true,
+      "hash_matches_manifest": false,
+      "local_stream": null,
+      "local_stream_present": false,
+      "run_dir_name": "12-T3-r1-pi_state_control_v1",
+      "slot_index": 12,
+      "status": "timeout",
+      "verifier_passed": true
+    },
+    "gen49-IP1-r1-C": {
+      "available_logs": [
+        "derivation.ndjson",
+        "harness_state.json",
+        "leaf.json",
+        "payloads.ndjson",
+        "requests.ndjson",
+        "stderr.txt",
+        "tools.ndjson"
+      ],
+      "committed_stream": {
+        "bytes": 1457420,
+        "sha256": "b6e6469a71e254ab14b7e48c339fb107faa3980e73d423f83bab675249258155"
+      },
+      "failed_requirement": "B",
+      "found": true,
+      "hash_matches_manifest": false,
+      "local_stream": null,
+      "local_stream_present": false,
+      "run_dir_name": "08-IP1-r1-pi_harness_state_control_v1",
+      "slot_index": 8,
+      "status": "completed",
+      "verifier_passed": false
+    },
+    "gen49-IP1-r1-D": {
+      "available_logs": [
+        "derivation.ndjson",
+        "harness_state.json",
+        "leaf.json",
+        "payloads.ndjson",
+        "requests.ndjson",
+        "stderr.txt",
+        "tools.ndjson"
+      ],
+      "committed_stream": {
+        "bytes": 2940424,
+        "sha256": "da1c85fa2bd0899872feb3bd7ff2427fb2edbd211ed1164a15a48b163c6e9293"
+      },
+      "failed_requirement": null,
+      "found": true,
+      "hash_matches_manifest": false,
+      "local_stream": null,
+      "local_stream_present": false,
+      "run_dir_name": "07-IP1-r1-pi_harness_state_control_task_floor_v1",
+      "slot_index": 7,
+      "status": "completed",
+      "verifier_passed": true
+    },
+    "gen49-IP1-r3-D": {
+      "available_logs": [
+        "derivation.ndjson",
+        "harness_state.json",
+        "leaf.json",
+        "payloads.ndjson",
+        "requests.ndjson",
+        "stderr.txt",
+        "tools.ndjson"
+      ],
+      "committed_stream": {
+        "bytes": 3110009,
+        "sha256": "c1a9dd9825613ce86aded253f1093185072706787fb380ac5e0faf003647d148"
+      },
+      "failed_requirement": "A",
+      "found": true,
+      "hash_matches_manifest": false,
+      "local_stream": null,
+      "local_stream_present": false,
+      "run_dir_name": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+      "slot_index": 11,
+      "status": "completed",
+      "verifier_passed": false
+    },
+    "gen49-IP2-r1-C": {
+      "available_logs": [
+        "derivation.ndjson",
+        "harness_state.json",
+        "leaf.json",
+        "payloads.ndjson",
+        "requests.ndjson",
+        "stderr.txt",
+        "tools.ndjson"
+      ],
+      "committed_stream": {
+        "bytes": 6127544,
+        "sha256": "d5fa5e27247afd2e3a9124938315ecc431c42338ef73c9721456b4d309f0e816"
+      },
+      "failed_requirement": null,
+      "found": true,
+      "hash_matches_manifest": false,
+      "local_stream": null,
+      "local_stream_present": false,
+      "run_dir_name": "24-IP2-r1-pi_harness_state_control_v1",
+      "slot_index": 24,
+      "status": "timeout",
+      "verifier_passed": true
+    }
+  },
+  "finding": {
+    "consequence": "the audit could not read a single model utterance. It was carried out entirely on the committed harness logs - tool calls with arguments, provider request sizes, derivation events, receipts, tree digests and verifier outcomes - which turned out to be sufficient for all six cases, but that is luck rather than design",
+    "manifests_corrected": [
+      "pi_state_control_gen47",
+      "pi_state_control_gen49"
+    ],
+    "raw_streams_available": false,
+    "self_inflicted": true,
+    "what_happened": "the Gen47 and Gen49 raw provider streams were deleted by the same script that hashed them. For Gen49 that script ran on the workstation, so the only copy went with it; for Gen47 both copies are gone. Gen45's 24 streams survive because that manifest was computed against the Mac copy alone."
+  },
+  "note": "raw streams stay on the workstation; only hashes and sizes are recorded here, never host paths"
+}

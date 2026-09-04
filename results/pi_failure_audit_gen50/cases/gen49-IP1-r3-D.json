@@ -1,0 +1,254 @@
+{
+  "analysis": {
+    "context_sufficiency": {
+      "absent_everywhere": false,
+      "discoverable_in_code": true,
+      "only_in_history": false,
+      "requirement_A": "present in the prompt and in human_direction, the floor was active",
+      "requirement_B": "present"
+    },
+    "counterfactuals": {
+      "bounded_recent_window": "no_mechanical_effect",
+      "harness_maintained_state_control": "no_mechanical_effect",
+      "human_direction_floor": "no_mechanical_effect",
+      "visible_check_receipt_semantics": "no_mechanical_effect"
+    },
+    "critical_point": {
+      "certain": true,
+      "locator": "mutation 3 of 4 - STEPS_PER_MM reverted from 8 back to 4"
+    },
+    "lesson": "the floor was active and verbatim and the run still failed the requirement it carried; presence is not use",
+    "primary_mechanism": "coding_or_reasoning_error_with_sufficient_evidence",
+    "reasoning": "every piece of information needed was in the live context, including the verbatim instruction carried by the floor. The agent inverted which constant belonged to which consumer across four mutations",
+    "secondary_mechanisms": [
+      "present_but_not_used"
+    ],
+    "what_it_did_instead": "reverted the gauge ratio to the old value while moving the telemetry constant to 8, which is the change inverted; requirement A then failed",
+    "what_it_was_doing": "revising an earlier attempt at the same ratio change, with the floor active"
+  },
+  "case": {
+    "anomaly": "verifier FAIL requirement A with visible_receipt_false_assurance",
+    "arm": "pi_harness_state_control_task_floor_v1",
+    "generation": 49,
+    "id": "gen49-IP1-r3-D",
+    "repetition": 3,
+    "task": "IP1",
+    "why": "the floor arm failed the code-visible requirement while the paired C passed"
+  },
+  "derivation_events": 28,
+  "floor": {
+    "activated": true,
+    "first_activation_request": 6,
+    "requests_total": 10
+  },
+  "harness": {
+    "receipts": [
+      {
+        "command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1",
+        "event": "e000027",
+        "kind": "validation_receipt",
+        "passed": true,
+        "tree_digest": "67c595f8af4ee188ab343797fe274b059ec844f6"
+      }
+    ],
+    "transitions_accepted": 6,
+    "valid_receipt_at_end": true
+  },
+  "mutations": [
+    {
+      "edits": [
+        {
+          "new": "STEPS_PER_MM = 8",
+          "old": "STEPS_PER_MM = 4"
+        }
+      ],
+      "n": 9,
+      "path": "units.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "\"\"\"Telemetry frames sent to the control room.\"\"\"\nfrom sluice.units import to_millimetres\n\n_TELEMETRY_STEPS_PER_MM = 4\n\n\n",
+          "old": "\"\"\"Telemetry frames sent to the control room.\"\"\"\nfrom sluice.units import to_steps\n\n\ndef frame(position_mm: int) -> dict"
+        }
+      ],
+      "n": 10,
+      "path": "telemetry.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "STEPS_PER_MM = 4",
+          "old": "STEPS_PER_MM = 8"
+        }
+      ],
+      "n": 12,
+      "path": "units.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "_TELEMETRY_STEPS_PER_MM = 8",
+          "old": "_TELEMETRY_STEPS_PER_MM = 4"
+        }
+      ],
+      "n": 13,
+      "path": "telemetry.py",
+      "tool": "edit"
+    }
+  ],
+  "outcome": {
+    "failed_requirement": "A",
+    "final_phase": "done",
+    "requests": 10,
+    "status": "completed",
+    "tool_calls": 14,
+    "verifier_passed": false,
+    "verifier_tail": [
+      "AssertionError: A: position_mm(80) -> 20, expected 10"
+    ],
+    "wall_seconds": 61.74
+  },
+  "phases": [
+    "inspect",
+    "inspect",
+    "inspect",
+    "plan",
+    "implement",
+    "implement",
+    "implement",
+    "implement",
+    "implement",
+    "validate"
+  ],
+  "prompt": "The controller firmware changed: it now reports 8 steps per millimetre instead of 4. Update the package so gate positions are correct again. The control room's telemetry frames must keep reporting the same steps value for a given millimetre position as they do today, because the display upstream is calibrated to it and cannot be changed.",
+  "public_requirements": {
+    "A": "the new steps-per-millimetre ratio",
+    "B": "telemetry steps unchanged for a given position"
+  },
+  "raw_stream_available": false,
+  "request_bytes": [
+    1364,
+    2990,
+    4103,
+    7393,
+    9198,
+    9971,
+    11231,
+    9565,
+    10348,
+    11725
+  ],
+  "run_dir_name": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+  "timeline": [
+    {
+      "command": "ls -la /var/home/bmosher/pilot-gen45-work/run_11/",
+      "n": 1,
+      "tool": "bash"
+    },
+    {
+      "command": "find /var/home/bmosher/pilot-gen45-work/run_11/ -type f -not -path '*/.git/*' | sort",
+      "n": 2,
+      "tool": "bash"
+    },
+    {
+      "n": 3,
+      "path": "README.md",
+      "tool": "read"
+    },
+    {
+      "n": 4,
+      "path": "__init__.py",
+      "tool": "read"
+    },
+    {
+      "n": 5,
+      "path": "gauge.py",
+      "tool": "read"
+    },
+    {
+      "n": 6,
+      "path": "telemetry.py",
+      "tool": "read"
+    },
+    {
+      "n": 7,
+      "path": "units.py",
+      "tool": "read"
+    },
+    {
+      "n": 8,
+      "path": "test_gauge.py",
+      "tool": "read"
+    },
+    {
+      "edits": [
+        {
+          "new": "STEPS_PER_MM = 8",
+          "old": "STEPS_PER_MM = 4"
+        }
+      ],
+      "n": 9,
+      "path": "units.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "\"\"\"Telemetry frames sent to the control room.\"\"\"\nfrom sluice.units import to_millimetres\n\n_TELEMETRY_STEPS_PER_MM = 4\n\n\n",
+          "old": "\"\"\"Telemetry frames sent to the control room.\"\"\"\nfrom sluice.units import to_steps\n\n\ndef frame(position_mm: int) -> dict"
+        }
+      ],
+      "n": 10,
+      "path": "telemetry.py",
+      "tool": "edit"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1",
+      "n": 11,
+      "tool": "bash"
+    },
+    {
+      "edits": [
+        {
+          "new": "STEPS_PER_MM = 4",
+          "old": "STEPS_PER_MM = 8"
+        }
+      ],
+      "n": 12,
+      "path": "units.py",
+      "tool": "edit"
+    },
+    {
+      "edits": [
+        {
+          "new": "_TELEMETRY_STEPS_PER_MM = 8",
+          "old": "_TELEMETRY_STEPS_PER_MM = 4"
+        }
+      ],
+      "n": 13,
+      "path": "telemetry.py",
+      "tool": "edit"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1",
+      "n": 14,
+      "tool": "bash"
+    }
+  ],
+  "visible_checks": [
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1",
+      "n": 11,
+      "tool": "bash"
+    },
+    {
+      "command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1",
+      "n": 14,
+      "tool": "bash"
+    }
+  ]
+}

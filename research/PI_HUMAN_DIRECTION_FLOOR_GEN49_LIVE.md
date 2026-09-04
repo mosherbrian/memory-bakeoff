@@ -65,8 +65,10 @@ finished before the window would have dropped the task, so their floor never act
 8/9; unexposed passed
 3/3.
 
-That matters for reading the table: on a ruler where a third of runs end before the intervention
-turns on, a null result is weaker evidence than 24 runs suggests.
+That matters for reading the table: on a ruler where a quarter of the treated runs end before
+the intervention turns on, a null result is weaker evidence than 24 runs suggests.
+
+*(Corrected 2026-09-04: this sentence originally said "a third". Three of twelve is a quarter. Prose arithmetic only — no leaf, aggregate, outcome, digest input or interpretation changed.)*
 
 ## The one difference that is not noise
 
