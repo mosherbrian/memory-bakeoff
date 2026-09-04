@@ -1,5 +1,10 @@
 # Memory Engine Bake-off
 
+> **Architecture:** for the post-Gen38 synthesis — how memory, state, control,
+> history and artifacts divide up in an agent, and where every system evaluated
+> here sits — see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+
 A reproducible, coding-flavored benchmark for persistent agent memory systems.
 
 > **Start here for the evidence:** [`RESULTS.md`](RESULTS.md) is the maintained index of every measured result, with its experiment class, its caveat, and links to the authoritative write-up and machine-readable artifacts. Prefer it, and [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md), over older score text further down this file.

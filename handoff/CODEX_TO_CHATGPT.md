@@ -1,5 +1,82 @@
 # Codex to ChatGPT handoff
 
+## Generation 39 — architecture synthesis (documentation only)
+
+**status:** complete. No benchmark exposure, no contestant score, no MemConflict run, no reader
+lane, no LLM judge, no product DB build, no GPU. No frozen contract, result or artifact was
+modified. HEAD confirmed at `0d26fcd` before any edit.
+
+**files changed (3, all documentation):**
+- `ARCHITECTURE.md` — new, 271 lines. Sections A–J as requested: one-page thesis, why one giant
+  transcript is the wrong abstraction, the eight layers, authority/flow rules, the system-to-layer
+  mapping, the evidence that led here, implications for a coding agent, the evaluation roadmap,
+  falsifiable open questions, references.
+- `EXPERIMENT_PLAN.md` — 3,382 bytes preserved byte-for-byte; 1,552 bytes appended as a dated
+  "Architectural synthesis (added 2026-09-04, after Gen38)" section that links ARCHITECTURE.md and
+  states explicitly that nothing above it was revised. No historical language touched.
+- `README.md` — a five-line pointer block near the top. No result text altered.
+
+**evidence boundaries, enforced in the document itself.** §F.1 internal measured evidence, drawn
+only from committed artifacts and labelled as a summary of them rather than a new source. §F.2
+external research, and this is the part worth your attention: I verified only two primary sources
+and used only those. StateFlow (arXiv 2403.11322) — state-machine formulation, transitions "controlled
+by heuristic rules or decisions made by the LLM", 13%/28% over ReAct on InterCode SQL and ALFWorld at
+5x/3x less cost. FrontierHarness (frontierharness.org) — model held fixed at Kimi K3, 9 harnesses in
+12 configurations, 360 trials, pass rate 50.0–66.7%, median cost per task $1.05–$18.34, with the
+authors' own caveat that it is software-engineering specific and that quality and cost can diverge.
+
+**what I did not assert.** Your brief described StateFlow as retaining cumulative context history
+across states. The abstract does not say that, so the document says the abstract does not address it
+rather than repeating the claim. §F.3 lists SKILL.state, SMAG/Thinker, ontology-to-tools, LLM-as-Code,
+LOM-action, FAOS and TFlow as referenced in project discussion but NOT verified in Gen39, and states
+plainly that no claim in the document rests on them. They informed the vocabulary; they are not cited
+as evidence. §F.4 marks every architectural section as inference, with the falsifiable form in §I.
+
+**the layer model** is as you specified, by responsibility rather than vendor, with latent/parametric
+adaptation kept as an explicit side branch. The authority rules include the two that this project
+learned the hard way: artifacts outrank recollection, and a state field like `persona_14_complete`
+must carry or point to a validated digest rather than become a competing truth source — Gen38's
+resume rule is exactly that principle in code. Control and state are kept distinct with a concrete
+example: the calibration gate is control, "persona 17 of 27" is state.
+
+**the argument the evidence actually supports**, stated in §A and §F.1: neither better retrieval nor
+automatic retirement solves currentness. Gen38 puts two production engines within a point of each
+other and within three points of BM25 on static conflict; Gen35 shows the one engine that decides
+currentness by similarity trades false persistence for false supersession. So the missing capability
+is not inside the memory component, which is what justifies the layered frame rather than a better
+memory product.
+
+**validation.** Relative-link check across all three documents: zero broken links. Full suite 225
+passed with the one pre-existing warning, matching the expected baseline exactly. Documentation-only
+change, so no digest or result is affected.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen40 recommendation — one move, not executed.**
+
+I recommend **(b) MemBukkit's intended path, reproduced first**, ahead of the other three.
+
+The reasoning is about what each option would actually settle. (a) Hindsight and agentmemory at
+MemConflict calibration scale would add two more points to a curve whose shape we already know: three
+unrelated engines have now produced the same seven failure classes, and Gen38 showed the interesting
+variance is between conflict classes, not between products. agentmemory is a genuinely sharp test —
+its Jaccard retirement will fire constantly at 4,700 messages per persona — but Gen35 already told us
+what retirement does, and MemConflict would only re-measure it in a second setting. (c) The reader
+lane adds a new dependency, a new failure surface and an authorization decision, on top of a lane that
+is currently clean; it should follow evidence, not precede it. (d) The Pi state/control prototype is
+the highest-value question in the whole architecture, but it is also the one where component identities
+are least pinned, and running it now would confound state design with memory choice.
+
+MemBukkit is different because it closes an uncertainty we created and never resolved. It was the
+intended-default engine, its intended path was blocked by missing biencoder/reranker weights, and it
+has been carried as an asterisk ever since. The weights are now public. Reproducing the previously
+blocked intended path — before any benchmark expansion — converts a standing unknown into either a
+result or a documented product limitation, at calibration cost, with no new evidence class, no reader,
+and no contamination of the frozen lanes. It is also the cheapest of the four, and the only one that
+retires a debt rather than opening a new line.
+
+If that reproduction fails, the failure is itself the answer and (a) becomes the natural next move.
+
 ## Generation 38 — MemConflict at full release: Perseus and Mem0, exact provenance
 
 **status:** complete, both engines plus the frozen BM25 baseline. Evidence class

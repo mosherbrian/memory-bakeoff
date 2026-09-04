@@ -92,3 +92,33 @@ Hold constant:
 Measure actual task success, regressions, token/context cost, memory usefulness, stale
 memory harm, and post-compaction continuity. This is the phase that answers whether a
 strong memory benchmark score actually makes the coding agent better.
+
+
+---
+
+## Architectural synthesis (added 2026-09-04, after Gen38)
+
+*Everything above is preserved as originally written. This section is additive: the
+staged plan describes where the project started, and nothing in it has been revised
+to look as though the architecture below was known at the outset.*
+
+Thirty-eight generations of measurement changed what the project believes the object
+of study is. The plan above treats memory as the thing being evaluated. The evidence
+now places memory as **one layer in an agent architecture**, and the bake-off as the
+component-level evidence programme inside it.
+
+See **[ARCHITECTURE.md](ARCHITECTURE.md)** for the synthesis: the layer model, the
+authority rules, the mapping of every system studied here onto a layer, and the
+falsifiable questions that follow.
+
+The short reason for the change, from the measured record: at full external-benchmark
+scale two production memory engines land within a point of each other and within three
+points of a plain BM25 index on old-truth-versus-new-contradiction questions (Gen38),
+and the one engine that actively decides currentness by similarity trades false
+persistence for false supersession rather than fixing it (Gen35). Retrieval quality is
+not the missing capability.
+
+The phases above remain valid and are unchanged. Phase-level work continues under the
+same discipline — frozen evidence classes, calibration before full release, exact
+provenance, fail-closed reporting — and now feeds the component layer of the larger
+architecture rather than standing alone.
