@@ -71,7 +71,7 @@ streams total 168 MB, dominated by the T3 loops; they are retained on the Linux 
 sha256-hashed in `raw_stream_manifest.json` rather than committed, and nothing needed to rebuild
 the aggregate was removed.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `a2d9040` (base `30c4b59`; harness `681acaf`, smoke repairs `9911e82` and `69894e3`, all before the frozen tasks)
 
 **Gen46 recommendation — do not execute.**
 
