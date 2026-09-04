@@ -96,7 +96,7 @@ ledgers, calibration report with scientific digest `7f133d612cfa2e3d…`). RESUL
 STATUS gain clearly labelled calibration rows. No Gen36, Gen37 or Gen38 artifact was modified; no
 weights or product DB committed.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `23d85f5` (base `eaef85a`)
 
 **Gen43 recommendation — do not execute.**
 
