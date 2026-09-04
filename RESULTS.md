@@ -216,6 +216,20 @@ receipt file invalidated a completed claim, and a restart rebuilt the exact stat
 digests from persisted evidence alone. Whether any of this helps a real coding agent is
 deliberately unmeasured. See `research/PI_STATE_CONTROL_GEN43_PROTOTYPE.md`.
 
+## First paired Pi coding pilot — design frozen, no score
+
+`architecture_pilot_design_no_score`. Nothing here was run against a model.
+
+The A/B experiment that follows Gen43 is now frozen: two arms, four invented fixture repositories
+with hidden deterministic verifiers, a counterbalanced 24-run order from a fixed seed, and
+measurement and tool-churn definitions written before any result exists. Both arms were verified
+inside the installed Pi — arm A passes 33,535 bytes through untouched while arm B returns a
+composed 5,991-byte view and cancels compaction — and the local model candidate is pinned by file
+hash, server build and device without generating a token. The largest open risk is stated rather
+than smoothed: sampling is stochastic with no pinned seed, so repetitions are samples unless that
+is fixed before the first live run. See
+`research/PI_STATE_CONTROL_GEN44_PILOT_DESIGN.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

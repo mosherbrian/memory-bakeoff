@@ -1,0 +1,104 @@
+{
+  "arms": {
+    "pi_default_v1": {
+      "context_hook_installed": false,
+      "description": "stock Pi 0.73.0 history and context behaviour",
+      "history": "Pi's own session transcript",
+      "pi_compaction": "enabled, Pi's own default",
+      "state_control_tools": []
+    },
+    "pi_state_control_v1": {
+      "context_hook_installed": true,
+      "description": "Pi 0.73.0 plus the Gen43 state/control extension lineage",
+      "history": "lossless external NDJSON log, hash-chained, never replayed by default",
+      "pi_compaction": "cancelled from the extension; history is externalized instead",
+      "state_control_tools": [
+        "propose_state_patch",
+        "request_transition",
+        "record_receipt"
+      ]
+    }
+  },
+  "churn_definitions": {
+    "exact_repeated_tool_call": "same tool name and canonicalized JSON arguments as any earlier call in the same run",
+    "redundant_file_read": "same path and byte/line range read again with no intervening write to that path in the run's own tool log",
+    "redundant_verifier_invocation": "same canonical verifier or test command repeated with no intervening repository mutation, judged by the worktree digest"
+  },
+  "co_primary_outcomes": [
+    "provider request bytes at every model call",
+    "cumulative request bytes across the run",
+    "max and median request bytes",
+    "request bytes by turn index",
+    "model calls",
+    "tool calls"
+  ],
+  "composition": {
+    "interaction_unit_rule": "a unit starts at a user message and runs to the message before the next user message; a trailing partial unit counts as one unit; messages before the first user message belong to no unit and are never included",
+    "latest_observation_byte_cap": 8192,
+    "order": [
+      "immutable_instructions",
+      "control",
+      "state",
+      "recent_window",
+      "latest_observation",
+      "artifact_refs"
+    ],
+    "recent_window_byte_cap": 8192,
+    "recent_window_units": 2,
+    "semantic_retrieval": "not available in this pilot",
+    "state_byte_cap": 4096
+  },
+  "contract_sha256": "a44c6b77dc51910a88b0ec1d90b33ac18b52676e76e3a21c439bd6a8819b7d71",
+  "contract_version": "pi-pilot-v1",
+  "control_outcomes_arm_b": [
+    "state patches accepted and rejected",
+    "transitions accepted and rejected",
+    "completion attempts blocked by the artifact gate",
+    "state bytes per request",
+    "history bytes and events accumulated",
+    "bytes retained only in history",
+    "artifact revalidation failures"
+  ],
+  "evidence_class": "architecture_pilot_design_no_score",
+  "hypotheses": {
+    "H1": "B materially reduces cumulative request bytes on longer or noisier runs",
+    "H2": "B reduces the growth of request size with run length",
+    "H3": "B does not reduce verifier success so far that the architecture is unusable",
+    "H4": "exploratory: B may reduce repeated or redundant tool calls, or increase them",
+    "H5": "the artifact gate prevents any naturally occurring unearned completion from counting",
+    "H6": "a failure caused by missing older context is a result, not a reason to retune"
+  },
+  "primary_outcome": "deterministic verifier pass or fail on the final repository state",
+  "reading_rules": [
+    "four tasks and three repetitions is descriptive paired evidence, not a population estimate",
+    "no global winner claim",
+    "every run-level leaf is reported, including crashes and blocked runs",
+    "wall clock stays outside the scientific digest"
+  ],
+  "run_plan": {
+    "execution": "serial, one at a time",
+    "order_seed": 20260905,
+    "repetitions": 3,
+    "runs": 24,
+    "tasks": [
+      "T1",
+      "T2",
+      "T3",
+      "T4"
+    ]
+  },
+  "termination_classes": {
+    "abandoned_or_timeout": "the run ended without verifier success",
+    "correctly_blocked": "arm B refused an unearned completion; a control success, not a task success",
+    "orchestration_failure": "the harness or extension failed; not a model result",
+    "unearned_completion_attempt": "the model tried to finish while the verifier or receipt was invalid",
+    "valid_completion": "verifier passes and, in arm B, the gate also validates"
+  },
+  "treatment_components": [
+    "composed context replaces transcript replay",
+    "executable phase transitions with a gated completion",
+    "bounded validated structured state",
+    "artifact receipts outrank state",
+    "three extra tools that exist only to drive the above"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "pi_version": "0.73.0",
+  "core_patched": false,
+  "arm_a": {
+    "arm": "pi_default_v1",
+    "load_errors": [],
+    "returned_replacement": false,
+    "replacement_messages": null,
+    "replacement_bytes": null,
+    "incoming_messages": 36,
+    "incoming_bytes": 33535,
+    "pi_message_array_unmutated": true,
+    "captured_requests": [
+      {
+        "index": 1,
+        "bytes": 33535,
+        "messages": 36,
+        "composed": false
+      }
+    ],
+    "compaction_cancelled": false
+  },
+  "arm_b": {
+    "arm": "pi_state_control_v1",
+    "load_errors": [],
+    "returned_replacement": true,
+    "replacement_messages": 7,
+    "replacement_bytes": 5991,
+    "incoming_messages": 36,
+    "incoming_bytes": 33535,
+    "pi_message_array_unmutated": true,
+    "captured_requests": [
+      {
+        "index": 1,
+        "bytes": 5991,
+        "messages": 7,
+        "composed": true
+      }
+    ],
+    "compaction_cancelled": true
+  },
+  "checks": {
+    "a_does_not_replace_context": true,
+    "a_leaves_pi_array_untouched": true,
+    "a_keeps_pi_compaction": true,
+    "b_replaces_context": true,
+    "b_cancels_compaction": true,
+    "b_window_is_bounded": true,
+    "both_capture_request_sizes": true
+  }
+}

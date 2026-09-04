@@ -1,5 +1,113 @@
 # Codex to ChatGPT handoff
 
+## Generation 44 — the paired Pi coding pilot, designed and frozen
+
+**status:** complete. `architecture_pilot_design_no_score`. No model, no inference, no GPU, no
+hosted API, and no network during the preflight — that last one is proved by blocking the socket
+layer and attempting a connection, not asserted. Base `83caa74`, full suite 329 passed (310
+baseline + 19 new) with the one pre-existing warning.
+
+**model candidate: PINNED, without generating a token.** `qwen3.6-35b-vulkan-nothink` resolves to
+Qwen3.6-35B-A3B UD-Q4_K_XL, 22,360,456,160 bytes, sha256 `707a55a8a4397ecde44de0c4…`, arch
+`qwen35moe`, GGUF v3, 733 tensors, apache-2.0, gpt2 BPE tokenizer, mmproj BF16 sha256
+`356dfaa3…`. Chat template embedded in the GGUF and applied via `--jinja`, sha256 `55d49314…`,
+8,057 chars. Server is the nathanw-v04 Vulkan `llama-server` build 385 (2041049), GCC 13.3.0, on
+Vulkan0 AMD Radeon 8060S (RADV GFX1151), 127,488 MiB. Flags `-ngl 99 --no-mmap -ub 2048
+--ctx-size 131072 --jinja --reasoning off --temp 0.6 --top-p 0.8 --top-k 20 --min-p 0`. Router is
+llama-swap on 0.0.0.0:8080 with TTL 3600. Everything came from the on-disk config, the GGUF
+header, the binary's own `--version`/`--list-devices` and the running unit; the server was never
+started.
+
+**four risks recorded for you and Brian, and the first is the one I would not walk past.** There
+is no pinned seed and temperature is 0.6, so the three repetitions per cell are *samples, not
+reproductions*. That has to be decided before the first live run — pin a per-request seed if the
+path carries one, or accept sampling and say so in the result. The others: `--reasoning off` is a
+server flag rather than a model property and I have not verified Pi cannot re-open a thinking
+channel without generating; tool-call formatting under this chat template has never been
+exercised with Pi, so a format incompatibility is a plausible early blocker rather than a result;
+and llama-swap's 3600s TTL means prompt KV cache persists across runs while the two arms send
+different prefixes by construction, so wall-clock and prefill must not be read as an architecture
+effect.
+
+**arms frozen.** A `pi_default_v1` is stock Pi with its own compaction and no extension touching
+the request. B `pi_state_control_v1` is the Gen43 lineage: composed context replaces transcript
+replay, history is externalized losslessly, Pi compaction is cancelled, completion is gated on a
+validated artifact, and three tools exist to drive state and control. The report states plainly
+that B is **not** "A with fewer bytes" — the treatment is that whole bundle, and four tasks cannot
+attribute a difference to any one part of it. No arm C, as instructed.
+
+**both arms verified inside the installed Pi, with no core patch.** Given a synthetic transcript
+of 36 messages and 33,535 bytes: arm A returned no replacement, left Pi's message array
+byte-identical and kept Pi's compaction; arm B returned 7 messages of 5,991 bytes and cancelled
+compaction. Both captured the request size. So the baseline really is stock Pi with
+instrumentation *beside* the request rather than in front of it.
+
+**composition frozen, because Gen43's one-message view was too brittle to assume.** Order is
+instructions, control, state, recent window, latest observation, artifact refs. Caps: state 4,096
+bytes, recent window two complete interaction units under 8,192 bytes, latest observation 8,192
+bytes; overflow stays in history with a reference. The unit rule is mechanical rather than a
+judgement call — a unit starts at a user message and runs to the message before the next user
+message, a trailing partial unit counts, and messages before the first user turn belong to no unit
+— and it is tested against fixtures including that orphan case.
+
+**four tasks, invented, proved solvable without a model.** T1 cross-file bug fix with a decoy
+module whose similar-looking conversion is correct. T2 coordinated API change across three files
+that must keep every existing caller working. T3 debugging where the real failure is buried in
+about 200 lines of console noise. T4 a regression where the obvious one-line fix satisfies the
+visible test but breaks the midpoint rule the module's own design note states. Each has a frozen
+git tree digest, and each was proved to fail before and pass after a reference fix that exists
+only in the builder script — never written into a fixture tree, never in a prompt, never
+committed anywhere the agent can reach. Hidden verifiers sit beside the repository, not inside it;
+the preflight checks the agent cannot see the verifier and that neither repo nor prompt names it.
+
+**measurement frozen before any result exists.** Primary is the deterministic verifier on the
+final tree. Co-primary are request bytes per call, cumulative bytes, max and median, bytes by
+turn, model calls and tool calls. The three churn definitions are frozen and deliberately
+overlapping — a verifier re-run after an edit is an exact repeat but not a redundant invocation,
+and both are reported rather than merged — and the counters were checked against a hand-written
+log whose expected numbers were written down first. Termination is classified separately from task
+success, because artifact-gated completion will produce runs that stop short rather than declare
+victory, and a naive success metric would score that as failure.
+
+**run plan.** 24 runs: 4 tasks x 3 repetitions x 2 arms, serial, fresh worktree and fresh session
+each time, deterministic order from seed 20260905, arms adjacent within a pair and first position
+counterbalanced 6/6 so arm order cannot align with machine drift or cache warmth.
+
+**one thing I fixed rather than shipped.** The fixtures were initially committed with their own
+`.git` directories inside this repository, which git skips as embedded repos — the fixtures would
+have looked committed and not been. Tree digests are computed and the `.git` removed, so the
+runner re-creates the repository and gets the same tree hash from content alone. Fixture footprint
+dropped from 636K to 96K in the process.
+
+**files.** `src/memory_bakeoff/pi_state_control/pilot.py` (frozen contract, composition, churn,
+order), `extensions/pi_state_control/{pi_pilot_arms.ts,verify_pi_pilot_arms.ts}`,
+`scripts/{build_pi_pilot_gen44_tasks,preflight_pi_pilot_gen44,build_pi_pilot_gen44_report}.py`,
+`tests/test_pi_pilot_gen44.py` (19), `fixtures/pi_pilot_gen44/T1..T4`,
+`research/PI_STATE_CONTROL_GEN44_PILOT_DESIGN.md`, `results/pi_state_control_gen44/`
+(model_candidate_identity, pilot_contract, task_manifest, order_manifest, pi_arm_verification,
+preflight, design_digest). No Gen43 leaf was altered; no weights or caches committed.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen45 recommendation — do not execute without Brian.**
+
+Run the pilot exactly as frozen, after three decisions that are his and yours, not mine.
+
+1. **Authorization** for 24 live runs on the local Strix Halo server. I have deliberately not
+   produced a wall-clock estimate from a calibration completion, because that would have meant
+   generating in Gen44. What I can say without inference: the model is 22 GB on a 128 GB unified
+   device, the router keeps it resident for an hour, and the runs are serial. The honest answer is
+   that the per-run cost is unknown until one authorized run exists.
+2. **The seed decision** above. This changes how the result may be phrased, so it must be settled
+   first.
+3. **An operational move.** Pi and the inference server are both on the Linux workstation; this
+   repository is on the Mac. Gen45 has to execute on Linux, so the fixtures and harness need to be
+   there before the first run, and the result leaves need to come back.
+
+If tool-call formatting turns out to be incompatible with Pi under this template, that is a
+blocker to publish, not a reason to swap models quietly. The pinned hosted alternative should be
+proposed to Brian at that point rather than assumed.
+
 ## Generation 43 — the first Pi state/control prototype
 
 **status:** complete. `architecture_prototype_no_score`. No model, no network, no API, no GPU, no

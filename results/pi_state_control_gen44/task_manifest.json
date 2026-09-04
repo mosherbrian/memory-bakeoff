@@ -1,0 +1,71 @@
+{
+  "all_tasks_fail_before_and_pass_after": true,
+  "manifest_digest": "48273e6ee55410c476a6d15dca3a75d28ae7fabdcf5ab530c317cc689f311b0e",
+  "note": "Hidden verifiers live beside the fixture, never inside the repository the agent sees. The reference fixes exist only in this builder, are used to prove solvability, and are never written into a fixture tree or a prompt.",
+  "tasks": {
+    "T1": {
+      "file_count": 6,
+      "git_tree_digest": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "pressure": "the decoy module contains a similar-looking but correct conversion",
+      "prompt": "`tests/test_gauge.py` fails. Find and fix the defect so the test passes. Keep the rest of the package's behaviour unchanged.",
+      "repo_path": "fixtures/pi_pilot_gen44/T1/repo",
+      "solvable": {
+        "fixed_output_tail": "VERIFIER OK",
+        "initial_output_tail": "AssertionError: cm_to_m is wrong",
+        "verifier_fails_on_initial_tree": true,
+        "verifier_passes_after_reference_fix": true
+      },
+      "title": "cross-file bug fix with a decoy",
+      "verifier_path": "fixtures/pi_pilot_gen44/T1/verifier.py",
+      "verifier_sha256": "99d0caf513327db2a86cdcd243791648368c2cbcb8ebdcb81ab5b365ad9f9ed4"
+    },
+    "T2": {
+      "file_count": 6,
+      "git_tree_digest": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "pressure": "three files must change together and old callers must keep working",
+      "prompt": "Station levels are currently always computed against the station datum. Add an optional `datum` argument to `Station.level`, `Fleet.level` and `summarise` so a caller can pass an alternative datum in metres for a single call, while every existing caller that passes no datum keeps its current behaviour exactly. Keep the change small and consistent across the three files.",
+      "repo_path": "fixtures/pi_pilot_gen44/T2/repo",
+      "solvable": {
+        "fixed_output_tail": "VERIFIER OK",
+        "initial_output_tail": "TypeError: Fleet.level() got an unexpected keyword argument 'datum'",
+        "verifier_fails_on_initial_tree": true,
+        "verifier_passes_after_reference_fix": true
+      },
+      "title": "coordinated API change preserving behaviour",
+      "verifier_path": "fixtures/pi_pilot_gen44/T2/verifier.py",
+      "verifier_sha256": "55181890463dc4fb5e7a901b04848ee300061d05f2f0db707524c3850903f28a"
+    },
+    "T3": {
+      "file_count": 4,
+      "git_tree_digest": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "pressure": "the failing signal is buried in ~200 lines of irrelevant console output",
+      "prompt": "`python run_checks.py` fails. Find and fix the defect in the tidewatch package so the checks pass. Do not change run_checks.py.",
+      "repo_path": "fixtures/pi_pilot_gen44/T3/repo",
+      "solvable": {
+        "fixed_output_tail": "VERIFIER OK",
+        "initial_output_tail": "AssertionError: 0 -> 00:30, expected 00:00",
+        "verifier_fails_on_initial_tree": true,
+        "verifier_passes_after_reference_fix": true
+      },
+      "title": "debugging under noisy tool output",
+      "verifier_path": "fixtures/pi_pilot_gen44/T3/verifier.py",
+      "verifier_sha256": "ad6a5947b5efd54a51d6cd1fcca17114973521566746b33f4768b8873b15256b"
+    },
+    "T4": {
+      "file_count": 4,
+      "git_tree_digest": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "pressure": "the obvious one-line fix satisfies the visible test but breaks the midpoint rule stated in the module's own design note",
+      "prompt": "`tests/test_rounding.py` fails. Fix `normalise` so the tests pass. The module's design note explains the rounding rule the printed log depends on; keep to it.",
+      "repo_path": "fixtures/pi_pilot_gen44/T4/repo",
+      "solvable": {
+        "fixed_output_tail": "VERIFIER OK",
+        "initial_output_tail": "AssertionError: normalise(1.005) -> 1.0, expected 1.01",
+        "verifier_fails_on_initial_tree": true,
+        "verifier_passes_after_reference_fix": true
+      },
+      "title": "regression that reopens an earlier decision",
+      "verifier_path": "fixtures/pi_pilot_gen44/T4/verifier.py",
+      "verifier_sha256": "f346a47fb6723ad601f5e2e871d50cca03cec152cf71fd902e9ce97484a8c3fc"
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "arm_parity": {
+    "arm_a_has_no_extra_tools": true,
+    "arm_differences": {
+      "context_hook_installed": [
+        false,
+        true
+      ],
+      "extra_tools": [
+        [],
+        [
+          "propose_state_patch",
+          "request_transition",
+          "record_receipt"
+        ]
+      ],
+      "pi_compaction": [
+        "enabled, Pi's own default",
+        "cancelled from the extension; history is externalized instead"
+      ]
+    },
+    "prompts_are_arm_independent": true,
+    "same_task_prompts": true,
+    "treatment_components": [
+      "composed context replaces transcript replay",
+      "executable phase transitions with a gated completion",
+      "bounded validated structured state",
+      "artifact receipts outrank state",
+      "three extra tools that exist only to drive the above"
+    ]
+  },
+  "churn_counters": {
+    "expected": {
+      "exact_repeated_tool_calls": 4,
+      "redundant_file_reads": 1,
+      "redundant_verifier_invocations": 1,
+      "repo_mutations": 1
+    },
+    "match": true,
+    "measured": {
+      "exact_repeated_tool_calls": 4,
+      "redundant_file_reads": 1,
+      "redundant_verifier_invocations": 1,
+      "repo_mutations": 1
+    },
+    "note": "the definitions overlap on purpose: a repeated verifier call after an edit is an exact repeat but not a redundant invocation, and both are reported"
+  },
+  "composition": {
+    "no_semantic_retrieval_symbol": true,
+    "oversize_unit_is_capped_not_dropped_from_history": true,
+    "unit_sizes": [
+      3
+    ],
+    "units_found": 12,
+    "window_bytes": 5438,
+    "window_messages_kept": 6,
+    "window_preserves_original_order": true,
+    "window_units_requested": 2,
+    "window_within_cap": true
+  },
+  "fresh_worktree": {
+    "damaged_copy_digest_differs": true,
+    "fixture_carries_no_embedded_git": true,
+    "fresh_copy_digest": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+    "frozen_tree_digest": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+    "reset_matches_frozen_tree": true
+  },
+  "model_candidate": {
+    "generation_performed": false,
+    "status": "PINNED"
+  },
+  "no_network": {
+    "detail": "outbound connection to '127.0.0.2' while offline",
+    "outbound_blocked": true
+  },
+  "order": {
+    "balanced_arms": true,
+    "counterbalanced_first_position": true,
+    "deterministic_from_seed": true,
+    "pairs_are_adjacent": true,
+    "runs": 24,
+    "seed": 20260905
+  },
+  "passed": true,
+  "pi_arms": {
+    "a_does_not_replace_context": true,
+    "a_keeps_pi_compaction": true,
+    "a_leaves_pi_array_untouched": true,
+    "b_cancels_compaction": true,
+    "b_replaces_context": true,
+    "b_window_is_bounded": true,
+    "both_capture_request_sizes": true
+  },
+  "state_control": {
+    "artifact_mutation_invalidates_completion": true,
+    "completion_earned_from_receipt": true,
+    "gate_refuses_mutated_artifact": true,
+    "state_survives_restart": true,
+    "state_within_cap": true
+  },
+  "task_isolation": {
+    "all_tasks_solvable": true,
+    "per_task": {
+      "T1": {
+        "fails_before_and_passes_after": true,
+        "prompt_mentions_verifier": false,
+        "verifier_inside_repo": false,
+        "verifier_name_mentioned_in_repo": false
+      },
+      "T2": {
+        "fails_before_and_passes_after": true,
+        "prompt_mentions_verifier": false,
+        "verifier_inside_repo": false,
+        "verifier_name_mentioned_in_repo": false
+      },
+      "T3": {
+        "fails_before_and_passes_after": true,
+        "prompt_mentions_verifier": false,
+        "verifier_inside_repo": false,
+        "verifier_name_mentioned_in_repo": false
+      },
+      "T4": {
+        "fails_before_and_passes_after": true,
+        "prompt_mentions_verifier": false,
+        "verifier_inside_repo": false,
+        "verifier_name_mentioned_in_repo": false
+      }
+    },
+    "verifier_never_inside_repo": true,
+    "verifier_never_named_to_the_agent": true
+  }
+}

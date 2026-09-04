@@ -1,0 +1,79 @@
+{
+  "host": {
+    "hostname": "strix-halo",
+    "kernel": "7.0.14-101.fc43.x86_64",
+    "note": "Pi 0.73.0 and this inference server are on the same Linux workstation; the memory-bakeoff repository lives on the Mac"
+  },
+  "inference_server": {
+    "backend": "Vulkan",
+    "binary": "/var/home/bmosher/nathanw-v04/vulkan/bin/llama-server",
+    "binary_bytes": 17920,
+    "binary_note": "a small launcher; the Vulkan runtime libraries sit beside it on LD_LIBRARY_PATH",
+    "binary_sha256": "3b84a431ce531a9dfd05b55c4e4d91c50a0716fa420f75bbfe8fa8f2f912093b",
+    "built_with": "GNU 13.3.0 for Linux x86_64",
+    "device": "Vulkan0: AMD Radeon 8060S Graphics (RADV GFX1151), 127488 MiB total",
+    "version_line": "version: 385 (2041049)"
+  },
+  "model": {
+    "architecture": "qwen35moe",
+    "bytes": 22360456160,
+    "chat_template": {
+      "chars": 8057,
+      "sha256": "55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "source": "embedded in the GGUF, applied via --jinja"
+    },
+    "gguf_version": 3,
+    "kv_count": 54,
+    "license": "apache-2.0",
+    "mmproj": {
+      "bytes": 902822624,
+      "path": "/home/bmosher/models/qwen3.6-35b/mmproj-BF16.gguf",
+      "sha256": "356dfaa3111376a4f7165e32e8749713378d1700b37cf52e0c50d9f23322334d"
+    },
+    "name": "Qwen3.6-35B-A3B",
+    "path": "/home/bmosher/models/qwen3.6-35b/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf",
+    "quantization": "UD-Q4_K_XL (general.file_type 15, quantization_version 2)",
+    "sha256": "707a55a8a4397ecde44de0c499d3e68c1ad1d240d1da65826b4949d1043f4450",
+    "size_label": "35B-A3B",
+    "tensor_count": 733,
+    "tokenizer": "gpt2 BPE (tokenizer.ggml.model)"
+  },
+  "note": "Characterized without generating a single token. The server was not started for this generation; every value below comes from the on-disk config, the GGUF header, the binary's --version and --list-devices, or the running unit.",
+  "open_risks_for_gen45": [
+    "No seed is pinned and temperature is 0.6, so individual runs are stochastic. Either the request path must carry a per-request seed, or repetitions must be treated as samples rather than reproductions. This is the single largest threat to the paired design and needs deciding before the first live run.",
+    "--reasoning off is a server-side flag, not a model property. Whether Pi's provider path re-enables a thinking channel has not been verified without generating.",
+    "Tool-call formatting under this chat template has not been exercised with Pi; template compatibility with Pi's tool protocol is unverified and is a real blocker risk.",
+    "llama-swap's 3600s TTL means prompt KV cache can persist across runs. Arm B sends a different, shorter prefix than arm A, so cache warmth differs by arm by construction; wall-clock and prefill numbers must not be read as an architecture effect.",
+    "The 131072 context window is far larger than any arm is expected to reach, so arm A is unlikely to hit native truncation on four small tasks; Pi's own compaction threshold, not the model window, is what arm A will meet first."
+  ],
+  "router": {
+    "config_path": "/home/bmosher/llama-swap/config.yaml",
+    "config_sha256": "8fc960974fa1782ca3509f89b1e0c72dd34c86b649ec392d528597657cfd0ab4",
+    "container": "toolbox llama-rocm-7.2",
+    "listen": "0.0.0.0:8080",
+    "model_entry": "  \"qwen3.6-35b-vulkan-nothink\":\n    cmd: |\n      /var/home/bmosher/nathanw-v04/vulkan/bin/llama-server\n        --port ${PORT}\n        -m /home/bmosher/models/qwen3.6-35b/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf\n        --mmproj /home/bmosher/models/qwen3.6-35b/mmproj-BF16.gguf\n        --alias qwen3.6-35b-vulkan-nothink\n        -ngl 99\n        --no-mmap\n        -ub 2048\n        --ctx-size 131072\n        --jinja\n        --reasoning off\n        --temp 0.6\n        --top-p 0.8\n        --top-k 20\n        --min-p 0\n        --host 0.0.0.0\n    env:\n      - \"LD_LIBRARY_PATH=/var/home/bmosher/nathanw-v04/vulkan/bin:/var/home/bmosher/nathanw-v04/vulkan\"\n    ttl: 3600\n",
+    "software": "llama-swap",
+    "ttl_meaning": "the loaded model stays resident for an hour, so llama-server slots and their prompt KV cache can outlive a single Pi session; the pilot must treat cross-run cache reuse as a controlled variable",
+    "ttl_seconds": 3600,
+    "unit": "llama-swap.service (user)"
+  },
+  "runtime_flags": {
+    "concurrency": "one slot by default; the pilot runs serially regardless",
+    "ctx_size": 131072,
+    "jinja": true,
+    "max_output_tokens": "not set at the server; the client governs it",
+    "mmap": false,
+    "n_gpu_layers": 99,
+    "reasoning": "off",
+    "sampling": {
+      "min_p": 0.0,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.8
+    },
+    "seed": null,
+    "ubatch": 2048
+  },
+  "served_alias": "qwen3.6-35b-vulkan-nothink",
+  "status": "PINNED"
+}
