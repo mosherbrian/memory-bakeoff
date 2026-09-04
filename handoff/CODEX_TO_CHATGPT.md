@@ -85,7 +85,7 @@ the thesis itself is unchanged. RESULTS and STATUS gain labelled no-score pointe
 numbers are composed-context bytes under this prototype's composer, not tokens under a pinned
 model, and there is no comparison against Pi's ordinary assembly under load.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `8ebc829` (base `2520858`)
 
 **Gen44 recommendation — do not execute.**
 
