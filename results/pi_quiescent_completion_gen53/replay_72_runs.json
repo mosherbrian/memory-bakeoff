@@ -1,0 +1,4760 @@
+{
+  "change_a_effectiveness": {
+    "answer": "no, not on the recorded evidence",
+    "consequence": "v2 still triggers on that run at K=1, 2 and 3. It declines at K=5 and K=10 only because the run ran out of calls, not because the new predicate engaged. The criterion is met incidentally, not in substance.",
+    "question": "does net-tree-change eligibility decline the Gen52 revert-to-start stop?",
+    "why": "the harness tree digest is `git add -A` over the worktree, so it includes untracked build artifacts. Running the visible tests creates __pycache__ and .pytest_cache, which changes the digest on its own. In 11-IP1-r1 the agent reverted its source exactly - the leaf's start_tree and final_tree are the same digest, 732a4b97 - but the digest recorded at the qualifying check was 966c0910, so `current != initial` was satisfied by bytecode."
+  },
+  "contract": {
+    "changes_from_v1": [
+      "net-tree-change eligibility: a run whose current tree equals its initial tree is never quiescent-complete, however many mutation events it made",
+      "a recognized visible pass on a tree that already holds a valid receipt is an idle completion, not a re-arm, and increments the K count instead of resetting it"
+    ],
+    "contract_sha256": "bd53c2686063825ffae054232c69953fa147c785f8de9bae8b67c6a84d6bcfa8",
+    "contract_version": "quiescent-completion-toolcall-v2",
+    "derived_from": "quiescent-completion-toolcall-k3-v1",
+    "hidden_verifier_exclusion": [
+      "verifier.py",
+      "verifier_path",
+      "reference_fix"
+    ],
+    "k_sweep": [
+      1,
+      2,
+      3,
+      5,
+      10
+    ],
+    "k_unit": "tool calls",
+    "mutation_tools": [
+      "edit",
+      "multi_edit",
+      "write"
+    ],
+    "never_an_input": [
+      "hidden verifier",
+      "reference fix",
+      "task manifest answers",
+      "post-hoc correctness",
+      "model self-report"
+    ],
+    "unchanged_from_v1": [
+      "the harness-state-v1 validation recognizer, reused unchanged",
+      "hidden verifier, reference fixes and scorer paths excluded by the same tokens",
+      "at least one repository mutation event is still required",
+      "a visible fail invalidates the receipt and resets the count",
+      "a mutation invalidates the receipt and resets the count",
+      "the stop waits for an in-flight batch to drain and records the overshoot",
+      "K is counted in tool calls"
+    ]
+  },
+  "evidence_class": "architecture_quiescent_completion_refinement_offline_replay_no_score",
+  "focal_runs": {
+    "11-IP1-r1": {
+      "1": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 16,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 0.0,
+        "qualifying_receipt_tree": "966c0910a200fc0e8f0e12e76fcaa722de63b619",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 0,
+        "tool_calls_after_trigger": 0,
+        "trigger_tool_index": 16,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "10": {
+        "became_eligible": true,
+        "net_tree_changed_at_end": true,
+        "triggered": false
+      },
+      "2": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 17,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 0.0,
+        "qualifying_receipt_tree": "966c0910a200fc0e8f0e12e76fcaa722de63b619",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 0,
+        "tool_calls_after_trigger": 0,
+        "trigger_tool_index": 17,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "3": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 18,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 0.0,
+        "qualifying_receipt_tree": "966c0910a200fc0e8f0e12e76fcaa722de63b619",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 0,
+        "tool_calls_after_trigger": 0,
+        "trigger_tool_index": 18,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "5": {
+        "became_eligible": true,
+        "net_tree_changed_at_end": true,
+        "triggered": false
+      }
+    },
+    "23-IP1-r2": {
+      "1": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 23,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 271.4,
+        "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 0,
+        "tool_calls_after_trigger": 280,
+        "trigger_tool_index": 23,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "10": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 32,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 254.0,
+        "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 5,
+        "tool_calls_after_trigger": 262,
+        "trigger_tool_index": 32,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "2": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 24,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 269.5,
+        "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 1,
+        "tool_calls_after_trigger": 278,
+        "trigger_tool_index": 24,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "3": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 25,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 267.5,
+        "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 1,
+        "tool_calls_after_trigger": 276,
+        "trigger_tool_index": 25,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      },
+      "5": {
+        "became_eligible": true,
+        "current_tree_differs_from_initial": true,
+        "effective_stop_tool_index": 27,
+        "first_later_mutation_index": null,
+        "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+        "later_visible_contradiction": false,
+        "provider_requests_after_trigger_estimated": 263.7,
+        "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+        "same_batch_overshoot_calls": 0,
+        "same_tree_passes_counted_idle_before_trigger": 2,
+        "tool_calls_after_trigger": 272,
+        "trigger_tool_index": 27,
+        "trigger_tree_equals_final_tree": false,
+        "triggered": true,
+        "would_stop_wrong_tree": true,
+        "would_truncate_observed_progress": false
+      }
+    }
+  },
+  "gen54_decision_rule": {
+    "k_catching_the_repeated_check_timeout": [
+      1,
+      2,
+      3,
+      5,
+      10
+    ],
+    "k_declining_the_revert_to_start_stop": [
+      5,
+      10
+    ],
+    "k_satisfying_all_criteria": [
+      5,
+      10
+    ],
+    "k_with_zero_observed_progress_truncation": [
+      1,
+      2,
+      3,
+      5,
+      10
+    ],
+    "recommended_k": 5
+  },
+  "known_limits": [
+    "Gen47 arm B has no recorded tree digests at all, so its net-tree-change predicate is modelled from mutation events and cannot test the revert case",
+    "the harness tree digest includes untracked build artifacts such as __pycache__, so running the tests alone changes it"
+  ],
+  "per_k": {
+    "1": {
+      "by_generation": {
+        "47": 13,
+        "49": 9,
+        "52": 10
+      },
+      "fully_observed_triggers": 31,
+      "later_visible_contradiction": 0,
+      "median_tool_calls_after_trigger": 0.0,
+      "of_runs": 72,
+      "runs_triggered": 32,
+      "runs_with_no_net_source_change": [
+        "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1"
+      ],
+      "same_tree_passes_counted_idle": 0,
+      "timeout_runs_caught": 6,
+      "timeout_runs_total": 6,
+      "total_tool_calls_after_trigger": 1729,
+      "triggered_on_runs_with_no_net_source_change": 1,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 2,
+      "would_truncate_observed_progress": 0,
+      "wrong_tree_runs": [
+        "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1"
+      ]
+    },
+    "10": {
+      "by_generation": {
+        "47": 3,
+        "49": 3,
+        "52": 1
+      },
+      "fully_observed_triggers": 7,
+      "later_visible_contradiction": 0,
+      "median_tool_calls_after_trigger": 262,
+      "of_runs": 72,
+      "runs_triggered": 7,
+      "runs_with_no_net_source_change": [],
+      "same_tree_passes_counted_idle": 17,
+      "timeout_runs_caught": 6,
+      "timeout_runs_total": 6,
+      "total_tool_calls_after_trigger": 1630,
+      "triggered_on_runs_with_no_net_source_change": 0,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 1,
+      "would_truncate_observed_progress": 0,
+      "wrong_tree_runs": [
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1"
+      ]
+    },
+    "2": {
+      "by_generation": {
+        "47": 8,
+        "49": 5,
+        "52": 3
+      },
+      "fully_observed_triggers": 15,
+      "later_visible_contradiction": 0,
+      "median_tool_calls_after_trigger": 0.0,
+      "of_runs": 72,
+      "runs_triggered": 16,
+      "runs_with_no_net_source_change": [
+        "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1"
+      ],
+      "same_tree_passes_counted_idle": 5,
+      "timeout_runs_caught": 6,
+      "timeout_runs_total": 6,
+      "total_tool_calls_after_trigger": 1718,
+      "triggered_on_runs_with_no_net_source_change": 1,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 2,
+      "would_truncate_observed_progress": 0,
+      "wrong_tree_runs": [
+        "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1"
+      ]
+    },
+    "3": {
+      "by_generation": {
+        "47": 7,
+        "49": 4,
+        "52": 3
+      },
+      "fully_observed_triggers": 13,
+      "later_visible_contradiction": 0,
+      "median_tool_calls_after_trigger": 1.5,
+      "of_runs": 72,
+      "runs_triggered": 14,
+      "runs_with_no_net_source_change": [
+        "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1"
+      ],
+      "same_tree_passes_counted_idle": 6,
+      "timeout_runs_caught": 6,
+      "timeout_runs_total": 6,
+      "total_tool_calls_after_trigger": 1702,
+      "triggered_on_runs_with_no_net_source_change": 1,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 2,
+      "would_truncate_observed_progress": 0,
+      "wrong_tree_runs": [
+        "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1"
+      ]
+    },
+    "5": {
+      "by_generation": {
+        "47": 3,
+        "49": 3,
+        "52": 2
+      },
+      "fully_observed_triggers": 8,
+      "later_visible_contradiction": 0,
+      "median_tool_calls_after_trigger": 254.0,
+      "of_runs": 72,
+      "runs_triggered": 8,
+      "runs_with_no_net_source_change": [],
+      "same_tree_passes_counted_idle": 7,
+      "timeout_runs_caught": 6,
+      "timeout_runs_total": 6,
+      "total_tool_calls_after_trigger": 1672,
+      "triggered_on_runs_with_no_net_source_change": 0,
+      "truncated_runs": [],
+      "would_stop_wrong_tree": 1,
+      "would_truncate_observed_progress": 0,
+      "wrong_tree_runs": [
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1"
+      ]
+    }
+  },
+  "runs": [
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 95,
+      "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 587,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 587,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 596,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 596,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 588,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 588,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 589,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 589,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 591,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 591,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 328,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 3,
+      "run": "01-T3-r3-pi_state_control_v1",
+      "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "start_tree_equals_final_tree": false,
+      "status": "timeout",
+      "task": "T3",
+      "termination_class": null,
+      "total_tool_calls": 556,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 3,
+      "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 14,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "90211dc14a23a501a76757e3fc13123b3c91cc7c",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 14,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 15,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "90211dc14a23a501a76757e3fc13123b3c91cc7c",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 15,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 16,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "90211dc14a23a501a76757e3fc13123b3c91cc7c",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 16,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 12,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "02-T3-r3-pi_harness_state_control_v1",
+      "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T3",
+      "termination_class": null,
+      "total_tool_calls": 13,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 3,
+      "final_tree": "897bc7a098b1165a4bd433205e44a2c83b58ec1d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "66cf759ed5df83f715735baa46901f214c064697",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 13,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "03-T4-r3-pi_harness_state_control_v1",
+      "start_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T4",
+      "termination_class": null,
+      "total_tool_calls": 15,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 1,
+      "final_tree": "d403c13308ccebe1fa92aef24ba0d75069fa8a7e",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 9,
+          "first_later_mutation_index": null,
+          "initial_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 9,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 10,
+          "first_later_mutation_index": null,
+          "initial_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 10,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 8,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 3,
+      "run": "04-T4-r3-pi_state_control_v1",
+      "start_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T4",
+      "termination_class": null,
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 0,
+      "final_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 4,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 1,
+      "run": "05-T2-r1-pi_state_control_v1",
+      "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "start_tree_equals_final_tree": true,
+      "status": "completed",
+      "task": "T2",
+      "termination_class": null,
+      "total_tool_calls": 8,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "7f0801010b0d43840e02fad8f615fa6bab89134c",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "06-T2-r1-pi_harness_state_control_v1",
+      "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T2",
+      "termination_class": null,
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "38d15edd5aacbdc284afa6ff7c00249ae29303c8",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "07-T4-r1-pi_harness_state_control_v1",
+      "start_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T4",
+      "termination_class": null,
+      "total_tool_calls": 5,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 2,
+      "final_tree": "a8ae60d45cc28d0ee026aa5ecb202e808a5ae208",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-2",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 13,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 1,
+      "run": "08-T4-r1-pi_state_control_v1",
+      "start_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T4",
+      "termination_class": null,
+      "total_tool_calls": 16,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 1,
+      "final_tree": "f014f243de564087721cd16c3478174dbb578c2d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 10,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 10,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 7,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 3,
+      "run": "09-T1-r3-pi_state_control_v1",
+      "start_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T1",
+      "termination_class": null,
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "f014f243de564087721cd16c3478174dbb578c2d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "10-T1-r3-pi_harness_state_control_v1",
+      "start_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T1",
+      "termination_class": null,
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 25,
+      "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 129,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "1f0ad239d6abf00522e9ce8ca3fa9dd651598a87",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 129,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 130,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "1f0ad239d6abf00522e9ce8ca3fa9dd651598a87",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 130,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 131,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "1f0ad239d6abf00522e9ce8ca3fa9dd651598a87",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 131,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 65,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "11-T3-r1-pi_harness_state_control_v1",
+      "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T3",
+      "termination_class": null,
+      "total_tool_calls": 106,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 111,
+      "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 380,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 133.7,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 241,
+          "trigger_tool_index": 380,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 389,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 128.2,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 231,
+          "trigger_tool_index": 389,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 381,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 132.6,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 239,
+          "trigger_tool_index": 381,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 382,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 132.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 238,
+          "trigger_tool_index": 382,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 384,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 130.9,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 236,
+          "trigger_tool_index": 384,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 324,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 1,
+      "run": "12-T3-r1-pi_state_control_v1",
+      "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "start_tree_equals_final_tree": false,
+      "status": "timeout",
+      "task": "T3",
+      "termination_class": null,
+      "total_tool_calls": 584,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 4,
+      "final_tree": "cd708ece4ccd88a5cd74de039bf36837aba7ba82",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-3",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 13,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 2,
+      "run": "13-T4-r2-pi_state_control_v1",
+      "start_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T4",
+      "termination_class": null,
+      "total_tool_calls": 14,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "d403c13308ccebe1fa92aef24ba0d75069fa8a7e",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "14-T4-r2-pi_harness_state_control_v1",
+      "start_tree": "6ae275d23e74e9218edc02c7566085894d335b8a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T4",
+      "termination_class": null,
+      "total_tool_calls": 5,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "f014f243de564087721cd16c3478174dbb578c2d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "15-T1-r1-pi_harness_state_control_v1",
+      "start_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T1",
+      "termination_class": null,
+      "total_tool_calls": 6,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 3,
+      "final_tree": "f014f243de564087721cd16c3478174dbb578c2d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 10,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 10,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 8,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 1,
+      "run": "16-T1-r1-pi_state_control_v1",
+      "start_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T1",
+      "termination_class": null,
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 3,
+      "final_tree": "f014f243de564087721cd16c3478174dbb578c2d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 13,
+          "first_later_mutation_index": null,
+          "initial_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 13,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 9,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 2,
+      "run": "17-T1-r2-pi_state_control_v1",
+      "start_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T1",
+      "termination_class": null,
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "f014f243de564087721cd16c3478174dbb578c2d",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "18-T1-r2-pi_harness_state_control_v1",
+      "start_tree": "c5f74d27399a6b74b5f3e49ecc7a88c4abed73cf",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T1",
+      "termination_class": null,
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 5,
+      "final_tree": "54d83044637d07eec525956f4206eb3189e87333",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 33,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "ff27d337d391982392601140a4c86ffc5e0adbc3",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 33,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 22,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "19-T3-r2-pi_harness_state_control_v1",
+      "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T3",
+      "termination_class": null,
+      "total_tool_calls": 28,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 128,
+      "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 226,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 238.3,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 426,
+          "trigger_tool_index": 226,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 235,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 232.2,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 415,
+          "trigger_tool_index": 235,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 227,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 237.8,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 425,
+          "trigger_tool_index": 227,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 228,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 237.2,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 424,
+          "trigger_tool_index": 228,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 230,
+          "first_later_mutation_index": null,
+          "initial_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 235.5,
+          "qualifying_receipt_tree": "post-mutation-1",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 421,
+          "trigger_tool_index": 230,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 320,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 2,
+      "run": "20-T3-r2-pi_state_control_v1",
+      "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+      "start_tree_equals_final_tree": false,
+      "status": "timeout",
+      "task": "T3",
+      "termination_class": null,
+      "total_tool_calls": 572,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 0,
+      "final_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 4,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 2,
+      "run": "21-T2-r2-pi_state_control_v1",
+      "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "start_tree_equals_final_tree": true,
+      "status": "completed",
+      "task": "T2",
+      "termination_class": null,
+      "total_tool_calls": 8,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "1c28d03ed5d76697b5b07222c9170b4c1f58352f",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "22-T2-r2-pi_harness_state_control_v1",
+      "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T2",
+      "termination_class": null,
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "final_tree": "8baee324c4293a3c5f62cdadbb2687de0dec2e43",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "23-T2-r3-pi_harness_state_control_v1",
+      "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "T2",
+      "termination_class": null,
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_state_control_v1",
+      "checks": 0,
+      "final_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "generation": 47,
+      "k": {
+        "1": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": false,
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 4,
+      "receipt_source": "offline_reconstructed_observable_receipt",
+      "repetition": 3,
+      "run": "24-T2-r3-pi_state_control_v1",
+      "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+      "start_tree_equals_final_tree": true,
+      "status": "completed",
+      "task": "T2",
+      "termination_class": null,
+      "total_tool_calls": 8,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": false,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "final_tree": "70fede354d9cfe61925ee2fae3605e44b41e4f7f",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 17,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "5674dbdadacc402144b86e6bcff437efa2287a0b",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 17,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 10,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "01-IP1-r2-pi_harness_state_control_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": null,
+      "total_tool_calls": 15,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 2,
+      "final_tree": "bbfd0e3092a4bf7352c76ed0985bba64c26f60a9",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 11,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "02-IP1-r2-pi_harness_state_control_task_floor_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": null,
+      "total_tool_calls": 17,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "03-IP2-r3-pi_harness_state_control_task_floor_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": null,
+      "total_tool_calls": 8,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "13779080cd051510b53361b8dfeccf872a2ea4d0",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "04-IP2-r3-pi_harness_state_control_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": null,
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "05-IP4-r1-pi_harness_state_control_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": null,
+      "total_tool_calls": 6,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 8,
+          "first_later_mutation_index": null,
+          "initial_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "936d2d81a47f38b70a59d48a7459762a9ff9ec61",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 8,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "06-IP4-r1-pi_harness_state_control_task_floor_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": null,
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 2,
+      "final_tree": "b05840f7cf59a79afc3fe4f9154a8e04a437a50a",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 17,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "ab3cf810f520be809f2da5c6073dd1247c9b147e",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 17,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "ab3cf810f520be809f2da5c6073dd1247c9b147e",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 19,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "ab3cf810f520be809f2da5c6073dd1247c9b147e",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 19,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 10,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "07-IP1-r1-pi_harness_state_control_task_floor_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": null,
+      "total_tool_calls": 17,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "392c6d9d0a71d84e0e3aabac92dbb1d6396ad287",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "08-IP1-r1-pi_harness_state_control_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": null,
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "de075a9c6a04735fef6850b414e2a1ec9cc3f1f4",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "09-IP2-r2-pi_harness_state_control_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": null,
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "b3cd72220d888cbe21cd551108c593a4eeac10b0",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "10-IP2-r2-pi_harness_state_control_task_floor_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": null,
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 2,
+      "final_tree": "65559e56322bebc950a322e8b5b9f1f6e8f6b051",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 4,
+      "provider_requests": 10,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": null,
+      "total_tool_calls": 14,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "final_tree": "40cd2c4a9fd2e7b5b20e87cdedb9c652cca21e43",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 15,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "e6ddcd4360329a41d18e90f9c202a7ad9a1e3e24",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 15,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 16,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "e6ddcd4360329a41d18e90f9c202a7ad9a1e3e24",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 16,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 9,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "12-IP1-r3-pi_harness_state_control_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": null,
+      "total_tool_calls": 14,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 160,
+      "final_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 10,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 314.2,
+          "qualifying_receipt_tree": "125ae3c2852a5c6563c47495f3ad31cb81e0dae6",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 318,
+          "trigger_tool_index": 10,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 23,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 288.5,
+          "qualifying_receipt_tree": "4e66be6f8dbbe54dd7e20022e8f5617c4d447df9",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 5,
+          "tool_calls_after_trigger": 292,
+          "trigger_tool_index": 23,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 312.3,
+          "qualifying_receipt_tree": "125ae3c2852a5c6563c47495f3ad31cb81e0dae6",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 316,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 310.3,
+          "qualifying_receipt_tree": "125ae3c2852a5c6563c47495f3ad31cb81e0dae6",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 314,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 298.4,
+          "qualifying_receipt_tree": "4e66be6f8dbbe54dd7e20022e8f5617c4d447df9",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 2,
+          "tool_calls_after_trigger": 302,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 167,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "13-IP3-r2-pi_harness_state_control_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "timeout",
+      "task": "IP3",
+      "termination_class": null,
+      "total_tool_calls": 169,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "14-IP3-r2-pi_harness_state_control_task_floor_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": null,
+      "total_tool_calls": 12,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 14,
+      "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 22.8,
+          "qualifying_receipt_tree": "b456ecfeedc9bbc6b30f02effeac9047f27d44d2",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 28,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 23,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 6.5,
+          "qualifying_receipt_tree": "4176d4fc59cbce94094b5865af20ddf9a319cb7d",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 5,
+          "tool_calls_after_trigger": 8,
+          "trigger_tool_index": 23,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 21.2,
+          "qualifying_receipt_tree": "b456ecfeedc9bbc6b30f02effeac9047f27d44d2",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 26,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 16,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 14.7,
+          "qualifying_receipt_tree": "4176d4fc59cbce94094b5865af20ddf9a319cb7d",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 18,
+          "trigger_tool_index": 16,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 11.4,
+          "qualifying_receipt_tree": "4176d4fc59cbce94094b5865af20ddf9a319cb7d",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 2,
+          "tool_calls_after_trigger": 14,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 22,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "15-IP3-r3-pi_harness_state_control_task_floor_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": null,
+      "total_tool_calls": 27,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "16-IP3-r3-pi_harness_state_control_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": null,
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "ee471978b503a70377ce23fcfd61e7e0aee7a1c0",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "17-IP4-r2-pi_harness_state_control_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": null,
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "18-IP4-r2-pi_harness_state_control_task_floor_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": null,
+      "total_tool_calls": 6,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "2c041c8499656b417b117de34c75978cf700019b",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "19-IP3-r1-pi_harness_state_control_task_floor_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": null,
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "f80bf4fc3c8e36e4d3f83b5091e14444db0c37dd",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "20-IP3-r1-pi_harness_state_control_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": null,
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 8,
+          "first_later_mutation_index": null,
+          "initial_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "bf4d1967fd17dddc84c8c7f7c275175bc6e075d8",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 8,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": null,
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "64da81dc832a4aafbb29a2cdeca2e90d6d06f3bc",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_task_floor_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": null,
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "checks": 1,
+      "final_tree": "c08db7784dca673e6f74818f4ca3cfc29eda972f",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "23-IP2-r1-pi_harness_state_control_task_floor_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": null,
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+      "generation": 49,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 428.1,
+          "qualifying_receipt_tree": "9d1af01d0d77a5670246df2e2f12b2ba0d7d61ff",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 431,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 20,
+          "first_later_mutation_index": null,
+          "initial_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 419.1,
+          "qualifying_receipt_tree": "9d1af01d0d77a5670246df2e2f12b2ba0d7d61ff",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 422,
+          "trigger_tool_index": 20,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 427.1,
+          "qualifying_receipt_tree": "9d1af01d0d77a5670246df2e2f12b2ba0d7d61ff",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 430,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 13,
+          "first_later_mutation_index": null,
+          "initial_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 426.1,
+          "qualifying_receipt_tree": "9d1af01d0d77a5670246df2e2f12b2ba0d7d61ff",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 429,
+          "trigger_tool_index": 13,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 15,
+          "first_later_mutation_index": null,
+          "initial_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 424.1,
+          "qualifying_receipt_tree": "9d1af01d0d77a5670246df2e2f12b2ba0d7d61ff",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 427,
+          "trigger_tool_index": 15,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 439,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "24-IP2-r1-pi_harness_state_control_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "timeout",
+      "task": "IP2",
+      "termination_class": null,
+      "total_tool_calls": 442,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 10,
+          "first_later_mutation_index": null,
+          "initial_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "8744c2cb93ca4dda79aea0d752915db894a80ba5",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 10,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "01-IP2-r2-pi_harness_state_control_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "02-IP2-r2-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 2,
+      "final_tree": "01940a59e548df63222211dc916ffbfa7ada5966",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "03-IP3-r2-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": false,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "04-IP3-r2-pi_harness_state_control_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "5284eb6158a3fd4db038043969df7a1a65954d7d",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "05-IP3-r1-pi_harness_state_control_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 2,
+      "final_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 0,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "06-IP3-r1-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": true,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "total_tool_calls": 8,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "2896924db16789e40f606e4a8437ca8140a55c98",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "07-IP2-r3-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "a207940999515a616fdc5c7cd3a45bd19d3f0830",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "08-IP2-r3-pi_harness_state_control_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 8,
+          "first_later_mutation_index": null,
+          "initial_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "1b408a82d81cef3402cf3706092d69c124d76330",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 8,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "09-IP4-r1-pi_harness_state_control_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 1,
+      "provider_requests": 5,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "10-IP4-r1-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "total_tool_calls": 6,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 2,
+      "final_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 16,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "966c0910a200fc0e8f0e12e76fcaa722de63b619",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 16,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 17,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "966c0910a200fc0e8f0e12e76fcaa722de63b619",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 17,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 18,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "966c0910a200fc0e8f0e12e76fcaa722de63b619",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 18,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 12,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": true,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": "quiescent_stop",
+      "total_tool_calls": 16,
+      "trajectory_censored_by_prior_live_stop": true,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 3,
+      "final_tree": "bd0e3113987e034a3e9f32820edc71881b0a5e0e",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 22,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 4.0,
+          "qualifying_receipt_tree": "a1165dfef2271330e7f822dd7cedd4006fd1154f",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 5,
+          "trigger_tool_index": 22,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 23,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 3.2,
+          "qualifying_receipt_tree": "a1165dfef2271330e7f822dd7cedd4006fd1154f",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 4,
+          "trigger_tool_index": 23,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 24,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 2.4,
+          "qualifying_receipt_tree": "a1165dfef2271330e7f822dd7cedd4006fd1154f",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 3,
+          "trigger_tool_index": 24,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 26,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "a1165dfef2271330e7f822dd7cedd4006fd1154f",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 26,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 21,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "12-IP1-r1-pi_harness_state_control_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "total_tool_calls": 26,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "390d3c45366f063b0c04b29500e8ae93ad0ded45",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "13-IP2-r1-pi_harness_state_control_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "total_tool_calls": 9,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 2,
+      "final_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 1,
+      "run": "14-IP2-r1-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "0d87ea1dcf5271e6f63ea6194b75f3ec46f9e71e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "15-IP4-r2-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "5545de53b1908addf80f5148bb1a26a6c743129c",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "16-IP4-r2-pi_harness_state_control_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 11,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "705157a94b6e178ae3bf9f8fb4ea5b70aa51976b",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 11,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 7,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "17-IP3-r3-pi_harness_state_control_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "total_tool_calls": 10,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 12,
+          "first_later_mutation_index": null,
+          "initial_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "faead15bcaf54859e9ca9408884080334658d37b",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 12,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "18-IP3-r3-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "total_tool_calls": 11,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "d72fda40c119abdf37e4f6f291a752f2acef5fe2",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 14,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "2a14709a8a6fe746a35de526df88636f8ca9771a",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 14,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "19-IP1-r3-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "total_tool_calls": 13,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 2,
+      "final_tree": "1bd59d031de741aa40f9ba576c2ca366c64da407",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 3,
+      "provider_requests": 9,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "20-IP1-r3-pi_harness_state_control_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "total_tool_calls": 13,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "8014ed79cd3e5fa47b039368fb7fc6e3b14687f5",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 1,
+      "final_tree": "054ef59a4ac7b71fd431247c52a192b45554fc59",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 6,
+      "receipt_source": "harness_validation_record",
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "total_tool_calls": 7,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "checks": 145,
+      "final_tree": "f73f441ad1f46fdc542313669cee2bd5179a5f62",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 23,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 271.4,
+          "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 280,
+          "trigger_tool_index": 23,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 32,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 254.0,
+          "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 5,
+          "tool_calls_after_trigger": 262,
+          "trigger_tool_index": 32,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "2": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 24,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 269.5,
+          "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 278,
+          "trigger_tool_index": 24,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "3": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 25,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 267.5,
+          "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 1,
+          "tool_calls_after_trigger": 276,
+          "trigger_tool_index": 25,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        },
+        "5": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 27,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 263.7,
+          "qualifying_receipt_tree": "7149349a149c77be449128f8b041016fc6d86c48",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 2,
+          "tool_calls_after_trigger": 272,
+          "trigger_tool_index": 27,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": true,
+          "would_truncate_observed_progress": false
+        }
+      },
+      "mutations": 4,
+      "provider_requests": 158,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "timeout",
+      "task": "IP1",
+      "termination_class": "timeout",
+      "total_tool_calls": 163,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "checks": 1,
+      "final_tree": "e6aa1524fceab8d09e1812a59ba27c93aa474538",
+      "generation": 52,
+      "k": {
+        "1": {
+          "became_eligible": true,
+          "current_tree_differs_from_initial": true,
+          "effective_stop_tool_index": 14,
+          "first_later_mutation_index": null,
+          "initial_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+          "later_visible_contradiction": false,
+          "provider_requests_after_trigger_estimated": 0.0,
+          "qualifying_receipt_tree": "61244f5ede53ee42cb5816a935e4049bbad8131f",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle_before_trigger": 0,
+          "tool_calls_after_trigger": 0,
+          "trigger_tool_index": 14,
+          "trigger_tree_equals_final_tree": false,
+          "triggered": true,
+          "would_stop_wrong_tree": false,
+          "would_truncate_observed_progress": false
+        },
+        "10": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "2": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "3": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        },
+        "5": {
+          "became_eligible": true,
+          "net_tree_changed_at_end": true,
+          "triggered": false
+        }
+      },
+      "mutations": 2,
+      "provider_requests": 8,
+      "receipt_source": "harness_validation_record",
+      "repetition": 2,
+      "run": "24-IP1-r2-pi_harness_state_control_v1",
+      "start_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "start_tree_equals_final_tree": false,
+      "status": "completed",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "total_tool_calls": 13,
+      "trajectory_censored_by_prior_live_stop": false,
+      "tree_digest_available": true,
+      "verifier_passed": true
+    }
+  ],
+  "tree_modelling": "start_tree from the leaf; a mutation moves the tree to an unknown-but-different state; a recognized check carries the digest the harness recorded. Receipts are only created at checks, so every eligibility decision uses a measured digest."
+}

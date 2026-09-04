@@ -321,6 +321,7 @@ Priority order:
 - `research/PI_FAILURE_AUDIT_GEN50.md` — failure audit: none of five failures was a context problem
 - `research/PI_EVIDENCE_AND_QUIESCENCE_GEN51.md` — evidence retention fixed; quiescent stop calibrated offline, K=3
 - `research/PI_QUIESCENT_COMPLETION_GEN52_LIVE.md` — the stop rule live: fired once, stopped a self-reverted run, and missed a 144-repeat check loop
+- `research/PI_QUIESCENT_COMPLETION_GEN53_REFINEMENT.md` — v2 over 72 runs: the loop repair works, the revert repair is inert because the tree digest counts build artifacts
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

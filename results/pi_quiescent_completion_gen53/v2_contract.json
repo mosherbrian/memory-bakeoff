@@ -1,0 +1,43 @@
+{
+  "changes_from_v1": [
+    "net-tree-change eligibility: a run whose current tree equals its initial tree is never quiescent-complete, however many mutation events it made",
+    "a recognized visible pass on a tree that already holds a valid receipt is an idle completion, not a re-arm, and increments the K count instead of resetting it"
+  ],
+  "contract_sha256": "bd53c2686063825ffae054232c69953fa147c785f8de9bae8b67c6a84d6bcfa8",
+  "contract_version": "quiescent-completion-toolcall-v2",
+  "derived_from": "quiescent-completion-toolcall-k3-v1",
+  "hidden_verifier_exclusion": [
+    "verifier.py",
+    "verifier_path",
+    "reference_fix"
+  ],
+  "k_sweep": [
+    1,
+    2,
+    3,
+    5,
+    10
+  ],
+  "k_unit": "tool calls",
+  "mutation_tools": [
+    "edit",
+    "multi_edit",
+    "write"
+  ],
+  "never_an_input": [
+    "hidden verifier",
+    "reference fix",
+    "task manifest answers",
+    "post-hoc correctness",
+    "model self-report"
+  ],
+  "unchanged_from_v1": [
+    "the harness-state-v1 validation recognizer, reused unchanged",
+    "hidden verifier, reference fixes and scorer paths excluded by the same tokens",
+    "at least one repository mutation event is still required",
+    "a visible fail invalidates the receipt and resets the count",
+    "a mutation invalidates the receipt and resets the count",
+    "the stop waits for an in-flight batch to drain and records the overshoot",
+    "K is counted in tool calls"
+  ]
+}

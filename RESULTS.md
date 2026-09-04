@@ -388,6 +388,34 @@ All 24 raw provider streams are retained: 59,097,996 bytes, archived, verified a
 first generation whose model output survives by contract rather than by luck.
 See `research/PI_QUIESCENT_COMPLETION_GEN52_LIVE.md`.
 
+## Gen53 - one repair worked, the other never got the chance
+
+Gen52 showed the stop rule failing in two ways: it stopped a run that had reverted its own correct
+fix, and it never stopped a run that ran the same passing test 144 times. Gen53 made one change for
+each, froze them as `quiescent-completion-toolcall-v2`, and replayed the result over every run on
+record - 72 across three generations - with no model, no GPU and no network.
+
+**The repeated-check repair works.** Treating a pass on an unchanged tree as silence rather than
+news catches that 144-repeat run at every K, about 25 tool calls in instead of 163, and catches all
+six recorded runaway runs across all three generations. No K truncates observed progress on any
+fully observed trajectory.
+
+**The revert repair does not, and the reason matters.** The rule was told "a tree back at its
+starting digest is not finished", but the digest is `git add -A` over the whole worktree, so running
+the visible tests creates `__pycache__` and changes it. The reverted run's source ended exactly
+where it began - the leaf records the same digest for start and final - yet the digest at the
+qualifying check differed by bytecode alone, so the new predicate never engaged. v2 still stops that
+run at K=1, 2 and 3, and declines at K=5 and 10 only because the run ran out of calls.
+
+So the mechanical decision rule names K=5, and **the recommendation is against it**: a criterion met
+by luck on one run has not been met. Reported and stopped, without inventing a third patch. What the
+next brief should settle is whether the tree digest ignores content the project does not track.
+
+Also fixed: the quiescence snapshot is now written on every tool result and survives SIGKILL intact,
+closing the evidence gap that left Gen52's one timeout with null eligibility fields. The TypeScript
+arm and the Python rule were driven through the same ten traces and disagree nowhere.
+See `research/PI_QUIESCENT_COMPLETION_GEN53_REFINEMENT.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and
