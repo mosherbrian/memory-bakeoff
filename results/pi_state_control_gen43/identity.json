@@ -1,0 +1,90 @@
+{
+  "cli_reported_version": "0.73.0",
+  "extension_api_events": [
+    "after_provider_response",
+    "agent_end",
+    "agent_start",
+    "before_agent_start",
+    "before_provider_request",
+    "context",
+    "input",
+    "message_end",
+    "message_start",
+    "message_update",
+    "model_select",
+    "resources_discover",
+    "session_before_compact",
+    "session_before_fork",
+    "session_before_switch",
+    "session_before_tree",
+    "session_compact",
+    "session_shutdown",
+    "session_start",
+    "session_tree",
+    "thinking_level_select",
+    "tool_call",
+    "tool_execution_end",
+    "tool_execution_start",
+    "tool_execution_update",
+    "tool_result",
+    "turn_end",
+    "turn_start",
+    "user_bash"
+  ],
+  "extension_load_test": {
+    "before_agent_start_can_replace_system_prompt": true,
+    "compaction_cancelled": true,
+    "context_hook": {
+      "incoming_bytes": 46031,
+      "incoming_messages": 80,
+      "replacement_bytes": 413,
+      "replacement_messages": 1,
+      "transcript_replayed": false
+    },
+    "core_patched": false,
+    "extension_loaded": true,
+    "history_events_recorded": 7,
+    "load_errors": [],
+    "pi_version": "0.73.0",
+    "registered_handlers": [
+      "before_agent_start",
+      "context",
+      "input",
+      "session_before_compact",
+      "session_shutdown",
+      "session_start",
+      "tool_call",
+      "tool_result",
+      "turn_end"
+    ]
+  },
+  "hooks_of_interest": {
+    "compaction": "session_before_compact -> {cancel?} and session_compact",
+    "context_transformation": "context -> {messages?: AgentMessage[]} REPLACES the message array",
+    "persistence": "SessionManager / session entries; session_start carries previousSessionFile",
+    "provider_payload": "before_provider_request -> replacement payload (result type is unknown)",
+    "session_start_resume": "session_start (reason: startup|reload|new|resume|fork)",
+    "stop_completion": "turn_end, agent_end, session_shutdown",
+    "system_prompt": "before_agent_start -> {systemPrompt?, message?}",
+    "token_accounting": "ContextUsage and calculateContextTokens/estimateTokens are exported",
+    "tool_pre_post": "tool_call -> {block?, reason?}; tool_result -> {content?, details?, isError?}",
+    "user_prompt_submission": "input -> {action: continue|transform|handled}"
+  },
+  "host": "strix-halo",
+  "note": "Pi is installed on the Linux workstation, not on the Mac that holds this repository. The characterization and the extension load test therefore ran there, against the installed package, and their output is committed here.",
+  "package": {
+    "exports": [
+      ".",
+      "./hooks"
+    ],
+    "install_path": "/home/bmosher/.bun/install/global/node_modules/@mariozechner/pi-coding-agent",
+    "name": "@mariozechner/pi-coding-agent",
+    "package_json_sha256": "9a9937bf1ec62105dd37a5588c1b81b39b52d27a13d770327f0608e2c3cb23dc",
+    "runtime": "bun",
+    "version": "0.73.0"
+  },
+  "unsupported_or_absent": [
+    "no hook replaces the persisted session transcript itself; context replacement is per request",
+    "before_agent_start cannot replace history, only the system prompt and an added message"
+  ]
+}

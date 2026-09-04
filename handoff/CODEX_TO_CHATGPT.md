@@ -1,5 +1,118 @@
 # Codex to ChatGPT handoff
 
+## Generation 43 — the first Pi state/control prototype
+
+**status:** complete. `architecture_prototype_no_score`. No model, no network, no API, no GPU, no
+reader, no benchmark corpus, no Pi core patch. Base `2520858`, full suite 310 passed (283 baseline
++ 27 new) with the one pre-existing warning.
+
+**one correction to your brief before anything else.** Pi is not installed on the Mac. The Mac
+holds the repository; Pi lives on the Linux workstation. So the characterization and the extension
+load test ran there, against the installed package, and their raw output is committed here in
+`identity.json` with a note saying exactly that. Nothing was inferred from the wrong machine.
+
+**Pi identity.** `@mariozechner/pi-coding-agent` 0.73.0, bun runtime, CLI agreeing at 0.73.0, 29
+extension events exposed. Hooks read from the installed package's own `.d.ts` rather than from
+docs or recollection: `session_start` (startup|reload|new|resume|fork), `input` ->
+continue/transform/handled, **`context` -> `{messages?}` which REPLACES the message array**,
+`before_provider_request` -> replacement payload, `before_agent_start` -> systemPrompt and an added
+message, `session_before_compact` -> `{cancel?}`, `tool_call` -> `{block?}`, `tool_result` ->
+`{content?, isError?}`, `turn_end`/`agent_end`/`session_shutdown`, SessionManager for persistence,
+and `ContextUsage`/`calculateContextTokens` for accounting. Recorded as absent: no hook replaces
+the persisted session transcript itself — context replacement is per request — and
+`before_agent_start` cannot replace history, only the system prompt.
+
+**H1 holds, with the strongest evidence available without a model.** The prototype extension was
+loaded by *Pi's own loader* and driven with synthetic events. Loaded true, zero load errors, nine
+handlers registered, core patched false. The decisive measurement: handed a synthetic transcript
+of 80 messages and 46,031 bytes, the `context` handler returned one composed message of 413 bytes.
+The transcript was not replayed. That mechanism — the one the whole architecture depends on — is a
+public extension hook, not something Pi needs changed. Compaction was also cancellable from the
+extension, which matters, because history here is externalized rather than destructively
+compacted.
+
+**contract frozen before measurement.** `pi-state-control-v1`, sha256 `b022359a2bee52b4…`.
+Transition table in code with backedges and a `blocked` state; `done` gated on a
+`validation_receipt`; state bounded at 4,096 bytes with per-field list bounds where overflow is
+archived to history with a reference rather than dropped; patches are `{base_revision, ops}`
+transactions over `set`/`append`/`remove`. A phase change is deliberately not a patch — control
+owns that, so state cannot talk itself into being done.
+
+**the trace.** 59 steps, digest `a1fed1d8…`, invented and unrelated to every corpus here. It
+carries repository inspection, a plan revision, two implementation attempts, a failed validation
+then a fix, a large irrelevant tool output, an early decision that becomes relevant again after
+being archived out of active state, a superseded check result, an intentionally illegal
+transition, a stale patch, a malformed patch, and a restart boundary. It produced 70 history
+events and ended in `done` — reached only once a passing receipt existed.
+
+**H2.** History grew from 646 to 52,248 bytes, a factor of 81. Composed live context went 705 ->
+1,358 bytes, peaking at 3,762. Active state peaked at 1,036 against the 4,096 guard. At the end
+the live context is 2.6% of the history it can still reach, and 21,951 bytes of tool output never
+entered context at all while staying retrievable by event id. I am naming the peak rather than
+smoothing it: context tracks the size of the latest observation, so one large kept tool result
+moves it. What it does not track is the length of the run.
+
+**H3.** At the boundary the object was destroyed and rebuilt from `state.json` and
+`history.ndjson` alone. Phase, state digest, history head digest, event count and artifact status
+all identical. The part that makes it more than a serialization test: an early decision archived
+out of active state by the list bound was still recoverable, was recalled on demand, and did not
+reinstall itself into active state afterwards. Retrievable is not the same as always present.
+
+**H4 and H5.** Eleven fail-closed cases, all closed, none silently repaired: illegal transition,
+`done` with no receipt, `done` with a failing receipt, artifact mutation after completion, stale
+revision, type violation, phase change attempted via patch, unknown field, the whole history
+stuffed into a state field, a missing history reference, a tampered history event caught by the
+hash chain, and a restart with no persisted state. H5 is the artifact one: after `done` was
+legitimately earned, the receipt file was edited and both the artifact status and the completion
+gate rejected it. State said valid; the artifact disagreed; the artifact won.
+
+**a bug I introduced and fixed before publishing.** My first cut kept accept/reject counters in
+memory and persisted them only on success, so the restart quietly reset the rejection counts to
+zero — a counter that reads clean because the evidence was lost. Counts are now derived from the
+history log itself, which is the only record that survives a restart by construction. Published
+numbers are patches 25 accepted / 2 rejected, transitions 6 accepted / 2 rejected.
+
+**files.** `src/memory_bakeoff/pi_state_control/{contract,runtime}.py`,
+`extensions/pi_state_control/{pi_state_control.ts,verify_pi_extension.ts}`,
+`scripts/run_pi_state_control_gen43.py`, `scripts/build_pi_state_control_gen43_report.py`,
+`tests/test_pi_state_control_gen43.py` (27), `research/PI_STATE_CONTROL_GEN43_PROTOTYPE.md`,
+`results/pi_state_control_gen43/` (identity, contract, synthetic_trace, trace_metrics,
+restart_recovery, corruption_tests, scientific_digest). `ARCHITECTURE.md` gains a small dated
+pointer that separates the measured prototype facts from the still-unmeasured agent hypotheses;
+the thesis itself is unchanged. RESULTS and STATUS gain labelled no-score pointers.
+
+**H6 stands unmeasured, as preregistered.** No model produced any of these bytes. The context
+numbers are composed-context bytes under this prototype's composer, not tokens under a pinned
+model, and there is no comparison against Pi's ordinary assembly under load.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen44 recommendation — do not execute.**
+
+Design the controlled paired pilot, and bring me the model decision rather than making it.
+
+Arms: **A** ordinary Pi context behaviour; **B** Pi plus this extension with history externalized.
+I would hold C (on-demand retrieval) back until B is stable, because C changes two things at once
+and the interesting failure in B is whether the composed view is *sufficient*, not whether
+retrieval works.
+
+Hold fixed: Pi 0.73.0, the extension sha, the tool set, a pinned repository snapshot, the task
+set, and the environment. Harness-owned measurements only: deterministic verifier pass/fail,
+exact context bytes at each provider request, input/output tokens if the pinned path exposes an
+exact tokenizer, tool calls and repeated tool calls, turns, wall clock, and every control/state
+rejection. Controlled repeats per task, because a single run of a coding agent measures noise.
+
+Two things Gen43 says the design must survive contact with. The composed view is currently one
+message; a real model may need the last few turns as well, and that is a design parameter which
+must be **fixed before the pilot runs**, not tuned once success rates are visible. And `done`
+being artifact-gated will produce runs that stop short rather than declare victory — that is the
+intended behaviour, but it will look like failure in a naive success metric, so the verifier has
+to distinguish "stopped correctly" from "failed".
+
+The model is your call and Brian's, not mine to spend silently. The candidates I would put to him
+are a local Strix Halo model on the inference server, or a pinned hosted model for lower variance.
+I have not run either and I am not choosing between them here.
+
 ## Generation 42 — MemBukkit intended models on the MemConflict calibration slice
 
 **status:** complete. `external_benchmark_calibration_raw_product_exact_provenance`, lane

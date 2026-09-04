@@ -1,0 +1,112 @@
+{
+  "contract_sha256": "b022359a2bee52b4f335a0f19c97b6ef00809c8d7f91625d3748e6cbbf59e09e",
+  "contract_version": "pi-state-control-v1",
+  "gated_phases": {
+    "done": "validation_receipt"
+  },
+  "max_state_bytes": 4096,
+  "patch_ops": [
+    "set",
+    "append",
+    "remove"
+  ],
+  "phases": [
+    "inspect",
+    "plan",
+    "implement",
+    "validate",
+    "done",
+    "blocked"
+  ],
+  "state_fields": {
+    "active_files": {
+      "bound": 6,
+      "required": true,
+      "type": "list"
+    },
+    "blockers": {
+      "bound": 4,
+      "required": false,
+      "type": "list"
+    },
+    "completed_checkpoints": {
+      "bound": 6,
+      "required": true,
+      "type": "list"
+    },
+    "current_process_or_tool": {
+      "bound": null,
+      "required": false,
+      "type": "str"
+    },
+    "goal": {
+      "bound": null,
+      "required": true,
+      "type": "str"
+    },
+    "important_findings": {
+      "bound": 8,
+      "required": true,
+      "type": "list"
+    },
+    "last_observation_ref": {
+      "bound": null,
+      "required": false,
+      "type": "str"
+    },
+    "next_actions": {
+      "bound": 5,
+      "required": true,
+      "type": "list"
+    },
+    "open_questions": {
+      "bound": 5,
+      "required": false,
+      "type": "list"
+    },
+    "phase": {
+      "bound": null,
+      "required": true,
+      "type": "str"
+    },
+    "schema_version": {
+      "bound": null,
+      "required": true,
+      "type": "int"
+    },
+    "validated_artifact_refs": {
+      "bound": 4,
+      "required": true,
+      "type": "list"
+    }
+  },
+  "state_schema_version": 1,
+  "transitions": {
+    "blocked": [
+      "inspect",
+      "plan",
+      "implement",
+      "validate"
+    ],
+    "done": [],
+    "implement": [
+      "validate",
+      "plan",
+      "blocked"
+    ],
+    "inspect": [
+      "plan",
+      "blocked"
+    ],
+    "plan": [
+      "implement",
+      "inspect",
+      "blocked"
+    ],
+    "validate": [
+      "done",
+      "implement",
+      "blocked"
+    ]
+  }
+}

@@ -269,3 +269,27 @@ Internal evidence, authoritative:
 - `research/ROUND2_REPORTING_INTEGRITY_GEN34.md` — the reporting audit.
 - `research/MEMCONFLICT_GEN36_CONTRACT.md` — the external-benchmark contract.
 - `EXPERIMENT_PLAN.md` — the original staged plan, preserved as written.
+
+
+## First prototype (added 2026-09-04, after Gen42)
+
+The layer separations above now have a working prototype on the installed Pi, reported in
+`research/PI_STATE_CONTROL_GEN43_PROTOTYPE.md`. Evidence class
+`architecture_prototype_no_score`.
+
+Measured, on a fixed synthetic trace with no model involved:
+
+- Pi's public `context` extension hook returns a replacement message array, so the live context
+  can be composed rather than replayed **without patching or forking Pi core**. A synthetic
+  80-message transcript was replaced by one composed message, 46,031 bytes down to 413.
+- Executable control refused an illegal transition and refused `done` twice: once with no
+  receipt, once with a failing one. `done` was reached only after a passing receipt existed.
+- Editing the receipt's file after completion invalidated the claim. Artifacts outranked state.
+- Across the trace, history grew 81x while the composed live context ended at 2.6% of it and
+  active state stayed under its bound. Old detail moved out of replay rather than being deleted,
+  and an archived decision was recalled on demand without becoming permanently resident.
+- Restart rebuilt the exact phase, state digest and history head from persisted evidence alone.
+
+Still unmeasured, and not implied by any of the above: whether this design improves coding-task
+success, reduces tool churn, or saves tokens under a live model. That is a paired experiment with
+model, harness and task held fixed, not a prototype.

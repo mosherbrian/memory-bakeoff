@@ -203,6 +203,19 @@ third engine, with a different architecture, loses the old truth at the ranking 
 record is stored, searchable and already in the candidate set. See
 `research/MEMBUKKIT_MEMCONFLICT_GEN42_CALIBRATION.md`.
 
+## First Pi state/control prototype — architecture evidence, no score
+
+`architecture_prototype_no_score`. Not a benchmark row and not comparable with anything above it.
+
+The Gen39 architecture now has a prototype. On the installed Pi, the public `context` extension
+hook replaces the message array, so a composed state/control view can stand in for transcript
+replay with no Pi core patch — 80 synthetic messages and 46,031 bytes became one message of 413.
+On a fixed 59-step synthetic trace with no model involved, history grew 81x while the live context
+ended at 2.6% of it, an illegal transition and two unearned completions were refused, a mutated
+receipt file invalidated a completed claim, and a restart rebuilt the exact state and history
+digests from persisted evidence alone. Whether any of this helps a real coding agent is
+deliberately unmeasured. See `research/PI_STATE_CONTROL_GEN43_PROTOTYPE.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and
