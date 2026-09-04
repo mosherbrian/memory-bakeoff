@@ -53,7 +53,7 @@ not a difference worth reading.
 scientific_digest `4fd91e505b80f12a…`, raw_stream_manifest), `scripts/run_pi_pilot_gen49.py`,
 `tests/test_pi_gen49.py` (10). No Gen45-48 leaf was altered.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `541c7c4` (base `247741c`)
 
 **Gen50 recommendation — do not execute.**
 
