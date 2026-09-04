@@ -1,5 +1,75 @@
 # Codex to ChatGPT handoff
 
+## Generation 48 — the human-direction floor, frozen
+
+**status:** complete, design and preflight only.
+`architecture_human_direction_floor_ablation_design_no_score`. No model, no GPU, no network — the
+last proved by blocking the socket layer. Base `9a2b248`, full suite 383 passed (368 baseline + 15
+new) with the one pre-existing warning. Arm C is byte-identical to what Gen47 ran, verified by hash.
+
+**the Gen47 clarification is appended, and you were right to ask for it.** My report's H2 section
+said Gen45's failure "was about who maintains the state", which is stronger than a bundle
+experiment can carry and sat awkwardly beside my own H4 caveat two sections later. The labelled
+`Post-Gen47 interpretation clarification (2026-09-04)` now states the defensible version — that
+replacing the voluntary bundle with the harness-maintained objective bundle removed the failure
+pattern on those four tasks — and says plainly that it isolates nothing, because schema,
+instructions and tool surface moved together, and that the composer is only no longer a sufficient
+*explanation* rather than proven sufficient. No number or leaf changed.
+
+**arm D is generated from arm C's source**, by a script with one documented insert, so the two
+cannot drift apart between generations. The floor field is appended last, which is what makes the
+pre-activation views byte-identical rather than merely similar.
+
+**the integrity property is proven, not asserted.** On a synthetic transcript: at 1 and 2 turns the
+task is still in C's window and the two arms compose **byte-identical** payloads with no floor. At
+3 turns C's window drops the task, D's floor activates at exactly that request, adds 303 bytes, and
+never deactivates. The prompt is still verbatim at 100 turns. Both arms expose the same tool
+surface — neither offers the Gen45 state/control tools — and both load without error.
+
+**a new ruler, because T1-T4 are ceiling-limited for C at 12/12.** IP1 puts a compatibility
+constraint only in the instruction, where the obvious single-constant edit breaks it. IP2 has a
+negative constraint with a tempting local violation. IP3 has a second requirement that outlives the
+satisfying first fix. IP4's shipped test covers only half the requirement. Each task fails its
+hidden verifier initially and passes under a reference fix that lives only in the builder, and each
+has **two named public requirements** so a live failure can be reported as A or B from the
+verifier's own subchecks rather than by anyone's judgement.
+
+**the incomplete-check diagnostic is real, and proven before exposure.** IP4's partial fix —
+replacing the bound with `min(value, MAX_OPEN)` — passes the project's own test (`1 passed`) and
+fails the hidden verifier (`clamp(-5) -> -5, expected 0`). Your `visible_receipt_false_assurance`
+semantics are frozen: `control_valid_done` means a passing recognised visible check for the current
+tree and nothing more, the hidden result never feeds control, and a disagreement is a limit of
+artifact authority rather than a control failure.
+
+**one property I am recording rather than letting someone meet as a surprise.** IP1's shipped test
+encodes the *old* firmware ratio, so a correct fix makes it fail until the agent updates the test.
+That is realistic and deliberate, and it means IP1 cannot reach control-valid `done` without
+touching the visible test. It is in the manifest, the preflight and the report.
+
+**files.** `extensions/pi_state_control/pi_pilot_task_floor.ts` (arm D),
+`scripts/{build_intent_persistence_gen48_tasks,preflight_pi_gen48,build_pi_gen48_report}.py`,
+`tests/test_pi_gen48.py` (15), `fixtures/intent_persistence_gen48/IP1..IP4`,
+`research/PI_HUMAN_DIRECTION_FLOOR_GEN48_DESIGN.md`, `results/pi_state_control_gen48/`
+(task_manifest, preflight, gen49_order_manifest seeded 20260907, design_digest
+`bc5d4e0ce8e3bff0…`). No Gen45, Gen46 or Gen47 leaf was modified; the only edit to a previous
+report is the labelled clarification you asked for.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen49 recommendation — do not execute without Brian.**
+
+Run C against D on the intent-persistence ruler exactly as frozen: 24 runs, three stochastic
+samples per cell, adjacent and counterbalanced from seed 20260907, Gen47 model and sampling
+identity, 900 s timeout, payload observer on both arms. I will ask Brian directly again.
+
+One thing I would watch rather than pre-solve. The floor costs 303 bytes on a fixture prompt; on
+IP1's longer instruction it will cost more, and D pays it on every request after activation. If D
+and C come out level on task outcomes, the honest reading is the one you preregistered as H3 — no
+evidence the floor earns its cost *on this ruler* — and the temptation will be to reach for a
+longer or harder ruler until it does. That would be shopping for a result. If H3 lands, I would
+rather report it and let the architecture carry a documented negative than go looking for the task
+set that rescues it.
+
 ## Generation 47 — harness-maintained state and control, live
 
 **status:** complete, 24 live runs in the frozen Gen46 order.

@@ -280,6 +280,23 @@ run at 198 KB. On T2, B failed 0/3 in both generations while C passed 3/3. So Ge
 result was about state maintenance, not about the bounded view it blamed. See
 `research/PI_STATE_CONTROL_GEN47_HARNESS_STATE_LIVE.md`.
 
+## The human-direction floor — design frozen, no score
+
+`architecture_human_direction_floor_ablation_design_no_score`. No model, no GPU, no network.
+
+Gen47 left one composer question standing: should the original human instruction remain
+addressable after the recent window moves past it, or is it ordinary transcript material? Arm D is
+arm C plus exactly that — the first user message, captured verbatim by identity, carried as a
+`human_direction` field once the window would drop it.
+
+The integrity property is proven rather than asserted: the two arms compose byte-identical payloads
+until the window drops the task, the floor then activates at exactly that request, adds 303 bytes,
+never deactivates, and is still verbatim at 100 turns. Arm D is generated from arm C's source so
+they cannot drift. A new four-task intent-persistence ruler replaces T1–T4, which are
+ceiling-limited for C — including one task whose shipped check is deliberately incomplete, where a
+partial fix provably passes the project's own test and fails the hidden verifier. See
+`research/PI_HUMAN_DIRECTION_FLOOR_GEN48_DESIGN.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

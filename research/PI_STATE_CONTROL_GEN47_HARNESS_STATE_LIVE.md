@@ -133,3 +133,26 @@ above alongside the Gen45 message-byte measure. It returns nothing, and Pi's run
 handler result only when it is not `undefined`, so it cannot rewrite a request.
 
 Scientific digest `6063e3c857f213b1d6264318505b34882a10f9bd3489387ab2d3d5e3289cd9c8`, rebuilt with wall clock, cache warmth and host-local paths excluded.
+
+
+## Post-Gen47 interpretation clarification (2026-09-04)
+
+This page says, in the H2 section, that "Gen45's negative result was about **who maintains the
+state**". That sentence is stronger than this experiment can carry, and it sits awkwardly beside
+the caveat two sections later. Nothing above is changed; this note fixes the reading.
+
+Arm C differs from arm B in three ways at once: state and phase are maintained by the harness
+rather than by the model, the state schema and instruction text are objective rather than
+semantic, and the three voluntary state/control tools are removed. The experiment changed that
+whole bundle together, so the defensible statement is:
+
+> With the same bounded-window and cap policy, replacing the voluntary model-maintained
+> state/control bundle with the harness-maintained objective bundle removed the Gen45 failure
+> pattern on these four tasks.
+
+Two things that does **not** license. It does not isolate maintenance as the cause — schema,
+instructions and tool surface moved with it. And it does not show the bounded composer is
+sufficient in general; it shows only that the composer is no longer a sufficient *explanation* for
+the Gen45 failure, because the same composer succeeded once the bundle changed.
+
+The numbers, the leaves and every other claim on this page stand as published.
