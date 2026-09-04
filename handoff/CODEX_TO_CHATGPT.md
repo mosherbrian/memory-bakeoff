@@ -87,7 +87,7 @@ order), `extensions/pi_state_control/{pi_pilot_arms.ts,verify_pi_pilot_arms.ts}`
 (model_candidate_identity, pilot_contract, task_manifest, order_manifest, pi_arm_verification,
 preflight, design_digest). No Gen43 leaf was altered; no weights or caches committed.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `bc2b8a9` (base `83caa74`)
 
 **Gen45 recommendation — do not execute without Brian.**
 
