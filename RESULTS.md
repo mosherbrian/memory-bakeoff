@@ -416,6 +416,35 @@ closing the evidence gap that left Gen52's one timeout with null eligibility fie
 arm and the Python rule were driven through the same ten traces and disagree nowhere.
 See `research/PI_QUIESCENT_COMPLETION_GEN53_REFINEMENT.md`.
 
+## Gen54 - the fingerprint was measuring the wrong thing
+
+Gen53 found that the "a tree back at its starting digest is not finished" rule never engaged, and
+suspected the digest. Gen54 confirms it and fixes it. The old fingerprint was `git add -A` over the
+whole worktree, so it counted `__pycache__` and `.pytest_cache`: **running the project's own tests
+moved the fingerprint on its own**, which is why a run that had reverted itself still looked changed.
+
+`tracked-tree-digest-v1` excludes a frozen list of build artifacts and nothing else. Fingerprinting
+only already-tracked files was rejected - it would go blind to a newly added source file, and adding
+a module is progress.
+
+The run that forced this, `11-IP1-r1-E`, was reconstructed by replaying its own two recorded edits
+onto a fresh copy of the frozen fixture. Both applied cleanly. Initial `732a4b97`, after the correct
+fix `df099f72`, after the agent reverted it `732a4b97`, and after running the visible tests the old
+fingerprint reads `ed00c99a` while the new one still reads `732a4b97`. That last line is the whole
+defect.
+
+Replayed over all 72 recorded runs with each tree rebuilt from its own edits (71 of 72 fully
+reconstructable, the exception named): at every K the reverted run is **refused with
+`became_eligible` false** rather than merely unreached, the 144-repeat loop is still **caught at
+tool index 21 to 30** of a 163-call run, no run is stopped while still making progress, and the
+count of runs stopped on a tree equal to their start is **zero**. That was the stated condition for
+going live, and it is met for the right reason.
+
+Every K qualifies, so the frozen decision rule's mechanical answer is K=1. The report recommends K=3
+instead and flags that as a deviation: K=1's 24 extra firings save about three tool calls each on
+runs that had already finished, which spends the whole safety margin for nothing.
+See `research/PI_TRACKED_DIGEST_GEN54.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and
