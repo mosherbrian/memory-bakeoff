@@ -50,7 +50,7 @@ memory product.
 passed with the one pre-existing warning, matching the expected baseline exactly. Documentation-only
 change, so no digest or result is affected.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `d33971f` (documentation only; parent `0d26fcd` is the Gen38 release commit)
 
 **Gen40 recommendation — one move, not executed.**
 
