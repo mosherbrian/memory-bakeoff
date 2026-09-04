@@ -80,7 +80,7 @@ content identity, digest), `scripts/run_membukkit_gen40_preflight.py`,
 are committed. `research/MEMBUKKIT_INTENDED_MODEL_GEN7.md` is untouched; Gen40 links backward to
 it. RESULTS.md and STATUS_AND_FINDINGS.md gain clearly-labelled no-score pointers.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `2b06107` (base `c4e49bb`)
 
 **Gen41 recommendation — do not execute.**
 
