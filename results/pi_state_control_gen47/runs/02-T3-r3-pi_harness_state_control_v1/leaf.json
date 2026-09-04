@@ -1,0 +1,234 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 5,
+      "redundant_file_reads": 3,
+      "redundant_verifier_invocations": 1,
+      "repo_mutations": 1,
+      "tool_calls": 13,
+      "total_repeated_or_redundant": 9
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "harness": {
+      "derivation_events": 26,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 2,
+      "state_bytes": 1020,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000006",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000018",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000021",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000026",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6703,
+      7314,
+      9460,
+      8800,
+      9161,
+      10315,
+      7045,
+      9592,
+      10376,
+      7598,
+      7620,
+      8196
+    ],
+    "payload_bytes_total": 102180,
+    "payload_captures": 12,
+    "request_bytes_by_turn": [
+      1152,
+      2185,
+      4725,
+      4459,
+      5194,
+      6742,
+      1468,
+      4558,
+      5997,
+      2021,
+      2043,
+      3038
+    ],
+    "request_bytes_max": 6742,
+    "request_bytes_median": 4459,
+    "request_bytes_total": 43582,
+    "request_count": 12,
+    "tool_calls": 13
+  },
+  "requests": [
+    {
+      "bytes": 1152,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 208,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 2185,
+      "composed": true,
+      "messages": 4,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 1037,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 4725,
+      "composed": true,
+      "messages": 6,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 2537,
+      "state_bytes": 373
+    },
+    {
+      "bytes": 4459,
+      "composed": true,
+      "messages": 8,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 3264,
+      "state_bytes": 373
+    },
+    {
+      "bytes": 5194,
+      "composed": true,
+      "messages": 10,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 3968,
+      "state_bytes": 436
+    },
+    {
+      "bytes": 6742,
+      "composed": true,
+      "messages": 12,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 4998,
+      "state_bytes": 504
+    },
+    {
+      "bytes": 1468,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 21940,
+      "state_bytes": 693
+    },
+    {
+      "bytes": 4558,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 24547,
+      "state_bytes": 694
+    },
+    {
+      "bytes": 5997,
+      "composed": true,
+      "messages": 7,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 26233,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 2021,
+      "composed": true,
+      "messages": 1,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 43030,
+      "state_bytes": 1004
+    },
+    {
+      "bytes": 2043,
+      "composed": true,
+      "messages": 1,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 59863,
+      "state_bytes": 1024
+    },
+    {
+      "bytes": 3038,
+      "composed": true,
+      "messages": 3,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 60795,
+      "state_bytes": 1024
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1558270,
+    "wall_seconds": 40.76
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_v1",
+    "index": 2,
+    "position_in_pair": 2,
+    "repetition": 3,
+    "task": "T3"
+  },
+  "task": {
+    "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+    "id": "T3",
+    "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+    "verifier_sha256": "ad6a5947b5efd54a51d6cd1fcca17114973521566746b33f4768b8873b15256b"
+  },
+  "verifier": {
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}

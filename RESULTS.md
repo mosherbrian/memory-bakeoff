@@ -264,6 +264,22 @@ will run live produce byte-identical summaries from the same event log. Arm B is
 task-prompt floor and history retrieval are named as deferred hypotheses rather than folded in. See
 `research/PI_STATE_CONTROL_GEN46_HARNESS_STATE_DESIGN.md`.
 
+## Harness-maintained state and control, live — the mechanism was the problem
+
+`architecture_state_control_ablation_paired_live`. 24 live runs, same four tasks, same bounded
+composer, same model as Gen45. Only who maintains the state changed.
+
+Arm C, with state and phase derived by the harness from visible tool events, passed **12/12** with
+zero timeouts and reached a control-valid `done` on every run. Arm B, waiting for the model to
+drive the same loop, passed 9/12 with three timeouts and reached `done` on none — it called
+`request_transition` zero times in twelve runs, reproducing Gen45 exactly. C also used fewer
+provider payload bytes at the median (70,557 against 98,153).
+
+Two tasks carry the finding. On T3, B timed out 3/3 at 3.4 MB median payload while C finished every
+run at 198 KB. On T2, B failed 0/3 in both generations while C passed 3/3. So Gen45's negative
+result was about state maintenance, not about the bounded view it blamed. See
+`research/PI_STATE_CONTROL_GEN47_HARNESS_STATE_LIVE.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

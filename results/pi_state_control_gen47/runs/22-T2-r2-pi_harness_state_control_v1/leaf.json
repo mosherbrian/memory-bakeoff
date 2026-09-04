@@ -1,0 +1,184 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 0,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 3,
+      "tool_calls": 10,
+      "total_repeated_or_redundant": 0
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "harness": {
+      "derivation_events": 20,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 1,
+      "state_bytes": 1319,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000003",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000012",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000019",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000020",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6948,
+      8281,
+      10844,
+      11875,
+      12679,
+      12270,
+      13268
+    ],
+    "payload_bytes_total": 76165,
+    "payload_captures": 7,
+    "request_bytes_by_turn": [
+      1397,
+      3129,
+      6347,
+      8225,
+      9875,
+      9837,
+      10939
+    ],
+    "request_bytes_max": 10939,
+    "request_bytes_median": 8225,
+    "request_bytes_total": 49749,
+    "request_count": 7,
+    "tool_calls": 10
+  },
+  "requests": [
+    {
+      "bytes": 1397,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 453,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 3129,
+      "composed": true,
+      "messages": 4,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 1692,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 6347,
+      "composed": true,
+      "messages": 10,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 4725,
+      "state_bytes": 636
+    },
+    {
+      "bytes": 8225,
+      "composed": true,
+      "messages": 12,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 6599,
+      "state_bytes": 725
+    },
+    {
+      "bytes": 9875,
+      "composed": true,
+      "messages": 14,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 8162,
+      "state_bytes": 810
+    },
+    {
+      "bytes": 9837,
+      "composed": true,
+      "messages": 13,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 9723,
+      "state_bytes": 896
+    },
+    {
+      "bytes": 10939,
+      "composed": true,
+      "messages": 13,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 11173,
+      "state_bytes": 1323
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1524108,
+    "wall_seconds": 38.91
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_v1",
+    "index": 22,
+    "position_in_pair": 2,
+    "repetition": 2,
+    "task": "T2"
+  },
+  "task": {
+    "final_tree": "1c28d03ed5d76697b5b07222c9170b4c1f58352f",
+    "id": "T2",
+    "start_tree": "671fb3bb247542198af0a6e5f85a373d4997a464",
+    "verifier_sha256": "55181890463dc4fb5e7a901b04848ee300061d05f2f0db707524c3850903f28a"
+  },
+  "verifier": {
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_13"}}
+{"phase":"call","tool":"bash","args":{"command":"cat /var/home/bmosher/pilot-gen45-work/run_13/tests/test_rounding.py"}}
+{"phase":"result","tool":"bash","bytes":56}
+{"phase":"result","tool":"bash","bytes":241}
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_13/tidewatch/"}}
+{"phase":"call","tool":"bash","args":{"command":"cat /var/home/bmosher/pilot-gen45-work/run_13/tidewatch/rounding.py"}}
+{"phase":"result","tool":"bash","bytes":53}
+{"phase":"result","tool":"bash","bytes":745}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_rounding.py -v 2>&1"}}
+{"phase":"result","tool":"bash","bytes":1303}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_13/tidewatch/rounding.py","edits":[{"oldText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    return round(reading_m, 2)","newText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    d = Decimal(str(reading_m))\n    if d < 0:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_DOWN)\n    else:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    return float(rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_rounding.py -v 2>&1"}}
+{"phase":"result","tool":"bash","bytes":1800}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_13/tidewatch/rounding.py"}}
+{"phase":"result","tool":"read","bytes":947}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_13/tidewatch/rounding.py","edits":[{"oldText":"from decimal import Decimal, ROUND_HALF_UP","newText":"from decimal import Decimal, ROUND_HALF_DOWN, ROUND_HALF_UP"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_rounding.py -v 2>&1"}}
+{"phase":"result","tool":"bash","bytes":1303}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_13 && python3 -c \"\nfrom decimal import Decimal, ROUND_HALF_DOWN, ROUND_HALF_UP, ROUND_FLOOR, ROUND_CEILING\nd = Decimal('-1.005')\nprint('Original:', d)\nprint('ROUND_HALF_DOWN:', d.quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN))\nprint('ROUND_HALF_UP:', d.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))\nprint('ROUND_FLOOR:', d.quantize(Decimal('0.01'), rounding=ROUND_FLOOR))\nprint('ROUND_CEILING:', d.quantize(Decimal('0.01'), rounding=ROUND_CEILING))\n# What about -1.015?\nd2 = Decimal('-1.015')\nprint()\nprint('Original:', d2)\nprint('ROUND_HALF_DOWN:', d2.quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN))\nprint('ROUND_HALF_UP:', d2.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))\n\"\n"}}
+{"phase":"result","tool":"bash","bytes":199}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_13/tidewatch/rounding.py","edits":[{"oldText":"    if d < 0:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_DOWN)\n    else:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)","newText":"    if d < 0:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    else:\n        rounded = d.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_rounding.py -v 2>&1"}}
+{"phase":"result","tool":"bash","bytes":726}
+{"phase":"call","tool":"record_receipt","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_13/tests/test_rounding.py","kind":"validation_receipt","passed":true}}
+{"phase":"result","tool":"record_receipt","bytes":2}

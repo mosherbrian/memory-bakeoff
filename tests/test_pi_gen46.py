@@ -145,10 +145,27 @@ def test_preflight_passed_including_cross_implementation_equivalence():
     assert pre["no_network"]["outbound_blocked"] is True
 
 
-def test_arm_b_extension_hash_still_matches_gen45():
-    pre = _json("preflight.json")
+def test_arm_b_hash_changed_only_by_the_shared_observer_and_it_is_recorded():
+    """Gen46 required arm B untouched; Gen47 then added one hook to BOTH arms.
+
+    That was authorised explicitly - the observation-only provider-payload
+    capture had to be identical across arms to be usable - so B's hash moves.
+    The check is therefore not "unchanged forever" but "changed only for that
+    reason, with both values written down".
+    """
     live = ROOT / "extensions/pi_state_control/pi_pilot_live.ts"
-    assert hashlib.sha256(live.read_bytes()).hexdigest() == pre["arm_b_unchanged"]["recorded_sha256"]
+    current = hashlib.sha256(live.read_bytes()).hexdigest()
+    gen46 = _json("preflight.json")["arm_b_unchanged"]["recorded_sha256"]
+    bindings_path = ROOT / "results/pi_state_control_gen47/preflight_bindings.json"
+    if not bindings_path.exists():
+        assert current == gen46
+        return
+    bindings = json.loads(bindings_path.read_text())["extension_hashes"]
+    assert bindings["arm_b_gen45"] == gen46
+    assert bindings["arm_b_now"] == current
+    assert bindings["arm_b_changed_only_by_the_shared_observer"] is True
+    observer = json.loads(bindings_path.read_text())["provider_payload_observer"]
+    assert observer["added_to_both_arms"] is True and observer["returns"] == "nothing"
 
 
 def test_gen47_order_uses_a_new_seed_and_the_two_new_arms():

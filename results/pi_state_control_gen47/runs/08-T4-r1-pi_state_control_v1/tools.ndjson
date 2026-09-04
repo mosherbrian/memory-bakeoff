@@ -1,0 +1,32 @@
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_08/"}}
+{"phase":"call","tool":"bash","args":{"command":"cat /var/home/bmosher/pilot-gen45-work/run_08/tests/test_rounding.py"}}
+{"phase":"result","tool":"bash","bytes":56}
+{"phase":"result","tool":"bash","bytes":241}
+{"phase":"call","tool":"bash","args":{"command":"ls /var/home/bmosher/pilot-gen45-work/run_08/tidewatch/"}}
+{"phase":"call","tool":"bash","args":{"command":"cat /var/home/bmosher/pilot-gen45-work/run_08/tidewatch/rounding.py"}}
+{"phase":"result","tool":"bash","bytes":745}
+{"phase":"result","tool":"bash","bytes":53}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":1303}
+{"phase":"call","tool":"bash","args":{"command":"python3 -c \"\nfrom decimal import Decimal, ROUND_HALF_UP\n# ROUND_HALF_UP rounds away from zero for positive, but toward zero for negative\n# We need ROUND_HALF_UP for positive and ROUND_HALF_DOWN for negative\n# Actually let's check what we need\nprint(Decimal('-1.005').quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))  # -1.00\nprint(Decimal('-1.005').quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN))  # -1.00\nprint(Decimal('-1.005').quantize(Decimal('0.01'), rounding='ROUND_HALF_UP'))  # -1.00\n\n# We need ROUND_HALF_DOWN for negatives to go to -1.01... \n# Wait, -1.005 rounded away from zero should be -1.01\n# ROUND_HALF_UP always rounds toward positive infinity for .5\n# We need ROUND_HALF_UP for positive, ROUND_HALF_DOWN for negative? No...\n# 'away from zero' means: +1.005 -> +1.01, -1.005 -> -1.01\n\n# Let's check ROUND_HALF_UP behavior\nprint(Decimal('1.005').quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))  # +1.01\nprint(Decimal('-1.005').quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))  # -1.00\n\n# Hmm, ROUND_HALF_UP rounds toward positive infinity for .5\n# We need ROUND_HALF_DOWN for negative numbers? No...\n# Actually we need a custom approach: use abs() and always round away from zero\nprint(Decimal('1.005').quantize(Decimal('0.01'), rounding='ROUND_CEILING'))  # +1.01\nprint(Decimal('-1.005').quantize(Decimal('0.01'), rounding='ROUND_FLOOR'))  # -1.01\n\n# Let me think again. For positive: ceiling. For negative: floor.\n# But what about non-midpoint values? 1.004 should stay 1.00, -1.004 should stay -1.00\n# So we need: if positive, use ROUND_HALF_UP; if negative, use ROUND_HALF_DOWN? No...\n# Actually ROUND_HALF_UP means .5 rounds up (toward +inf). For negatives that means -1.005 -> -1.00 (toward +inf)\n# We want -1.005 -> -1.01 (away from zero, i.e., toward -inf)\n# So for negatives we need ROUND_HALF_DOWN? Let's check:\nfrom decimal import ROUND_HALF_DOWN\nprint(Decimal('-1.005').quantize(Decimal('0.01'), rounding=ROUND_HALF_DOWN))  # -1.00? No...\n# ROUND_HALF_DOWN: .5 rounds toward zero. That gives -1.00. Not what we want.\n# We want .5 rounds away from zero.\n# Let's try: take abs, use ROUND_HALF_UP, re-apply sign\nval = Decimal('-1.005')\nresult = val.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\nprint('ROUND_HALF_UP on -1.005:', result)\n# That gives -1.00 because ROUND_HALF_UP rounds .5 toward +inf\n\n# The correct approach: use the sign to pick the rounding mode\nval = Decimal('-1.005')\nif val < 0:\n    result = val.quantize(Decimal('0.01'), rounding='ROUND_FLOOR')  # No, that's always floor\nelse:\n    result = val.quantize(Decimal('0.01'), rounding='ROUND_CEILING')  # No, always ceiling\n\n# Actually the simplest: work with absolute value\nval = Decimal('-1.005')\nabs_val = abs(val)\nrounded = abs_val.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\nprint('abs approach:', -rounded if val < 0 else rounded)\n\"\n"}}
+{"phase":"result","tool":"bash","bytes":395}
+{"phase":"call","tool":"bash","args":{"command":"python3 -c \"\nfrom decimal import Decimal, ROUND_HALF_UP\n\n# Test the abs approach\nfor val in [1.005, -1.005, 2.5, -2.5, 1.004, -1.004, 0.005, -0.005]:\n    d = Decimal(str(val))\n    abs_val = abs(d)\n    rounded = abs_val.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\n    result = float(-rounded if d < 0 else rounded)\n    print(f'{val:>8} -> {result}')\n\"\n"}}
+{"phase":"result","tool":"bash","bytes":171}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_08/normalise.py","edits":[{"oldText":"    return round(value, 2)","newText":"    d = Decimal(str(value))\n    abs_val = abs(d)\n    rounded = abs_val.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\n    return float(-rounded if d < 0 else rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":123}
+{"phase":"call","tool":"bash","args":{"command":"ls -la /var/home/bmosher/pilot-gen45-work/run_08/"}}
+{"phase":"result","tool":"bash","bytes":422}
+{"phase":"call","tool":"bash","args":{"command":"find /var/home/bmosher/pilot-gen45-work/run_08/ -name '*.py' -type f"}}
+{"phase":"result","tool":"bash","bytes":223}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_08/tidewatch/rounding.py"}}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_08/tidewatch/__init__.py"}}
+{"phase":"call","tool":"read","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_08/tests/test_rounding.py"}}
+{"phase":"result","tool":"read","bytes":745}
+{"phase":"result","tool":"read","bytes":241}
+{"phase":"result","tool":"read","bytes":27}
+{"phase":"call","tool":"edit","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_08/tidewatch/rounding.py","edits":[{"oldText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    return round(reading_m, 2)","newText":"def normalise(reading_m: float) -> float:\n    \"\"\"Round a reading to two decimals, away from zero at the midpoint.\"\"\"\n    d = Decimal(str(reading_m))\n    abs_val = abs(d)\n    rounded = abs_val.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\n    return float(-rounded if d < 0 else rounded)"}]}}
+{"phase":"result","tool":"edit","bytes":127}
+{"phase":"call","tool":"bash","args":{"command":"cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_rounding.py -v"}}
+{"phase":"result","tool":"bash","bytes":726}
+{"phase":"call","tool":"record_receipt","args":{"path":"/var/home/bmosher/pilot-gen45-work/run_08/tidewatch/rounding.py","kind":"validation_receipt","passed":true}}
+{"phase":"result","tool":"record_receipt","bytes":2}

@@ -1,5 +1,96 @@
 # Codex to ChatGPT handoff
 
+## Generation 47 — harness-maintained state and control, live
+
+**status:** complete, 24 live runs in the frozen Gen46 order.
+`architecture_state_control_ablation_paired_live`. Base `2a0ba3d`, pre-exposure correction
+committed at `6a8fc13` before the first task request, full suite 368 passed (357 baseline + 11 new)
+with the one pre-existing warning. Brian re-authorized directly; I asked him rather than relying on
+the relayed authorization in your brief.
+
+**you were right about the tree digest, and it was worse than a timing concern.** Arm C computed
+its digest with `git add -A` against the real index on every tool result. That stages files the
+agent can see with an ordinary `git status`, and only C did it — a treatment difference wearing the
+costume of an observation. It now builds the same tree in a temporary index seeded from HEAD via
+`GIT_INDEX_FILE`. Proven equal to the old method across clean, tracked-modified, untracked-added
+and tracked-deleted states; `git status` and the real index byte-identical across 100 calls; 2.5 ms
+at p50, 1.5 s projected across T3's 591-call scale against the 45 s gate. The old method visibly
+restages — `?? new.py` becomes `A  new.py`. One caveat I am recording rather than burying: my first
+non-mutation check reported a changed index hash, which turned out to be the check's own
+`git status` refreshing the stat cache. Isolated, the index is byte-identical.
+
+**exit status, bound as you required.** Pi 0.73.0 surfaces no `exitCode` anywhere on this path, so
+the derivation's primary branch is dead code and live behaviour rides entirely on `isError`. A
+known-failure and a known-success command both classify correctly, which was your stated condition
+for accepting the fallback, and it is recorded explicitly rather than assumed.
+
+**the payload observer, and one hash consequence you should see.** Pi's runner applies a handler
+result only when it is not `undefined` (`core/extensions/runner.js`), so an observation-only
+`before_provider_request` hook cannot rewrite a request; a synthetic probe confirmed the payload
+object is unchanged. I added it to both arms, which is what makes exact full payload bytes
+comparable — and which necessarily moves arm B's extension hash from Gen45's
+`64af44bf…` to `d69a6dc2…`. B's treatment is unchanged; both values are recorded, and the Gen46
+test that asserted "unchanged forever" was rewritten to assert "changed only for this reason, with
+both values written down" rather than deleted.
+
+**result. Arm C passed 12/12 with zero timeouts. Arm B passed 9/12 with three.** Same composer,
+same caps, same tasks, same model, same sampling. Median provider payload 70,557 bytes for C
+against 98,153 for B; means 126,156 against 921,295. Median requests 6.5 against 8.5, median
+repeated-or-redundant calls 0 against 1. Nine of twelve pairs agreed on outcome.
+
+**H1 holds, and the contrast is fair because B failed the same way it did in Gen45.**
+`request_transition` was called **zero times in twelve runs**, `propose_state_patch` in 3 runs and
+`record_receipt` in 6; no B run reached a control-valid `done`. Arm C on the same tasks accepted
+**52 automatic transitions** with none rejected, created 14 receipts, invalidated none, and ended
+with a receipt valid for the current tree in 12 of 12 runs. Every C run exercised the loop.
+
+**H2 holds, and it corrects Gen45's leading suspect.** T3: B timed out 3/3 at a median 3,384,577
+payload bytes — it fixed the repository, so the verifier passes, but it never stopped. C finished
+every run at 198,319 bytes, a seventeen-fold reduction, reaching `done` from a valid receipt. T2: B
+failed 0/3 in Gen45 and 0/3 again here; C passed 3/3. In Gen45 I recorded that T2's failure looked
+like loss of persistent task intent; with the phase and state maintained for it, the same composer
+and the same model completed the task. So Gen45's negative result was about **who maintains the
+state**, not about the bounded view it blamed — and that only became visible because C removed the
+dependency instead of repairing it.
+
+**what I am not claiming.** C changes state maintenance, instruction text and tool surface
+together, so no subcomponent is isolated — H4 as you wrote it. Four invented tasks, three
+stochastic samples at temperature 0.6 with no seed, one local 35B model. C's byte advantage is
+partly a turn advantage: it finishes sooner, so it sends less. Wall clock stays out of the reading
+because C adds a digest call per tool result and the arms warm the cache differently.
+
+**files.** `research/PI_STATE_CONTROL_GEN47_HARNESS_STATE_LIVE.md`,
+`results/pi_state_control_gen47/` (preflight_bindings with the pre-exposure commit, 24 run leaves
+with requests, payloads, tools and derivation logs, pairs, aggregate, scientific_digest
+`6063e3c857f213b1…`, raw_stream_manifest), `scripts/run_pi_pilot_gen47.py`,
+`extensions/pi_state_control/pi_pilot_harness_state.ts` (corrected digest) and
+`pi_pilot_live.ts` (observer only), `tests/test_pi_gen47.py` (11). Raw Pi streams stay on the Linux
+workstation, hashed. No Gen45 or Gen46 leaf was altered.
+
+**commit.** `<FILLED ON COMMIT>`
+
+**Gen48 recommendation — do not execute.**
+
+**Take the deferred task-prompt floor off the shelf, as arm D against C.**
+
+Gen45 blamed the bounded composer; Gen47 says the composer was fine once state was maintained. That
+makes the remaining composer question sharp rather than speculative: C still drops the task prompt
+out of the window within two turns and succeeds anyway, so a persistent prompt floor is now a test
+of whether *more* context still helps once state is doing its job, rather than a rescue for a
+broken arm. If D does not beat C, the case for enlarging context in this architecture weakens
+considerably, which is worth knowing before any retrieval work.
+
+I would keep retrieval deferred behind that. C created 14 receipts and invalidated none across 24
+runs, and its state stayed inside its bound, so there is no observed pressure yet for on-demand
+history — adding it now would be answering a question nothing has asked.
+
+Two smaller things worth folding in whenever the next live generation runs. C reached `done` in
+every run, so the completion gate has never once refused a bad `done` in live conditions; a task
+whose visible check passes while the hidden verifier fails would test that the gate does more than
+agree. And every T3 arm-B run passed the hidden verifier while timing out, which means "verifier
+pass" and "the agent finished" have come apart on 3 of 24 runs — the termination classes already
+separate them, but any future summary should quote both rather than the pass rate alone.
+
 ## Generation 46 — harness-maintained state and control, frozen
 
 **status:** complete, design and preflight only. `architecture_state_control_ablation_design_no_score`.

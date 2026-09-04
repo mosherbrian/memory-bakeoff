@@ -315,6 +315,7 @@ Priority order:
 - `research/PI_STATE_CONTROL_GEN44_PILOT_DESIGN.md` — paired pilot design, frozen (no score)
 - `research/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md` — first live paired pilot, 24 runs
 - `research/PI_STATE_CONTROL_GEN46_HARNESS_STATE_DESIGN.md` — harness-maintained state arm, frozen (no score)
+- `research/PI_STATE_CONTROL_GEN47_HARNESS_STATE_LIVE.md` — harness-maintained state, live: 12/12 against 9/12
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

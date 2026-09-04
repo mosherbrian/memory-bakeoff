@@ -1,0 +1,764 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 96,
+      "redundant_file_reads": 66,
+      "redundant_verifier_invocations": 29,
+      "repo_mutations": 1,
+      "tool_calls": 106,
+      "total_repeated_or_redundant": 191
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "harness": {
+      "derivation_events": 212,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 2,
+      "state_bytes": 1059,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000010",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000204",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000207",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000212",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6703,
+      9041,
+      9467,
+      10372,
+      6920,
+      8668,
+      9860,
+      7056,
+      9258,
+      7083,
+      9223,
+      7105,
+      8665,
+      9702,
+      7127,
+      9725,
+      7149,
+      9423,
+      9480,
+      10035,
+      10584,
+      7149,
+      10269,
+      7149,
+      9690,
+      7149,
+      9699,
+      7149,
+      8561,
+      10165,
+      10938,
+      7149,
+      9698,
+      7149,
+      10269,
+      7149,
+      9298,
+      7149,
+      9690,
+      7149,
+      10306,
+      7149,
+      9297,
+      7149,
+      8290,
+      10179,
+      10952,
+      7149,
+      10306,
+      7149,
+      9694,
+      9751,
+      7149,
+      10269,
+      7149,
+      9680,
+      9737,
+      7149,
+      9289,
+      7150,
+      9691,
+      10783,
+      7668,
+      7668,
+      8440
+    ],
+    "payload_bytes_total": 564457,
+    "payload_captures": 65,
+    "request_bytes_by_turn": [
+      1152,
+      3983,
+      4804,
+      6104,
+      1343,
+      3584,
+      5241,
+      1479,
+      4244,
+      1506,
+      4209,
+      1528,
+      3580,
+      5011,
+      1550,
+      4711,
+      1572,
+      4268,
+      4720,
+      5670,
+      6614,
+      1572,
+      5255,
+      1572,
+      4676,
+      1572,
+      4685,
+      1572,
+      3477,
+      5545,
+      6713,
+      1572,
+      4684,
+      1572,
+      5255,
+      1572,
+      4284,
+      1572,
+      4676,
+      1572,
+      5292,
+      1572,
+      4283,
+      1572,
+      3135,
+      5559,
+      6727,
+      1572,
+      5292,
+      1572,
+      4610,
+      5062,
+      1572,
+      5255,
+      1572,
+      4595,
+      5047,
+      1572,
+      4275,
+      1573,
+      4677,
+      6424,
+      2091,
+      2091,
+      3282
+    ],
+    "request_bytes_max": 6727,
+    "request_bytes_median": 4209,
+    "request_bytes_total": 230545,
+    "request_count": 65,
+    "tool_calls": 106
+  },
+  "requests": [
+    {
+      "bytes": 1152,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 208,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 3983,
+      "composed": true,
+      "messages": 5,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 2518,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 4804,
+      "composed": true,
+      "messages": 7,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 3454,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 6104,
+      "composed": true,
+      "messages": 9,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 4485,
+      "state_bytes": 383
+    },
+    {
+      "bytes": 1343,
+      "composed": true,
+      "messages": 1,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 21421,
+      "state_bytes": 572
+    },
+    {
+      "bytes": 3584,
+      "composed": true,
+      "messages": 4,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 23268,
+      "state_bytes": 569
+    },
+    {
+      "bytes": 5241,
+      "composed": true,
+      "messages": 7,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 25124,
+      "state_bytes": 682
+    },
+    {
+      "bytes": 1479,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 42063,
+      "state_bytes": 702
+    },
+    {
+      "bytes": 4244,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 44747,
+      "state_bytes": 702
+    },
+    {
+      "bytes": 1506,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 61690,
+      "state_bytes": 727
+    },
+    {
+      "bytes": 4209,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 64312,
+      "state_bytes": 727
+    },
+    {
+      "bytes": 1528,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 81255,
+      "state_bytes": 747
+    },
+    {
+      "bytes": 3580,
+      "composed": true,
+      "messages": 4,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 83226,
+      "state_bytes": 747
+    },
+    {
+      "bytes": 5011,
+      "composed": true,
+      "messages": 6,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 84256,
+      "state_bytes": 747
+    },
+    {
+      "bytes": 1550,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 101200,
+      "state_bytes": 767
+    },
+    {
+      "bytes": 4711,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 103879,
+      "state_bytes": 767
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 120824,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4268,
+      "composed": true,
+      "messages": 3,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 122459,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4720,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 123490,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5670,
+      "composed": true,
+      "messages": 7,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 124525,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 6614,
+      "composed": true,
+      "messages": 9,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 125521,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 142461,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5255,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 145083,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 162031,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4676,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 164653,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 181597,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4685,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 184228,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 201168,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 3477,
+      "composed": true,
+      "messages": 4,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 202676,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5545,
+      "composed": true,
+      "messages": 7,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 204796,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 6713,
+      "composed": true,
+      "messages": 9,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 205827,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 222771,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4684,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 225401,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 242345,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5255,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 244967,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 261911,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4284,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 264542,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 281489,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4676,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 284111,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 301055,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5292,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 303714,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 320663,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4283,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 323293,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 340240,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 3135,
+      "composed": true,
+      "messages": 3,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 341406,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5559,
+      "composed": true,
+      "messages": 7,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 343882,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 6727,
+      "composed": true,
+      "messages": 9,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 344913,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 361861,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5292,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 364520,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 381464,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4610,
+      "composed": true,
+      "messages": 4,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 383441,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5062,
+      "composed": true,
+      "messages": 6,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 384472,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 401416,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5255,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 404038,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 420987,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4595,
+      "composed": true,
+      "messages": 4,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 422949,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 5047,
+      "composed": true,
+      "messages": 6,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 423980,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1572,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 441649,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 4275,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 444271,
+      "state_bytes": 787
+    },
+    {
+      "bytes": 1573,
+      "composed": true,
+      "messages": 1,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 461214,
+      "state_bytes": 788
+    },
+    {
+      "bytes": 4677,
+      "composed": true,
+      "messages": 5,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 463836,
+      "state_bytes": 788
+    },
+    {
+      "bytes": 6424,
+      "composed": true,
+      "messages": 7,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 465852,
+      "state_bytes": 861
+    },
+    {
+      "bytes": 2091,
+      "composed": true,
+      "messages": 1,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 482642,
+      "state_bytes": 1063
+    },
+    {
+      "bytes": 2091,
+      "composed": true,
+      "messages": 1,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 499472,
+      "state_bytes": 1063
+    },
+    {
+      "bytes": 3282,
+      "composed": true,
+      "messages": 3,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 500559,
+      "state_bytes": 1063
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 10106167,
+    "wall_seconds": 188.08
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_v1",
+    "index": 11,
+    "position_in_pair": 1,
+    "repetition": 1,
+    "task": "T3"
+  },
+  "task": {
+    "final_tree": "e00db86ecb5ff485d9d455df6ef030dda620c72f",
+    "id": "T3",
+    "start_tree": "ad03f75d8c8a0e317faec36e499ad23cfbb04b9a",
+    "verifier_sha256": "ad6a5947b5efd54a51d6cd1fcca17114973521566746b33f4768b8873b15256b"
+  },
+  "verifier": {
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}
