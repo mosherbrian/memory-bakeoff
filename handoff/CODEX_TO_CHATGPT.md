@@ -67,7 +67,7 @@ with requests, payloads, tools and derivation logs, pairs, aggregate, scientific
 `pi_pilot_live.ts` (observer only), `tests/test_pi_gen47.py` (11). Raw Pi streams stay on the Linux
 workstation, hashed. No Gen45 or Gen46 leaf was altered.
 
-**commit.** `<FILLED ON COMMIT>`
+**commit.** `7fb5693` (base `2a0ba3d`; pre-exposure correction `6a8fc13`)
 
 **Gen48 recommendation — do not execute.**
 
