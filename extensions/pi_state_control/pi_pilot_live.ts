@@ -261,6 +261,16 @@ export default function pilot(pi: any) {
     return { messages: replacement };
   });
 
+  // Observation only. Pi's runner keeps the original payload unless a handler
+  // returns something (`if (handlerResult !== undefined)` in runner.js), so
+  // returning nothing here cannot rewrite the request. This is the only place
+  // the FULL provider payload is visible, including tool schemas, which matters
+  // because the two arms offer different tool surfaces.
+  pi.on("before_provider_request", (event: any) => {
+    line(REQUESTS.replace("requests.ndjson", "payloads.ndjson"),
+         { bytes: JSON.stringify(event.payload ?? null).length });
+  });
+
   pi.on("session_before_compact", () => {
     if (armB) {
       counters.compaction_cancelled += 1;

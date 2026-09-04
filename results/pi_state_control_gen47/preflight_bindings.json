@@ -1,0 +1,76 @@
+{
+  "exit_status_binding": {
+    "failure_probe": {
+      "command": "python -m pytest 2>&1",
+      "event": "e000001",
+      "passed": false,
+      "tree_digest": "e92045b2fb6b86b76a866f5fcbec14d426b5fd1f"
+    },
+    "frozen_extraction_rule": "no exitCode field is surfaced by Pi 0.73.0 on this path, so the derivation uses event.isError; both a known-failure and a known-success command classify correctly, which is the condition Gen47 set for accepting the fallback",
+    "known_failure_classified": true,
+    "known_success_classified": true,
+    "pi_surfaces_an_exit_code_field": false,
+    "success_probe": {
+      "command": "python -m pytest 2>&1",
+      "event": "e000001",
+      "passed": true,
+      "tree_digest": "c63f1cadadafa166f3b6a73a2fea0ef022152618"
+    }
+  },
+  "extension_hashes": {
+    "arm_b_changed_only_by_the_shared_observer": true,
+    "arm_b_gen45": "64af44bfc24969ab6f16367dcf307c60b86a8c9f502d801f1888a3ae3560067d",
+    "arm_b_now": "d69a6dc2b3fa8e05a76a2b35297fbb3fa7feb88015f811380234d8a49ad4f5c7",
+    "arm_c_now": "205279d9c1db4659459ccd9e504421f21623c6d9a74c14142b322450bad848df",
+    "note": "arm B's treatment is unchanged; the only edit is the observation-only payload hook that Gen47 asked to be applied identically to both arms, so its hash necessarily moves and both values are recorded here"
+  },
+  "passed": true,
+  "provider_payload_observer": {
+    "added_to_both_arms": true,
+    "non_mutation_evidence": "Pi's runner applies a handler result only when it is not undefined (`if (handlerResult !== undefined)` in core/extensions/runner.js), and a synthetic probe confirmed the payload object is unchanged",
+    "returns": "nothing",
+    "why": "C removes three tools, so tool schemas differ between arms and message bytes alone would understate the difference in what is actually sent"
+  },
+  "tree_digest_correction": {
+    "all_states_match": true,
+    "defect": "arm C computed the tree with `git add -A` against the REAL index on every tool result, which stages files the agent can see with an ordinary `git status`, and only arm C did it - a treatment difference disguised as an observation",
+    "fix": "compute the same tree in a temporary index seeded from HEAD via GIT_INDEX_FILE, then delete it",
+    "gate_45_seconds_passed": true,
+    "git_status_unchanged_over_100_calls": true,
+    "index_measurement_caveat": "the earlier run reported a changed index hash because the fingerprint itself ran git status, which refreshes the index stat cache; isolated, the digest calls leave the index byte-identical",
+    "old_method_status_after": [
+      "M  pkg/core.py",
+      "A  pkg/new.py"
+    ],
+    "old_method_visibly_mutated_status": true,
+    "overhead_ms": {
+      "mean": 2.411,
+      "p50": 2.342,
+      "p95": 2.988
+    },
+    "projection_591_calls_seconds": 1.38,
+    "real_index_unchanged_over_100_calls": true,
+    "state_equivalence": {
+      "clean": {
+        "alternate": "be3be034943ace7c5cac2c84eb919d0b6e0dd528",
+        "match": true,
+        "reference": "be3be034943ace7c5cac2c84eb919d0b6e0dd528"
+      },
+      "tracked_deleted": {
+        "alternate": "25d8ba01faf86d531060ac943b61f7c62fd35ce6",
+        "match": true,
+        "reference": "25d8ba01faf86d531060ac943b61f7c62fd35ce6"
+      },
+      "tracked_modified": {
+        "alternate": "0cafa8f94a11cde334c64f85b264f8b8b1a9c81d",
+        "match": true,
+        "reference": "0cafa8f94a11cde334c64f85b264f8b8b1a9c81d"
+      },
+      "untracked_added": {
+        "alternate": "c392bab280b40dd19b26ad8d4f54bf71d070de65",
+        "match": true,
+        "reference": "c392bab280b40dd19b26ad8d4f54bf71d070de65"
+      }
+    }
+  }
+}

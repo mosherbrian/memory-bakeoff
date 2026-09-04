@@ -12,7 +12,7 @@
  * fixes are outside this path by construction.
  */
 import { createHash } from "node:crypto";
-import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 
@@ -234,11 +234,27 @@ export default function harnessArm(pi: any) {
   let seq = 0;
   const nextRef = () => `e${String(seq++).padStart(6, "0")}`;
 
+  /**
+   * Tree digest of the working tree, computed WITHOUT touching the real index.
+   *
+   * The first version ran `git add -A` against the real index on every tool
+   * result. That is observable: the agent can see staged files with an ordinary
+   * `git status`, and only arm C would have caused it, so it would have been a
+   * treatment difference rather than an observation. This builds the same tree
+   * in a temporary alternate index seeded from HEAD and throws it away.
+   */
   const treeDigest = () => {
+    const indexFile = join(OUT, `.tree-index-${process.pid}`);
+    const env = { ...process.env, GIT_INDEX_FILE: indexFile };
     try {
-      execFileSync("git", ["add", "-A"], { cwd: WORKTREE, stdio: "ignore" });
-      return execFileSync("git", ["write-tree"], { cwd: WORKTREE }).toString().trim();
-    } catch { return ""; }
+      execFileSync("git", ["read-tree", "HEAD"], { cwd: WORKTREE, env, stdio: "ignore" });
+      execFileSync("git", ["add", "-A"], { cwd: WORKTREE, env, stdio: "ignore" });
+      return execFileSync("git", ["write-tree"], { cwd: WORKTREE, env }).toString().trim();
+    } catch {
+      return "";
+    } finally {
+      try { rmSync(indexFile, { force: true }); } catch { /* nothing to remove */ }
+    }
   };
 
   const persist = () => writeFileSync(join(OUT, "harness_state.json"),
@@ -267,6 +283,16 @@ export default function harnessArm(pi: any) {
       composed: true, pi_would_have_sent_bytes: canonical(incoming).length,
       state_bytes: canonical(derivation.state).length, phase: derivation.state.phase });
     return { messages: replacement };
+  });
+
+
+  // Observation only. Pi's runner keeps the original payload unless a handler
+  // returns something (`if (handlerResult !== undefined)` in runner.js), so
+  // returning nothing here cannot rewrite the request. This is the only place
+  // the FULL provider payload is visible, including tool schemas, which matters
+  // because the two arms offer different tool surfaces.
+  pi.on("before_provider_request", (event: any) => {
+    line("payloads.ndjson", { bytes: JSON.stringify(event.payload ?? null).length });
   });
 
   pi.on("session_before_compact", () => ({ cancel: true }));
