@@ -326,6 +326,7 @@ Priority order:
 - `research/PI_QUIESCENT_COMPLETION_GEN55_LIVE.md` — the corrected controller live: 2 legal stops, 0 hard failures, 3 baseline timeouts against none
 - `research/PI_ARTIFACT_AUTHORITY_GEN56.md` — quiescence closed in ARCHITECTURE.md; breadth would have blocked 0 of 14 false assurances, so the gap is artifact coverage
 - `research/PI_ARTIFACT_COVERAGE_GEN57.md` — coverage probes are sensitive but fire on ~70% of correct runs; the false assurance is clean and the good run is flagged
+- `research/PI_MODEL_ASSISTED_EVIDENCE_GEN58.md` — half the generated test banks reject correct code; valid banks cover the tasks with no wrong work, so the screen is unevaluable
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

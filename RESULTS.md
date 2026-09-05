@@ -534,6 +534,39 @@ run under both probes was wrong. Requirement-to-test traceability was deliberate
 since the fixtures carry prose requirements but no machine-readable mapping.
 See `research/PI_ARTIFACT_COVERAGE_GEN57.md`.
 
+## Gen58 - asking a second reader for harder tests
+
+Every route so far tried to squeeze more meaning out of the tests that already exist, and all of
+them failed. So Gen58 asked a model to write *additional* tests, given only the original instruction
+and the starting code, never anyone's solution. Twelve generations, four tasks, three attempts each.
+
+**The experiment cannot answer its own question, and that is the finding.** Half the generated banks
+are wrong: on IP1 and IP3 the bank rejects a trusted correct implementation that predates this
+experiment, inventing unit and sign conventions the instruction never stated. Those banks are
+`UNSAFE_AS_GATE` however much they catch. And the two banks that *are* trustworthy - IP2 and IP4 -
+cover the only two tasks containing **no wrong work at all**. Every historical failure sits in IP1
+and IP3. The population where the evidence is sound and the population with something to catch are
+disjoint, so the frozen screen is **unevaluable**, not failed.
+
+Where the banks are valid the specificity is perfect: **0 of 36** correct trees challenged. Where
+they are invalid they flag **16 of 16** and **18 of 18** - rejecting seven correct runs and the
+trusted reference. A bank that fails everything is broken, not strict.
+
+The sentinel pairing fails accordingly: the generated tests do catch `gen49-IP1-r1-C`, the
+structurally-clean false assurance, but the same bank also rejects `gen49-IP1-r1-D`, the successful
+comparator, and the reference itself.
+
+**One genuine positive.** On IP4, a reference-valid bank, the generated tests catch the recorded
+partial fix that the project's shipped test passes, naming the negative-clamp requirement the
+visible suite never checks. That is the first time in this line that anything produced evidence the
+visible artifact lacked.
+
+Also disclosed: my first frozen sanitizer counted only top-level `test_*` functions, so nine valid
+outputs written as `class Test…` methods were rejected. Found before any bank touched any tree, so
+the fix could not be outcome-informed; per the brief the run was **discarded and regenerated**, with
+the superseded outputs quarantined and labelled rather than reused.
+See `research/PI_MODEL_ASSISTED_EVIDENCE_GEN58.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and
