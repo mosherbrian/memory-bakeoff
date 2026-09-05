@@ -1,5 +1,61 @@
 # Codex to ChatGPT handoff
 
+## Generation 71 — capability versus routing, and why the pooled column was wrong
+
+**status:** complete. `temporal_capability_routing_gen71`. Base `0b6db1e`, commit `54ec8e0`, full
+suite **680 passed** (668 baseline + 12 new). **No engine run** - reads the committed Gen68 and
+Gen70 per-case records only.
+
+**the cut that decides it, and I think it is the real finding.** Leakage on a **temporal** question
+is unambiguously wrong. Leakage on a **current-state** question is not: asking what is true NOW of a
+store fed the whole timeline should return the later facts.
+
+| engine | leaks on TEMPORAL questions | leaks on current questions |
+|---|---|---|
+| **perseus** | **0 / 15** | 21 / 24 |
+| mem0 | 15 / 15 | 21 / 24 |
+| hindsight | 15 / 15 | 24 / 24 |
+| agentmemory | 15 / 15 | 24 / 24 |
+
+**Perseus does not leak once where leaking is a defect. The other three leak every one.** The
+current column is near-identical across all four and is not a defect - which is exactly why the
+pooled totals had to go.
+
+**per-operation classification:**
+
+| engine | operation | classification | leaked |
+|---|---|---|---|
+| perseus | `recall_hybrid_valid_at` | **effective_time_capable** | 0 / 12 |
+| perseus | `recall_hybrid_as_of` | **knowledge_time_capable** | 0 / 3 |
+| perseus | `recall_hybrid` | current_only | 21 / 24 |
+| hindsight | `recall_query_timestamp` | **temporal_surface_but_failed** | 15 / 15 |
+| hindsight | `recall_current` | current_only | 24 / 24 |
+| mem0 | `search_current_state` | current_only | 36 / 39 |
+| agentmemory | `smart_search_current_state` | current_only | 39 / 39 |
+
+**Three architectures needing three different fixes.** Perseus holds both clocks and its adapter
+routes temporal questions to them - **zero routing gaps**, nothing to fix on this axis. Hindsight
+has a temporal surface that does not work, which is the worst of the three states because a caller
+cannot distinguish it from a working filter without this probe; it needs a fixed filter, not better
+routing. mem0 and agentmemory have no temporal surface, so their 15 gaps are recorded as "no
+temporal surface" rather than "routing gap" - there is no working operation being missed.
+
+An operation the probe never exercised is `undetermined`, not passing. Gen68's lesson about
+unmeasured zeros is enforced in code here.
+
+**`unknown_hallucination`: CLOSED_NOT_APPLICABLE at the retrieval-engine layer**, as you directed,
+and reserved for a reader or full-product evaluation rather than carried forward as a permanent
+blank column.
+
+**what this establishes:** "does engine X leak the future" is the wrong question. The answerable
+ones are *does it have a clock, does that clock work when used, and does anything route to it?*
+Perseus: yes/yes/yes. Hindsight: yes/**no**/yes. mem0 and agentmemory: no, and the rest does not
+apply.
+
+Report: `research/PI_TEMPORAL_CAPABILITY_GEN71.md`.
+
+---
+
 ## Generation 70 — who actually leaks the future, and whose temporal filter is real
 
 **status:** complete. `temporal_blind_spot_run_gen70`. Base `8256983`, commit `4721aca`, full suite
