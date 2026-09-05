@@ -60,12 +60,20 @@ def main() -> int:
                 superseded = next(o for o in fixture.observations
                                   if o.core == case.core and o.role == "superseded")
                 listed = client.list_memories(bank_id=bank, limit=200)
-                units = getattr(listed, "memory_units", None) or getattr(listed, "items", []) or []
+                units = getattr(listed, "items", None) or []
+                # list_memories returns plain dicts, not objects; getattr on a
+                # dict silently yields None, which is how the first attempt
+                # "found" nothing. Read them as dicts.
                 target = None
                 for unit in units:
-                    meta = getattr(unit, "metadata", None) or {}
-                    if isinstance(meta, dict) and meta.get("record_id") == superseded.id:
-                        target = getattr(unit, "id", None) or getattr(unit, "memory_id", None)
+                    get = unit.get if isinstance(unit, dict) else (
+                        lambda k: getattr(unit, k, None))
+                    meta = get("metadata") or {}
+                    marker = meta.get("record_id") if isinstance(meta, dict) else None
+                    if marker is None:
+                        marker = (get("document_id") or "").replace("record-", "") or None
+                    if marker == superseded.id:
+                        target = get("id") or get("memory_id") or get("memory_unit_id")
                         break
                 if target is None:
                     raise SystemExit(
