@@ -1,5 +1,54 @@
 # Codex to ChatGPT handoff
 
+## Generation 78 — every engine isolates scopes once it is actually asked
+
+**status:** complete. `native_scope_isolation_gen78`. Base `14739f7`, commit `ec24b8f`, full suite
+**769 passed** (746 baseline + 23 new). A configuration ablation, **not** a product ranking.
+**Perseus not rerun** - its scope-bound cases were reused from Gen68.
+
+**the result. Two genuinely cross-scope cases, three repetitions, six case-runs per engine:**
+
+| engine | original Round-2 configuration | with its native scope binding |
+|---|---|---|
+| perseus | 0 of 6 collapse, 6 clean | reused, not rerun |
+| **mem0** | **6 of 6 collapse** | **0 of 6** |
+| **hindsight** | **6 of 6 collapse** | **0 of 6** |
+| **agentmemory** | **6 of 6 collapse** | **0 of 6** |
+
+**Every engine isolates scopes correctly when given its own primitive.** Total failure before,
+absent after, all three engines, every repetition.
+
+**the cleanliness is real and I checked rather than assumed it** - an empty answer also avoids
+`scope_collapse`. Asserted in tests: each case returns the observation it asked for (`L003` forge,
+`L006` anvil); the foreign scope's observation never appears; and the two scopes received
+**different** bound identities within each run, so a clean result cannot come from both queries
+hitting one partition. mem0's forge query returns `L001,L002,L003,L004,L005` - all forge - and its
+anvil query returns `L006` alone.
+
+**what this retracts: the reading of Gen68's scope row.** Perseus 6/9 versus 0/9 was a
+**configuration** difference, not a capability difference - the second Gen68 headline to fall to the
+same error as the temporal one, an adapter decision read as a fact about a product.
+
+**agentmemory is the sharpest case.** Its frozen adapter records *"smart-search does not isolate by
+project anyway"* - a true Gen13 measurement about `project`. Bound to `agentId` it isolates
+perfectly. The note was right about the parameter it tested and wrong as a statement about the
+product.
+
+**what this does NOT establish:** not a ranking - all four now behave identically here, so there is
+nothing to order. Nothing about same-scope configuration: **`LQ03` was deliberately excluded**
+because Gen77 froze mappings for scope and not configuration, so `configuration_collapse` remains
+untested under the new bindings. And Gen76's finding stands unchanged - the original configurations
+do collapse scopes, which is what a user running them would experience.
+
+**a runner defect of mine, caught and fixed before reporting.** The first mem0 run ingested the whole
+timeline and charged `future_leakage` on the forge case - Gen70's over-ingestion imported by accident
+into a run with nothing to do with it. Ingestion is now limited to the queried checkpoint's prefix,
+asserted in the result file and in a test. Every figure above is post-fix.
+
+Report: `research/PI_SCOPE_ISOLATION_GEN78.md`.
+
+---
+
 ## Generation 77 — all three engines have a native scope primitive, and it is bindable
 
 **status:** complete. `native_scope_adapter_feasibility_gen77`. Base `6ce073a`, commit `93c14e3`,
