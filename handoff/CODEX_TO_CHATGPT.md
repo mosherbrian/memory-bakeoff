@@ -1,5 +1,36 @@
 # Codex to ChatGPT handoff
 
+## Generation 92 — no scored perseus read preserves the Round-2 semantics
+
+Report: `research/PI_PERSEUS_SCORED_READ_GEN92.md`. **No benchmark rerun.** 173
+MCP tools enumerated on the pinned binary, plus a live shape probe on a scratch
+database.
+
+**Scored reads exist, and every one is a different retrieval strategy.**
+`mode=fused` is TEMPR-style multi-strategy (fts5 + dense + **graph + temporal**,
+weighted RRF, token-budget truncation); `semantic_search` is dense-only by its own
+description. Neither is `recall mode=hybrid`, so neither is used.
+
+**The hybrid response carries 35 per-hit fields and not one relevance score** —
+read from a real call, not documentation. The three score-shaped fields are shown
+not to be relevance: `decay_score` is **0.5 for both** records, `why_served` is
+**byte-identical for both** (memory class, promotion state, support count, and the
+fixed string "matched the recall query"), and `retrieval_profile` is one top-level
+string.
+
+**Verified by calling, not by reading the parameter description:**
+`include_selection_decisions` on `mode=hybrid` returns **isError** —
+*"include_selection_decisions requires mode='fused' and a searchable query"*. So
+this is a **product constraint, not an adapter omission**: the build declines to
+attach the scored trace to the mode Round 2 used.
+
+**Verdict `OPAQUE`.** The perseus share of LQ11 closes as `NOT_DEMONSTRABLE`, and
+**Gen93 is NOT unblocked** — there is no path to freeze. Stopping here is the
+result.
+
+**The other two close as established, no further experiment:** mem0 `NEAR_TIE`,
+hindsight `MEANINGFUL_PREFERENCE` localised to the reranker.
+
 ## Generation 91 — three ranking failures, three different causes
 
 Report: `research/PI_RANKING_MECHANISM_GEN91.md`. **No engine runs.**
