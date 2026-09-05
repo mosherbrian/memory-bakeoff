@@ -1,5 +1,55 @@
 # Codex to ChatGPT handoff
 
+## Generation 61 — spec grounding changed nothing, and the reason is the finding
+
+**status:** complete. `spec_grounded_assertion_provenance_gen61`. Base `0c7a535`, commit `28c23df`,
+full suite **573 passed** (561 baseline + 12 new). Local GPU: 48 calls across two attempts, 686.6 s
+total.
+
+**one generator-side change, exactly as specified.** Every generated test must carry a verbatim
+`REQUIREMENT:` citation from the visible instruction, and a mechanical filter deletes any test whose
+citation is not in that instruction. Model, sampling, repetitions, Gen59 corpus, frozen task order
+and the `b694f7b8` screen are untouched. No critic, no cross-model check. The filter reads `spec.txt`
+only; it does no file I/O at all, which is asserted in a test rather than promised in a comment.
+
+**the primary metric did not move.** UNSAFE_AS_GATE **4 of 8**, against your Gen60 baseline of 4 of
+8. Sensitivity 1.000 (12/12) again. Three of the four unsafe tasks are the same (`culvert`, `ledger`,
+`pathsafe`); `manifest` became safe and `tally` became unsafe, which at eight tasks is noise.
+
+**why it could not have worked, which is the part worth having.** The filter deleted **0 of 223**
+tests: the model cited correctly every single time. And all 27 false assertions, across 16 tests in
+the four unsafe tasks, carry a **genuine verbatim citation**. What they invent is the SCOPE of a
+requirement they quoted accurately - `pathsafe` quotes the ValueError sentence and then demands a
+Windows drive-letter path be refused; `culvert` quotes "must keep reporting the SAME number of steps"
+and then asserts 80 where the same number is 40. Provenance checking is blind to this, because
+provenance is precisely what these tests have. The citations are also broad: 223 quotes, 45 distinct,
+some whole sentences of 40 words reused across many tests. Sentence-level citation does not constrain
+an assertion-level claim.
+
+**what this does not establish.** One run per condition on eight tasks cannot separate "no effect"
+from "an effect too small for this design to see". The 4-of-8 comparison is a single observation on
+each side. The verdict line still reads PASSED and carries no new information, for the reason I
+flagged in Gen60: specificity cannot fail once the validity gate has run.
+
+**an attempt was discarded and re-run, and I am reporting it rather than burying it.** My first
+prompt said each test "must begin with a docstring whose first line is REQUIREMENT: ..."; the model
+wrote that as a bare statement, which is a syntax error, and 8 of 24 outputs died in the inherited
+sanitizer. Scoring it would have measured my prompt's clarity, not grounding. The whole attempt is
+kept under `results/pi_spec_grounded_gen61/superseded_attempt_1/` with a README. Only the formatting
+instruction and its worked example changed; the grounding rule is byte-for-byte identical, and no
+bank had been run against any candidate when the decision was made.
+
+**my recommendation for Gen62,** ranked: (1) require the citation to LICENSE the exact assertion -
+the quoted words must state the specific value or behaviour asserted, not merely the topic; still
+mechanical, still no second model. (2) A critic pass asking whether each assertion is entailed by its
+quote - the first change that adds a model, and it should be measured against Gen61's 4-of-8, not
+Gen60's. (3) Accept the generator as a reviewer's aid rather than a gate, which is what the evidence
+so far actually supports.
+
+Report: `research/PI_SPEC_GROUNDED_GEN61.md`.
+
+---
+
 ## Generation 60 — the generator caught every wrong answer, and still rejects correct code half the time
 
 **status:** complete. `generated_evidence_screen_gen60`. Base `bfa32e5`, commit `11aa124`, full
