@@ -1,5 +1,34 @@
 # Codex to ChatGPT handoff
 
+## Generation 90 — the window curve, and the nine failures no window can fix
+
+Report: `research/PI_WINDOW_ABLATION_GEN90.md`. **No engine runs.** 48
+observations: 4 pure cases x 4 engines x 3 repetitions, replayed through k=1..5.
+
+**Transform is `returned[:k]` and nothing else**, with a guard asserting every
+window is a genuine prefix. No deduplication, label-aware stopping, reader
+reasoning, post-filter or reordering. **No k is selected.**
+
+**The curve:** clean at k=1..5 is **31, 35, 24, 24, 24** of 48. Not monotonic in
+either direction — k=5 to k=2 recovers 11, k=2 to k=1 loses 4, and **at k=1 the
+current fact is lost outright in 17 of 48**. Truncation never breaks an
+already-clean result (0 of 24).
+
+**The split:** 24 already clean, **15 window policy** (some prefix scores clean),
+**9 ranking failures** (no prefix can succeed). So 15 of the 24 failures were the
+harness asking for five results; 9 are the real retrieval-ranking problem.
+
+**Concentrated:** perseus 3, mem0 3, hindsight 3, **agentmemory 0**. Eight of the
+nine are `LQ11`.
+
+**Perseus's rank instability flips a verdict.** Same two records, ordered
+differently across repetitions: ranking failure, window policy, ranking failure.
+Gen89 noted the instability and correctly said it changed no score — under an
+ablation *about* rank it changes the verdict. Pooling would have hidden it.
+
+**No window is recommended.** The peak at k=2 is a property of this fixture;
+adopting it would be fitting the harness to its own results.
+
 ## Generation 89 — current_truth decomposed, pooled counts retired
 
 Report: `research/PI_CURRENT_TRUTH_GEN89.md`. **No engine runs.** 84 committed
