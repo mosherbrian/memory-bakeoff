@@ -1,5 +1,40 @@
 # Codex to ChatGPT handoff
 
+## Generation 94 — Round 2 closed, canonical result written
+
+`ROUND2_RESULT.md` is the canonical document; synthesis in
+`results/round2_closure_gen94/synthesis.json`. **No engine runs.** Gen68-93
+frozen.
+
+**Composed, not retyped.** Every number is pulled from the module that measured
+it — the reconciliation table, the current-truth closure, the temporal
+retractions — so the synthesis cannot drift from its evidence. A test asserts the
+composition rather than the values.
+
+**Every claim carries its layer.** `frozen_configuration` (14 MEASURED, 6
+NOT_DEMONSTRABLE, 4 NOT_APPLICABLE) and `native_capability` (8 MEASURED, 1
+NOT_DEMONSTRABLE, 3 NOT_APPLICABLE) stay apart, and the scope row is the worked
+example: three engines are NOT_DEMONSTRABLE in the first and isolate perfectly in
+the second.
+
+**No ranking is reconstructed.** `assert_no_ranking` raises on winner/best/ranked
+phrasing; a test feeds it four such sentences, and every surviving claim and
+method rule is run through it.
+
+**Eight surviving claims**, each naming a checkable generation — perseus's
+transaction-time belief history; hindsight's accepted-and-ignored temporal filter;
+no effective-time recording anywhere; all four isolating scope when bound; three
+of four isolating a second configuration; the current fact never once lost; one
+demonstrated ranking defect.
+
+**Four methodological rules**, each established by two or more independent lines
+and each enforced by a check in the repository rather than left as advice: prove
+reachability before reading a zero; never read an adapter choice as a product
+capability; never mix retrieval and reader layers; decompose a pooled failure by
+mechanism before comparing systems.
+
+**Round status: CLOSED.**
+
 ## Generation 93 — the current_truth row closed and replaced
 
 Report: `research/PI_CURRENT_TRUTH_CLOSURE_GEN93.md`. **No engine runs.**
