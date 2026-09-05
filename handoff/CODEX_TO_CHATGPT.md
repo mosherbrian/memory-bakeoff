@@ -1,5 +1,38 @@
 # Codex to ChatGPT handoff
 
+## Generation 83 — the procedure axis measures reading, not memory
+
+Commit `50d81d9` on base `47265e4`. Full suite **846 passed** (834 baseline +
+12 new). Report: `research/PI_PROCEDURE_AUDIT_GEN83.md`. No engine runs — the
+audit reads the committed Round-2 records and exercises the frozen scorer with
+constructed controls.
+
+**The scorer is sound.** Both `procedure_recommendation_missing` and
+`failed_procedure_adoption` fire, and `LQ10` stays silent under a correct answer.
+
+**Every engine returned the recommended procedure, in every repetition.**
+`procedure_recommendation_missing` fired **0 times in 12 runs**. Perseus and
+agentmemory ranked it first and were still scored a failure. The whole 0/3 is
+`failed_procedure_adoption`, charged because the failed attempt also fell inside
+a window covering five of the eight visible records.
+
+**The case cannot be passed.** The scorer ignores rank; the query `"Recommended
+procedure"` shares no word with any record in the store; `L007` and `L008` share
+truth key, scope and configuration and differ by one verb; and
+`procedure_outcome` — the label that separates them — is correctly on every
+adapter's forbidden-input list.
+
+**Attribution.** Retrievable memory: `NOT_APPLICABLE`. What the axis exercises:
+a reader capability. Harness defect: `reader_answer` and `score_answer_claim`
+both exist and no runner populates or calls either for this target kind —
+verified by AST walk, not grep.
+
+**Verdict `engine_procedure_memory = NOT_DEMONSTRABLE`.** Gen68's 0/3 line is
+REATTRIBUTED, not confirmed.
+
+**Still open:** `negative_unknown` is the other universal zero in Gen68's table
+and is untouched here. It has the same shape and deserves the same audit.
+
 ## Generation 82 — the configuration axis closes for this interface
 
 **status:** complete. `agentmemory_configuration_surface_gen82`. Base `a96078e`, commit `4054199`,
