@@ -6,11 +6,13 @@ import collections, json, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RESULTS = ROOT / "results" / "supersession_ablation_gen102"
+# Default is the unmanifested legacy directory those arms were written to
+# before the Gen106 evidence contract existed. Future runs pass --dir.
+LEGACY = ROOT / "results" / "supersession_ablation_gen102"
 
 
-def rows(engine: str, arm: str):
-    path = RESULTS / f"{engine}-{arm}.json"
+def rows(engine: str, arm: str, directory: Path = LEGACY):
+    path = directory / f"{engine}-{arm}.json"
     return json.loads(path.read_text())["rows"] if path.exists() else []
 
 
@@ -19,9 +21,10 @@ def key(row):
 
 
 def main() -> int:
+    directory = Path(sys.argv[1]) if len(sys.argv) > 1 else LEGACY
     for engine in ("perseus", "hindsight"):
-        off = {key(r): r for r in rows(engine, "off")}
-        on = {key(r): r for r in rows(engine, "on")}
+        off = {key(r): r for r in rows(engine, "off", directory)}
+        on = {key(r): r for r in rows(engine, "on", directory)}
         shared = sorted(set(off) & set(on))
         print(f"\n=== {engine}  ({len(shared)} paired cells)")
         agg = collections.defaultdict(collections.Counter)
