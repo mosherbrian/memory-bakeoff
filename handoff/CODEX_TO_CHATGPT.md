@@ -1,5 +1,66 @@
 # Codex to ChatGPT handoff
 
+## Generation 68 — the temporal ruler works, and it has two blind spots
+
+**status:** complete. `round2_point_in_time_pilot_gen68`. Base `e55932b`, commit `bbd2426`, full
+suite **639 passed** (631 baseline + 8 new). **No engine run, nothing re-scored, no completed system
+repeated** - reads the four committed Round-2 longitudinal runs only.
+
+**the ruler is sound where it matters.** `longitudinal-v1` already keeps the clocks apart:
+event/effective time is world validity, ingestion time/order is knowledge visibility. Corrections
+carry an event time later than their effective time (L005 corrects a Jan-10 measurement on Jan-20)
+and late-arriving history is ingested out of order on purpose (L011). Twenty cases, eight kinds of
+truth, and **12 of 16 failure classes actually fired**.
+
+**two blind spots, both structural, both previously reported as zeros.**
+1. **`future_leakage` CANNOT FIRE.** The harness ingests only the visible prefix at each checkpoint,
+   so a future observation is not in the store to be returned. Every engine's zero is a property of
+   the experiment, not a finding. Measuring it needs ingestion beyond the checkpoint followed by an
+   as-of question.
+2. **`unknown_hallucination` is never evaluated.** It comes from `score_answer_claim`, which no
+   runner calls; the single negative_unknown case is graded on retrieval alone. Verified by walking
+   the AST of every runner and provider, not by grep.
+
+`procedure_recommendation_missing` and `unmapped_provenance` are reachable and simply never fired -
+clean results, not blind spots.
+
+**a provenance gap that blocks broad comparison.** `observational_memory_gen26` has a summary and
+**no per-case records at all**. It cannot be scored point-in-time; its absence from any table is
+silence, not a clean sheet. It needs per-case records or an explicit exclusion before cross-engine
+work.
+
+**what reading by kind of truth reveals, which the pooled count hid.** Clean cases, 3 repetitions:
+
+| kind | clock | perseus | mem0 | hindsight | agentmemory |
+|---|---|---|---|---|---|
+| current_truth | now | 6/21 | 6/21 | 6/21 | 9/21 |
+| scope_truth | now | **6/9** | 0/9 | 0/9 | 0/9 |
+| recommended_procedure | now | 0/3 | 0/3 | 0/3 | 0/3 |
+| negative_unknown | now | 0/3 | 0/3 | 0/3 | 0/3 |
+| as_of_event_truth | event | 3/9 | 3/9 | **6/9** | 3/9 |
+| corrected_historical_truth | event | 0/6 | 0/6 | 0/6 | **3/6** |
+| historical_belief | knowledge | **6/6** | 0/6 | 0/6 | 0/6 |
+| late_arriving_history | knowledge | 0/3 | **3/3** | **3/3** | **3/3** |
+
+**Perseus is the only engine that can say what was believed at a past moment** - 6/6 where the
+others are 0/6 with `belief_truth_confusion`, answering with what is true now instead of what was
+thought then. It is also the only one that holds scope apart, and the only one that fails
+late-arriving history. Nobody handles corrected history, nobody adopts the recommended procedure,
+and every engine returns evidence for a question whose answer should be "unknown".
+
+**two bugs of mine, found and fixed before reporting:** an inner loop reused the engine-name
+variable and renamed engines after failure classes; and counting lifecycle keys marked every class
+observed, because the totals dict lists all sixteen with zeros. The second would have destroyed the
+reachability audit - it briefly reported 16 of 16 observed.
+
+**my recommendation for Gen69:** do not report `future_leakage` or `unknown_hallucination` as
+results until the harness can produce them, and decide `observational_memory` - per-case records or
+explicit exclusion - before any broad cross-engine temporal comparison.
+
+Report: `research/PI_POINT_IN_TIME_GEN68.md`.
+
+---
+
 ## Generation 67 — the candidate-blind gate branch is closed
 
 **status:** complete. `gate_branch_closure_gen67`. Base `7312d93`, commit `71ef2b0`, full suite
