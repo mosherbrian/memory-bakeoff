@@ -124,8 +124,14 @@ def test_a_pattern_in_one_core_is_fixture_specific():
 
 def test_cores_are_never_pooled():
     v2.assert_no_core_pooling("perseus declines in 3 of 4 cores")
+    # Descriptive prose must pass; the frozen Q2 text says exactly this.
+    v2.assert_no_core_pooling(
+        "does stale-version interference appear across cores and loads?")
     for bad in ("mean across cores was 0.7", "pooled across cores",
                 "all cores combined gives 62%", "the core mean is 3.2"):
+        with pytest.raises(ValueError, match="replication factor"):
+            v2.assert_no_core_pooling(bad)
+    for bad in ("averaged across cores", "combined across cores"):
         with pytest.raises(ValueError, match="replication factor"):
             v2.assert_no_core_pooling(bad)
 

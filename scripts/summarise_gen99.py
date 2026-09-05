@@ -85,7 +85,11 @@ def main() -> int:
         "Q2_stale_interference_recurs": q2(curve),
         "Q3_other_engines_hold_their_shape": q3(curve),
     }
-    V2.assert_no_core_pooling(json.dumps(payload["questions_as_frozen"]))
+    # Guard the SUMMARY, not the frozen contract - a contract is not a claim.
+    for entry in (payload["Q1_perseus_rank_declines_with_density"],
+                  payload["Q2_stale_interference_recurs"]):
+        V2.assert_no_core_pooling(json.dumps(entry))
+    V2.assert_no_core_pooling(json.dumps(payload["Q3_other_engines_hold_their_shape"]))
     (OUT / "verdicts.json").write_text(json.dumps(payload, indent=1, sort_keys=True,
                                                   default=str))
     print("Q1 perseus rank declines with density:",

@@ -179,8 +179,14 @@ def replication_verdict(per_core: Mapping[str, bool]) -> str:
     return PARTIAL
 
 
-POOLING_TERMS = ("across cores", "all cores combined", "pooled across", "core mean",
-                 "mean across cores", "overall across cores")
+# Averaging phrasings only. The bare phrase "across cores" is ordinary
+# descriptive prose - Gen98's own frozen question asks whether a pattern recurs
+# "across cores and loads" - and flagging it caught the contract rather than a
+# pooled number. The guard targets the ACT of averaging, not the concept.
+POOLING_TERMS = ("all cores combined", "pooled across", "core mean",
+                 "mean across cores", "averaged across cores",
+                 "average across cores", "overall across cores",
+                 "combined across cores")
 
 
 def assert_no_core_pooling(statement: str) -> None:
