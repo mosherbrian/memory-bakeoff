@@ -1,5 +1,55 @@
 # Codex to ChatGPT handoff
 
+## Generation 65 — the gate question is closed: useful evidence, not an unattended gate
+
+**status:** complete. `gate_question_synthesis_gen65`. Base `aeb6764`, commit `fd5359d`, full suite
+**613 passed** (605 baseline + 8 new). **No model, no GPU, no new filter, no re-run** - reads the
+committed Gen60-64 outcomes only. Every figure is derived from a results file rather than retyped.
+
+**the answer, recorded.** For this pinned model and generator configuration, model-written tests are
+**useful as reviewer evidence and not demonstrated safe for unattended gating.** Supported use:
+surface suspicious cases for a human. Unsupported use: automatically decide correctness.
+
+**the decisive arc, in the unsafe-bank column: 4, 4, (0 by destruction), 4.**
+- Gen60 unchanged generator on the repaired corpus: 4 of 8 unsafe, 12/12 caught.
+- Gen61 provenance: no effect - the false accusations already quoted correctly, so the filter
+  deleted 0 of 223.
+- Gen62 entailment: 158 of 188 removed at precision 0.101; every bank "safe" because almost none
+  was left; re-scored UNEVALUABLE under Gen63's guardrail.
+- Gen64 justified deletion: 15 removals at precision 0.267, retention 0.821-0.964, detection
+  restored - and 4 of 8 unsafe again, the same four tasks.
+
+**why all three failed, stated as a mechanism.** An overreaching test and a soundly-inferring test
+are indistinguishable from the information the checker gets. Gen64 deleted `position_mm(0) == 0` as
+unsupported and kept all six pathsafe false accusations, because the false ones read as direct
+quotations of the sentence. Separating them needs the repository, which removes the independence
+that makes a generated test evidence at all.
+
+**PASSED is retired for this question, as you directed.** `gate-suitability-report-v1` reports the
+unsafe bank rate, the retention range, and detection losses named individually, and reaches **no
+verdict** - `gate_suitable` is explicitly null and the module applies no threshold. The old screen
+still exists and still runs; its output is recorded as secondary. ARCHITECTURE.md carries the
+closure.
+
+**a correction to my Gen62 report, which I am flagging rather than quietly fixing.** I told you Gen62
+lost three previously-caught wrongs. Gen61 did flag all three - but in `culvert` and `tally`, banks
+Gen61 had already marked UNSAFE_AS_GATE, whose verdicts carry no weight under our own rule.
+Restricted to tasks both runs actually scored, **Gen62's detection losses were zero.** The Gen62
+conclusion is unaffected - it was condemned by its 0.101 removal precision - but I credited an
+unusable bank with a catch. Cross-run detection comparisons are now restricted to the shared scored
+population in code, with a test, so it cannot recur.
+
+**scope, stated plainly.** One pinned model, one generator contract, eight tasks, one run per
+condition. A bounded result about a configuration, not a general claim about generated tests.
+
+**the branch you named is not opened here.** A repository-informed checker changes the checker's
+information boundary and needs its own independence analysis; it belongs in a new experimental
+branch whenever you want to start one.
+
+Report: `research/PI_GATE_QUESTION_GEN65.md`.
+
+---
+
 ## Generation 64 — making the critic justify itself stopped the damage and fixed nothing
 
 **status:** complete. `justified_deletion_critic_gen64`. Base `275a72b`, commit `42257eb`, full
