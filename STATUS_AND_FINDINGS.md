@@ -324,6 +324,7 @@ Priority order:
 - `research/PI_QUIESCENT_COMPLETION_GEN53_REFINEMENT.md` — v2 over 72 runs: the loop repair works, the revert repair is inert because the tree digest counts build artifacts
 - `research/PI_TRACKED_DIGEST_GEN54.md` — fingerprint corrected to ignore build output; the revert refusal is now real at every K, zero stops on an unchanged tree
 - `research/PI_QUIESCENT_COMPLETION_GEN55_LIVE.md` — the corrected controller live: 2 legal stops, 0 hard failures, 3 baseline timeouts against none
+- `research/PI_ARTIFACT_AUTHORITY_GEN56.md` — quiescence closed in ARCHITECTURE.md; breadth would have blocked 0 of 14 false assurances, so the gap is artifact coverage
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`

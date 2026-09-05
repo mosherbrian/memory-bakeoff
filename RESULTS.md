@@ -476,6 +476,35 @@ All 24 raw streams retained and verified after cleanup: 73,080,123 bytes. Runtim
 of which 2,700 is the three untreated timeouts.
 See `research/PI_QUIESCENT_COMPLETION_GEN55_LIVE.md`.
 
+## Gen56 - the receipt was never the problem; the test was
+
+Two things: the quiescent-completion line is closed in `ARCHITECTURE.md` as an optional harness
+guardrail with its limits recorded, and the next question was tested and answered.
+
+That question was whether a wrong result slipping past a passing check is a matter of **scope** -
+the agent running one test file instead of the whole suite. Audited across all 72 recorded
+intent-persistence runs, with the broadest shipped command frozen from the fixture layout before any
+outcome was read: **it is not**. Fourteen runs ended hidden-verifier-wrong while holding a valid
+receipt, and in **every one** the broadest test command the project ships also passes on exactly
+that tree. Nine of the fourteen had already run the whole suite live. Across all 72 final trees the
+broad check failed **zero** times.
+
+The cleanest proof needs no reconstruction: on the **shipped, unmodified** IP4 fixture the project's
+own test passes a knowingly incomplete implementation that the hidden verifier rejects.
+
+The counterfactual is therefore blunt - requiring the broadest shipped check would have blocked
+**0** false assurances while charging 24 runs an extra check. All four hidden-wrong sentinels are
+`visible_artifact_coverage_gap`; **zero** are `narrow_receipt_broader_visible_contradicts`.
+
+So the unresolved problem is visible artifact **coverage**, not command scope: a harness cannot
+recover a requirement that no visible test encodes. Recommendation is to design around how stronger
+evidence is produced, not to build a validation-breadth gate.
+
+Also frozen, metadata only, changing no control behaviour: `scoped-validation-receipt-v1`, whose
+authority statement has exactly one form - *command X exited N on tree Y under configuration Z* -
+and which is forbidden by construction from saying a task is correct.
+See `research/PI_ARTIFACT_AUTHORITY_GEN56.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

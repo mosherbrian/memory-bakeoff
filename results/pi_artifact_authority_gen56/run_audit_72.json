@@ -1,0 +1,3462 @@
+{
+  "evidence_class": "architecture_quiescence_closeout_and_artifact_authority_audit_no_score",
+  "frozen_broad_commands_sha256": "05e5126a63885ddb7af57c8ade67e520770cb1fa55fd68eb218fbff4f2744422",
+  "hidden_wrong_with_valid_receipt": {
+    "reconstruction_or_instrumentation_unknown": 2,
+    "visible_artifact_coverage_gap": 14
+  },
+  "receipt_contract": {
+    "authority_form": "command X exited N on tracked tree Y under configuration Z",
+    "changes_no_control_behaviour": true,
+    "contract_sha256": "907279d38f6d23be2e7645a924b48c6c2c8db1d33a728e1324f932150b6da0c2",
+    "contract_version": "scoped-validation-receipt-v1",
+    "forbidden_claims": [
+      "task correct",
+      "requirements satisfied",
+      "implementation complete"
+    ],
+    "hidden_verifier_is_never_an_input": true,
+    "purpose": "metadata describing what a passing visible check establishes, and no more",
+    "scope_classes": [
+      "project_wide_visible",
+      "explicit_subset",
+      "single_test_or_selector",
+      "unknown_scope"
+    ]
+  },
+  "receipt_scope_classes": {
+    "explicit_subset": 29,
+    "project_wide_visible": 43
+  },
+  "reconstruction": {
+    "fully_reconstructable": 70,
+    "of_runs": 72,
+    "unreconstructable": [
+      "12-IP1-r1-pi_harness_state_control_v1",
+      "20-IP1-r3-pi_harness_state_control_v1"
+    ]
+  },
+  "runs": [
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "70fede354d9cfe61925ee2fae3605e44b41e4f7f",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_gauge.py -v 2>&1' exited 0 on tracked tree 70fede354d9cfe61925ee2fae3605e44b41e4f7f under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/01-IP1-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 14,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "70fede354d9cfe61925ee2fae3605e44b41e4f7f",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_gauge.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "01-IP1-r2-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "bbfd0e3092a4bf7352c76ed0985bba64c26f60a9",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_02 && python -m pytest tests/ -v' exited 0 on tracked tree bbfd0e3092a4bf7352c76ed0985bba64c26f60a9 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/02-IP1-r2-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 17,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "bbfd0e3092a4bf7352c76ed0985bba64c26f60a9",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_02 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "02-IP1-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP1",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/03-IP2-r3-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 8,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "03-IP2-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP2",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "13779080cd051510b53361b8dfeccf872a2ea4d0",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_04 && python -m pytest tests/ -v' exited 0 on tracked tree 13779080cd051510b53361b8dfeccf872a2ea4d0 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/04-IP2-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "13779080cd051510b53361b8dfeccf872a2ea4d0",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_04 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "04-IP2-r3-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/05-IP4-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "05-IP4-r1-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/test_valve.py -v 2>&1' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/06-IP4-r1-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/test_valve.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "06-IP4-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP4",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "b05840f7cf59a79afc3fe4f9154a8e04a437a50a",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree b05840f7cf59a79afc3fe4f9154a8e04a437a50a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/07-IP1-r1-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 14,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "b05840f7cf59a79afc3fe4f9154a8e04a437a50a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "07-IP1-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP1",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "392c6d9d0a71d84e0e3aabac92dbb1d6396ad287",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_gauge.py -v' exited 0 on tracked tree 392c6d9d0a71d84e0e3aabac92dbb1d6396ad287 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/08-IP1-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "392c6d9d0a71d84e0e3aabac92dbb1d6396ad287",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_gauge.py -v"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "08-IP1-r1-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "de075a9c6a04735fef6850b414e2a1ec9cc3f1f4",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/test_schedule.py -v 2>&1' exited 0 on tracked tree de075a9c6a04735fef6850b414e2a1ec9cc3f1f4 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/09-IP2-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "de075a9c6a04735fef6850b414e2a1ec9cc3f1f4",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/test_schedule.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "09-IP2-r2-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "b3cd72220d888cbe21cd551108c593a4eeac10b0",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_10 && python -m pytest tests/ -v' exited 0 on tracked tree b3cd72220d888cbe21cd551108c593a4eeac10b0 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/10-IP2-r2-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "b3cd72220d888cbe21cd551108c593a4eeac10b0",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_10 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "10-IP2-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP2",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "65559e56322bebc950a322e8b5b9f1f6e8f6b051",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1' exited 0 on tracked tree 65559e56322bebc950a322e8b5b9f1f6e8f6b051 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/11-IP1-r3-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 14,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "65559e56322bebc950a322e8b5b9f1f6e8f6b051",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP1",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "40cd2c4a9fd2e7b5b20e87cdedb9c652cca21e43",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/test_gauge.py -v 2>&1' exited 0 on tracked tree 40cd2c4a9fd2e7b5b20e87cdedb9c652cca21e43 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/12-IP1-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 12,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "40cd2c4a9fd2e7b5b20e87cdedb9c652cca21e43",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/test_gauge.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "12-IP1-r3-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/ -v' exited 0 on tracked tree 94c8ff837fdd7d7763243a9d3536e9f1918db9e4 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/13-IP3-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 169,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "13-IP3-r2-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "timeout",
+      "unreplayable_mutations": [],
+      "visible_checks": 160
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_14 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 94c8ff837fdd7d7763243a9d3536e9f1918db9e4 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/14-IP3-r2-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 12,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_14 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "14-IP3-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP3",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/15-IP3-r3-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 27,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "15-IP3-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP3",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 14
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/ -v 2>&1 || true' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/16-IP3-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/ -v 2>&1 || true"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "16-IP3-r3-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "ee471978b503a70377ce23fcfd61e7e0aee7a1c0",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/ -v' exited 0 on tracked tree ee471978b503a70377ce23fcfd61e7e0aee7a1c0 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/17-IP4-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "ee471978b503a70377ce23fcfd61e7e0aee7a1c0",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "17-IP4-r2-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_18 && python -m pytest tests/ -v' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/18-IP4-r2-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_18 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "18-IP4-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP4",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "4 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py",
+        "tests/test_counter.py"
+      ],
+      "final_tracked_tree": "2c041c8499656b417b117de34c75978cf700019b",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/ -v' exited 0 on tracked tree 2c041c8499656b417b117de34c75978cf700019b under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py",
+          "tests/test_counter.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/19-IP3-r1-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 11,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "2c041c8499656b417b117de34c75978cf700019b",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "19-IP3-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP3",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/20-IP3-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "20-IP3-r1-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/test_valve.py -v' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/21-IP4-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/test_valve.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "64da81dc832a4aafbb29a2cdeca2e90d6d06f3bc",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_22 && python -m pytest tests/ -v' exited 0 on tracked tree 64da81dc832a4aafbb29a2cdeca2e90d6d06f3bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/22-IP4-r3-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "64da81dc832a4aafbb29a2cdeca2e90d6d06f3bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_22 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP4",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "c08db7784dca673e6f74818f4ca3cfc29eda972f",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree c08db7784dca673e6f74818f4ca3cfc29eda972f under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/23-IP2-r1-pi_harness_state_control_task_floor_v1",
+        "establishes_task_correctness": false,
+        "event_index": 11,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c08db7784dca673e6f74818f4ca3cfc29eda972f",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "23-IP2-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP2",
+      "termination_class": "completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+      "fully_reconstructable": true,
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1' exited 0 on tracked tree 464bf53fd40f1adce784b3679376a4c8c9554ef2 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_state_control_gen49/runs/24-IP2-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_schedule.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "24-IP2-r1-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "timeout",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_schedule.py -v 2>&1' exited 0 on tracked tree c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/01-IP2-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 8,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_schedule.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "01-IP2-r2-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_02 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/02-IP2-r2-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_02 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "02-IP2-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "01940a59e548df63222211dc916ffbfa7ada5966",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/ 2>&1 || python -m unittest discover tests/ 2>&1' exited 0 on tracked tree 01940a59e548df63222211dc916ffbfa7ada5966 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/03-IP3-r2-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 11,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "01940a59e548df63222211dc916ffbfa7ada5966",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/ 2>&1 || python -m unittest discover tests/ 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "03-IP3-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'find /var/home/bmosher/pilot-gen45-work/run_04/ -name \"*.sh\" -o -name \"Makefile\" -o -name \"pyproject.toml\" -o -name \"setup.py\" -o -name \"pytest.ini\" -o -name \"tox.ini\" | head -20' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/04-IP3-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 8,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "gen45-work/run_04/",
+          "setup.py"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "find /var/home/bmosher/pilot-gen45-work/run_04/ -name \"*.sh\" -o -name \"Makefile\" -o -name \"pyproject.toml\" -o -name \"setup.py\" -o -name \"pytest.ini\" -o -name \"tox.ini\" | head -20"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "04-IP3-r2-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/ -v' exited 0 on tracked tree 94c8ff837fdd7d7763243a9d3536e9f1918db9e4 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/05-IP3-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "94c8ff837fdd7d7763243a9d3536e9f1918db9e4",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_05 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "05-IP3-r1-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [],
+      "final_tracked_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/ 2>&1' exited 0 on tracked tree de99e04fb9e677a7fecc0250745d9849e9f051db under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/06-IP3-r1-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 8,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/ 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "06-IP3-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "2896924db16789e40f606e4a8437ca8140a55c98",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree 2896924db16789e40f606e4a8437ca8140a55c98 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/07-IP2-r3-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "2896924db16789e40f606e4a8437ca8140a55c98",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "07-IP2-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "a207940999515a616fdc5c7cd3a45bd19d3f0830",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/ -v' exited 0 on tracked tree a207940999515a616fdc5c7cd3a45bd19d3f0830 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/08-IP2-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "a207940999515a616fdc5c7cd3a45bd19d3f0830",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "08-IP2-r3-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/ -v' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/09-IP4-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "09-IP4-r1-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_10 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/10-IP4-r1-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_10 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "10-IP4-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.22,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 732a4b97815b5738451feca8a95099ee2952b612 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 13,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "732a4b97815b5738451feca8a95099ee2952b612",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP1",
+      "termination_class": "quiescent_stop",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "bd0e3113987e034a3e9f32820edc71881b0a5e0e",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree bd0e3113987e034a3e9f32820edc71881b0a5e0e under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/12-IP1-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 25,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "bd0e3113987e034a3e9f32820edc71881b0a5e0e",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "12-IP1-r1-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 3
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "390d3c45366f063b0c04b29500e8ae93ad0ded45",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree 390d3c45366f063b0c04b29500e8ae93ad0ded45 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/13-IP2-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "390d3c45366f063b0c04b29500e8ae93ad0ded45",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "13-IP2-r1-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_14 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/14-IP2-r1-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_14 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "14-IP2-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 0fa3398c7271fc8e299c448fbb089e3b69201212 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/15-IP4-r2-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "15-IP4-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "5545de53b1908addf80f5148bb1a26a6c743129c",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/test_valve.py -v' exited 0 on tracked tree 5545de53b1908addf80f5148bb1a26a6c743129c under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/16-IP4-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "5545de53b1908addf80f5148bb1a26a6c743129c",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/test_valve.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "16-IP4-r2-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/ -v' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/17-IP3-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "17-IP3-r3-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_18 && python -m pytest tests/ -v' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/18-IP3-r3-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_18 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "18-IP3-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "d72fda40c119abdf37e4f6f291a752f2acef5fe2",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree d72fda40c119abdf37e4f6f291a752f2acef5fe2 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/19-IP1-r3-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 12,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "d72fda40c119abdf37e4f6f291a752f2acef5fe2",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "19-IP1-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "1bd59d031de741aa40f9ba576c2ca366c64da407",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/test_gauge.py -v 2>&1' exited 0 on tracked tree 1bd59d031de741aa40f9ba576c2ca366c64da407 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/20-IP1-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 13,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "1bd59d031de741aa40f9ba576c2ca366c64da407",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/test_gauge.py -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "20-IP1-r3-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "8014ed79cd3e5fa47b039368fb7fc6e3b14687f5",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/test_valve.py -v' exited 0 on tracked tree 8014ed79cd3e5fa47b039368fb7fc6e3b14687f5 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/21-IP4-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "8014ed79cd3e5fa47b039368fb7fc6e3b14687f5",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/test_valve.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "4 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "054ef59a4ac7b71fd431247c52a192b45554fc59",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_22 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 054ef59a4ac7b71fd431247c52a192b45554fc59 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/22-IP4-r3-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "054ef59a4ac7b71fd431247c52a192b45554fc59",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_22 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "f73f441ad1f46fdc542313669cee2bd5179a5f62",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree f73f441ad1f46fdc542313669cee2bd5179a5f62 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/23-IP1-r2-pi_harness_state_control_quiescent_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 163,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "f73f441ad1f46fdc542313669cee2bd5179a5f62",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP1",
+      "termination_class": "timeout",
+      "unreplayable_mutations": [],
+      "visible_checks": 145
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "e6aa1524fceab8d09e1812a59ba27c93aa474538",
+      "fully_reconstructable": true,
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree e6aa1524fceab8d09e1812a59ba27c93aa474538 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen52/runs/24-IP1-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 12,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "e6aa1524fceab8d09e1812a59ba27c93aa474538",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "24-IP1-r2-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "8d67ef95253133f4c436b5003b03662ae5a8e6e7",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree 8d67ef95253133f4c436b5003b03662ae5a8e6e7 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/01-IP2-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "8d67ef95253133f4c436b5003b03662ae5a8e6e7",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_01 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "01-IP2-r2-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_02 && python -m pytest tests/test_schedule.py -v 2>&1' exited 0 on tracked tree 464bf53fd40f1adce784b3679376a4c8c9554ef2 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/02-IP2-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_02 && python -m pytest tests/test_schedule.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "02-IP2-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1 || python -m pytest tests/test_counter.py -v 2>&1' exited 0 on tracked tree 84b2a167db0f7b020d48ab0110e3c89f8443d8bc under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/03-IP3-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 11,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "84b2a167db0f7b020d48ab0110e3c89f8443d8bc",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_03 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1 || python -m pytest tests/test_counter.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "03-IP3-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "4 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py",
+        "tests/test_counter.py"
+      ],
+      "final_tracked_tree": "aa2273dad6c200f25ae733d2c003e8c9500505d3",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_04 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree aa2273dad6c200f25ae733d2c003e8c9500505d3 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py",
+          "tests/test_counter.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/04-IP3-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 11,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "aa2273dad6c200f25ae733d2c003e8c9500505d3",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_04 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "04-IP3-r2-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "cdfc2dcf61ff1466bbdd75b3d5a37afe8cabea33",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'python -m pytest tests/test_counter.py -v' exited 0 on tracked tree cdfc2dcf61ff1466bbdd75b3d5a37afe8cabea33 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/05-IP3-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 291,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_counter.py"
+        ],
+        "tracked_tree_digest": "cdfc2dcf61ff1466bbdd75b3d5a37afe8cabea33",
+        "validation_command": "python -m pytest tests/test_counter.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "05-IP3-r1-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "timeout",
+      "unreplayable_mutations": [],
+      "visible_checks": 141
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_tree": "d3c805465d0b600ee0a8e9895c89378d1f0c1dcb",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree d3c805465d0b600ee0a8e9895c89378d1f0c1dcb under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "tally/counter.py",
+          "tally/report.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/06-IP3-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 10,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "d3c805465d0b600ee0a8e9895c89378d1f0c1dcb",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_06 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "06-IP3-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.22,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "ferry/schedule.py",
+        "tests/test_schedule.py"
+      ],
+      "final_tracked_tree": "da9e14e3e8fbad9c8eb80e6344f6911a14b3d727",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_07 && PYTHONPATH=. python -m pytest tests/ -v 2>&1' exited 0 on tracked tree da9e14e3e8fbad9c8eb80e6344f6911a14b3d727 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py",
+          "tests/test_schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/07-IP2-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 12,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "da9e14e3e8fbad9c8eb80e6344f6911a14b3d727",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && PYTHONPATH=. python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "07-IP2-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 2
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_schedule.py -v' exited 0 on tracked tree c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/08-IP2-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_schedule.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "08-IP2-r3-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/test_valve.py -v' exited 0 on tracked tree 0fa3398c7271fc8e299c448fbb089e3b69201212 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/09-IP4-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_09 && python -m pytest tests/test_valve.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "09-IP4-r1-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_tree": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_10 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree ac59264d5ea10ccb804bf26206adca4337bd3c74 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/10-IP4-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 6,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "ac59264d5ea10ccb804bf26206adca4337bd3c74",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_10 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "10-IP4-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "1835eed6d2cd52b032e124e5fc2dd180cf0c9392",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 1835eed6d2cd52b032e124e5fc2dd180cf0c9392 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/11-IP1-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 19,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "1835eed6d2cd52b032e124e5fc2dd180cf0c9392",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "11-IP1-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP1",
+      "termination_class": "quiescent_stop",
+      "unreplayable_mutations": [],
+      "visible_checks": 5
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.27,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/gauge.py",
+        "sluice/telemetry.py",
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "5960ecb83b39a1bd255736af2e384c6db8bdb4ac",
+      "fully_reconstructable": false,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 5960ecb83b39a1bd255736af2e384c6db8bdb4ac under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/gauge.py",
+          "sluice/telemetry.py",
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/12-IP1-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 27,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "5960ecb83b39a1bd255736af2e384c6db8bdb4ac",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_12 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "reconstruction_or_instrumentation_unknown",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "12-IP1-r1-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [
+        {
+          "call": 15,
+          "tool": "edit"
+        }
+      ],
+      "visible_checks": 5
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.21,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_schedule.py -v 2>&1' exited 0 on tracked tree c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/13-IP2-r1-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 8,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_schedule.py"
+        ],
+        "tracked_tree_digest": "c0ec7f42fc6c0e080f8a1d9caae9784af7c4456a",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_13 && python -m pytest tests/test_schedule.py -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 1,
+      "run": "13-IP2-r1-pi_harness_state_control_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_tree": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_14 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 464bf53fd40f1adce784b3679376a4c8c9554ef2 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "ferry/schedule.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/14-IP2-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 8,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "464bf53fd40f1adce784b3679376a4c8c9554ef2",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_14 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 1,
+      "run": "14-IP2-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP2",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v' exited 0 on tracked tree 0fa3398c7271fc8e299c448fbb089e3b69201212 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/15-IP4-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_15 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 2,
+      "run": "15-IP4-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "3 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "3380eaf38d16e04ec75ae2bc2abddb28fc94dc88",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/test_valve.py -v' exited 0 on tracked tree 3380eaf38d16e04ec75ae2bc2abddb28fc94dc88 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/16-IP4-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "3380eaf38d16e04ec75ae2bc2abddb28fc94dc88",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_16 && python -m pytest tests/test_valve.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "16-IP4-r2-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [],
+      "final_tracked_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree de99e04fb9e677a7fecc0250745d9849e9f051db under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/17-IP3-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_17 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "17-IP3-r3-pi_harness_state_control_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [],
+      "final_tracked_tree": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_18 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree de99e04fb9e677a7fecc0250745d9849e9f051db under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/18-IP3-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 9,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "de99e04fb9e677a7fecc0250745d9849e9f051db",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_18 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "18-IP3-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP3",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [],
+      "final_tracked_tree": "732a4b97815b5738451feca8a95099ee2952b612",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/test_gauge.py -v 2>&1' exited 0 on tracked tree 732a4b97815b5738451feca8a95099ee2952b612 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/19-IP1-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 15,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "732a4b97815b5738451feca8a95099ee2952b612",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_19 && python -m pytest tests/test_gauge.py -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "19-IP1-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP1",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py",
+        "tests/test_gauge.py"
+      ],
+      "final_tracked_tree": "66acdd8179f90b26bf49f4ffc32f610c7c934596",
+      "fully_reconstructable": false,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/ -v 2>&1' exited 0 on tracked tree 66acdd8179f90b26bf49f4ffc32f610c7c934596 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py",
+          "tests/test_gauge.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/20-IP1-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 160,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "66acdd8179f90b26bf49f4ffc32f610c7c934596",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_20 && python -m pytest tests/ -v 2>&1"
+      },
+      "primary_class": "reconstruction_or_instrumentation_unknown",
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "20-IP1-r3-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "timeout",
+      "unreplayable_mutations": [
+        {
+          "call": 16,
+          "tool": "edit"
+        }
+      ],
+      "visible_checks": 144
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": true,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "8a71f488133504696ae4b06bfdb4f600a9f02a43",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/ -v' exited 0 on tracked tree 8a71f488133504696ae4b06bfdb4f600a9f02a43 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/21-IP4-r3-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "project_wide_visible",
+        "scope_reason": "runs the whole shipped tests directory, the broadest visible check",
+        "targets": [
+          "tests/"
+        ],
+        "tracked_tree_digest": "8a71f488133504696ae4b06bfdb4f600a9f02a43",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_21 && python -m pytest tests/ -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "project_wide_visible",
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "2 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "lockgate/valve.py",
+        "tests/test_valve.py"
+      ],
+      "final_tracked_tree": "5545de53b1908addf80f5148bb1a26a6c743129c",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_22 && python -m pytest tests/test_valve.py -v' exited 0 on tracked tree 5545de53b1908addf80f5148bb1a26a6c743129c under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "lockgate/valve.py",
+          "tests/test_valve.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/22-IP4-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 7,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_valve.py"
+        ],
+        "tracked_tree_digest": "5545de53b1908addf80f5148bb1a26a6c743129c",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_22 && python -m pytest tests/test_valve.py -v"
+      },
+      "primary_class": null,
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP4",
+      "termination_class": "model_completed",
+      "unreplayable_mutations": [],
+      "visible_checks": 1
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "4d692b3bbf51ce67085f4c53945b65cf11f7e5ad",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/test_gauge.py -v 2>&1' exited 0 on tracked tree 4d692b3bbf51ce67085f4c53945b65cf11f7e5ad under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/23-IP1-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "establishes_task_correctness": false,
+        "event_index": 16,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "4d692b3bbf51ce67085f4c53945b65cf11f7e5ad",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/test_gauge.py -v 2>&1"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "23-IP1-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP1",
+      "termination_class": "quiescent_stop",
+      "unreplayable_mutations": [],
+      "visible_checks": 3
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "broad_visible_offline": {
+        "command": "python -m pytest tests/ -q",
+        "exit_status": 0,
+        "passed": true,
+        "seconds": 0.2,
+        "tail": "1 passed in 0.00s"
+      },
+      "broadest_visible_ran_live": false,
+      "changed_project_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_tree": "a57ee9f09aa2c7175bd5302ae8d9e840dff35945",
+      "fully_reconstructable": true,
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "last_valid_visible_receipt": {
+        "authority": "command 'cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_gauge.py -v' exited 0 on tracked tree a57ee9f09aa2c7175bd5302ae8d9e840dff35945 under the recorded configuration",
+        "broadest_visible_validation_for_this_task": "python -m pytest tests/ -q",
+        "changed_project_paths_on_this_tree": [
+          "sluice/telemetry.py",
+          "sluice/units.py"
+        ],
+        "contract_version": "scoped-validation-receipt-v1",
+        "cwd": "/var/home/bmosher/pilot-gen45/results/pi_quiescent_completion_gen55/runs/24-IP1-r2-pi_harness_state_control_v1",
+        "establishes_task_correctness": false,
+        "event_index": 161,
+        "exit_status": 0,
+        "provenance": "harness_validation_record",
+        "scope_class": "explicit_subset",
+        "scope_reason": "runs pytest against named paths rather than the project entrypoint",
+        "targets": [
+          "tests/test_gauge.py"
+        ],
+        "tracked_tree_digest": "a57ee9f09aa2c7175bd5302ae8d9e840dff35945",
+        "validation_command": "cd /var/home/bmosher/pilot-gen45-work/run_24 && python -m pytest tests/test_gauge.py -v"
+      },
+      "primary_class": "visible_artifact_coverage_gap",
+      "receipt_scope_class": "explicit_subset",
+      "repetition": 2,
+      "run": "24-IP1-r2-pi_harness_state_control_v1",
+      "task": "IP1",
+      "termination_class": "timeout",
+      "unreplayable_mutations": [],
+      "visible_checks": 146
+    }
+  ]
+}

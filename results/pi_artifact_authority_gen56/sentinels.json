@@ -1,0 +1,91 @@
+[
+  {
+    "broad_visible_offline_passes": true,
+    "broad_visible_tail": "1 passed in 0.00s",
+    "broadest_visible_ran_live": false,
+    "found": true,
+    "fully_reconstructable": true,
+    "hidden_verifier_passed": false,
+    "primary_class": "visible_artifact_coverage_gap",
+    "receipt_command": "cd /var/home/bmosher/pilot-gen45-work/run_08 && python -m pytest tests/test_gauge.py -v",
+    "receipt_scope_class": "explicit_subset",
+    "run": "08-IP1-r1-pi_harness_state_control_v1",
+    "sentinel": "gen49-IP1-r1-C",
+    "why": "known visible-receipt false assurance; narrow validation was part of the observed mechanism",
+    "would_a_broader_shipped_visible_check_have_contradicted_the_receipt": false
+  },
+  {
+    "broad_visible_offline_passes": true,
+    "broad_visible_tail": "1 passed in 0.00s",
+    "broadest_visible_ran_live": true,
+    "found": true,
+    "fully_reconstructable": true,
+    "hidden_verifier_passed": true,
+    "primary_class": null,
+    "receipt_command": "cd /var/home/bmosher/pilot-gen45-work/run_07 && python -m pytest tests/ -v 2>&1",
+    "receipt_scope_class": "project_wide_visible",
+    "run": "07-IP1-r1-pi_harness_state_control_task_floor_v1",
+    "sentinel": "gen49-IP1-r1-D",
+    "why": "paired successful comparator that ran the whole tests directory",
+    "would_a_broader_shipped_visible_check_have_contradicted_the_receipt": false
+  },
+  {
+    "broad_visible_offline_passes": true,
+    "broad_visible_tail": "1 passed in 0.00s",
+    "broadest_visible_ran_live": true,
+    "found": true,
+    "fully_reconstructable": true,
+    "hidden_verifier_passed": false,
+    "primary_class": "visible_artifact_coverage_gap",
+    "receipt_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1 || python -m unittest discover tests/ -v 2>&1",
+    "receipt_scope_class": "project_wide_visible",
+    "run": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+    "sentinel": "gen49-IP1-r3-D",
+    "why": "known false assurance with the human-direction floor active",
+    "would_a_broader_shipped_visible_check_have_contradicted_the_receipt": false
+  },
+  {
+    "broad_visible_offline_passes": true,
+    "broad_visible_tail": "1 passed in 0.00s",
+    "broadest_visible_ran_live": true,
+    "found": true,
+    "fully_reconstructable": true,
+    "hidden_verifier_passed": false,
+    "primary_class": "visible_artifact_coverage_gap",
+    "receipt_command": "cd /var/home/bmosher/pilot-gen45-work/run_11 && python -m pytest tests/ -v 2>&1",
+    "receipt_scope_class": "project_wide_visible",
+    "run": "11-IP1-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+    "sentinel": "gen55-IP1-r1-F",
+    "why": "live stop on a hidden-verifier-wrong tree; C partner passed",
+    "would_a_broader_shipped_visible_check_have_contradicted_the_receipt": false
+  },
+  {
+    "broad_visible_offline_passes": true,
+    "broad_visible_tail": "1 passed in 0.00s",
+    "broadest_visible_ran_live": false,
+    "found": true,
+    "fully_reconstructable": true,
+    "hidden_verifier_passed": false,
+    "primary_class": "visible_artifact_coverage_gap",
+    "receipt_command": "cd /var/home/bmosher/pilot-gen45-work/run_23 && python -m pytest tests/test_gauge.py -v 2>&1",
+    "receipt_scope_class": "explicit_subset",
+    "run": "23-IP1-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+    "sentinel": "gen55-IP1-r2-F",
+    "why": "live stop on a hidden-verifier-wrong tree; C partner also failed after timeout",
+    "would_a_broader_shipped_visible_check_have_contradicted_the_receipt": false
+  },
+  {
+    "broadest_visible_on_shipped_fixture_passes": true,
+    "hidden_verifier_on_shipped_fixture_passes": false,
+    "note": "the shipped fixture is the unfixed starting state, so both failing here is expected; the diagnostic that matters is whether any tree exists on which the broad visible check passes and the hidden verifier fails, which the 72-run audit answers directly",
+    "recorded_probe_in_manifest": {
+      "demonstrates_false_assurance": true,
+      "hidden_tail": "AssertionError: B: clamp(-5) -> -5, expected 0",
+      "hidden_verifier_passes": false,
+      "visible_check_passes": true,
+      "visible_tail": "1 passed in 0.00s"
+    },
+    "sentinel": "gen48-IP4-partial-fix-fixture-diagnostic",
+    "why": "fixture-level evidence that the broadest shipped visible check can itself be incomplete"
+  }
+]

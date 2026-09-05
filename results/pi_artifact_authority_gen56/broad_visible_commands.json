@@ -1,0 +1,68 @@
+{
+  "contract_sha256": "05e5126a63885ddb7af57c8ade67e520770cb1fa55fd68eb218fbff4f2744422",
+  "contract_version": "broadest-visible-validation-v1",
+  "frozen_before": "any run classification or outcome inspection in Gen56",
+  "rule": "one command per task, taken from the shipped visible fixture only, preferring the natural project-wide test entrypoint already present",
+  "tasks": {
+    "IP1": {
+      "broadest_visible_validation": "python -m pytest tests/ -q",
+      "selected_without_consulting": [
+        "hidden verifier",
+        "reference fixes",
+        "run outcomes"
+      ],
+      "shipped_packages": [
+        "sluice"
+      ],
+      "shipped_visible_test_files": [
+        "test_gauge.py"
+      ],
+      "why_this_is_visibly_the_broadest": "the fixture ships a single `tests/` directory and no other runnable check; running the whole directory executes every visible test the project has, so no shipped invocation is broader. Chosen from the repository layout alone."
+    },
+    "IP2": {
+      "broadest_visible_validation": "python -m pytest tests/ -q",
+      "selected_without_consulting": [
+        "hidden verifier",
+        "reference fixes",
+        "run outcomes"
+      ],
+      "shipped_packages": [
+        "ferry"
+      ],
+      "shipped_visible_test_files": [
+        "test_schedule.py"
+      ],
+      "why_this_is_visibly_the_broadest": "the fixture ships a single `tests/` directory and no other runnable check; running the whole directory executes every visible test the project has, so no shipped invocation is broader. Chosen from the repository layout alone."
+    },
+    "IP3": {
+      "broadest_visible_validation": "python -m pytest tests/ -q",
+      "selected_without_consulting": [
+        "hidden verifier",
+        "reference fixes",
+        "run outcomes"
+      ],
+      "shipped_packages": [
+        "tally"
+      ],
+      "shipped_visible_test_files": [
+        "test_counter.py"
+      ],
+      "why_this_is_visibly_the_broadest": "the fixture ships a single `tests/` directory and no other runnable check; running the whole directory executes every visible test the project has, so no shipped invocation is broader. Chosen from the repository layout alone."
+    },
+    "IP4": {
+      "broadest_visible_validation": "python -m pytest tests/ -q",
+      "selected_without_consulting": [
+        "hidden verifier",
+        "reference fixes",
+        "run outcomes"
+      ],
+      "shipped_packages": [
+        "lockgate"
+      ],
+      "shipped_visible_test_files": [
+        "test_valve.py"
+      ],
+      "why_this_is_visibly_the_broadest": "the fixture ships a single `tests/` directory and no other runnable check; running the whole directory executes every visible test the project has, so no shipped invocation is broader. Chosen from the repository layout alone."
+    }
+  }
+}

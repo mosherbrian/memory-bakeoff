@@ -293,3 +293,59 @@ Measured, on a fixed synthetic trace with no model involved:
 Still unmeasured, and not implied by any of the above: whether this design improves coding-task
 success, reduces tool churn, or saves tokens under a live model. That is a paired experiment with
 model, harness and task held fixed, not a prototype.
+
+---
+
+## Measured evidence appended 2026-09-04, after Gen55 and Gen56
+
+This section records what has been measured since the Gen39 hypotheses were written. It does not
+rewrite them, and it does not upgrade any earlier inference to fact.
+
+### Quiescent completion is a closed line: an optional harness guardrail
+
+**It is a termination control, not a task-correctness mechanism.**
+
+Demonstrated form: `quiescent-completion-toolcall-v2` at K = 3 tool calls, on
+`tracked-tree-digest-v1`. A receipt is valid only on the current tracked tree; a passing check on a
+tree that already holds a valid receipt counts as idle rather than re-arming; an exact revert to the
+initial tracked tree is never eligible; and the stop waits for an in-flight tool batch to drain.
+
+Gen55 live evidence on the intent-persistence ruler: 2 of 12 treated runs triggered, with **zero**
+contract violations and **zero** stops on a tracked tree equal to its initial tree. The treated arm
+had **no** timeouts against the baseline's **three**, and totals were 132 against 709 tool calls and
+516 against 3,108 seconds. The benefit was concentrated entirely in runs that stalled.
+
+Two limits travel with that result and must not be dropped:
+
+- **A valid visible receipt can exist on a wrong tree.** The controller stops such a run faster. It
+  does not make the tree correct. Both Gen55 triggers were on trees the hidden verifier rejected.
+- **Live treatment exposure was only 2 of 12.** No broad effect size may be generalised from this.
+
+### Artifact authority is proposition-scoped
+
+The earlier slogan that artifacts establish truth must be read narrowly, and this is now measured
+rather than argued.
+
+**A passing artifact establishes only the proposition it actually checks, on the tree and
+configuration it checked.** It does not establish task truth.
+
+The evidence: Gen49's false assurances, Gen55's two wrong-tree stops, and the Gen56 audit of all 72
+intent-persistence runs. In that audit, 14 runs ended hidden-verifier-wrong while holding a valid
+visible receipt, and in **every one** the broadest shipped visible validation also passed. Nine of
+those fourteen had already run the project-wide check live. Across all 72 final trees the broadest
+shipped visible check never once failed. On the IP4 fixture the shipped visible test passes a known
+partial implementation that the hidden verifier rejects.
+
+So the gap is not the *scope of the command*. It is the *coverage of the visible artifact*. A
+harness cannot recover a requirement that no visible test encodes.
+
+### Unchanged by Gen51-56
+
+Gen50 audited five failures and found **zero** `missing_relevant_context`. Nothing in Gen51 through
+Gen56 revives retrieval, a prompt floor, or a larger context window.
+
+### Open question carried forward
+
+How should artifact and receipt authority be scoped so that control can distinguish *this check
+passed* from *the task is sufficiently verified* — given that, on this ruler, no amount of command
+breadth closes that gap?
