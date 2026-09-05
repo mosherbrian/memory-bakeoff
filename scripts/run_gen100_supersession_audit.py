@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from memory_bakeoff import interference as ITF                    # noqa: E402
 from memory_bakeoff import interference_v2 as V2        # noqa: E402
 from memory_bakeoff import supersession_surface as SS    # noqa: E402
 
@@ -22,8 +23,8 @@ def main() -> int:
     for core in V2.CORES:
         case = next(c for c in fixture.cases
                     if c.core == core["id"] and c.load == 0)
-        order = [o.id for o in fixture.observations
-                 if o.id in set(V2.visible_ids(fixture, case))]
+        order = [o.id for o in ITF.ordered_observations(
+            fixture, case, V2.visible_ids)]
         per_core[core["id"]] = SS.explains_gen99_kestrel(fixture, core["id"], order)
 
     fired = sorted(c for c, e in per_core.items() if e["rule_can_fire"])
