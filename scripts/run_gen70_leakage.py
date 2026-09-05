@@ -282,11 +282,10 @@ def run_agentmemory(fixture, repetition: int, root: Path) -> dict:
                     "reader_answer": None,
                 })
     finally:
-        if launcher is not None:
-            try:
-                g13.stop_service(launcher)
-            except Exception:
-                pass
+        try:
+            g13.stop_service(g33.AGENTMEMORY, state, repetition, agent, launcher)
+        except Exception:
+            pass
     return {"records": score(fixture, records),
             "observations_ingested": len(fixture.observations)}
 
