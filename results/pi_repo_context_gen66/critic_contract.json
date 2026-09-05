@@ -1,0 +1,55 @@
+{
+  "contract": {
+    "baseline": {
+      "gen61_unsafe_as_gate": "4 of 8",
+      "gen64_removal_precision": 0.267,
+      "gen64_retention": "0.821-0.964",
+      "gen64_unsafe_as_gate": "4 of 8"
+    },
+    "candidate_blind": "the repository shown is the pre-work state, identical for every candidate, so nothing in it is evidence about the implementation under judgement",
+    "contract_sha256": "a4ab90c992190974bf42a152973e512594302be5505b126fb46fc21abe97ecbc",
+    "contract_version": "candidate-blind-repo-context-critic-v1",
+    "critic_inputs_forbidden": [
+      "the candidate under test",
+      "any diff",
+      "the hidden evaluator",
+      "any outcome or score",
+      "the known-wrong labels",
+      "any other generated test",
+      "the Gen62 or Gen64 verdicts"
+    ],
+    "critic_inputs_permitted": [
+      "the cited requirement sentence",
+      "the reference repository as shipped",
+      "the visible tests shipped with it",
+      "the source of the single test under review"
+    ],
+    "default_is_keep": "an unreadable reply, a REMOVE with no EXTRA line, a too-short justification or a vague restatement all KEEP",
+    "experimental_family": "repository-informed checking; NOT a continuation of the Gen61-64 text-only line, which is closed",
+    "failure_this_must_not_produce": "a critic that keeps a test because the shipped code happens to behave that way; the shipped code is the UNFIXED state, so agreeing with it is not agreeing with a candidate",
+    "frozen_before_exposure": true,
+    "question": "can reference repository context let the critic separate an overreaching assertion from a sound inference, without learning to agree with the candidate and without hollowing the banks?",
+    "single_change_from_gen64": "the critic additionally sees the reference repository as shipped and its visible tests",
+    "unchanged_from_gen64": [
+      "the Gen61 generated banks, byte for byte",
+      "pinned model",
+      "sampling",
+      "deletion only",
+      "one stateless call per test",
+      "the verdict reader, imported not reimplemented",
+      "gen63-retention-guardrail-v1"
+    ]
+  },
+  "endpoint": "local llama-swap on this host",
+  "model": "qwen3.6-35b-vulkan-nothink",
+  "prompt_template_sha256": "dc22947701a25dc49e29b2206935c7870714eae3ea1603ed7b404a58c09913d3",
+  "sampling": {
+    "max_tokens": 512,
+    "min_p": 0.0,
+    "temperature": 0.6,
+    "top_k": 20,
+    "top_p": 0.8
+  },
+  "session": "one stateless HTTP request per test; no conversation carried over",
+  "source_banks": "results/pi_spec_grounded_gen61/grounded/, unmodified"
+}
