@@ -1,0 +1,78 @@
+{
+  "bounded_to": "the pinned agentmemory 0.9.29 build and the surfaces listed; not a claim about the product in general",
+  "candidates": {
+    "agentId": {
+      "symmetric": true,
+      "usable_as_second_identity": false,
+      "why": "symmetric and working, but already carries scope (Gen78); reusing it would collapse the two axes into one"
+    },
+    "concepts": {
+      "symmetric": false,
+      "usable_as_second_identity": false,
+      "why": "write only; not a search filter"
+    },
+    "files": {
+      "symmetric": false,
+      "usable_as_second_identity": false,
+      "why": "write only; not a search filter"
+    },
+    "project": {
+      "symmetric": true,
+      "usable_as_second_identity": false,
+      "why": "symmetric on paper; Gen81 measured smart-search ignoring it entirely, and the search response never mentions it"
+    },
+    "sessionId": {
+      "symmetric": false,
+      "usable_as_second_identity": false,
+      "why": "accepted at search only; no write path sets it and the MCP tool hardcodes sessionIds to empty"
+    },
+    "ttlDays": {
+      "symmetric": false,
+      "usable_as_second_identity": false,
+      "why": "write only, and a lifetime rather than an identity"
+    },
+    "type": {
+      "symmetric": false,
+      "usable_as_second_identity": false,
+      "why": "write only; not a search filter"
+    }
+  },
+  "contract_version": "agentmemory-configuration-surface-v1",
+  "mcp_write_accepts": [
+    "project",
+    "agentId"
+  ],
+  "no_engine_run": true,
+  "scope_axis_unaffected": "agentId still isolates scope; Gen78 stands",
+  "search_accepts": [
+    "query",
+    "expandIds",
+    "limit",
+    "project",
+    "includeLessons",
+    "agentId",
+    "sessionId",
+    "source"
+  ],
+  "surfaces_examined": [
+    "REST /agentmemory/remember",
+    "REST /agentmemory/smart-search",
+    "MCP remember tool"
+  ],
+  "symmetric_fields": [
+    "agentId",
+    "project"
+  ],
+  "usable_second_identity": [],
+  "verdict": "NO_USABLE_SECOND_SURFACE",
+  "write_accepts": [
+    "content",
+    "type",
+    "concepts",
+    "files",
+    "ttlDays",
+    "sourceObservationIds",
+    "project",
+    "agentId"
+  ]
+}
