@@ -1,0 +1,1264 @@
+{
+ "contract": {
+  "contract_version": "current-truth-decomposition-gen89-v1",
+  "mechanisms": [
+   "missing_current_fact",
+   "stale_returned_current_absent",
+   "conflicting_versions_co_returned",
+   "retrieval_window_effect",
+   "clean"
+  ],
+  "no_engine_runs": true,
+  "pooled_counts_status": "6/21, 6/21, 6/21 and 9/21 are NOT preserved as meaningful; they are decomposed here and reported only by mechanism",
+  "why": "'cannot find what is true now' and 'finds it and hands you the old one alongside it' are different products, and pooling hides which",
+  "window_rule": "a window effect is recorded when the current fact OUTRANKS every prohibited record, so a limit of expected_rank holds the new version and excludes the old - a limit of N, not necessarily 1"
+ },
+ "controls": {
+  "clean_on_current_alone": {
+   "classes": [],
+   "returned": [
+    "L010"
+   ]
+  },
+  "missing_on_empty": {
+   "classes": [
+    "missing_required_truth"
+   ],
+   "returned": []
+  },
+  "rank_is_ignored_by_the_scorer": {
+   "current_first": [
+    "stale_persistence"
+   ],
+   "stale_first": [
+    "stale_persistence"
+   ]
+  },
+  "stale_persistence_on_co_return": {
+   "classes": [
+    "stale_persistence"
+   ],
+   "returned": [
+    "L010",
+    "L009"
+   ]
+  },
+  "stale_persistence_on_stale_alone": {
+   "classes": [
+    "missing_required_truth",
+    "stale_persistence"
+   ],
+   "returned": [
+    "L009"
+   ]
+  }
+ },
+ "mechanism_totals": {
+  "NOT_DEMONSTRABLE": 12,
+  "clean": 27,
+  "conflicting_versions_co_returned": 15,
+  "retrieval_window_effect": 21,
+  "stale_returned_current_absent": 9
+ },
+ "pooled_counts_being_replaced": {
+  "agentmemory": "9/21",
+  "hindsight": "6/21",
+  "mem0": "6/21",
+  "perseus": "6/21"
+ },
+ "purity_audit": {
+  "cases_carrying_another_layer": {
+   "LQ02": {
+    "layer": "configuration",
+    "note": "the prohibited record differs by CONFIGURATION, so the scorer charges configuration_collapse inside a current-truth row; Gen80 measured configuration isolation as its own bindable axis",
+    "pure": false
+   },
+   "LQ12": {
+    "layer": "temporal",
+    "note": "prohibits a historical_only record and charges late_history_corruption, a temporal class, inside a current-truth row",
+    "pure": false
+   },
+   "LQ15": {
+    "layer": "abstention",
+    "note": "expects the EMPTY set, so it can only be passed by returning nothing; Gen84 established no retrieval surface here can express abstention",
+    "pure": false
+   }
+  },
+  "pure_current_truth_cases": [
+   "LQ01",
+   "LQ11",
+   "LQ14",
+   "LQ17"
+  ],
+  "verdict": "3 of 7 current_truth cases are failed by a distinction that belongs to another layer; their cells are NOT_DEMONSTRABLE at this layer rather than another zero"
+ },
+ "rows": [
+  {
+   "case": "LQ01",
+   "engine": "perseus",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "perseus",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "perseus",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "mem0",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "mem0",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "mem0",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "hindsight",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "hindsight",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "hindsight",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ01",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ02",
+   "engine": "perseus",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 1,
+   "returned": [
+    "L004",
+    "L002",
+    "L001",
+    "L003"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ02",
+   "engine": "perseus",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 2,
+   "returned": [
+    "L004",
+    "L002",
+    "L001",
+    "L003"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ02",
+   "engine": "perseus",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 3,
+   "returned": [
+    "L004",
+    "L002",
+    "L001",
+    "L003"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ02",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 1,
+   "returned": [
+    "L002",
+    "L004",
+    "L001",
+    "L003"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ02",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 2,
+   "returned": [
+    "L002",
+    "L004",
+    "L001",
+    "L003"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ02",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 3,
+   "returned": [
+    "L002",
+    "L004",
+    "L001",
+    "L003"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ02",
+   "engine": "hindsight",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 1,
+   "returned": [
+    "L004",
+    "L002",
+    "L003",
+    "L001"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ02",
+   "engine": "hindsight",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 2,
+   "returned": [
+    "L004",
+    "L002",
+    "L003",
+    "L001"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ02",
+   "engine": "hindsight",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 3,
+   "returned": [
+    "L004",
+    "L002",
+    "L003",
+    "L001"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ02",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L004",
+    "L003"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ02",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L004",
+    "L003"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ02",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L004",
+    "L003"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ11",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 1,
+   "returned": [
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "perseus",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 2,
+   "returned": [
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ11",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 3,
+   "returned": [
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 1,
+   "returned": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 2,
+   "returned": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 3,
+   "returned": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "hindsight",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 1,
+   "returned": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "hindsight",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 2,
+   "returned": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "hindsight",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 3,
+   "returned": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ11",
+   "engine": "agentmemory",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 1,
+   "returned": [
+    "L010",
+    "L009",
+    "L003",
+    "L004",
+    "L008"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ11",
+   "engine": "agentmemory",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 2,
+   "returned": [
+    "L010",
+    "L009",
+    "L003",
+    "L004",
+    "L008"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ11",
+   "engine": "agentmemory",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 2,
+   "repetition": 3,
+   "returned": [
+    "L010",
+    "L009",
+    "L003",
+    "L004",
+    "L008"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ12",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 1,
+   "returned": [
+    "L011",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 2,
+   "returned": [
+    "L011",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 1,
+   "repetition": 3,
+   "returned": [
+    "L011",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "mem0",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 1,
+   "returned": [
+    "L011",
+    "L008",
+    "L005",
+    "L002",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "mem0",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 2,
+   "returned": [
+    "L011",
+    "L008",
+    "L005",
+    "L002",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "mem0",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 3,
+   "returned": [
+    "L011",
+    "L008",
+    "L005",
+    "L002",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "hindsight",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 1,
+   "returned": [
+    "L011",
+    "L005",
+    "L008",
+    "L007",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "hindsight",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 2,
+   "returned": [
+    "L011",
+    "L005",
+    "L008",
+    "L007",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "hindsight",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 3,
+   "returned": [
+    "L011",
+    "L005",
+    "L008",
+    "L007",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "agentmemory",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 1,
+   "returned": [
+    "L011",
+    "L005",
+    "L004",
+    "L003",
+    "L006"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "agentmemory",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 2,
+   "returned": [
+    "L011",
+    "L005",
+    "L004",
+    "L003",
+    "L006"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ12",
+   "engine": "agentmemory",
+   "mechanism": "stale_returned_current_absent",
+   "repetition": 3,
+   "returned": [
+    "L011",
+    "L005",
+    "L004",
+    "L003",
+    "L006"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ14",
+   "engine": "perseus",
+   "expected_rank": 3,
+   "mechanism": "conflicting_versions_co_returned",
+   "passing_limit": null,
+   "prohibited_rank": 2,
+   "repetition": 1,
+   "returned": [
+    "L013",
+    "L012",
+    "L014",
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ14",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 2,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "perseus",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 3,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 1,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 2,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "mem0",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 3,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "hindsight",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 1,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "hindsight",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 2,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "hindsight",
+   "expected_rank": 2,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 2,
+   "prohibited_rank": 3,
+   "repetition": 3,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "agentmemory",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 3,
+   "repetition": 1,
+   "returned": [
+    "L014",
+    "L013",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "agentmemory",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 3,
+   "repetition": 2,
+   "returned": [
+    "L014",
+    "L013",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ14",
+   "engine": "agentmemory",
+   "expected_rank": 1,
+   "mechanism": "retrieval_window_effect",
+   "passing_limit": 1,
+   "prohibited_rank": 3,
+   "repetition": 3,
+   "returned": [
+    "L014",
+    "L013",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": true
+  },
+  {
+   "case": "LQ15",
+   "engine": "perseus",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 1,
+   "returned": [
+    "L016",
+    "L015",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "perseus",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 2,
+   "returned": [
+    "L015",
+    "L016",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "perseus",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 3,
+   "returned": [
+    "L015",
+    "L016",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "mem0",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 1,
+   "returned": [
+    "L015",
+    "L016",
+    "L009",
+    "L010",
+    "L012"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "mem0",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 2,
+   "returned": [
+    "L015",
+    "L016",
+    "L009",
+    "L010",
+    "L012"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "mem0",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 3,
+   "returned": [
+    "L015",
+    "L016",
+    "L009",
+    "L010",
+    "L012"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "hindsight",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 1,
+   "returned": [
+    "L015",
+    "L016",
+    "L008",
+    "L005",
+    "L012"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "hindsight",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 2,
+   "returned": [
+    "L015",
+    "L016",
+    "L008",
+    "L005",
+    "L012"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "hindsight",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 3,
+   "returned": [
+    "L015",
+    "L016",
+    "L008",
+    "L005",
+    "L012"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "agentmemory",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 1,
+   "returned": [
+    "L015",
+    "L016",
+    "L004",
+    "L012",
+    "L014"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "agentmemory",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 2,
+   "returned": [
+    "L015",
+    "L016",
+    "L004",
+    "L012",
+    "L014"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ15",
+   "engine": "agentmemory",
+   "mechanism": "NOT_DEMONSTRABLE",
+   "reason": "abstention required",
+   "repetition": 3,
+   "returned": [
+    "L015",
+    "L016",
+    "L004",
+    "L012",
+    "L014"
+   ],
+   "tighter_window_would_pass": false
+  },
+  {
+   "case": "LQ17",
+   "engine": "perseus",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "perseus",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "perseus",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "mem0",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "mem0",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "mem0",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "hindsight",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "hindsight",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "hindsight",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  },
+  {
+   "case": "LQ17",
+   "engine": "agentmemory",
+   "mechanism": "clean",
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "tighter_window_would_pass": null
+  }
+ ]
+}
