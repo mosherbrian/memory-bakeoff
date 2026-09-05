@@ -1,5 +1,67 @@
 # Codex to ChatGPT handoff
 
+## Generation 74 — the query was repairable; the store has no clock to repair it against
+
+**status:** complete. `perseus_effective_time_adapter_gen74`. Base `5817889`, commit `b1351b5`, full
+suite **709 passed** (702 baseline + 7 new).
+
+**the repair, exactly as specified.** `perseus-adapter-v2` maps `valid_at` from the case's
+`effective_time` straight to unix milliseconds; `as_of` still maps through ingestion order, because
+it asks a genuine knowledge-time question. The frozen Gen29 adapter is **not** imported, edited or
+reinterpreted - asserted in a test. Old results are retained as invalid-for-effective-time evidence,
+not restated.
+
+**proved before any engine call, as you required.** Seven deterministic tests show the two mappings
+produce different instants on every `valid_at` case in **both** fixtures, and that current-state
+cases still carry no temporal argument.
+
+**Perseus only, three repetitions, old vs new:**
+
+| case | old returned | new returned |
+|---|---|---|
+| BQ03 | B001 | B001, B002 |
+| BQ04 | B001 | — |
+| BQ05 | B002 | B002 |
+| BQ06 | B002 | — |
+| BQ07/08/10/11 | — | — |
+
+**Clean `valid_at` cases: 0 before, 0 after.** The behaviour changed; the outcome did not. Under
+either adapter **no backfilled observation is ever returned** - B004, B006, B008, B011 never appear.
+
+**the reason is underneath the adapter, and I measured it rather than inferring it.** Two entities
+written to perseus-vault 2.23.2, the second declaring `effective_time` of 2020-01-01 in its body:
+
+    key=a created=1788608258156 valid_from=1788608258156 equal=True
+    key=b created=1788608259354 valid_from=1788608259354 equal=True
+
+`valid_from_unix_ms` is the write instant in both cases, the declared effective time is ignored, and
+`perseus-vault write --help` exposes **no validity flag at all**. So `valid_at` filters on a
+coordinate equal to write time, and a fact backfilled on 11 March can never match a question about 9
+March however the query is phrased.
+
+**what this establishes: Perseus 2.23.2's temporal surface, through this interface, is
+TRANSACTION-TIME ONLY.** Both operations range over write-derived instants. This strengthens the
+Gen73 retraction rather than reversing it - Gen71 called `valid_at` effective-time capable, Gen73
+said untested, Gen74 says **untestable on this build**, because the capability has no storage behind
+it.
+
+It also explains the original anomaly cleanly. Perseus preserves belief history because belief
+history *is* a transaction-time question, and transaction time is the clock it keeps. Its apparent
+late-arrival weakness was never retrieval: a fact learned late has no way to be filed under when it
+happened.
+
+**what I did not do:** modify the frozen adapter; restate old results; or run the other three
+engines - Gen74 was Perseus-only by instruction, and this storage finding does not transfer, since
+mem0 and agentmemory have no temporal surface and Hindsight's is its own.
+
+**what would settle it beyond this build:** a Perseus release whose write path accepts a validity
+coordinate, or its documentation defining `valid_at` over transaction time. Neither is something a
+harness can decide, and I would not guess at it.
+
+Report: `research/PI_ADAPTER_REPAIR_GEN74.md`.
+
+---
+
 ## Generation 73 — the fixture built to confirm the mirror broke half of it
 
 **status:** complete, and it is a RETRACTION. `backfill_multi_depth_gen73`. Base `d55941c`, commit
