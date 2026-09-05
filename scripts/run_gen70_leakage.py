@@ -223,7 +223,76 @@ def run_perseus(fixture, repetition: int, root: Path) -> dict:
             "observations_ingested": len(fixture.observations)}
 
 
-ENGINES = {"mem0": run_mem0, "perseus": run_perseus}
+
+# --------------------------------------------------------------------------
+# agentmemory 0.9.29, frozen Gen33 service and adapter.
+# --------------------------------------------------------------------------
+def run_agentmemory(fixture, repetition: int, root: Path) -> dict:
+    g33 = load("run_agentmemory_gen33_longitudinal.py")
+    g13, A = g33.g13, g33.A
+    state = Path(tempfile.mkdtemp(prefix=f"agentmemory-gen70-r{repetition}-",
+                                  dir="/private/tmp"))
+    agent = f"memory-bakeoff-gen70-r{repetition}"
+    native_to_canonical: dict[str, str] = {}
+    records = []
+    launcher = None
+    try:
+        base, _startup, launcher = g13.start_service(g33.AGENTMEMORY, state,
+                                                     repetition, agent)
+        for observation in fixture.observations:
+            payload = A.remember_arguments(observation, agent)
+            A.assert_public_only(payload)
+            g13.request_json(base, "/agentmemory/remember", body=payload)
+            time.sleep(0.05)
+            for row in g33.native_rows(base, agent):
+                for source in (row.get("sourceObservationIds") or []):
+                    native_to_canonical[row.get("id")] = source
+
+        cases_by_checkpoint: dict[str, list] = {}
+        for case in fixture.cases:
+            cases_by_checkpoint.setdefault(case.checkpoint_id, []).append(case)
+
+        for checkpoint_id in probe_checkpoints(fixture):
+            prefix_sha = hashlib.sha256(L.canonical_json(
+                [o.public_dict() for o in fixture.prefix(checkpoint_id)]).encode()).hexdigest()
+            for case in cases_by_checkpoint.get(checkpoint_id, []):
+                arguments = A.search_arguments(case, agent, LIMIT)
+                started = time.perf_counter()
+                raw = g13.request_json(base, "/agentmemory/smart-search", body=arguments)
+                latency_ms = (time.perf_counter() - started) * 1000
+                items = []
+                for rank, hit in enumerate((raw.get("results") or [])[:LIMIT], start=1):
+                    obs = hit.get("obsId")
+                    canonical = (native_to_canonical.get(obs)
+                                 or (hit.get("sourceObservationIds") or [None])[0])
+                    exact = canonical in {o.id for o in fixture.observations}
+                    items.append({"native_rank": rank, "obsId": obs,
+                                  "canonical_id": canonical if exact else None,
+                                  "provenance_exact": exact, "score": hit.get("score"),
+                                  "text": (hit.get("content") or "")[:110]})
+                records.append({
+                    "case_id": case.id, "checkpoint_id": checkpoint_id,
+                    "queried_as_of": checkpoint_id,
+                    "ingested_through": PROBE["ingest_through_checkpoint"],
+                    "ingested_prefix_sha256": prefix_sha,
+                    "native_temporal_operation": A.native_operation(case),
+                    "requested_limit": LIMIT, "latency_ms": round(latency_ms, 2),
+                    "returned": items,
+                    "provenance_exact_all": all(i["provenance_exact"] for i in items),
+                    "reader_answer": None,
+                })
+    finally:
+        if launcher is not None:
+            try:
+                g13.stop_service(launcher)
+            except Exception:
+                pass
+    return {"records": score(fixture, records),
+            "observations_ingested": len(fixture.observations)}
+
+
+ENGINES = {"mem0": run_mem0, "perseus": run_perseus,
+           "agentmemory": run_agentmemory}
 
 
 def answer_claim_probe(fixture, records: list[dict]) -> dict:
