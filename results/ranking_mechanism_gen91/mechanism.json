@@ -1,0 +1,236 @@
+{
+ "component_attribution": [
+  {
+   "case": "LQ11",
+   "component_gaps": {
+    "final": 0.07289697071424817,
+    "keyword": 0.0,
+    "reranker": 0.07826497587472103,
+    "semantic": 0.0016547936597094415
+   },
+   "dominant_component": "reranker",
+   "engine": "hindsight",
+   "identical_components": [
+    "keyword"
+   ],
+   "why": "the component with the largest gap is what produces the order; components that are identical cannot have produced it"
+  }
+ ],
+ "contract": {
+  "contract_version": "stale-before-current-ranking-gen91-v1",
+  "mechanisms": [
+   "MEANINGFUL_PREFERENCE",
+   "NEAR_TIE",
+   "OPAQUE_RANKING_SURFACE"
+  ],
+  "near_tie_definition": "pair gap as a share of the gap from the pair to the next record in the SAME list - unit-free and internal to one engine",
+  "near_tie_share": 0.05,
+  "no_cross_engine_normalisation": "score gaps are never compared between engines; a gap in one scale and a gap in another are not the same quantity",
+  "no_engine_runs": true,
+  "repetition_identity": "preserved; each repetition is classified on its own"
+ },
+ "mechanism_totals": {
+  "MEANINGFUL_PREFERENCE": 3,
+  "NEAR_TIE": 3,
+  "OPAQUE_RANKING_SURFACE": 3
+ },
+ "perseus_flip_test": {
+  "distinct_orders": 2,
+  "hypothesis": "the flip is a tie-break between near-tied scores",
+  "not_claimed": "'generic nondeterminism' is NOT asserted; that would name a cause the evidence does not carry",
+  "orders": {
+   "1": [
+    "L009",
+    "L010"
+   ],
+   "2": [
+    "L010",
+    "L009"
+   ],
+   "3": [
+    "L009",
+    "L010"
+   ]
+  },
+  "rerun_prerequisite": "a perseus read path that surfaces per-hit scores. Gen84 measured that recall returns none, so this is a prerequisite to establish before any targeted rerun, not a rerun that can simply be scheduled",
+  "same_record_set": true,
+  "verdict": "NOT_DEMONSTRABLE",
+  "why_untestable": "the committed records carry canonical_id, native_id, provenance_exact and rank - and no score or tie metadata of any kind, so the hypothesis can be neither confirmed nor rejected"
+ },
+ "rows": [
+  {
+   "case": "LQ11",
+   "current_score": null,
+   "engine": "perseus",
+   "mechanism": "OPAQUE_RANKING_SURFACE",
+   "observable": false,
+   "order": [
+    "L009",
+    "L010"
+   ],
+   "repetition": 1,
+   "stale_score": null,
+   "verdict": "NOT_DEMONSTRABLE",
+   "why": "the adapter records no score for any hit, so nothing about the ordering is observable"
+  },
+  {
+   "case": "LQ11",
+   "current_score": null,
+   "engine": "perseus",
+   "mechanism": "OPAQUE_RANKING_SURFACE",
+   "observable": false,
+   "order": [
+    "L009",
+    "L010"
+   ],
+   "repetition": 3,
+   "stale_score": null,
+   "verdict": "NOT_DEMONSTRABLE",
+   "why": "the adapter records no score for any hit, so nothing about the ordering is observable"
+  },
+  {
+   "case": "LQ11",
+   "current_score": 0.9033086387281324,
+   "engine": "mem0",
+   "field_gap": 0.5139393515790771,
+   "mechanism": "NEAR_TIE",
+   "observable": true,
+   "order": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "pair_gap": 0.00634279034327534,
+   "repetition": 1,
+   "share_of_field": 0.01234151524647244,
+   "stale_score": 0.9096514290714077,
+   "verdict": "measured",
+   "why": "the pair is separated by 1.2% of the distance from it to the next record in the same list; the order is decided in the noise"
+  },
+  {
+   "case": "LQ11",
+   "current_score": 0.9033086387281324,
+   "engine": "mem0",
+   "field_gap": 0.5139393515790771,
+   "mechanism": "NEAR_TIE",
+   "observable": true,
+   "order": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "pair_gap": 0.00634279034327534,
+   "repetition": 2,
+   "share_of_field": 0.01234151524647244,
+   "stale_score": 0.9096514290714077,
+   "verdict": "measured",
+   "why": "the pair is separated by 1.2% of the distance from it to the next record in the same list; the order is decided in the noise"
+  },
+  {
+   "case": "LQ11",
+   "current_score": 0.9033086387281324,
+   "engine": "mem0",
+   "field_gap": 0.5139393515790771,
+   "mechanism": "NEAR_TIE",
+   "observable": true,
+   "order": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "pair_gap": 0.00634279034327534,
+   "repetition": 3,
+   "share_of_field": 0.01234151524647244,
+   "stale_score": 0.9096514290714077,
+   "verdict": "measured",
+   "why": "the pair is separated by 1.2% of the distance from it to the next record in the same list; the order is decided in the noise"
+  },
+  {
+   "case": "LQ11",
+   "current_score": 0.8053780639824735,
+   "engine": "hindsight",
+   "field_gap": 0.8053673328230899,
+   "mechanism": "MEANINGFUL_PREFERENCE",
+   "observable": true,
+   "order": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "pair_gap": 0.07289697071424817,
+   "repetition": 1,
+   "share_of_field": 0.09051394033914832,
+   "stale_score": 0.8782750346967216,
+   "verdict": "measured",
+   "why": "the engine separates the two clearly within its own scale"
+  },
+  {
+   "case": "LQ11",
+   "current_score": 0.8053779261630581,
+   "engine": "hindsight",
+   "field_gap": 0.8053671950055294,
+   "mechanism": "MEANINGFUL_PREFERENCE",
+   "observable": true,
+   "order": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "pair_gap": 0.07289695748568248,
+   "repetition": 2,
+   "share_of_field": 0.09051393940273665,
+   "stale_score": 0.8782748836487406,
+   "verdict": "measured",
+   "why": "the engine separates the two clearly within its own scale"
+  },
+  {
+   "case": "LQ11",
+   "current_score": 0.8053777877553246,
+   "engine": "hindsight",
+   "field_gap": 0.8053670565996588,
+   "mechanism": "MEANINGFUL_PREFERENCE",
+   "observable": true,
+   "order": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "pair_gap": 0.07289694420064696,
+   "repetition": 3,
+   "share_of_field": 0.09051393846232703,
+   "stale_score": 0.8782747319559716,
+   "verdict": "measured",
+   "why": "the engine separates the two clearly within its own scale"
+  },
+  {
+   "case": "LQ14",
+   "current_score": null,
+   "engine": "perseus",
+   "mechanism": "OPAQUE_RANKING_SURFACE",
+   "observable": false,
+   "order": [
+    "L013",
+    "L012",
+    "L014",
+    "L009",
+    "L010"
+   ],
+   "repetition": 1,
+   "stale_score": null,
+   "verdict": "NOT_DEMONSTRABLE",
+   "why": "the adapter records no score for any hit, so nothing about the ordering is observable"
+  }
+ ]
+}
