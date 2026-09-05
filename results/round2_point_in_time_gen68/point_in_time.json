@@ -1,0 +1,430 @@
+{
+  "cases_in_fixture": 20,
+  "contract": {
+    "audits": [
+      "failure classes that can never fire",
+      "failure classes that fired for nobody",
+      "engines lacking the evidence a class needs"
+    ],
+    "clocks": [
+      "event time",
+      "knowledge time",
+      "now"
+    ],
+    "contract_version": "point-in-time-truth-v1",
+    "groups_by": "target kind, and the clock each kind interrogates",
+    "reads_only": "committed longitudinal artifacts; no engine is run and no case is re-scored",
+    "why": "a pooled failure count hides the distinction the ruler was built for - current truth, as-of truth and historical belief are different questions and can fail independently"
+  },
+  "engines": {
+    "agentmemory_gen33_longitudinal": {
+      "by_target_kind": {
+        "as_of_event_truth": {
+          "cases": 9,
+          "clean": 3,
+          "clean_rate": 0.3333333333333333,
+          "clock": "event time",
+          "failures": {
+            "correction_failure": 3,
+            "history_erasure": 3,
+            "stale_persistence": 3
+          }
+        },
+        "corrected_historical_truth": {
+          "cases": 6,
+          "clean": 3,
+          "clean_rate": 0.5,
+          "clock": "event time",
+          "failures": {
+            "false_persistence": 3
+          }
+        },
+        "current_truth": {
+          "cases": 21,
+          "clean": 9,
+          "clean_rate": 0.42857142857142855,
+          "clock": "now",
+          "failures": {
+            "false_persistence": 3,
+            "late_history_corruption": 3,
+            "missing_required_truth": 3,
+            "stale_persistence": 9,
+            "unsupported_evidence": 3
+          }
+        },
+        "historical_belief": {
+          "cases": 6,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "knowledge time",
+          "failures": {
+            "belief_truth_confusion": 6,
+            "history_erasure": 3
+          }
+        },
+        "late_arriving_history": {
+          "cases": 3,
+          "clean": 3,
+          "clean_rate": 1.0,
+          "clock": "knowledge time",
+          "failures": {}
+        },
+        "negative_unknown": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "unsupported_evidence": 3
+          }
+        },
+        "recommended_procedure": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "failed_procedure_adoption": 3
+          }
+        },
+        "scope_truth": {
+          "cases": 9,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3,
+            "missing_required_truth": 3,
+            "scope_collapse": 6
+          }
+        }
+      },
+      "cases_scored": 60,
+      "has_lifecycle": true,
+      "has_per_case": true,
+      "lifecycle_failures": {
+        "false_supersession": 3
+      },
+      "repetitions": 3
+    },
+    "hindsight_gen31_longitudinal": {
+      "by_target_kind": {
+        "as_of_event_truth": {
+          "cases": 9,
+          "clean": 6,
+          "clean_rate": 0.6666666666666666,
+          "clock": "event time",
+          "failures": {
+            "stale_persistence": 3
+          }
+        },
+        "corrected_historical_truth": {
+          "cases": 6,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "event time",
+          "failures": {
+            "false_persistence": 6
+          }
+        },
+        "current_truth": {
+          "cases": 21,
+          "clean": 6,
+          "clean_rate": 0.2857142857142857,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3,
+            "false_persistence": 3,
+            "late_history_corruption": 3,
+            "missing_required_truth": 3,
+            "stale_persistence": 9,
+            "unsupported_evidence": 3
+          }
+        },
+        "historical_belief": {
+          "cases": 6,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "knowledge time",
+          "failures": {
+            "belief_truth_confusion": 6
+          }
+        },
+        "late_arriving_history": {
+          "cases": 3,
+          "clean": 3,
+          "clean_rate": 1.0,
+          "clock": "knowledge time",
+          "failures": {}
+        },
+        "negative_unknown": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "unsupported_evidence": 3
+          }
+        },
+        "recommended_procedure": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "failed_procedure_adoption": 3
+          }
+        },
+        "scope_truth": {
+          "cases": 9,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3,
+            "scope_collapse": 6
+          }
+        }
+      },
+      "cases_scored": 60,
+      "has_lifecycle": true,
+      "has_per_case": true,
+      "lifecycle_failures": {},
+      "repetitions": 3
+    },
+    "mem0_gen32_longitudinal": {
+      "by_target_kind": {
+        "as_of_event_truth": {
+          "cases": 9,
+          "clean": 3,
+          "clean_rate": 0.3333333333333333,
+          "clock": "event time",
+          "failures": {
+            "stale_persistence": 6
+          }
+        },
+        "corrected_historical_truth": {
+          "cases": 6,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "event time",
+          "failures": {
+            "false_persistence": 6
+          }
+        },
+        "current_truth": {
+          "cases": 21,
+          "clean": 6,
+          "clean_rate": 0.2857142857142857,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3,
+            "false_persistence": 3,
+            "late_history_corruption": 3,
+            "missing_required_truth": 3,
+            "stale_persistence": 9,
+            "unsupported_evidence": 3
+          }
+        },
+        "historical_belief": {
+          "cases": 6,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "knowledge time",
+          "failures": {
+            "belief_truth_confusion": 6
+          }
+        },
+        "late_arriving_history": {
+          "cases": 3,
+          "clean": 3,
+          "clean_rate": 1.0,
+          "clock": "knowledge time",
+          "failures": {}
+        },
+        "negative_unknown": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "unsupported_evidence": 3
+          }
+        },
+        "recommended_procedure": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "failed_procedure_adoption": 3
+          }
+        },
+        "scope_truth": {
+          "cases": 9,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3,
+            "scope_collapse": 6
+          }
+        }
+      },
+      "cases_scored": 60,
+      "has_lifecycle": true,
+      "has_per_case": true,
+      "lifecycle_failures": {},
+      "repetitions": 3
+    },
+    "observational_memory_gen26_longitudinal": {
+      "by_target_kind": {},
+      "cases_scored": 0,
+      "has_lifecycle": false,
+      "has_per_case": false,
+      "lifecycle_failures": {},
+      "repetitions": 0
+    },
+    "perseus_vault_gen29_longitudinal": {
+      "by_target_kind": {
+        "as_of_event_truth": {
+          "cases": 9,
+          "clean": 3,
+          "clean_rate": 0.3333333333333333,
+          "clock": "event time",
+          "failures": {
+            "correction_failure": 6,
+            "history_erasure": 6,
+            "stale_persistence": 3
+          }
+        },
+        "corrected_historical_truth": {
+          "cases": 6,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "event time",
+          "failures": {
+            "correction_failure": 6,
+            "false_persistence": 6,
+            "missing_required_truth": 6
+          }
+        },
+        "current_truth": {
+          "cases": 21,
+          "clean": 6,
+          "clean_rate": 0.2857142857142857,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3,
+            "false_persistence": 3,
+            "late_history_corruption": 3,
+            "stale_persistence": 9,
+            "unsupported_evidence": 3
+          }
+        },
+        "historical_belief": {
+          "cases": 6,
+          "clean": 6,
+          "clean_rate": 1.0,
+          "clock": "knowledge time",
+          "failures": {}
+        },
+        "late_arriving_history": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "knowledge time",
+          "failures": {
+            "history_erasure": 3
+          }
+        },
+        "negative_unknown": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "unsupported_evidence": 3
+          }
+        },
+        "recommended_procedure": {
+          "cases": 3,
+          "clean": 0,
+          "clean_rate": 0.0,
+          "clock": "now",
+          "failures": {
+            "failed_procedure_adoption": 3
+          }
+        },
+        "scope_truth": {
+          "cases": 9,
+          "clean": 6,
+          "clean_rate": 0.6666666666666666,
+          "clock": "now",
+          "failures": {
+            "configuration_collapse": 3
+          }
+        }
+      },
+      "cases_scored": 60,
+      "has_lifecycle": true,
+      "has_per_case": true,
+      "lifecycle_failures": {},
+      "repetitions": 3
+    }
+  },
+  "fixture_version": "longitudinal-v1",
+  "provenance": {
+    "engines": [
+      "agentmemory_gen33_longitudinal",
+      "hindsight_gen31_longitudinal",
+      "mem0_gen32_longitudinal",
+      "observational_memory_gen26_longitudinal",
+      "perseus_vault_gen29_longitudinal"
+    ],
+    "lifecycle_classes_not_cross_comparable": true,
+    "no_lifecycle_evidence": [
+      "observational_memory_gen26_longitudinal"
+    ],
+    "no_per_case_records": [
+      "observational_memory_gen26_longitudinal"
+    ],
+    "note": "a class scored from evidence only some engines emit cannot be compared across engines; its absence elsewhere is silence, not a clean result"
+  },
+  "ruler_reachability": {
+    "blind_spots": 2,
+    "declared": 16,
+    "never_observed_but_reachable": [
+      "procedure_recommendation_missing",
+      "unmapped_provenance"
+    ],
+    "observed": [
+      "belief_truth_confusion",
+      "configuration_collapse",
+      "correction_failure",
+      "failed_procedure_adoption",
+      "false_persistence",
+      "false_supersession",
+      "history_erasure",
+      "late_history_corruption",
+      "missing_required_truth",
+      "scope_collapse",
+      "stale_persistence",
+      "unsupported_evidence"
+    ],
+    "unmeasurable_by_construction": {
+      "future_leakage": "engines are only ever ingested the visible prefix for a checkpoint, so a future observation is not in the store to be returned; the harness never creates the opportunity to leak",
+      "unknown_hallucination": "scored by score_answer_claim, which no runner calls - the single negative_unknown case is graded on retrieval alone and the answer claim is never read"
+    }
+  },
+  "target_kind_counts": {
+    "as_of_event_truth": 3,
+    "corrected_historical_truth": 2,
+    "current_truth": 7,
+    "historical_belief": 2,
+    "late_arriving_history": 1,
+    "negative_unknown": 1,
+    "recommended_procedure": 1,
+    "scope_truth": 3
+  }
+}
