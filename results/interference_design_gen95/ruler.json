@@ -1,0 +1,933 @@
+{
+ "cases": [
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "I000"
+   ],
+   "id": "IQ000",
+   "load": 0,
+   "prohibited_foreign": [
+    "I002"
+   ],
+   "prohibited_stale": [
+    "I001"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "I000"
+   ],
+   "id": "IQ004",
+   "load": 4,
+   "prohibited_foreign": [
+    "I002"
+   ],
+   "prohibited_stale": [
+    "I001"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "I000"
+   ],
+   "id": "IQ016",
+   "load": 16,
+   "prohibited_foreign": [
+    "I002"
+   ],
+   "prohibited_stale": [
+    "I001"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "I000"
+   ],
+   "id": "IQ064",
+   "load": 64,
+   "prohibited_foreign": [
+    "I002"
+   ],
+   "prohibited_stale": [
+    "I001"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  }
+ ],
+ "contract": {
+  "fixture_version": "interference-v1",
+  "frozen_before_any_engine_run": true,
+  "independent_variable": "distractor count, generated from ONE semantic core so density is the only thing that changes",
+  "load_levels": [
+   0,
+   4,
+   16,
+   64
+  ],
+  "mechanisms": [
+   "true_forgetting",
+   "distractor_displacement",
+   "stale_version_interference",
+   "cross_scope_contamination",
+   "retrieval_window_effect"
+  ],
+  "per_case_rank_and_provenance_preserved": true,
+  "question": "what happens when the store contains many plausible distractors and competing memories?",
+  "rules_carried_from_round_2": {
+   "fair_bindings": "every observation carries a scope and a configuration; the adapter must bind both on write and query",
+   "layers_apart": "no case asks for a judgement, and none can only be passed by returning nothing",
+   "no_pooled_score": "score_case returns mechanisms; assert_no_pooled_accuracy refuses a scale score",
+   "reachability_first": "every class is driven by a synthetic control before any product sees the fixture"
+  },
+  "scorer_version": "interference-scorer-v1",
+  "the_pair_that_matters": {
+   "distractor_displacement": "the current fact is absent and the window is saturated with same-core distractors",
+   "true_forgetting": "the current fact is absent and the window was NOT filled by same-core competitors",
+   "why": "identical in any pooled count, and completely different fixes"
+  }
+ },
+ "contract_sha256": "765bd9fe4ba831be022bdc1b9d10a6195882e169cf7ede5740eae68695c1550c",
+ "controls": {
+  "clean": {
+   "case": "IQ064",
+   "clean": true,
+   "distractors_returned": [],
+   "expected_rank": 1,
+   "load": 64,
+   "mechanisms": [],
+   "ranks": {
+    "I000": 1
+   },
+   "returned": [
+    "I000"
+   ],
+   "window_saturated": false
+  },
+  "cross_scope_contamination": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [],
+   "expected_rank": 1,
+   "load": 64,
+   "mechanisms": [
+    "cross_scope_contamination",
+    "retrieval_window_effect"
+   ],
+   "ranks": {
+    "I000": 1,
+    "I002": 2
+   },
+   "returned": [
+    "I000",
+    "I002"
+   ],
+   "window_saturated": false
+  },
+  "distractor_displacement": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [
+    "D000",
+    "D001",
+    "D002",
+    "D003",
+    "D004"
+   ],
+   "expected_rank": null,
+   "load": 64,
+   "mechanisms": [
+    "distractor_displacement"
+   ],
+   "ranks": {
+    "D000": 1,
+    "D001": 2,
+    "D002": 3,
+    "D003": 4,
+    "D004": 5
+   },
+   "returned": [
+    "D000",
+    "D001",
+    "D002",
+    "D003",
+    "D004"
+   ],
+   "window_saturated": true
+  },
+  "not_displacement_when_window_has_room": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [
+    "D000",
+    "D001"
+   ],
+   "expected_rank": null,
+   "load": 64,
+   "mechanisms": [
+    "true_forgetting"
+   ],
+   "ranks": {
+    "D000": 1,
+    "D001": 2
+   },
+   "returned": [
+    "D000",
+    "D001"
+   ],
+   "window_saturated": false
+  },
+  "retrieval_window_effect": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [
+    "D000"
+   ],
+   "expected_rank": 1,
+   "load": 64,
+   "mechanisms": [
+    "stale_version_interference",
+    "retrieval_window_effect"
+   ],
+   "ranks": {
+    "D000": 2,
+    "I000": 1,
+    "I001": 3
+   },
+   "returned": [
+    "I000",
+    "D000",
+    "I001"
+   ],
+   "window_saturated": false
+  },
+  "stale_version_interference": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [],
+   "expected_rank": 1,
+   "load": 64,
+   "mechanisms": [
+    "stale_version_interference",
+    "retrieval_window_effect"
+   ],
+   "ranks": {
+    "I000": 1,
+    "I001": 2
+   },
+   "returned": [
+    "I000",
+    "I001"
+   ],
+   "window_saturated": false
+  },
+  "true_forgetting": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [
+    "D000"
+   ],
+   "expected_rank": null,
+   "load": 64,
+   "mechanisms": [
+    "true_forgetting"
+   ],
+   "ranks": {
+    "D000": 1
+   },
+   "returned": [
+    "D000"
+   ],
+   "window_saturated": false
+  },
+  "window_effect_silent_when_stale_outranks": {
+   "case": "IQ064",
+   "clean": false,
+   "distractors_returned": [],
+   "expected_rank": 2,
+   "load": 64,
+   "mechanisms": [
+    "stale_version_interference"
+   ],
+   "ranks": {
+    "I000": 2,
+    "I001": 1
+   },
+   "returned": [
+    "I001",
+    "I000"
+   ],
+   "window_saturated": false
+  }
+ },
+ "fixture_sha256": "3bf9c860e429a22bca38172ce7ae2b8426f435ee774a89a530aead51809e06d0",
+ "observations": [
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "I000",
+   "role": "current",
+   "scope": "server:atlas",
+   "text": "Atlas measured 41 t/s after the cache fix."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "I001",
+   "role": "superseded",
+   "scope": "server:atlas",
+   "text": "Atlas measured 27 t/s."
+  },
+  {
+   "configuration": "B2",
+   "core": "throughput:atlas",
+   "id": "I002",
+   "role": "foreign",
+   "scope": "repo:borealis",
+   "text": "Borealis measured 41 t/s after the cache fix."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D000",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 0 measured 20 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D001",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 1 measured 21 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D002",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 2 measured 22 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D003",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 3 measured 23 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D004",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 4 measured 24 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D005",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 5 measured 25 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D006",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 6 measured 26 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D007",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 7 measured 27 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D008",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 8 measured 28 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D009",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 9 measured 29 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D010",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 10 measured 30 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D011",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 11 measured 31 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D012",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 12 measured 32 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D013",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 13 measured 33 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D014",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 14 measured 34 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D015",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 15 measured 35 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D016",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 16 measured 36 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D017",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 17 measured 20 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D018",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 18 measured 21 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D019",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 19 measured 22 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D020",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 20 measured 23 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D021",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 21 measured 24 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D022",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 22 measured 25 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D023",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 23 measured 26 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D024",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 24 measured 27 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D025",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 25 measured 28 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D026",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 26 measured 29 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D027",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 27 measured 30 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D028",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 28 measured 31 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D029",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 29 measured 32 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D030",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 30 measured 33 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D031",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 31 measured 34 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D032",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 32 measured 35 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D033",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 33 measured 36 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D034",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 34 measured 20 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D035",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 35 measured 21 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D036",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 36 measured 22 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D037",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 37 measured 23 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D038",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 38 measured 24 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D039",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 39 measured 25 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D040",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 40 measured 26 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D041",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 41 measured 27 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D042",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 42 measured 28 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D043",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 43 measured 29 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D044",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 44 measured 30 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D045",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 45 measured 31 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D046",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 46 measured 32 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D047",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 47 measured 33 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D048",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 48 measured 34 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D049",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 49 measured 35 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D050",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 50 measured 36 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D051",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 51 measured 20 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D052",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 52 measured 21 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D053",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 53 measured 22 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D054",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 54 measured 23 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D055",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 55 measured 24 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D056",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 56 measured 25 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D057",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 57 measured 26 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D058",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 58 measured 27 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D059",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 59 measured 28 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D060",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 60 measured 29 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D061",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 61 measured 30 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D062",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 62 measured 31 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "D063",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 63 measured 32 t/s on the regression bench."
+  }
+ ],
+ "reachability": {
+  "all_fired": true,
+  "clean_control_silent": true,
+  "mechanisms": [
+   "true_forgetting",
+   "distractor_displacement",
+   "stale_version_interference",
+   "cross_scope_contamination",
+   "retrieval_window_effect"
+  ]
+ },
+ "visible_per_case": {
+  "IQ000": [
+   "I000",
+   "I001",
+   "I002"
+  ],
+  "IQ004": [
+   "I000",
+   "I001",
+   "I002",
+   "D000",
+   "D001",
+   "D002",
+   "D003"
+  ],
+  "IQ016": [
+   "I000",
+   "I001",
+   "I002",
+   "D000",
+   "D001",
+   "D002",
+   "D003",
+   "D004",
+   "D005",
+   "D006",
+   "D007",
+   "D008",
+   "D009",
+   "D010",
+   "D011",
+   "D012",
+   "D013",
+   "D014",
+   "D015"
+  ],
+  "IQ064": [
+   "I000",
+   "I001",
+   "I002",
+   "D000",
+   "D001",
+   "D002",
+   "D003",
+   "D004",
+   "D005",
+   "D006",
+   "D007",
+   "D008",
+   "D009",
+   "D010",
+   "D011",
+   "D012",
+   "D013",
+   "D014",
+   "D015",
+   "D016",
+   "D017",
+   "D018",
+   "D019",
+   "D020",
+   "D021",
+   "D022",
+   "D023",
+   "D024",
+   "D025",
+   "D026",
+   "D027",
+   "D028",
+   "D029",
+   "D030",
+   "D031",
+   "D032",
+   "D033",
+   "D034",
+   "D035",
+   "D036",
+   "D037",
+   "D038",
+   "D039",
+   "D040",
+   "D041",
+   "D042",
+   "D043",
+   "D044",
+   "D045",
+   "D046",
+   "D047",
+   "D048",
+   "D049",
+   "D050",
+   "D051",
+   "D052",
+   "D053",
+   "D054",
+   "D055",
+   "D056",
+   "D057",
+   "D058",
+   "D059",
+   "D060",
+   "D061",
+   "D062",
+   "D063"
+  ]
+ }
+}
