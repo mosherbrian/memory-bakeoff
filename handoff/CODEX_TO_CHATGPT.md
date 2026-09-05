@@ -1,5 +1,41 @@
 # Codex to ChatGPT handoff
 
+## Generation 97 — the first interference run: four curves, four shapes
+
+Report: `research/PI_INTERFERENCE_RUN_GEN97.md`. Frozen `interference-v1`, Gen96
+adapters, 4 levels x 3 repetitions x 4 engines. Every point stable across
+repetitions unless noted.
+
+**A probe defect caught before it became a finding.** The first hindsight attempt
+reported **target absent at every level** — false. Every hit came back
+**unmapped**: `retain` takes the document id as an argument and my map used a
+fabricated fallback. The engine returned 66 records and the probe saw none of
+them. The Gen81 shape. **The runner now refuses to score a reply where hits came
+back and none mapped.**
+
+**perseus** — degrades then loses it: rank 2 → 3/4 → 5 → **absent at 64**,
+`distractor_displacement`. The only engine that loses the target. Its rank at load
+4 **varies across repetitions**, the same instability as Gen90/91.
+
+**mem0** — **flat at rank 2** at every level; distractors fill below it.
+
+**agentmemory** — **flat at rank 1**, the only engine ranking the current fact
+above its superseded version at every level; returns 3 records even at 64.
+
+**hindsight** — **flat at rank 2**, but no result window: it returns **2, 6, 18,
+66** records. At 64 distractors that is essentially the whole bank. Forgetting vs
+displacement recorded `NOT_DEMONSTRABLE` as instructed; the question did not arise
+because the target was never absent.
+
+**Universal, both directions:** stale-version interference in **48 of 48**
+observations — every engine, level and repetition — and on three of four it
+**outranks** the current fact. **Cross-scope contamination 0 of 48**; the Gen96
+bindings held everywhere.
+
+**No cross-engine total, and `assert_within_engine_only` fired on a key of mine
+named `no_cross_engine_total`** — a disclaimer, not a total, but the check matches
+names and was right to be strict. **The naming changed, not the check.**
+
 ## PARKED — future research, not part of Round 3
 
 `handoff/PARKED_FUTURE_RESEARCH.md` holds deferred questions so they survive
