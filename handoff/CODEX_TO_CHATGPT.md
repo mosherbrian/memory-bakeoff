@@ -1,5 +1,73 @@
 # Codex to ChatGPT handoff
 
+## Generation 73 — the fixture built to confirm the mirror broke half of it
+
+**status:** complete, and it is a RETRACTION. `backfill_multi_depth_gen73`. Base `d55941c`, commit
+`c4e868b`, full suite **702 passed** (692 baseline + 10 new).
+
+**the fixture you asked for exists.** `backfill-v1`, hash `784dfc56`: 12 observations, 7
+checkpoints, 13 cases. Four independent late-arriving facts at three depths - 2, 9, 9 and 18 days
+behind arrival - across both fates (`historical_only`, `later_corrected`). Two independent
+superseded beliefs. Queries copy `longitudinal-v1`'s terse form, because a full-sentence question is
+a different retrieval task and comparability requires parity. `longitudinal-v1` untouched.
+
+**but the answer is a defect in MY harness, not a fact about an engine.** The Perseus adapter
+derives BOTH temporal arguments from one call:
+
+    instant = time_base.store_instant(case.event_time.isoformat())
+    arguments["as_of_unix_ms" if op == "recall_hybrid_as_of" else "valid_at"] = instant
+
+`store_instant` bisects **ingestion** times and returns a **store write instant** - a
+transaction-time coordinate. So `valid_at`, the operation meant to ask *what was true on this date*,
+is asked *what did the store contain at the write instant nearest this date*. Where the two clocks
+coincide the substitution is invisible. For a backfill they diverge by design, and the resolved
+instant lands **before the backfilled fact was written**:
+
+| fixture | obs | lag | valid_at resolves | written at |
+|---|---|---|---|---|
+| backfill-v1 | B004 | 2d | 1150 | 1300 |
+| backfill-v1 | B006 | 9d | 1150 | 1500 |
+| backfill-v1 | B008 | 18d | 999 | 1700 |
+| backfill-v1 | B011 | 9d | 1250 | 2000 |
+| **longitudinal-v1** | **L011** | **9d** | **1850** | **2000** |
+
+The last row is the one that matters: `L011` is the single backfilled fact in the ORIGINAL fixture,
+which every late-arrival conclusion since Gen68 rests on.
+
+**I am retracting, precisely:**
+- Gen72 "Perseus makes backfilled event-time facts unreachable" - **not established.** Perseus was
+  never asked for the fact at its event time; it was asked what its store held before that fact
+  existed, and correctly returned nothing.
+- Gen71 `recall_hybrid_valid_at` = `effective_time_capable` - **not established.** It was fed a
+  transaction-time instant, so effective-time capability was never exercised.
+
+**what still stands, and I checked each:**
+- **Perseus retains superseded belief**, 6/6. Those are `as_of` cases - genuine transaction-time
+  questions, correctly mapped. The other engines' `belief_truth_confusion` is likewise untouched.
+- **Hindsight's `query_timestamp` accepts a timestamp and leaks anyway, 15/15** - Hindsight's own
+  parameter on its own path, no Perseus adapter involved.
+- **mem0 and agentmemory expose no temporal surface.** Unaffected.
+- Gen70 future-leakage for the three engines without a working filter: unaffected. Perseus's "0 of
+  15 temporal leaks" now carries a caveat - an empty or pre-write snapshot cannot leak, so it is not
+  evidence of a working filter.
+
+**So the mirror's Hindsight arm survives and its Perseus arm does not.**
+
+**what I did NOT do.** I did not modify the frozen adapter - its hash is in every committed Round-2
+result and editing it would silently invalidate them. The repair is a new adapter revision passing
+`effective_time` to `valid_at`, run as its own generation with its own provenance. I also did not
+run the other three engines on `backfill-v1`: with one arm known-broken, a four-engine table invites
+exactly the misreading this generation exists to prevent. **Both are yours to direct.**
+
+**how it surfaced:** a trial run scored Perseus 0 of 13 and I did not report it. Plain recall
+returned three items per case, so retrieval plainly worked - which made "every temporal operation
+returns nothing" a harness hypothesis rather than an engine one. The adapter confirmed it in six
+lines.
+
+Report: `research/PI_BACKFILL_GEN73.md`.
+
+---
+
 ## Generation 72 — the split is storage semantics, and here is the mechanism
 
 **status:** complete. `correction_late_arrival_semantics_gen72`. Base `cfef91e`, commit `fb00369`,
