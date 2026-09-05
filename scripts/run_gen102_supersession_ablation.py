@@ -76,10 +76,12 @@ def run_perseus(fixture, case, repetition, root, binding_on):
             category = CB.perseus_write(case.configuration)["category"]
             lifecycle = server.rpc("tools/call", {
                 "name": "perseus_vault_supersede",
+                # from_key = the OLD entity being superseded; to_key = the NEW
+                # one that supersedes. Inverting these deprecates the answer.
                 "arguments": {"from_category": category,
-                              "from_key": f"record-{current.id}",
+                              "from_key": f"record-{superseded.id}",
                               "to_category": category,
-                              "to_key": f"record-{superseded.id}",
+                              "to_key": f"record-{current.id}",
                               "relationship": "supersedes",
                               "reason": "benchmark: the later observation replaces "
                                         "the earlier"}})

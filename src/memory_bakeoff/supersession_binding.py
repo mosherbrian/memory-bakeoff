@@ -43,12 +43,22 @@ BINDINGS = {
     "perseus": {
         "kind": EXPLICIT_LINEAGE,
         "call": "perseus_vault_supersede",
-        "arguments": {"from_category": "<current record's category>",
-                      "from_key": "record-<current id>",
-                      "to_category": "<superseded record's category>",
-                      "to_key": "record-<superseded id>",
+        # CORRECTED in Gen102. The parameter schema is explicit and is the
+        # authority: from_key is "the OLD entity being superseded", to_key is
+        # "the NEW entity that supersedes". The tool's SUMMARY description says
+        # the opposite - "from a new fact to an old one" - and the first binding
+        # followed the summary, told perseus the CURRENT record was the old one,
+        # and watched it correctly deprecate the answer.
+        "arguments": {"from_category": "<superseded record's category>",
+                      "from_key": "record-<superseded id>   # the OLD entity",
+                      "to_category": "<current record's category>",
+                      "to_key": "record-<current id>        # the NEW entity",
                       "relationship": "supersedes",
                       "reason": "benchmark: the later observation replaces the earlier"},
+        "interface_trap": "the tool's summary description and its parameter "
+                          "descriptions disagree about direction; the parameter "
+                          "descriptions are authoritative and the measured "
+                          "behaviour agrees with them (Gen102)",
         "issued": "once, after both records are written",
         "old_record_retained": True,
         "effect": "the old entity's status becomes 'deprecated'; it is not removed",
