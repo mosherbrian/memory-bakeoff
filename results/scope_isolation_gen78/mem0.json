@@ -1,0 +1,214 @@
+{
+  "ablation": "frozen Gen77 scope binding replaces the Round-2 constant namespace; one variable moved",
+  "binding": {
+    "note": "frozen Gen32 adapter binds user_id to a constant; this binds it per scope and changes nothing else",
+    "primitive": "user_id",
+    "query_call": "Memory.search(filters={'user_id': ...})",
+    "status": "native_primitive_bound_on_both_paths",
+    "write_call": "Memory.add(user_id=...)"
+  },
+  "case_runs": 6,
+  "cases": [
+    "LQ08",
+    "LQ09"
+  ],
+  "engine": "mem0",
+  "excluded": {
+    "LQ03": "same scope, different configuration - excluded so configuration_collapse is not conflated with scope"
+  },
+  "generated_at": "2026-09-05T12:29:06+00:00",
+  "generation": 78,
+  "ingestion": "prefix of the queried checkpoint only; the whole timeline would charge future_leakage as a runner artefact",
+  "repetitions": [
+    {
+      "records": [
+        {
+          "bound_identity": "scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ08",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L002",
+              "native_rank": 3,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L001",
+              "native_rank": 4,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 5,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "scope": "server:forge",
+          "scope_collapse": false
+        },
+        {
+          "bound_identity": "scope-d2532c8a217c19ad23014400d1542ce0",
+          "case_id": "LQ09",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L006"
+          ],
+          "scope": "server:anvil",
+          "scope_collapse": false
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "records": [
+        {
+          "bound_identity": "scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ08",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L002",
+              "native_rank": 3,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L001",
+              "native_rank": 4,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 5,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "scope": "server:forge",
+          "scope_collapse": false
+        },
+        {
+          "bound_identity": "scope-d2532c8a217c19ad23014400d1542ce0",
+          "case_id": "LQ09",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L006"
+          ],
+          "scope": "server:anvil",
+          "scope_collapse": false
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "records": [
+        {
+          "bound_identity": "scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ08",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L002",
+              "native_rank": 3,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L001",
+              "native_rank": 4,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 5,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "scope": "server:forge",
+          "scope_collapse": false
+        },
+        {
+          "bound_identity": "scope-d2532c8a217c19ad23014400d1542ce0",
+          "case_id": "LQ09",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L006"
+          ],
+          "scope": "server:anvil",
+          "scope_collapse": false
+        }
+      ],
+      "repetition": 3
+    }
+  ],
+  "scope_collapse_total": 0
+}

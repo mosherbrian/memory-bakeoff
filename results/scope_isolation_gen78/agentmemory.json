@@ -1,0 +1,178 @@
+{
+  "ablation": "frozen Gen77 scope binding replaces the Round-2 constant namespace; one variable moved",
+  "binding": {
+    "note": "both endpoints accept agentId and project; Gen13 measured that PROJECT alone did not isolate, so agentId is the candidate and whether it isolates is the isolation run's question",
+    "primitive": "agentId",
+    "query_call": "POST /agentmemory/smart-search {agentId}",
+    "status": "native_primitive_bound_on_both_paths",
+    "write_call": "POST /agentmemory/remember {agentId}"
+  },
+  "case_runs": 6,
+  "cases": [
+    "LQ08",
+    "LQ09"
+  ],
+  "engine": "agentmemory",
+  "excluded": {
+    "LQ03": "same scope, different configuration - excluded so configuration_collapse is not conflated with scope"
+  },
+  "generated_at": "2026-09-05T12:29:30+00:00",
+  "generation": 78,
+  "ingestion": "prefix of the queried checkpoint only; the whole timeline would charge future_leakage as a runner artefact",
+  "repetitions": [
+    {
+      "records": [
+        {
+          "bound_identity": "g78r1-scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ08",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 3,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "scope": "server:forge",
+          "scope_collapse": false
+        },
+        {
+          "bound_identity": "g78r1-scope-d2532c8a217c19ad23014400d1542ce0",
+          "case_id": "LQ09",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L006"
+          ],
+          "scope": "server:anvil",
+          "scope_collapse": false
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "records": [
+        {
+          "bound_identity": "g78r2-scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ08",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 3,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "scope": "server:forge",
+          "scope_collapse": false
+        },
+        {
+          "bound_identity": "g78r2-scope-d2532c8a217c19ad23014400d1542ce0",
+          "case_id": "LQ09",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L006"
+          ],
+          "scope": "server:anvil",
+          "scope_collapse": false
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "records": [
+        {
+          "bound_identity": "g78r3-scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ08",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 3,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "scope": "server:forge",
+          "scope_collapse": false
+        },
+        {
+          "bound_identity": "g78r3-scope-d2532c8a217c19ad23014400d1542ce0",
+          "case_id": "LQ09",
+          "failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "provenance_exact": true
+            }
+          ],
+          "returned_ids": [
+            "L006"
+          ],
+          "scope": "server:anvil",
+          "scope_collapse": false
+        }
+      ],
+      "repetition": 3
+    }
+  ],
+  "scope_collapse_total": 0
+}
