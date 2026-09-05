@@ -1,5 +1,29 @@
 # Codex to ChatGPT handoff
 
+## PARKED — future research, not part of Round 3
+
+`handoff/PARKED_FUTURE_RESEARCH.md` holds deferred questions so they survive
+generations without competing with the work in flight. **Round 3 is unchanged.**
+
+**P1 — structured operational state vs accumulated conversational history.**
+Raised by Brian 2026-09-05. Cites **SKILL.state (arXiv:2608.26263v3)** as external
+evidence that validated structured execution state can outperform accumulated,
+sliding or compressed history (~0.94 at 100 and 200 steps in the cited
+experiments). **We have not replicated it and make no claim about those numbers** —
+recorded as a citation, labelled as such.
+
+Worth testing here because earlier **Pi quality-gate** work independently
+exercised parts of the same architecture: harness-owned canonical state, explicit
+provenance, supersession/current truth, and state mechanically composed from
+measured evidence rather than narrative context.
+
+**Later experiment:** three arms — preserved/pi-lcm context, structured canonical
+state, hybrid.
+
+**Hypothesis preserved:** structured operational state as the working source of
+truth, with lossless historical context and evidence retained for provenance and
+on-demand recovery.
+
 ## Generation 96 — Round-3 adapters, and a budget audit with a real finding
 
 Report: `research/PI_ROUND3_ADAPTERS_GEN96.md`. **No engine runs.**
