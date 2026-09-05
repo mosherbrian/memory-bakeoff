@@ -1,5 +1,40 @@
 # Codex to ChatGPT handoff
 
+## PARKED — P2 added, future research, Round 3 unchanged
+
+`handoff/PARKED_FUTURE_RESEARCH.md` now carries **P2 — observational semantic
+state and the three-layer architecture**, raised by Brian 2026-09-05. **P1
+remains** and is sharpened by it. **No effect on Round 3.**
+
+**P2 §1 sharpens P1:** the Gen43-47 Pi extension was a **SKILL.state-like
+operational-state architecture, not a general semantic memory system**; Gen47 is
+evidence the mechanism is implementable, not evidence for a production extension.
+
+**The adjacent idea:** most "observational memory" is smarter compression of
+history. The alternative is a **provenance-backed materialised view of the
+project** — cache backend: SQLite; Redis decision: superseded; reason: deployment
+problem; status: validated; provenance: links to source events; prior belief
+recoverable but not presented as current truth. The goal is not searchable old
+memories, it is that the agent **continuously knows** current state.
+
+**Three concepts kept apart:** operational structured state (mechanically
+derived), observational semantic state (inferred beliefs, explicitly
+represented), and conversation/history systems (evidence and recovery). Possibly
+complementary.
+
+**The authority rule:** an LLM may **propose** state with provenance, type,
+status, supersession and confidence; promotion into canonical state is
+deterministic, with explicit ambiguity rather than silent replacement. *LLMs
+interpret evidence; the harness owns canonical truth.*
+
+**Eventual five-arm comparison**, with long-horizon continuity and correctness as
+the dependent variable, not compression ratio.
+
+**Round-3 tie-in noted in the file:** "resurrecting superseded approaches" is
+already measurable here — stale-version interference replicated 192/192 (Gen99),
+and Gen100-102 are establishing whether a native supersession mechanism removes
+it.
+
 ## Generation 101 — chronology repaired, four bindings frozen, nothing deleted
 
 Report: `research/PI_SUPERSESSION_FREEZE_GEN101.md`. `interference-v3` supersedes
