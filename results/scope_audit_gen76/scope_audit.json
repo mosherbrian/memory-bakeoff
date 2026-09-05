@@ -1,0 +1,102 @@
+{
+  "adapters": {
+    "agentmemory": {
+      "configuration_behaviour": "collapses scopes, which is a true statement about the tested configuration",
+      "engine_scope_capability": "not_demonstrable",
+      "evidence": "adapter contract: 'never a project or agent per scope', and 'smart-search does not isolate by project anyway'",
+      "mechanism": "one agentId and one project namespace for every scope",
+      "passed_on_query": false,
+      "passed_on_write": false,
+      "scope_exercised": "scope_not_exercised",
+      "why": "no scope filter is passed on either path, so the engine is never asked to isolate; a scope failure here is the configuration's, not evidence about the product"
+    },
+    "hindsight": {
+      "configuration_behaviour": "collapses scopes, which is a true statement about the tested configuration",
+      "engine_scope_capability": "not_demonstrable",
+      "evidence": "recall arguments are bank_id, query, max_tokens - no scope term",
+      "mechanism": "bank_id is per repetition; scope appears only inside a context string",
+      "passed_on_query": false,
+      "passed_on_write": false,
+      "scope_exercised": "scope_not_exercised",
+      "why": "no scope filter is passed on either path, so the engine is never asked to isolate; a scope failure here is the configuration's, not evidence about the product"
+    },
+    "mem0": {
+      "configuration_behaviour": "collapses scopes, which is a true statement about the tested configuration",
+      "engine_scope_capability": "not_demonstrable",
+      "evidence": "adapter contract: 'scored_filter: constant user_id only, exactly as Gen10'",
+      "mechanism": "scope stored in metadata; queries filter on a constant user_id",
+      "passed_on_query": false,
+      "passed_on_write": false,
+      "scope_exercised": "scope_not_exercised",
+      "why": "no scope filter is passed on either path, so the engine is never asked to isolate; a scope failure here is the configuration's, not evidence about the product"
+    },
+    "perseus": {
+      "configuration_behaviour": "measured directly",
+      "engine_scope_capability": "measured",
+      "evidence": "body carries scope; write and recall both take workspace_hash derived from the case scope",
+      "mechanism": "workspace_hash = sha256(public scope)",
+      "passed_on_query": true,
+      "passed_on_write": true,
+      "scope_exercised": "scope_isolated",
+      "why": "a scope filter is supplied on both paths, so honouring or violating it is the engine's own behaviour"
+    }
+  },
+  "configuration_collapse_proof": {
+    "case": "LQ02",
+    "classes_when_violated": [
+      "configuration_collapse"
+    ],
+    "control_clean": true,
+    "fires": true,
+    "same_scope_other_configuration": "L002"
+  },
+  "contract": {
+    "contract_version": "scope-reachability-audit-v1",
+    "distinction": {
+      "scope_isolated": "scope filter supplied on write and query; engine behaviour is measured",
+      "scope_not_exercised": "no scope filter supplied; configuration collapses scopes and engine capability is not demonstrable"
+    },
+    "method": "the Gen75 rule applied to scope: prove a class can fire before reporting its zero, and separate engine capability from what the harness asked",
+    "no_engine_runs": true,
+    "why_it_matters": "Gen71 read an adapter routing decision as an engine property on the temporal axis; the same error is available here and this module exists to prevent it"
+  },
+  "engines_run": 0,
+  "reachability_in_fixture": {
+    "configuration_collapse": {
+      "cases": [
+        {
+          "case": "LQ02",
+          "prohibited": "L002"
+        },
+        {
+          "case": "LQ03",
+          "prohibited": "L003"
+        }
+      ],
+      "reachable": true
+    },
+    "scope_collapse": {
+      "cases": [
+        {
+          "case": "LQ08",
+          "prohibited": "L006"
+        },
+        {
+          "case": "LQ09",
+          "prohibited": "L003"
+        }
+      ],
+      "reachable": true
+    }
+  },
+  "scope_collapse_proof": {
+    "case": "LQ08",
+    "classes_when_violated": [
+      "scope_collapse"
+    ],
+    "control_classes": [],
+    "control_clean": true,
+    "cross_scope_observation": "L006",
+    "fires": true
+  }
+}
