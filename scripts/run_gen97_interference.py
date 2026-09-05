@@ -49,8 +49,13 @@ def public_body(observation) -> dict[str, str]:
     return body
 
 
+# Which records a case ingests. v2 overrides this with its core-aware resolver;
+# a global rather than an argument so the four engine functions stay unchanged.
+VISIBLE_IDS = ITF.visible_ids
+
+
 def observations_for(fixture, case):
-    visible = set(ITF.visible_ids(fixture, case))
+    visible = set(VISIBLE_IDS(fixture, case))
     return [o for o in fixture.observations if o.id in visible]
 
 
