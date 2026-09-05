@@ -49,8 +49,8 @@ def trace_case(fixture, case, repetition):
     try:
         base, _startup, launcher = g13.start_service(g33.AGENTMEMORY, state,
                                                      repetition, agent)
-        for observation in [o for o in fixture.observations
-                            if o.id in set(V3.visible_ids(fixture, case))]:
+        by_id = {o.id: o for o in fixture.observations}
+        for observation in [by_id[i] for i in V3.visible_ids(fixture, case)]:
             observation_agent = SB.agentmemory_write(observation.scope, run=run)["agentId"]
             payload = {"content": observation.text, "type": "observation",
                        "sourceObservationIds": [observation.id],
