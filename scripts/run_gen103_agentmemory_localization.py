@@ -61,9 +61,14 @@ def stored_rows(g33, base, agent):
     return out
 
 
-def probe(order_name, order, fixture, g13, g33, A, tag):
+def probe(order_name, order, fixture, g13, g33, A, tag, include_foreign=False):
+    """`include_foreign` tests the one rule source inspection named: remember.ts
+    skips supersession across an explicit project boundary. The foreign record is
+    the only fixture record the two-record probe omits, and it is the only
+    difference between this probe and the Gen102 run."""
     core_records = {o.role: o for o in fixture.observations
-                    if o.core == CORE and o.role in ("current", "superseded")}
+                    if o.core == CORE and o.role in ("current", "superseded",
+                                                     "foreign")}
     state = Path(tempfile.mkdtemp(prefix=f"g103-{tag}-", dir="/private/tmp"))
     run = f"g103{tag}"
     case = next(c for c in fixture.cases if c.core == CORE and c.load == 0)
@@ -76,12 +81,17 @@ def probe(order_name, order, fixture, g13, g33, A, tag):
         stages.append({"stage": "before any write",
                        "rows": stored_rows(g33, base, agent),
                        **snapshot(g13, base, agent, case.query, project)})
-        for index, role in enumerate(order, start=1):
+        sequence = list(order) + (["foreign"] if include_foreign else [])
+        for index, role in enumerate(sequence, start=1):
             observation = core_records[role]
+            # The foreign record carries its OWN scope and configuration, exactly
+            # as the fixture and the Gen96 bindings put them.
+            write_agent = SB.agentmemory_write(observation.scope, run=run)["agentId"]
+            write_project = CB.agentmemory_write(observation.configuration)["project"]
             g13.request_json(base, "/agentmemory/remember", body={
                 "content": observation.text, "type": "observation",
                 "sourceObservationIds": [observation.id],
-                "agentId": agent, "project": project})
+                "agentId": write_agent, "project": write_project})
             time.sleep(0.2)
             stages.append({
                 "stage": f"after write {index}: {role} ({observation.id})",
@@ -105,6 +115,9 @@ def main() -> int:
         "v2_current_first": probe("v2 (current first, superseded second)",
                                   ("current", "superseded"), fixture, g13, g33,
                                   A, "v2"),
+        "v3_with_foreign": probe("v3 plus the foreign record (project guard)",
+                                 ("superseded", "current"), fixture, g13, g33,
+                                 A, "v3f", include_foreign=True),
     }
     payload = {
         "engine": "agentmemory", "core": CORE,
