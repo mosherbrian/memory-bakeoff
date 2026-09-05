@@ -1,0 +1,51 @@
+{
+  "contract": {
+    "contract_sha256": "112c52893c2d69774c582bfbcbb7db23ba3efd14858ec71b0eb80c29b76c05d0",
+    "contract_version": "entailment-critic-ablation-v1",
+    "critic_inputs_forbidden": [
+      "the repository",
+      "any candidate implementation",
+      "the hidden verifier",
+      "any outcome or score",
+      "any other test",
+      "the task name"
+    ],
+    "critic_inputs_permitted": [
+      "the cited requirement sentence",
+      "the source of the single test under review"
+    ],
+    "critic_is_the_same_model": "the same pinned weights as the generator, in a separate stateless call; this is a second pass, not a second opinion, and cross-model independence remains untested",
+    "deletion_only": "the critic cannot edit, reorder or add a test",
+    "frozen_before_exposure": true,
+    "labels_are_evaluator_side": "known-false and valid labels come from running each test against the trusted positives; the critic never sees them",
+    "primary_comparison": {
+      "gen61_sensitivity": 1.0,
+      "gen61_unsafe_as_gate": "4 of 8"
+    },
+    "question": "can a second pass by the same model remove the assertions that overextend a correctly quoted requirement, without removing the assertions that catch wrong implementations?",
+    "secondary_measurement": "of the 27 assertions known to be false, because they reject a trusted positive, how many does the critic remove; and how many assertions that reject no positive does it remove wrongly",
+    "single_change_from_gen61": "a critic pass over the frozen Gen61 banks; the critic may delete a test and may do nothing else",
+    "unchanged": [
+      "the Gen61 generated banks, byte for byte",
+      "the generator prompt",
+      "pinned model",
+      "sampling",
+      "evidence-generation-gen59-v1 corpus",
+      "frozen task order",
+      "gen60-generated-evidence-screen-v1 at b694f7b8"
+    ],
+    "unreadable_reply_keeps_the_test": "so a malformed answer cannot silently delete evidence"
+  },
+  "endpoint": "local llama-swap on this host",
+  "model": "qwen3.6-35b-vulkan-nothink",
+  "prompt_template_sha256": "34b45911522f46e01e04f283095f5277a6d9a9e61cb9f23567e5ca85f2e654f3",
+  "sampling": {
+    "max_tokens": 512,
+    "min_p": 0.0,
+    "temperature": 0.6,
+    "top_k": 20,
+    "top_p": 0.8
+  },
+  "session": "one stateless HTTP request per test; no conversation carried over",
+  "source_banks": "results/pi_spec_grounded_gen61/grounded/, unmodified"
+}
