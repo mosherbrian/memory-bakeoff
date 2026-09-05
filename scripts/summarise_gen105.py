@@ -32,8 +32,13 @@ def main() -> int:
             stale_off = "stale_version_interference" in (off[k]["mechanisms"] or [])
             stale_on = "stale_version_interference" in (on[k]["mechanisms"] or [])
             bucket["stale_removed"] += stale_off and not stale_on
-            bucket["current_lost"] += (off[k]["current_retrievable"]
-                                       and not on[k]["current_retrievable"])
+            # hindsight has no result count (token budget, window_expressible
+            # False), so it records target_present rather than current_retrievable.
+            def kept(row):
+                return row.get("current_retrievable", row.get("target_present"))
+            bucket["current_lost"] += kept(off[k]) and not kept(on[k])
+            # A rank move is the EXPECTED consequence of removing the stale
+            # record, not a cost - counted so it is visible, not as a failure.
             bucket["rank_moved"] += off[k].get("current_rank") != on[k].get("current_rank")
         print("{:<20}{:>5}{:>7}{:>15}{:>14}{:>12}".format(
             "core", "load", "cells", "stale_removed", "current_lost", "rank_moved"))
