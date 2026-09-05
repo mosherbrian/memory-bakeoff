@@ -1,0 +1,312 @@
+{
+  "absence_is_not_sufficiency": "a bank that raises no challenge proves nothing about task correctness; generated tests stay proposition-scoped evidence candidates",
+  "accepted_outputs": 24,
+  "coverage_met": true,
+  "flagged_positives": 0,
+  "flagged_wrongs": 12,
+  "generation_calls": 24,
+  "primary_population": {
+    "positive_candidates": 8,
+    "tasks": [
+      "dispatch",
+      "tally",
+      "thermo",
+      "valve"
+    ],
+    "wrong_candidates": 12
+  },
+  "reason": "flagged at least half of the known-wrong candidates without rejecting known-correct code",
+  "reference_valid_tasks": [
+    "dispatch",
+    "tally",
+    "thermo",
+    "valve"
+  ],
+  "ruler": "evidence-generation-gen59-v1",
+  "screen_sha256": "b694f7b873c39731f043fffcee01437f530f82644d2bc1fe4aac73bcee42c3f5",
+  "sensitivity": 1.0,
+  "specificity": 0.0,
+  "statuses": {
+    "culvert": "UNSAFE_AS_GATE",
+    "dispatch": "REFERENCE_VALID",
+    "ledger": "UNSAFE_AS_GATE",
+    "manifest": "UNSAFE_AS_GATE",
+    "pathsafe": "UNSAFE_AS_GATE",
+    "tally": "REFERENCE_VALID",
+    "thermo": "REFERENCE_VALID",
+    "valve": "REFERENCE_VALID"
+  },
+  "tasks": {
+    "culvert": {
+      "accepted_outputs": 3,
+      "positives": {
+        "separate_constant": {
+          "passed": true,
+          "tail": "38 passed in 0.02s"
+        },
+        "telemetry_owns_its_ratio": {
+          "passed": false,
+          "tail": "4 failed, 34 passed in 0.03s"
+        }
+      },
+      "wrongs": {
+        "edited_the_test_to_agree": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "21 failed, 17 passed in 0.06s"
+        },
+        "inverted_the_consumers": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "32 failed, 6 passed in 0.08s"
+        },
+        "shared_constant_breaks_telemetry": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "11 failed, 27 passed in 0.05s"
+        }
+      }
+    },
+    "dispatch": {
+      "accepted_outputs": 3,
+      "positives": {
+        "sorted_by_rank": {
+          "passed": true,
+          "tail": "26 passed in 0.03s"
+        },
+        "two_lists": {
+          "passed": true,
+          "tail": "26 passed in 0.03s"
+        }
+      },
+      "wrongs": {
+        "pops_from_the_back": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "14 failed, 12 passed in 0.08s"
+        },
+        "urgency_ignored": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "12 failed, 14 passed in 0.07s"
+        },
+        "urgent_jobs_reversed": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "9 failed, 17 passed in 0.07s"
+        }
+      }
+    },
+    "ledger": {
+      "accepted_outputs": 3,
+      "positives": {
+        "decimal_half_up": {
+          "passed": true,
+          "tail": "66 passed in 0.05s"
+        },
+        "explicit_remainder": {
+          "passed": false,
+          "tail": "2 failed, 64 passed in 0.06s"
+        }
+      },
+      "wrongs": {
+        "half_to_even": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "16 failed, 50 passed in 0.09s"
+        },
+        "through_a_float": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "25 failed, 41 passed in 0.11s"
+        },
+        "truncates_instead_of_rounding": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "42 failed, 24 passed in 0.15s"
+        }
+      }
+    },
+    "manifest": {
+      "accepted_outputs": 3,
+      "positives": {
+        "guard_clause": {
+          "passed": false,
+          "tail": "2 failed, 30 passed in 0.03s"
+        },
+        "helper_function": {
+          "passed": false,
+          "tail": "2 failed, 30 passed in 0.03s"
+        }
+      },
+      "wrongs": {
+        "blank_stays_empty_string": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "18 failed, 14 passed in 0.07s"
+        },
+        "fields_out_of_order": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "23 failed, 9 passed in 0.07s"
+        },
+        "only_empty_counts_as_blank": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "9 failed, 23 passed in 0.04s"
+        }
+      }
+    },
+    "pathsafe": {
+      "accepted_outputs": 3,
+      "positives": {
+        "explicit_checks": {
+          "passed": false,
+          "tail": "12 failed, 68 passed in 0.06s"
+        },
+        "single_guard": {
+          "passed": false,
+          "tail": "12 failed, 68 passed in 0.06s"
+        }
+      },
+      "wrongs": {
+        "absolute_only": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "57 failed, 23 passed in 0.16s"
+        },
+        "refuses_everything": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "19 failed, 61 passed in 0.08s"
+        },
+        "silently_repaired": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "64 failed, 16 passed in 0.17s"
+        }
+      }
+    },
+    "tally": {
+      "accepted_outputs": 3,
+      "positives": {
+        "delegated_reset": {
+          "passed": true,
+          "tail": "29 passed in 0.02s"
+        },
+        "reset_in_close": {
+          "passed": true,
+          "tail": "29 passed in 0.02s"
+        }
+      },
+      "wrongs": {
+        "add_multiplies": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "21 failed, 8 passed in 0.07s"
+        },
+        "close_does_not_reset": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "16 failed, 13 passed in 0.06s"
+        },
+        "reset_only_on_next_add": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "12 failed, 17 passed in 0.05s"
+        }
+      }
+    },
+    "thermo": {
+      "accepted_outputs": 3,
+      "positives": {
+        "default_changed": {
+          "passed": true,
+          "tail": "17 passed in 0.02s"
+        },
+        "named_constant": {
+          "passed": true,
+          "tail": "17 passed in 0.02s"
+        }
+      },
+      "wrongs": {
+        "conversion_inverted": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "14 failed, 3 passed in 0.04s"
+        },
+        "default_left_at_two": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "2 failed, 15 passed in 0.02s"
+        },
+        "default_truncates": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "7 failed, 10 passed in 0.03s"
+        }
+      }
+    },
+    "valve": {
+      "accepted_outputs": 3,
+      "positives": {
+        "explicit_branches": {
+          "passed": true,
+          "tail": "30 passed in 0.02s"
+        },
+        "min_max": {
+          "passed": true,
+          "tail": "30 passed in 0.02s"
+        }
+      },
+      "wrongs": {
+        "absolute_value": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "10 failed, 20 passed in 0.03s"
+        },
+        "off_by_one_ceiling": {
+          "failed_requirement": "A",
+          "passed": false,
+          "passes_visible": false,
+          "tail": "10 failed, 20 passed in 0.03s"
+        },
+        "upper_bound_only": {
+          "failed_requirement": "B",
+          "passed": false,
+          "passes_visible": true,
+          "tail": "10 failed, 20 passed in 0.03s"
+        }
+      }
+    }
+  },
+  "unsafe_as_gate_tasks": [
+    "culvert",
+    "ledger",
+    "manifest",
+    "pathsafe"
+  ],
+  "verdict": "PASSED"
+}
