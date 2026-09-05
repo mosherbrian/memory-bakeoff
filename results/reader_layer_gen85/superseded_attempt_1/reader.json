@@ -1,0 +1,693 @@
+{
+ "controls": {
+  "procedure_adoption": {
+   "cites_both": {
+    "cited": [
+     "L008",
+     "L007"
+    ],
+    "classes": [
+     "failed_procedure_adoption"
+    ],
+    "parsed": true
+   },
+   "cites_the_failed_attempt": {
+    "cited": [
+     "L007"
+    ],
+    "classes": [
+     "failed_procedure_adoption",
+     "procedure_recommendation_missing"
+    ],
+    "parsed": true
+   },
+   "cites_the_successful_attempt": {
+    "cited": [
+     "L008"
+    ],
+    "classes": [],
+    "parsed": true
+   },
+   "ignores_the_format": {
+    "cited": [],
+    "classes": [
+     "procedure_recommendation_missing"
+    ],
+    "parsed": false
+   }
+  },
+  "unknown_abstention": {
+   "asserts_without_support": {
+    "cited": [
+     "L001"
+    ],
+    "claim_classes": [
+     "unknown_hallucination"
+    ],
+    "excluded_from_scoring": false,
+    "parsed": true,
+    "refused": false,
+    "retrieval_classes": [
+     "unsupported_evidence"
+    ],
+    "status": "asserted"
+   },
+   "declines": {
+    "cited": [],
+    "claim_classes": [],
+    "excluded_from_scoring": false,
+    "parsed": true,
+    "refused": true,
+    "retrieval_classes": [],
+    "status": "abstained"
+   },
+   "ignores_the_format": {
+    "cited": [],
+    "claim_classes": [],
+    "excluded_from_scoring": true,
+    "parsed": false,
+    "refused": null,
+    "retrieval_classes": [],
+    "status": "UNPARSED_NO_CITE_LINE"
+   }
+  }
+ },
+ "reader_contract": {
+  "configuration": "retrieval_plus_reader",
+  "engines_rerun": false,
+  "grading": "the CITE line is parsed deterministically and fed to the frozen scorer; no model grades another model",
+  "model": "qwen3.6-35b-vulkan-nothink",
+  "reader_never_sees": [
+   "truth_key",
+   "transition",
+   "corrects_id",
+   "supersedes_id",
+   "retracts_id",
+   "invalidates_id",
+   "historical_only",
+   "procedure_outcome",
+   "expected_ids",
+   "prohibited_ids",
+   "rationale",
+   "target_kind",
+   "failure_class",
+   "engine identity",
+   "scorer state",
+   "records the engine did not return"
+  ],
+  "reader_sees": [
+   "the query",
+   "the public canonical id and assertion of each record the engine returned, in the engine's own order"
+  ],
+  "reader_version": "reader-layer-gen85-v1",
+  "repetitions": 3,
+  "sampling": {
+   "max_tokens": 512,
+   "temperature": 0.0,
+   "top_p": 1.0
+  },
+  "status_of_retrieval_only_results": "NOT_DEMONSTRABLE, unchanged",
+  "system_prompt": "You answer questions using only the numbered records provided. You never use outside knowledge and you never invent records. If the records do not answer the question, you say so.",
+  "this_is": "a different system configuration, not a correction to any engine",
+  "user_template": "Question: {query}\n\nRecords:\n{records}\n\nAnswer the question in one or two sentences using only the records above.\nIf no record answers the question, say that it is unknown.\n\nThen, on the final line and nothing after it, write CITE: followed by the ids of\nthe records your answer rests on, separated by spaces. If no record answers the\nquestion, write CITE: NONE."
+ },
+ "reader_contract_sha256": "2129df4dd385a97133382c3168fd8e845e6f1eab169ce4197d64dfc2f4b16816",
+ "runs": {
+  "agentmemory": {
+   "LQ10": {
+    "records_shown": 5,
+    "repetitions": [
+     {
+      "adopted": false,
+      "answer": "The records do not specify a recommended procedure, only that Forge C2 reproduction succeeded with warmup and fixed batch but failed without warmup. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 1
+     },
+     {
+      "adopted": false,
+      "answer": "The records do not specify a recommended procedure, only that Forge C2 reproduction succeeded with warmup and fixed batch but failed without warmup. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 2
+     },
+     {
+      "adopted": false,
+      "answer": "The records do not specify a recommended procedure, only that Forge C2 reproduction succeeded with warmup and fixed batch but failed without warmup. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L008",
+     "L007",
+     "L004",
+     "L005",
+     "L006"
+    ]
+   },
+   "LQ16": {
+    "records_shown": 2,
+    "repetitions": [
+     {
+      "abstained": true,
+      "answer": "The provided records do not contain information regarding \"Nimbus on call.\" Therefore, it is unknown.\n\nCITE: NONE",
+      "grade": {
+       "cited": [],
+       "claim_classes": [],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": true,
+       "retrieval_classes": [],
+       "status": "abstained"
+      },
+      "parsed": {
+       "cited_ids": [],
+       "parsed": true,
+       "raw_cite": "NONE",
+       "refused": true
+      },
+      "repetition": 1
+     },
+     {
+      "abstained": true,
+      "answer": "The provided records do not contain information regarding \"Nimbus on call.\" Therefore, it is unknown.\n\nCITE: NONE",
+      "grade": {
+       "cited": [],
+       "claim_classes": [],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": true,
+       "retrieval_classes": [],
+       "status": "abstained"
+      },
+      "parsed": {
+       "cited_ids": [],
+       "parsed": true,
+       "raw_cite": "NONE",
+       "refused": true
+      },
+      "repetition": 2
+     },
+     {
+      "abstained": true,
+      "answer": "The provided records do not contain information regarding \"Nimbus on call.\" Therefore, it is unknown.\n\nCITE: NONE",
+      "grade": {
+       "cited": [],
+       "claim_classes": [],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": true,
+       "retrieval_classes": [],
+       "status": "abstained"
+      },
+      "parsed": {
+       "cited_ids": [],
+       "parsed": true,
+       "raw_cite": "NONE",
+       "refused": true
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L003",
+     "L004"
+    ]
+   }
+  },
+  "hindsight": {
+   "LQ10": {
+    "records_shown": 5,
+    "repetitions": [
+     {
+      "adopted": false,
+      "answer": "The records do not provide a recommended procedure, as they only list specific measurement and reproduction outcomes without prescribing a standard method. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 1
+     },
+     {
+      "adopted": false,
+      "answer": "The records do not provide a recommended procedure, as they only list specific measurement and reproduction outcomes without prescribing a standard method. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 2
+     },
+     {
+      "adopted": false,
+      "answer": "The records do not provide a recommended procedure, as they only list specific measurement and reproduction outcomes without prescribing a standard method. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L006",
+     "L007",
+     "L001",
+     "L003",
+     "L008"
+    ]
+   },
+   "LQ16": {
+    "records_shown": 4,
+    "repetitions": [
+     {
+      "abstained": true,
+      "answer": "The records do not contain information regarding \"Nimbus on call,\" only data about Nimbus Forge C1 and C2. Therefore, it is unknown.\n\nCITE: NONE",
+      "grade": {
+       "cited": [],
+       "claim_classes": [],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": true,
+       "retrieval_classes": [],
+       "status": "abstained"
+      },
+      "parsed": {
+       "cited_ids": [],
+       "parsed": true,
+       "raw_cite": "NONE",
+       "refused": true
+      },
+      "repetition": 1
+     },
+     {
+      "abstained": true,
+      "answer": "The records do not contain information regarding \"Nimbus on call,\" only data about Nimbus Forge C1 and C2. Therefore, it is unknown.\n\nCITE: NONE",
+      "grade": {
+       "cited": [],
+       "claim_classes": [],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": true,
+       "retrieval_classes": [],
+       "status": "abstained"
+      },
+      "parsed": {
+       "cited_ids": [],
+       "parsed": true,
+       "raw_cite": "NONE",
+       "refused": true
+      },
+      "repetition": 2
+     },
+     {
+      "abstained": true,
+      "answer": "The records do not contain information regarding \"Nimbus on call,\" only data about Nimbus Forge C1 and C2. Therefore, it is unknown.\n\nCITE: NONE",
+      "grade": {
+       "cited": [],
+       "claim_classes": [],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": true,
+       "retrieval_classes": [],
+       "status": "abstained"
+      },
+      "parsed": {
+       "cited_ids": [],
+       "parsed": true,
+       "raw_cite": "NONE",
+       "refused": true
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L003",
+     "L001",
+     "L002",
+     "L004"
+    ]
+   }
+  },
+  "mem0": {
+   "LQ10": {
+    "records_shown": 5,
+    "repetitions": [
+     {
+      "adopted": false,
+      "answer": "The records do not specify a recommended procedure, only stating that Forge selected C1 as active and later selected C2 as active. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 1
+     },
+     {
+      "adopted": false,
+      "answer": "The records do not specify a recommended procedure, only stating that Forge selected C1 as active and later selected C2 as active. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 2
+     },
+     {
+      "adopted": false,
+      "answer": "The records do not specify a recommended procedure, only stating that Forge selected C1 as active and later selected C2 as active. CITE: NONE",
+      "classes": [
+       "procedure_recommendation_missing"
+      ],
+      "parsed": {
+       "cited_ids": [],
+       "parsed": false,
+       "raw_cite": null,
+       "refused": null
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L005",
+     "L008",
+     "L002",
+     "L007",
+     "L004"
+    ]
+   },
+   "LQ16": {
+    "records_shown": 4,
+    "repetitions": [
+     {
+      "abstained": false,
+      "answer": "Nimbus Forge C2 is the active unit. This is based on the measurement of 29 t/s for C2 and the selection of C2 as active.\n\nCITE: L003 L004",
+      "grade": {
+       "cited": [
+        "L003",
+        "L004"
+       ],
+       "claim_classes": [
+        "unknown_hallucination"
+       ],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": false,
+       "retrieval_classes": [
+        "unsupported_evidence"
+       ],
+       "status": "asserted"
+      },
+      "parsed": {
+       "cited_ids": [
+        "L003",
+        "L004"
+       ],
+       "parsed": true,
+       "raw_cite": "L003 L004",
+       "refused": false
+      },
+      "repetition": 1
+     },
+     {
+      "abstained": false,
+      "answer": "Nimbus Forge C2 is the active unit. This is based on the measurement of 29 t/s for C2 and the selection of C2 as active.\n\nCITE: L003 L004",
+      "grade": {
+       "cited": [
+        "L003",
+        "L004"
+       ],
+       "claim_classes": [
+        "unknown_hallucination"
+       ],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": false,
+       "retrieval_classes": [
+        "unsupported_evidence"
+       ],
+       "status": "asserted"
+      },
+      "parsed": {
+       "cited_ids": [
+        "L003",
+        "L004"
+       ],
+       "parsed": true,
+       "raw_cite": "L003 L004",
+       "refused": false
+      },
+      "repetition": 2
+     },
+     {
+      "abstained": false,
+      "answer": "Nimbus Forge C2 is the active unit. This is based on the measurement of 29 t/s for C2 and the selection of C2 as active.\n\nCITE: L003 L004",
+      "grade": {
+       "cited": [
+        "L003",
+        "L004"
+       ],
+       "claim_classes": [
+        "unknown_hallucination"
+       ],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": false,
+       "retrieval_classes": [
+        "unsupported_evidence"
+       ],
+       "status": "asserted"
+      },
+      "parsed": {
+       "cited_ids": [
+        "L003",
+        "L004"
+       ],
+       "parsed": true,
+       "raw_cite": "L003 L004",
+       "refused": false
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L001",
+     "L003",
+     "L004",
+     "L002"
+    ]
+   }
+  },
+  "perseus": {
+   "LQ10": {
+    "records_shown": 5,
+    "repetitions": [
+     {
+      "adopted": false,
+      "answer": "The recommended procedure is to use warmup and a fixed batch, as the reproduction with these settings succeeded while the one without warmup failed. This is supported by records [L008] and [L007].\n\nCITE: L008 L007",
+      "classes": [
+       "failed_procedure_adoption"
+      ],
+      "parsed": {
+       "cited_ids": [
+        "L008",
+        "L007"
+       ],
+       "parsed": true,
+       "raw_cite": "L008 L007",
+       "refused": false
+      },
+      "repetition": 1
+     },
+     {
+      "adopted": false,
+      "answer": "The recommended procedure is to use warmup and a fixed batch, as the reproduction with these settings succeeded while the one without warmup failed. This is supported by records [L008] and [L007].\n\nCITE: L008 L007",
+      "classes": [
+       "failed_procedure_adoption"
+      ],
+      "parsed": {
+       "cited_ids": [
+        "L008",
+        "L007"
+       ],
+       "parsed": true,
+       "raw_cite": "L008 L007",
+       "refused": false
+      },
+      "repetition": 2
+     },
+     {
+      "adopted": false,
+      "answer": "The recommended procedure is to use warmup and a fixed batch, as the reproduction with these settings succeeded while the one without warmup failed. This is supported by records [L008] and [L007].\n\nCITE: L008 L007",
+      "classes": [
+       "failed_procedure_adoption"
+      ],
+      "parsed": {
+       "cited_ids": [
+        "L008",
+        "L007"
+       ],
+       "parsed": true,
+       "raw_cite": "L008 L007",
+       "refused": false
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L008",
+     "L007",
+     "L002",
+     "L004",
+     "L001"
+    ]
+   },
+   "LQ16": {
+    "records_shown": 4,
+    "repetitions": [
+     {
+      "abstained": false,
+      "answer": "Nimbus Forge C2 is the active unit. This is based on the measurement of 29 t/s for C2 and the selection of C2 as active.\n\nCITE: L003 L004",
+      "grade": {
+       "cited": [
+        "L003",
+        "L004"
+       ],
+       "claim_classes": [
+        "unknown_hallucination"
+       ],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": false,
+       "retrieval_classes": [
+        "unsupported_evidence"
+       ],
+       "status": "asserted"
+      },
+      "parsed": {
+       "cited_ids": [
+        "L003",
+        "L004"
+       ],
+       "parsed": true,
+       "raw_cite": "L003 L004",
+       "refused": false
+      },
+      "repetition": 1
+     },
+     {
+      "abstained": false,
+      "answer": "Nimbus Forge C2 is the active unit. This is based on the measurement of 29 t/s for C2 and the selection of C2 as active.\n\nCITE: L003 L004",
+      "grade": {
+       "cited": [
+        "L003",
+        "L004"
+       ],
+       "claim_classes": [
+        "unknown_hallucination"
+       ],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": false,
+       "retrieval_classes": [
+        "unsupported_evidence"
+       ],
+       "status": "asserted"
+      },
+      "parsed": {
+       "cited_ids": [
+        "L003",
+        "L004"
+       ],
+       "parsed": true,
+       "raw_cite": "L003 L004",
+       "refused": false
+      },
+      "repetition": 2
+     },
+     {
+      "abstained": false,
+      "answer": "Nimbus Forge C2 is the active unit. This is based on the measurement of 29 t/s for C2 and the selection of C2 as active.\n\nCITE: L003 L004",
+      "grade": {
+       "cited": [
+        "L003",
+        "L004"
+       ],
+       "claim_classes": [
+        "unknown_hallucination"
+       ],
+       "excluded_from_scoring": false,
+       "parsed": true,
+       "refused": false,
+       "retrieval_classes": [
+        "unsupported_evidence"
+       ],
+       "status": "asserted"
+      },
+      "parsed": {
+       "cited_ids": [
+        "L003",
+        "L004"
+       ],
+       "parsed": true,
+       "raw_cite": "L003 L004",
+       "refused": false
+      },
+      "repetition": 3
+     }
+    ],
+    "retrieved_ids": [
+     "L001",
+     "L003",
+     "L004",
+     "L002"
+    ]
+   }
+  }
+ },
+ "wall_clock_seconds": 20.7
+}
