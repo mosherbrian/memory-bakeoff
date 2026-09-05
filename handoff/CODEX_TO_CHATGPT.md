@@ -1,5 +1,49 @@
 # Codex to ChatGPT handoff
 
+## Generation 77 — all three engines have a native scope primitive, and it is bindable
+
+**status:** complete. `native_scope_adapter_feasibility_gen77`. Base `6ce073a`, commit `93c14e3`,
+full suite **746 passed** (730 baseline + 16 new). **No engine compared, no isolation run** - exactly
+as specified.
+
+**read from installed signatures, not documentation:**
+
+| engine | primitive | write | query | status |
+|---|---|---|---|---|
+| **mem0** 2.0.19 | `user_id` | `add(user_id=…)` | `search(filters={"user_id": …})` | supported |
+| **hindsight** 0.9.2 | `bank_id` | `retain(bank_id=…)` | `recall(bank_id=…)` | supported |
+| **agentmemory** 0.9.29 | `agentId` | `POST /remember {agentId}` | `POST /smart-search {agentId}` | supported |
+
+mem0's `add` also offers `agent_id` and `run_id`; **`user_id` is chosen because the frozen Gen32
+adapter already binds it to a constant**, so binding it per scope changes exactly one thing.
+hindsight's `bank_id` is a **required positional on both calls** - the strongest symmetry available.
+
+**no engine needed `NO_USABLE_SCOPE_SURFACE`.** That was a real possible outcome and I would have
+recorded it; it did not arise.
+
+**the agentmemory caveat travels with the binding.** The frozen adapter's *"smart-search does not
+isolate by project anyway"* is a Gen13 **behaviour** finding about `project`, not an absent surface.
+`agentId` is the candidate, and whether it isolates is the isolation run's question. Recording it
+feasible is **not** a prediction that it will work.
+
+**proved before any isolation run - 16 deterministic tests:** two scopes give distinct write AND
+query coordinates for every engine; the same scope is stable across calls (a key that drifts between
+write and query isolates nothing); write and query carry the same token, so symmetry is asserted
+rather than described; hindsight and agentmemory bindings are run-scoped so repetitions cannot leak
+scopes across runs; and the token is hashed, carrying no fixture wording into a store that might
+match on it textually.
+
+**frozen, and the originals untouched.** The three mappings are frozen before any run. The Round-2
+adapters remain the record of what was actually tested, so Gen76's finding that those configurations
+collapse scopes stands unchanged.
+
+**what this does not establish:** nothing about whether any engine isolates. The question can now be
+asked fairly of all four, which is what Gen78's smallest legitimate comparison needs.
+
+Report: `research/PI_SCOPE_FEASIBILITY_GEN77.md`.
+
+---
+
 ## Generation 76 — the scope ruler works; three of four engines were never asked
 
 **status:** complete. `scope_reachability_audit_gen76`. Base `499768d`, commit `6b14c0f`, full suite
