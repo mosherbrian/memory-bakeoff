@@ -1,0 +1,47 @@
+{
+  "contract_sha256": "b66a921183f5dda71cef12bad542890be450f854ef0b125f5f2d6f6e238ec736",
+  "contract_version": "artifact-coverage-diagnostics-v1",
+  "diagnostics": {
+    "change-reversion-sensitivity-v1": {
+      "binary_signal": "any applicable production hunk reversion survives",
+      "explicitly_not": [
+        "proof the hunk is required by the task",
+        "semantic sufficiency when every reversion is killed"
+      ],
+      "killed_reversion": "the broad visible check fails, so the suite notices the loss",
+      "method": "reverse exactly one production diff hunk toward the shipped initial tree in an isolated copy, rerun the frozen broad visible command, restore",
+      "no_operator_zoo": "probes are grounded in the run's own diff, not synthetic mutation operators, so there is no operator selection or equivalent-mutant tuning problem",
+      "question": "can one hunk of the change be undone with the visible suite still passing?",
+      "survived_reversion": "the broad visible check passes, so the suite does not establish the hunk was needed"
+    },
+    "changed-line-execution-v1": {
+      "binary_signal": "any changed executable line not hit",
+      "changed_executable_lines": "AST statement/expression lines intersected with added or modified diff lines; comments and blank lines never count",
+      "explicitly_not": [
+        "assertion coverage",
+        "proof of correctness",
+        "evidence the behaviour was checked"
+      ],
+      "method": "sys.settrace line events in a child process running the frozen command",
+      "question": "did the frozen broad visible test execute the changed production lines?",
+      "unsupported_categories": [
+        "deleted_only",
+        "non_python",
+        "no_production_change"
+      ]
+    }
+  },
+  "frozen_screening_thresholds": {
+    "flags_at_least": "50% of the known coverage-gap runs",
+    "flags_at_most": "25% of reconstructable hidden-correct runs",
+    "note": "screening only; not statistical power, and not permission to gate completion"
+  },
+  "hidden_verifier_is_never_an_input": true,
+  "production_paths": "tracked source outside tests/, VCS metadata and build artifacts",
+  "requirement_traceability": {
+    "instantiated": false,
+    "status": "structurally unavailable from current visible metadata, not a negative result",
+    "why": "the IP fixtures carry prose requirements but no machine-readable requirement IDs or author-supplied requirement-to-test mapping; inferring one would need a model or heuristic semantics, which this generation excludes"
+  },
+  "tests_are_not_production_targets_but_test_changes_are_recorded": true
+}

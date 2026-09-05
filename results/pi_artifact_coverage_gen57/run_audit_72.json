@@ -1,0 +1,4437 @@
+{
+  "contract": {
+    "contract_sha256": "b66a921183f5dda71cef12bad542890be450f854ef0b125f5f2d6f6e238ec736",
+    "contract_version": "artifact-coverage-diagnostics-v1",
+    "diagnostics": {
+      "change-reversion-sensitivity-v1": {
+        "binary_signal": "any applicable production hunk reversion survives",
+        "explicitly_not": [
+          "proof the hunk is required by the task",
+          "semantic sufficiency when every reversion is killed"
+        ],
+        "killed_reversion": "the broad visible check fails, so the suite notices the loss",
+        "method": "reverse exactly one production diff hunk toward the shipped initial tree in an isolated copy, rerun the frozen broad visible command, restore",
+        "no_operator_zoo": "probes are grounded in the run's own diff, not synthetic mutation operators, so there is no operator selection or equivalent-mutant tuning problem",
+        "question": "can one hunk of the change be undone with the visible suite still passing?",
+        "survived_reversion": "the broad visible check passes, so the suite does not establish the hunk was needed"
+      },
+      "changed-line-execution-v1": {
+        "binary_signal": "any changed executable line not hit",
+        "changed_executable_lines": "AST statement/expression lines intersected with added or modified diff lines; comments and blank lines never count",
+        "explicitly_not": [
+          "assertion coverage",
+          "proof of correctness",
+          "evidence the behaviour was checked"
+        ],
+        "method": "sys.settrace line events in a child process running the frozen command",
+        "question": "did the frozen broad visible test execute the changed production lines?",
+        "unsupported_categories": [
+          "deleted_only",
+          "non_python",
+          "no_production_change"
+        ]
+      }
+    },
+    "frozen_screening_thresholds": {
+      "flags_at_least": "50% of the known coverage-gap runs",
+      "flags_at_most": "25% of reconstructable hidden-correct runs",
+      "note": "screening only; not statistical power, and not permission to gate completion"
+    },
+    "hidden_verifier_is_never_an_input": true,
+    "production_paths": "tracked source outside tests/, VCS metadata and build artifacts",
+    "requirement_traceability": {
+      "instantiated": false,
+      "status": "structurally unavailable from current visible metadata, not a negative result",
+      "why": "the IP fixtures carry prose requirements but no machine-readable requirement IDs or author-supplied requirement-to-test mapping; inferring one would need a model or heuristic semantics, which this generation excludes"
+    },
+    "tests_are_not_production_targets_but_test_changes_are_recorded": true
+  },
+  "cost": {
+    "total_reversion_probes": 133,
+    "total_reversion_seconds": 29.65,
+    "total_trace_seconds": 18.27
+  },
+  "crosstabs": {
+    "change_reversion_sensitivity": {
+      "clean_hidden_correct": 13,
+      "clean_hidden_wrong": 1,
+      "flagged_hidden_correct": 43,
+      "flagged_hidden_wrong": 8,
+      "not_applicable": 7
+    },
+    "changed_line_execution": {
+      "clean_hidden_correct": 21,
+      "clean_hidden_wrong": 1,
+      "flagged_hidden_correct": 35,
+      "flagged_hidden_wrong": 8,
+      "not_applicable": 7
+    }
+  },
+  "evidence_class": "architecture_visible_artifact_coverage_diagnostics_offline_no_score",
+  "reconstruction": {
+    "of_runs": 72,
+    "reconstructable": 70,
+    "unknown": [
+      "12-IP1-r1-pi_harness_state_control_v1",
+      "20-IP1-r3-pi_harness_state_control_v1"
+    ]
+  },
+  "runs": [
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 1,
+        "seconds": 0.44,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 5,
+        "changed_line_total": 6,
+        "hit_fraction": 0.833,
+        "missed_lines": [
+          "sluice/units.py:13"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "01-IP1-r2-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.65,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 3,
+        "changed_line_total": 10,
+        "hit_fraction": 0.3,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:4",
+          "sluice/telemetry.py:7",
+          "sluice/telemetry.py:8",
+          "sluice/telemetry.py:11",
+          "sluice/telemetry.py:12"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "02-IP1-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.66,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "03-IP2-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.66,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "04-IP2-r3-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.23,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "05-IP4-r1-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.22,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "06-IP4-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.67,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 3,
+        "changed_line_total": 7,
+        "hit_fraction": 0.429,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:5",
+          "sluice/telemetry.py:6"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "07-IP1-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.24,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 3,
+        "changed_line_total": 3,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "08-IP1-r1-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.66,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "09-IP2-r2-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.67,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "10-IP2-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.45,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 0,
+        "changed_line_total": 5,
+        "hit_fraction": 0.0,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:4",
+          "sluice/telemetry.py:7",
+          "sluice/telemetry.py:8"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 1,
+        "seconds": 0.45,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 5,
+        "changed_line_total": 6,
+        "hit_fraction": 0.833,
+        "missed_lines": [
+          "sluice/units.py:12"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "12-IP1-r3-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 9,
+        "hit_fraction": 0.778,
+        "missed_lines": [
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "13-IP3-r2-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 9,
+        "hit_fraction": 0.778,
+        "missed_lines": [
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "14-IP3-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "15-IP3-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.43,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "16-IP3-r3-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.22,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 5,
+        "changed_line_total": 6,
+        "hit_fraction": 0.833,
+        "missed_lines": [
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "17-IP4-r2-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.22,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "18-IP4-r2-pi_harness_state_control_task_floor_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 1,
+            "outcome": "killed_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 2,
+        "seconds": 0.45,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 11,
+        "changed_line_total": 11,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "19-IP3-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "20-IP3-r1-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.22,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.23,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_task_floor_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_task_floor_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.66,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "23-IP2-r1-pi_harness_state_control_task_floor_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.46,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 49,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "24-IP2-r1-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.66,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "01-IP2-r2-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.66,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "02-IP2-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "03-IP3-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "04-IP3-r2-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 9,
+        "hit_fraction": 0.778,
+        "missed_lines": [
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "05-IP3-r1-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 0,
+        "details": [],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 0,
+        "killed": 0,
+        "seconds": 0.01,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "category": "no_production_change",
+        "changed_line_total": 0,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "06-IP3-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.68,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "07-IP2-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.69,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "08-IP2-r3-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.23,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "09-IP4-r1-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.22,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "10-IP4-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 0,
+        "details": [],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 0,
+        "killed": 0,
+        "seconds": 0.01,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "category": "no_production_change",
+        "changed_line_total": 0,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "11-IP1-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.69,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 3,
+        "changed_line_total": 8,
+        "hit_fraction": 0.375,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:4",
+          "sluice/telemetry.py:7",
+          "sluice/telemetry.py:8"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "reconstruction_or_instrumentation_unknown",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "12-IP1-r1-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.68,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "13-IP2-r1-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.66,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "14-IP2-r1-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.23,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "15-IP4-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.24,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "16-IP4-r2-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.46,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "17-IP3-r3-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "18-IP3-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 1,
+        "seconds": 0.43,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 5,
+        "changed_line_total": 6,
+        "hit_fraction": 0.833,
+        "missed_lines": [
+          "sluice/units.py:12"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "19-IP1-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 0,
+        "changed_line_total": 5,
+        "hit_fraction": 0.0,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:6",
+          "sluice/telemetry.py:9",
+          "sluice/telemetry.py:10"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "reconstruction_or_instrumentation_unknown",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "20-IP1-r3-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.26,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.22,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.65,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 8,
+        "hit_fraction": 0.5,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:5",
+          "sluice/telemetry.py:6"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 52,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 1,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.68,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 7,
+        "hit_fraction": 0.857,
+        "missed_lines": [
+          "sluice/units.py:14"
+        ],
+        "trace_seconds": 0.3,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 52,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "24-IP1-r2-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.67,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "01-IP2-r2-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.43,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "02-IP2-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 10,
+        "hit_fraction": 0.7,
+        "missed_lines": [
+          "tally/counter.py:9",
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "03-IP3-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 1,
+            "outcome": "killed_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 2,
+        "seconds": 0.45,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 9,
+        "changed_line_total": 9,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "04-IP3-r2-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.45,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 9,
+        "hit_fraction": 0.778,
+        "missed_lines": [
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "05-IP3-r1-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/counter.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "tally/report.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 9,
+        "hit_fraction": 0.778,
+        "missed_lines": [
+          "tally/report.py:4",
+          "tally/report.py:5"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "tally/counter.py",
+        "tally/report.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "06-IP3-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 2,
+            "outcome": "killed_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 1,
+        "seconds": 0.66,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 8,
+        "changed_line_total": 8,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "07-IP2-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.65,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "08-IP2-r3-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.22,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "09-IP4-r1-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 0,
+        "seconds": 0.22,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 6,
+        "hit_fraction": 0.667,
+        "missed_lines": [
+          "lockgate/valve.py:8",
+          "lockgate/valve.py:11"
+        ],
+        "trace_seconds": 0.27,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "10-IP4-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 1,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.66,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 7,
+        "hit_fraction": 0.857,
+        "missed_lines": [
+          "sluice/units.py:12"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "11-IP1-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "category": "reconstruction_unknown"
+      },
+      "changed_line_execution": {
+        "category": "reconstruction_unknown"
+      },
+      "changed_production_paths": [
+        "sluice/gauge.py",
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": null,
+      "gen56_class": "reconstruction_or_instrumentation_unknown",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": false,
+      "repetition": 1,
+      "run": "12-IP1-r1-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 0,
+        "seconds": 0.65,
+        "survived": 3,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "13-IP2-r1-pi_harness_state_control_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "ferry/schedule.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 7,
+        "changed_line_total": 8,
+        "hit_fraction": 0.875,
+        "missed_lines": [
+          "ferry/schedule.py:10"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "ferry/schedule.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 1,
+      "run": "14-IP2-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP2",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.24,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.3,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "15-IP4-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.23,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "16-IP4-r2-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 0,
+        "details": [],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 0,
+        "killed": 0,
+        "seconds": 0.01,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "category": "no_production_change",
+        "changed_line_total": 0,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "17-IP3-r3-pi_harness_state_control_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 0,
+        "details": [],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 0,
+        "killed": 0,
+        "seconds": 0.01,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "category": "no_production_change",
+        "changed_line_total": 0,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "18-IP3-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP3",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 0,
+        "details": [],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 0,
+        "killed": 0,
+        "seconds": 0.01,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "category": "no_production_change",
+        "changed_line_total": 0,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "19-IP1-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "category": "reconstruction_unknown"
+      },
+      "changed_line_execution": {
+        "category": "reconstruction_unknown"
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": null,
+      "gen56_class": "reconstruction_or_instrumentation_unknown",
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": false,
+      "repetition": 3,
+      "run": "20-IP1-r3-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.23,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.29,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "project_wide_visible",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "21-IP4-r3-pi_harness_state_control_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": false,
+        "applicable": 1,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "lockgate/valve.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 1,
+        "killed": 1,
+        "seconds": 0.22,
+        "survived": 0,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": true,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 6,
+        "hit_fraction": 1.0,
+        "missed_lines": [],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "lockgate/valve.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": null,
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": true,
+      "reconstructable": true,
+      "repetition": 3,
+      "run": "22-IP4-r3-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP4",
+      "tests_changed_since_initial": true
+    },
+    {
+      "arm": "pi_harness_state_control_quiescent_tracked_k3_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 3,
+        "details": [
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": "collection_or_syntax",
+            "hunk": 1,
+            "outcome": "killed_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 2,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 3,
+        "killed": 2,
+        "seconds": 0.67,
+        "survived": 1,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 6,
+        "changed_line_total": 7,
+        "hit_fraction": 0.857,
+        "missed_lines": [
+          "sluice/units.py:12"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "23-IP1-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    },
+    {
+      "arm": "pi_harness_state_control_v1",
+      "change_reversion_sensitivity": {
+        "any_survived_reversion": true,
+        "applicable": 2,
+        "details": [
+          {
+            "failure_kind": null,
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/telemetry.py"
+            ]
+          },
+          {
+            "failure_kind": null,
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "sluice/units.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks_total": 2,
+        "killed": 0,
+        "seconds": 0.44,
+        "survived": 2,
+        "unknown": 0
+      },
+      "changed_line_execution": {
+        "all_changed_executable_lines_hit": false,
+        "category": "measured",
+        "changed_line_hit_count": 4,
+        "changed_line_total": 9,
+        "hit_fraction": 0.444,
+        "missed_lines": [
+          "sluice/telemetry.py:1",
+          "sluice/telemetry.py:2",
+          "sluice/telemetry.py:5",
+          "sluice/telemetry.py:6",
+          "sluice/telemetry.py:9"
+        ],
+        "trace_seconds": 0.28,
+        "traced_broad_passes": true,
+        "unsupported": [
+          {
+            "path": "README.md",
+            "why": "non_python"
+          }
+        ]
+      },
+      "changed_production_paths": [
+        "sluice/telemetry.py",
+        "sluice/units.py"
+      ],
+      "final_tracked_digest": "",
+      "gen56_class": "visible_artifact_coverage_gap",
+      "gen56_receipt_scope": "explicit_subset",
+      "generation": 55,
+      "hidden_verifier_passed": false,
+      "reconstructable": true,
+      "repetition": 2,
+      "run": "24-IP1-r2-pi_harness_state_control_v1",
+      "task": "IP1",
+      "tests_changed_since_initial": false
+    }
+  ],
+  "screening": {
+    "change_reversion_sensitivity": {
+      "coverage_gap_applicable": 10,
+      "coverage_gap_flagged": 9,
+      "coverage_gap_rate": 0.9,
+      "diagnostic": "change-reversion-sensitivity-v1",
+      "flagged_gap_runs": [
+        "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+        "03-IP3-r2-pi_harness_state_control_quiescent_k3_v1",
+        "17-IP3-r3-pi_harness_state_control_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1",
+        "24-IP1-r2-pi_harness_state_control_v1",
+        "06-IP3-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "11-IP1-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "24-IP1-r2-pi_harness_state_control_v1"
+      ],
+      "hidden_correct_applicable": 56,
+      "hidden_correct_flagged": 43,
+      "hidden_correct_rate": 0.768,
+      "meets_frozen_screen": false
+    },
+    "changed_line_execution": {
+      "coverage_gap_applicable": 10,
+      "coverage_gap_flagged": 9,
+      "coverage_gap_rate": 0.9,
+      "diagnostic": "changed-line-execution-v1",
+      "flagged_gap_runs": [
+        "11-IP1-r3-pi_harness_state_control_task_floor_v1",
+        "03-IP3-r2-pi_harness_state_control_quiescent_k3_v1",
+        "17-IP3-r3-pi_harness_state_control_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_k3_v1",
+        "24-IP1-r2-pi_harness_state_control_v1",
+        "06-IP3-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "11-IP1-r1-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "23-IP1-r2-pi_harness_state_control_quiescent_tracked_k3_v1",
+        "24-IP1-r2-pi_harness_state_control_v1"
+      ],
+      "hidden_correct_applicable": 56,
+      "hidden_correct_flagged": 35,
+      "hidden_correct_rate": 0.625,
+      "meets_frozen_screen": false
+    }
+  }
+}

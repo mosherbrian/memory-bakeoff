@@ -1,0 +1,276 @@
+{
+  "checks": {
+    "1_changed_line_never_executed_reports_uncovered": true,
+    "2_executed_but_unasserted_hits_line_and_survives_reversion": true,
+    "3_executed_and_asserted_hits_line_and_kills_reversion": true,
+    "4_two_hunks_one_constrained_are_distinguished": true,
+    "5_new_production_file_used_is_killed_by_deletion_probe": true,
+    "6_new_production_file_unused_survives_deletion_probe": true,
+    "7_test_only_change_reports_no_production_change": true,
+    "8_probe_isolation_restores_the_final_tree": true,
+    "9_hidden_verifier_absent_from_diagnostic_logic": true
+  },
+  "contract": {
+    "contract_sha256": "b66a921183f5dda71cef12bad542890be450f854ef0b125f5f2d6f6e238ec736",
+    "contract_version": "artifact-coverage-diagnostics-v1",
+    "diagnostics": {
+      "change-reversion-sensitivity-v1": {
+        "binary_signal": "any applicable production hunk reversion survives",
+        "explicitly_not": [
+          "proof the hunk is required by the task",
+          "semantic sufficiency when every reversion is killed"
+        ],
+        "killed_reversion": "the broad visible check fails, so the suite notices the loss",
+        "method": "reverse exactly one production diff hunk toward the shipped initial tree in an isolated copy, rerun the frozen broad visible command, restore",
+        "no_operator_zoo": "probes are grounded in the run's own diff, not synthetic mutation operators, so there is no operator selection or equivalent-mutant tuning problem",
+        "question": "can one hunk of the change be undone with the visible suite still passing?",
+        "survived_reversion": "the broad visible check passes, so the suite does not establish the hunk was needed"
+      },
+      "changed-line-execution-v1": {
+        "binary_signal": "any changed executable line not hit",
+        "changed_executable_lines": "AST statement/expression lines intersected with added or modified diff lines; comments and blank lines never count",
+        "explicitly_not": [
+          "assertion coverage",
+          "proof of correctness",
+          "evidence the behaviour was checked"
+        ],
+        "method": "sys.settrace line events in a child process running the frozen command",
+        "question": "did the frozen broad visible test execute the changed production lines?",
+        "unsupported_categories": [
+          "deleted_only",
+          "non_python",
+          "no_production_change"
+        ]
+      }
+    },
+    "frozen_screening_thresholds": {
+      "flags_at_least": "50% of the known coverage-gap runs",
+      "flags_at_most": "25% of reconstructable hidden-correct runs",
+      "note": "screening only; not statistical power, and not permission to gate completion"
+    },
+    "hidden_verifier_is_never_an_input": true,
+    "production_paths": "tracked source outside tests/, VCS metadata and build artifacts",
+    "requirement_traceability": {
+      "instantiated": false,
+      "status": "structurally unavailable from current visible metadata, not a negative result",
+      "why": "the IP fixtures carry prose requirements but no machine-readable requirement IDs or author-supplied requirement-to-test mapping; inferring one would need a model or heuristic semantics, which this generation excludes"
+    },
+    "tests_are_not_production_targets_but_test_changes_are_recorded": true
+  },
+  "fixtures": {
+    "changed_line_never_executed": {
+      "line": {
+        "all_changed_executable_lines_hit": false,
+        "broad_passes": true,
+        "category": "measured",
+        "changed_line_hit_count": 2,
+        "changed_line_total": 3,
+        "hit_fraction": 0.667,
+        "missed": [
+          "pkg/core.py:5"
+        ],
+        "seconds": 0.28
+      },
+      "reversion": {
+        "any_survived_reversion": true,
+        "details": [
+          {
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "pkg/core.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 1,
+        "killed": 0,
+        "survived": 1,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": false
+    },
+    "executed_and_asserted": {
+      "line": {
+        "all_changed_executable_lines_hit": true,
+        "broad_passes": true,
+        "category": "measured",
+        "changed_line_hit_count": 2,
+        "changed_line_total": 2,
+        "hit_fraction": 1.0,
+        "missed": [],
+        "seconds": 0.27
+      },
+      "reversion": {
+        "any_survived_reversion": false,
+        "details": [
+          {
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "pkg/core.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 1,
+        "killed": 1,
+        "survived": 0,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": false
+    },
+    "executed_but_never_asserted": {
+      "line": {
+        "all_changed_executable_lines_hit": true,
+        "broad_passes": true,
+        "category": "measured",
+        "changed_line_hit_count": 2,
+        "changed_line_total": 2,
+        "hit_fraction": 1.0,
+        "missed": [],
+        "seconds": 0.28
+      },
+      "reversion": {
+        "any_survived_reversion": true,
+        "details": [
+          {
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "pkg/core.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 1,
+        "killed": 0,
+        "survived": 1,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": false
+    },
+    "new_production_file_unused": {
+      "line": {
+        "all_changed_executable_lines_hit": false,
+        "broad_passes": true,
+        "category": "measured",
+        "changed_line_hit_count": 0,
+        "changed_line_total": 2,
+        "hit_fraction": 0.0,
+        "missed": [
+          "pkg/orphan.py:1",
+          "pkg/orphan.py:2"
+        ],
+        "seconds": 0.29
+      },
+      "reversion": {
+        "any_survived_reversion": true,
+        "details": [
+          {
+            "hunk": 0,
+            "outcome": "survived_reversion",
+            "paths": [
+              "pkg/orphan.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 1,
+        "killed": 0,
+        "survived": 1,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": false
+    },
+    "new_production_file_used": {
+      "line": {
+        "all_changed_executable_lines_hit": true,
+        "broad_passes": true,
+        "category": "measured",
+        "changed_line_hit_count": 2,
+        "changed_line_total": 2,
+        "hit_fraction": 1.0,
+        "missed": [],
+        "seconds": 0.27
+      },
+      "reversion": {
+        "any_survived_reversion": false,
+        "details": [
+          {
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "pkg/extra.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 1,
+        "killed": 1,
+        "survived": 0,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": false
+    },
+    "test_only_change": {
+      "line": {
+        "broad_passes": true,
+        "category": "no_production_change",
+        "changed_line_total": 0,
+        "seconds": 0.29
+      },
+      "reversion": {
+        "any_survived_reversion": false,
+        "details": [],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 0,
+        "killed": 0,
+        "survived": 0,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": true
+    },
+    "two_hunks_one_constrained": {
+      "line": {
+        "all_changed_executable_lines_hit": false,
+        "broad_passes": true,
+        "category": "measured",
+        "changed_line_hit_count": 3,
+        "changed_line_total": 4,
+        "hit_fraction": 0.75,
+        "missed": [
+          "pkg/core.py:6"
+        ],
+        "seconds": 0.27
+      },
+      "reversion": {
+        "any_survived_reversion": true,
+        "details": [
+          {
+            "hunk": 0,
+            "outcome": "killed_reversion",
+            "paths": [
+              "pkg/core.py"
+            ]
+          },
+          {
+            "hunk": 1,
+            "outcome": "survived_reversion",
+            "paths": [
+              "pkg/core.py"
+            ]
+          }
+        ],
+        "final_digest_unchanged_after_probes": true,
+        "hunks": 2,
+        "killed": 1,
+        "survived": 1,
+        "unknown": 0
+      },
+      "tests_changed_since_initial": false
+    }
+  },
+  "no_network": true,
+  "passed": true
+}

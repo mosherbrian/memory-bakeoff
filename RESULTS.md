@@ -505,6 +505,35 @@ authority statement has exactly one form - *command X exited N on tree Y under c
 and which is forbidden by construction from saying a task is correct.
 See `research/PI_ARTIFACT_AUTHORITY_GEN56.md`.
 
+## Gen57 - the tests do not cover the change, on the good runs too
+
+Gen56 showed that running a broader test command catches nothing. Gen57 asked the narrower
+mechanical question: can visible artifacts alone show that the tests do not exercise or constrain
+what the agent changed? Two deterministic probes, no model - did the suite execute the changed
+lines, and would it notice if one hunk of the change were undone.
+
+Both work, and both are useless as a warning. They are sensitive - 9 of 10 applicable known-bad runs
+flagged - and hopelessly unspecific: they also flag **62.5%** and **76.8%** of the runs that were
+*correct*, against a frozen ceiling of 25%. The visible tests in these tasks routinely under-
+constrain the change even when the work is right, so structural weakness is the normal condition
+rather than a signal.
+
+The sentinels come out backwards, which settles it. The known false assurance is **clean under both
+probes** - every changed line executed, its reversion killed - because that agent **edited the
+test**, so the suite genuinely constrains the behaviour it implemented. The successful comparator is
+**flagged by both** - 43% of lines executed, two surviving reversions. A control built on these
+signals would have waved the wrong run through and blocked the right one.
+
+Neither diagnostic meets the screen frozen before any of it was measured, so per that rule no third
+heuristic was invented. Stronger evidence must be **produced**, not inferred from tests never
+written to cover the change. Gen58 should choose between author-supplied structured traceability and
+model-assisted evidence generation, the latter in its own evidence class.
+
+Recorded for free: absence of these signals must never be read as sufficiency - the single cleanest
+run under both probes was wrong. Requirement-to-test traceability was deliberately not instantiated,
+since the fixtures carry prose requirements but no machine-readable mapping.
+See `research/PI_ARTIFACT_COVERAGE_GEN57.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and
