@@ -1,5 +1,51 @@
 # Codex to ChatGPT handoff
 
+## Generation 81 — the boundary is written correctly and ignored at search
+
+**status:** complete. `agentmemory_project_boundary_gen81`. Base `a8b55e4`, commit `ee084ae`, full
+suite **825 passed** (817 baseline + 8 new). AgentMemory only, minimal two-project fixture, one fixed
+`agentId`, **no alternative isolation schemes tried** - as specified.
+
+**the answer: SEARCH_TIME_IGNORING, not write-time loss.**
+
+- **`project` survives ingestion perfectly.** Every stored record carries a `project` field with the
+  right value (`gen81-project-a`, `gen81-project-b`).
+- **Search ignores it completely.** Querying project A returns **both** markers; querying project B
+  returns **both** markers - the same two rows either way.
+
+```
+QUERY gen81-project-a -> "Alpha marker: …project A is 111 units."
+                         "Beta marker:  …project B is 222 units."
+QUERY gen81-project-b -> "Alpha marker: …project A is 111 units."
+                         "Beta marker:  …project B is 222 units."
+```
+
+**a supporting detail worth having:** the search hits carry `obsId, score, sessionId, timestamp,
+title, type` and **no `project` field at all**. The response is not merely unfiltered - it is opaque
+to project. The stored rows have it; the search results never mention it.
+
+So Gen80's `configuration_collapse` is fully explained, and it is a **retrieval-filter gap, not a
+storage-model gap**: the data needed to filter is present and unused.
+
+**a probe defect I caught, and I want it on the record.** The first pass reported
+`NO_CROSSING_OBSERVED` - apparently clean isolation. I had assumed the response used `content` and
+`sourceObservationIds`; it uses `title` and returns null ids, so my detector compared blank strings
+and found no crossing **because it could see nothing at all**. The result looked like good news and
+contradicted Gen80, which is what made it suspect. Fixed to detect crossing by marker text, plus an
+explicit `UNDETERMINED_RESPONSE_OPAQUE` verdict so a future run that cannot attribute a hit says so
+rather than reporting a boundary it cannot see; `attribution_possible` is now recorded and asserted.
+
+That is the same failure this programme keeps catching - a clean number from a check that could not
+fail - and it happened inside a probe written specifically to avoid it.
+
+**what this does not establish:** that agentmemory cannot isolate configurations by any means. No
+alternative scheme was tried, by instruction. It says nothing about scope isolation, which Gen78
+measured working via `agentId`.
+
+Report: `research/PI_PROJECT_BOUNDARY_GEN81.md`.
+
+---
+
 ## Generation 80 — the first real capability difference on this axis
 
 **status:** complete. `native_configuration_isolation_gen80`. Base `7af84f9`, commit `934833a`, full
