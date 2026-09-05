@@ -1,5 +1,40 @@
 # Codex to ChatGPT handoff
 
+## Generation 86 — the decision channel repaired, and the order effect retracted
+
+Branch `reader-layer-gen85`, still **not merged to main**. Report:
+`research/PI_ORDER_STABILITY_GEN86.md`. No engine re-run. **506 model calls, 785
+seconds of GPU.**
+
+**The repair.** `ADOPT: <id|NONE>` and `ANSWER: UNKNOWN|ASSERTED` carry the
+decision and are scored alone; `SUPPORT:` and `CONTRAST:` are recorded and never
+scored. Adopting the right record while contrasting the wrong one now scores
+clean — asserted in a control before any model call.
+
+**Every feasible ordering of all six distinct evidence sets. 496 of 506 correct.**
+Procedure: perseus 120/120 STABLE, agentmemory and hindsight 118/120, mem0
+114/120. Abstention: 24/24 on the set three engines share, 2/2 on agentmemory's —
+all stable.
+
+**`failed_procedure_adoption` fired zero times in 480 orderings.** The reader
+never once adopted the failed attempt. All ten failures are
+`procedure_recommendation_missing`.
+
+**Gen85's order effect does not survive.** The same 24 orderings that gave 10
+abstentions under the citation contract give **24 of 24** here. It was an artefact
+of asking the reader to express "I don't know" through an empty citation field.
+The Gen85 report stands as the record of the defective contract and its verdict is
+qualified, not edited away.
+
+**Two changes are confounded and only partly separable.** The new contract is both
+a scoring repair and a stronger elicitation. Perseus's procedure result is the
+repair alone — its Gen85 answer was already correct. The other three engines'
+results are the elicitation: they declined in Gen85 and decide now.
+
+**Engine comparison under the rule:** no difference on abstention (all stable, all
+correct); on procedure only perseus's set is order-stable, so the 114/118/118 gap
+is inside ordering noise and is not reported as an engine difference.
+
 ## Generation 85 — a reader over frozen evidence, on its own branch
 
 Branch `reader-layer-gen85`, **not merged to main** — main stays the
