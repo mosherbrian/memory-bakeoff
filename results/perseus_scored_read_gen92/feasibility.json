@@ -1,0 +1,143 @@
+{
+ "candidates": {
+  "perseus_vault_declared_query": {
+   "evidence": "explicitly 'the no-ranking arm' - deterministic exact match",
+   "returns_per_hit_scores": false,
+   "same_semantics": false
+  },
+  "perseus_vault_recall (mode=fused)": {
+   "evidence": "returns fused_trace with selection_decisions, fusion, rerank, strategies and truncation - but 'fused' is TEMPR-style multi-strategy (fts5 + dense + graph + temporal, weighted RRF, token-budget truncation), a different retrieval strategy",
+   "returns_per_hit_scores": true,
+   "same_semantics": false
+  },
+  "perseus_vault_recall (mode=hybrid)": {
+   "evidence": "live probe: 35 per-hit fields, none of them a relevance or ranking score",
+   "returns_per_hit_scores": false,
+   "same_semantics": true
+  },
+  "perseus_vault_recall_batch": {
+   "evidence": "fuses results across a BATCH of queries server-side; the unit of retrieval is different",
+   "returns_per_hit_scores": null,
+   "same_semantics": false
+  },
+  "perseus_vault_retrieval_telemetry": {
+   "evidence": "aggregate telemetry - concentration, diversity, repeated serving - not per-hit scores for one query",
+   "returns_per_hit_scores": false,
+   "same_semantics": false
+  },
+  "perseus_vault_semantic_search": {
+   "evidence": "dense-only, 'ranked purely by embedding similarity (no keyword fallback)' - by its own description not the hybrid fusion",
+   "returns_per_hit_scores": true,
+   "same_semantics": false
+  }
+ },
+ "closed_mechanisms": {
+  "hindsight": {
+   "finding": "a real stale preference, localised to the reranker: keyword identical, semantic gap 0.001655, reranker gap 0.078265",
+   "further_experiment": "none unless a later question specifically targets reranker quality",
+   "mechanism": "MEANINGFUL_PREFERENCE",
+   "status": "CLOSED"
+  },
+  "mem0": {
+   "finding": "no meaningful preference; the pair is separated by 1.2% of the distance to the next record in its own list",
+   "further_experiment": "none unless a later question specifically targets tie-breaking",
+   "mechanism": "NEAR_TIE",
+   "status": "CLOSED"
+  }
+ },
+ "contract": {
+  "candidates_considered": [
+   "perseus_vault_declared_query",
+   "perseus_vault_recall (mode=fused)",
+   "perseus_vault_recall (mode=hybrid)",
+   "perseus_vault_recall_batch",
+   "perseus_vault_retrieval_telemetry",
+   "perseus_vault_semantic_search"
+  ],
+  "contract_version": "perseus-scored-read-gen92-v1",
+  "hard_constraint": "a different search mode does not qualify merely because it exposes scores",
+  "method": "MCP tools/list on the pinned binary, plus a live shape probe on a scratch database - the item fields are read from a real response, not from documentation",
+  "no_benchmark_rerun": true,
+  "question": "does the pinned build expose a read that returns per-hit relevance scores AND preserves the Round-2 retrieval semantics?",
+  "round2_semantics": "perseus_vault_recall mode=hybrid - fts5 plus dense, fused by reciprocal rank fusion"
+ },
+ "live_probe": {
+  "decay_score_identical_for_both_hits": true,
+  "mode": "hybrid",
+  "per_hit_fields": [
+   "agent_id",
+   "always_on",
+   "archive_reason",
+   "archived",
+   "assertion_text",
+   "body_json",
+   "canonical_record_id",
+   "category",
+   "certainty",
+   "created_at_unix_ms",
+   "decay_score",
+   "efficacy_status",
+   "encoding_strength",
+   "epistemic_state",
+   "follow_count",
+   "follow_rate",
+   "hints",
+   "id",
+   "key",
+   "last_accessed_unix_ms",
+   "layer",
+   "links",
+   "memory_type",
+   "miss_count",
+   "retrieval_count",
+   "source",
+   "status",
+   "tags",
+   "topic_path",
+   "type",
+   "untrusted",
+   "verified",
+   "visibility",
+   "why_served",
+   "workspace_hash"
+  ],
+  "score_shaped_fields_that_are_not_relevance": {
+   "certainty": "a provenance/trust property of the record, not of the match",
+   "decay_score": "a lifecycle importance floor, not query relevance; identical (0.5) for both records in the probe",
+   "follow_rate": "a usage statistic accumulated over time",
+   "retrieval_profile": "a single string ('shared'), not a per-hit value",
+   "why_served": "a governance projection - memory class, promotion state, support count, and a fixed reason string 'matched the recall query'; identical for both records in the probe"
+  },
+  "top_level_fields": [
+   "items",
+   "retrieval_profile",
+   "total"
+  ],
+  "why_served_is_identical_for_both_hits": true
+ },
+ "selection_decisions_on_hybrid": {
+  "is_error": true,
+  "message": "{\"content\":[{\"text\":\"include_selection_decisions requires mode='fused' and a searchable query\",\"type\":\"text\"}],\"isError\":true}"
+ },
+ "verdict": {
+  "closes": "the perseus share of the LQ11 ranking failures closes as OPAQUE",
+  "contract_version": "perseus-scored-read-gen92-v1",
+  "gen93_targeted_rerun": "NOT UNBLOCKED - there is no path to freeze",
+  "lq11_perseus_cause": "NOT_DEMONSTRABLE",
+  "no_benchmark_rerun": true,
+  "pinned_build": "perseus-vault 2.23.2 (9c82920)",
+  "product_constraint_not_adapter_omission": {
+   "arguments": {
+    "include_selection_decisions": true,
+    "mode": "hybrid"
+   },
+   "is_error": true,
+   "message": "include_selection_decisions requires mode='fused' and a searchable query",
+   "why_it_matters": "the product itself refuses to attach the scored trace to the Round-2 mode, so this is a product constraint rather than an adapter omission"
+  },
+  "round2_path": "perseus_vault_recall mode=hybrid",
+  "substitution_declined": "mode='fused' and semantic_search both expose scores and both rank differently; using either would answer what a different strategy ranks and report it as an explanation of the one measured",
+  "verdict": "OPAQUE",
+  "why": "no read operation on this build returns per-hit relevance scores while preserving the Round-2 retrieval semantics. Scored traces exist, and every one of them is a different retrieval strategy."
+ }
+}
