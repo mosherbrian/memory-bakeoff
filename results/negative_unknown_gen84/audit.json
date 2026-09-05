@@ -1,0 +1,347 @@
+{
+ "abstention_surface": {
+  "agentmemory": {
+   "arguments": [
+    "agentId",
+    "project",
+    "query",
+    "limit"
+   ],
+   "note": "smart-search exposes no threshold; it returned 2 of 4 records, so some internal cut exists, but it is not caller-settable",
+   "relevance_floor": null,
+   "scores_returned": true,
+   "status": "NO_ABSTENTION_SURFACE"
+  },
+  "hindsight": {
+   "arguments": [
+    "bank_id",
+    "query",
+    "max_tokens"
+   ],
+   "note": "max_tokens is a size budget, not a relevance floor; scores come back but nothing consumes them",
+   "relevance_floor": null,
+   "scores_returned": true,
+   "status": "NO_ABSTENTION_SURFACE"
+  },
+  "mem0": {
+   "arguments": [
+    "query",
+    "filters",
+    "limit",
+    "threshold"
+   ],
+   "note": "the only engine of the four with a caller-settable floor; the frozen Gen32 adapter pins it at 0.1",
+   "relevance_floor": 0.1,
+   "scores_returned": true,
+   "status": "caller_settable_relevance_floor"
+  },
+  "perseus": {
+   "arguments": [
+    "query",
+    "workspace_hash",
+    "limit",
+    "mode"
+   ],
+   "note": "recall exposes no threshold, and the records carry no score at all, so neither the engine nor the harness could apply one",
+   "relevance_floor": null,
+   "scores_returned": false,
+   "status": "NO_ABSTENTION_SURFACE"
+  }
+ },
+ "committed": {
+  "agentmemory": {
+   "cases_scoring_lower": 13,
+   "repetitions": [
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 1,
+     "returned": [
+      "L003",
+      "L004"
+     ],
+     "scored_cases_with_expected_evidence": 19,
+     "threshold": null,
+     "top_score": 1.05
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 2,
+     "returned": [
+      "L003",
+      "L004"
+     ],
+     "threshold": null,
+     "top_score": 1.05
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 3,
+     "returned": [
+      "L003",
+      "L004"
+     ],
+     "threshold": null,
+     "top_score": 1.05
+    }
+   ]
+  },
+  "hindsight": {
+   "cases_scoring_lower": 6,
+   "repetitions": [
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 1,
+     "returned": [
+      "L003",
+      "L001",
+      "L002",
+      "L004"
+     ],
+     "scored_cases_with_expected_evidence": 19,
+     "threshold": null,
+     "top_score": 0.04097377804291001
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 2,
+     "returned": [
+      "L003",
+      "L001",
+      "L002",
+      "L004"
+     ],
+     "threshold": null,
+     "top_score": 0.04097377091539361
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 3,
+     "returned": [
+      "L003",
+      "L001",
+      "L002",
+      "L004"
+     ],
+     "threshold": null,
+     "top_score": 0.04097376375974313
+    }
+   ]
+  },
+  "mem0": {
+   "cases_scoring_lower": 1,
+   "repetitions": [
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 1,
+     "returned": [
+      "L001",
+      "L003",
+      "L004",
+      "L002"
+     ],
+     "scored_cases_with_expected_evidence": 19,
+     "threshold": 0.1,
+     "top_score": 0.4644287432525836
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 2,
+     "returned": [
+      "L001",
+      "L003",
+      "L004",
+      "L002"
+     ],
+     "threshold": 0.1,
+     "top_score": 0.4644287432525836
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 3,
+     "returned": [
+      "L001",
+      "L003",
+      "L004",
+      "L002"
+     ],
+     "threshold": 0.1,
+     "top_score": 0.4644287432525836
+    }
+   ]
+  },
+  "perseus": {
+   "cases_scoring_lower": null,
+   "repetitions": [
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 1,
+     "returned": [
+      "L001",
+      "L003",
+      "L004",
+      "L002"
+     ],
+     "threshold": null,
+     "top_score": null
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 2,
+     "returned": [
+      "L003",
+      "L001",
+      "L004",
+      "L002"
+     ],
+     "threshold": null,
+     "top_score": null
+    },
+    {
+     "failure_classes": [
+      "unsupported_evidence"
+     ],
+     "repetition": 3,
+     "returned": [
+      "L003",
+      "L001",
+      "L004",
+      "L002"
+     ],
+     "threshold": null,
+     "top_score": null
+    }
+   ]
+  }
+ },
+ "contract": {
+  "answer_abstention": "not_demonstrable",
+  "answer_abstention_why": "no reader answer was ever produced or graded; the capability the case is named for was never exercised",
+  "case": "LQ16",
+  "contract_version": "negative-unknown-audit-v1",
+  "gen68_line_status": "RETRACTED - 'every engine returns evidence for a question whose answer should be unknown' describes the harness asking for top-k and charging the answer to the engine, not a measured hallucination",
+  "no_engine_runs": true,
+  "no_reader_added": true,
+  "retrieval_abstention": "NOT_DEMONSTRABLE for perseus, hindsight and agentmemory - no caller-settable relevance floor exists on those surfaces; mem0 has one, pinned at 0.1, and no setting of it separates this case",
+  "unknown_hallucination_status": "reachable since Gen69, still never fired in a scored Round-2 run",
+  "what_the_0_of_3_measured": "top-k retrieval, scored as if it were an abstention decision"
+ },
+ "controls": {
+  "answer_abstention": {
+   "fires_on_assertion": {
+    "classes": [
+     "unknown_hallucination"
+    ],
+    "supported": false
+   },
+   "silent_on_refusal": {
+    "classes": [],
+    "supported": true
+   }
+  },
+  "retrieval_abstention": {
+   "fires_on_one_record": {
+    "classes": [
+     "unsupported_evidence"
+    ],
+    "returned": [
+     "L001"
+    ]
+   },
+   "fires_on_the_whole_store": {
+    "classes": [
+     "unsupported_evidence"
+    ],
+    "returned": [
+     "L001",
+     "L002",
+     "L003",
+     "L004"
+    ]
+   },
+   "silent_on_empty": {
+    "classes": [],
+    "returned": []
+   }
+  }
+ },
+ "corpus_at_checkpoint": 4,
+ "layers": {
+  "agentmemory": {
+   "answer_abstention_verdict": "not_demonstrable",
+   "answer_abstention_why": "score_answer_claim was never called in Round 2 and no reader answer exists to grade",
+   "retrieval_abstention_exercised": false,
+   "retrieval_abstention_surface": "NO_ABSTENTION_SURFACE",
+   "retrieval_abstention_verdict": "not_demonstrable",
+   "separability": {
+    "engine": "agentmemory",
+    "legitimate_cases_lost_at_that_floor": 13,
+    "of_scored_cases": 19,
+    "separable": false,
+    "why": "a floor above the unanswerable question's own score also rejects 13 question(s) that do have an answer"
+   }
+  },
+  "hindsight": {
+   "answer_abstention_verdict": "not_demonstrable",
+   "answer_abstention_why": "score_answer_claim was never called in Round 2 and no reader answer exists to grade",
+   "retrieval_abstention_exercised": false,
+   "retrieval_abstention_surface": "NO_ABSTENTION_SURFACE",
+   "retrieval_abstention_verdict": "not_demonstrable",
+   "separability": {
+    "engine": "hindsight",
+    "legitimate_cases_lost_at_that_floor": 6,
+    "of_scored_cases": 19,
+    "separable": false,
+    "why": "a floor above the unanswerable question's own score also rejects 6 question(s) that do have an answer"
+   }
+  },
+  "mem0": {
+   "answer_abstention_verdict": "not_demonstrable",
+   "answer_abstention_why": "score_answer_claim was never called in Round 2 and no reader answer exists to grade",
+   "retrieval_abstention_exercised": true,
+   "retrieval_abstention_surface": "caller_settable_relevance_floor",
+   "retrieval_abstention_verdict": "measured_and_failed",
+   "separability": {
+    "engine": "mem0",
+    "legitimate_cases_lost_at_that_floor": 1,
+    "of_scored_cases": 19,
+    "separable": false,
+    "why": "a floor above the unanswerable question's own score also rejects 1 question(s) that do have an answer"
+   }
+  },
+  "perseus": {
+   "answer_abstention_verdict": "not_demonstrable",
+   "answer_abstention_why": "score_answer_claim was never called in Round 2 and no reader answer exists to grade",
+   "retrieval_abstention_exercised": false,
+   "retrieval_abstention_surface": "NO_ABSTENTION_SURFACE",
+   "retrieval_abstention_verdict": "not_demonstrable",
+   "separability": {
+    "engine": "perseus",
+    "separable": "not_demonstrable",
+    "why": "no scores are returned, so no threshold is expressible"
+   }
+  }
+ },
+ "requested_limit": 5
+}

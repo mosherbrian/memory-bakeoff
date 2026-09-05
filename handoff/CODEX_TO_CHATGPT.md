@@ -1,5 +1,34 @@
 # Codex to ChatGPT handoff
 
+## Generation 84 — nobody was asked to abstain
+
+Report: `research/PI_NEGATIVE_UNKNOWN_GEN84.md`. No engine runs, **no reader
+added**.
+
+**Both layers fire and stay silent.** Retrieval abstention: empty is clean, any
+record charges `unsupported_evidence`. Answer abstention: a refusal is clean, an
+assertion charges `unknown_hallucination`. The two are scored by different
+functions and neither can emit the other's class.
+
+**Every engine returned everything it had.** Four records visible at `CP04`, a
+limit of five requested. perseus, hindsight and mem0 returned 4 of 4;
+agentmemory 2 of 4. Identical across three repetitions.
+
+**No relevance floor separates the case.** perseus emits no score, so no
+threshold is expressible. hindsight's `max_tokens` is a size budget; a real
+floor would silence 6 of 19 answerable questions. mem0 is the only engine with a
+caller-settable floor (pinned 0.1) and raising it past `LQ16`'s 0.46 also
+silences `LQ17`. agentmemory scores `LQ16` at **1.05 — the highest of any case
+in the run** — outranking 13 of 19 real questions.
+
+**Verdict.** Retrieval abstention `NOT_DEMONSTRABLE` on three of four;
+answer abstention `NOT_DEMONSTRABLE` on all four. `unknown_hallucination` has
+been reachable since Gen69 and has still never fired in a scored run. Gen68's
+line is **RETRACTED**: the 0/3 measured top-k retrieval scored as if it were an
+abstention decision.
+
+**Both universal zeros are now attributed, and neither was a product result.**
+
 ## Generation 83 — the procedure axis measures reading, not memory
 
 Commit `50d81d9` on base `47265e4`. Full suite **846 passed** (834 baseline +
