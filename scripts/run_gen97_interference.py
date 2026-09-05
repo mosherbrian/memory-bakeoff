@@ -68,6 +68,22 @@ def observations_for(fixture, case):
     return [by_id[i] for i in VISIBLE_IDS(fixture, case) if i in by_id]
 
 
+def ingest(fixture, case):
+    """Yield the records to write, and check on the way out that the caller
+    consumed them in the resolver's order.
+
+    Gen104's invariant, applied where it can actually fire: `observations_for`
+    returns the right order by construction, so the residual risk is an engine
+    function reordering after the call. This checks what was CONSUMED.
+    """
+    resolved = [o.id for o in observations_for(fixture, case)]
+    consumed = []
+    for observation in ingest(fixture, case):
+        consumed.append(observation.id)
+        yield observation
+    ITF.assert_ingest_order_preserved(resolved, consumed)
+
+
 # --- perseus --------------------------------------------------------------
 def run_perseus(fixture, case, repetition, root):
     g29 = load("run_perseus_gen29_longitudinal")
@@ -76,7 +92,7 @@ def run_perseus(fixture, case, repetition, root):
     db, key = home / "vault.sqlite", home / "vault.key"
     g29.sh([g29.BIN, "keygen", "--key-file", key])
     native = {}
-    for observation in observations_for(fixture, case):
+    for observation in ingest(fixture, case):
         body = public_body(observation)
         receipt = json.loads(g29.sh(
             [g29.BIN, "write", "--db", db, "--encryption-key", key,
@@ -92,7 +108,9 @@ def run_perseus(fixture, case, repetition, root):
                      "workspace_hash": SB.scope_token(case.scope),
                      **CB.perseus_query(case.configuration)}
         payload = server.recall(arguments)
-        return [native.get(hit.get("id")) for hit in payload.get("items", [])[:LIMIT]], arguments
+        hits = [hit.get("id") for hit in payload.get("items", [])[:LIMIT]]
+        ITF.assert_hits_map_to_live_identity(hits, list(native), native)
+        return [native.get(h) for h in hits], arguments
     finally:
         server.stop()
 
@@ -108,7 +126,7 @@ def run_mem0(fixture, case, repetition, root):
         str(root / f"{case.id}-rep{repetition}"),
         f"bakeoff-{case.id.lower()}-r{repetition}"))
     native = {}
-    for observation in observations_for(fixture, case):
+    for observation in ingest(fixture, case):
         body = public_body(observation)
         result = memory.add(
             observation.text,
@@ -140,22 +158,20 @@ def run_agentmemory(fixture, case, repetition, root):
                                   dir="/private/tmp"))
     run = f"g{case.id.replace(chr(45), chr(48)).lower()}r{repetition}"
     agent = SB.agentmemory_write(case.scope, run=run)["agentId"]
-    native, launcher, written_order = {}, None, []
+    native, launcher = {}, None
     try:
         base, _startup, launcher = g13.start_service(g33.AGENTMEMORY, state,
                                                      repetition, agent)
-        for observation in observations_for(fixture, case):
+        for observation in ingest(fixture, case):
             observation_agent = SB.agentmemory_write(observation.scope, run=run)["agentId"]
             payload = {"content": observation.text, "type": "observation",
                        "sourceObservationIds": [observation.id],
                        "agentId": observation_agent,
                        **CB.agentmemory_write(observation.configuration)}
             g13.request_json(base, "/agentmemory/remember", body=payload)
-            written_order.append(observation.id)
             for row in g33.native_rows(base, observation_agent):
                 for source in (row.get("sourceObservationIds") or []):
                     native[row.get("id")] = source
-        ITF.assert_ingest_order_preserved(VISIBLE_IDS(fixture, case), written_order)
         arguments = {"agentId": agent, "query": case.query, "limit": LIMIT,
                      **CB.agentmemory_query(case.configuration)}
         raw = g13.request_json(base, "/agentmemory/smart-search", body=arguments)
@@ -175,7 +191,7 @@ def run_hindsight(fixture, case, repetition, root):
     client = Hindsight()
     bank = f"bakeoff-{case.id.lower()}-r{repetition}"
     native = {}
-    for observation in observations_for(fixture, case):
+    for observation in ingest(fixture, case):
         body = public_body(observation)
         result = client.retain(
             bank_id=bank, content=observation.text,
@@ -188,13 +204,15 @@ def run_hindsight(fixture, case, repetition, root):
                  **CB.hindsight_query(case.configuration)}
     raw = client.recall(**arguments)
     got = getattr(raw, "results", None) or (raw.get("results") if isinstance(raw, dict) else [])
-    returned = []
+    returned, hits = [], []
     for hit in (got or []):
         get = (lambda k: hit.get(k)) if isinstance(hit, dict) else (lambda k: getattr(hit, k, None))
         metadata = get("metadata") or {}
         marker = metadata.get("record_id") if isinstance(metadata, dict) else None
+        hits.append(get("document_id"))
         canonical = native.get(get("document_id"))
         returned.append(canonical if canonical is not None and marker == canonical else None)
+    ITF.assert_hits_map_to_live_identity(hits, list(native), native)
     return returned, arguments
 
 
