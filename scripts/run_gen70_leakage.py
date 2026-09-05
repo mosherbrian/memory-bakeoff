@@ -141,7 +141,89 @@ def run_mem0(fixture, repetition: int, root: Path) -> dict:
             "observations_ingested": len(fixture.observations)}
 
 
-ENGINES = {"mem0": run_mem0}
+# --------------------------------------------------------------------------
+# Perseus Vault 2.23.2, frozen Gen29 binary and adapter. This is the engine with
+# real as-of operations, so the probe asks whether they hold when the vault
+# actually contains the future.
+# --------------------------------------------------------------------------
+def run_perseus(fixture, repetition: int, root: Path) -> dict:
+    g29 = load("run_perseus_gen29_longitudinal")
+    A = g29.A
+    home = root / f"rep{repetition}"
+    home.mkdir(parents=True, exist_ok=True)
+    db, key = home / "vault.sqlite", home / "vault.key"
+    g29.sh([g29.BIN, "keygen", "--key-file", key])
+
+    native_to_canonical, write_instants, fixture_iso = {}, [], []
+    for observation in fixture.observations:
+        body = A.body_for_observation(observation)
+        A.assert_public_only(body)
+        receipt = json.loads(g29.sh(
+            [g29.BIN, "write", "--db", db, "--encryption-key", key,
+             "--category", A.CATEGORY, "--key", A.key_for_observation(observation.id),
+             "--body", json.dumps(body, sort_keys=True, separators=(",", ":")),
+             "--workspace-hash", A.workspace_for_scope(observation.scope)]))
+        native_id = receipt.get("id")
+        if not receipt.get("ok") or not isinstance(native_id, str):
+            raise SystemExit(f"write receipt lacks native id for {observation.id}")
+        native_to_canonical[native_id] = observation.id
+        row = {r["id"]: r for r in g29.rows_of(db)}[native_id]
+        write_instants.append(int(row["created_at_unix_ms"]))
+        fixture_iso.append(observation.ingestion_time.isoformat())
+        time.sleep(0.05)
+
+    # One snapshot, holding the whole timeline, queried as of earlier moments.
+    time_base = A.TimeBase(tuple(fixture_iso), tuple(write_instants))
+    snap_db, snap_key = g29.snapshot(db, key, home / "snap-full")
+    records = []
+    cases_by_checkpoint: dict[str, list] = {}
+    for case in fixture.cases:
+        cases_by_checkpoint.setdefault(case.checkpoint_id, []).append(case)
+
+    server = g29.Server(snap_db, snap_key)
+    try:
+        for checkpoint_id in probe_checkpoints(fixture):
+            prefix_sha = hashlib.sha256(L.canonical_json(
+                [o.public_dict() for o in fixture.prefix(checkpoint_id)]).encode()).hexdigest()
+            for case in cases_by_checkpoint.get(checkpoint_id, []):
+                arguments = A.recall_arguments(case, time_base, LIMIT)
+                started = time.perf_counter()
+                payload = server.recall(arguments)
+                latency_ms = (time.perf_counter() - started) * 1000
+                items = []
+                for rank, hit in enumerate(payload.get("items", [])[:LIMIT], start=1):
+                    native_id = hit.get("id")
+                    canonical = (native_to_canonical.get(native_id)
+                                 if isinstance(native_id, str) else None)
+                    try:
+                        body_id = json.loads(hit.get("body_json", "{}")).get(
+                            "canonical_observation_id")
+                    except json.JSONDecodeError:
+                        body_id = None
+                    exact = canonical is not None and body_id == canonical
+                    items.append({"native_rank": rank, "native_id": native_id,
+                                  "canonical_id": canonical if exact else None,
+                                  "provenance_exact": exact, "score": hit.get("score"),
+                                  "text": (hit.get("assertion") or "")[:110]})
+                records.append({
+                    "case_id": case.id, "checkpoint_id": checkpoint_id,
+                    "queried_as_of": checkpoint_id,
+                    "ingested_through": PROBE["ingest_through_checkpoint"],
+                    "ingested_prefix_sha256": prefix_sha,
+                    "native_scope_filter": arguments.get("workspace_hash"),
+                    "native_temporal_operation": A.native_operation(case),
+                    "requested_limit": LIMIT, "latency_ms": round(latency_ms, 2),
+                    "returned": items,
+                    "provenance_exact_all": all(i["provenance_exact"] for i in items),
+                    "reader_answer": None,
+                })
+    finally:
+        server.stop()
+    return {"records": score(fixture, records),
+            "observations_ingested": len(fixture.observations)}
+
+
+ENGINES = {"mem0": run_mem0, "perseus": run_perseus}
 
 
 def answer_claim_probe(fixture, records: list[dict]) -> dict:
