@@ -41,14 +41,18 @@ def main() -> int:
             for observation in fixture.observations:
                 if observation.id not in visible:
                     continue
-                result = client.retain(
+                # The document id is SENT, not read back - the frozen Round-2
+                # convention. A map keyed on a fabricated fallback matches
+                # nothing, which is how the first attempt reported every hit
+                # unmapped and every target absent.
+                document_id = f"record-{observation.id}"
+                client.retain(
                     bank_id=bank, content=observation.text,
+                    document_id=document_id,
                     metadata={"record_id": observation.id,
                               "scope": observation.scope,
                               "configuration": observation.configuration},
                     tags=CB.hindsight_write(observation.configuration)["tags"])
-                document_id = getattr(result, "document_id", None) or \
-                    f"record-{observation.id}"
                 native[document_id] = observation.id
             arguments = {"bank_id": bank, "query": case.query,
                          "max_tokens": MAX_TOKENS,
@@ -69,6 +73,11 @@ def main() -> int:
                 returned.append(canonical if canonical is not None and marker == canonical
                                 else None)
             ids = [i for i in returned if i]
+            if returned and not ids:
+                raise SystemExit(
+                    f"L{case.load} rep{repetition}: {len(returned)} hits and NONE "
+                    "mapped to a canonical id. That is a provenance failure in the "
+                    "probe, not a result - refusing to record 'target absent'.")
             scored = ITF.score_case(fixture, case, ids, LIMIT,
                                     window_expressible=False)
             rows.append({"engine": "hindsight", "load": case.load, "case": case.id,
