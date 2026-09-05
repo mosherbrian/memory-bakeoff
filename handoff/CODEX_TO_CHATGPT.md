@@ -1,5 +1,38 @@
 # Codex to ChatGPT handoff
 
+## Generation 96 — Round-3 adapters, and a budget audit with a real finding
+
+Report: `research/PI_ROUND3_ADAPTERS_GEN96.md`. **No engine runs.**
+
+**Bindings reused, not reinvented** — scope from Gen77/78, configuration from
+Gen79/80. Identity symmetry is checked on **identity keys**, not payload shapes
+(mem0 nests under `filters`, hindsight adds `tags_match`; neither is an
+asymmetry). `assert_no_mode_substitution` keeps each engine on its own strategy.
+
+**A defect the checks caught before any engine ran.** A plain dict merge of
+mem0's scope and configuration **query** payloads silently dropped the scope
+filter — both nest under `filters`. That is **the Gen76 failure exactly**, and it
+would have made Round 3's scope column meaningless. `merge_payloads` now merges
+nested payloads and raises on any primitive collision.
+
+**The budget audit.** perseus, mem0 and agentmemory each express a native
+**result count** (`limit`). **Hindsight expresses only a token budget**
+(`max_tokens`) — and verified against the frozen adapter, `recall_arguments`
+**accepts `limit` and never passes it**; the Round-2 harness truncated with
+`[:LIMIT]` afterwards.
+
+So **every `requested_limit: 5` in hindsight's Round-2 records is the harness's
+scissors**, and the frozen contract's `post_filtering: "none; native order and
+native limit are preserved"` is **inaccurate for that engine** — there is no
+native limit to preserve.
+
+**Consequence: `saturated` is `NOT_DEMONSTRABLE` for hindsight**, so forgetting
+and displacement cannot be separated for it from a result count alone.
+
+**Comparable windows are therefore recorded as NOT expressible**, and the run is
+designed around **within-engine scale curves**; `assert_within_engine_only` raises
+on a cross-engine pooled count.
+
 ## Generation 95 — the Round-3 interference ruler, frozen before any product
 
 Report: `research/PI_INTERFERENCE_DESIGN_GEN95.md`. Fixture `interference-v1`,
