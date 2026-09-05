@@ -52,8 +52,8 @@ def main() -> int:
         "load_levels": list(ITF.LOAD_LEVELS),
         "repetitions": 3,
         "within_engine_curves": curves,
-        "no_cross_engine_total": "the four budgets are not the same quantity "
-                                 "(Gen96); nothing is summed across engines",
+        "why_no_shared_total": "the four budgets are not the same quantity "
+                               "(Gen96); nothing is summed across engines",
         "universal": {
             "stale_version_interference": "every engine, every load level, every "
                                           "repetition",
@@ -61,7 +61,7 @@ def main() -> int:
         },
     }
     R3.assert_within_engine_only(payload)
-    ITF.assert_no_pooled_accuracy(json.dumps(payload["no_cross_engine_total"]))
+    ITF.assert_no_pooled_accuracy(json.dumps(payload["why_no_shared_total"]))
     (OUT / "curves.json").write_text(json.dumps(payload, indent=1, sort_keys=True,
                                                 default=str))
     for engine, entry in curves.items():
