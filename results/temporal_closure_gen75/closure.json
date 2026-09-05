@@ -1,0 +1,81 @@
+{
+  "contract_version": "temporal-semantics-closure-v1",
+  "engines": [
+    {
+      "belief_confusions": 0,
+      "effective_time_history": "not_demonstrable",
+      "engine": "perseus",
+      "temporal_query_surface": "surface_present_and_holds",
+      "temporal_query_surface_note": "as_of holds as a transaction-time filter; valid_at was never exercised as an effective-time filter and cannot be on this build",
+      "transaction_time_history": "kept"
+    },
+    {
+      "belief_confusions": 6,
+      "effective_time_history": "not_kept",
+      "engine": "hindsight",
+      "temporal_query_surface": "surface_present_and_fails",
+      "transaction_time_history": "not_kept"
+    },
+    {
+      "belief_confusions": 6,
+      "effective_time_history": "not_kept",
+      "engine": "mem0",
+      "temporal_query_surface": "no_temporal_surface",
+      "transaction_time_history": "not_kept"
+    },
+    {
+      "belief_confusions": 6,
+      "effective_time_history": "not_kept",
+      "engine": "agentmemory",
+      "temporal_query_surface": "no_temporal_surface",
+      "transaction_time_history": "not_kept"
+    }
+  ],
+  "engines_run": 0,
+  "no_single_score": "these axes vary independently and must not be collapsed; an engine that keeps belief history perfectly and cannot record effective time at all has no meaningful average",
+  "retractions": [
+    {
+      "because": "the adapter fed valid_at a transaction-time instant derived from ingestion order, so effective-time capability was never exercised (Gen73)",
+      "claim": "recall_hybrid_valid_at is effective_time_capable",
+      "generation": 71,
+      "status": "RETRACTED"
+    },
+    {
+      "because": "Perseus was asked what its store held before the backfilled fact was written, not for the fact at its event time (Gen73)",
+      "claim": "Perseus makes backfilled event-time facts unreachable",
+      "generation": 72,
+      "status": "RETRACTED"
+    },
+    {
+      "because": "an empty or pre-write snapshot cannot leak, so the figure is not evidence of a working effective-time filter (Gen73)",
+      "claim": "Perseus's temporal operations never leaked (0 of 15)",
+      "generation": 70,
+      "status": "QUALIFIED"
+    },
+    {
+      "because": "the failure is the harness asking an effective-time question through a knowledge-time coordinate, compounded by the store having no validity coordinate to set (Gen73, Gen74)",
+      "claim": "Perseus fails late-arriving history",
+      "generation": 68,
+      "status": "REATTRIBUTED"
+    }
+  ],
+  "scope": "perseus-vault 2.23.2, hindsight 0.9.2, mem0 2.0.19, agentmemory 0.9.29, in the tested Round-2 configurations, on longitudinal-v1 and backfill-v1",
+  "surviving": [
+    {
+      "claim": "Perseus preserves what was believed at a past moment",
+      "evidence": "Gen68 historical_belief 6/6 clean; those are as_of cases, a genuine transaction-time question, correctly mapped"
+    },
+    {
+      "claim": "Hindsight's query_timestamp is accepted and ignored",
+      "evidence": "Gen70: 15 of 15 leaked on its own parameter and its own path; no Perseus adapter involved"
+    },
+    {
+      "claim": "mem0 and agentmemory expose no temporal surface",
+      "evidence": "Gen71: every case routed to current-state search because there is nowhere else to send it"
+    },
+    {
+      "claim": "no engine tested keeps both clocks",
+      "evidence": "Gen72, asserted in a test; unchanged by the retractions, since no engine gained an effective-time capability"
+    }
+  ]
+}
