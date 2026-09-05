@@ -1,5 +1,38 @@
 # Codex to ChatGPT handoff
 
+## Generation 89 — current_truth decomposed, pooled counts retired
+
+Report: `research/PI_CURRENT_TRUTH_GEN89.md`. **No engine runs.** 84 committed
+observations: 7 cases x 4 engines x 3 repetitions.
+
+**Controls first.** Every contributing class fires and the case can stay silent.
+And the scorer **ignores rank** — current first and stale first score identically.
+
+**Mechanism totals:** clean 27, retrieval-window effect 21, conflicting versions
+co-returned 15, stale-returned-current-absent 9, NOT_DEMONSTRABLE 12,
+**missing current fact 0**.
+
+**The current fact was never simply lost.** `missing_current_fact` is reachable
+(the control fires it) and occurred **zero times**. In **63 of 72 scoreable
+observations the present truth was returned**.
+
+**Most failures are co-return, not loss.** Of 36 co-return failures, **21 are
+window effects** — the current fact outranks every prohibited record, so a limit
+of *N* would pass; each row names that limit. The other 15 are genuine ranking
+failures where the superseded record outranks the current one.
+
+**Three of seven cases are failed by another layer:** `LQ02` by a configuration
+distinction (Gen80's axis), `LQ12` by a late-history distinction, and `LQ15` by
+requiring the **empty set** — the same structure as `LQ16`, `NOT_DEMONSTRABLE` by
+Gen84. Only `LQ01`, `LQ11`, `LQ14`, `LQ17` ask purely for present truth.
+
+**Perseus varies across repetitions in rank order only** — same record set,
+reordered. No score changes; recorded because it is the same instability Gen86
+measured at the reader layer.
+
+**6/21, 6/21, 6/21 and 9/21 are retired**, kept only as the record of what is
+being replaced.
+
 ## Generation 88 — the corrected retrieval-layer picture of Round 2
 
 Report: `research/PI_ROUND2_RECONCILIATION_GEN88.md`. **No engine runs.** Rebuilt
