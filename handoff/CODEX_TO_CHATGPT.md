@@ -1,5 +1,55 @@
 # Codex to ChatGPT handoff
 
+## Generation 72 — the split is storage semantics, and here is the mechanism
+
+**status:** complete. `correction_late_arrival_semantics_gen72`. Base `cfef91e`, commit `fb00369`,
+full suite **692 passed** (680 baseline + 12 new). **No engine run** - reads the committed Gen68
+per-case records only.
+
+**your question answered: distinct storage semantics, not retrieval behaviour.** Perseus and
+Hindsight are opposites on both axes simultaneously.
+
+| engine | belief confusions | late arrival | reading |
+|---|---|---|---|
+| **perseus** | **0** | **6 of 6 ABSENT** | keeps belief history; an out-of-order fact is not addressable at its own event time |
+| **hindsight** | 6 | **6 of 6 clean** | files by event time so backfill lands; the superseded version is not addressable |
+| mem0 | 6 | 3 misfiled | neither |
+| agentmemory | 6 | 3 misfiled | neither |
+
+**the decisive detail is the KIND of Perseus failure.** Its late-arriving fact is not misfiled - it
+is **unreachable**, 6 times out of 6, where mem0 and agentmemory return the wrong version
+(`misplaced`). A retrieval-ranking difference produces wrong ordering; it does not make a stored
+fact disappear. Perseus appears to place observations on a knowledge timeline, and something
+ingested tenth but dated fifth has nowhere to live on it. Hindsight is the mirror - event clock kept,
+belief state not.
+
+**the correction cluster settles a second question.** Every engine except Perseus shows belief
+confusion in **both** the backdated-correction cluster and the aligned-time invalidation cluster. So
+their inability to recover a superseded belief is **not** about backdating - the prior version is
+simply not addressable once revised. Perseus instead shows `correction_not_applied` 6 times: it
+retains both versions and sometimes serves the pre-correction value. A resolution-order fault, not a
+data-loss fault, and a different fix.
+
+**no engine on this fixture keeps both clocks.** Asserted in a test so a later generation cannot
+quietly claim otherwise.
+
+**three revision shapes, deliberately different:** a correction with event time later than effective
+time (L005/L001); an invalidation chain with aligned times (L012/L013/L014); and a fact ingested
+tenth but dated fifth, marked historical-only (L011). Each interrogates a different part of the
+storage model, which is why they are reported separately.
+
+**scope:** one fixture, one correction, one invalidation chain, one backfilled fact, three
+repetitions. This names a pattern and gives it a mechanism; it does not prove a storage design.
+Confirming it needs engine documentation or a fixture with several independent backfills at
+different depths - **that is the obvious Gen73 if you want it.**
+
+The mechanisms must not be averaged into a temporal-accuracy score; averaging is exactly what would
+have hidden the mirror, and the contract and a test both say so.
+
+Report: `research/PI_CORRECTION_SEMANTICS_GEN72.md`.
+
+---
+
 ## Generation 71 — capability versus routing, and why the pooled column was wrong
 
 **status:** complete. `temporal_capability_routing_gen71`. Base `0b6db1e`, commit `54ec8e0`, full
