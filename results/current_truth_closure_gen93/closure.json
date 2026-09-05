@@ -1,0 +1,110 @@
+{
+ "contract_version": "current-truth-closure-gen93-v1",
+ "current_fact_never_lost": {
+  "note": "missing_current_fact is reachable - a control fires it - and never occurred",
+  "observed": 0,
+  "of": 84,
+  "provenance": "Gen89"
+ },
+ "decomposition": {
+  "already_clean": 24,
+  "no_prefix_can_succeed": 9,
+  "observations": 48,
+  "provenance": "Gen90",
+  "retrieval_window_policy": 15
+ },
+ "excluded_from_this_row": {
+  "LQ02": "failed by a configuration distinction (Gen80's axis)",
+  "LQ12": "failed by a late-history distinction, a temporal class",
+  "LQ15": "expects the empty set; abstention is NOT_DEMONSTRABLE at the retrieval layer (Gen84)",
+  "provenance": "Gen89"
+ },
+ "line_status": "CLOSED",
+ "no_engine_runs": true,
+ "only_one_is_a_ranking_quality_defect": "hindsight",
+ "perseus_instability": {
+  "case": "LQ11",
+  "orders": {
+   "1": [
+    "L009",
+    "L010"
+   ],
+   "2": [
+    "L010",
+    "L009"
+   ],
+   "3": [
+    "L009",
+    "L010"
+   ]
+  },
+  "provenance": "Gen90",
+  "verdicts": {
+   "1": "no-prefix ranking failure",
+   "2": "window policy, clean at k=1",
+   "3": "no-prefix ranking failure"
+  },
+  "why_kept": "the flip changes the verdict, not just the order; pooling the repetitions would have produced one confident wrong answer"
+ },
+ "replacement_row": {
+  "agentmemory": {
+   "finding": "retrieves the current fact - never once lost in 84 observations; the row's failures are retrieval-window policy plus an engine-specific residue (NONE, 0 of 48)",
+   "provenance": "Gen89, Gen90, Gen90; the pooled Gen68 count is REPLACED, not restated",
+   "status": "MEASURED",
+   "value": "NONE"
+  },
+  "hindsight": {
+   "finding": "retrieves the current fact - never once lost in 84 observations; the row's failures are retrieval-window policy plus an engine-specific residue (DEMONSTRATED_RANKING_DEFECT, 3 of 48)",
+   "provenance": "Gen89, Gen90, Gen91; the pooled Gen68 count is REPLACED, not restated",
+   "status": "MEASURED",
+   "value": "DEMONSTRATED_RANKING_DEFECT"
+  },
+  "mem0": {
+   "finding": "retrieves the current fact - never once lost in 84 observations; the row's failures are retrieval-window policy plus an engine-specific residue (UNRESOLVED_ORDERING_OF_TIED_REVISIONS, 3 of 48)",
+   "provenance": "Gen89, Gen90, Gen91; the pooled Gen68 count is REPLACED, not restated",
+   "status": "MEASURED",
+   "value": "UNRESOLVED_ORDERING_OF_TIED_REVISIONS"
+  },
+  "perseus": {
+   "finding": "retrieves the current fact - never once lost in 84 observations; the row's failures are retrieval-window policy plus an engine-specific residue (NOT_DIAGNOSABLE_THROUGH_THE_MEASURED_SURFACE, 3 of 48)",
+   "provenance": "Gen89, Gen90, Gen91, Gen92; the pooled Gen68 count is REPLACED, not restated",
+   "status": "MEASURED",
+   "value": "NOT_DIAGNOSABLE_THROUGH_THE_MEASURED_SURFACE"
+  }
+ },
+ "replaces": "the pooled current_truth row (6/21, 6/21, 6/21, 9/21)",
+ "residue": {
+  "agentmemory": {
+   "count": 0,
+   "finding": "no irreducible ranking failure on this row",
+   "provenance": "Gen90",
+   "status": "NONE"
+  },
+  "hindsight": {
+   "count": 3,
+   "finding": "a real preference for the stale revision, localised to the reranker: keyword identical, semantic gap 0.001655, reranker gap 0.078265",
+   "provenance": "Gen91",
+   "status": "DEMONSTRATED_RANKING_DEFECT"
+  },
+  "mem0": {
+   "count": 3,
+   "finding": "the two revisions are separated by 1.2% of the distance to the next record in the same list; the engine does not meaningfully prefer the stale one, it barely distinguishes them",
+   "provenance": "Gen91",
+   "status": "UNRESOLVED_ORDERING_OF_TIED_REVISIONS"
+  },
+  "perseus": {
+   "count": 3,
+   "finding": "no read on the pinned build returns per-hit relevance scores while preserving the Round-2 retrieval semantics; the product refuses the scored trace on that mode",
+   "provenance": "Gen91, Gen92",
+   "status": "NOT_DIAGNOSABLE_THROUGH_THE_MEASURED_SURFACE"
+  }
+ },
+ "window_curve": {
+  "1": 31,
+  "2": 35,
+  "3": 24,
+  "4": 24,
+  "5": 24
+ },
+ "window_is_not_a_recommendation": "the curve peaks at k=2 on four cases and 48 observations. That is a property of this fixture. Adopting it as policy would be fitting the harness to its own results, and a narrower window is not free: at k=1 the current fact is lost outright in 17 of 48 observations."
+}

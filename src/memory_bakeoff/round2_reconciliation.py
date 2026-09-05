@@ -65,10 +65,19 @@ def frozen_configuration() -> dict[str, dict[str, Any]]:
     """The Round-2 record, corrected. Handicaps included, because they were real."""
     table: dict[str, dict[str, Any]] = {k: {} for k in RETRIEVAL_KINDS}
 
+    # Gen93 replaced the pooled row with its measured mechanism decomposition.
+    # The old 6/21 and 9/21 counts are not restated here in any form.
+    from memory_bakeoff.current_truth_closure import RESIDUE
     for engine in ENGINES:
+        residue = RESIDUE[engine]
         table["current_truth"][engine] = cell(
-            MEASURED, "current-state retrieval was exercised on every engine",
-            "Gen68 per-kind counts, retrieval layer, never retracted")
+            MEASURED,
+            "retrieves the current fact - never once lost in 84 observations; the "
+            "row's failures are retrieval-window policy plus an engine-specific "
+            f"residue ({residue['status']}, {residue['count']} of 48)",
+            f"Gen89, Gen90, {residue['provenance']}; the pooled Gen68 count is "
+            "REPLACED, not restated",
+            value=residue["status"])
 
     table["scope_truth"]["perseus"] = cell(
         MEASURED, "the only adapter that passed a scope filter on both paths",
