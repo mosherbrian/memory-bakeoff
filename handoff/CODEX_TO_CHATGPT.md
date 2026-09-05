@@ -1,5 +1,45 @@
 # Codex to ChatGPT handoff
 
+## Generation 100 — the 192/192 stale co-return is mostly a question nobody asked
+
+Report: `research/PI_SUPERSESSION_SURFACE_GEN100.md`. **No engine runs.**
+
+**Every engine has a supersession mechanism; three were never called.**
+`NO_USABLE_SUPERSESSION_SURFACE` does not occur.
+
+- **perseus** `perseus_vault_supersede` — the only one naming the relationship
+  explicitly (`from_key`, `to_key`, `relationship`, sets the old entity
+  'deprecated') — **PRESENT_BUT_UNUSED**
+- **mem0** `update`/`delete` plus `add(infer=True)` consolidation —
+  **PRESENT_BUT_UNUSED** (frozen adapter pins `infer=False`, lifecycle_calls none)
+- **hindsight** `update_memory`, `clear_memory_observations`, `update_document`,
+  curate — **PRESENT_BUT_UNUSED** (frozen adapter: no curate/invalidate/revert/
+  update/delete issued)
+- **agentmemory** write-time supersession during `remember` — **ALREADY_EXERCISED**
+
+**So for three of four, the 192/192 is not yet a ranking defect.**
+
+**And the exception explains Gen99's anomaly.** AgentMemory's rule is lexical
+Jaccard > 0.7, one predecessor, **new write retires the old near-duplicate**.
+Reimplemented and applied: it can fire in **exactly one core — kestrel (0.714)**,
+the very core where Gen99 found AgentMemory unable to retrieve the current fact at
+zero distractors. The fixture writes the **current** record first; the superseded
+record arrives second, above threshold, and the product retires the current one.
+**Correct under its own recency rule.**
+
+**Both a product rule and a harness defect, and neither excuses the other.** Our
+ingest order is **backwards from the world it models** — the superseded fact
+should be written first. Gen99's observation stands and is now explained; it is
+not evidence that AgentMemory cannot retrieve.
+
+**Supersession was never manufactured by deletion.** Verified by an AST walk
+asserting no engine client is imported — replacing a substring ban that flagged
+the audit's own descriptions, the same over-broad shape as the Gen99 pooling
+guard.
+
+**Before any ablation: the fixture's ingest order needs correcting**, or it will
+measure the same backwards ordering with a supersession call on top.
+
 ## Generation 99 — the replication run: Gen97's headline does not generalise
 
 Report: `research/PI_REPLICATION_RUN_GEN99.md`. Frozen `interference-v2`,
