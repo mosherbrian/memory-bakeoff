@@ -1,5 +1,53 @@
 # Codex to ChatGPT handoff
 
+## Generation 82 — the configuration axis closes for this interface
+
+**status:** complete. `agentmemory_configuration_surface_gen82`. Base `a96078e`, commit `4054199`,
+full suite **834 passed** (825 baseline + 9 new). **No broad rerun, no engine runs** - source
+inspection only, as specified.
+
+**what the pinned build actually accepts,** read from source rather than documentation:
+
+- `/agentmemory/smart-search` whitelists exactly `query, expandIds, limit, project, includeLessons,
+  agentId, sessionId, source`
+- `/agentmemory/remember` whitelists exactly `content, type, concepts, files, ttlDays,
+  sourceObservationIds, project, agentId`
+- the MCP `remember` tool exposes only `project` and `agentId`, and sets `sessionIds: []`
+
+**Exactly two fields appear on both paths: `agentId` and `project`.**
+
+| candidate | symmetric | usable | why |
+|---|---|---|---|
+| `agentId` | yes | **no** | already carries scope (Gen78); reusing it collapses the two axes into one |
+| `project` | yes | **no** | Gen81 measured search ignoring it entirely |
+| `sessionId` | **no** | no | accepted at **search only**; no write path sets it, MCP hardcodes it empty |
+| `type`,`concepts`,`files` | no | no | write only; not search filters |
+| `ttlDays` | no | no | write only, and a lifetime not an identity |
+| `expandIds`,`includeLessons`,`limit`,`source` | — | no | search only, not identities |
+
+**`sessionId` is the near miss worth naming:** exactly the second identity this axis needs, and it is
+**queryable but not writable**. A filter you cannot set at write time cannot separate what was
+stored.
+
+**verdict: `NO_USABLE_SECOND_SURFACE`.** Configuration isolation closes for this interface - not
+because the idea failed, but because the build offers no second identity both paths accept.
+Approximating a one-sided field would have manufactured exactly the false symmetry Gen76-79 spent
+four generations removing; it would have produced a number that meant nothing.
+
+**what stays intact:** scope isolation is unaffected and **Gen78 stands**; perseus, mem0 and
+hindsight each separate configurations cleanly (Gen80); and this is **bounded to the pinned 0.9.29
+build and the three surfaces examined** - not a claim about the product in general, since a later
+release or an unexposed surface could carry a writable second identity.
+
+**the shape of it:** three generations produced a properly narrow result - agentmemory separates
+scopes and does not separate configurations within one, because its only symmetric second field is
+ignored by search and its only other candidate cannot be written. A specific, checkable limitation of
+an interface. Not a verdict on a product, and not a ranking.
+
+Report: `research/PI_SURFACE_CLOSURE_GEN82.md`.
+
+---
+
 ## Generation 81 — the boundary is written correctly and ignored at search
 
 **status:** complete. `agentmemory_project_boundary_gen81`. Base `a8b55e4`, commit `ee084ae`, full
