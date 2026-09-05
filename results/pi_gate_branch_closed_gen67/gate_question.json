@@ -1,0 +1,158 @@
+{
+  "conclusion": {
+    "answer": "not demonstrated. They are useful as reviewer evidence.",
+    "branch_closed": "further prompt, filter or context tuning on candidate-blind checking is closed. Four interventions moved nothing, including one that changed the information boundary.",
+    "decisive_arc": [
+      "Gen60: unchanged generator on a repaired corpus - caught every wrong implementation it was allowed to judge, and 4 of 8 banks rejected known-correct code",
+      "Gen61: require each test to quote its requirement - no effect; the false accusations already carried genuine verbatim quotes",
+      "Gen62: require entailment - removed 158 of 188 tests at precision 0.101, and the screen called that PASSED",
+      "Gen63: screen repaired with a retention floor; Gen62 re-scored UNEVALUABLE",
+      "Gen64: deletion only with a named extra condition - destruction stopped, retention 0.821 to 0.964, detection restored, and the unsafe rate returned to 4 of 8 on the same four tasks",
+      "Gen66: the critic additionally shown the reference repository, candidate-blind - removal precision 0.222, retention 0.607 to 1.000, detection 12/12, and the unsafe rate STILL 4 of 8 on the same four tasks; the pathsafe bank kept all seven of its false accusations"
+    ],
+    "explicitly_not_the_next_iteration": "a checker allowed to inspect the candidate is a different, non-independent architecture; it is not a continuation of this experiment and must not be reported as one",
+    "generations_covered": [
+      "gen60",
+      "gen61",
+      "gen62",
+      "gen63",
+      "gen64",
+      "gen65",
+      "gen66",
+      "gen67"
+    ],
+    "next_branch": "a repository-informed checker changes the checker's information boundary and belongs in a new experimental branch, not as another turn of this one",
+    "question": "are model-generated tests safe to use as an unattended gate on this pinned model and generator configuration?",
+    "scope": "one pinned model, one generator contract, one corpus of eight tasks, one run per condition; this is a bounded result, not a general claim about generated tests",
+    "supported_use": "surface suspicious cases for a human reviewer",
+    "unsupported_use": "automatically decide correctness",
+    "why_filters_failed": "the false accusations and the sound inferences are indistinguishable to a candidate-blind checker, with or without the repository in front of it"
+  },
+  "contract": {
+    "contract_version": "gate-suitability-report-v1",
+    "no_threshold": "this module applies no bar and reaches no verdict; the screen still exists and still runs, and its output is recorded as secondary",
+    "reads_only": "committed outcome files; no model call, no re-run",
+    "replaces": "PASSED/FAILED as the headline for the generated-evidence question",
+    "reports": [
+      "unsafe bank rate",
+      "retention range",
+      "banks hollowed",
+      "wrongs caught out of the eligible population",
+      "detection losses named individually"
+    ],
+    "why": "the frozen screen returned PASSED for a run with half its banks unusable, for a run that changed nothing, and for a run that had deleted 84% of its tests; the word tracked none of it"
+  },
+  "generations": {
+    "gen60": {
+      "banks_considered": 8,
+      "banks_hollowed": 0,
+      "comparison_tasks": [
+        "dispatch",
+        "thermo",
+        "valve"
+      ],
+      "detection_losses_vs_baseline": [],
+      "gate_suitable": null,
+      "generation": "gen60",
+      "retention_max": null,
+      "retention_min": null,
+      "unsafe_banks": 4,
+      "unsafe_rate": 0.5,
+      "why_no_verdict": "gate suitability is not a single number; read the unsafe rate, the retention range and the named detection losses",
+      "wrongs_caught": 12,
+      "wrongs_in_population": 12
+    },
+    "gen61": {
+      "banks_considered": 8,
+      "banks_hollowed": 0,
+      "comparison_tasks": [],
+      "detection_losses_vs_baseline": [],
+      "gate_suitable": null,
+      "generation": "gen61",
+      "retention_max": null,
+      "retention_min": null,
+      "unsafe_banks": 4,
+      "unsafe_rate": 0.5,
+      "why_no_verdict": "gate suitability is not a single number; read the unsafe rate, the retention range and the named detection losses",
+      "wrongs_caught": 12,
+      "wrongs_in_population": 12
+    },
+    "gen62": {
+      "banks_considered": 7,
+      "banks_hollowed": 0,
+      "comparison_tasks": [
+        "dispatch",
+        "manifest",
+        "valve"
+      ],
+      "detection_losses_vs_baseline": [],
+      "gate_suitable": null,
+      "generation": "gen62",
+      "known_false_removed": 16,
+      "known_false_total": 16,
+      "removal_precision": 0.10126582278481013,
+      "retention_max": null,
+      "retention_min": null,
+      "tests_removed": 158,
+      "tests_reviewed": 188,
+      "unsafe_banks": 0,
+      "unsafe_rate": 0.0,
+      "valid_removed": 142,
+      "why_no_verdict": "gate suitability is not a single number; read the unsafe rate, the retention range and the named detection losses",
+      "wrongs_caught": 18,
+      "wrongs_in_population": 21
+    },
+    "gen64": {
+      "banks_considered": 8,
+      "banks_hollowed": 0,
+      "comparison_tasks": [
+        "dispatch",
+        "manifest",
+        "thermo",
+        "valve"
+      ],
+      "detection_losses_vs_baseline": [],
+      "gate_suitable": null,
+      "generation": "gen64",
+      "known_false_removed": 4,
+      "known_false_total": 16,
+      "removal_precision": 0.26666666666666666,
+      "retention_max": 0.9642857142857143,
+      "retention_min": 0.8214285714285714,
+      "tests_removed": 15,
+      "tests_reviewed": 188,
+      "unsafe_banks": 4,
+      "unsafe_rate": 0.5,
+      "valid_removed": 11,
+      "why_no_verdict": "gate suitability is not a single number; read the unsafe rate, the retention range and the named detection losses",
+      "wrongs_caught": 12,
+      "wrongs_in_population": 12
+    },
+    "gen66": {
+      "banks_considered": 8,
+      "banks_hollowed": 0,
+      "comparison_tasks": [
+        "dispatch",
+        "manifest",
+        "thermo",
+        "valve"
+      ],
+      "detection_losses_vs_baseline": [],
+      "gate_suitable": null,
+      "generation": "gen66",
+      "known_false_removed": 6,
+      "known_false_total": 16,
+      "removal_precision": 0.2222222222222222,
+      "retention_max": 1.0,
+      "retention_min": 0.6071428571428571,
+      "tests_removed": 27,
+      "tests_reviewed": 188,
+      "unsafe_banks": 4,
+      "unsafe_rate": 0.5,
+      "valid_removed": 21,
+      "why_no_verdict": "gate suitability is not a single number; read the unsafe rate, the retention range and the named detection losses",
+      "wrongs_caught": 12,
+      "wrongs_in_population": 12
+    }
+  }
+}

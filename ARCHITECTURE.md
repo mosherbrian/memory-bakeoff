@@ -373,5 +373,16 @@ to decide correctness automatically.** PASSED is retired as the headline for thi
 question; report the unsafe bank rate, retention range and named detection losses
 instead (`gate-suitability-report-v1`).
 
-A repository-informed checker changes the checker's information boundary and
-belongs in a new branch, not a further turn of this one.
+A repository-informed checker was then tried (Gen66) as its own branch, with the
+critic shown the pre-work repository and verified candidate-blind: **the unsafe
+rate stayed at 4 of 8, the same four tasks**, and the `pathsafe` bank kept all
+seven of its false accusations with the code in view. Removing the information
+handicap removed the explanation for the earlier failures without changing the
+result.
+
+**The candidate-blind gate branch is CLOSED (Gen67).** Further prompt, filter or
+context tuning on this architecture is closed. A checker permitted to inspect the
+candidate is a different, non-independent architecture - a checker that reads the
+implementation is on its way to agreeing with it, which is the Gen49 failure this
+programme exists to detect - and must not be reported as the next iteration of
+this experiment.
