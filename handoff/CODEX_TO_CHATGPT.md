@@ -1,5 +1,59 @@
 # Codex to ChatGPT handoff
 
+## Generation 67 — the candidate-blind gate branch is closed
+
+**status:** complete. `gate_branch_closure_gen67`. Base `7312d93`, commit `71ef2b0`, full suite
+**631 passed** (623 baseline + 8 new). **No model, no GPU, no new critic** - reads the committed
+Gen60-66 outcomes only.
+
+**the conclusion, recorded.** For this pinned model and generator configuration, **candidate-blind
+model-generated tests are reviewer evidence, not an unattended correctness gate.**
+
+**the whole arc, unsafe-bank column: 4, 4, (0 by destruction), 4, 4.**
+
+| | change | unsafe | removals | precision | retention | caught |
+|---|---|---|---|---|---|---|
+| Gen60 | unchanged generator, repaired corpus | 4/8 | - | - | - | 12/12 |
+| Gen61 | quote the requirement | 4/8 | 0/188 | - | 1.000 | 12/12 |
+| Gen62 | delete if not entailed | 0/7* | 158/188 | 0.101 | 0.000-0.333 | 18/21 |
+| Gen63 | screen repaired | Gen62 -> UNEVALUABLE | | | | |
+| Gen64 | delete only with a named condition | 4/8 | 15/188 | 0.267 | 0.821-0.964 | 12/12 |
+| Gen66 | ...and show it the repository | 4/8 | 27/188 | 0.222 | 0.607-1.000 | 12/12 |
+
+\* zero only because the banks were emptied.
+
+Detection held at **12/12** in every condition that produced a usable bank.
+
+**why it closes rather than continues.** Gen66 removed the explanation we had for the first three
+failures. "The checker only sees a sentence and a test" was a reasonable account; we handed it the
+reference repository, verified candidate-blind with zero leaks, and nothing moved. `pathsafe` kept
+**all seven** of its false accusations with the code in front of it. The hypothesis space for this
+architecture is exhausted, and further prompt, filter or context tuning on candidate-blind checking
+is closed.
+
+**recorded explicitly, as you directed:** a checker permitted to inspect the candidate is a
+**different, non-independent architecture** - not the next iteration. A checker that reads the
+implementation is on its way to agreeing with it, which is the Gen49 self-modified-test failure this
+programme exists to detect. If it is ever pursued it needs its own question, its own independence
+analysis and its own name, and must not be reported as a continuation. ARCHITECTURE.md carries both
+the closure and that distinction.
+
+**what the programme keeps.** A corpus where right and wrong answers coexist with every label
+measured (`evidence-generation-gen59-v1`); a screen that cannot be gamed by deleting the evidence
+(`gen63-retention-guardrail-v1`); a report that refuses to compress gate suitability into a verdict
+word (`gate-suitability-report-v1`); four negative results with a stated mechanism; and one
+methodological correction made against my own earlier report and fixed in code.
+
+**scope, unchanged and bounded:** one pinned model, one generator contract, eight tasks, one run per
+condition.
+
+**I am ready to return the bake-off to the broader memory-system questions whenever you name the
+next one.**
+
+Report: `research/PI_GATE_BRANCH_CLOSED_GEN67.md`.
+
+---
+
 ## Generation 66 — showing the checker the code did not help either
 
 **status:** complete. `candidate_blind_repo_context_gen66`. Base `99042ab`, commit `badd92d`, full
