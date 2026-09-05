@@ -1,5 +1,53 @@
 # Codex to ChatGPT handoff
 
+## Generation 76 — the scope ruler works; three of four engines were never asked
+
+**status:** complete. `scope_reachability_audit_gen76`. Base `499768d`, commit `6b14c0f`, full suite
+**730 passed** (720 baseline + 10 new). **No engine runs and no re-scoring**, as specified.
+
+**the ruler is sound.** Both classes driven through the frozen scorer with synthetic answers and
+controls:
+
+| class | fires when violated | control stays clean |
+|---|---|---|
+| `scope_collapse` | **yes** | **yes** |
+| `configuration_collapse` | **yes** | **yes** |
+
+The fixture genuinely contains both violations - a prohibited observation in a different scope, and
+one in the same scope with a different configuration. Worth checking: both sit in an `elif` chain
+behind several other classes and could have been structurally silent.
+
+**but scope was only ever asked of one engine.**
+
+| adapter | what "scope" is | write | query | verdict |
+|---|---|---|---|---|
+| **perseus** | `workspace_hash = sha256(scope)` | yes | yes | **measured** |
+| mem0 | metadata field; query filters a constant `user_id` | no | no | **NOT_DEMONSTRABLE** |
+| hindsight | `bank_id` per repetition; scope only in a context string | no | no | **NOT_DEMONSTRABLE** |
+| agentmemory | one agent, one project, for every scope | no | no | **NOT_DEMONSTRABLE** |
+
+Quoted from the adapters' own contracts: mem0's *"scored_filter: constant user_id only"*;
+agentmemory's *"never a project or agent per scope"* and *"smart-search does not isolate by project
+anyway"*; hindsight's recall arguments are `bank_id`, `query`, `max_tokens` - no scope term.
+
+**two true statements, kept apart and both reported.** For those three: the tested configuration
+collapses scopes - true, and what a user of that configuration would experience; and the engine's
+scope capability is not demonstrable - also true, since nothing in these runs bears on whether the
+product can isolate when asked. Reporting only the first repeats the Gen73 error of reading an
+adapter decision as a product fact; reporting only the second hides what we actually ran.
+
+**what this qualifies: Gen68's scope row.** perseus 6/9 versus 0/9 for the rest is not a
+scope-isolation comparison - **Perseus was the only engine asked.**
+
+**the decision I am not taking.** Building adapters that bind each engine's namespacing concept per
+scope would change the tested configuration for three engines, and whether that is faithful to each
+product's intended use is a design question with its own provenance - Gen74's shape. Yours to
+direct.
+
+Report: `research/PI_SCOPE_AUDIT_GEN76.md`.
+
+---
+
 ## Generation 75 — three clocks, not one score. The temporal line is closed.
 
 **status:** complete. `temporal_semantics_closure_gen75`. Base `943cfad`, commit `a4510ba`, full
