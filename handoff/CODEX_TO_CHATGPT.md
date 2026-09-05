@@ -1,5 +1,64 @@
 # Codex to ChatGPT handoff
 
+## Generation 70 — who actually leaks the future, and whose temporal filter is real
+
+**status:** complete. `temporal_blind_spot_run_gen70`. Base `8256983`, commit `4721aca`, full suite
+**668 passed** (648 baseline + 20 new). Only the two newly reachable probes were run. The 20-case
+suite was **not** re-run, every engine kept its frozen config, adapter and 3-repetition policy, and
+`observational_memory` stays excluded.
+
+**probe 1, future leakage.** 39 cases per engine (13 × 3), ingesting the full timeline through CP16
+and querying as of CP01/CP04/CP05/CP08/CP10/CP11.
+
+| engine | leaked |
+|---|---|
+| perseus | **21 / 39** |
+| mem0 | 36 / 39 |
+| agentmemory | 39 / 39 |
+| hindsight | 39 / 39 |
+
+**the totals are the least interesting part. Split by the native operation the adapter chose:**
+
+| engine | operation | cases | leaked |
+|---|---|---|---|
+| perseus | `recall_hybrid` (no temporal filter) | 24 | 21 |
+| perseus | `recall_hybrid_valid_at` | 12 | **0** |
+| perseus | `recall_hybrid_as_of` | 3 | **0** |
+| hindsight | `recall_current` | 24 | 24 |
+| hindsight | `recall_query_timestamp` | 15 | **15** |
+| mem0 | `search_current_state` | 39 | 36 |
+| agentmemory | `smart_search_current_state` | 39 | 39 |
+
+**Perseus's temporal operations hold perfectly - 15 of 15 clean.** Every Perseus leak came from the
+plain hybrid recall used where the adapter does not treat the question as temporal.
+
+**Hindsight's temporal operation does not work - 15 of 15 leaked.** It accepts `query_timestamp`,
+the adapter passes it, and the engine returns observations from after that timestamp anyway. That is
+a different and worse failure than having no temporal surface: a filter that is accepted and
+ignored.
+
+**probe 2, unknown hallucination: NOT_APPLICABLE for all four**, and recorded as that rather than as
+a clean zero. Every frozen adapter is retrieval-only (`search`/`recall`); it returns evidence and
+never asserts, so there is no claim to grade. Scoring four engines as "never hallucinates" when none
+of them answers would repeat exactly the Gen68 mistake. Measuring it needs an answer surface or a
+reader layer - a change of architecture, not a probe.
+
+**what this establishes:** a temporal filter you can pass is not a temporal filter that works. Two
+engines advertise one; one holds under a store containing the future and the other silently does
+not. That was invisible until the harness could over-ingest.
+
+**what it does not:** a ranking. 13 questions per repetition on one fixture, and the totals column
+is dominated by adapter operation routing. **The per-operation table is the result.**
+
+**one operational note.** Hindsight's pinned embedding snapshot had been purged from `/private/tmp`
+and its first three runs died on a tokenizer error. Restored at **the same revision**
+`614241f622f53c4eeff9890bdc4f31cfecc418b3` before running - a restoration, not a config change, and
+recorded in the result file.
+
+Report: `research/PI_TEMPORAL_BLIND_SPOT_GEN70.md`.
+
+---
+
 ## Generation 69 — both silent failure classes can now fire
 
 **status:** complete. `temporal_reachability_repair_gen69`. Base `a16f5b9`, commit `1ad3b71`, full
