@@ -96,12 +96,20 @@ def main() -> int:
             findings["requests"].append({"path": "/agentmemory/smart-search",
                                          "body": body})
             raw = g13.request_json(base, "/agentmemory/smart-search", body=body)
+            # Record the response verbatim: the first pass mis-read its shape and
+            # reported a boundary result it could not actually see.
+            findings.setdefault("raw_search_responses", []).append(
+                {"queried_project": project,
+                 "raw": json.loads(json.dumps(raw, default=str))[:4]
+                        if isinstance(raw, list) else raw})
             returned = []
             for hit in (raw.get("results") or []):
                 returned.append({
+                    "keys": sorted(hit),
                     "obsId": hit.get("obsId"),
                     "sourceObservationIds": hit.get("sourceObservationIds"),
-                    "content": (hit.get("content") or "")[:70],
+                    "content": (hit.get("content") or hit.get("text")
+                                or hit.get("title") or "")[:90],
                     "project_field": project_of(hit),
                 })
             findings["queries"].append({"queried_project": project,
@@ -115,13 +123,23 @@ def main() -> int:
     stored_projects = {entry["project_field"] for entry in findings["stored"]}
     project_survives_write = stored_projects and stored_projects != {"<absent>"}
 
-    crossed = False
+    crossed, undetectable = False, True
     for query in findings["queries"]:
-        wanted = "A" if query["queried_project"] == PROJECT_A else "B"
+        own, other = ((MARKER_A, MARKER_B) if query["queried_project"] == PROJECT_A
+                      else (MARKER_B, MARKER_A))
+        own_key, other_key = own.split(":")[0], other.split(":")[0]
         for hit in query["returned"]:
-            sources = hit.get("sourceObservationIds") or []
-            if any(s and not s.endswith(wanted) for s in sources):
+            text = " ".join(str(v) for v in hit.values())
+            if own_key in text or other_key in text:
+                undetectable = False
+            if other_key in text:
                 crossed = True
+            sources = hit.get("sourceObservationIds") or []
+            wanted = "A" if query["queried_project"] == PROJECT_A else "B"
+            if any(x for x in sources if x):
+                undetectable = False
+                if any(x and not x.endswith(wanted) for x in sources):
+                    crossed = True
 
     if not project_survives_write and crossed:
         verdict = "BOTH"
@@ -135,6 +153,11 @@ def main() -> int:
         verdict = "SEARCH_TIME_IGNORING"
         why = ("the stored record carries the right project and search returns "
                "the other one anyway")
+    elif undetectable:
+        verdict = "UNDETERMINED_RESPONSE_OPAQUE"
+        why = ("search returned hits carrying neither the marker text nor a "
+               "source id, so this probe cannot tell which project answered; "
+               "reporting that rather than a boundary result it cannot see")
     else:
         verdict = "NO_CROSSING_OBSERVED"
         why = "each query returned only its own project's marker"
@@ -146,6 +169,7 @@ def main() -> int:
         "project_survives_write": bool(project_survives_write),
         "stored_project_values": sorted(str(p) for p in stored_projects),
         "cross_project_results_returned": crossed,
+        "attribution_possible": not undetectable,
         "verdict": verdict, "why": why,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         **findings,
