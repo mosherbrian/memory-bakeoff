@@ -149,3 +149,45 @@ def test_shared_helper_returns_the_resolver_order():
         got = [o.id for o in ITF.ordered_observations(
             fixture, case, V3.visible_ids)]
         assert got == list(V3.visible_ids(fixture, case)), case.id
+
+
+# --- Gen105: do the Gen102 conclusions survive the corrected order? ----------
+def _arm(engine, arm):
+    path = (ROOT / "results" / "supersession_ablation_gen102"
+            / f"{engine}-{arm}.json")
+    if not path.exists():
+        pytest.skip("engine results are produced on the Mac")
+    return json.loads(path.read_text())["rows"]
+
+
+def _paired(engine):
+    def key(row):
+        return (row["core"], row["load"], row["repetition"])
+    off = {key(r): r for r in _arm(engine, "off")}
+    on = {key(r): r for r in _arm(engine, "on")}
+    return [(off[k], on[k]) for k in sorted(set(off) & set(on))]
+
+
+def test_perseus_explicit_lineage_survives_the_corrected_order():
+    """Gen102 said 16/16 stale removed, 0 current lost. It holds on v3 order."""
+    pairs = _paired("perseus")
+    assert len(pairs) == 48
+    for off, on in pairs:
+        assert "stale_version_interference" in (off["mechanisms"] or [])
+        assert "stale_version_interference" not in (on["mechanisms"] or [])
+        assert on["current_retrievable"]
+
+
+def test_hindsight_invalidation_still_changes_nothing():
+    """Gen102 said 0/16 removed. On the corrected order NOT ONE CELL differs.
+
+    Stronger than Gen102: not the stale record, not the current record, not
+    even a rank. update_memory(state='invalidated') is accepted and recall is
+    byte-for-byte the same decision at every core, load and repetition.
+    """
+    pairs = _paired("hindsight")
+    assert len(pairs) == 48
+    for off, on in pairs:
+        assert (off["mechanisms"] or []) == (on["mechanisms"] or [])
+        assert off["target_present"] == on["target_present"]
+        assert off["ranks"] == on["ranks"]
