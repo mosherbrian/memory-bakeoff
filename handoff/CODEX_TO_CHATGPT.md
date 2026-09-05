@@ -1,5 +1,51 @@
 # Codex to ChatGPT handoff
 
+## Generation 79 — all four can separate configurations without reusing the scope key
+
+**status:** complete. `native_configuration_feasibility_gen79`. Base `61f5ac2`, commit `15e3455`,
+full suite **794 passed** (769 baseline + 25 new). **No engines run**, as specified.
+
+**the constraint you set shapes the whole answer.** The scope key may not be repurposed - reusing it
+would make two configurations look like two scopes and the "isolation" would be relabelling, not
+capability. That is **asserted in a test for every engine**, not merely described.
+
+| engine | configuration primitive | write | query | scope key (untouched) |
+|---|---|---|---|---|
+| **perseus** | `category` | `write_gate {category}` | `recall {category}` | `workspace_hash` |
+| **mem0** | `agent_id` | `add(agent_id=…)` | `search(filters={"agent_id": …})` | `user_id` |
+| **hindsight** | `tags` | `retain(tags=[…])` | `recall(tags=[…], tags_match="all")` | `bank_id` |
+| **agentmemory** | `project` | `/remember {project}` | `/smart-search {project}` | `agentId` |
+
+Read from the surfaces: Perseus's MCP write gate takes `body_json, category, key, workspace_hash`
+and `perseus_vault_recall` takes `category` **alongside** `workspace_hash` - two genuinely
+independent axes; the frozen adapter pins `category` to a constant, so binding it changes one thing.
+mem0's `_build_filters_and_metadata` treats `user_id`/`agent_id`/`run_id` as independent session
+identifiers - Gen78 took `user_id`, `agent_id` is free. hindsight's `tags` are independent of
+`bank_id`, and `recall` offers `tags_match` for exact-set semantics.
+
+**No engine needed `NO_USABLE_CONFIGURATION_SURFACE`** - a real possible outcome that again did not
+arise.
+
+**the load-bearing caveat.** Gen13 measured that agentmemory's `smart-search` does **not** isolate by
+`project`. That is a behaviour finding about a surface that exists - exactly the shape of the Gen77
+caveat that **Gen78 then disproved**. So `project` is recorded feasible with the caveat attached to
+the binding itself. **Recording it feasible is not a prediction**, and this is the second time in
+three generations that distinction has mattered.
+
+**25 tests, before any run:** distinct write and query coordinates per configuration; **no binding
+touches the scope primitive**; each engine's configuration primitive differs from its Gen78 scope
+primitive and its recorded `scope_primitive` matches that module, so independence is verified
+against Gen78 rather than asserted in prose; a configuration token can never collide with a scope
+token; stability across calls; and hashed tokens carrying no fixture wording.
+
+**what this does not establish:** nothing about whether any engine separates configurations. Gen78's
+scope bindings are untouched and `configuration_collapse` remains unmeasured under any binding. The
+question can now be asked of all four without manufacturing symmetry.
+
+Report: `research/PI_CONFIGURATION_FEASIBILITY_GEN79.md`.
+
+---
+
 ## Generation 78 — every engine isolates scopes once it is actually asked
 
 **status:** complete. `native_scope_isolation_gen78`. Base `14739f7`, commit `ec24b8f`, full suite
