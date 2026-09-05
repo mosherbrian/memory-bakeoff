@@ -1,0 +1,2216 @@
+{
+  "engine": "perseus",
+  "fixture_sha256": "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd",
+  "future_leakage_cases": 21,
+  "generated_at": "2026-09-05T10:25:25+00:00",
+  "generation": 70,
+  "probe": {
+    "ingest_through_checkpoint": "CP16",
+    "not_a_fixture_change": "longitudinal-v1 observations, cases and checkpoints are untouched; their sha256 must still match every committed result",
+    "probe_version": "future-leakage-probe-v1",
+    "query_as_of_checkpoints": [
+      "CP01",
+      "CP04",
+      "CP05",
+      "CP08",
+      "CP10",
+      "CP11"
+    ],
+    "scorer_unchanged": "longitudinal-scorer-v1 already flags any returned id outside the queried checkpoint's visible prefix; only the ingestion plan changes",
+    "why": "the store holds the whole timeline while the question is asked about an earlier moment, so a system that cannot filter by knowledge time will return something it should not have known yet"
+  },
+  "probe_cases_total": 39,
+  "repetitions": [
+    {
+      "observations_ingested": 16,
+      "records": [
+        {
+          "case_id": "LQ01",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 81.21,
+          "leaked_observations": [
+            "L002",
+            "L004",
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-40bf18d7e10d",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-cd6abda17441",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-72d83adcb7b3",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ17",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 14.14,
+          "leaked_observations": [
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-40bf18d7e10d",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-72d83adcb7b3",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L003",
+              "native_id": "cli-a429b766c304",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C2 measured 29 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ02",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "configuration_collapse",
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.88,
+          "leaked_observations": [
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "configuration_collapse"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-72d83adcb7b3",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-cd6abda17441",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-40bf18d7e10d",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ03",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.8,
+          "leaked_observations": [
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-40bf18d7e10d",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-cd6abda17441",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-72d83adcb7b3",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ04",
+          "checkpoint_id": "CP04",
+          "failure_classes": [],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 14.02,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ16",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage",
+            "unsupported_evidence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.83,
+          "leaked_observations": [
+            "L007",
+            "L008"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "unsupported_evidence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L003",
+              "native_id": "cli-a429b766c304",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C2 measured 29 t/s."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-cd6abda17441",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L008",
+              "native_id": "cli-c161c62aede4",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction with warmup and fixed batch succeeded."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-72d83adcb7b3",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ05",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "correction_failure",
+            "history_erasure",
+            "stale_persistence"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.93,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "history_erasure",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ06",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "history_erasure"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.71,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_as_of",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ07",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "correction_failure",
+            "false_persistence",
+            "missing_required_truth"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.86,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "false_persistence",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ10",
+          "checkpoint_id": "CP08",
+          "failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "834200810debd68abbb6cac1299cd01aa93cb64262b7cac87c63b70d8a115cb1",
+          "ingested_through": "CP16",
+          "latency_ms": 13.78,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP08",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_id": "cli-c161c62aede4",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction with warmup and fixed batch succeeded."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-cd6abda17441",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-1cfd047d3d73",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-72d83adcb7b3",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-b1178e6e7f08",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ11",
+          "checkpoint_id": "CP10",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "88381e5f755a40d75761bc3dc1f6c82cf683833f4f0c0b79409676431580255d",
+          "ingested_through": "CP16",
+          "latency_ms": 13.86,
+          "leaked_observations": [
+            "L011",
+            "L015",
+            "L016"
+          ],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP10",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L010",
+              "native_id": "cli-170424d7ad22",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora moved release branch to release/aurora-2.x."
+            },
+            {
+              "canonical_id": "L009",
+              "native_id": "cli-609d09bfe795",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora release branch was release/aurora-1.x."
+            },
+            {
+              "canonical_id": "L015",
+              "native_id": "cli-39a9c04e1246",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "A temporary Aurora compatibility symlink exposed old client path."
+            },
+            {
+              "canonical_id": "L016",
+              "native_id": "cli-70fb2a02e515",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora removed temporary compatibility symlink; claim retracted."
+            },
+            {
+              "canonical_id": "L011",
+              "native_id": "cli-f4366e24e024",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ12",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 13.77,
+          "leaked_observations": [
+            "L013",
+            "L015",
+            "L016"
+          ],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L011",
+              "native_id": "cli-f4366e24e024",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5."
+            },
+            {
+              "canonical_id": "L016",
+              "native_id": "cli-70fb2a02e515",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora removed temporary compatibility symlink; claim retracted."
+            },
+            {
+              "canonical_id": "L010",
+              "native_id": "cli-170424d7ad22",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora moved release branch to release/aurora-2.x."
+            },
+            {
+              "canonical_id": "L013",
+              "native_id": "cli-39fbbb368018",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Old Aurora client path was invalidated as stale generated artifact."
+            },
+            {
+              "canonical_id": "L015",
+              "native_id": "cli-39a9c04e1246",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "A temporary Aurora compatibility symlink exposed old client path."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ13",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "history_erasure"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 13.89,
+          "leaked_observations": [],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L009",
+              "native_id": "cli-609d09bfe795",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora release branch was release/aurora-1.x."
+            }
+          ]
+        }
+      ],
+      "repetition": 1,
+      "unknown_hallucination": {
+        "case_id": "LQ16",
+        "graded": [],
+        "not_a_clean_zero": true,
+        "reader_answers_seen": 0,
+        "status": "NOT_APPLICABLE",
+        "why": "the frozen adapter exposes retrieval only (search/recall); it returns evidence and never asserts an answer, so there is no claim to grade"
+      }
+    },
+    {
+      "observations_ingested": 16,
+      "records": [
+        {
+          "case_id": "LQ01",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 82.12,
+          "leaked_observations": [
+            "L002",
+            "L004",
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-b9fcff65697b",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-69c2bd0c90ec",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-451418a975cf",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ17",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 14.21,
+          "leaked_observations": [
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-b9fcff65697b",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-451418a975cf",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L003",
+              "native_id": "cli-37e5422430e3",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C2 measured 29 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ02",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "configuration_collapse",
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.89,
+          "leaked_observations": [
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "configuration_collapse"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-451418a975cf",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-69c2bd0c90ec",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-b9fcff65697b",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ03",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.99,
+          "leaked_observations": [
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-b9fcff65697b",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-69c2bd0c90ec",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-451418a975cf",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ04",
+          "checkpoint_id": "CP04",
+          "failure_classes": [],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 14.05,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ16",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage",
+            "unsupported_evidence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.85,
+          "leaked_observations": [
+            "L007",
+            "L008"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "unsupported_evidence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L003",
+              "native_id": "cli-37e5422430e3",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C2 measured 29 t/s."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-69c2bd0c90ec",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L008",
+              "native_id": "cli-329faa7af4ad",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction with warmup and fixed batch succeeded."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-451418a975cf",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ05",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "correction_failure",
+            "history_erasure",
+            "stale_persistence"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.97,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "history_erasure",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ06",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "history_erasure"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.79,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_as_of",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ07",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "correction_failure",
+            "false_persistence",
+            "missing_required_truth"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.98,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "false_persistence",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ10",
+          "checkpoint_id": "CP08",
+          "failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "834200810debd68abbb6cac1299cd01aa93cb64262b7cac87c63b70d8a115cb1",
+          "ingested_through": "CP16",
+          "latency_ms": 13.81,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP08",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_id": "cli-329faa7af4ad",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction with warmup and fixed batch succeeded."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-69c2bd0c90ec",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-0d043d1aeb73",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-451418a975cf",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-16eebbfc60ed",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ11",
+          "checkpoint_id": "CP10",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "88381e5f755a40d75761bc3dc1f6c82cf683833f4f0c0b79409676431580255d",
+          "ingested_through": "CP16",
+          "latency_ms": 13.89,
+          "leaked_observations": [
+            "L011",
+            "L015",
+            "L016"
+          ],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP10",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L010",
+              "native_id": "cli-089cedd7310f",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora moved release branch to release/aurora-2.x."
+            },
+            {
+              "canonical_id": "L009",
+              "native_id": "cli-5eaf695a6ca7",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora release branch was release/aurora-1.x."
+            },
+            {
+              "canonical_id": "L015",
+              "native_id": "cli-8bbd337f46ae",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "A temporary Aurora compatibility symlink exposed old client path."
+            },
+            {
+              "canonical_id": "L011",
+              "native_id": "cli-21b8522d76a5",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5."
+            },
+            {
+              "canonical_id": "L016",
+              "native_id": "cli-da4c50641766",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora removed temporary compatibility symlink; claim retracted."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ12",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 14.43,
+          "leaked_observations": [
+            "L013",
+            "L015",
+            "L016"
+          ],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L011",
+              "native_id": "cli-21b8522d76a5",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5."
+            },
+            {
+              "canonical_id": "L016",
+              "native_id": "cli-da4c50641766",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora removed temporary compatibility symlink; claim retracted."
+            },
+            {
+              "canonical_id": "L010",
+              "native_id": "cli-089cedd7310f",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora moved release branch to release/aurora-2.x."
+            },
+            {
+              "canonical_id": "L013",
+              "native_id": "cli-a111586e326b",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Old Aurora client path was invalidated as stale generated artifact."
+            },
+            {
+              "canonical_id": "L015",
+              "native_id": "cli-8bbd337f46ae",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "A temporary Aurora compatibility symlink exposed old client path."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ13",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "history_erasure"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 14.53,
+          "leaked_observations": [],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L009",
+              "native_id": "cli-5eaf695a6ca7",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora release branch was release/aurora-1.x."
+            }
+          ]
+        }
+      ],
+      "repetition": 2,
+      "unknown_hallucination": {
+        "case_id": "LQ16",
+        "graded": [],
+        "not_a_clean_zero": true,
+        "reader_answers_seen": 0,
+        "status": "NOT_APPLICABLE",
+        "why": "the frozen adapter exposes retrieval only (search/recall); it returns evidence and never asserts an answer, so there is no claim to grade"
+      }
+    },
+    {
+      "observations_ingested": 16,
+      "records": [
+        {
+          "case_id": "LQ01",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 81.58,
+          "leaked_observations": [
+            "L002",
+            "L004",
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-5060e4078dce",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-2bc7ab4616b3",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-d65d8ccf00bc",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ17",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 14.14,
+          "leaked_observations": [
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-5060e4078dce",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-d65d8ccf00bc",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L003",
+              "native_id": "cli-b20498d4a798",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C2 measured 29 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ02",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "configuration_collapse",
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.85,
+          "leaked_observations": [
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "configuration_collapse"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-d65d8ccf00bc",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-2bc7ab4616b3",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-5060e4078dce",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ03",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.79,
+          "leaked_observations": [
+            "L005",
+            "L007"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_id": "cli-5060e4078dce",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Audit corrected Forge C1: valid result was 24 t/s, not 21."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-2bc7ab4616b3",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-d65d8ccf00bc",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ04",
+          "checkpoint_id": "CP04",
+          "failure_classes": [],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.97,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ16",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage",
+            "unsupported_evidence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 13.83,
+          "leaked_observations": [
+            "L007",
+            "L008"
+          ],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "unsupported_evidence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L003",
+              "native_id": "cli-b20498d4a798",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C2 measured 29 t/s."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-2bc7ab4616b3",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L008",
+              "native_id": "cli-c6e909a22c28",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction with warmup and fixed batch succeeded."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-d65d8ccf00bc",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ05",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "correction_failure",
+            "history_erasure",
+            "stale_persistence"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.9,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "history_erasure",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ06",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "history_erasure"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.71,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_as_of",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ07",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "correction_failure",
+            "false_persistence",
+            "missing_required_truth"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 13.86,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "false_persistence",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ10",
+          "checkpoint_id": "CP08",
+          "failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "834200810debd68abbb6cac1299cd01aa93cb64262b7cac87c63b70d8a115cb1",
+          "ingested_through": "CP16",
+          "latency_ms": 13.79,
+          "leaked_observations": [],
+          "native_scope_filter": "82fbaa10f192671fa2ec394d49c542e0e9e5e885424f93a7fad34c0efe6c49cb",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP08",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_id": "cli-c6e909a22c28",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction with warmup and fixed batch succeeded."
+            },
+            {
+              "canonical_id": "L007",
+              "native_id": "cli-2bc7ab4616b3",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge C2 reproduction without warmup failed."
+            },
+            {
+              "canonical_id": "L002",
+              "native_id": "cli-2c0eb717d0b5",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C1 as active."
+            },
+            {
+              "canonical_id": "L004",
+              "native_id": "cli-d65d8ccf00bc",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Forge selected C2 as active."
+            },
+            {
+              "canonical_id": "L001",
+              "native_id": "cli-70233e993372",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Nimbus Forge C1 measured 21 t/s."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ11",
+          "checkpoint_id": "CP10",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "88381e5f755a40d75761bc3dc1f6c82cf683833f4f0c0b79409676431580255d",
+          "ingested_through": "CP16",
+          "latency_ms": 13.85,
+          "leaked_observations": [
+            "L011",
+            "L015",
+            "L016"
+          ],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP10",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L010",
+              "native_id": "cli-abfbca410019",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora moved release branch to release/aurora-2.x."
+            },
+            {
+              "canonical_id": "L009",
+              "native_id": "cli-b5b7d21f8c75",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora release branch was release/aurora-1.x."
+            },
+            {
+              "canonical_id": "L015",
+              "native_id": "cli-6815a39f9a84",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "A temporary Aurora compatibility symlink exposed old client path."
+            },
+            {
+              "canonical_id": "L011",
+              "native_id": "cli-5e293136b50a",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5."
+            },
+            {
+              "canonical_id": "L016",
+              "native_id": "cli-6a44145843cc",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora removed temporary compatibility symlink; claim retracted."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ12",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 13.75,
+          "leaked_observations": [
+            "L013",
+            "L015",
+            "L016"
+          ],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L011",
+              "native_id": "cli-5e293136b50a",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Recovered CI log: Aurora used release/aurora-1.x on Feb 5."
+            },
+            {
+              "canonical_id": "L016",
+              "native_id": "cli-6a44145843cc",
+              "native_rank": 2,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora removed temporary compatibility symlink; claim retracted."
+            },
+            {
+              "canonical_id": "L010",
+              "native_id": "cli-abfbca410019",
+              "native_rank": 3,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora moved release branch to release/aurora-2.x."
+            },
+            {
+              "canonical_id": "L013",
+              "native_id": "cli-7976047ab9e8",
+              "native_rank": 4,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Old Aurora client path was invalidated as stale generated artifact."
+            },
+            {
+              "canonical_id": "L015",
+              "native_id": "cli-6815a39f9a84",
+              "native_rank": 5,
+              "provenance_exact": true,
+              "score": null,
+              "text": "A temporary Aurora compatibility symlink exposed old client path."
+            }
+          ]
+        },
+        {
+          "case_id": "LQ13",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "history_erasure"
+          ],
+          "future_leakage": false,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 13.88,
+          "leaked_observations": [],
+          "native_scope_filter": "97f7c9ce6aa3c919974fe6a73c0f30b4f840bb3ce00dca2f387fcd5579915a35",
+          "native_temporal_operation": "recall_hybrid_valid_at",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L009",
+              "native_id": "cli-b5b7d21f8c75",
+              "native_rank": 1,
+              "provenance_exact": true,
+              "score": null,
+              "text": "Aurora release branch was release/aurora-1.x."
+            }
+          ]
+        }
+      ],
+      "repetition": 3,
+      "unknown_hallucination": {
+        "case_id": "LQ16",
+        "graded": [],
+        "not_a_clean_zero": true,
+        "reader_answers_seen": 0,
+        "status": "NOT_APPLICABLE",
+        "why": "the frozen adapter exposes retrieval only (search/recall); it returns evidence and never asserts an answer, so there is no claim to grade"
+      }
+    }
+  ],
+  "suite_rerun": false
+}

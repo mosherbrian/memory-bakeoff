@@ -1,0 +1,2690 @@
+{
+  "engine": "agentmemory",
+  "fixture_sha256": "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd",
+  "future_leakage_cases": 39,
+  "generated_at": "2026-09-05T10:29:07+00:00",
+  "generation": 70,
+  "probe": {
+    "ingest_through_checkpoint": "CP16",
+    "not_a_fixture_change": "longitudinal-v1 observations, cases and checkpoints are untouched; their sha256 must still match every committed result",
+    "probe_version": "future-leakage-probe-v1",
+    "query_as_of_checkpoints": [
+      "CP01",
+      "CP04",
+      "CP05",
+      "CP08",
+      "CP10",
+      "CP11"
+    ],
+    "scorer_unchanged": "longitudinal-scorer-v1 already flags any returned id outside the queried checkpoint's visible prefix; only the ingestion plan changes",
+    "why": "the store holds the whole timeline while the question is asked about an earlier moment, so a system that cannot filter by knowledge time will return something it should not have known yet"
+  },
+  "probe_cases_total": 39,
+  "repetitions": [
+    {
+      "observations_ingested": 16,
+      "records": [
+        {
+          "case_id": "LQ01",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 14.85,
+          "leaked_observations": [
+            "L003",
+            "L004",
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_rank": 1,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "obsId": "mem_mto8q1rl_0dc22234d99a",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 4,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 5,
+              "obsId": "mem_mto8q1zl_0babd9c3fece",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ17",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 8.53,
+          "leaked_observations": [
+            "L004",
+            "L005",
+            "L007",
+            "L008",
+            "L011"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 1.0112307692307692,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 4,
+              "obsId": "mem_mto8q27w_ef1077c69d44",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 5,
+              "obsId": "mem_mto8q1zl_0babd9c3fece",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ02",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 7.17,
+          "leaked_observations": [
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 1.0201512096774192,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1zl_0babd9c3fece",
+              "provenance_exact": true,
+              "score": 1.0071354166666666,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 4,
+              "obsId": "mem_mto8q1rl_0dc22234d99a",
+              "provenance_exact": true,
+              "score": 1.0044565756823822,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 5,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 1.004153846153846,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ03",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "configuration_collapse",
+            "future_leakage",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 5.91,
+          "leaked_observations": [
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "configuration_collapse",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 4,
+              "obsId": "mem_mto8q1zl_0babd9c3fece",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q1rl_0dc22234d99a",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ04",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "correction_failure",
+            "future_leakage",
+            "history_erasure"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 6.22,
+          "leaked_observations": [
+            "L005",
+            "L008",
+            "L013"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 2,
+              "obsId": "mem_mto8q2bx_8b3b4c9bd7d1",
+              "provenance_exact": true,
+              "score": 0.9783728652751422,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q1rl_0dc22234d99a",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ16",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage",
+            "unsupported_evidence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 5.44,
+          "leaked_observations": [
+            "L006",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "unsupported_evidence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1xi_ef421822a395",
+              "provenance_exact": true,
+              "score": 1.0366666666666668,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "obsId": "mem_mto8q1rl_0dc22234d99a",
+              "provenance_exact": true,
+              "score": 1.0232258064516129,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 3,
+              "obsId": "mem_mto8q27w_ef1077c69d44",
+              "provenance_exact": true,
+              "score": 1.0112307692307692,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 4,
+              "obsId": "mem_mto8q2a1_0fb45e3d8c07",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L014",
+              "native_rank": 5,
+              "obsId": "mem_mto8q2dq_220e680ed1c5",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ05",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 6.36,
+          "leaked_observations": [
+            "L008",
+            "L013"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 2,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 1.0330645161290322,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 3,
+              "obsId": "mem_mto8q2bx_8b3b4c9bd7d1",
+              "provenance_exact": true,
+              "score": 0.971813725490196,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q1rl_0dc22234d99a",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ06",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage",
+            "history_erasure"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 5.18,
+          "leaked_observations": [
+            "L007",
+            "L008",
+            "L012",
+            "L014",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L012",
+              "native_rank": 1,
+              "obsId": "mem_mto8q2a1_0fb45e3d8c07",
+              "provenance_exact": true,
+              "score": 0.9544934120854156,
+              "text": ""
+            },
+            {
+              "canonical_id": "L014",
+              "native_rank": 2,
+              "obsId": "mem_mto8q2dq_220e680ed1c5",
+              "provenance_exact": true,
+              "score": 0.9393243243243244,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1zl_0babd9c3fece",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 5,
+              "obsId": "mem_mto8q2fi_553d17b6dfca",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ07",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 5.67,
+          "leaked_observations": [
+            "L008",
+            "L009",
+            "L011",
+            "L016"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L016",
+              "native_rank": 2,
+              "obsId": "mem_mto8q2hj_877a5e901507",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 3,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L009",
+              "native_rank": 4,
+              "obsId": "mem_mto8q23p_9ca2c21c459b",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 5,
+              "obsId": "mem_mto8q27w_ef1077c69d44",
+              "provenance_exact": true,
+              "score": 0.5630769230769231,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ10",
+          "checkpoint_id": "CP08",
+          "failure_classes": [
+            "failed_procedure_adoption",
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "834200810debd68abbb6cac1299cd01aa93cb64262b7cac87c63b70d8a115cb1",
+          "ingested_through": "CP16",
+          "latency_ms": 4.92,
+          "leaked_observations": [
+            "L012"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP08",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_rank": 1,
+              "obsId": "mem_mto8q21n_d48413e7c493",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 2,
+              "obsId": "mem_mto8q1zl_0babd9c3fece",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 4,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q2a1_0fb45e3d8c07",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ11",
+          "checkpoint_id": "CP10",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "88381e5f755a40d75761bc3dc1f6c82cf683833f4f0c0b79409676431580255d",
+          "ingested_through": "CP16",
+          "latency_ms": 4.4,
+          "leaked_observations": [
+            "L011",
+            "L012",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP10",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L010",
+              "native_rank": 1,
+              "obsId": "mem_mto8q25r_974e6b0de499",
+              "provenance_exact": true,
+              "score": 1.0432258064516131,
+              "text": ""
+            },
+            {
+              "canonical_id": "L009",
+              "native_rank": 2,
+              "obsId": "mem_mto8q23p_9ca2c21c459b",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 3,
+              "obsId": "mem_mto8q27w_ef1077c69d44",
+              "provenance_exact": true,
+              "score": 0.9923880597014924,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 4,
+              "obsId": "mem_mto8q2fi_553d17b6dfca",
+              "provenance_exact": true,
+              "score": 0.9886505681818182,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q2a1_0fb45e3d8c07",
+              "provenance_exact": true,
+              "score": 0.9853846153846154,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ12",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "missing_required_truth",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 4.1,
+          "leaked_observations": [
+            "L013",
+            "L016"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "missing_required_truth",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L011",
+              "native_rank": 1,
+              "obsId": "mem_mto8q27w_ef1077c69d44",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L016",
+              "native_rank": 2,
+              "obsId": "mem_mto8q2hj_877a5e901507",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q1vh_5ae67d4c4b64",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 4,
+              "obsId": "mem_mto8q1tj_a60ac3eb37ed",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 5,
+              "obsId": "mem_mto8q2bx_8b3b4c9bd7d1",
+              "provenance_exact": true,
+              "score": 0.5630769230769231,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ13",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 4.81,
+          "leaked_observations": [
+            "L012",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L009",
+              "native_rank": 1,
+              "obsId": "mem_mto8q23p_9ca2c21c459b",
+              "provenance_exact": true,
+              "score": 1.0432258064516131,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 2,
+              "obsId": "mem_mto8q27w_ef1077c69d44",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L010",
+              "native_rank": 3,
+              "obsId": "mem_mto8q25r_974e6b0de499",
+              "provenance_exact": true,
+              "score": 1.0166666666666666,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 4,
+              "obsId": "mem_mto8q2fi_553d17b6dfca",
+              "provenance_exact": true,
+              "score": 0.9828568097014926,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q2a1_0fb45e3d8c07",
+              "provenance_exact": true,
+              "score": 0.9794125874125874,
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "repetition": 1,
+      "unknown_hallucination": {
+        "case_id": "LQ16",
+        "graded": [],
+        "not_a_clean_zero": true,
+        "reader_answers_seen": 0,
+        "status": "NOT_APPLICABLE",
+        "why": "the frozen adapter exposes retrieval only (search/recall); it returns evidence and never asserts an answer, so there is no claim to grade"
+      }
+    },
+    {
+      "observations_ingested": 16,
+      "records": [
+        {
+          "case_id": "LQ01",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 12.98,
+          "leaked_observations": [
+            "L003",
+            "L004",
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4k2_00630f1deb77",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4ro_0a0a5aeaed54",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ17",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 7.98,
+          "leaked_observations": [
+            "L004",
+            "L005",
+            "L007",
+            "L008",
+            "L011"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 1.0112307692307692,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4zv_1701b526a3b4",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4ro_0a0a5aeaed54",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ02",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 8.16,
+          "leaked_observations": [
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 1.0201512096774192,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4ro_0a0a5aeaed54",
+              "provenance_exact": true,
+              "score": 1.0071354166666666,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4k2_00630f1deb77",
+              "provenance_exact": true,
+              "score": 1.0044565756823822,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 1.004153846153846,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ03",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "configuration_collapse",
+            "future_leakage",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 7.19,
+          "leaked_observations": [
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "configuration_collapse",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4ro_0a0a5aeaed54",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4k2_00630f1deb77",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ04",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "correction_failure",
+            "future_leakage",
+            "history_erasure"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 6.18,
+          "leaked_observations": [
+            "L005",
+            "L008",
+            "L013"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 2,
+              "obsId": "mem_mto8q53y_ce9b1def4e92",
+              "provenance_exact": true,
+              "score": 0.9783728652751422,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4k2_00630f1deb77",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ16",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage",
+            "unsupported_evidence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 5.4,
+          "leaked_observations": [
+            "L006",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "unsupported_evidence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4pn_6d0212b41dd3",
+              "provenance_exact": true,
+              "score": 1.0366666666666668,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4k2_00630f1deb77",
+              "provenance_exact": true,
+              "score": 1.0232258064516129,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4zv_1701b526a3b4",
+              "provenance_exact": true,
+              "score": 1.0112307692307692,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 4,
+              "obsId": "mem_mto8q51t_335ee535af29",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L014",
+              "native_rank": 5,
+              "obsId": "mem_mto8q55u_9918518b92f4",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ05",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 5.51,
+          "leaked_observations": [
+            "L008",
+            "L013"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 1.0330645161290322,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 3,
+              "obsId": "mem_mto8q53y_ce9b1def4e92",
+              "provenance_exact": true,
+              "score": 0.971813725490196,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4k2_00630f1deb77",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ06",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage",
+            "history_erasure"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 4.96,
+          "leaked_observations": [
+            "L007",
+            "L008",
+            "L012",
+            "L014",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L012",
+              "native_rank": 1,
+              "obsId": "mem_mto8q51t_335ee535af29",
+              "provenance_exact": true,
+              "score": 0.9544934120854156,
+              "text": ""
+            },
+            {
+              "canonical_id": "L014",
+              "native_rank": 2,
+              "obsId": "mem_mto8q55u_9918518b92f4",
+              "provenance_exact": true,
+              "score": 0.9393243243243244,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4ro_0a0a5aeaed54",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 5,
+              "obsId": "mem_mto8q589_b4473d2ff23e",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ07",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 5.71,
+          "leaked_observations": [
+            "L008",
+            "L009",
+            "L011",
+            "L016"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L016",
+              "native_rank": 2,
+              "obsId": "mem_mto8q5a2_02492675f55d",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L009",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4vs_0a1a65989e95",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 5,
+              "obsId": "mem_mto8q4zv_1701b526a3b4",
+              "provenance_exact": true,
+              "score": 0.5630769230769231,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ10",
+          "checkpoint_id": "CP08",
+          "failure_classes": [
+            "failed_procedure_adoption",
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "834200810debd68abbb6cac1299cd01aa93cb64262b7cac87c63b70d8a115cb1",
+          "ingested_through": "CP16",
+          "latency_ms": 5.03,
+          "leaked_observations": [
+            "L012"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP08",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4tp_3ad114f58d35",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4ro_0a0a5aeaed54",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q51t_335ee535af29",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ11",
+          "checkpoint_id": "CP10",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "88381e5f755a40d75761bc3dc1f6c82cf683833f4f0c0b79409676431580255d",
+          "ingested_through": "CP16",
+          "latency_ms": 4.55,
+          "leaked_observations": [
+            "L011",
+            "L012",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP10",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L010",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4xu_41a320594573",
+              "provenance_exact": true,
+              "score": 1.0432258064516131,
+              "text": ""
+            },
+            {
+              "canonical_id": "L009",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4vs_0a1a65989e95",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4zv_1701b526a3b4",
+              "provenance_exact": true,
+              "score": 0.9923880597014924,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 4,
+              "obsId": "mem_mto8q589_b4473d2ff23e",
+              "provenance_exact": true,
+              "score": 0.9886505681818182,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q51t_335ee535af29",
+              "provenance_exact": true,
+              "score": 0.9853846153846154,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ12",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "missing_required_truth",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 4.36,
+          "leaked_observations": [
+            "L013",
+            "L016"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "missing_required_truth",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L011",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4zv_1701b526a3b4",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L016",
+              "native_rank": 2,
+              "obsId": "mem_mto8q5a2_02492675f55d",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4nv_4873dba155ff",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 4,
+              "obsId": "mem_mto8q4ly_97e2782d477a",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 5,
+              "obsId": "mem_mto8q53y_ce9b1def4e92",
+              "provenance_exact": true,
+              "score": 0.5630769230769231,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ13",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 4.5,
+          "leaked_observations": [
+            "L012",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L009",
+              "native_rank": 1,
+              "obsId": "mem_mto8q4vs_0a1a65989e95",
+              "provenance_exact": true,
+              "score": 1.0432258064516131,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 2,
+              "obsId": "mem_mto8q4zv_1701b526a3b4",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L010",
+              "native_rank": 3,
+              "obsId": "mem_mto8q4xu_41a320594573",
+              "provenance_exact": true,
+              "score": 1.0166666666666666,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 4,
+              "obsId": "mem_mto8q589_b4473d2ff23e",
+              "provenance_exact": true,
+              "score": 0.9828568097014926,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q51t_335ee535af29",
+              "provenance_exact": true,
+              "score": 0.9794125874125874,
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "repetition": 2,
+      "unknown_hallucination": {
+        "case_id": "LQ16",
+        "graded": [],
+        "not_a_clean_zero": true,
+        "reader_answers_seen": 0,
+        "status": "NOT_APPLICABLE",
+        "why": "the frozen adapter exposes retrieval only (search/recall); it returns evidence and never asserts an answer, so there is no claim to grade"
+      }
+    },
+    {
+      "observations_ingested": 16,
+      "records": [
+        {
+          "case_id": "LQ01",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 18.94,
+          "leaked_observations": [
+            "L003",
+            "L004",
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7c4_4a756c9758ea",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7k3_836631a9de8f",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ17",
+          "checkpoint_id": "CP01",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9c30b2a0486a0f0cc99b85fc63d2dcf76b514ac11f460a71f3e3386d32b91459",
+          "ingested_through": "CP16",
+          "latency_ms": 5.09,
+          "leaked_observations": [
+            "L004",
+            "L005",
+            "L007",
+            "L008",
+            "L011"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP01",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 1.0112307692307692,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7rn_9248736b8f44",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7k3_836631a9de8f",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ02",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 5.26,
+          "leaked_observations": [
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 1.0201512096774192,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7k3_836631a9de8f",
+              "provenance_exact": true,
+              "score": 1.0071354166666666,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7c4_4a756c9758ea",
+              "provenance_exact": true,
+              "score": 1.0044565756823822,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 1.004153846153846,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ03",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "configuration_collapse",
+            "future_leakage",
+            "missing_required_truth"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 4.48,
+          "leaked_observations": [
+            "L005",
+            "L007",
+            "L008"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "configuration_collapse",
+            "missing_required_truth"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7k3_836631a9de8f",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7c4_4a756c9758ea",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ04",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "correction_failure",
+            "future_leakage",
+            "history_erasure"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 4.64,
+          "leaked_observations": [
+            "L005",
+            "L008",
+            "L013"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "correction_failure",
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L004",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7vt_cce9793e472e",
+              "provenance_exact": true,
+              "score": 0.9783728652751422,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7c4_4a756c9758ea",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ16",
+          "checkpoint_id": "CP04",
+          "failure_classes": [
+            "future_leakage",
+            "unsupported_evidence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "9cf63478d19ec919ed6abf5c13609202c8e95be804a9b78f02762fee91e4c7ed",
+          "ingested_through": "CP16",
+          "latency_ms": 7.88,
+          "leaked_observations": [
+            "L006",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP04",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "unsupported_evidence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L006",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7i0_2890f4f02a8c",
+              "provenance_exact": true,
+              "score": 1.0366666666666668,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7c4_4a756c9758ea",
+              "provenance_exact": true,
+              "score": 1.0232258064516129,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7rn_9248736b8f44",
+              "provenance_exact": true,
+              "score": 1.0112307692307692,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7tq_4005b3b89191",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L014",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7y2_3c36bab77173",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ05",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 7.19,
+          "leaked_observations": [
+            "L008",
+            "L013"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 1.0330645161290322,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7vt_cce9793e472e",
+              "provenance_exact": true,
+              "score": 0.971813725490196,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7c4_4a756c9758ea",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ06",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage",
+            "history_erasure"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 8.22,
+          "leaked_observations": [
+            "L007",
+            "L008",
+            "L012",
+            "L014",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "history_erasure"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L012",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7tq_4005b3b89191",
+              "provenance_exact": true,
+              "score": 0.9544934120854156,
+              "text": ""
+            },
+            {
+              "canonical_id": "L014",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7y2_3c36bab77173",
+              "provenance_exact": true,
+              "score": 0.9393243243243244,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7k3_836631a9de8f",
+              "provenance_exact": true,
+              "score": 0.6,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 5,
+              "obsId": "mem_mto8q804_dff71e668d62",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ07",
+          "checkpoint_id": "CP05",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "2251ed5626450b9a8ea9b9fa92772c5f29a460830083a75ad0a14cf015a1c887",
+          "ingested_through": "CP16",
+          "latency_ms": 6.36,
+          "leaked_observations": [
+            "L008",
+            "L009",
+            "L011",
+            "L016"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP05",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L005",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L016",
+              "native_rank": 2,
+              "obsId": "mem_mto8q824_13f43a01519a",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L008",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L009",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7nq_13210ca9712b",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7rn_9248736b8f44",
+              "provenance_exact": true,
+              "score": 0.5630769230769231,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ10",
+          "checkpoint_id": "CP08",
+          "failure_classes": [
+            "failed_procedure_adoption",
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "834200810debd68abbb6cac1299cd01aa93cb64262b7cac87c63b70d8a115cb1",
+          "ingested_through": "CP16",
+          "latency_ms": 4.99,
+          "leaked_observations": [
+            "L012"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP08",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "failed_procedure_adoption"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L008",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7lx_951fb057cbfe",
+              "provenance_exact": true,
+              "score": 1,
+              "text": ""
+            },
+            {
+              "canonical_id": "L007",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7k3_836631a9de8f",
+              "provenance_exact": true,
+              "score": 0.9838709677419352,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 0.968253968253968,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 0.953125,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7tq_4005b3b89191",
+              "provenance_exact": true,
+              "score": 0.9384615384615383,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ11",
+          "checkpoint_id": "CP10",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "88381e5f755a40d75761bc3dc1f6c82cf683833f4f0c0b79409676431580255d",
+          "ingested_through": "CP16",
+          "latency_ms": 5.47,
+          "leaked_observations": [
+            "L011",
+            "L012",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP10",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L010",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7pk_b2f18c9ed0c2",
+              "provenance_exact": true,
+              "score": 1.0432258064516131,
+              "text": ""
+            },
+            {
+              "canonical_id": "L009",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7nq_13210ca9712b",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7rn_9248736b8f44",
+              "provenance_exact": true,
+              "score": 0.9923880597014924,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 4,
+              "obsId": "mem_mto8q804_dff71e668d62",
+              "provenance_exact": true,
+              "score": 0.9886505681818182,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7tq_4005b3b89191",
+              "provenance_exact": true,
+              "score": 0.9853846153846154,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ12",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage",
+            "late_history_corruption",
+            "missing_required_truth",
+            "stale_persistence"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 7.67,
+          "leaked_observations": [
+            "L013",
+            "L016"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [
+            "late_history_corruption",
+            "missing_required_truth",
+            "stale_persistence"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L011",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7rn_9248736b8f44",
+              "provenance_exact": true,
+              "score": 1.05,
+              "text": ""
+            },
+            {
+              "canonical_id": "L016",
+              "native_rank": 2,
+              "obsId": "mem_mto8q824_13f43a01519a",
+              "provenance_exact": true,
+              "score": 0.5903225806451612,
+              "text": ""
+            },
+            {
+              "canonical_id": "L005",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7fy_5f8c813b965d",
+              "provenance_exact": true,
+              "score": 0.5809523809523809,
+              "text": ""
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 4,
+              "obsId": "mem_mto8q7e0_321a3abbb052",
+              "provenance_exact": true,
+              "score": 0.5718749999999999,
+              "text": ""
+            },
+            {
+              "canonical_id": "L013",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7vt_cce9793e472e",
+              "provenance_exact": true,
+              "score": 0.5630769230769231,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "case_id": "LQ13",
+          "checkpoint_id": "CP11",
+          "failure_classes": [
+            "future_leakage"
+          ],
+          "future_leakage": true,
+          "ingested_prefix_sha256": "6218d4587e96ed9428a2000db03bcf81799dde34d47f94935b029a87058e6f12",
+          "ingested_through": "CP16",
+          "latency_ms": 7.98,
+          "leaked_observations": [
+            "L012",
+            "L015"
+          ],
+          "native_temporal_operation": "smart_search_current_state",
+          "provenance_exact_all": true,
+          "queried_as_of": "CP11",
+          "reader_answer": null,
+          "requested_limit": 5,
+          "retrieval_failure_classes": [],
+          "returned": [
+            {
+              "canonical_id": "L009",
+              "native_rank": 1,
+              "obsId": "mem_mto8q7nq_13210ca9712b",
+              "provenance_exact": true,
+              "score": 1.0432258064516131,
+              "text": ""
+            },
+            {
+              "canonical_id": "L011",
+              "native_rank": 2,
+              "obsId": "mem_mto8q7rn_9248736b8f44",
+              "provenance_exact": true,
+              "score": 1.039838709677419,
+              "text": ""
+            },
+            {
+              "canonical_id": "L010",
+              "native_rank": 3,
+              "obsId": "mem_mto8q7pk_b2f18c9ed0c2",
+              "provenance_exact": true,
+              "score": 1.0166666666666666,
+              "text": ""
+            },
+            {
+              "canonical_id": "L015",
+              "native_rank": 4,
+              "obsId": "mem_mto8q804_dff71e668d62",
+              "provenance_exact": true,
+              "score": 0.9828568097014926,
+              "text": ""
+            },
+            {
+              "canonical_id": "L012",
+              "native_rank": 5,
+              "obsId": "mem_mto8q7tq_4005b3b89191",
+              "provenance_exact": true,
+              "score": 0.9794125874125874,
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "repetition": 3,
+      "unknown_hallucination": {
+        "case_id": "LQ16",
+        "graded": [],
+        "not_a_clean_zero": true,
+        "reader_answers_seen": 0,
+        "status": "NOT_APPLICABLE",
+        "why": "the frozen adapter exposes retrieval only (search/recall); it returns evidence and never asserts an answer, so there is no claim to grade"
+      }
+    }
+  ],
+  "suite_rerun": false
+}
