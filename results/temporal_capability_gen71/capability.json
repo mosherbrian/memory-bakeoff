@@ -1,0 +1,330 @@
+{
+  "contract": {
+    "classifications": [
+      "current_only",
+      "effective_time_capable",
+      "knowledge_time_capable",
+      "temporal_surface_but_failed",
+      "undetermined"
+    ],
+    "contract_version": "temporal-capability-routing-v1",
+    "not_a_ranking": "pooled totals must not be used to order engines; the per-operation classification is the result",
+    "reads_only": "committed Gen68 and Gen70 per-case records; no engine is run",
+    "separates": [
+      "capability: does the operation honour its clock when invoked",
+      "routing: does the adapter send the question to that operation"
+    ],
+    "unknown_hallucination": "NOT_APPLICABLE at the retrieval-engine layer - these adapters return evidence and never assert; reserved for a reader or full-product evaluation",
+    "why": "pooled future-leakage totals conflate an engine that lacks a clock, an engine whose clock is never consulted, and an engine whose clock is consulted and does not work",
+    "zero_observations_is_undetermined": "an operation the probe never exercised is not credited with working"
+  },
+  "engines": {
+    "agentmemory": {
+      "has_failed_temporal_surface": [],
+      "has_working_temporal_operation": [],
+      "leakage_on_current_questions": {
+        "cases": 24,
+        "leaked": 24,
+        "note": "asking what is true NOW of a store that has been fed the whole timeline should return the later facts; this column is largely expected and must not be read as a defect"
+      },
+      "leakage_on_temporal_questions": {
+        "cases": 15,
+        "leaked": 15
+      },
+      "operations": {
+        "smart_search_current_state": {
+          "cases": 39,
+          "claims": null,
+          "classification": "current_only",
+          "leaked": 39,
+          "operation": "smart_search_current_state",
+          "why": "no temporal parameter; leakage here is expected and is a routing question, not a capability failure"
+        }
+      },
+      "pooled_leakage": 39,
+      "probe_cases": 39,
+      "routing_by_kind": {
+        "as_of_event_truth": {
+          "smart_search_current_state": 6
+        },
+        "corrected_historical_truth": {
+          "smart_search_current_state": 3
+        },
+        "current_truth": {
+          "smart_search_current_state": 15
+        },
+        "historical_belief": {
+          "smart_search_current_state": 3
+        },
+        "late_arriving_history": {
+          "smart_search_current_state": 3
+        },
+        "negative_unknown": {
+          "smart_search_current_state": 3
+        },
+        "recommended_procedure": {
+          "smart_search_current_state": 3
+        },
+        "scope_truth": {
+          "smart_search_current_state": 3
+        }
+      },
+      "routing_gaps": [
+        {
+          "cases": 6,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "as_of_event_truth",
+          "operation": "smart_search_current_state",
+          "verdict": "no temporal surface"
+        },
+        {
+          "cases": 3,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "corrected_historical_truth",
+          "operation": "smart_search_current_state",
+          "verdict": "no temporal surface"
+        },
+        {
+          "cases": 3,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "historical_belief",
+          "operation": "smart_search_current_state",
+          "verdict": "no temporal surface"
+        },
+        {
+          "cases": 3,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "late_arriving_history",
+          "operation": "smart_search_current_state",
+          "verdict": "no temporal surface"
+        }
+      ]
+    },
+    "hindsight": {
+      "has_failed_temporal_surface": [
+        "recall_query_timestamp"
+      ],
+      "has_working_temporal_operation": [],
+      "leakage_on_current_questions": {
+        "cases": 24,
+        "leaked": 24,
+        "note": "asking what is true NOW of a store that has been fed the whole timeline should return the later facts; this column is largely expected and must not be read as a defect"
+      },
+      "leakage_on_temporal_questions": {
+        "cases": 15,
+        "leaked": 15
+      },
+      "operations": {
+        "recall_current": {
+          "cases": 24,
+          "claims": null,
+          "classification": "current_only",
+          "leaked": 24,
+          "operation": "recall_current",
+          "why": "no temporal parameter; leakage here is expected and is a routing question, not a capability failure"
+        },
+        "recall_query_timestamp": {
+          "cases": 15,
+          "claims": "knowledge_time_capable",
+          "classification": "temporal_surface_but_failed",
+          "leaked": 15,
+          "operation": "recall_query_timestamp",
+          "why": "accepts a temporal parameter and returned observations from after the queried moment anyway"
+        }
+      },
+      "pooled_leakage": 39,
+      "probe_cases": 39,
+      "routing_by_kind": {
+        "as_of_event_truth": {
+          "recall_query_timestamp": 6
+        },
+        "corrected_historical_truth": {
+          "recall_query_timestamp": 3
+        },
+        "current_truth": {
+          "recall_current": 15
+        },
+        "historical_belief": {
+          "recall_query_timestamp": 3
+        },
+        "late_arriving_history": {
+          "recall_query_timestamp": 3
+        },
+        "negative_unknown": {
+          "recall_current": 3
+        },
+        "recommended_procedure": {
+          "recall_current": 3
+        },
+        "scope_truth": {
+          "recall_current": 3
+        }
+      },
+      "routing_gaps": []
+    },
+    "mem0": {
+      "has_failed_temporal_surface": [],
+      "has_working_temporal_operation": [],
+      "leakage_on_current_questions": {
+        "cases": 24,
+        "leaked": 21,
+        "note": "asking what is true NOW of a store that has been fed the whole timeline should return the later facts; this column is largely expected and must not be read as a defect"
+      },
+      "leakage_on_temporal_questions": {
+        "cases": 15,
+        "leaked": 15
+      },
+      "operations": {
+        "search_current_state": {
+          "cases": 39,
+          "claims": null,
+          "classification": "current_only",
+          "leaked": 36,
+          "operation": "search_current_state",
+          "why": "no temporal parameter; leakage here is expected and is a routing question, not a capability failure"
+        }
+      },
+      "pooled_leakage": 36,
+      "probe_cases": 39,
+      "routing_by_kind": {
+        "as_of_event_truth": {
+          "search_current_state": 6
+        },
+        "corrected_historical_truth": {
+          "search_current_state": 3
+        },
+        "current_truth": {
+          "search_current_state": 15
+        },
+        "historical_belief": {
+          "search_current_state": 3
+        },
+        "late_arriving_history": {
+          "search_current_state": 3
+        },
+        "negative_unknown": {
+          "search_current_state": 3
+        },
+        "recommended_procedure": {
+          "search_current_state": 3
+        },
+        "scope_truth": {
+          "search_current_state": 3
+        }
+      },
+      "routing_gaps": [
+        {
+          "cases": 6,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "as_of_event_truth",
+          "operation": "search_current_state",
+          "verdict": "no temporal surface"
+        },
+        {
+          "cases": 3,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "corrected_historical_truth",
+          "operation": "search_current_state",
+          "verdict": "no temporal surface"
+        },
+        {
+          "cases": 3,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "historical_belief",
+          "operation": "search_current_state",
+          "verdict": "no temporal surface"
+        },
+        {
+          "cases": 3,
+          "engine_has_a_working_temporal_operation": [],
+          "kind": "late_arriving_history",
+          "operation": "search_current_state",
+          "verdict": "no temporal surface"
+        }
+      ]
+    },
+    "perseus": {
+      "has_failed_temporal_surface": [],
+      "has_working_temporal_operation": [
+        "recall_hybrid_as_of",
+        "recall_hybrid_valid_at"
+      ],
+      "leakage_on_current_questions": {
+        "cases": 24,
+        "leaked": 21,
+        "note": "asking what is true NOW of a store that has been fed the whole timeline should return the later facts; this column is largely expected and must not be read as a defect"
+      },
+      "leakage_on_temporal_questions": {
+        "cases": 15,
+        "leaked": 0
+      },
+      "operations": {
+        "recall_hybrid": {
+          "cases": 24,
+          "claims": null,
+          "classification": "current_only",
+          "leaked": 21,
+          "operation": "recall_hybrid",
+          "why": "no temporal parameter; leakage here is expected and is a routing question, not a capability failure"
+        },
+        "recall_hybrid_as_of": {
+          "cases": 3,
+          "claims": "knowledge_time_capable",
+          "classification": "knowledge_time_capable",
+          "leaked": 0,
+          "operation": "recall_hybrid_as_of",
+          "why": "exercised and never leaked"
+        },
+        "recall_hybrid_valid_at": {
+          "cases": 12,
+          "claims": "effective_time_capable",
+          "classification": "effective_time_capable",
+          "leaked": 0,
+          "operation": "recall_hybrid_valid_at",
+          "why": "exercised and never leaked"
+        }
+      },
+      "pooled_leakage": 21,
+      "probe_cases": 39,
+      "routing_by_kind": {
+        "as_of_event_truth": {
+          "recall_hybrid_valid_at": 6
+        },
+        "corrected_historical_truth": {
+          "recall_hybrid_valid_at": 3
+        },
+        "current_truth": {
+          "recall_hybrid": 15
+        },
+        "historical_belief": {
+          "recall_hybrid_as_of": 3
+        },
+        "late_arriving_history": {
+          "recall_hybrid_valid_at": 3
+        },
+        "negative_unknown": {
+          "recall_hybrid": 3
+        },
+        "recommended_procedure": {
+          "recall_hybrid": 3
+        },
+        "scope_truth": {
+          "recall_hybrid": 3
+        }
+      },
+      "routing_gaps": []
+    }
+  },
+  "temporal_kinds": [
+    "as_of_event_truth",
+    "corrected_historical_truth",
+    "historical_belief",
+    "late_arriving_history"
+  ],
+  "unknown_hallucination": {
+    "layer": "retrieval engine",
+    "reserved_for": "a reader or full-product evaluation, where something actually produces an answer",
+    "status": "CLOSED_NOT_APPLICABLE",
+    "why": "every frozen adapter returns evidence and never asserts an answer, so there is no claim to grade"
+  }
+}
