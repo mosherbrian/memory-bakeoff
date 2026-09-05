@@ -142,6 +142,10 @@ def main() -> int:
     args = parser.parse_args()
 
     engine, binding_on = args.engine, args.arm == "on"
+    if binding_on and SB.BINDINGS[engine].get("available_in_pinned_profile") is False:
+        raise SystemExit(
+            f"{engine}: the ON arm is NOT_AVAILABLE_IN_PINNED_PROFILE - "
+            f"{SB.BINDINGS[engine]['why_unavailable']}")
     if engine in SINGLE_ARM and binding_on is False:
         raise SystemExit(
             f"{engine} has an automatic mechanism; an OFF arm is a configuration the "

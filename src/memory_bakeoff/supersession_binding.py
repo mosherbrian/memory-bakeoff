@@ -93,6 +93,15 @@ BINDINGS = {
         "effect": "mem0's own consolidation decides; the harness selects nothing "
                   "and issues no update or delete",
         "one_variable": "infer flips from False to True and nothing else moves",
+        # MEASURED in Gen102, not assumed.
+        "available_in_pinned_profile": False,
+        "why_unavailable": "infer=True routes through mem0's LLM extractor, and the "
+                           "frozen Round-2 profile is deliberately no-LLM. The call "
+                           "fails with an authentication error against a placeholder "
+                           "key. Supplying an LLM would add a component the profile "
+                           "never had, moving far more than one variable and making "
+                           "the ON arm incomparable to its own OFF arm.",
+        "arm_status": "NOT_AVAILABLE_IN_PINNED_PROFILE",
         "note": "Memory.update exists and is NOT used: it would replace the old "
                 "record's content, which is the harness deciding the outcome rather "
                 "than the engine",
