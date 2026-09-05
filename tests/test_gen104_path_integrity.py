@@ -44,13 +44,17 @@ def test_v3_writes_superseded_before_current():
 def test_observations_for_preserves_resolver_order():
     """The runner must consume the resolver's sequence, not the fixture's."""
     source = (ROOT / "scripts" / "run_gen97_interference.py").read_text()
-    tree = ast.parse(source)
-    func = next(n for n in ast.walk(tree)
+    func = next(n for n in ast.walk(ast.parse(source))
                 if isinstance(n, ast.FunctionDef) and n.name == "observations_for")
-    body = ast.dump(func)
-    assert "set" not in body.replace("'set(VISIBLE_IDS", ""), \
+    # An AST walk, not a substring check: the docstring that DESCRIBES the
+    # defect contains the word, which is the Gen100 mistake exactly.
+    calls = [n.func.id for n in ast.walk(func)
+             if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)]
+    assert "set" not in calls, \
         "taking a set of the resolver's output discards its order"
-    assert "VISIBLE_IDS" in body
+    returned = next(n for n in ast.walk(func) if isinstance(n, ast.Return))
+    names = {n.id for n in ast.walk(returned) if isinstance(n, ast.Name)}
+    assert "VISIBLE_IDS" in names, "the return must be driven by the resolver"
 
 
 # --- invariant 1: ingest order ---------------------------------------------
