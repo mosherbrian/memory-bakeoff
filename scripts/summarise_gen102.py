@@ -8,7 +8,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from memory_bakeoff import interference_v3 as V3        # noqa: E402
 from memory_bakeoff import supersession_binding as SB   # noqa: E402
+
+FIXTURE = V3.build_fixture()
+ROLE = {o.core: {} for o in FIXTURE.observations}
+for _o in FIXTURE.observations:
+    if _o.role in ('current', 'superseded'):
+        ROLE[_o.core][_o.role] = _o.id
 
 OUT = ROOT / "results" / "supersession_ablation_gen102"
 ARMS = {"perseus": ("off", "on"), "hindsight": ("off", "on"),
@@ -20,15 +27,25 @@ def load(engine, arm):
     return json.loads(path.read_text())["rows"] if path.exists() else None
 
 
+def present(row, role):
+    """Derived from `returned`, so every runner's rows are read the same way."""
+    return ROLE[row["core"]][role] in (row.get("returned") or [])
+
+
+def rank(row, role):
+    ids = row.get("returned") or []
+    target = ROLE[row["core"]][role]
+    return ids.index(target) + 1 if target in ids else None
+
+
 def fold(rows):
     per = {}
     for row in rows:
-        key = (row["core"], row["load"])
-        per.setdefault(key, []).append(row)
+        per.setdefault((row["core"], row["load"]), []).append(row)
     return {f"{core}|L{load}": {
-        "stale_retrievable": {r["superseded_retrievable"] for r in group} == {True},
-        "current_retrievable": {r["current_retrievable"] for r in group} == {True},
-        "current_rank": sorted({r.get("current_rank") for r in group},
+        "stale_retrievable": {present(r, "superseded") for r in group} == {True},
+        "current_retrievable": {present(r, "current") for r in group} == {True},
+        "current_rank": sorted({rank(r, "current") for r in group},
                                key=lambda v: (v is None, v)),
     } for (core, load), group in sorted(per.items())}
 
