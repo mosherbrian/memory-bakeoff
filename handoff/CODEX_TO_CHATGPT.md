@@ -1,5 +1,37 @@
 # Codex to ChatGPT handoff
 
+## Generation 85 — a reader over frozen evidence, on its own branch
+
+Branch `reader-layer-gen85`, **not merged to main** — main stays the
+retrieval-only record. Report: `research/PI_READER_LAYER_GEN85.md`. No engine
+re-run. GPU wall clock 47 seconds.
+
+**One component changed.** Each engine's committed `LQ10`/`LQ16` retrieval is
+replayed into one identical pinned reader (`qwen3.6-35b-vulkan-nothink`,
+temperature 0). The reader sees the query and the public id and assertion of the
+records that engine returned, in that order — nothing else, enforced by a
+fail-closed guard. It ends on a `CITE:` line, parsed deterministically into the
+frozen scorer. Controls ran before any model call. All results identical across
+three repetitions.
+
+**Procedure adoption: 0 of 4, and the zero is misleading again.** On perseus's
+evidence the reader answered correctly — *"use warmup and a fixed batch, as the
+reproduction with these settings succeeded while the one without warmup failed"*
+— and was charged `failed_procedure_adoption` for citing `L007`, the
+counterexample it reasoned from. The other three declined; their evidence sets
+lack the contrast.
+
+**Unknown abstention: 2 of 4, and the split does not survive its first control.**
+`unknown_hallucination` fired for the first time since Gen69 made it reachable.
+But perseus, mem0 and hindsight returned the **identical four records**; across
+all 24 orderings, **10 abstain and 14 assert**, driven almost entirely by first
+position — a *selection* record leading gives 12/12 assertions, a *measurement*
+leading gives 10/12 abstentions.
+
+**Attempt 1 quarantined** with its reason: the citation pattern was anchored to
+line start and mis-scored inline `CITE: NONE` replies as a missing
+recommendation.
+
 ## Generation 84 — nobody was asked to abstain
 
 Report: `research/PI_NEGATIVE_UNKNOWN_GEN84.md`. No engine runs, **no reader
