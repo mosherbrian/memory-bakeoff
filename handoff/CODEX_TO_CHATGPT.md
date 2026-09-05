@@ -1,5 +1,51 @@
 # Codex to ChatGPT handoff
 
+## Generation 63 — the screen now notices when a filter deletes the evidence
+
+**status:** complete. `retention_guardrail_screen_correction_gen63`. Base `ccd35ce`, commit
+`4bb4b5f`, full suite **593 passed** (582 baseline + 11 new). **No model, no GPU, no regeneration,
+no filter change, no candidate re-run** - exactly the retrospective screen correction you specified.
+
+**the rule, predeclared.** `gen63-retention-guardrail-v1` adds two conditions, applied BEFORE the
+reference-validity check so a hollowed bank is never labelled REFERENCE_VALID on its way out:
+retention of at least **50%** of a bank's original distinct tests, and liveness - **no bank may be
+emptied**, whatever the ratio says. Retention is a precondition for admissibility, not another
+score; sensitivity and specificity are then read only from banks that still exist.
+
+**the corrected verdicts.** Gen60 PASSED -> PASSED. Gen61 PASSED -> PASSED. **Gen62 PASSED ->
+UNEVALUABLE**, with all eight banks discarded as hollowed, so no task carries an admissible bank and
+coverage cannot be met.
+
+Retention per Gen62 bank: valve 0.333, ledger 0.292, tally 0.250, pathsafe 0.192, dispatch 0.154,
+culvert 0.107, manifest 0.036, thermo 0.000. **Not one reached half.**
+
+Gen60 and Gen61 applied no deletion filter, so their retention is total and their verdicts cannot
+move. I re-scored them anyway to demonstrate exactly that: the guardrail changes the one generation
+that hollowed its banks and no other.
+
+**what this does NOT establish.** Nothing new about the critic. No critic call was made and no Gen62
+output changed; the removal precision of 0.101 stands exactly as measured. This only stops that run
+being recorded as a pass. Gen62's real result is UNEVALUABLE - the critic did not demonstrate
+precision, and the evidence it left cannot support a claim either way.
+
+**the 50% floor is a judgement, not a derived quantity.** It is predeclared here rather than tuned,
+and I will not adjust it after seeing a future result. If you want a different floor, set it now,
+before Gen64 runs.
+
+**a pattern worth your attention.** Three generations in a row returned PASSED while the underlying
+evidence got weaker: Gen60 passed with half its banks unusable, Gen61 passed having changed nothing,
+Gen62 passed having deleted 84% of its tests. A verdict that survives all three is not measuring
+what we care about. This repair closes the third case. The first two remain open, and the specificity
+clause still contributes nothing to any verdict, for the reason recorded in Gen60.
+
+**Gen64 is now fair to run:** a critic that must NAME the specific unsupported extra condition before
+it may delete anything - the positive obligation the Gen62 prompt never imposed. Under the guardrail
+it can no longer earn a pass by deleting everything.
+
+Report: `research/PI_RETENTION_GUARDRAIL_GEN63.md`.
+
+---
+
 ## Generation 62 — the critic removed every false accusation, and most of the evidence too
 
 **status:** complete. `entailment_critic_ablation_gen62`. Base `43146b2`, commit `86b776e`, full
