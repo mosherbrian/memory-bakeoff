@@ -1,0 +1,3296 @@
+{
+ "contract": {
+  "cases": [
+   "LQ01",
+   "LQ11",
+   "LQ14",
+   "LQ17"
+  ],
+  "contract_version": "current-truth-window-ablation-gen90-v1",
+  "forbidden": [
+   "deduplication",
+   "label_aware_stopping",
+   "reader_reasoning",
+   "semantic_post_filter",
+   "reordering"
+  ],
+  "no_engine_runs": true,
+  "repetition_note": "each repetition keeps its own ranked order so Perseus's rank instability stays visible",
+  "repetitions_pooled": false,
+  "transform": "returned[:k], and nothing else",
+  "verdicts": {
+   "ALREADY_CLEAN": "clean at the full window; no ablation needed",
+   "RANKING_FAILURE": "no prefix scores clean - the stale record outranks the current one, and truncation cannot help",
+   "WINDOW_POLICY": "some prefix scores clean - the failure was the harness asking for five results"
+  },
+  "why_these_four": "Gen89 found the other three current_truth cases are failed by a configuration, temporal or abstention distinction and do not belong to this row",
+  "windows": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ]
+ },
+ "rows": [
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence",
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L012",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L012",
+      "L014",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L012",
+      "L014",
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L013",
+    "L012",
+    "L014",
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [
+    1
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "perseus",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010",
+      "L002"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010",
+      "L002",
+      "L004"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010",
+      "L002",
+      "L004",
+      "L006"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010",
+      "L002"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010",
+      "L002",
+      "L004"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010",
+      "L002",
+      "L004",
+      "L006"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010",
+      "L002"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010",
+      "L002",
+      "L004"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010",
+      "L002",
+      "L004",
+      "L006"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L009",
+    "L010",
+    "L002",
+    "L004",
+    "L006"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "mem0",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L009",
+      "L010"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L009",
+    "L010"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010",
+      "L007"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010",
+      "L007",
+      "L008"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010",
+      "L007",
+      "L008",
+      "L002"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010",
+      "L007"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010",
+      "L007",
+      "L008"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010",
+      "L007",
+      "L008",
+      "L002"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth",
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L009",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L009",
+      "L010",
+      "L007"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L009",
+      "L010",
+      "L007",
+      "L008"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L009",
+      "L010",
+      "L007",
+      "L008",
+      "L002"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L009",
+    "L010",
+    "L007",
+    "L008",
+    "L002"
+   ],
+   "smallest_clean_window": null,
+   "verdict": "RANKING_FAILURE"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    2
+   ],
+   "engine": "hindsight",
+   "points": [
+    {
+     "classes": [
+      "missing_required_truth"
+     ],
+     "clean": false,
+     "k": 1,
+     "returned": [
+      "L013"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L013",
+      "L014"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L013",
+      "L014",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L013",
+      "L014",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L013",
+    "L014",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 2,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [
+    1
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L010",
+      "L009",
+      "L003"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L010",
+      "L009",
+      "L003",
+      "L004"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L010",
+      "L009",
+      "L003",
+      "L004",
+      "L008"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L010",
+    "L009",
+    "L003",
+    "L004",
+    "L008"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    1,
+    2
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L014"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L014",
+      "L013"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L014",
+      "L013",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L014",
+      "L013",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L014",
+      "L013",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 1,
+   "returned": [
+    "L014",
+    "L013",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [
+    1
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L010",
+      "L009",
+      "L003"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L010",
+      "L009",
+      "L003",
+      "L004"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L010",
+      "L009",
+      "L003",
+      "L004",
+      "L008"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L010",
+    "L009",
+    "L003",
+    "L004",
+    "L008"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    1,
+    2
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L014"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L014",
+      "L013"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L014",
+      "L013",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L014",
+      "L013",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L014",
+      "L013",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 2,
+   "returned": [
+    "L014",
+    "L013",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ01",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ17",
+   "clean_windows": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 3,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 4,
+     "returned": [
+      "L001"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 5,
+     "returned": [
+      "L001"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L001"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "ALREADY_CLEAN"
+  },
+  {
+   "case": "LQ11",
+   "clean_windows": [
+    1
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 2,
+     "returned": [
+      "L010",
+      "L009"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L010",
+      "L009",
+      "L003"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L010",
+      "L009",
+      "L003",
+      "L004"
+     ]
+    },
+    {
+     "classes": [
+      "stale_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L010",
+      "L009",
+      "L003",
+      "L004",
+      "L008"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L010",
+    "L009",
+    "L003",
+    "L004",
+    "L008"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  },
+  {
+   "case": "LQ14",
+   "clean_windows": [
+    1,
+    2
+   ],
+   "engine": "agentmemory",
+   "points": [
+    {
+     "classes": [],
+     "clean": true,
+     "k": 1,
+     "returned": [
+      "L014"
+     ]
+    },
+    {
+     "classes": [],
+     "clean": true,
+     "k": 2,
+     "returned": [
+      "L014",
+      "L013"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 3,
+     "returned": [
+      "L014",
+      "L013",
+      "L012"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 4,
+     "returned": [
+      "L014",
+      "L013",
+      "L012",
+      "L010"
+     ]
+    },
+    {
+     "classes": [
+      "false_persistence"
+     ],
+     "clean": false,
+     "k": 5,
+     "returned": [
+      "L014",
+      "L013",
+      "L012",
+      "L010",
+      "L009"
+     ]
+    }
+   ],
+   "repetition": 3,
+   "returned": [
+    "L014",
+    "L013",
+    "L012",
+    "L010",
+    "L009"
+   ],
+   "smallest_clean_window": 1,
+   "verdict": "WINDOW_POLICY"
+  }
+ ],
+ "summary": {
+  "clean_count_at_each_window": {
+   "1": 31,
+   "2": 35,
+   "3": 24,
+   "4": 24,
+   "5": 24
+  },
+  "no_k_is_selected": "the curve is the result; picking the best-scoring window would be tuning the harness against the data it is scoring",
+  "observations": 48,
+  "verdicts": {
+   "ALREADY_CLEAN": 24,
+   "RANKING_FAILURE": 9,
+   "WINDOW_POLICY": 15
+  }
+ }
+}
