@@ -103,9 +103,9 @@ def run_mem0(fixture, repetition, root):
     return records
 
 
-def run_perseus(fixture, repetition, root):
+def run_perseus(fixture, repetition, root, adapter=None):
     g29 = load("run_perseus_gen29_longitudinal")
-    A = g29.A
+    A = adapter or g29.A
     home = root / f"rep{repetition}"
     home.mkdir(parents=True, exist_ok=True)
     db, key = home / "vault.sqlite", home / "vault.key"
@@ -200,7 +200,27 @@ def run_agentmemory(fixture, repetition, root):
     return records
 
 
-ENGINES = {"mem0": run_mem0, "perseus": run_perseus, "agentmemory": run_agentmemory}
+def run_perseus_v2(fixture, repetition, root):
+    """Same runner, the repaired adapter: valid_at carries the effective time."""
+    from memory_bakeoff.providers import perseus_effective_time as V2
+    g29 = load("run_perseus_gen29_longitudinal")
+
+    class Bridge:
+        """V2 for query arguments; the frozen module for everything on the write path."""
+        CATEGORY = g29.A.CATEGORY
+        body_for_observation = staticmethod(g29.A.body_for_observation)
+        assert_public_only = staticmethod(g29.A.assert_public_only)
+        key_for_observation = staticmethod(g29.A.key_for_observation)
+        workspace_for_scope = staticmethod(g29.A.workspace_for_scope)
+        TimeBase = g29.A.TimeBase
+        recall_arguments = staticmethod(V2.recall_arguments)
+        native_operation = staticmethod(V2.native_operation)
+
+    return run_perseus(fixture, repetition, root, adapter=Bridge)
+
+
+ENGINES = {"mem0": run_mem0, "perseus": run_perseus,
+           "perseus_v2": run_perseus_v2, "agentmemory": run_agentmemory}
 
 
 def main() -> int:
