@@ -1,0 +1,232 @@
+{
+  "attribution_possible": true,
+  "cross_project_results_returned": true,
+  "design": "two projects, ONE fixed agentId, one distinct marker each",
+  "engine": "agentmemory",
+  "generated_at": "2026-09-05T13:16:34+00:00",
+  "generation": 81,
+  "no_alternative_schemes_tried": true,
+  "project_survives_write": true,
+  "queries": [
+    {
+      "queried_project": "gen81-project-a",
+      "returned": [
+        {
+          "content": "Alpha marker: the rig reading for project A is 111 units.",
+          "keys": [
+            "obsId",
+            "score",
+            "sessionId",
+            "timestamp",
+            "title",
+            "type"
+          ],
+          "obsId": "mem_mtoepk1l_0edd095f6e12",
+          "project_field": "<absent>",
+          "sourceObservationIds": null
+        },
+        {
+          "content": "Beta marker: the rig reading for project B is 222 units.",
+          "keys": [
+            "obsId",
+            "score",
+            "sessionId",
+            "timestamp",
+            "title",
+            "type"
+          ],
+          "obsId": "mem_mtoepk8a_3eef581cf4d9",
+          "project_field": "<absent>",
+          "sourceObservationIds": null
+        }
+      ]
+    },
+    {
+      "queried_project": "gen81-project-b",
+      "returned": [
+        {
+          "content": "Alpha marker: the rig reading for project A is 111 units.",
+          "keys": [
+            "obsId",
+            "score",
+            "sessionId",
+            "timestamp",
+            "title",
+            "type"
+          ],
+          "obsId": "mem_mtoepk1l_0edd095f6e12",
+          "project_field": "<absent>",
+          "sourceObservationIds": null
+        },
+        {
+          "content": "Beta marker: the rig reading for project B is 222 units.",
+          "keys": [
+            "obsId",
+            "score",
+            "sessionId",
+            "timestamp",
+            "title",
+            "type"
+          ],
+          "obsId": "mem_mtoepk8a_3eef581cf4d9",
+          "project_field": "<absent>",
+          "sourceObservationIds": null
+        }
+      ]
+    }
+  ],
+  "raw_search_responses": [
+    {
+      "queried_project": "gen81-project-a",
+      "raw": {
+        "lessons": [],
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtoepk1l_0edd095f6e12",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-05T13:16:33.080Z",
+            "title": "Alpha marker: the rig reading for project A is 111 units.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtoepk8a_3eef581cf4d9",
+            "score": 1.0330645161290322,
+            "sessionId": "memory",
+            "timestamp": "2026-09-05T13:16:33.321Z",
+            "title": "Beta marker: the rig reading for project B is 222 units.",
+            "type": "decision"
+          }
+        ]
+      }
+    },
+    {
+      "queried_project": "gen81-project-b",
+      "raw": {
+        "lessons": [],
+        "mode": "compact",
+        "results": [
+          {
+            "obsId": "mem_mtoepk1l_0edd095f6e12",
+            "score": 1.05,
+            "sessionId": "memory",
+            "timestamp": "2026-09-05T13:16:33.080Z",
+            "title": "Alpha marker: the rig reading for project A is 111 units.",
+            "type": "decision"
+          },
+          {
+            "obsId": "mem_mtoepk8a_3eef581cf4d9",
+            "score": 1.0330645161290322,
+            "sessionId": "memory",
+            "timestamp": "2026-09-05T13:16:33.321Z",
+            "title": "Beta marker: the rig reading for project B is 222 units.",
+            "type": "decision"
+          }
+        ]
+      }
+    }
+  ],
+  "requests": [
+    {
+      "body": {
+        "agentId": "gen81-single-agent",
+        "content": "Alpha marker: the rig reading for project A is 111 units.",
+        "project": "gen81-project-a",
+        "sourceObservationIds": [
+          "GEN81-A"
+        ]
+      },
+      "path": "/agentmemory/remember"
+    },
+    {
+      "body": {
+        "agentId": "gen81-single-agent",
+        "content": "Beta marker: the rig reading for project B is 222 units.",
+        "project": "gen81-project-b",
+        "sourceObservationIds": [
+          "GEN81-B"
+        ]
+      },
+      "path": "/agentmemory/remember"
+    },
+    {
+      "body": {
+        "agentId": "gen81-single-agent",
+        "limit": 5,
+        "project": "gen81-project-a",
+        "query": "rig reading units"
+      },
+      "path": "/agentmemory/smart-search"
+    },
+    {
+      "body": {
+        "agentId": "gen81-single-agent",
+        "limit": 5,
+        "project": "gen81-project-b",
+        "query": "rig reading units"
+      },
+      "path": "/agentmemory/smart-search"
+    }
+  ],
+  "stored": [
+    {
+      "id": "mem_mtoepk1l_0edd095f6e12",
+      "keys_present": [
+        "agentId",
+        "concepts",
+        "content",
+        "createdAt",
+        "files",
+        "id",
+        "isLatest",
+        "origin",
+        "project",
+        "sessionIds",
+        "sourceObservationIds",
+        "strength",
+        "supersedes",
+        "title",
+        "type",
+        "updatedAt",
+        "version"
+      ],
+      "project_field": "gen81-project-a",
+      "sourceObservationIds": [
+        "GEN81-A"
+      ]
+    },
+    {
+      "id": "mem_mtoepk8a_3eef581cf4d9",
+      "keys_present": [
+        "agentId",
+        "concepts",
+        "content",
+        "createdAt",
+        "files",
+        "id",
+        "isLatest",
+        "origin",
+        "project",
+        "sessionIds",
+        "sourceObservationIds",
+        "strength",
+        "supersedes",
+        "title",
+        "type",
+        "updatedAt",
+        "version"
+      ],
+      "project_field": "gen81-project-b",
+      "sourceObservationIds": [
+        "GEN81-B"
+      ]
+    }
+  ],
+  "stored_project_values": [
+    "gen81-project-a",
+    "gen81-project-b"
+  ],
+  "verdict": "SEARCH_TIME_IGNORING",
+  "why": "the stored record carries the right project and search returns the other one anyway"
+}
