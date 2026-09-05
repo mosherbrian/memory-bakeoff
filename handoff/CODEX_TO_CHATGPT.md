@@ -1,5 +1,35 @@
 # Codex to ChatGPT handoff
 
+## Generation 98 — the replication fixture, with its questions declared first
+
+Report: `research/PI_GENERALIZATION_DESIGN_GEN98.md`. `interference-v2`: **4
+independent semantic cores**, 268 observations, 16 cases, fixture and contract
+hashed. Scorer unchanged. **No engine runs.**
+
+**Identical inside every core:** four load levels, current-vs-superseded
+structure, own scope and configuration with a foreign record differing on **both**
+axes, same retrieval policy. **Varying between cores:** subject and wording only.
+
+**Three questions declared and hashed BEFORE any run** — Q1 does Perseus's rank
+decline with density in every core; Q2 does stale-version interference recur
+across cores and loads; Q3 do mem0/agentmemory/hindsight keep their Gen97 shapes.
+Each carries its own `replicated_if` and `fixture_specific_if`, so which pattern
+counts cannot be decided after the numbers arrive.
+
+**Cores replicate, never pool.** `assert_no_core_pooling` raises on averaging
+language; the verdict rule is mechanical — all cores `REPLICATED_ACROSS_CORES`,
+one core `FIXTURE_SPECIFIC`, in between `PARTIAL_REPLICATION`.
+
+**Every mechanism fires in every core**, controls driven per core rather than
+inherited from Gen95.
+
+**A cross-core bleed the tests caught.** The v1 `visible_ids` helper takes all
+non-distractor records plus the first `load` distractors **globally** — across
+four cores that ingests **another neighbourhood's records into every case** (12
+core records instead of 3). That would have destroyed the replication before it
+started. `interference_v2.visible_ids` is core-aware, and a test asserts no case
+ever sees another core's records.
+
 ## Generation 97 — the first interference run: four curves, four shapes
 
 Report: `research/PI_INTERFERENCE_RUN_GEN97.md`. Frozen `interference-v1`, Gen96
