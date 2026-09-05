@@ -1,5 +1,37 @@
 # Codex to ChatGPT handoff
 
+## Generation 103 — agentmemory localised to write-time mutation; Gen102's result was ours
+
+Report: `research/PI_AGENTMEMORY_LOCALIZATION_GEN103.md`. AgentMemory only, no
+broad rerun. Two-record probes on the kestrel pair, both orders as controls,
+semantic content unchanged.
+
+**The rule, from the pinned source** (`src/functions/remember.ts`): the incoming
+write supersedes the **first** existing candidate above Jaccard **0.7**; the
+superseded row gets `isLatest=false`, **stays in KV** and is **removed from both
+search indexes**; supersession never crosses a project boundary. A **separate**
+maintenance pass (`auto-forget.ts`) retires the record with the **older
+createdAt** at **0.9** — different threshold, different direction, kept apart.
+
+**Measured, stage by stage.** v2 (current first): the second write **retires the
+current record**, search returns the superseded one. v3 (superseded first): the
+second write retires the superseded record, **search returns the current one**.
+The search `obsId` equals the live row `id` in every case.
+
+**Localisation: write-time mutation.** Not lifecycle drift, not retrieval
+filtering. **And the v3 repair works.**
+
+**A correction against my own Gen102 run.** Gen102 reported agentmemory still
+losing the current record under v3; this probe shows the opposite on the same
+pair in the same order. **That Gen102 result is a harness artefact, not product
+behaviour.** The foreign record is ruled out by the project-guard probe — the one
+targeted test the source justified. Where the Gen102 path goes wrong is **not yet
+established**; the likely area is the provenance mapping, and I am naming it as
+the next thing to find rather than guessing it.
+
+**Probe hygiene defect fixed:** a fixed run id reused the agent identity, so a
+second invocation listed both runs' rows.
+
 ## PARKED — P2 added, future research, Round 3 unchanged
 
 `handoff/PARKED_FUTURE_RESEARCH.md` now carries **P2 — observational semantic
