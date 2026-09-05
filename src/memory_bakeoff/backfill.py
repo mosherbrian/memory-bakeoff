@@ -27,6 +27,11 @@ the same shape as `longitudinal-v1` so the two fixtures can be compared.
 
 `longitudinal-v1` is untouched. This is a separate fixture with its own version
 and its own hash; the frozen scorer reads both because the shapes are identical.
+
+Queries deliberately copy `longitudinal-v1`'s terse topic-phrase style ("As of
+Mar 9 Alpha", not "What was Alpha's reading on 9 March?"). A full-sentence
+question is a measurably different retrieval task, and the point of this fixture
+is to compare against Gen68 - so the query form has to match.
 """
 from __future__ import annotations
 
@@ -128,65 +133,65 @@ def build_backfill_fixture() -> LongitudinalFixture:
     cases = (
         # belief retention, measured twice on independent keys
         C("BQ01", "BP04", TargetKind.HISTORICAL_BELIEF, "throughput:alpha",
-          "What was Alpha's reading believed to be on 1 March?", ("B001",), ("B003",),
+          "Belief at BP01 Alpha", ("B001",), ("B003",),
           event_time=_t("2026-03-01T09:00"), scope="rig:alpha", configuration="v1",
           rationale="superseded belief, first key"),
         C("BQ02", "BP06", TargetKind.HISTORICAL_BELIEF, "throughput:beta",
-          "What was Beta's reading believed to be on 2 March?", ("B002",), ("B005",),
+          "Belief at BP02 Beta", ("B002",), ("B005",),
           event_time=_t("2026-03-02T09:00"), scope="rig:beta", configuration="v1",
           rationale="superseded belief, second key"),
 
         # shallow backfill, never revised
         C("BQ03", "BP04", TargetKind.LATE_HISTORY, "throughput:alpha",
-          "What did the recovered log say Alpha read on 9 March?", ("B004",), (),
+          "Recovered Alpha log Mar 9", ("B004",), (),
           event_time=_t("2026-03-09T09:00"), scope="rig:alpha", configuration="v1",
           rationale="shallow backfill, historical only"),
         C("BQ04", "BP06", TargetKind.AS_OF, "throughput:alpha",
-          "What was Alpha's reading on 9 March?", ("B004",), ("B003",),
+          "As of Mar 9 Alpha", ("B004",), ("B003",),
           event_time=_t("2026-03-09T09:00"), scope="rig:alpha", configuration="v1",
           rationale="shallow backfill must win at its own event time"),
 
         # deep backfill, never revised
         C("BQ05", "BP06", TargetKind.LATE_HISTORY, "throughput:beta",
-          "What did the recovered log say Beta read on 4 March?", ("B006",), (),
+          "Recovered Beta log Mar 4", ("B006",), (),
           event_time=_t("2026-03-04T09:00"), scope="rig:beta", configuration="v1",
           rationale="deep backfill, historical only"),
         C("BQ06", "BP08", TargetKind.AS_OF, "throughput:beta",
-          "What was Beta's reading on 4 March?", ("B006",), ("B005",),
+          "As of Mar 4 Beta", ("B006",), ("B005",),
           event_time=_t("2026-03-04T09:00"), scope="rig:beta", configuration="v1",
           rationale="deep backfill must win at its own event time"),
 
         # very deep backfill, later corrected
         C("BQ07", "BP08", TargetKind.LATE_HISTORY, "throughput:gamma",
-          "What did the recovered log say Gamma read on 25 February?", ("B008",), (),
+          "Recovered Gamma log Feb 25", ("B008",), (),
           event_time=_t("2026-02-25T09:00"), scope="rig:gamma", configuration="v1",
           rationale="very deep backfill, before the timeline starts"),
         C("BQ08", "BP09", TargetKind.CORRECTED_HISTORY, "throughput:gamma",
-          "What was Gamma's corrected reading for 25 February?", ("B009",), ("B008",),
+          "Corrected truth Feb 25 Gamma", ("B009",), ("B008",),
           event_time=_t("2026-02-25T09:00"), scope="rig:gamma", configuration="v1",
           rationale="a correction landing on a very deep backfill"),
         C("BQ09", "BP09", TargetKind.HISTORICAL_BELIEF, "throughput:gamma",
-          "What did the recovered Gamma log say before the audit?", ("B008",), ("B009",),
+          "Belief before Gamma audit", ("B008",), ("B009",),
           event_time=_t("2026-02-25T09:00"), scope="rig:gamma", configuration="v1",
           rationale="belief about a backfilled fact, before its correction"),
 
         # deep backfill, later corrected
         C("BQ10", "BP11", TargetKind.LATE_HISTORY, "throughput:delta",
-          "What did the recovered log say Delta read on 11 March?", ("B011",), (),
+          "Recovered Delta log Mar 11", ("B011",), (),
           event_time=_t("2026-03-11T09:00"), scope="rig:delta", configuration="v1",
           rationale="deep backfill, about to be corrected"),
         C("BQ11", "BP12", TargetKind.CORRECTED_HISTORY, "throughput:delta",
-          "What was Delta's corrected reading for 11 March?", ("B012",), ("B011",),
+          "Corrected truth Mar 11 Delta", ("B012",), ("B011",),
           event_time=_t("2026-03-11T09:00"), scope="rig:delta", configuration="v1",
           rationale="a correction landing on a deep backfill"),
 
         # current-truth controls, so the fixture is not only historical
         C("BQ12", "BP12", TargetKind.CURRENT, "throughput:alpha",
-          "What does Alpha currently measure?", ("B003",), ("B001",),
+          "Alpha throughput", ("B003",), ("B001",),
           scope="rig:alpha", configuration="v1",
           rationale="control: current truth must not be the superseded value"),
         C("BQ13", "BP12", TargetKind.CURRENT, "throughput:delta",
-          "What does Delta currently measure?", ("B010",), (),
+          "Delta throughput", ("B010",), (),
           scope="rig:delta", configuration="v1",
           rationale="control: a backfill must not displace current truth"),
     )
