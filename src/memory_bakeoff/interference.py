@@ -278,3 +278,43 @@ def contract() -> dict[str, Any]:
         "per_case_rank_and_provenance_preserved": True,
         "frozen_before_any_engine_run": True,
     }
+
+
+ORDER_SENSITIVE_RESOLVERS = "the ingest order is part of the fixture, not an "\
+                            "incidental detail; a resolver that returns an order "\
+                            "must have that order preserved all the way to the write"
+
+
+def assert_ingest_order_preserved(resolved: Sequence[str],
+                                  written: Sequence[str]) -> None:
+    """The records must be WRITTEN in the order the resolver returned them.
+
+    Gen104: `observations_for` took `set(resolver(...))` and then iterated the
+    fixture, which silently discarded the resolver's sequence. Gen102 therefore
+    ran the v2 order while reporting itself as v3. The set was right and the
+    sequence was not, and nothing checked the sequence.
+    """
+    if list(resolved) != list(written):
+        raise ValueError(
+            "ingest order was not preserved: resolver returned "
+            f"{list(resolved)[:4]}... but records were written "
+            f"{list(written)[:4]}... - " + ORDER_SENSITIVE_RESOLVERS)
+
+
+def assert_hits_map_to_live_identity(hits: Sequence[str],
+                                     live_ids: Sequence[str],
+                                     mapping: Mapping[str, str]) -> None:
+    """Every raw search hit must resolve to a live stored identity.
+
+    A hit that maps to nothing is a provenance break; a hit that maps to a
+    retired row means search and the store disagree. Either way the run is not
+    reporting the engine.
+    """
+    unmapped = [h for h in hits if h not in mapping]
+    if unmapped:
+        raise ValueError(f"search hits resolve to no stored identity: {unmapped}")
+    not_live = [h for h in hits if h not in set(live_ids)]
+    if not_live:
+        raise ValueError(
+            f"search hits are not live in the store: {not_live}; search and the "
+            "store disagree, so the result is not about the engine")

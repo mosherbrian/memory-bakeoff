@@ -140,7 +140,7 @@ def run_agentmemory(fixture, case, repetition, root):
                                   dir="/private/tmp"))
     run = f"g{case.id.replace(chr(45), chr(48)).lower()}r{repetition}"
     agent = SB.agentmemory_write(case.scope, run=run)["agentId"]
-    native, launcher = {}, None
+    native, launcher, written_order = {}, None, []
     try:
         base, _startup, launcher = g13.start_service(g33.AGENTMEMORY, state,
                                                      repetition, agent)
@@ -151,15 +151,19 @@ def run_agentmemory(fixture, case, repetition, root):
                        "agentId": observation_agent,
                        **CB.agentmemory_write(observation.configuration)}
             g13.request_json(base, "/agentmemory/remember", body=payload)
+            written_order.append(observation.id)
             for row in g33.native_rows(base, observation_agent):
                 for source in (row.get("sourceObservationIds") or []):
                     native[row.get("id")] = source
+        ITF.assert_ingest_order_preserved(VISIBLE_IDS(fixture, case), written_order)
         arguments = {"agentId": agent, "query": case.query, "limit": LIMIT,
                      **CB.agentmemory_query(case.configuration)}
         raw = g13.request_json(base, "/agentmemory/smart-search", body=arguments)
-        returned = []
-        for hit in (raw.get("results") or [])[:LIMIT]:
-            returned.append(native.get(hit.get("obsId")))
+        hits = [h.get("obsId") for h in (raw.get("results") or [])[:LIMIT]]
+        live = [r.get("id") for r in g33.native_rows(base, agent)
+                if r.get("isLatest") is not False]
+        ITF.assert_hits_map_to_live_identity(hits, live, native)
+        returned = [native.get(h) for h in hits]
         return returned, arguments
     finally:
         g13.stop_service(g33.AGENTMEMORY, state, repetition, agent, launcher)
