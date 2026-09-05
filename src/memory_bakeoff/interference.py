@@ -318,3 +318,17 @@ def assert_hits_map_to_live_identity(hits: Sequence[str],
         raise ValueError(
             f"search hits are not live in the store: {not_live}; search and the "
             "store disagree, so the result is not about the engine")
+
+
+def ordered_observations(fixture, case, resolver) -> list:
+    """The records a case ingests, IN THE RESOLVER'S ORDER.
+
+    Gen104/105: four separate sites had each written this as
+    `set(resolver(...))` plus a loop over `fixture.observations`, which
+    discards the resolver's sequence. It was harmless while resolver order
+    happened to match construction order (v1, v2) and silently wrong the
+    moment v3 reordered ingestion on purpose. One helper, so no site can
+    re-derive it wrongly again.
+    """
+    by_id = {o.id: o for o in fixture.observations}
+    return [by_id[i] for i in resolver(fixture, case) if i in by_id]

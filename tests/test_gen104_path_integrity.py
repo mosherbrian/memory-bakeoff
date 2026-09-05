@@ -119,3 +119,33 @@ def test_corrected_arm_removes_stale_only_where_the_threshold_fires():
     for core, flags in stale.items():
         if core != "oncall:kestrel":
             assert all(flags), core
+
+
+# --- Gen105: the same defect existed at four sites ---------------------------
+def test_no_script_rederives_ingest_order_from_a_set():
+    """Four sites had each written `set(visible_ids(...))` plus a fixture loop.
+
+    Harmless while resolver order matched construction order; silently wrong
+    the moment v3 reordered ingestion on purpose. One shared helper now, and
+    this asserts nobody re-derives it.
+    """
+    offenders = []
+    for path in sorted((ROOT / "scripts").glob("*.py")):
+        for node in ast.walk(ast.parse(path.read_text())):
+            if not (isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Name) and node.func.id == "set"):
+                continue
+            inner = node.args[0] if node.args else None
+            if (isinstance(inner, ast.Call)
+                    and isinstance(inner.func, ast.Attribute)
+                    and inner.func.attr == "visible_ids"):
+                offenders.append(path.name)
+    assert offenders == [], f"ingest order re-derived from a set in {offenders}"
+
+
+def test_shared_helper_returns_the_resolver_order():
+    fixture = V3.build_fixture()
+    for case in fixture.cases:
+        got = [o.id for o in ITF.ordered_observations(
+            fixture, case, V3.visible_ids)]
+        assert got == list(V3.visible_ids(fixture, case)), case.id

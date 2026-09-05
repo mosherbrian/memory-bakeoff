@@ -36,11 +36,9 @@ def main() -> int:
     for case in fixture.cases:
         for repetition in REPETITIONS:
             bank = f"{args.run}-l{case.load}-r{repetition}"
-            visible = set(ITF.visible_ids(fixture, case))
             native = {}
-            for observation in fixture.observations:
-                if observation.id not in visible:
-                    continue
+            for observation in ITF.ordered_observations(
+                    fixture, case, ITF.visible_ids):
                 # The document id is SENT, not read back - the frozen Round-2
                 # convention. A map keyed on a fabricated fallback matches
                 # nothing, which is how the first attempt reported every hit

@@ -64,8 +64,7 @@ def observations_for(fixture, case):
     and never the ORDER they were written in - so Gen102 ran the v2 order while
     reporting itself as v3 (found by the Gen104 trace).
     """
-    by_id = {o.id: o for o in fixture.observations}
-    return [by_id[i] for i in VISIBLE_IDS(fixture, case) if i in by_id]
+    return ITF.ordered_observations(fixture, case, VISIBLE_IDS)
 
 
 def ingest(fixture, case):
