@@ -40,6 +40,20 @@ def cases_for(fixture):
     return [c for c in fixture.cases if c.id in CROSS_SCOPE_CASES]
 
 
+def ingestion_prefix(fixture):
+    """Only what the queried checkpoint may know.
+
+    Both cross-scope cases sit at the same checkpoint. Ingesting the whole
+    timeline would import Gen70's over-ingestion and charge future_leakage as an
+    artefact of this runner rather than a property of the binding.
+    """
+    checkpoints = {c.checkpoint_id for c in cases_for(fixture)}
+    if len(checkpoints) != 1:
+        raise SystemExit(f"cross-scope cases span checkpoints {sorted(checkpoints)}; "
+                         "the prefix rule needs revisiting")
+    return fixture.prefix(next(iter(checkpoints)))
+
+
 def score(fixture, records):
     for record in records:
         case = next(c for c in fixture.cases if c.id == record["case_id"])
@@ -61,7 +75,7 @@ def run_mem0(fixture, repetition, root):
     memory = Memory.from_config(g32.config_for(
         str(root / f"rep{repetition}"), f"bakeoff-gen78-r{repetition}"))
     native = {}
-    for observation in fixture.observations:
+    for observation in ingestion_prefix(fixture):
         payload = M.add_arguments(observation)
         M.assert_public_only(payload)
         bound = SB.mem0_write(observation.scope)          # scope, not a constant
@@ -106,7 +120,7 @@ def run_agentmemory(fixture, repetition, root):
             g33.AGENTMEMORY, state, repetition,
             SB.agentmemory_write(scopes[0], run=run)["agentId"])
         launchers["main"] = launcher
-        for observation in fixture.observations:
+        for observation in ingestion_prefix(fixture):
             agent = SB.agentmemory_write(observation.scope, run=run)["agentId"]
             payload = {**A.remember_arguments(observation, agent), "agentId": agent}
             A.assert_public_only(payload)
@@ -165,6 +179,8 @@ def main() -> int:
         "ablation": "frozen Gen77 scope binding replaces the Round-2 constant "
                     "namespace; one variable moved",
         "cases": list(CROSS_SCOPE_CASES),
+        "ingestion": "prefix of the queried checkpoint only; the whole timeline "
+                     "would charge future_leakage as a runner artefact",
         "excluded": {"LQ03": "same scope, different configuration - excluded so "
                              "configuration_collapse is not conflated with scope"},
         "binding": {k: v for k, v in SB.BINDINGS[args.engine].items()
