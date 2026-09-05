@@ -18,11 +18,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from memory_bakeoff import evidence as EV  # noqa: E402
 from memory_bakeoff import interference_v3 as V3                  # noqa: E402
 from memory_bakeoff.providers import configuration_bound as CB    # noqa: E402
 from memory_bakeoff.providers import scope_bound as SB            # noqa: E402
 
-OUT = ROOT / "results" / "agentmemory_localization_gen103"
+OUT = EV.next_attempt(ROOT, 103)
 CORE = "oncall:kestrel"
 LIMIT = 5
 

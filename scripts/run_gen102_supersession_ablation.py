@@ -20,12 +20,13 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from memory_bakeoff import interference as ITF                    # noqa: E402
 from memory_bakeoff import interference_v3 as V3                  # noqa: E402
+from memory_bakeoff import evidence as EV                    # noqa: E402
 from memory_bakeoff import round3_adapters as R3                  # noqa: E402
 from memory_bakeoff import supersession_binding as SB             # noqa: E402
 from memory_bakeoff.providers import configuration_bound as CB    # noqa: E402
 from memory_bakeoff.providers import scope_bound as SBIND         # noqa: E402
 
-OUT = ROOT / "results" / "supersession_ablation_gen102"
+GENERATION = 102   # the generation whose ARMS these are
 LIMIT = 5
 HINDSIGHT_MAX_TOKENS = 4096
 REPETITIONS = (1, 2, 3)
@@ -138,6 +139,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine", required=True)
     parser.add_argument("--arm", choices=("off", "on"), required=True)
+    parser.add_argument("--generation", type=int, default=None,
+                        help="the generation DOING the run; artefacts "
+                             "are written under results/gen<N>/attempt<M>")
     parser.add_argument("--root", default=None)
     args = parser.parse_args()
 
@@ -190,10 +194,10 @@ def main() -> int:
                "fixture_contract_sha256": V3.contract_sha256(),
                "binding": SB.BINDINGS[engine], "rows": rows}
     R3.assert_within_engine_only(payload)
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"{engine}-{args.arm}.json").write_text(
-        json.dumps(payload, indent=1, sort_keys=True, default=str))
-    print(f"\nwrote {OUT / (engine + '-' + args.arm + '.json')}")
+    # The path names the run that WRITES it, and refuses an existing set.
+    out = EV.next_attempt(ROOT, args.generation or GENERATION)
+    EV.write_evidence(out, f"{engine}-{args.arm}.json", payload)
+    print(f"\nwrote {out / (engine + '-' + args.arm + '.json')}")
     return 0
 
 

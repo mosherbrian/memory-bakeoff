@@ -19,11 +19,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from memory_bakeoff import interference as ITF                        # noqa: E402
+from memory_bakeoff import evidence as EV                      # noqa: E402
 from memory_bakeoff import round3_adapters as R3                      # noqa: E402
 from memory_bakeoff.providers import scope_bound as SB                # noqa: E402
 from memory_bakeoff.providers import configuration_bound as CB        # noqa: E402
 
-OUT = ROOT / "results" / "interference_gen97"
+GENERATION = 97    # the generation whose RUN this is
 LIMIT = 5                 # the harness window for engines that express one
 HINDSIGHT_MAX_TOKENS = 4096
 REPETITIONS = (1, 2, 3)
@@ -223,6 +224,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine", required=True, choices=sorted(ENGINES))
     parser.add_argument("--root", default=None)
+    parser.add_argument("--generation", type=int, default=None,
+                        help="the generation DOING the run; artefacts "
+                             "are written under results/gen<N>/attempt<M>")
     args = parser.parse_args()
 
     engine = args.engine
@@ -256,10 +260,9 @@ def main() -> int:
                "saturation": R3.saturation_meaning(engine),
                "rows": rows}
     R3.assert_within_engine_only(payload)
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"{engine}.json").write_text(
-        json.dumps(payload, indent=1, sort_keys=True, default=str))
-    print(f"\nwrote {OUT / (engine + '.json')}")
+    out = EV.next_attempt(ROOT, args.generation or GENERATION)
+    EV.write_evidence(out, f"{engine}.json", payload)
+    print(f"\nwrote {out / (engine + '.json')}")
     return 0
 
 

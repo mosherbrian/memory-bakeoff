@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from memory_bakeoff import evidence as EV
 from memory_bakeoff import interference as ITF
 from memory_bakeoff import interference_v3 as V3                        # noqa: E402
 from memory_bakeoff import round3_adapters as R3                      # noqa: E402
@@ -127,8 +128,8 @@ def main() -> int:
                "saturation": R3.saturation_meaning("hindsight"),
                "rows": rows}
     R3.assert_within_engine_only(payload)
-    Path(args.out).write_text(json.dumps(payload, indent=1, sort_keys=True,
-                                         default=str))
+    out = Path(args.out)
+    EV.write_evidence(out.parent, out.name, payload)
     print(f"\nwrote {args.out}")
     return 0
 

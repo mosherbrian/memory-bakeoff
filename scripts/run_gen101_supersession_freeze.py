@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from memory_bakeoff import evidence as EV  # noqa: E402
 from memory_bakeoff import interference_v2 as V2          # noqa: E402
 from memory_bakeoff import interference_v3 as V3          # noqa: E402
 from memory_bakeoff import supersession_binding as SB     # noqa: E402
@@ -78,7 +79,7 @@ def main() -> int:
                       sort_keys=True, separators=(",", ":"), default=str)
     payload["fixture_sha256"] = hashlib.sha256(blob.encode()).hexdigest()
 
-    destination = ROOT / "results" / "supersession_freeze_gen101"
+    destination = EV.next_attempt(ROOT, 101)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "freeze.json").write_text(
         json.dumps(payload, indent=1, sort_keys=True, default=str))

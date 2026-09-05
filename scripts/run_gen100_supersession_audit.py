@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from memory_bakeoff import evidence as EV  # noqa: E402
 from memory_bakeoff import interference as ITF                    # noqa: E402
 from memory_bakeoff import interference_v2 as V2        # noqa: E402
 from memory_bakeoff import supersession_surface as SS    # noqa: E402
@@ -36,7 +37,7 @@ def main() -> int:
         "cores_where_the_rule_can_fire": fired,
         "gen99_kestrel_explained": all(per_core[c]["explains_absence"] for c in fired),
     }
-    destination = ROOT / "results" / "supersession_gen100"
+    destination = EV.next_attempt(ROOT, 100)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "audit.json").write_text(
         json.dumps(payload, indent=1, sort_keys=True, default=str))
