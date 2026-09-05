@@ -62,7 +62,7 @@ def observations_for(fixture, case):
 # --- perseus --------------------------------------------------------------
 def run_perseus(fixture, case, repetition, root):
     g29 = load("run_perseus_gen29_longitudinal")
-    home = root / f"L{case.load}-rep{repetition}"
+    home = root / f"{case.id}-rep{repetition}"
     home.mkdir(parents=True, exist_ok=True)
     db, key = home / "vault.sqlite", home / "vault.key"
     g29.sh([g29.BIN, "keygen", "--key-file", key])
@@ -96,8 +96,8 @@ def run_mem0(fixture, case, repetition, root):
         sys.path.insert(0, str(upstream))
     from mem0 import Memory
     memory = Memory.from_config(g32.config_for(
-        str(root / f"L{case.load}-rep{repetition}"),
-        f"bakeoff-gen97-l{case.load}-r{repetition}"))
+        str(root / f"{case.id}-rep{repetition}"),
+        f"bakeoff-{case.id.lower()}-r{repetition}"))
     native = {}
     for observation in observations_for(fixture, case):
         body = public_body(observation)
@@ -127,9 +127,9 @@ def run_mem0(fixture, case, repetition, root):
 def run_agentmemory(fixture, case, repetition, root):
     g33 = load("run_agentmemory_gen33_longitudinal.py")
     g13 = g33.g13
-    state = Path(tempfile.mkdtemp(prefix=f"am-gen97-l{case.load}-r{repetition}-",
+    state = Path(tempfile.mkdtemp(prefix=f"am-{case.id.lower()}-r{repetition}-",
                                   dir="/private/tmp"))
-    run = f"g97l{case.load}r{repetition}"
+    run = f"g{case.id.replace(chr(45), chr(48)).lower()}r{repetition}"
     agent = SB.agentmemory_write(case.scope, run=run)["agentId"]
     native, launcher = {}, None
     try:
@@ -160,7 +160,7 @@ def run_agentmemory(fixture, case, repetition, root):
 def run_hindsight(fixture, case, repetition, root):
     from hindsight_client import Hindsight
     client = Hindsight()
-    bank = f"bakeoff-gen97-l{case.load}-r{repetition}"
+    bank = f"bakeoff-{case.id.lower()}-r{repetition}"
     native = {}
     for observation in observations_for(fixture, case):
         body = public_body(observation)
