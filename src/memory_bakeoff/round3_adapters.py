@@ -124,11 +124,38 @@ def bindings(engine: str, scope: str, configuration: str, run: str = "r3") -> di
         "engine": engine,
         "scope_primitive": scope_primitive,
         "configuration_primitive": configuration_entry["primitive"],
-        "write": {**scope_write, **configuration_entry["write"](configuration)},
-        "query": {**scope_query, **configuration_entry["query"](configuration)},
+        "write": merge_payloads(scope_write, configuration_entry["write"](configuration)),
+        "query": merge_payloads(scope_query, configuration_entry["query"](configuration)),
         "provenance": "scope binding from Gen77/78, configuration binding from "
                       "Gen79/80; neither is re-derived here",
     }
+
+
+def merge_payloads(scope: Mapping[str, Any],
+                   configuration: Mapping[str, Any]) -> dict[str, Any]:
+    """Combine the two bindings without one silently overwriting the other.
+
+    mem0 nests its query identities under `filters`, so a plain dict merge drops
+    the scope filter and leaves the configuration one - which is exactly the Gen76
+    failure, an engine never given a scope to honour. Nested dicts are merged.
+    """
+    merged: dict[str, Any] = dict(scope)
+    for key, value in configuration.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            collision = sorted(set(merged[key]) & set(value))
+            if collision:
+                raise ValueError(
+                    f"scope and configuration bindings collide on {collision} inside "
+                    f"{key!r}; reusing a primitive would make two configurations "
+                    "look like two scopes")
+            merged[key] = {**merged[key], **value}
+        elif key in merged:
+            raise ValueError(
+                f"scope and configuration bindings collide on {key!r}; reusing a "
+                "primitive would make two configurations look like two scopes")
+        else:
+            merged[key] = value
+    return merged
 
 
 # Query-only modifiers: not identities, and legitimately absent from the write.

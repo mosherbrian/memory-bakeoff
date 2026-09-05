@@ -48,6 +48,23 @@ def test_a_one_sided_identity_is_rejected():
                      "query": {"filters": {"user_id": "a"}}})
 
 
+def test_the_merge_refuses_a_primitive_collision():
+    """Reusing one primitive for both axes is the Gen79 hard constraint."""
+    with pytest.raises(ValueError, match="collide"):
+        r3.merge_payloads({"user_id": "a"}, {"user_id": "b"})
+    with pytest.raises(ValueError, match="collide"):
+        r3.merge_payloads({"filters": {"user_id": "a"}}, {"filters": {"user_id": "b"}})
+
+
+def test_nested_filters_are_merged_not_overwritten():
+    """A plain dict merge would silently drop mem0's scope filter."""
+    merged = r3.merge_payloads({"filters": {"user_id": "a"}},
+                               {"filters": {"agent_id": "b"}})
+    assert merged == {"filters": {"user_id": "a", "agent_id": "b"}}
+    query = r3.bindings("mem0", "server:atlas", "A1")["query"]
+    assert set(query["filters"]) == {"user_id", "agent_id"}
+
+
 def test_a_query_only_modifier_is_not_treated_as_an_identity():
     """hindsight's tags_match is a matching mode, not an identity."""
     assert r3.identity_keys({"tags": ["x"], "tags_match": "all"}) == {"tags"}
