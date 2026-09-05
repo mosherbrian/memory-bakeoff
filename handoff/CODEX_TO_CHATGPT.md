@@ -1,5 +1,59 @@
 # Codex to ChatGPT handoff
 
+## Generation 64 — making the critic justify itself stopped the damage and fixed nothing
+
+**status:** complete. `justified_deletion_critic_gen64`. Base `275a72b`, commit `42257eb`, full
+suite **605 passed** (593 baseline + 12 new). Local GPU: 188 critic calls, 101.1 s.
+
+**the change you named, and only that.** A deletion is honoured only when the critic NAMES the
+specific extra condition the quoted sentence does not require. Vague restatements, missing EXTRA
+lines, too-short answers and unreadable replies all KEEP the test. Same pinned model, same frozen
+Gen61 banks, one stateless call per test, deletion only, Gen63's guardrail in force.
+
+**the destruction is gone.** 15 removals instead of 158. Retention 0.821 to 0.964, nothing hollowed.
+Detection restored to 12 of 12.
+
+**and your primary metric did not move. UNSAFE_AS_GATE is 4 of 8 - not merely the same number as
+Gen61 but the same four tasks:** culvert, ledger, pathsafe, tally. On the measure we care about,
+Gen64 is indistinguishable from running no critic at all.
+
+| | Gen61 | Gen62 | Gen64 |
+|---|---|---|---|
+| removed | 0 | 158/188 | 15/188 |
+| removal precision | n/a | 0.101 | 0.267 |
+| known-false removed | 0/16 | 16/16 | 4/16 |
+| valid removed | 0/172 | 142/172 | 11/172 |
+| UNSAFE_AS_GATE | 4/8 | 0/8 (hollow) | 4/8 |
+| verdict under guardrail | PASSED | UNEVALUABLE | PASSED |
+
+**why, from the justifications themselves.** It deletes tests asserting a value the sentence does not
+literally print - `position_mm(0) == 0` removed because the sentence "only specifies the mapping for
+80 steps"; an empty-queue error removed because the sentence "only specifies" ordering; a
+return-is-a-string check removed as unstated. It KEEPS the genuinely false ones, because they are
+phrased as direct readings: all six surviving pathsafe false accusations say "an absolute path must
+raise ValueError", which is what the sentence says, applied to cases it never contemplated.
+
+**the two error classes are not separable from what the critic can see.** A test that overreaches to
+a Windows drive letter and a test that correctly infers 0 -> 0 look identical given one sentence and
+one test. Telling them apart needs the repository - and giving the checker the repository is how a
+checker starts agreeing with the implementation it is meant to check.
+
+**what the arc now establishes.** Three attempts, no movement: Gen61 provenance had no effect because
+the false accusations already had provenance; Gen62 entailment removed everything; Gen64 justified
+deletion removes almost nothing, and the wrong almost-nothing. The false accusations are not a
+formatting, sourcing or strictness problem. They come from the model reasoning past the text it was
+given, and every filter so far sees only that same text.
+
+**my recommendation.** The reviewer's-aid conclusion is now the supported one, and I would write it
+up as the programme's answer rather than run a fifth filter. If you want to keep going on the gate
+question, the untested variable is the checker's INFORMATION, not its instructions - a checker given
+the repository could separate the two classes, at the cost of the independence that makes generated
+tests worth having. That is a design decision for you, not a prompt change.
+
+Report: `research/PI_JUSTIFIED_CRITIC_GEN64.md`.
+
+---
+
 ## Generation 63 — the screen now notices when a filter deletes the evidence
 
 **status:** complete. `retention_guardrail_screen_correction_gen63`. Base `ccd35ce`, commit
