@@ -1,0 +1,38 @@
+{
+  "positives": {
+    "explicit_branches": {
+      "valve/limits.py": "MAX_PERCENT = 100\nMIN_PERCENT = 0\n\n\ndef opening_percent(raw: int) -> int:\n    if raw > MAX_PERCENT:\n        return MAX_PERCENT\n    if raw < MIN_PERCENT:\n        return MIN_PERCENT\n    return raw\n"
+    },
+    "min_max": {
+      "valve/limits.py": "MAX_PERCENT = 100\nMIN_PERCENT = 0\n\n\ndef opening_percent(raw: int) -> int:\n    return max(MIN_PERCENT, min(MAX_PERCENT, raw))\n"
+    }
+  },
+  "requirements": {
+    "A": "opening_percent(150) == 100 and opening_percent(40) == 40",
+    "B": "opening_percent(-5) == 0 and opening_percent(-1) == 0"
+  },
+  "wrongs": {
+    "absolute_value": {
+      "failed_requirement": "B",
+      "overlay": {
+        "valve/limits.py": "MAX_PERCENT = 100\n\n\ndef opening_percent(raw: int) -> int:\n    raw = abs(raw)\n    if raw > MAX_PERCENT:\n        return MAX_PERCENT\n    return raw\n"
+      },
+      "passes_visible": true,
+      "why": "made negatives positive instead of clamping them to zero"
+    },
+    "off_by_one_ceiling": {
+      "failed_requirement": "A",
+      "overlay": {
+        "valve/limits.py": "MAX_PERCENT = 99\nMIN_PERCENT = 0\n\n\ndef opening_percent(raw: int) -> int:\n    return max(MIN_PERCENT, min(MAX_PERCENT, raw))\n"
+      },
+      "passes_visible": false,
+      "why": "clamped the top of the range to 99"
+    },
+    "upper_bound_only": {
+      "failed_requirement": "B",
+      "overlay": {},
+      "passes_visible": true,
+      "why": "kept the shipped upper-bound clamp and never added the lower bound"
+    }
+  }
+}

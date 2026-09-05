@@ -1,0 +1,202 @@
+{
+  "culvert": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:separate_constant": "7a61b607a6e8861ae5c7665c84349adc4b123745",
+      "positive:telemetry_owns_its_ratio": "456fb9aeba3397a2823bab419f6bf9fc41ede5af",
+      "wrong:edited_the_test_to_agree": "ef79ec91f8e763432b2c41598d347903fa830aba",
+      "wrong:inverted_the_consumers": "3280043b268627dfb7924b77a1c4caf236ede8ea",
+      "wrong:shared_constant_breaks_telemetry": "1273d032b432915a5b072987c9c18524d43d02de"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "cross_file_compatibility",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "position_mm(80) == 10 and position_mm(40) == 5 under the new ratio",
+      "B": "frame(10)['steps'] == 40, unchanged by the firmware change"
+    },
+    "spec_sha256": "15de8045153e2962948466e2ce76689adf11b6f8e4609c1029fab9803cf09437",
+    "title": "a shared constant that only one consumer should follow"
+  },
+  "dispatch": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:sorted_by_rank": "c4d9b0d596f2c0fe00e1c1a6de8c59cad7f0f5c2",
+      "positive:two_lists": "6b257479f0bbe4aef5146c5fec4aaac2e81b5e55",
+      "wrong:pops_from_the_back": "6d170207d76d4d949768bc244e8960691969f5d4",
+      "wrong:urgency_ignored": "f3e2910626987fdeb5d96fb947bde6c2cab6ea79",
+      "wrong:urgent_jobs_reversed": "ea31deb26846f35dd0cca579a8a3ed40ccdadb3a"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "sequence_and_state",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "ordinary jobs come out in the order they were pushed",
+      "B": "an urgent job overtakes every waiting ordinary job, and urgent jobs keep their own order"
+    },
+    "spec_sha256": "d4ce735d0f8e5709593cfff24e14996f26a731ceebfb553e770a1fd5a5cd8317",
+    "title": "a queue whose ordering rule needs several items to show"
+  },
+  "ledger": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:decimal_half_up": "cff3c4c77f489ef5170b2147718105dde30e4043",
+      "positive:explicit_remainder": "9f2fc0f47d637c20c00c5200c15725cb82be0790",
+      "wrong:half_to_even": "f71951718f4417468bc504301f57222d4a05b195",
+      "wrong:through_a_float": "24bf643261d9042c3d94775bc965043a4d00e2e3",
+      "wrong:truncates_instead_of_rounding": "c91d7ec55c473a89f6b71ab41cd3f9be8631f7da"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "numeric_convention",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "ordinary amounts round to two decimal places and keep two decimals in the output",
+      "B": "an exact midpoint rounds away from zero, for positive and negative amounts"
+    },
+    "spec_sha256": "a712ff9f0bc2317e67c77c8865cd3fe62bed0fd25c7b094d68767d0437b7a5ab",
+    "title": "a rounding rule that only shows at an exact midpoint"
+  },
+  "manifest": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:guard_clause": "0da1f79df284608c077207add0d5f633f5b567c8",
+      "positive:helper_function": "845e636e8f48d5d13b45df0b9d60ee4f7c219ff8",
+      "wrong:blank_stays_empty_string": "8cf761a505e6d9ddc3c841da4f36e4a3431616cd",
+      "wrong:fields_out_of_order": "bade3edb76fa4673e872f42f55762dce04b38eb5",
+      "wrong:only_empty_counts_as_blank": "c474023156b343b89e7b3c5f744aefb1b7562782"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "parser_edge_case",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "fields are stripped of surrounding whitespace and mapped in order",
+      "B": "a blank or whitespace-only field is None, not an empty string"
+    },
+    "spec_sha256": "f8073461dcf9f02ccf01cde14c1706c706c64f835ebbbd8cc4688c96f4e5b204",
+    "title": "a blank field is not an empty string"
+  },
+  "pathsafe": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:explicit_checks": "e8b72077814b3d77ffe2eb98f73dfbdfc9822b77",
+      "positive:single_guard": "e418051e8ad2b3a49b6666e5f3eff158d4a72622",
+      "wrong:absolute_only": "57743610e32270461cb2fd1475e1117c4f3cb5c0",
+      "wrong:refuses_everything": "f0c8e417e475422b5bdafb1d12cf83ab2d54b101",
+      "wrong:silently_repaired": "8e8b0713c8f2ff36f88bf5843387e714f8ce7888"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "error_behaviour",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "a relative name resolves to depot/<name>",
+      "B": "an absolute name or one containing .. raises ValueError"
+    },
+    "spec_sha256": "64581b3c5e931a9a51eced62af97adbb959fa2053be847f67d0673345487d486",
+    "title": "an input that must be refused, not repaired"
+  },
+  "tally": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:delegated_reset": "8de3f61518d3d28b666457a2ba05e7ae77b938b4",
+      "positive:reset_in_close": "85c8099203fc7893df6519c3eb7759b2901cb5b7",
+      "wrong:add_multiplies": "786faefda95bd9458aad1aeff5f7d5fd25fbd7d2",
+      "wrong:close_does_not_reset": "208d7369a0f2309c295ea3d589864773ed499007",
+      "wrong:reset_only_on_next_add": "f38755bc2092985906434c62aa5c0a2cb4834099"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "sequence_and_state",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "add accumulates and total reports the running total",
+      "B": "close returns the total and resets the session, so total() is 0 afterwards"
+    },
+    "spec_sha256": "b009b87432b1b0bfa8f72137b83637c3003e8bbdfc675e3926e82069c881f83c",
+    "title": "a counter whose rule only appears across several calls"
+  },
+  "thermo": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:default_changed": "2a7b0329b3d9297bca0299992b4cbfa30f79c85a",
+      "positive:named_constant": "5478a694608d6ac09dddb1d314907ad0a8fc5360",
+      "wrong:conversion_inverted": "814cf3f6b40fd5168f0b4679c5ce707a66e7f725",
+      "wrong:default_left_at_two": "576e8150a49b0d2562d40bd42d4dddeedbe5b2bc",
+      "wrong:default_truncates": "86b785a60427f28a90df7f07d3f7324c12560dd6"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "default_argument",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "conversion is correct and honours an explicit places argument",
+      "B": "the default keeps one decimal place"
+    },
+    "spec_sha256": "5461cd453ecbebb708e70ca7ea6eef3abd218a392bbdd2a0a33c812225420a17",
+    "title": "a default that the shipped tests never exercise"
+  },
+  "valve": {
+    "admitted": true,
+    "candidate_digests": {
+      "positive:explicit_branches": "77b4d9923d9457cf270793a764366c9b05af82c3",
+      "positive:min_max": "b4b61018f25b0019ca8da5dd8dc5f078987f380f",
+      "wrong:absolute_value": "079e9b8f0c0eeda6c9a4e3f1e4069f688c357421",
+      "wrong:off_by_one_ceiling": "e5c5dffd6a21ed28509f3ebe176e4b5d21f52a07",
+      "wrong:upper_bound_only": "4a18f63aaf1aafe8494ca299fab13b5281fb7c42"
+    },
+    "evaluator_only_paths": [
+      "truth"
+    ],
+    "generator_visible_paths": [
+      "spec.txt",
+      "repo"
+    ],
+    "mechanism": "boundary_and_negative_input",
+    "repo_tracked_digest": null,
+    "requirements": {
+      "A": "opening_percent(150) == 100 and opening_percent(40) == 40",
+      "B": "opening_percent(-5) == 0 and opening_percent(-1) == 0"
+    },
+    "spec_sha256": "300317755e3057c0e2213f8f2581cca3f210a3c44740728f5af4e39ce7680be2",
+    "title": "a limit that is stated at both ends"
+  }
+}

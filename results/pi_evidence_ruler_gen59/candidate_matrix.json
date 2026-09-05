@@ -1,0 +1,779 @@
+{
+  "summary": {
+    "admitted": 8,
+    "admitted_tasks": [
+      "culvert",
+      "dispatch",
+      "ledger",
+      "manifest",
+      "pathsafe",
+      "tally",
+      "thermo",
+      "valve"
+    ],
+    "authored": 8,
+    "mechanisms": [
+      "boundary_and_negative_input",
+      "cross_file_compatibility",
+      "default_argument",
+      "error_behaviour",
+      "numeric_convention",
+      "parser_edge_case",
+      "sequence_and_state"
+    ],
+    "rejected_tasks": [],
+    "ruler": "evidence-generation-gen59-v1",
+    "total_known_wrong_candidates": 24,
+    "total_visible_pass_hidden_fail": 18
+  },
+  "tasks": {
+    "culvert": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [
+        "inverted_the_consumers"
+      ],
+      "rows": [
+        {
+          "candidate": "separate_constant",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "7a61b607a6e8861ae5c7665c84349adc4b123745",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "telemetry_owns_its_ratio",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "456fb9aeba3397a2823bab419f6bf9fc41ede5af",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "shared_constant_breaks_telemetry",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: frame(10) -> {'mm': 10, 'steps': 80}, expected 40 steps"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "1273d032b432915a5b072987c9c18524d43d02de",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "bumped the single shared constant, so telemetry frames silently changed too"
+        },
+        {
+          "candidate": "edited_the_test_to_agree",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: position_mm(80) -> 20, expected 10"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": true,
+          "tracked_digest": "ef79ec91f8e763432b2c41598d347903fa830aba",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "left the old ratio in place and rewrote the shipped test to assert the old behaviour"
+        },
+        {
+          "candidate": "inverted_the_consumers",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: position_mm(80) -> 20, expected 10"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "3280043b268627dfb7924b77a1c4caf236ede8ea",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "applied the new ratio to telemetry and left the gauge on the old one"
+        }
+      ],
+      "wrongs_passing_visible": 3
+    },
+    "dispatch": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [],
+      "rows": [
+        {
+          "candidate": "two_lists",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "6b257479f0bbe4aef5146c5fec4aaac2e81b5e55",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "sorted_by_rank",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "c4d9b0d596f2c0fe00e1c1a6de8c59cad7f0f5c2",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "urgency_ignored",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: order -> ['a', 'b', 'u1', 'u2'], expected ['u1','u2','a','b']"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "f3e2910626987fdeb5d96fb947bde6c2cab6ea79",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          },
+          "why": "kept the shipped single list, so an urgent job waits its turn"
+        },
+        {
+          "candidate": "urgent_jobs_reversed",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: order -> ['u2', 'u1', 'a', 'b'], expected ['u1','u2','a','b']"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "ea31deb26846f35dd0cca579a8a3ed40ccdadb3a",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          },
+          "why": "put each urgent job at the very front, so urgent jobs come out backwards"
+        },
+        {
+          "candidate": "pops_from_the_back",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: ordinary order"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "6d170207d76d4d949768bc244e8960691969f5d4",
+          "visible": {
+            "passed": false,
+            "tail": "1 failed, 1 passed in 0.01s"
+          },
+          "why": "released the most recently added ordinary job first"
+        }
+      ],
+      "wrongs_passing_visible": 2
+    },
+    "ledger": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [
+        "truncates_instead_of_rounding"
+      ],
+      "rows": [
+        {
+          "candidate": "decimal_half_up",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "cff3c4c77f489ef5170b2147718105dde30e4043",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "explicit_remainder",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "9f2fc0f47d637c20c00c5200c15725cb82be0790",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "through_a_float",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: charge('2.675') -> '2.67', expected '2.68'"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "24bf643261d9042c3d94775bc965043a4d00e2e3",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "kept the shipped float conversion, which stores 2.675 just below the midpoint"
+        },
+        {
+          "candidate": "half_to_even",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: charge('2.665') -> '2.66', expected '2.67'"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "f71951718f4417468bc504301f57222d4a05b195",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "used decimals but rounded halves to even instead of away from zero"
+        },
+        {
+          "candidate": "truncates_instead_of_rounding",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: charge('2.675') -> '2.67', expected '2.68'"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "c91d7ec55c473a89f6b71ab41cd3f9be8631f7da",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "cut the amount at two decimals rather than rounding it"
+        }
+      ],
+      "wrongs_passing_visible": 3
+    },
+    "manifest": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [],
+      "rows": [
+        {
+          "candidate": "guard_clause",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "0da1f79df284608c077207add0d5f633f5b567c8",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "helper_function",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "845e636e8f48d5d13b45df0b9d60ee4f7c219ff8",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "blank_stays_empty_string",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: blank label -> '', expected None"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "8cf761a505e6d9ddc3c841da4f36e4a3431616cd",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "stripped the fields but left a blank one as an empty string"
+        },
+        {
+          "candidate": "only_empty_counts_as_blank",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: whitespace label -> '', expected None"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "c474023156b343b89e7b3c5f744aefb1b7562782",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "treated the empty string as blank but not a whitespace-only field"
+        },
+        {
+          "candidate": "fields_out_of_order",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: {'code': 'A1', 'depot': 'widget', 'label': 'north'}"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "bade3edb76fa4673e872f42f55762dce04b38eb5",
+          "visible": {
+            "passed": false,
+            "tail": "1 failed in 0.01s"
+          },
+          "why": "mapped the columns in the wrong order"
+        }
+      ],
+      "wrongs_passing_visible": 2
+    },
+    "pathsafe": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [],
+      "rows": [
+        {
+          "candidate": "explicit_checks",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "e8b72077814b3d77ffe2eb98f73dfbdfc9822b77",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "single_guard",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "e418051e8ad2b3a49b6666e5f3eff158d4a72622",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "silently_repaired",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: resolve('/etc/passwd') -> 'depot/etc/passwd', expected ValueError"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "8e8b0713c8f2ff36f88bf5843387e714f8ce7888",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "stripped the leading slash and dot segments instead of refusing the request"
+        },
+        {
+          "candidate": "absolute_only",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: resolve('../secrets') -> 'depot/../secrets', expected ValueError"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "57743610e32270461cb2fd1475e1117c4f3cb5c0",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "refused absolute names but let .. escape the depot"
+        },
+        {
+          "candidate": "refuses_everything",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "ValueError: refused: parts.csv"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "f0c8e417e475422b5bdafb1d12cf83ab2d54b101",
+          "visible": {
+            "passed": false,
+            "tail": "1 failed in 0.01s"
+          },
+          "why": "raised for any name containing a dot, which rejects ordinary files"
+        }
+      ],
+      "wrongs_passing_visible": 2
+    },
+    "tally": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [],
+      "rows": [
+        {
+          "candidate": "reset_in_close",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "85c8099203fc7893df6519c3eb7759b2901cb5b7",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "delegated_reset",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "8de3f61518d3d28b666457a2ba05e7ae77b938b4",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "close_does_not_reset",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: total after close -> 7, expected 0"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "208d7369a0f2309c295ea3d589864773ed499007",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "close reports the total but leaves the session holding it"
+        },
+        {
+          "candidate": "reset_only_on_next_add",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: total after close -> 7, expected 0"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "f38755bc2092985906434c62aa5c0a2cb4834099",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "defers the reset until the next add, so total() straight after close is stale"
+        },
+        {
+          "candidate": "add_multiplies",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: total -> 12, expected 7"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "786faefda95bd9458aad1aeff5f7d5fd25fbd7d2",
+          "visible": {
+            "passed": false,
+            "tail": "1 failed in 0.01s"
+          },
+          "why": "combined amounts with multiplication instead of addition"
+        }
+      ],
+      "wrongs_passing_visible": 2
+    },
+    "thermo": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [],
+      "rows": [
+        {
+          "candidate": "default_changed",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "2a7b0329b3d9297bca0299992b4cbfa30f79c85a",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "named_constant",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "5478a694608d6ac09dddb1d314907ad0a8fc5360",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "default_left_at_two",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: default places -> 97.88, expected 97.9"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "576e8150a49b0d2562d40bd42d4dddeedbe5b2bc",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "kept the shipped default of two places, which the shipped tests never exercise"
+        },
+        {
+          "candidate": "default_truncates",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: default places -> 97.8, expected 97.9"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "86b785a60427f28a90df7f07d3f7324c12560dd6",
+          "visible": {
+            "passed": true,
+            "tail": "1 passed in 0.00s"
+          },
+          "why": "made the default one place but cut the digit off instead of rounding"
+        },
+        {
+          "candidate": "conversion_inverted",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: 37.78"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "814cf3f6b40fd5168f0b4679c5ce707a66e7f725",
+          "visible": {
+            "passed": false,
+            "tail": "1 failed in 0.01s"
+          },
+          "why": "converted Fahrenheit to Celsius instead"
+        }
+      ],
+      "wrongs_passing_visible": 2
+    },
+    "valve": {
+      "admitted": true,
+      "checks": {
+        "all_positives_pass_hidden": true,
+        "all_positives_pass_visible": true,
+        "all_wrongs_fail_hidden": true,
+        "at_least_three_wrongs": true,
+        "at_least_two_positives": true,
+        "at_least_two_wrongs_pass_visible": true,
+        "positives_are_structurally_distinct": true
+      },
+      "mispredicted_visible_labels": [],
+      "rows": [
+        {
+          "candidate": "min_max",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "b4b61018f25b0019ca8da5dd8dc5f078987f380f",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "explicit_branches",
+          "hidden": {
+            "passed": true,
+            "tail": "VERIFIER OK"
+          },
+          "kind": "positive",
+          "tracked_digest": "77b4d9923d9457cf270793a764366c9b05af82c3",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          }
+        },
+        {
+          "candidate": "upper_bound_only",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: opening_percent(-5) -> -5, expected 0"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "4a18f63aaf1aafe8494ca299fab13b5281fb7c42",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          },
+          "why": "kept the shipped upper-bound clamp and never added the lower bound"
+        },
+        {
+          "candidate": "absolute_value",
+          "failed_requirement": "B",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: B: opening_percent(-5) -> 5, expected 0"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": true,
+          "self_modified_visible_test": false,
+          "tracked_digest": "079e9b8f0c0eeda6c9a4e3f1e4069f688c357421",
+          "visible": {
+            "passed": true,
+            "tail": "2 passed in 0.00s"
+          },
+          "why": "made negatives positive instead of clamping them to zero"
+        },
+        {
+          "candidate": "off_by_one_ceiling",
+          "failed_requirement": "A",
+          "hidden": {
+            "passed": false,
+            "tail": "AssertionError: A: opening_percent(150) -> 99"
+          },
+          "kind": "wrong",
+          "predicted_passes_visible": false,
+          "self_modified_visible_test": false,
+          "tracked_digest": "e5c5dffd6a21ed28509f3ebe176e4b5d21f52a07",
+          "visible": {
+            "passed": false,
+            "tail": "1 failed, 1 passed in 0.01s"
+          },
+          "why": "clamped the top of the range to 99"
+        }
+      ],
+      "wrongs_passing_visible": 2
+    }
+  }
+}

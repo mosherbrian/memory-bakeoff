@@ -1,0 +1,8 @@
+`parse_row(line)` splits a comma-separated manifest line into a dictionary
+with the keys `code`, `label` and `depot`, in that order.
+
+Surrounding whitespace is stripped from every field.
+
+A field that is blank — empty, or only whitespace — must be reported as `None`,
+not as an empty string, so that a missing label is distinguishable from a label
+that happens to be empty.

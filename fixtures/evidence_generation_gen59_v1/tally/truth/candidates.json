@@ -1,0 +1,38 @@
+{
+  "positives": {
+    "delegated_reset": {
+      "tally/session.py": "class Session:\n    def __init__(self) -> None:\n        self.reset()\n\n    def reset(self) -> None:\n        self._total = 0\n\n    def add(self, n: int) -> None:\n        self._total += n\n\n    def total(self) -> int:\n        return self._total\n\n    def close(self) -> int:\n        closing = self.total()\n        self.reset()\n        return closing\n"
+    },
+    "reset_in_close": {
+      "tally/session.py": "class Session:\n    def __init__(self) -> None:\n        self._total = 0\n\n    def add(self, n: int) -> None:\n        self._total += n\n\n    def total(self) -> int:\n        return self._total\n\n    def close(self) -> int:\n        closing = self._total\n        self._total = 0\n        return closing\n"
+    }
+  },
+  "requirements": {
+    "A": "add accumulates and total reports the running total",
+    "B": "close returns the total and resets the session, so total() is 0 afterwards"
+  },
+  "wrongs": {
+    "add_multiplies": {
+      "failed_requirement": "A",
+      "overlay": {
+        "tally/session.py": "class Session:\n    def __init__(self) -> None:\n        self._total = 1\n\n    def add(self, n: int) -> None:\n        self._total *= n\n\n    def total(self) -> int:\n        return self._total\n\n    def close(self) -> int:\n        closing = self._total\n        self._total = 1\n        return closing\n"
+      },
+      "passes_visible": false,
+      "why": "combined amounts with multiplication instead of addition"
+    },
+    "close_does_not_reset": {
+      "failed_requirement": "B",
+      "overlay": {},
+      "passes_visible": true,
+      "why": "close reports the total but leaves the session holding it"
+    },
+    "reset_only_on_next_add": {
+      "failed_requirement": "B",
+      "overlay": {
+        "tally/session.py": "class Session:\n    def __init__(self) -> None:\n        self._total = 0\n        self._closed = False\n\n    def add(self, n: int) -> None:\n        if self._closed:\n            self._total = 0\n            self._closed = False\n        self._total += n\n\n    def total(self) -> int:\n        return self._total\n\n    def close(self) -> int:\n        self._closed = True\n        return self._total\n"
+      },
+      "passes_visible": true,
+      "why": "defers the reset until the next add, so total() straight after close is stale"
+    }
+  }
+}

@@ -567,6 +567,39 @@ the fix could not be outcome-informed; per the brief the run was **discarded and
 the superseded outputs quarantined and labelled rather than reused.
 See `research/PI_MODEL_ASSISTED_EVIDENCE_GEN58.md`.
 
+## Gen59 - building a ruler where right and wrong answers live side by side
+
+Gen58 could not be scored: every faulty implementation on record lived in tasks whose generated
+tests also rejected known-good code, and the tasks where the generated tests were trustworthy had no
+faulty work in them. So Gen59 does not touch the generator - it builds the missing measuring stick.
+
+Eight new tasks (`evidence-generation-gen59-v1`), each with **two genuinely different correct
+implementations** and **three wrong ones**, where at least two of the wrongs **pass the project's own
+shipped tests**. All eight were admitted: **24 known-wrong candidates, 18 of which slip past the
+shipped tests**, across seven kinds of mistake. The bar was six tasks, eighteen wrongs, twelve
+slip-throughs.
+
+Every `passes_visible` label was treated as a prediction and measured: each of the 40 candidates was
+materialised and run against both the shipped tests and the hidden verifier, and a task was admitted
+only when measurement agreed with design.
+
+**Three corrections, all caught by measurement.** Two were harness bugs that made the ruler look
+broken when it was not - candidate trees with no git repo, so every digest came back empty and all
+positives looked identical; and the verifier run as a script, so nothing imported and *every*
+positive appeared to fail. The third was a real design error: `ledger` and `thermo` rested on float
+midpoint rounding, but 2.345 is stored above the midpoint, so Python's `round` already gives 2.35 and
+the "wrong" candidates were correct. Rebuilt `ledger` on decimal strings and removed the rounding
+clause from `thermo` entirely, rather than weakening the invariant.
+
+Isolation is mechanically demonstrated on the prompt a future generator would actually receive:
+zero occurrences of any evaluator token, and the truth package outside every generator-visible path.
+
+The Gen60 screen is frozen at `b694f7b8...` before any generated output exists, including the
+explicit **UNEVALUABLE** branch that Gen58 lacked. Gen60 must re-test the *same* Gen58 generator on
+this ruler; changing the model or adding a critic now would confound a corpus repair with a
+generator repair.
+See `research/PI_EVIDENCE_RULER_GEN59.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

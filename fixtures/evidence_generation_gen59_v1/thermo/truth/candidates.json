@@ -1,0 +1,38 @@
+{
+  "positives": {
+    "default_changed": {
+      "thermo/convert.py": "def to_fahrenheit(celsius: float, places: int = 1) -> float:\n    return round(celsius * 9 / 5 + 32, places)\n"
+    },
+    "named_constant": {
+      "thermo/convert.py": "DEFAULT_PLACES = 1\n\n\ndef _fahrenheit(celsius: float) -> float:\n    return celsius * 9 / 5 + 32\n\n\ndef to_fahrenheit(celsius: float, places: int = DEFAULT_PLACES) -> float:\n    return round(_fahrenheit(celsius), places)\n"
+    }
+  },
+  "requirements": {
+    "A": "conversion is correct and honours an explicit places argument",
+    "B": "the default keeps one decimal place"
+  },
+  "wrongs": {
+    "conversion_inverted": {
+      "failed_requirement": "A",
+      "overlay": {
+        "thermo/convert.py": "def to_fahrenheit(celsius: float, places: int = 1) -> float:\n    return round((celsius - 32) * 5 / 9, places)\n"
+      },
+      "passes_visible": false,
+      "why": "converted Fahrenheit to Celsius instead"
+    },
+    "default_left_at_two": {
+      "failed_requirement": "B",
+      "overlay": {},
+      "passes_visible": true,
+      "why": "kept the shipped default of two places, which the shipped tests never exercise"
+    },
+    "default_truncates": {
+      "failed_requirement": "B",
+      "overlay": {
+        "thermo/convert.py": "import math\n\n\ndef to_fahrenheit(celsius: float, places: int = 1) -> float:\n    scale = 10 ** places\n    return math.floor((celsius * 9 / 5 + 32) * scale) / scale\n"
+      },
+      "passes_visible": true,
+      "why": "made the default one place but cut the digit off instead of rounding"
+    }
+  }
+}

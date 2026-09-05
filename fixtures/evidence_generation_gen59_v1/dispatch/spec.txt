@@ -1,0 +1,8 @@
+`Queue` releases jobs to a depot.
+
+`push(name)` adds an ordinary job. `push(name, urgent=True)` adds an urgent one.
+`pop()` removes and returns the next job to run.
+
+Ordinary jobs run in the order they were added. An urgent job runs before every
+ordinary job currently waiting, and urgent jobs run among themselves in the order
+they were added.

@@ -1,0 +1,9 @@
+`charge(amount)` takes a money amount as a decimal string and returns it
+rounded to two decimal places, also as a string with exactly two decimals.
+
+Rounding is half away from zero: an amount exactly halfway between two hundredths
+goes to the larger magnitude. "2.675" becomes "2.68", and "-2.675" becomes "-2.68".
+
+Amounts are given as strings precisely so that a halfway value means what it says.
+Converting through a binary float loses that, because a value such as 2.675 is not
+stored exactly and can round the wrong way.

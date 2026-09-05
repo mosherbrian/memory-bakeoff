@@ -1,0 +1,8 @@
+`resolve(name)` turns a requested file name into a path underneath the
+depot directory `depot/`.
+
+A relative name resolves to `depot/<name>`.
+
+A name that is absolute, or that escapes the depot with `..`, must be refused by
+raising `ValueError`. It must not be silently rewritten, stripped or clamped into
+the depot — the caller needs to know the request was rejected.

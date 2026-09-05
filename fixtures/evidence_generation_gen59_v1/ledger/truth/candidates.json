@@ -1,0 +1,38 @@
+{
+  "positives": {
+    "decimal_half_up": {
+      "ledger/money.py": "from decimal import Decimal, ROUND_HALF_UP\n\n\ndef charge(amount: str) -> str:\n    value = Decimal(amount).quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n    return f\"{value:.2f}\"\n"
+    },
+    "explicit_remainder": {
+      "ledger/money.py": "from decimal import Decimal\n\n\ndef charge(amount: str) -> str:\n    value = Decimal(amount)\n    scaled = value * 100\n    whole = int(scaled)\n    remainder = abs(scaled - whole)\n    if remainder >= Decimal(\"0.5\"):\n        whole += 1 if value >= 0 else -1\n    result = Decimal(whole) / 100\n    return f\"{result:.2f}\"\n"
+    }
+  },
+  "requirements": {
+    "A": "ordinary amounts round to two decimal places and keep two decimals in the output",
+    "B": "an exact midpoint rounds away from zero, for positive and negative amounts"
+  },
+  "wrongs": {
+    "half_to_even": {
+      "failed_requirement": "B",
+      "overlay": {
+        "ledger/money.py": "from decimal import Decimal, ROUND_HALF_EVEN\n\n\ndef charge(amount: str) -> str:\n    value = Decimal(amount).quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_EVEN)\n    return f\"{value:.2f}\"\n"
+      },
+      "passes_visible": true,
+      "why": "used decimals but rounded halves to even instead of away from zero"
+    },
+    "through_a_float": {
+      "failed_requirement": "B",
+      "overlay": {},
+      "passes_visible": true,
+      "why": "kept the shipped float conversion, which stores 2.675 just below the midpoint"
+    },
+    "truncates_instead_of_rounding": {
+      "failed_requirement": "A",
+      "overlay": {
+        "ledger/money.py": "from decimal import Decimal, ROUND_DOWN\n\n\ndef charge(amount: str) -> str:\n    value = Decimal(amount).quantize(Decimal(\"0.01\"), rounding=ROUND_DOWN)\n    return f\"{value:.2f}\"\n"
+      },
+      "passes_visible": false,
+      "why": "cut the amount at two decimals rather than rounding it"
+    }
+  }
+}

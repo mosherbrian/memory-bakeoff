@@ -1,0 +1,40 @@
+{
+  "positives": {
+    "explicit_checks": {
+      "pathsafe/paths.py": "DEPOT = \"depot\"\n\n\ndef resolve(name: str) -> str:\n    if name.startswith(\"/\"):\n        raise ValueError(\"absolute names are not allowed\")\n    if \"..\" in name.split(\"/\"):\n        raise ValueError(\"names may not escape the depot\")\n    return f\"{DEPOT}/{name}\"\n"
+    },
+    "single_guard": {
+      "pathsafe/paths.py": "DEPOT = \"depot\"\n\n\ndef _is_refused(name: str) -> bool:\n    return name.startswith(\"/\") or \"..\" in name.split(\"/\")\n\n\ndef resolve(name: str) -> str:\n    if _is_refused(name):\n        raise ValueError(f\"refused: {name}\")\n    return f\"{DEPOT}/{name}\"\n"
+    }
+  },
+  "requirements": {
+    "A": "a relative name resolves to depot/<name>",
+    "B": "an absolute name or one containing .. raises ValueError"
+  },
+  "wrongs": {
+    "absolute_only": {
+      "failed_requirement": "B",
+      "overlay": {
+        "pathsafe/paths.py": "DEPOT = \"depot\"\n\n\ndef resolve(name: str) -> str:\n    if name.startswith(\"/\"):\n        raise ValueError(\"absolute names are not allowed\")\n    return f\"{DEPOT}/{name}\"\n"
+      },
+      "passes_visible": true,
+      "why": "refused absolute names but let .. escape the depot"
+    },
+    "refuses_everything": {
+      "failed_requirement": "A",
+      "overlay": {
+        "pathsafe/paths.py": "DEPOT = \"depot\"\n\n\ndef resolve(name: str) -> str:\n    if \".\" in name or name.startswith(\"/\"):\n        raise ValueError(f\"refused: {name}\")\n    return f\"{DEPOT}/{name}\"\n"
+      },
+      "passes_visible": false,
+      "why": "raised for any name containing a dot, which rejects ordinary files"
+    },
+    "silently_repaired": {
+      "failed_requirement": "B",
+      "overlay": {
+        "pathsafe/paths.py": "DEPOT = \"depot\"\n\n\ndef resolve(name: str) -> str:\n    cleaned = name.lstrip(\"/\").replace(\"../\", \"\")\n    return f\"{DEPOT}/{cleaned}\"\n"
+      },
+      "passes_visible": true,
+      "why": "stripped the leading slash and dot segments instead of refusing the request"
+    }
+  }
+}

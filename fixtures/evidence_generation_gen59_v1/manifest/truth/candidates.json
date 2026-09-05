@@ -1,0 +1,40 @@
+{
+  "positives": {
+    "guard_clause": {
+      "manifest/rows.py": "FIELDS = (\"code\", \"label\", \"depot\")\n\n\ndef parse_row(line: str) -> dict:\n    parts = [part.strip() for part in line.split(\",\")]\n    row = {}\n    for index, name in enumerate(FIELDS):\n        value = parts[index]\n        row[name] = value if value else None\n    return row\n"
+    },
+    "helper_function": {
+      "manifest/rows.py": "FIELDS = (\"code\", \"label\", \"depot\")\n\n\ndef _clean(value: str):\n    stripped = value.strip()\n    return stripped or None\n\n\ndef parse_row(line: str) -> dict:\n    parts = line.split(\",\")\n    return {name: _clean(parts[index]) for index, name in enumerate(FIELDS)}\n"
+    }
+  },
+  "requirements": {
+    "A": "fields are stripped of surrounding whitespace and mapped in order",
+    "B": "a blank or whitespace-only field is None, not an empty string"
+  },
+  "wrongs": {
+    "blank_stays_empty_string": {
+      "failed_requirement": "B",
+      "overlay": {
+        "manifest/rows.py": "FIELDS = (\"code\", \"label\", \"depot\")\n\n\ndef parse_row(line: str) -> dict:\n    parts = [part.strip() for part in line.split(\",\")]\n    return {name: parts[index] for index, name in enumerate(FIELDS)}\n"
+      },
+      "passes_visible": true,
+      "why": "stripped the fields but left a blank one as an empty string"
+    },
+    "fields_out_of_order": {
+      "failed_requirement": "A",
+      "overlay": {
+        "manifest/rows.py": "FIELDS = (\"code\", \"depot\", \"label\")\n\n\ndef parse_row(line: str) -> dict:\n    parts = [part.strip() for part in line.split(\",\")]\n    row = {}\n    for index, name in enumerate(FIELDS):\n        value = parts[index]\n        row[name] = value if value else None\n    return row\n"
+      },
+      "passes_visible": false,
+      "why": "mapped the columns in the wrong order"
+    },
+    "only_empty_counts_as_blank": {
+      "failed_requirement": "B",
+      "overlay": {
+        "manifest/rows.py": "FIELDS = (\"code\", \"label\", \"depot\")\n\n\ndef parse_row(line: str) -> dict:\n    parts = line.split(\",\")\n    row = {}\n    for index, name in enumerate(FIELDS):\n        value = parts[index]\n        row[name] = None if value == \"\" else value.strip()\n    return row\n"
+      },
+      "passes_visible": true,
+      "why": "treated the empty string as blank but not a whitespace-only field"
+    }
+  }
+}

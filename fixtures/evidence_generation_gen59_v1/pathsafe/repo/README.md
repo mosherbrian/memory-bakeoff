@@ -1,0 +1,3 @@
+# pathsafe
+
+Depot path helpers.

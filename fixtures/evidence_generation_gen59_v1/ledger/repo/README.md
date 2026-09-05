@@ -1,0 +1,3 @@
+# ledger
+
+Money rounding helpers.

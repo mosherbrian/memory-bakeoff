@@ -1,0 +1,38 @@
+{
+  "positives": {
+    "sorted_by_rank": {
+      "dispatch/queue.py": "class Queue:\n    def __init__(self) -> None:\n        self._jobs = []\n        self._sequence = 0\n\n    def push(self, name: str, urgent: bool = False) -> None:\n        self._jobs.append((0 if urgent else 1, self._sequence, name))\n        self._sequence += 1\n\n    def pop(self) -> str:\n        self._jobs.sort()\n        return self._jobs.pop(0)[2]\n"
+    },
+    "two_lists": {
+      "dispatch/queue.py": "class Queue:\n    def __init__(self) -> None:\n        self._urgent = []\n        self._ordinary = []\n\n    def push(self, name: str, urgent: bool = False) -> None:\n        (self._urgent if urgent else self._ordinary).append(name)\n\n    def pop(self) -> str:\n        if self._urgent:\n            return self._urgent.pop(0)\n        return self._ordinary.pop(0)\n"
+    }
+  },
+  "requirements": {
+    "A": "ordinary jobs come out in the order they were pushed",
+    "B": "an urgent job overtakes every waiting ordinary job, and urgent jobs keep their own order"
+  },
+  "wrongs": {
+    "pops_from_the_back": {
+      "failed_requirement": "A",
+      "overlay": {
+        "dispatch/queue.py": "class Queue:\n    def __init__(self) -> None:\n        self._urgent = []\n        self._ordinary = []\n\n    def push(self, name: str, urgent: bool = False) -> None:\n        (self._urgent if urgent else self._ordinary).append(name)\n\n    def pop(self) -> str:\n        if self._urgent:\n            return self._urgent.pop(0)\n        return self._ordinary.pop()\n"
+      },
+      "passes_visible": false,
+      "why": "released the most recently added ordinary job first"
+    },
+    "urgency_ignored": {
+      "failed_requirement": "B",
+      "overlay": {},
+      "passes_visible": true,
+      "why": "kept the shipped single list, so an urgent job waits its turn"
+    },
+    "urgent_jobs_reversed": {
+      "failed_requirement": "B",
+      "overlay": {
+        "dispatch/queue.py": "class Queue:\n    def __init__(self) -> None:\n        self._jobs = []\n\n    def push(self, name: str, urgent: bool = False) -> None:\n        if urgent:\n            self._jobs.insert(0, name)\n        else:\n            self._jobs.append(name)\n\n    def pop(self) -> str:\n        return self._jobs.pop(0)\n"
+      },
+      "passes_visible": true,
+      "why": "put each urgent job at the very front, so urgent jobs come out backwards"
+    }
+  }
+}

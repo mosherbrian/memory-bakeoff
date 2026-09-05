@@ -327,6 +327,7 @@ Priority order:
 - `research/PI_ARTIFACT_AUTHORITY_GEN56.md` — quiescence closed in ARCHITECTURE.md; breadth would have blocked 0 of 14 false assurances, so the gap is artifact coverage
 - `research/PI_ARTIFACT_COVERAGE_GEN57.md` — coverage probes are sensitive but fire on ~70% of correct runs; the false assurance is clean and the good run is flagged
 - `research/PI_MODEL_ASSISTED_EVIDENCE_GEN58.md` — half the generated test banks reject correct code; valid banks cover the tasks with no wrong work, so the screen is unevaluable
+- `research/PI_EVIDENCE_RULER_GEN59.md` — new 8-task ruler: 24 wrongs, 18 slipping past the shipped tests, Gen60 screen frozen before any generator output
 - `research/HABITUS_RETRIEVAL_CREDIT.md`
 - `research/CHATGPT_SIDECAR.md`
 - `research/TOOL_LOOP_RPC.md`
