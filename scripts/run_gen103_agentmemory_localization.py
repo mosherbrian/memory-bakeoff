@@ -70,7 +70,11 @@ def probe(order_name, order, fixture, g13, g33, A, tag, include_foreign=False):
                     if o.core == CORE and o.role in ("current", "superseded",
                                                      "foreign")}
     state = Path(tempfile.mkdtemp(prefix=f"g103-{tag}-", dir="/private/tmp"))
-    run = f"g103{tag}"
+    # Unique per invocation. A fixed run id reuses the agentId, and a second
+    # invocation then lists BOTH runs' rows - which showed up as four rows where
+    # there should be two. The conclusion was unaffected, but a localisation
+    # claim must not rest on a store shared with an earlier probe.
+    run = f"g103{tag}{int(time.time())}"
     case = next(c for c in fixture.cases if c.core == CORE and c.load == 0)
     agent = SB.agentmemory_write(case.scope, run=run)["agentId"]
     project = CB.agentmemory_write(case.configuration)["project"]
