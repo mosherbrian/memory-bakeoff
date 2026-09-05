@@ -38,7 +38,7 @@ This is the one result of Round 3 so far that has earned the word "general".
 
 ### Q3 — do the other three hold their Gen97 shapes? **`PARTIAL_REPLICATION`**, all three
 
-Each holds its Gen97 rank in **three of four** cores — but a *different* three:
+None holds its Gen97 rank everywhere, and they fail in different places — mem0 and hindsight in three of four cores, agentmemory in only two:
 
 | engine | Gen97 rank | holds in | fails in |
 |---|---|---|---|

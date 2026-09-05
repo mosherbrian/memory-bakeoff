@@ -72,9 +72,11 @@ def test_stale_interference_appears_in_every_single_observation():
 def test_q3_is_partial_for_all_three(verdicts):
     q3 = verdicts["Q3_other_engines_hold_their_shape"]
     assert set(q3) == {"mem0", "agentmemory", "hindsight"}
+    held = {engine: sum(1 for v in entry["per_core"].values() if v)
+            for engine, entry in q3.items()}
     for engine, entry in q3.items():
         assert entry["verdict"] == v2.PARTIAL, engine
-        assert sum(1 for v in entry["per_core"].values() if v) == 3
+    assert held == {"mem0": 3, "hindsight": 3, "agentmemory": 2}
 
 
 def test_the_engines_fail_in_different_cores(verdicts):
