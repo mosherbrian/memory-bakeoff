@@ -33,7 +33,25 @@ def test_scope_and_configuration_are_separate_primitives():
     for engine in r3.BUDGET_SURFACE:
         entry = r3.bindings(engine, "server:atlas", "A1")
         assert entry["scope_primitive"] != entry["configuration_primitive"], engine
-        assert set(entry["write"]) == set(entry["query"]) or engine == "mem0"
+
+
+def test_both_identities_are_bound_on_write_and_query():
+    """Payload shapes differ; the identities must not."""
+    for engine in r3.BUDGET_SURFACE:
+        r3.assert_symmetric_identities(engine, r3.bindings(engine, "server:atlas", "A1"))
+
+
+def test_a_one_sided_identity_is_rejected():
+    with pytest.raises(ValueError, match="cannot isolate"):
+        r3.assert_symmetric_identities(
+            "mem0", {"write": {"user_id": "a", "agent_id": "b"},
+                     "query": {"filters": {"user_id": "a"}}})
+
+
+def test_a_query_only_modifier_is_not_treated_as_an_identity():
+    """hindsight's tags_match is a matching mode, not an identity."""
+    assert r3.identity_keys({"tags": ["x"], "tags_match": "all"}) == {"tags"}
+    assert r3.identity_keys({"filters": {"user_id": "a"}}) == {"user_id"}
 
 
 def test_every_engine_binds_both_axes_on_write_and_query():

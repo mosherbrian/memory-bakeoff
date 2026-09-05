@@ -131,6 +131,35 @@ def bindings(engine: str, scope: str, configuration: str, run: str = "r3") -> di
     }
 
 
+# Query-only modifiers: not identities, and legitimately absent from the write.
+QUERY_ONLY_MODIFIERS = {"tags_match", "threshold"}
+
+
+def identity_keys(payload: Mapping[str, Any]) -> set[str]:
+    """The identity fields a payload carries, with mem0's filters wrapper unwrapped."""
+    keys: set[str] = set()
+    for key, value in payload.items():
+        if key == "filters" and isinstance(value, dict):
+            keys |= set(value)
+        elif key not in QUERY_ONLY_MODIFIERS:
+            keys.add(key)
+    return keys
+
+
+def assert_symmetric_identities(engine: str, entry: Mapping[str, Any]) -> None:
+    """Both axes must be bound on write AND query, whatever the payload shape.
+
+    mem0 wraps its query identities in `filters`, and hindsight adds `tags_match`,
+    a matching mode rather than an identity. Neither is an asymmetry, and neither
+    is waved through: the comparison is made on identity keys.
+    """
+    write, query = identity_keys(entry["write"]), identity_keys(entry["query"])
+    if write != query:
+        raise ValueError(
+            f"{engine}: identities differ between write {sorted(write)} and query "
+            f"{sorted(query)}; an identity on one path only cannot isolate")
+
+
 def assert_no_mode_substitution(engine: str, read_path: str) -> None:
     """The strategy each engine was measured on is the strategy it keeps."""
     expected = BUDGET_SURFACE[engine]["read_path"]
