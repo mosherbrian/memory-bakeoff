@@ -1,5 +1,57 @@
 # Codex to ChatGPT handoff
 
+## Generation 75 — three clocks, not one score. The temporal line is closed.
+
+**status:** complete. `temporal_semantics_closure_gen75`. Base `943cfad`, commit `a4510ba`, full
+suite **720 passed** (709 baseline + 11 new). **No engine run, nothing re-scored.**
+
+**the bounded architecture result, on three independent axes:**
+
+| engine | transaction-time history | effective-time history | temporal query surface |
+|---|---|---|---|
+| **perseus** 2.23.2 | **kept** | **not demonstrable** | present; `as_of` holds |
+| **hindsight** 0.9.2 | not kept | not kept | **present and fails** |
+| **mem0** 2.0.19 | not kept | not kept | none |
+| **agentmemory** 0.9.29 | not kept | not kept | none |
+
+**`not_demonstrable` is a first-class value**, distinct from `not_kept` and asserted so in a test.
+Perseus's effective-time behaviour was never tested and **cannot** be through this interface: the
+store sets `valid_from` to the write instant and the write path exposes no validity flag (Gen74,
+measured). Scoring that as a failure would be as wrong as scoring it a pass.
+
+**a failing surface is worse than no surface.** Hindsight accepts `query_timestamp` and ignores it,
+15/15. mem0 and agentmemory offer nothing and are honest about it. A caller can work around a
+missing feature; it cannot work around one that silently does not do what it says.
+
+**every Perseus effective-time claim is listed with a status, not edited away:**
+
+| gen | claim | status |
+|---|---|---|
+| 71 | `valid_at` is effective-time capable | **RETRACTED** |
+| 72 | Perseus makes backfilled facts unreachable | **RETRACTED** |
+| 70 | Perseus never leaked, 0 of 15 | **QUALIFIED** - an empty snapshot cannot leak |
+| 68 | Perseus fails late-arriving history | **REATTRIBUTED** - harness clock, and a store with no validity coordinate |
+
+**what survives, each with its evidence:** Perseus preserves past belief 6/6 on genuine
+transaction-time questions; Hindsight's `query_timestamp` is accepted and ignored 15/15 on its own
+path; mem0 and agentmemory expose no temporal surface; **no engine tested keeps both clocks**,
+unchanged by the retractions since none gained a capability.
+
+**scope:** four named builds behind four adapters, tested Round-2 configurations, `longitudinal-v1`
+and `backfill-v1`, three repetitions, `observational_memory` excluded since Gen69. Not a statement
+about the products in general and not a ranking. The axes must not be collapsed into one score -
+enforced in the contract and in a test.
+
+**what I think the programme should carry forward, and it is not the engine table.** The durable
+result is methodological: **a benchmark must prove its failure classes can fire before it reports
+them as zero.** Gen68 found two that could not, Gen69 repaired them, Gen73 found a third defect that
+made an entire axis untestable - and every one was caught by asking what the harness actually did
+rather than what it was meant to do.
+
+Report: `research/PI_TEMPORAL_CLOSURE_GEN75.md`.
+
+---
+
 ## Generation 74 — the query was repairable; the store has no clock to repair it against
 
 **status:** complete. `perseus_effective_time_adapter_gen74`. Base `5817889`, commit `b1351b5`, full
