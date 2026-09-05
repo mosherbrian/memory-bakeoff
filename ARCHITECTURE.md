@@ -349,3 +349,29 @@ Gen56 revives retrieval, a prompt floor, or a larger context window.
 How should artifact and receipt authority be scoped so that control can distinguish *this check
 passed* from *the task is sufficiently verified* — given that, on this ruler, no amount of command
 breadth closes that gap?
+
+## Generated evidence as a gate — CLOSED (2026-09-05, Gen60-65)
+
+Measured, not asserted. On the `evidence-generation-gen59-v1` corpus with the
+pinned local model, tests written by a model from the visible instruction alone
+catch wrong implementations well (12 of 12, including three that pass the
+shipped tests) and reject known-correct code in **half the tasks**.
+
+Three interventions failed to move that rate: requiring each test to quote its
+requirement (no effect - the false accusations already quoted correctly);
+deleting anything not entailed by the quote (removed 158 of 188 tests at
+precision 0.101); and deleting only with a named extra condition (15 removals,
+precision 0.267, unsafe rate back to 4 of 8 on the same four tasks).
+
+The cause is informational: an overreaching test and a soundly-inferring test are
+indistinguishable given one requirement sentence and one test. Separating them
+requires the repository, which removes the independence that makes generated
+tests worth having.
+
+**Conclusion: use generated tests to surface suspicious cases for a reviewer, not
+to decide correctness automatically.** PASSED is retired as the headline for this
+question; report the unsafe bank rate, retention range and named detection losses
+instead (`gate-suitability-report-v1`).
+
+A repository-informed checker changes the checker's information boundary and
+belongs in a new branch, not a further turn of this one.
