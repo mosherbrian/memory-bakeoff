@@ -151,9 +151,20 @@ def visible_ids(fixture: Fixture, case: Case) -> tuple[str, ...]:
     return tuple(core_ids + distractors[:case.load])
 
 
+TARGET_ABSENT_UNATTRIBUTED = "target_absent_attribution_not_demonstrable"
+
+
 def score_case(fixture: Fixture, case: Case, returned: Sequence[str],
-               limit: int) -> dict[str, Any]:
-    """Mechanisms, never a mark. Rank and provenance are preserved on the way out."""
+               limit: int, *, window_expressible: bool = True) -> dict[str, Any]:
+    """Mechanisms, never a mark. Rank and provenance are preserved on the way out.
+
+    `window_expressible=False` is for an engine whose retrieval budget is not a
+    result count (Gen96: hindsight expresses `max_tokens` and no limit). For those,
+    a returned count equal to the harness limit would describe the harness's
+    truncation, not the engine, so `saturated` is not computed and the forgetting /
+    displacement split is recorded as `TARGET_ABSENT_UNATTRIBUTED` rather than
+    guessed.
+    """
     returned = list(returned)
     by_id = fixture.by_id()
     got_expected = [i for i in case.expected if i in returned]
@@ -164,12 +175,16 @@ def score_case(fixture: Fixture, case: Case, returned: Sequence[str],
     mechanisms: list[str] = []
 
     if not got_expected:
-        saturated = len(returned) >= limit
-        # The pair that a pooled count would merge.
-        if saturated and distractors:
-            mechanisms.append(DISTRACTOR_DISPLACEMENT)
+        if not window_expressible:
+            # Gen96: no result-count window, so saturation is the harness's state.
+            mechanisms.append(TARGET_ABSENT_UNATTRIBUTED)
         else:
-            mechanisms.append(TRUE_FORGETTING)
+            saturated = len(returned) >= limit
+            # The pair that a pooled count would merge.
+            if saturated and distractors:
+                mechanisms.append(DISTRACTOR_DISPLACEMENT)
+            else:
+                mechanisms.append(TRUE_FORGETTING)
     if stale:
         mechanisms.append(STALE_VERSION_INTERFERENCE)
     if foreign:
@@ -188,7 +203,9 @@ def score_case(fixture: Fixture, case: Case, returned: Sequence[str],
         "expected_rank": (min(returned.index(i) for i in got_expected) + 1
                           if got_expected else None),
         "distractors_returned": distractors,
-        "window_saturated": len(returned) >= limit,
+        "window_saturated": (len(returned) >= limit) if window_expressible else None,
+        "window_expressible": window_expressible,
+        "target_present": bool(got_expected),
         "mechanisms": tuple(mechanisms),
         "clean": mechanisms == [],
     }
