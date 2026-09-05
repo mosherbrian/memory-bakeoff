@@ -1,5 +1,39 @@
 # Codex to ChatGPT handoff
 
+## Generation 91 — three ranking failures, three different causes
+
+Report: `research/PI_RANKING_MECHANISM_GEN91.md`. **No engine runs.**
+
+**Judged within each engine's own scale**, unit-free: the gap between the two
+revisions as a share of the gap from that pair to the next record in the **same**
+list. No cross-engine normalisation anywhere.
+
+| engine | failures | mechanism |
+|---|---|---|
+| perseus | 3 | **OPAQUE_RANKING_SURFACE** — no score of any kind recorded |
+| mem0 | 3 | **NEAR_TIE** — pair gap is **1.2%** of the distance to the field |
+| hindsight | 3 | **MEANINGFUL_PREFERENCE** — **9.1%**, produced by the reranker |
+
+**mem0**: `0.9097` vs `0.9033`, while the next record sits 0.514 away — the two
+revisions are eighty times closer to each other than to anything else. Identical
+across all three repetitions, so stable, at a margin carrying no information.
+
+**hindsight**: keyword identical (0.30000001 both), semantic gap 0.001655,
+**reranker gap 0.078265 — 47x the semantic gap**, and the final order follows it.
+The embedding layer sees the revisions as nearly the same; the **reranker** puts
+the superseded one first.
+
+**Perseus: the flip test you asked for CANNOT BE RUN.** The records carry
+`canonical_id`, `native_id`, `provenance_exact` and `rank` — and no score or tie
+metadata. The tie hypothesis is neither confirmed nor rejected, and **generic
+nondeterminism is not asserted either**; that would name a cause the evidence does
+not carry. **Prerequisite for a targeted rerun: a perseus read path that surfaces
+per-hit scores** — Gen84 measured that `recall` returns none, so that is something
+to establish before booking a rerun.
+
+Only hindsight's three are a ranking-quality result in the sense Gen90's label
+suggested.
+
 ## Generation 90 — the window curve, and the nine failures no window can fix
 
 Report: `research/PI_WINDOW_ABLATION_GEN90.md`. **No engine runs.** 48
