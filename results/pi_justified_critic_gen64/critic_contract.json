@@ -1,0 +1,54 @@
+{
+  "contract": {
+    "comparison": {
+      "gen61_unsafe_as_gate": "4 of 8",
+      "gen62_corrected_verdict": "UNEVALUABLE",
+      "gen62_removals": "158 of 188, precision 0.101"
+    },
+    "contract_sha256": "a6b752faab8a15f1e14b709e2a14f9d6ad917ca191b44c1c6ae3e5a26797832f",
+    "contract_version": "justified-deletion-critic-v1",
+    "critic_inputs_forbidden": [
+      "the repository",
+      "any candidate implementation",
+      "the hidden verifier",
+      "any outcome or score",
+      "any other test",
+      "the task name",
+      "the Gen62 verdicts"
+    ],
+    "critic_inputs_permitted": [
+      "the cited requirement sentence",
+      "the source of the single test under review"
+    ],
+    "default_is_keep": "an unreadable reply, a REMOVE with no EXTRA line, a too-short justification, or a vague restatement all KEEP the test; only a named condition deletes it",
+    "explicit_note": "several examples of one stated requirement are not an extra condition; this is stated in the prompt because it is the distinction Gen62's critic collapsed",
+    "frozen_before_exposure": true,
+    "guardrail_in_force": "a bank retaining under 50% of its tests is HOLLOWED and inadmissible, so indiscriminate deletion cannot pass",
+    "question": "does requiring the critic to NAME the unsupported extra condition stop it deleting sound tests, while still removing the false ones?",
+    "single_change_from_gen62": "the critic prompt and its reader; a deletion is only honoured when accompanied by a named concrete extra condition",
+    "unchanged": [
+      "the Gen61 generated banks, byte for byte",
+      "the generator prompt",
+      "pinned model",
+      "sampling",
+      "one stateless call per test",
+      "deletion only",
+      "evidence-generation-gen59-v1 corpus",
+      "frozen task order",
+      "gen60-generated-evidence-screen-v1 at b694f7b8",
+      "gen63-retention-guardrail-v1"
+    ]
+  },
+  "endpoint": "local llama-swap on this host",
+  "model": "qwen3.6-35b-vulkan-nothink",
+  "prompt_template_sha256": "d9624df46f8f3db31d3671aea0f40d16d425cf657c148d2b507744d2853f84af",
+  "sampling": {
+    "max_tokens": 512,
+    "min_p": 0.0,
+    "temperature": 0.6,
+    "top_k": 20,
+    "top_p": 0.8
+  },
+  "session": "one stateless HTTP request per test; no conversation carried over",
+  "source_banks": "results/pi_spec_grounded_gen61/grounded/, unmodified"
+}
