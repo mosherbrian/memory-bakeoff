@@ -1,0 +1,2708 @@
+{
+ "binding_contract": {
+  "agentmemory_binding_is_empty": "its mechanism was already exercised; the only variable moved for it is the fixture ingest order",
+  "bindings": {
+   "agentmemory": {
+    "arguments": {},
+    "call": "unchanged - /agentmemory/remember with write-time supersession",
+    "effect": "isLatest=false; the record stays in KV and leaves the search index. Absence from search is not deletion",
+    "issued": "automatically on write, exactly as in Round 2",
+    "kind": "PRODUCT_DECIDES",
+    "old_record_retained": true,
+    "one_variable": "NOTHING changes for this engine. Its mechanism was already exercised; the only variable Gen101 moves for it is the fixture's ingest order"
+   },
+   "hindsight": {
+    "arguments": {
+     "bank_id": "<the case bank>",
+     "memory_id": "<the superseded observation>",
+     "reason": "benchmark: superseded by the later observation",
+     "state": "invalidated"
+    },
+    "call": "memory.update_memory(bank_id, memory_id, state='invalidated', reason=...)",
+    "effect": "the observation's lifecycle state changes; its text is NOT replaced and the record is not deleted",
+    "issued": "once, after both records are written",
+    "kind": "STATE_TRANSITION",
+    "note": "the only states the pinned build accepts are 'valid' and 'invalidated'; there is no 'supersedes' relationship to name, so this is a state transition and is labelled as one",
+    "old_record_retained": true,
+    "one_variable": "retain and recall are unchanged; only the frozen 'lifecycle_calls: none' becomes this single call"
+   },
+   "mem0": {
+    "arguments": {
+     "infer": true
+    },
+    "call": "Memory.add(..., infer=True)",
+    "effect": "mem0's own consolidation decides; the harness selects nothing and issues no update or delete",
+    "issued": "on every write; the engine decides whether a new statement updates an earlier one",
+    "kind": "PRODUCT_DECIDES",
+    "note": "Memory.update exists and is NOT used: it would replace the old record's content, which is the harness deciding the outcome rather than the engine",
+    "old_record_retained": true,
+    "one_variable": "infer flips from False to True and nothing else moves"
+   },
+   "perseus": {
+    "arguments": {
+     "from_category": "<current record's category>",
+     "from_key": "record-<current id>",
+     "reason": "benchmark: the later observation replaces the earlier",
+     "relationship": "supersedes",
+     "to_category": "<superseded record's category>",
+     "to_key": "record-<superseded id>"
+    },
+    "call": "perseus_vault_supersede",
+    "effect": "the old entity's status becomes 'deprecated'; it is not removed",
+    "issued": "once, after both records are written",
+    "kind": "EXPLICIT_LINEAGE",
+    "old_record_retained": true,
+    "one_variable": "the frozen Gen29 write path is unchanged; this is the only added call"
+   }
+  },
+  "contract_version": "supersession-binding-gen101-v1",
+  "frozen_before_any_engine_run": true,
+  "kinds": {
+   "agentmemory": "PRODUCT_DECIDES",
+   "hindsight": "STATE_TRANSITION",
+   "mem0": "PRODUCT_DECIDES",
+   "perseus": "EXPLICIT_LINEAGE"
+  },
+  "mechanism_kinds_are_not_equivalent": "explicit lineage, a state transition and a product decision are three different things; reporting them as one comparison would manufacture an equivalence the interfaces do not support",
+  "nothing_deletes": "every binding leaves the superseded record in the store; assert_no_deletion refuses one that does not"
+ },
+ "cases": [
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "C0-CUR"
+   ],
+   "id": "C0-IQ000",
+   "load": 0,
+   "prohibited_foreign": [
+    "C0-FOR"
+   ],
+   "prohibited_stale": [
+    "C0-SUP"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "C0-CUR"
+   ],
+   "id": "C0-IQ004",
+   "load": 4,
+   "prohibited_foreign": [
+    "C0-FOR"
+   ],
+   "prohibited_stale": [
+    "C0-SUP"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "C0-CUR"
+   ],
+   "id": "C0-IQ016",
+   "load": 16,
+   "prohibited_foreign": [
+    "C0-FOR"
+   ],
+   "prohibited_stale": [
+    "C0-SUP"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "expected": [
+    "C0-CUR"
+   ],
+   "id": "C0-IQ064",
+   "load": 64,
+   "prohibited_foreign": [
+    "C0-FOR"
+   ],
+   "prohibited_stale": [
+    "C0-SUP"
+   ],
+   "query": "Atlas measured throughput",
+   "scope": "server:atlas"
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "expected": [
+    "C1-CUR"
+   ],
+   "id": "C1-IQ000",
+   "load": 0,
+   "prohibited_foreign": [
+    "C1-FOR"
+   ],
+   "prohibited_stale": [
+    "C1-SUP"
+   ],
+   "query": "Vega release branch",
+   "scope": "repo:vega"
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "expected": [
+    "C1-CUR"
+   ],
+   "id": "C1-IQ004",
+   "load": 4,
+   "prohibited_foreign": [
+    "C1-FOR"
+   ],
+   "prohibited_stale": [
+    "C1-SUP"
+   ],
+   "query": "Vega release branch",
+   "scope": "repo:vega"
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "expected": [
+    "C1-CUR"
+   ],
+   "id": "C1-IQ016",
+   "load": 16,
+   "prohibited_foreign": [
+    "C1-FOR"
+   ],
+   "prohibited_stale": [
+    "C1-SUP"
+   ],
+   "query": "Vega release branch",
+   "scope": "repo:vega"
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "expected": [
+    "C1-CUR"
+   ],
+   "id": "C1-IQ064",
+   "load": 64,
+   "prohibited_foreign": [
+    "C1-FOR"
+   ],
+   "prohibited_stale": [
+    "C1-SUP"
+   ],
+   "query": "Vega release branch",
+   "scope": "repo:vega"
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "expected": [
+    "C2-CUR"
+   ],
+   "id": "C2-IQ000",
+   "load": 0,
+   "prohibited_foreign": [
+    "C2-FOR"
+   ],
+   "prohibited_stale": [
+    "C2-SUP"
+   ],
+   "query": "Kestrel escalation routing",
+   "scope": "service:kestrel"
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "expected": [
+    "C2-CUR"
+   ],
+   "id": "C2-IQ004",
+   "load": 4,
+   "prohibited_foreign": [
+    "C2-FOR"
+   ],
+   "prohibited_stale": [
+    "C2-SUP"
+   ],
+   "query": "Kestrel escalation routing",
+   "scope": "service:kestrel"
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "expected": [
+    "C2-CUR"
+   ],
+   "id": "C2-IQ016",
+   "load": 16,
+   "prohibited_foreign": [
+    "C2-FOR"
+   ],
+   "prohibited_stale": [
+    "C2-SUP"
+   ],
+   "query": "Kestrel escalation routing",
+   "scope": "service:kestrel"
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "expected": [
+    "C2-CUR"
+   ],
+   "id": "C2-IQ064",
+   "load": 64,
+   "prohibited_foreign": [
+    "C2-FOR"
+   ],
+   "prohibited_stale": [
+    "C2-SUP"
+   ],
+   "query": "Kestrel escalation routing",
+   "scope": "service:kestrel"
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "expected": [
+    "C3-CUR"
+   ],
+   "id": "C3-IQ000",
+   "load": 0,
+   "prohibited_foreign": [
+    "C3-FOR"
+   ],
+   "prohibited_stale": [
+    "C3-SUP"
+   ],
+   "query": "Solstice provisioned capacity",
+   "scope": "cluster:solstice"
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "expected": [
+    "C3-CUR"
+   ],
+   "id": "C3-IQ004",
+   "load": 4,
+   "prohibited_foreign": [
+    "C3-FOR"
+   ],
+   "prohibited_stale": [
+    "C3-SUP"
+   ],
+   "query": "Solstice provisioned capacity",
+   "scope": "cluster:solstice"
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "expected": [
+    "C3-CUR"
+   ],
+   "id": "C3-IQ016",
+   "load": 16,
+   "prohibited_foreign": [
+    "C3-FOR"
+   ],
+   "prohibited_stale": [
+    "C3-SUP"
+   ],
+   "query": "Solstice provisioned capacity",
+   "scope": "cluster:solstice"
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "expected": [
+    "C3-CUR"
+   ],
+   "id": "C3-IQ064",
+   "load": 64,
+   "prohibited_foreign": [
+    "C3-FOR"
+   ],
+   "prohibited_stale": [
+    "C3-SUP"
+   ],
+   "query": "Solstice provisioned capacity",
+   "scope": "cluster:solstice"
+  }
+ ],
+ "control_nothing_deletes": {
+  "_guard_rejects_a_delete_binding": true,
+  "agentmemory": {
+   "call": "unchanged - /agentmemory/remember with write-time supersession",
+   "kind": "PRODUCT_DECIDES",
+   "old_record_retained": true
+  },
+  "hindsight": {
+   "call": "memory.update_memory(bank_id, memory_id, state='invalidated', reason=...)",
+   "kind": "STATE_TRANSITION",
+   "old_record_retained": true
+  },
+  "mem0": {
+   "call": "Memory.add(..., infer=True)",
+   "kind": "PRODUCT_DECIDES",
+   "old_record_retained": true
+  },
+  "perseus": {
+   "call": "perseus_vault_supersede",
+   "kind": "EXPLICIT_LINEAGE",
+   "old_record_retained": true
+  }
+ },
+ "control_order_visible_to_the_rule": {
+  "branch:vega": {
+   "case": "C1-IQ000",
+   "current_now_second": true,
+   "jaccard": 0.667,
+   "repair_visible_to_the_rule": false,
+   "rule_can_fire": false,
+   "same_records": true,
+   "superseded_now_first": true,
+   "threshold": 0.7,
+   "v2_order": [
+    "C1-CUR",
+    "C1-SUP",
+    "C1-FOR"
+   ],
+   "v2_would_retire": "nothing",
+   "v3_order": [
+    "C1-SUP",
+    "C1-CUR",
+    "C1-FOR"
+   ],
+   "v3_would_retire": "nothing"
+  },
+  "budget:solstice": {
+   "case": "C3-IQ000",
+   "current_now_second": true,
+   "jaccard": 0.3,
+   "repair_visible_to_the_rule": false,
+   "rule_can_fire": false,
+   "same_records": true,
+   "superseded_now_first": true,
+   "threshold": 0.7,
+   "v2_order": [
+    "C3-CUR",
+    "C3-SUP",
+    "C3-FOR"
+   ],
+   "v2_would_retire": "nothing",
+   "v3_order": [
+    "C3-SUP",
+    "C3-CUR",
+    "C3-FOR"
+   ],
+   "v3_would_retire": "nothing"
+  },
+  "oncall:kestrel": {
+   "case": "C2-IQ000",
+   "current_now_second": true,
+   "jaccard": 0.714,
+   "repair_visible_to_the_rule": true,
+   "rule_can_fire": true,
+   "same_records": true,
+   "superseded_now_first": true,
+   "threshold": 0.7,
+   "v2_order": [
+    "C2-CUR",
+    "C2-SUP",
+    "C2-FOR"
+   ],
+   "v2_would_retire": "current",
+   "v3_order": [
+    "C2-SUP",
+    "C2-CUR",
+    "C2-FOR"
+   ],
+   "v3_would_retire": "superseded"
+  },
+  "throughput:atlas": {
+   "case": "C0-IQ000",
+   "current_now_second": true,
+   "jaccard": 0.25,
+   "repair_visible_to_the_rule": false,
+   "rule_can_fire": false,
+   "same_records": true,
+   "superseded_now_first": true,
+   "threshold": 0.7,
+   "v2_order": [
+    "C0-CUR",
+    "C0-SUP",
+    "C0-FOR"
+   ],
+   "v2_would_retire": "nothing",
+   "v3_order": [
+    "C0-SUP",
+    "C0-CUR",
+    "C0-FOR"
+   ],
+   "v3_would_retire": "nothing"
+  }
+ },
+ "fixture_contract": {
+  "fixture_version": "interference-v3",
+  "frozen_before_any_engine_run": true,
+  "replication_questions_carried_forward": [
+   "Q1_perseus_rank_declines_with_density",
+   "Q2_stale_interference_recurs",
+   "Q3_other_engines_hold_their_shape"
+  ],
+  "scorer_version": "interference-scorer-v1",
+  "single_change": "the ingest order: the superseded record is written FIRST and the current record SECOND",
+  "supersedes": "interference-v2",
+  "unchanged": [
+   "semantic cores",
+   "load levels",
+   "scope and configuration bindings",
+   "the foreign record on both axes",
+   "the query",
+   "the scorer"
+  ],
+  "v2_not_rewritten": "interference_v2 is untouched; its hashes stay valid for every committed Gen99 result, and the defect stays on the record",
+  "why": "v2's order was backwards from the world it models, and agentmemory's write-time rule - which retires the older near-duplicate - therefore retired the record we meant to keep (Gen100)"
+ },
+ "fixture_contract_sha256": "a5afe10fa32ac204c76111426a97ebe255d3180ae48793cc7e7c15238ebdedba",
+ "fixture_sha256": "13f15240e406733123f4869a1563775ff44ab4d5ca5093155db41e438508a2cf",
+ "ingest_order_per_case": {
+  "C0-IQ000": [
+   "C0-SUP",
+   "C0-CUR",
+   "C0-FOR"
+  ],
+  "C0-IQ004": [
+   "C0-SUP",
+   "C0-CUR",
+   "C0-FOR"
+  ],
+  "C0-IQ016": [
+   "C0-SUP",
+   "C0-CUR",
+   "C0-FOR"
+  ],
+  "C0-IQ064": [
+   "C0-SUP",
+   "C0-CUR",
+   "C0-FOR"
+  ],
+  "C1-IQ000": [
+   "C1-SUP",
+   "C1-CUR",
+   "C1-FOR"
+  ],
+  "C1-IQ004": [
+   "C1-SUP",
+   "C1-CUR",
+   "C1-FOR"
+  ],
+  "C1-IQ016": [
+   "C1-SUP",
+   "C1-CUR",
+   "C1-FOR"
+  ],
+  "C1-IQ064": [
+   "C1-SUP",
+   "C1-CUR",
+   "C1-FOR"
+  ],
+  "C2-IQ000": [
+   "C2-SUP",
+   "C2-CUR",
+   "C2-FOR"
+  ],
+  "C2-IQ004": [
+   "C2-SUP",
+   "C2-CUR",
+   "C2-FOR"
+  ],
+  "C2-IQ016": [
+   "C2-SUP",
+   "C2-CUR",
+   "C2-FOR"
+  ],
+  "C2-IQ064": [
+   "C2-SUP",
+   "C2-CUR",
+   "C2-FOR"
+  ],
+  "C3-IQ000": [
+   "C3-SUP",
+   "C3-CUR",
+   "C3-FOR"
+  ],
+  "C3-IQ004": [
+   "C3-SUP",
+   "C3-CUR",
+   "C3-FOR"
+  ],
+  "C3-IQ016": [
+   "C3-SUP",
+   "C3-CUR",
+   "C3-FOR"
+  ],
+  "C3-IQ064": [
+   "C3-SUP",
+   "C3-CUR",
+   "C3-FOR"
+  ]
+ },
+ "observations": [
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-CUR",
+   "role": "current",
+   "scope": "server:atlas",
+   "text": "Atlas measured 41 t/s after the cache fix."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-SUP",
+   "role": "superseded",
+   "scope": "server:atlas",
+   "text": "Atlas measured 27 t/s."
+  },
+  {
+   "configuration": "A1-foreign",
+   "core": "throughput:atlas",
+   "id": "C0-FOR",
+   "role": "foreign",
+   "scope": "server:atlas-foreign",
+   "text": "Umbra measured 41 t/s after the cache fix."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D000",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 0 measured 20 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D001",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 1 measured 21 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D002",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 2 measured 22 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D003",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 3 measured 23 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D004",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 4 measured 24 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D005",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 5 measured 25 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D006",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 6 measured 26 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D007",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 7 measured 27 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D008",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 8 measured 28 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D009",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 9 measured 29 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D010",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 10 measured 30 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D011",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 11 measured 31 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D012",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 12 measured 32 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D013",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 13 measured 33 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D014",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 14 measured 34 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D015",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 15 measured 35 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D016",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 16 measured 36 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D017",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 17 measured 20 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D018",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 18 measured 21 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D019",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 19 measured 22 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D020",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 20 measured 23 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D021",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 21 measured 24 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D022",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 22 measured 25 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D023",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 23 measured 26 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D024",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 24 measured 27 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D025",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 25 measured 28 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D026",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 26 measured 29 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D027",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 27 measured 30 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D028",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 28 measured 31 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D029",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 29 measured 32 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D030",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 30 measured 33 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D031",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 31 measured 34 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D032",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 32 measured 35 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D033",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 33 measured 36 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D034",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 34 measured 20 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D035",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 35 measured 21 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D036",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 36 measured 22 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D037",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 37 measured 23 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D038",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 38 measured 24 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D039",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 39 measured 25 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D040",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 40 measured 26 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D041",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 41 measured 27 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D042",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 42 measured 28 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D043",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 43 measured 29 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D044",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 44 measured 30 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D045",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 45 measured 31 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D046",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 46 measured 32 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D047",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 47 measured 33 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D048",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 48 measured 34 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D049",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 49 measured 35 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D050",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 50 measured 36 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D051",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 51 measured 20 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D052",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 52 measured 21 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D053",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 53 measured 22 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D054",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 54 measured 23 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D055",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 55 measured 24 t/s on the regression bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D056",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 56 measured 25 t/s on the staging bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D057",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 57 measured 26 t/s on the canary bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D058",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 58 measured 27 t/s on the shadow bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D059",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 59 measured 28 t/s on the replay bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D060",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 60 measured 29 t/s on the soak bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D061",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 61 measured 30 t/s on the smoke bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D062",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 62 measured 31 t/s on the burn-in bench."
+  },
+  {
+   "configuration": "A1",
+   "core": "throughput:atlas",
+   "id": "C0-D063",
+   "role": "distractor",
+   "scope": "server:atlas",
+   "text": "Atlas run 63 measured 32 t/s on the regression bench."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-CUR",
+   "role": "current",
+   "scope": "repo:vega",
+   "text": "Vega ships from branch release/vega-4.x."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-SUP",
+   "role": "superseded",
+   "scope": "repo:vega",
+   "text": "Vega ships from branch release/vega-3.x."
+  },
+  {
+   "configuration": "V1-foreign",
+   "core": "branch:vega",
+   "id": "C1-FOR",
+   "role": "foreign",
+   "scope": "repo:vega-foreign",
+   "text": "Umbra ships from branch release/vega-4.x."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D000",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 0 was cut from release/vega-20.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D001",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 1 was cut from release/vega-21.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D002",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 2 was cut from release/vega-22.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D003",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 3 was cut from release/vega-23.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D004",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 4 was cut from release/vega-24.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D005",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 5 was cut from release/vega-25.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D006",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 6 was cut from release/vega-26.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D007",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 7 was cut from release/vega-27.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D008",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 8 was cut from release/vega-28.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D009",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 9 was cut from release/vega-29.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D010",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 10 was cut from release/vega-30.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D011",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 11 was cut from release/vega-31.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D012",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 12 was cut from release/vega-32.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D013",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 13 was cut from release/vega-33.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D014",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 14 was cut from release/vega-34.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D015",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 15 was cut from release/vega-35.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D016",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 16 was cut from release/vega-36.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D017",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 17 was cut from release/vega-20.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D018",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 18 was cut from release/vega-21.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D019",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 19 was cut from release/vega-22.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D020",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 20 was cut from release/vega-23.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D021",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 21 was cut from release/vega-24.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D022",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 22 was cut from release/vega-25.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D023",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 23 was cut from release/vega-26.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D024",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 24 was cut from release/vega-27.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D025",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 25 was cut from release/vega-28.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D026",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 26 was cut from release/vega-29.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D027",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 27 was cut from release/vega-30.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D028",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 28 was cut from release/vega-31.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D029",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 29 was cut from release/vega-32.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D030",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 30 was cut from release/vega-33.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D031",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 31 was cut from release/vega-34.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D032",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 32 was cut from release/vega-35.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D033",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 33 was cut from release/vega-36.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D034",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 34 was cut from release/vega-20.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D035",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 35 was cut from release/vega-21.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D036",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 36 was cut from release/vega-22.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D037",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 37 was cut from release/vega-23.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D038",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 38 was cut from release/vega-24.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D039",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 39 was cut from release/vega-25.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D040",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 40 was cut from release/vega-26.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D041",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 41 was cut from release/vega-27.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D042",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 42 was cut from release/vega-28.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D043",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 43 was cut from release/vega-29.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D044",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 44 was cut from release/vega-30.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D045",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 45 was cut from release/vega-31.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D046",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 46 was cut from release/vega-32.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D047",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 47 was cut from release/vega-33.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D048",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 48 was cut from release/vega-34.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D049",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 49 was cut from release/vega-35.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D050",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 50 was cut from release/vega-36.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D051",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 51 was cut from release/vega-20.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D052",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 52 was cut from release/vega-21.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D053",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 53 was cut from release/vega-22.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D054",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 54 was cut from release/vega-23.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D055",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 55 was cut from release/vega-24.x for the telemetry track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D056",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 56 was cut from release/vega-25.x for the hotfix track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D057",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 57 was cut from release/vega-26.x for the backport track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D058",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 58 was cut from release/vega-27.x for the spike track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D059",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 59 was cut from release/vega-28.x for the docs track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D060",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 60 was cut from release/vega-29.x for the infra track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D061",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 61 was cut from release/vega-30.x for the vendor track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D062",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 62 was cut from release/vega-31.x for the locale track."
+  },
+  {
+   "configuration": "V1",
+   "core": "branch:vega",
+   "id": "C1-D063",
+   "role": "distractor",
+   "scope": "repo:vega",
+   "text": "Vega topic branch 63 was cut from release/vega-32.x for the telemetry track."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-CUR",
+   "role": "current",
+   "scope": "service:kestrel",
+   "text": "Kestrel escalations route to the platform rota."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-SUP",
+   "role": "superseded",
+   "scope": "service:kestrel",
+   "text": "Kestrel escalations route to the network rota."
+  },
+  {
+   "configuration": "K1-foreign",
+   "core": "oncall:kestrel",
+   "id": "C2-FOR",
+   "role": "foreign",
+   "scope": "service:kestrel-foreign",
+   "text": "Umbra escalations route to the platform rota."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D000",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 0 was handled by the storage rota in week 20."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D001",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 1 was handled by the database rota in week 21."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D002",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 2 was handled by the edge rota in week 22."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D003",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 3 was handled by the identity rota in week 23."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D004",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 4 was handled by the billing rota in week 24."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D005",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 5 was handled by the search rota in week 25."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D006",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 6 was handled by the media rota in week 26."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D007",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 7 was handled by the queue rota in week 27."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D008",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 8 was handled by the storage rota in week 28."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D009",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 9 was handled by the database rota in week 29."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D010",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 10 was handled by the edge rota in week 30."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D011",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 11 was handled by the identity rota in week 31."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D012",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 12 was handled by the billing rota in week 32."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D013",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 13 was handled by the search rota in week 33."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D014",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 14 was handled by the media rota in week 34."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D015",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 15 was handled by the queue rota in week 35."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D016",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 16 was handled by the storage rota in week 36."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D017",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 17 was handled by the database rota in week 20."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D018",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 18 was handled by the edge rota in week 21."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D019",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 19 was handled by the identity rota in week 22."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D020",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 20 was handled by the billing rota in week 23."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D021",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 21 was handled by the search rota in week 24."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D022",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 22 was handled by the media rota in week 25."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D023",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 23 was handled by the queue rota in week 26."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D024",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 24 was handled by the storage rota in week 27."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D025",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 25 was handled by the database rota in week 28."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D026",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 26 was handled by the edge rota in week 29."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D027",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 27 was handled by the identity rota in week 30."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D028",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 28 was handled by the billing rota in week 31."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D029",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 29 was handled by the search rota in week 32."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D030",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 30 was handled by the media rota in week 33."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D031",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 31 was handled by the queue rota in week 34."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D032",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 32 was handled by the storage rota in week 35."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D033",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 33 was handled by the database rota in week 36."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D034",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 34 was handled by the edge rota in week 20."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D035",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 35 was handled by the identity rota in week 21."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D036",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 36 was handled by the billing rota in week 22."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D037",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 37 was handled by the search rota in week 23."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D038",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 38 was handled by the media rota in week 24."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D039",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 39 was handled by the queue rota in week 25."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D040",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 40 was handled by the storage rota in week 26."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D041",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 41 was handled by the database rota in week 27."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D042",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 42 was handled by the edge rota in week 28."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D043",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 43 was handled by the identity rota in week 29."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D044",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 44 was handled by the billing rota in week 30."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D045",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 45 was handled by the search rota in week 31."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D046",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 46 was handled by the media rota in week 32."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D047",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 47 was handled by the queue rota in week 33."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D048",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 48 was handled by the storage rota in week 34."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D049",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 49 was handled by the database rota in week 35."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D050",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 50 was handled by the edge rota in week 36."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D051",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 51 was handled by the identity rota in week 20."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D052",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 52 was handled by the billing rota in week 21."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D053",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 53 was handled by the search rota in week 22."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D054",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 54 was handled by the media rota in week 23."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D055",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 55 was handled by the queue rota in week 24."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D056",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 56 was handled by the storage rota in week 25."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D057",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 57 was handled by the database rota in week 26."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D058",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 58 was handled by the edge rota in week 27."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D059",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 59 was handled by the identity rota in week 28."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D060",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 60 was handled by the billing rota in week 29."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D061",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 61 was handled by the search rota in week 30."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D062",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 62 was handled by the media rota in week 31."
+  },
+  {
+   "configuration": "K1",
+   "core": "oncall:kestrel",
+   "id": "C2-D063",
+   "role": "distractor",
+   "scope": "service:kestrel",
+   "text": "Kestrel incident 63 was handled by the queue rota in week 32."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-CUR",
+   "role": "current",
+   "scope": "cluster:solstice",
+   "text": "Solstice is provisioned with 512 GiB after the resize."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-SUP",
+   "role": "superseded",
+   "scope": "cluster:solstice",
+   "text": "Solstice is provisioned with 256 GiB."
+  },
+  {
+   "configuration": "S1-foreign",
+   "core": "budget:solstice",
+   "id": "C3-FOR",
+   "role": "foreign",
+   "scope": "cluster:solstice-foreign",
+   "text": "Umbra is provisioned with 512 GiB after the resize."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D000",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 0 reserved 20 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D001",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 1 reserved 21 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D002",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 2 reserved 22 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D003",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 3 reserved 23 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D004",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 4 reserved 24 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D005",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 5 reserved 25 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D006",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 6 reserved 26 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D007",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 7 reserved 27 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D008",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 8 reserved 28 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D009",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 9 reserved 29 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D010",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 10 reserved 30 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D011",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 11 reserved 31 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D012",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 12 reserved 32 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D013",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 13 reserved 33 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D014",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 14 reserved 34 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D015",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 15 reserved 35 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D016",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 16 reserved 36 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D017",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 17 reserved 20 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D018",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 18 reserved 21 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D019",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 19 reserved 22 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D020",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 20 reserved 23 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D021",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 21 reserved 24 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D022",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 22 reserved 25 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D023",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 23 reserved 26 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D024",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 24 reserved 27 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D025",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 25 reserved 28 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D026",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 26 reserved 29 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D027",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 27 reserved 30 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D028",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 28 reserved 31 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D029",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 29 reserved 32 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D030",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 30 reserved 33 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D031",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 31 reserved 34 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D032",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 32 reserved 35 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D033",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 33 reserved 36 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D034",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 34 reserved 20 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D035",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 35 reserved 21 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D036",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 36 reserved 22 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D037",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 37 reserved 23 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D038",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 38 reserved 24 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D039",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 39 reserved 25 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D040",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 40 reserved 26 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D041",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 41 reserved 27 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D042",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 42 reserved 28 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D043",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 43 reserved 29 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D044",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 44 reserved 30 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D045",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 45 reserved 31 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D046",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 46 reserved 32 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D047",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 47 reserved 33 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D048",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 48 reserved 34 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D049",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 49 reserved 35 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D050",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 50 reserved 36 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D051",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 51 reserved 20 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D052",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 52 reserved 21 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D053",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 53 reserved 22 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D054",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 54 reserved 23 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D055",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 55 reserved 24 GiB for the replica tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D056",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 56 reserved 25 GiB for the archive tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D057",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 57 reserved 26 GiB for the scratch tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D058",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 58 reserved 27 GiB for the cache tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D059",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 59 reserved 28 GiB for the index tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D060",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 60 reserved 29 GiB for the spill tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D061",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 61 reserved 30 GiB for the staging tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D062",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 62 reserved 31 GiB for the backup tier."
+  },
+  {
+   "configuration": "S1",
+   "core": "budget:solstice",
+   "id": "C3-D063",
+   "role": "distractor",
+   "scope": "cluster:solstice",
+   "text": "Solstice pool 63 reserved 32 GiB for the replica tier."
+  }
+ ]
+}

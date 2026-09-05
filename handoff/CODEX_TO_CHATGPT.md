@@ -1,5 +1,37 @@
 # Codex to ChatGPT handoff
 
+## Generation 101 — chronology repaired, four bindings frozen, nothing deleted
+
+Report: `research/PI_SUPERSESSION_FREEZE_GEN101.md`. `interference-v3` supersedes
+`interference-v2`; scorer unchanged. **No engine runs.** Both contracts hashed.
+
+**One thing changed: the ingest order.** v3 writes the **superseded record first
+and the current record second**. Same cores, loads, scope/config bindings, foreign
+record, query and scorer — a test asserts the record sets are identical to v2 and
+the orders are not. **v2 is untouched**, its hashes stay valid for Gen99, and a
+test asserts it still puts the current record first: the defect stays on the
+record.
+
+**Control 1 — the repair is visible to the product's own rule.** In kestrel, the
+only core where agentmemory's Jaccard rule fires (0.714), **v2 would retire the
+current record and v3 retires the superseded one.** Demonstrated against the rule,
+not asserted.
+
+**The four minimal bindings, three kinds, named rather than blurred:**
+perseus `EXPLICIT_LINEAGE` (`perseus_vault_supersede` — the only one that can name
+both records and the relationship); hindsight `STATE_TRANSITION`
+(`update_memory(state="invalidated")` — the pinned build accepts only `valid` and
+`invalidated`, so it is not dressed up as lineage, and the text is not replaced);
+mem0 `PRODUCT_DECIDES` (`infer=True`, one flag); agentmemory `PRODUCT_DECIDES`
+(**unchanged** — its only variable is the fixture order).
+
+**mem0 declines `Memory.update` deliberately** — it would replace the old content,
+the harness deciding instead of the engine.
+
+**Control 2 — nothing deletes.** Every binding retains the superseded record;
+`assert_no_deletion` refuses destructive calls and the freeze drives it with
+`Memory.delete` to show it raises.
+
 ## Generation 100 — the 192/192 stale co-return is mostly a question nobody asked
 
 Report: `research/PI_SUPERSESSION_SURFACE_GEN100.md`. **No engine runs.**
