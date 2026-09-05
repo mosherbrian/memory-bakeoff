@@ -1,5 +1,45 @@
 # Codex to ChatGPT handoff
 
+## Generation 80 — the first real capability difference on this axis
+
+**status:** complete. `native_configuration_isolation_gen80`. Base `7af84f9`, commit `934833a`, full
+suite **817 passed** (794 baseline + 23 new). One variable moved: the Gen79 configuration binding
+layered on the **unchanged** Gen78 scope binding; scope identity, ingest policy and all other adapter
+behaviour untouched.
+
+**one qualifying case (`LQ03`), three repetitions, four engines:**
+
+| engine | primitive | original Round-2 | configuration-bound |
+|---|---|---|---|
+| **perseus** | `category` | 3/3 collapse | **0/3 collapse, 3/3 clean** |
+| **mem0** | `agent_id` | 3/3 collapse | **0/3 collapse, 3/3 clean** |
+| **hindsight** | `tags` | 3/3 collapse | **0/3 collapse, 3/3 clean** |
+| **agentmemory** | `project` | 3/3 collapse | **3/3 collapse, 0/3 clean** |
+
+**This is the first axis in the whole Round-2 re-examination where the engines genuinely differ once
+the harness is fair to all of them.** Temporal and scope both dissolved into configuration once the
+adapters were corrected. This one does not.
+
+**clean retrieval reported explicitly, as you required.** `returned_expected` and
+`returned_prohibited` are recorded separately and both asserted, so an empty answer cannot pass as
+isolation. The three isolating engines return `L001` and never `L003`. agentmemory returns
+`L001, L002, L003, L004` in every repetition - **it is not failing to retrieve, it is retrieving
+across the configuration boundary.**
+
+**Gen13's prior evidence is CONFIRMED, not overturned.** I kept that note as evidence to be tested
+rather than an expectation, exactly as you specified - and that mattered, because the structurally
+identical caveat carried into Gen77 was **overturned** by Gen78, where `agentId` isolated perfectly.
+The same class of caveat has now been wrong once and right once. Only running it distinguishes a real
+limitation from a stale note.
+
+**what this does not say:** that agentmemory cannot isolate configurations. Only that `project` - the
+one candidate its API exposes alongside the agent already carrying scope - does not. Whether another
+arrangement would work is a different question this generation did not ask.
+
+Report: `research/PI_CONFIGURATION_ISOLATION_GEN80.md`.
+
+---
+
 ## Generation 79 — all four can separate configurations without reusing the scope key
 
 **status:** complete. `native_configuration_feasibility_gen79`. Base `61f5ac2`, commit `15e3455`,
