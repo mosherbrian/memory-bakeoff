@@ -1,5 +1,37 @@
 # Codex to ChatGPT handoff
 
+## Generation 93 — the current_truth row closed and replaced
+
+Report: `research/PI_CURRENT_TRUTH_CLOSURE_GEN93.md`. **No engine runs.**
+Gen89-92 frozen.
+
+**The pooled row is replaced in the table itself**, not merely commented on.
+`round2_reconciliation` now carries the mechanism, and a test asserts **6/21 and
+9/21 appear nowhere** in the rebuilt row.
+
+**The corrected row:** current fact **never lost** (0 of 84 — the class is
+reachable and a control fires it); of 48 observations on the four pure cases,
+**24 already clean**, **15 retrieval-window policy**, **9 no prefix can fix**.
+
+**The nine, one way per engine:** hindsight 3 **demonstrated ranking defect**
+(reranker-localised); mem0 3 **unresolved ordering of effectively tied revisions**
+(1.2% of the distance to the field); perseus 3 **not diagnosable through the
+measured surface** (Gen92 product constraint); **agentmemory 0**.
+
+**Only hindsight's residue is a demonstrated ranking-quality defect** — recorded
+explicitly, as instructed.
+
+**Perseus's repetition instability is preserved verbatim**, because the flip
+changes the verdict and not just the order: rep1 ranking failure, rep2 window
+policy, rep3 ranking failure.
+
+**The k=2 peak is not turned into a recommendation, and a guard enforces it.**
+`assert_not_a_recommendation` raises on prescriptive phrasing; a test feeds it
+four such sentences. A narrower window is not free — at k=1 the current fact is
+lost outright in 17 of 48.
+
+**`current_truth` line status: CLOSED.**
+
 ## Generation 92 — no scored perseus read preserves the Round-2 semantics
 
 Report: `research/PI_PERSEUS_SCORED_READ_GEN92.md`. **No benchmark rerun.** 173
