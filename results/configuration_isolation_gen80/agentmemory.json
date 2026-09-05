@@ -1,0 +1,169 @@
+{
+  "ablation": "Gen79 configuration binding layered on the Gen78 scope binding; scope identity, ingest policy and all other adapter behaviour unchanged",
+  "case": "LQ03",
+  "case_runs": 3,
+  "clean_retrieval_total": 0,
+  "configuration_binding": {
+    "note": "CAVEAT: Gen13 measured that smart-search does not isolate by project. That is a behaviour finding about a surface that exists, not an absent surface - the same shape as the Gen77 caveat that Gen78 disproved. Feasible to ask; not a prediction.",
+    "primitive": "project",
+    "query_call": "POST /agentmemory/smart-search {project}",
+    "scope_primitive": "agentId",
+    "status": "native_primitive_bound_on_both_paths",
+    "write_call": "POST /agentmemory/remember {project}"
+  },
+  "configuration_collapse_total": 3,
+  "engine": "agentmemory",
+  "generated_at": "2026-09-05T13:04:30+00:00",
+  "generation": 80,
+  "ingestion": "prefix of the queried checkpoint only",
+  "repetitions": [
+    {
+      "records": [
+        {
+          "bound_configuration": "cfg-d7852e69a5f045970121d65245e7529f",
+          "bound_scope": "g80r1-scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ03",
+          "clean_retrieval": false,
+          "configuration": "C1",
+          "configuration_collapse": true,
+          "failure_classes": [
+            "configuration_collapse"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L001",
+              "native_rank": 3,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 4,
+              "provenance_exact": true
+            }
+          ],
+          "returned_expected": true,
+          "returned_ids": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "returned_prohibited": true,
+          "scope": "server:forge"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "records": [
+        {
+          "bound_configuration": "cfg-d7852e69a5f045970121d65245e7529f",
+          "bound_scope": "g80r2-scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ03",
+          "clean_retrieval": false,
+          "configuration": "C1",
+          "configuration_collapse": true,
+          "failure_classes": [
+            "configuration_collapse"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L001",
+              "native_rank": 3,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 4,
+              "provenance_exact": true
+            }
+          ],
+          "returned_expected": true,
+          "returned_ids": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "returned_prohibited": true,
+          "scope": "server:forge"
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "records": [
+        {
+          "bound_configuration": "cfg-d7852e69a5f045970121d65245e7529f",
+          "bound_scope": "g80r3-scope-82fbaa10f192671fa2ec394d49c542e0",
+          "case_id": "LQ03",
+          "clean_retrieval": false,
+          "configuration": "C1",
+          "configuration_collapse": true,
+          "failure_classes": [
+            "configuration_collapse"
+          ],
+          "returned": [
+            {
+              "canonical_id": "L002",
+              "native_rank": 1,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L004",
+              "native_rank": 2,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L001",
+              "native_rank": 3,
+              "provenance_exact": true
+            },
+            {
+              "canonical_id": "L003",
+              "native_rank": 4,
+              "provenance_exact": true
+            }
+          ],
+          "returned_expected": true,
+          "returned_ids": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "returned_prohibited": true,
+          "scope": "server:forge"
+        }
+      ],
+      "repetition": 3
+    }
+  ],
+  "scope_binding": {
+    "note": "both endpoints accept agentId and project; Gen13 measured that PROJECT alone did not isolate, so agentId is the candidate and whether it isolates is the isolation run's question",
+    "primitive": "agentId",
+    "query_call": "POST /agentmemory/smart-search {agentId}",
+    "status": "native_primitive_bound_on_both_paths",
+    "write_call": "POST /agentmemory/remember {agentId}"
+  }
+}
