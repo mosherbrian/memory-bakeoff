@@ -1,0 +1,270 @@
+{
+ "contract_version": "round2-reconciliation-gen88-v1",
+ "excluded_reader_kinds": [
+  "negative_unknown",
+  "recommended_procedure"
+ ],
+ "exclusion_reason": "no retriever can answer them; enforced by the Gen87 layer boundary, not by hand",
+ "frozen_configuration": {
+  "as_of_event_truth": {
+   "agentmemory": {
+    "finding": "no temporal query surface exists to exercise",
+    "provenance": "Gen71: every case routed to current-state search",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "query_timestamp is accepted and ignored",
+    "provenance": "Gen70: 15 of 15 leaked on its own parameter and its own path",
+    "status": "MEASURED",
+    "value": null
+   },
+   "mem0": {
+    "finding": "no temporal query surface exists to exercise",
+    "provenance": "Gen71: every case routed to current-state search",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "perseus": {
+    "finding": "the adapter fed valid_at a transaction-time instant, so effective-time behaviour was never exercised",
+    "provenance": "Gen73 coordinate error; Gen74 measured that the store has no caller-settable validity coordinate; Gen75 retraction",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   }
+  },
+  "corrected_historical_truth": {
+   "agentmemory": {
+    "finding": "no temporal query surface exists to exercise",
+    "provenance": "Gen71: every case routed to current-state search",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "query_timestamp is accepted and ignored",
+    "provenance": "Gen70: 15 of 15 leaked on its own parameter and its own path",
+    "status": "MEASURED",
+    "value": null
+   },
+   "mem0": {
+    "finding": "no temporal query surface exists to exercise",
+    "provenance": "Gen71: every case routed to current-state search",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "perseus": {
+    "finding": "the adapter fed valid_at a transaction-time instant, so effective-time behaviour was never exercised",
+    "provenance": "Gen73 coordinate error; Gen74 measured that the store has no caller-settable validity coordinate; Gen75 retraction",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   }
+  },
+  "current_truth": {
+   "agentmemory": {
+    "finding": "current-state retrieval was exercised on every engine",
+    "provenance": "Gen68 per-kind counts, retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "current-state retrieval was exercised on every engine",
+    "provenance": "Gen68 per-kind counts, retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   },
+   "mem0": {
+    "finding": "current-state retrieval was exercised on every engine",
+    "provenance": "Gen68 per-kind counts, retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   },
+   "perseus": {
+    "finding": "current-state retrieval was exercised on every engine",
+    "provenance": "Gen68 per-kind counts, retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   }
+  },
+  "historical_belief": {
+   "agentmemory": {
+    "finding": "answers with present truth instead of past belief",
+    "provenance": "Gen68 belief_truth_confusion; survives Gen75",
+    "status": "MEASURED",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "answers with present truth instead of past belief",
+    "provenance": "Gen68 belief_truth_confusion; survives Gen75",
+    "status": "MEASURED",
+    "value": null
+   },
+   "mem0": {
+    "finding": "answers with present truth instead of past belief",
+    "provenance": "Gen68 belief_truth_confusion; survives Gen75",
+    "status": "MEASURED",
+    "value": null
+   },
+   "perseus": {
+    "finding": "preserves what was believed at a past moment",
+    "provenance": "Gen68 6/6 clean; as_of cases, a transaction-time question correctly mapped; survives Gen75",
+    "status": "MEASURED",
+    "value": null
+   }
+  },
+  "late_arriving_history": {
+   "agentmemory": {
+    "finding": "late-arriving history retrieved cleanly",
+    "provenance": "Gen68 3/3; retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "late-arriving history retrieved cleanly",
+    "provenance": "Gen68 3/3; retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   },
+   "mem0": {
+    "finding": "late-arriving history retrieved cleanly",
+    "provenance": "Gen68 3/3; retrieval layer, never retracted",
+    "status": "MEASURED",
+    "value": null
+   },
+   "perseus": {
+    "finding": "the recorded failure was the harness asking an effective-time question through a knowledge-time coordinate",
+    "provenance": "Gen68 line REATTRIBUTED by Gen75; not a perseus capability result",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   }
+  },
+  "scope_truth": {
+   "agentmemory": {
+    "finding": "the configuration collapses scopes, which is true of the configuration; the engine was never asked to isolate",
+    "provenance": "Gen76: no scope filter on write or query in the frozen adapter",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "the configuration collapses scopes, which is true of the configuration; the engine was never asked to isolate",
+    "provenance": "Gen76: no scope filter on write or query in the frozen adapter",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   },
+   "mem0": {
+    "finding": "the configuration collapses scopes, which is true of the configuration; the engine was never asked to isolate",
+    "provenance": "Gen76: no scope filter on write or query in the frozen adapter",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   },
+   "perseus": {
+    "finding": "the only adapter that passed a scope filter on both paths",
+    "provenance": "Gen76 scope audit: workspace_hash derived from the case scope",
+    "status": "MEASURED",
+    "value": null
+   }
+  }
+ },
+ "native_capability": {
+  "configuration_isolation": {
+   "agentmemory": {
+    "finding": "does not separate configurations; search ignores the project field, and no second identity is accepted on both write and search",
+    "provenance": "Gen80 3/3 collapse; Gen81 localised it to search-time ignoring; Gen82 NO_USABLE_SECOND_SURFACE",
+    "status": "MEASURED",
+    "value": "3/3 collapse"
+   },
+   "hindsight": {
+    "finding": "separates two configurations inside one scope",
+    "provenance": "Gen80 ablation on LQ03: 3/3 collapse became 0/3, 3/3 clean retrieval",
+    "status": "MEASURED",
+    "value": "0/3 collapse"
+   },
+   "mem0": {
+    "finding": "separates two configurations inside one scope",
+    "provenance": "Gen80 ablation on LQ03: 3/3 collapse became 0/3, 3/3 clean retrieval",
+    "status": "MEASURED",
+    "value": "0/3 collapse"
+   },
+   "perseus": {
+    "finding": "separates two configurations inside one scope",
+    "provenance": "Gen80 ablation on LQ03: 3/3 collapse became 0/3, 3/3 clean retrieval",
+    "status": "MEASURED",
+    "value": "0/3 collapse"
+   }
+  },
+  "effective_time_recording": {
+   "agentmemory": {
+    "finding": "no effective-time surface exists on this interface",
+    "provenance": "Gen71 capability survey",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "hindsight": {
+    "finding": "no effective-time surface exists on this interface",
+    "provenance": "Gen71 capability survey",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "mem0": {
+    "finding": "no effective-time surface exists on this interface",
+    "provenance": "Gen71 capability survey",
+    "status": "NOT_APPLICABLE",
+    "value": null
+   },
+   "perseus": {
+    "finding": "valid_from_unix_ms is set from the write instant and no write flag exposes validity, so a repaired query has nothing to match against",
+    "provenance": "Gen74 measured on the pinned build",
+    "status": "NOT_DEMONSTRABLE",
+    "value": null
+   }
+  },
+  "scope_isolation": {
+   "agentmemory": {
+    "finding": "isolates scopes perfectly once given its own scope key",
+    "provenance": "Gen78 ablation, frozen Gen77 binding, three repetitions",
+    "status": "MEASURED",
+    "value": "0 scope_collapse in 6 case runs"
+   },
+   "hindsight": {
+    "finding": "isolates scopes perfectly once given its own scope key",
+    "provenance": "Gen78 ablation, frozen Gen77 binding, three repetitions",
+    "status": "MEASURED",
+    "value": "0 scope_collapse in 6 case runs"
+   },
+   "mem0": {
+    "finding": "isolates scopes perfectly once given its own scope key",
+    "provenance": "Gen78 ablation, frozen Gen77 binding, three repetitions",
+    "status": "MEASURED",
+    "value": "0 scope_collapse in 6 case runs"
+   },
+   "perseus": {
+    "finding": "isolates scopes",
+    "provenance": "Gen76: already exercised in Round 2",
+    "status": "MEASURED",
+    "value": "6/9 clean in the frozen configuration"
+   }
+  }
+ },
+ "no_engine_runs": true,
+ "no_single_score": "the temporal axes vary independently and are not collapsed; no engine is given a total",
+ "retrieval_layer_kinds": [
+  "current_truth",
+  "scope_truth",
+  "as_of_event_truth",
+  "historical_belief",
+  "corrected_historical_truth",
+  "late_arriving_history"
+ ],
+ "status_counts": {
+  "frozen_configuration": {
+   "MEASURED": 14,
+   "NOT_APPLICABLE": 4,
+   "NOT_DEMONSTRABLE": 6
+  },
+  "native_capability": {
+   "MEASURED": 8,
+   "NOT_APPLICABLE": 3,
+   "NOT_DEMONSTRABLE": 1
+  }
+ },
+ "superseded_numbers_not_carried": "no Gen68 cell is reprinted because it was printed before; each is restated from the generation that last examined it",
+ "two_tables_rule": "frozen_configuration answers 'what did this configuration do?'; native_capability answers 'what can this pinned engine do when correctly bound?'. They must never share a ranking column - an engine that collapses scopes in the first and isolates them in the second is the difference between a configuration and a capability"
+}
