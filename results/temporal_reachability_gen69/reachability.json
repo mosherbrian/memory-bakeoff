@@ -1,0 +1,159 @@
+{
+  "contract": {
+    "contract_sha256": "5cc1b315fe9a9e56a8043fa6ea6411b2068912bf23177df5bcd30b63b3f19daa",
+    "contract_version": "temporal-reachability-v1",
+    "decline_phrases": 15,
+    "exclusions": {
+      "observational_memory_gen26_longitudinal": {
+        "action": "excluded from point-in-time comparison",
+        "not_done": "no reconstruction and no re-run merely to fill the table",
+        "reason": "the run ended `complete_ingestion_lifecycle_context_unavailable` - it ingested the timeline but never produced retrieval results, so there are no per-case records to recover from the artifacts",
+        "recoverable_from_existing_artifacts": false
+      }
+    },
+    "frozen_untouched": [
+      "longitudinal-v1 fixture",
+      "longitudinal-scorer-v1",
+      "every committed Round-2 result"
+    ],
+    "leakage_probe": {
+      "ingest_through_checkpoint": "CP16",
+      "not_a_fixture_change": "longitudinal-v1 observations, cases and checkpoints are untouched; their sha256 must still match every committed result",
+      "probe_version": "future-leakage-probe-v1",
+      "query_as_of_checkpoints": [
+        "CP01",
+        "CP04",
+        "CP05",
+        "CP08",
+        "CP10",
+        "CP11"
+      ],
+      "scorer_unchanged": "longitudinal-scorer-v1 already flags any returned id outside the queried checkpoint's visible prefix; only the ingestion plan changes",
+      "why": "the store holds the whole timeline while the question is asked about an earlier moment, so a system that cannot filter by knowledge time will return something it should not have known yet"
+    },
+    "proved_before_any_engine_run": true,
+    "repairs": {
+      "future_leakage": "run plan: ingest through a later checkpoint, query as of an earlier one",
+      "unknown_hallucination": "call score_answer_claim on negative_unknown cases, which no runner did"
+    },
+    "why_not_change_the_scorer": "the fixture and scorer sha256 appear in every committed result; altering them would invalidate the runs Gen68 read"
+  },
+  "engines_run": 0,
+  "exclusions": {
+    "observational_memory_gen26_longitudinal": {
+      "action": "excluded from point-in-time comparison",
+      "not_done": "no reconstruction and no re-run merely to fill the table",
+      "reason": "the run ended `complete_ingestion_lifecycle_context_unavailable` - it ingested the timeline but never produced retrieval results, so there are no per-case records to recover from the artifacts",
+      "recoverable_from_existing_artifacts": false
+    }
+  },
+  "fixture_sha256": "a5c67e7b2677dff5c90c91fe0fbc72f251f7e82b97d125122e8ce4ae5eb413dd",
+  "fixture_unchanged": true,
+  "future_leakage": {
+    "cases_that_fire": 6,
+    "cases_tried": 6,
+    "control_case": "LQ01",
+    "control_failure_classes": [],
+    "control_is_clean_of_leakage": true,
+    "proofs": [
+      {
+        "case_id": "LQ01",
+        "failure_classes": [
+          "future_leakage"
+        ],
+        "fires": true,
+        "ingested_through": "CP16",
+        "leaked_observation": "L002",
+        "queried_as_of": "CP01"
+      },
+      {
+        "case_id": "LQ02",
+        "failure_classes": [
+          "future_leakage"
+        ],
+        "fires": true,
+        "ingested_through": "CP16",
+        "leaked_observation": "L005",
+        "queried_as_of": "CP04"
+      },
+      {
+        "case_id": "LQ05",
+        "failure_classes": [
+          "future_leakage"
+        ],
+        "fires": true,
+        "ingested_through": "CP16",
+        "leaked_observation": "L006",
+        "queried_as_of": "CP05"
+      },
+      {
+        "case_id": "LQ10",
+        "failure_classes": [
+          "future_leakage"
+        ],
+        "fires": true,
+        "ingested_through": "CP16",
+        "leaked_observation": "L009",
+        "queried_as_of": "CP08"
+      },
+      {
+        "case_id": "LQ11",
+        "failure_classes": [
+          "future_leakage",
+          "late_history_corruption"
+        ],
+        "fires": true,
+        "ingested_through": "CP16",
+        "leaked_observation": "L011",
+        "queried_as_of": "CP10"
+      },
+      {
+        "case_id": "LQ12",
+        "failure_classes": [
+          "future_leakage"
+        ],
+        "fires": true,
+        "ingested_through": "CP16",
+        "leaked_observation": "L012",
+        "queried_as_of": "CP11"
+      }
+    ]
+  },
+  "unknown_hallucination": {
+    "case_id": "LQ16",
+    "fires_on_assertion": true,
+    "silent_on_refusal": true,
+    "trials": [
+      {
+        "answer": "The Aurora client lives at internal/gen/aurora_client.go.",
+        "assertion_supported": false,
+        "declined": false,
+        "failure_classes": [
+          "unknown_hallucination"
+        ],
+        "label": "confident assertion"
+      },
+      {
+        "answer": "Unknown - there is no record of that.",
+        "assertion_supported": true,
+        "declined": true,
+        "failure_classes": [],
+        "label": "explicit refusal"
+      },
+      {
+        "answer": "",
+        "assertion_supported": true,
+        "declined": true,
+        "failure_classes": [],
+        "label": "empty answer"
+      },
+      {
+        "answer": null,
+        "assertion_supported": true,
+        "declined": true,
+        "failure_classes": [],
+        "label": "no answer at all"
+      }
+    ]
+  }
+}
