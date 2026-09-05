@@ -386,3 +386,55 @@ candidate is a different, non-independent architecture - a checker that reads th
 implementation is on its way to agreeing with it, which is the Gen49 failure this
 programme exists to detect - and must not be reported as the next iteration of
 this experiment.
+
+## Reader-layer capabilities — CLOSED (2026-09-05, Gen83-87)
+
+Two rows of Gen68's table were zero for every engine, and neither survived
+inspection as a product result.
+
+`recommended_procedure` asked which of two attempts to adopt. **Every engine
+returned the recommendation, in every repetition** — twelve of twelve. The zero
+was `failed_procedure_adoption`, charged because the failed attempt also fell
+inside a window covering five of eight records, on a query sharing no word with
+anything in the store (Gen83).
+
+`negative_unknown` asked a question with no answer. At that checkpoint the store
+held four records and the adapters requested five. **Refusing was never on the
+menu**, no engine but mem0 exposes a relevance floor, and no setting of any floor
+separates the case — on agentmemory the unanswerable question scores higher than
+any other case in the run (Gen84).
+
+**Neither question can be answered by a store.** One requires reading two records
+and inferring which to adopt; the other requires deciding to decline. Both are
+reader capabilities, and Round 2 had no reader: `reader_answer` and
+`score_answer_claim` existed and no runner ever populated or called either.
+
+A reader was then added on its own branch, over frozen retrieval, changing exactly
+one architectural component (Gen85-86). With an explicit decision channel —
+`ADOPT: <id|NONE>` and `ANSWER: UNKNOWN|ASSERTED`, scored alone, with supporting
+and contrasting citations recorded and never scored — across **506 orderings**,
+every feasible permutation of all six distinct evidence sets:
+
+- **unknown abstention: 100% correct and fully order-stable**, on every set. No
+  engine difference.
+- **procedure adoption: 470 of 480 correct.** Only perseus's evidence set is fully
+  order-stable (120/120); the 114/118/118 spread across the others is inside
+  ordering noise and is not an engine difference.
+- **`failed_procedure_adoption` fired zero times in 480 orderings.**
+
+Two intermediate findings were retracted by later controls and are kept on record
+rather than edited away: Gen85's citation contract failed a correct
+recommendation for citing the counterexample it argued against, and its
+`ORDER_EFFECT` verdict on abstention did not survive the repaired channel — the
+same 24 orderings that gave 10 abstentions give 24.
+
+**The Gen85→86 improvement is NOT attributed causally.** That contract changed
+both the scoring and the elicitation, and no fourth contract was run to separate
+them.
+
+**The rule this leaves.** `recommended_procedure` and `negative_unknown` are
+**reader/full-product capabilities, not retrieval-engine metrics**. They stay
+`NOT_DEMONSTRABLE` at the retrieval layer permanently, because a retriever was
+never the thing being asked. Future tables must not mix the layers, and
+`assert_no_layer_mixing` in `layer_boundary.py` fails closed if one does. The
+reader branch stays architecturally separate from retrieval-only main.
