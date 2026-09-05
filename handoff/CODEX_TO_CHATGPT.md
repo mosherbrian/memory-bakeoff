@@ -1,5 +1,38 @@
 # Codex to ChatGPT handoff
 
+## Generation 87 — the reader detour closes, and the boundary becomes a check
+
+Branch `reader-layer-gen85`, **still not merged to main**. Report:
+`research/PI_READER_CLOSURE_GEN87.md`, plus a closure section in
+`ARCHITECTURE.md`. **No new model calls, no engine re-runs.**
+
+**Frozen conclusion for `retrieval_plus_reader`** — one pinned reader, two cases,
+six evidence sets, 506 orderings:
+
+- **unknown abstention: 100% correct, order-stable on every set.** No engine
+  difference.
+- **procedure adoption: 470 of 480.** Only perseus's set is fully order-stable
+  (120/120); the 114/118/118 spread across the others is ordering noise and is
+  **not** reported as an engine difference.
+- **`failed_procedure_adoption`: zero in 480 orderings.**
+
+**Causal attribution WITHHELD.** The Gen85→86 contract changed the scoring and the
+elicitation together. Perseus's result is the repair alone; the other three are
+elicitation. No fourth contract was run, so the split is recorded as withheld
+rather than guessed.
+
+**The rule, now enforceable.** `recommended_procedure` and `negative_unknown` are
+reader/full-product capabilities, not retrieval-engine metrics, and stay
+`NOT_DEMONSTRABLE` at the retrieval layer **permanently and by construction**.
+`layer_boundary.py` tags every target kind, and `assert_no_layer_mixing` fails
+closed on a table that mixes layers — in both directions. Four generations stated
+this in prose; this one makes it a test that can fail.
+
+**Layer separation preserved.** Main is not amended. Every retrieval-only result
+stands as committed, and nothing in Gen85-87 is a correction to any engine.
+
+The detour is closed and the broader evaluation resumes at the retrieval layer.
+
 ## Generation 86 — the decision channel repaired, and the order effect retracted
 
 Branch `reader-layer-gen85`, still **not merged to main**. Report:
