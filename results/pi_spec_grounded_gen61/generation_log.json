@@ -1,0 +1,1660 @@
+{
+  "accepted": 24,
+  "dropped_tests": 0,
+  "frozen": {
+    "contract": {
+      "attempt": 2,
+      "attempt_1_superseded": "the formatting instruction was ambiguous and the model wrote the citation as a bare statement, which is a syntax error; 8 of 24 outputs died in the sanitizer. Discarded before any bank was run against any candidate, so no outcome informed the repair. The grounding rule is unchanged; only the formatting instruction and its worked example differ.",
+      "comparison_rule": "case-folded, punctuation-stripped, whitespace-collapsed substring of the instruction",
+      "contract_sha256": "c73ba0267c3b01a8b5e580b0e68072a7354ceab2667f0eb0e17f8b92ea40f9ef",
+      "contract_version": "spec-grounded-assertion-provenance-v1",
+      "detection_is_not_diagnosis": "a flag records that the bank failed on a wrong tree, not that it failed for the requirement that tree breaks",
+      "exclusion_unit": "the whole test function, because that is what pytest reports",
+      "frozen_before_exposure": true,
+      "grounding_source": "spec.txt only - the text the generator was already shown; the hidden verifier and the named requirements in the truth package are never consulted",
+      "minimum_quote_words": 4,
+      "no_critic": "no second model, no critic pass, no cross-model check",
+      "primary_false_alarm_metric": "UNSAFE_AS_GATE rate; Gen60 baseline 4 of 8",
+      "question": "does forcing each generated test to quote the requirement it tests reduce the rate at which banks reject correct code?",
+      "single_change_from_gen58_gen60": "the generator prompt requires a verbatim REQUIREMENT citation per test, and a mechanical filter removes tests whose citation is not in the visible instruction",
+      "specificity_note": "retained for continuity but non-discriminating - it is measured after the validity gate has already removed every bank that rejects a correct tree",
+      "unchanged": [
+        "pinned model",
+        "sampling",
+        "repetitions per task",
+        "evidence-generation-gen59-v1 corpus",
+        "frozen task order",
+        "gen60-generated-evidence-screen-v1 at b694f7b8",
+        "bank assembly by concatenation, no semantic filtering"
+      ]
+    },
+    "endpoint": "local llama-swap on this host",
+    "gen60_baseline": {
+      "sensitivity": 1.0,
+      "unsafe_as_gate": "4 of 8"
+    },
+    "gen60_prompt_template_sha256": "41045b9789ce16fc78b28fb0928cefc281fe728a0a075e5914e5ed7f188206d4",
+    "inherited_sanitizer": {
+      "detects_tests": "top-level functions and methods inside test classes",
+      "forbidden_patterns": [
+        "\\bverifier\\b",
+        "\\breference_fix\\b",
+        "\\bsubprocess\\b",
+        "\\bsocket\\b",
+        "\\brequests\\b",
+        "\\burllib\\b"
+      ],
+      "frozen_before_exposure": true,
+      "max_output_bytes": 20000,
+      "rejects": [
+        "no code block",
+        "syntax error",
+        "no test functions",
+        "file access",
+        "module attribute assignment",
+        "size cap"
+      ]
+    },
+    "model": "qwen3.6-35b-vulkan-nothink",
+    "prompt_template_sha256": "1e9a5ac8f2324766c0376ec137ca239d5896287bd13c74fabb2e21c8e4471ab2",
+    "repetitions": 3,
+    "ruler": "evidence-generation-gen59-v1",
+    "sampling": {
+      "max_tokens": 4096,
+      "min_p": 0.0,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.8
+    },
+    "screen_sha256": "b694f7b873c39731f043fffcee01437f530f82644d2bc1fe4aac73bcee42c3f5",
+    "session": "one stateless HTTP request per repetition; no conversation carried over",
+    "task_order": [
+      "culvert",
+      "dispatch",
+      "ledger",
+      "manifest",
+      "pathsafe",
+      "tally",
+      "thermo",
+      "valve"
+    ],
+    "total_calls": 24
+  },
+  "kept_tests": 223,
+  "outputs": [
+    {
+      "accepted": true,
+      "code_sha256": "3de41534d1db970b4ed02198c3a72ab0b1aaa0cc74191396084061d9a87523a9",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "The gate controller firmware changed. It now reports 8 encoder steps per",
+          "test": "test_steps_per_mm_is_8"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a",
+          "test": "test_position_mm_80_steps_is_10_mm"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a",
+          "test": "test_position_mm_40_steps_is_5_mm"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a",
+          "test": "test_position_mm_0_steps_is_0_mm"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a",
+          "test": "test_to_steps_10_mm_is_80_steps"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a",
+          "test": "test_to_steps_5_mm_is_40_steps"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a",
+          "test": "test_to_steps_0_mm_is_0_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps",
+          "test": "test_frame_10_mm_has_80_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps",
+          "test": "test_frame_5_mm_has_40_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps",
+          "test": "test_frame_0_mm_has_0_steps"
+        }
+      ],
+      "kept_count": 10,
+      "prompt_sha256": "431f1a42f173f0ce1fa317c2012ea64b76121996ab68311a212bc9c123491730",
+      "raw_test_functions": [
+        "test_steps_per_mm_is_8",
+        "test_position_mm_80_steps_is_10_mm",
+        "test_position_mm_40_steps_is_5_mm",
+        "test_position_mm_0_steps_is_0_mm",
+        "test_to_steps_10_mm_is_80_steps",
+        "test_to_steps_5_mm_is_40_steps",
+        "test_to_steps_0_mm_is_0_steps",
+        "test_frame_10_mm_has_80_steps",
+        "test_frame_5_mm_has_40_steps",
+        "test_frame_0_mm_has_0_steps"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "89ab6fd6906b1a23e441c421d850fcf312425cf80d93fcc6026415aa16308287",
+      "run_id": "culvert-rep1",
+      "seconds": 14.2,
+      "task": "culvert",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "956756df9e5941d494f90edb9c7d06238a813711742e39fc94e0b57ffd9007d2",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_mm_with_new_ratio"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_mm_basic"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_mm_zero"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_mm_large"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_frame_steps_unchanged"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_frame_mm_unchanged"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_frame_steps_for_other_values"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_frame_steps_for_other_values_2"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_frame_steps_for_other_values_3"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "431f1a42f173f0ce1fa317c2012ea64b76121996ab68311a212bc9c123491730",
+      "raw_test_functions": [
+        "test_position_mm_with_new_ratio",
+        "test_position_mm_basic",
+        "test_position_mm_zero",
+        "test_position_mm_large",
+        "test_frame_steps_unchanged",
+        "test_frame_mm_unchanged",
+        "test_frame_steps_for_other_values",
+        "test_frame_steps_for_other_values_2",
+        "test_frame_steps_for_other_values_3"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "fc0fd5e922374c91f763edb819360426d78423810583573a65dd413761ba13d9",
+      "run_id": "culvert-rep2",
+      "seconds": 9.93,
+      "task": "culvert",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "b68062394b62de96a5bc296e0ec10c944d04f43775b7ec69a30d91b365409d9c",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "The gate controller firmware changed. It now reports 8 encoder steps per millimetre of gate travel, where it previously reported 4.",
+          "test": "test_steps_per_mm_is_eight"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_80_steps_is_10_mm"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_40_steps_is_5_mm"
+        },
+        {
+          "quote": "Update the package so that gate positions are computed from the new ratio: a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_0_steps_is_0_mm"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_10_mm_reports_40_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_5_mm_reports_20_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_0_mm_reports_0_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_20_mm_reports_80_steps"
+        },
+        {
+          "quote": "The control room's telemetry frames must keep reporting the SAME number of steps for a given millimetre position as they did before the firmware change.",
+          "test": "test_to_steps_is_unchanged"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "431f1a42f173f0ce1fa317c2012ea64b76121996ab68311a212bc9c123491730",
+      "raw_test_functions": [
+        "test_steps_per_mm_is_eight",
+        "test_position_80_steps_is_10_mm",
+        "test_position_40_steps_is_5_mm",
+        "test_position_0_steps_is_0_mm",
+        "test_10_mm_reports_40_steps",
+        "test_5_mm_reports_20_steps",
+        "test_0_mm_reports_0_steps",
+        "test_20_mm_reports_80_steps",
+        "test_to_steps_is_unchanged"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "c4822a417babdac1744761850abf72aae6bd3e6170a076801652315bc2c17c4f",
+      "run_id": "culvert-rep3",
+      "seconds": 13.16,
+      "task": "culvert",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "32c6733abe72d99f92ac206b25b8bc854a4ff9a4101868b8497542b59c0d2469",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_runs_before_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_urgent_jobs_run_in_order_among_themselves"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_inserted_before_existing_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_multiple_urgent_jobs_before_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_after_ordinary_jobs"
+        },
+        {
+          "quote": "push(name) adds an ordinary job",
+          "test": "test_push_with_urgent_false_is_ordinary"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_between_ordinary_jobs"
+        },
+        {
+          "quote": "pop() removes and returns the next job to run",
+          "test": "test_empty_queue_raises_error"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_mixed_urgent_and_ordinary_interleaved"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "bc815e86305ef45e13c727247fbef4426f22a473cd2fe34b2412183e525e2851",
+      "raw_test_functions": [
+        "test_urgent_job_runs_before_ordinary_jobs",
+        "test_urgent_jobs_run_in_order_among_themselves",
+        "test_urgent_job_inserted_before_existing_ordinary_jobs",
+        "test_multiple_urgent_jobs_before_ordinary_jobs",
+        "test_urgent_job_after_ordinary_jobs",
+        "test_push_with_urgent_false_is_ordinary",
+        "test_urgent_job_between_ordinary_jobs",
+        "test_empty_queue_raises_error",
+        "test_mixed_urgent_and_ordinary_interleaved"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "9ed0de16097234e73f4d73596a14b4fef9394775b698f4252192648ed0533a92",
+      "run_id": "dispatch-rep1",
+      "seconds": 15.57,
+      "task": "dispatch",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "4106eba1a4486c3728f3e934ff21d0b647f83f61b18b04ad0f15e774454bfd0a",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_runs_before_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_runs_before_multiple_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_urgent_jobs_among_themselves_run_in_fifo_order"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting, and urgent jobs run among themselves in the order they were added",
+          "test": "test_urgent_jobs_interleave_correctly_with_ordinary_jobs"
+        },
+        {
+          "quote": "Ordinary jobs run in the order they were added",
+          "test": "test_ordinary_jobs_keep_order_after_urgent"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting, and urgent jobs run among themselves in the order they were added",
+          "test": "test_multiple_urgent_jobs_before_multiple_ordinary_jobs"
+        },
+        {
+          "quote": "push(name) adds an ordinary job",
+          "test": "test_push_ordinary_job_default"
+        },
+        {
+          "quote": "push(name, urgent=True) adds an urgent one",
+          "test": "test_push_urgent_job_explicit"
+        },
+        {
+          "quote": "pop() removes and returns the next job to run",
+          "test": "test_empty_queue_raises_on_pop"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "bc815e86305ef45e13c727247fbef4426f22a473cd2fe34b2412183e525e2851",
+      "raw_test_functions": [
+        "test_urgent_job_runs_before_ordinary_jobs",
+        "test_urgent_job_runs_before_multiple_ordinary_jobs",
+        "test_urgent_jobs_among_themselves_run_in_fifo_order",
+        "test_urgent_jobs_interleave_correctly_with_ordinary_jobs",
+        "test_ordinary_jobs_keep_order_after_urgent",
+        "test_multiple_urgent_jobs_before_multiple_ordinary_jobs",
+        "test_push_ordinary_job_default",
+        "test_push_urgent_job_explicit",
+        "test_empty_queue_raises_on_pop"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "dd139c5bb7603b8e1fd78736e51f0c529c6b8163db5b6a779f522116bc20649e",
+      "run_id": "dispatch-rep2",
+      "seconds": 15.19,
+      "task": "dispatch",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "7fb0efc3bec949900fbc9224a7c57a00ead29a355a0a4fa6fe4650cefc422a56",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_precedes_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_urgent_jobs_run_in_fifo_order_among_themselves"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting, and urgent jobs run among themselves in the order they were added",
+          "test": "test_mixed_urgent_and_ordinary_order"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_multiple_urgent_jobs_inserted_between_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_when_queue_empty"
+        },
+        {
+          "quote": "Ordinary jobs run in the order they were added",
+          "test": "test_only_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_only_urgent_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_added_after_ordinary_jobs"
+        },
+        {
+          "quote": "Ordinary jobs run in the order they were added",
+          "test": "test_ordinary_job_added_after_urgent_jobs"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "bc815e86305ef45e13c727247fbef4426f22a473cd2fe34b2412183e525e2851",
+      "raw_test_functions": [
+        "test_urgent_job_precedes_ordinary_jobs",
+        "test_urgent_jobs_run_in_fifo_order_among_themselves",
+        "test_mixed_urgent_and_ordinary_order",
+        "test_multiple_urgent_jobs_inserted_between_ordinary_jobs",
+        "test_urgent_job_when_queue_empty",
+        "test_only_ordinary_jobs",
+        "test_only_urgent_jobs",
+        "test_urgent_job_added_after_ordinary_jobs",
+        "test_ordinary_job_added_after_urgent_jobs"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "bfd08a09ce3955af51cca926d6da7c0eb518919b1c65461e218dd6d330f5a297",
+      "run_id": "dispatch-rep3",
+      "seconds": 15.68,
+      "task": "dispatch",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "53fa4eecdd8213e179ef352b469c737e7583c0f78a7c195f1666937f050cd3b9",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_positive"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_negative"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_negative_smaller_magnitude"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_positive_smaller_magnitude"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals"
+        },
+        {
+          "quote": "Amounts are given as strings precisely so that a halfway value means what it says. Converting through a binary float loses that, because a value such as 2.675 is not stored exactly and can round the wrong way.",
+          "test": "test_no_float_precision_errors_for_halfway_values"
+        }
+      ],
+      "kept_count": 6,
+      "prompt_sha256": "f667d452a0ce9c624cf8e8b86040bceda2c6b0248ffee1916de2413b93f49470",
+      "raw_test_functions": [
+        "test_half_away_from_zero_positive",
+        "test_half_away_from_zero_negative",
+        "test_half_away_from_zero_negative_smaller_magnitude",
+        "test_half_away_from_zero_positive_smaller_magnitude",
+        "test_returns_string_with_exactly_two_decimals",
+        "test_no_float_precision_errors_for_halfway_values"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "ce4db4cbbb3daf86993838e5851596837ced3fe42dd1e691eb56fd27f28db82f",
+      "run_id": "ledger-rep1",
+      "seconds": 20.97,
+      "task": "ledger",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "df5651f4432be667dcd1e0bef35d40aeb6a0fffb6fe5b90b6dfba1e180186dda",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_positive"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_negative"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_positive_edge"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\", and \"-2.675\" becomes \"-2.68\".",
+          "test": "test_half_away_from_zero_negative_edge"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals_zero_fraction"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals_negative_zero_fraction"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_halfway_positive_towards_larger_magnitude"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_halfway_negative_towards_larger_magnitude"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_halfway_larger_positive"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_halfway_larger_negative"
+        },
+        {
+          "quote": "Amounts are given as strings precisely so that a halfway value means what it says. Converting through a binary float loses that, because a value such as 2.675 is not stored exactly and can round the wrong way.",
+          "test": "test_no_float_conversion_accuracy_issue"
+        }
+      ],
+      "kept_count": 12,
+      "prompt_sha256": "f667d452a0ce9c624cf8e8b86040bceda2c6b0248ffee1916de2413b93f49470",
+      "raw_test_functions": [
+        "test_half_away_from_zero_positive",
+        "test_half_away_from_zero_negative",
+        "test_half_away_from_zero_positive_edge",
+        "test_half_away_from_zero_negative_edge",
+        "test_returns_string_with_exactly_two_decimals",
+        "test_returns_string_with_exactly_two_decimals_zero_fraction",
+        "test_returns_string_with_exactly_two_decimals_negative_zero_fraction",
+        "test_halfway_positive_towards_larger_magnitude",
+        "test_halfway_negative_towards_larger_magnitude",
+        "test_halfway_larger_positive",
+        "test_halfway_larger_negative",
+        "test_no_float_conversion_accuracy_issue"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "3502d6c31a38f14d0777b4366bc783255495c44a813ec7596253df83586d9fc2",
+      "run_id": "ledger-rep2",
+      "seconds": 17.61,
+      "task": "ledger",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "10cc0b1a9133d2ef59f1b9cd25584f04efe96e6b6a59619fba3cd4e6b776b253",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\"",
+          "test": "test_half_away_from_zero_positive"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_half_away_from_zero_negative"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\"",
+          "test": "test_half_away_from_zero_positive_other"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_half_away_from_zero_negative_other"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_exact_two_decimals"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_exact_two_decimals_negative"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_exact_two_decimals_zero"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_exact_two_decimals_zero_negative"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_exact_two_decimals_zero_negative_sign"
+        },
+        {
+          "quote": "Amounts are given as strings precisely so that a halfway value means what it says. Converting through a binary float loses that, because a value such as 2.675 is not stored exactly and can round the wrong way.",
+          "test": "test_no_float_conversion_error_for_halfway"
+        }
+      ],
+      "kept_count": 11,
+      "prompt_sha256": "f667d452a0ce9c624cf8e8b86040bceda2c6b0248ffee1916de2413b93f49470",
+      "raw_test_functions": [
+        "test_half_away_from_zero_positive",
+        "test_half_away_from_zero_negative",
+        "test_half_away_from_zero_positive_other",
+        "test_half_away_from_zero_negative_other",
+        "test_returns_string",
+        "test_exact_two_decimals",
+        "test_exact_two_decimals_negative",
+        "test_exact_two_decimals_zero",
+        "test_exact_two_decimals_zero_negative",
+        "test_exact_two_decimals_zero_negative_sign",
+        "test_no_float_conversion_error_for_halfway"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "a168ae1182259e21762cca96e69e907160034ac5e519d1ee367aea8e452bac67",
+      "run_id": "ledger-rep3",
+      "seconds": 17.62,
+      "task": "ledger",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "7f48a2d37909c90e88dc06d5bff10ef5d4cb4671cb4fd7c249b65fc672e84c09",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_code"
+        },
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_label"
+        },
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_depot"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_label_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_whitespace_only_label_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_code_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_depot_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_empty_string_label_is_not_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_all_fields_blank"
+        },
+        {
+          "quote": "parse_row(line) splits a comma-separated manifest line into a dictionary with the keys code, label and depot, in that order.",
+          "test": "test_keys_order"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_non_blank_whitespace_still_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_code_with_whitespace_only_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_depot_with_whitespace_only_becomes_none"
+        }
+      ],
+      "kept_count": 13,
+      "prompt_sha256": "e37b2c031fe8f3d7a3a1844b8d98ac4ba7b5727d555a51381ad4195d0bea42cb",
+      "raw_test_functions": [
+        "test_whitespace_stripped_from_code",
+        "test_whitespace_stripped_from_label",
+        "test_whitespace_stripped_from_depot",
+        "test_blank_label_becomes_none",
+        "test_whitespace_only_label_becomes_none",
+        "test_blank_code_becomes_none",
+        "test_blank_depot_becomes_none",
+        "test_empty_string_label_is_not_none",
+        "test_all_fields_blank",
+        "test_keys_order",
+        "test_non_blank_whitespace_still_becomes_none",
+        "test_code_with_whitespace_only_becomes_none",
+        "test_depot_with_whitespace_only_becomes_none"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "739b10ccf715d5de0c5250f652cb3fd28fa7a62ab4f8c052c2e3b815d3c02a8e",
+      "run_id": "manifest-rep1",
+      "seconds": 18.91,
+      "task": "manifest",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "af112da716e1e7fecd8bac5731cd64d90f66769cdebc02851011bab387d24987",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_code"
+        },
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_label"
+        },
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_depot"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_label_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_whitespace_only_label_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_code_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_depot_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_empty_string_label_is_distinguishable_from_none"
+        },
+        {
+          "quote": "parse_row(line) splits a comma-separated manifest line into a dictionary with the keys `code`, `label` and `depot`, in that order.",
+          "test": "test_keys_order_is_code_label_depot"
+        },
+        {
+          "quote": "parse_row(line) splits a comma-separated manifest line into a dictionary with the keys `code`, `label` and `depot`, in that order.",
+          "test": "test_code_field_stored_correctly"
+        },
+        {
+          "quote": "parse_row(line) splits a comma-separated manifest line into a dictionary with the keys `code`, `label` and `depot`, in that order.",
+          "test": "test_label_field_stored_correctly"
+        },
+        {
+          "quote": "parse_row(line) splits a comma-separated manifest line into a dictionary with the keys `code`, `label` and `depot`, in that order.",
+          "test": "test_depot_field_stored_correctly"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_multiple_blank_fields"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_whitespace_only_code_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as `None`, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_whitespace_only_depot_becomes_none"
+        }
+      ],
+      "kept_count": 15,
+      "prompt_sha256": "e37b2c031fe8f3d7a3a1844b8d98ac4ba7b5727d555a51381ad4195d0bea42cb",
+      "raw_test_functions": [
+        "test_whitespace_stripped_from_code",
+        "test_whitespace_stripped_from_label",
+        "test_whitespace_stripped_from_depot",
+        "test_blank_label_becomes_none",
+        "test_whitespace_only_label_becomes_none",
+        "test_blank_code_becomes_none",
+        "test_blank_depot_becomes_none",
+        "test_empty_string_label_is_distinguishable_from_none",
+        "test_keys_order_is_code_label_depot",
+        "test_code_field_stored_correctly",
+        "test_label_field_stored_correctly",
+        "test_depot_field_stored_correctly",
+        "test_multiple_blank_fields",
+        "test_whitespace_only_code_becomes_none",
+        "test_whitespace_only_depot_becomes_none"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "ca589af3320a8eeecf4d88d11bc649c8e63886366aeef7283f981d633ccf64a7",
+      "run_id": "manifest-rep2",
+      "seconds": 21.01,
+      "task": "manifest",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "e4940e84b4a8f1fe0efe7ca9a2434436de78ca19807f49cdbc5e6c2c0f56d986",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Surrounding whitespace is stripped from every field.",
+          "test": "test_whitespace_stripped_from_fields"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_blank_field_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_empty_field_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_whitespace_only_field_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_code_blank_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_depot_blank_becomes_none"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_all_fields_blank"
+        },
+        {
+          "quote": "parse_row(line) splits a comma-separated manifest line into a dictionary with the keys code, label and depot, in that order.",
+          "test": "test_keys_order_and_presence"
+        },
+        {
+          "quote": "A field that is blank \u2014 empty, or only whitespace \u2014 must be reported as None, not as an empty string, so that a missing label is distinguishable from a label that happens to be empty.",
+          "test": "test_empty_string_label_is_distinguishable_from_none"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "e37b2c031fe8f3d7a3a1844b8d98ac4ba7b5727d555a51381ad4195d0bea42cb",
+      "raw_test_functions": [
+        "test_whitespace_stripped_from_fields",
+        "test_blank_field_becomes_none",
+        "test_empty_field_becomes_none",
+        "test_whitespace_only_field_becomes_none",
+        "test_code_blank_becomes_none",
+        "test_depot_blank_becomes_none",
+        "test_all_fields_blank",
+        "test_keys_order_and_presence",
+        "test_empty_string_label_is_distinguishable_from_none"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "e00cc10c0ebff7696790b49aac77cb828fa301b08581828340537e52af8826ac",
+      "run_id": "manifest-rep3",
+      "seconds": 18.04,
+      "task": "manifest",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "2734a6f55344f46c4c6887911085286ef72e0cb39722dab399406c0b28b3b5ad",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_absolute_name_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_absolute_name_with_drive_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_nested_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_hidden_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_dot_only_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_absolute_path_inside_depot_still_raises_valueerror"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_still_works"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_subdirectory_works"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_multiple_subdirectories_works"
+        }
+      ],
+      "kept_count": 10,
+      "prompt_sha256": "f55bdbb245cbdc5805575fad03bd986527ff7655cee216095d116f50e17b12b4",
+      "raw_test_functions": [
+        "test_absolute_name_raises_valueerror",
+        "test_absolute_name_with_drive_raises_valueerror",
+        "test_parent_directory_escape_raises_valueerror",
+        "test_nested_parent_directory_escape_raises_valueerror",
+        "test_hidden_parent_directory_escape_raises_valueerror",
+        "test_dot_only_escape_raises_valueerror",
+        "test_absolute_path_inside_depot_still_raises_valueerror",
+        "test_relative_name_still_works",
+        "test_relative_name_with_subdirectory_works",
+        "test_relative_name_with_multiple_subdirectories_works"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "ad1ec77319c891c603cc034617045a5ca822d969dc1c484e5e3544671d0b6ae3",
+      "run_id": "pathsafe-rep1",
+      "seconds": 13.47,
+      "task": "pathsafe",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "166941d08b816f133c0dd46a3b67ce0c964bd4e6c170d5a4c54ba0b610bcb4c8",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_absolute_name_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_absolute_name_with_depot_prefix_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_deep_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_parent_directory_escape_in_subdirectory_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`. It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_hidden_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_subdirectory_resolves_correctly"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_multiple_subdirectories_resolves_correctly"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_extension_resolves_correctly"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_dot_in_name_resolves_correctly"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_just_directory_resolves_correctly"
+        }
+      ],
+      "kept_count": 11,
+      "prompt_sha256": "f55bdbb245cbdc5805575fad03bd986527ff7655cee216095d116f50e17b12b4",
+      "raw_test_functions": [
+        "test_absolute_name_raises_valueerror",
+        "test_absolute_name_with_depot_prefix_raises_valueerror",
+        "test_parent_directory_escape_raises_valueerror",
+        "test_deep_parent_directory_escape_raises_valueerror",
+        "test_parent_directory_escape_in_subdirectory_raises_valueerror",
+        "test_hidden_parent_directory_escape_raises_valueerror",
+        "test_relative_name_with_subdirectory_resolves_correctly",
+        "test_relative_name_with_multiple_subdirectories_resolves_correctly",
+        "test_relative_name_with_extension_resolves_correctly",
+        "test_relative_name_with_dot_in_name_resolves_correctly",
+        "test_relative_name_just_directory_resolves_correctly"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "c149ef350d491d2b2d93fed60965bacba9d01973e58ad1e4b3aa8fbfd8b93436",
+      "run_id": "pathsafe-rep2",
+      "seconds": 13.76,
+      "task": "pathsafe",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "86486703d51b7a191b44fc3c7865e997a8a43661020aba97583d09f71c0899e2",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_absolute_name_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_absolute_name_with_drive_letter_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_nested_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_parent_directory_escape_in_middle_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_dot_only_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_double_dot_only_raises_valueerror"
+        },
+        {
+          "quote": "It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_absolute_path_raises_valueerror_not_silently_rewritten"
+        },
+        {
+          "quote": "It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_escape_path_raises_valueerror_not_silently_clamped"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_still_works"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_subdirectory"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_multiple_subdirectories"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_relative_name_with_extension"
+        }
+      ],
+      "kept_count": 13,
+      "prompt_sha256": "f55bdbb245cbdc5805575fad03bd986527ff7655cee216095d116f50e17b12b4",
+      "raw_test_functions": [
+        "test_absolute_name_raises_valueerror",
+        "test_absolute_name_with_drive_letter_raises_valueerror",
+        "test_parent_directory_escape_raises_valueerror",
+        "test_nested_parent_directory_escape_raises_valueerror",
+        "test_parent_directory_escape_in_middle_raises_valueerror",
+        "test_dot_only_escape_raises_valueerror",
+        "test_double_dot_only_raises_valueerror",
+        "test_absolute_path_raises_valueerror_not_silently_rewritten",
+        "test_escape_path_raises_valueerror_not_silently_clamped",
+        "test_relative_name_still_works",
+        "test_relative_name_with_subdirectory",
+        "test_relative_name_with_multiple_subdirectories",
+        "test_relative_name_with_extension"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "f298acbc41f5b0fe90d7422c08d86631e6d155ad4fd63df023c434d268c4f22b",
+      "run_id": "pathsafe-rep3",
+      "seconds": 16.26,
+      "task": "pathsafe",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "4c2cc3a61172d7405ab2098dea8560ac5aa060d78e8816bc286db822eddce567",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "close() returns the running total AND resets the session to zero",
+          "test": "test_close_returns_running_total"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero, so that a session reused after close() starts from zero again.",
+          "test": "test_close_resets_session_to_zero"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_total_after_close_reports_zero"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_add_after_close_starts_from_zero"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero",
+          "test": "test_close_on_empty_session_returns_zero"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero, so that a session reused after close() starts from zero again.",
+          "test": "test_close_on_empty_session_resets_to_zero"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero, so that a session reused after close() starts from zero again.",
+          "test": "test_multiple_close_calls"
+        },
+        {
+          "quote": "add(n) adds n to the running total.",
+          "test": "test_negative_values"
+        },
+        {
+          "quote": "add(n) adds n to the running total.",
+          "test": "test_add_zero"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "b1fba6361ff916720287039cc41fedb3b35f5f3a932823895cfa30b27c1778c8",
+      "raw_test_functions": [
+        "test_close_returns_running_total",
+        "test_close_resets_session_to_zero",
+        "test_total_after_close_reports_zero",
+        "test_add_after_close_starts_from_zero",
+        "test_close_on_empty_session_returns_zero",
+        "test_close_on_empty_session_resets_to_zero",
+        "test_multiple_close_calls",
+        "test_negative_values",
+        "test_add_zero"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "1db3719fe3a5c35bd345b55785c0ea105460279802c61023b1bdc276d67fb8ef",
+      "run_id": "tally-rep1",
+      "seconds": 10.64,
+      "task": "tally",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "e4f33b5211a4d44336df872ae7d9c3c696da093b57d1fca63ec720e221c85343",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "close() returns the running total",
+          "test": "test_close_returns_current_total"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero, so that a session reused after close() starts from zero again.",
+          "test": "test_close_resets_session_to_zero"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_total_after_close_reports_zero"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_add_after_close_accumulates_from_zero"
+        },
+        {
+          "quote": "close() returns the running total",
+          "test": "test_close_returns_zero_if_nothing_added"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_multiple_close_calls"
+        },
+        {
+          "quote": "add(n) adds n to the running total.",
+          "test": "test_add_negative_numbers"
+        },
+        {
+          "quote": "add(n) adds n to the running total.",
+          "test": "test_add_zero"
+        }
+      ],
+      "kept_count": 8,
+      "prompt_sha256": "b1fba6361ff916720287039cc41fedb3b35f5f3a932823895cfa30b27c1778c8",
+      "raw_test_functions": [
+        "test_close_returns_current_total",
+        "test_close_resets_session_to_zero",
+        "test_total_after_close_reports_zero",
+        "test_add_after_close_accumulates_from_zero",
+        "test_close_returns_zero_if_nothing_added",
+        "test_multiple_close_calls",
+        "test_add_negative_numbers",
+        "test_add_zero"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "915cc0fcd40d98f78a3029626c2d15f8626a178fdcc4abf73a229a8d677a4450",
+      "run_id": "tally-rep2",
+      "seconds": 8.39,
+      "task": "tally",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "e98ce5196fcf97693759f924b7dc21fb68c5fdcb457da91131e0fead013d1e14",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "close() returns the running total",
+          "test": "test_close_returns_running_total"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero, so that a session reused after close() starts from zero again.",
+          "test": "test_close_resets_session_to_zero"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_total_after_close_reports_zero"
+        },
+        {
+          "quote": "close() returns the running total AND resets the session to zero, so that a session reused after close() starts from zero again.",
+          "test": "test_session_reusable_after_close"
+        },
+        {
+          "quote": "close() returns the running total",
+          "test": "test_close_on_empty_session_returns_zero"
+        },
+        {
+          "quote": "add(n) adds n to the running total.",
+          "test": "test_multiple_adds_before_close"
+        },
+        {
+          "quote": "Calling total() after close() must report 0 until something new is added.",
+          "test": "test_close_resets_for_second_use"
+        }
+      ],
+      "kept_count": 7,
+      "prompt_sha256": "b1fba6361ff916720287039cc41fedb3b35f5f3a932823895cfa30b27c1778c8",
+      "raw_test_functions": [
+        "test_close_returns_running_total",
+        "test_close_resets_session_to_zero",
+        "test_total_after_close_reports_zero",
+        "test_session_reusable_after_close",
+        "test_close_on_empty_session_returns_zero",
+        "test_multiple_adds_before_close",
+        "test_close_resets_for_second_use"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "c99a71aca251c007041a65e9a0302035b08d062d7835fa023db3cd0ff7c1f521",
+      "run_id": "tally-rep3",
+      "seconds": 8.28,
+      "task": "tally",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "ccb6b9019b026eb23dcec3a89572d8a743c08ec1a61a68de053d87051901012c",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_is_one"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_one_rounding"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_zero_rounding"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_two_rounding"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_three_rounding"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_negative_temperatures"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_zero_celsius"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_return_type_is_float"
+        }
+      ],
+      "kept_count": 8,
+      "prompt_sha256": "caafa85237fd11d9974310613d29c3c9745e67dfde96de20ba0189020cce7c1c",
+      "raw_test_functions": [
+        "test_default_places_is_one",
+        "test_places_one_rounding",
+        "test_places_zero_rounding",
+        "test_places_two_rounding",
+        "test_places_three_rounding",
+        "test_negative_temperatures",
+        "test_zero_celsius",
+        "test_return_type_is_float"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "ecfaa675bf605d7053e933b3a4762c584c045563e016f0cfb21d17095be2e72e",
+      "run_id": "thermo-rep1",
+      "seconds": 12.38,
+      "task": "thermo",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "8ed019ae5b0707fd6c211da6660dbee63d6dd88c1229f1ee4a9a257a1da1b953",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_is_one"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_argument_rounds_correctly"
+        },
+        {
+          "quote": "`to_fahrenheit(celsius, places=1)` converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_zero_celsius_conversion"
+        },
+        {
+          "quote": "`to_fahrenheit(celsius, places=1)` converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_negative_celsius_conversion"
+        },
+        {
+          "quote": "`to_fahrenheit(celsius, places=1)` converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_return_type_is_float"
+        },
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_parameter"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_high_precision_rounding"
+        },
+        {
+          "quote": "Rounding is ordinary nearest-value rounding; no midpoint case arises in this task.",
+          "test": "test_no_midpoint_case_handling_required"
+        }
+      ],
+      "kept_count": 8,
+      "prompt_sha256": "caafa85237fd11d9974310613d29c3c9745e67dfde96de20ba0189020cce7c1c",
+      "raw_test_functions": [
+        "test_default_places_is_one",
+        "test_places_argument_rounds_correctly",
+        "test_zero_celsius_conversion",
+        "test_negative_celsius_conversion",
+        "test_return_type_is_float",
+        "test_default_places_parameter",
+        "test_high_precision_rounding",
+        "test_no_midpoint_case_handling_required"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "69f12ffe7d58b9bca57f206bd9d96c54499b94d11756b8af2818986f2f50478a",
+      "run_id": "thermo-rep2",
+      "seconds": 18.49,
+      "task": "thermo",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "c02bcce3aa1d7f3e9474209e465637610b57df15354fdf4f7b9ceef0bc9718ad",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_is_one"
+        },
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_argument_not_specified"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_zero"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_three"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_negative_celsius"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_freezing_point"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_boiling_point"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_body_temperature_default"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_argument_is_int"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "caafa85237fd11d9974310613d29c3c9745e67dfde96de20ba0189020cce7c1c",
+      "raw_test_functions": [
+        "test_default_places_is_one",
+        "test_default_places_argument_not_specified",
+        "test_places_zero",
+        "test_places_three",
+        "test_negative_celsius",
+        "test_freezing_point",
+        "test_boiling_point",
+        "test_body_temperature_default",
+        "test_places_argument_is_int"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "af003f5810e32657480c4b4a8d39dc6c4cfc71f3a8c4e0d2c53b7c64fbf4bcc2",
+      "run_id": "thermo-rep3",
+      "seconds": 15.62,
+      "task": "thermo",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "d102a79623f2e38bb109186143407000a65ed1bb5362ec3d996e266bc4744be7",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not physically meaningful and must not be passed through or made positive.",
+          "test": "test_negative_raw_reports_zero"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not physically meaningful and must not be passed through or made positive.",
+          "test": "test_negative_raw_reports_zero_edge"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_zero_raw_reports_zero"
+        },
+        {
+          "quote": "The reading must be clamped to the range 0 to 100 inclusive.",
+          "test": "test_upper_bound_raw_reports_hundred"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_very_large_raw_reports_hundred"
+        },
+        {
+          "quote": "negative openings are not physically meaningful and must not be passed through or made positive.",
+          "test": "test_raw_below_zero_is_not_made_positive"
+        }
+      ],
+      "kept_count": 6,
+      "prompt_sha256": "021226e46c918d24a183a052a611392fbf9f6472dacc61f9cf947f5fa5ed1d5b",
+      "raw_test_functions": [
+        "test_negative_raw_reports_zero",
+        "test_negative_raw_reports_zero_edge",
+        "test_zero_raw_reports_zero",
+        "test_upper_bound_raw_reports_hundred",
+        "test_very_large_raw_reports_hundred",
+        "test_raw_below_zero_is_not_made_positive"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "32aa60ceb8b2dae3e8402554e45f0b808240599f16aec61cb81b5d9cd455ef6e",
+      "run_id": "valve-rep1",
+      "seconds": 6.1,
+      "task": "valve",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "d102db3f30114ca8a95c23c1fd1a62ec196c0e082c4b8750c92245cfabe373c9",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not physically meaningful and must not be passed through or made positive.",
+          "test": "test_negative_values_are_clamped_to_zero"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not physically meaningful and must not be passed through or made positive.",
+          "test": "test_negative_values_are_clamped_to_zero_edge"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_exact_lower_bound_is_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_exact_upper_bound_is_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_values_inside_range_are_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_values_inside_range_are_unchanged_edge_low"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_values_inside_range_are_unchanged_edge_high"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_large_positive_values_are_clamped_to_one_hundred"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0.",
+          "test": "test_large_negative_values_are_clamped_to_zero"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "021226e46c918d24a183a052a611392fbf9f6472dacc61f9cf947f5fa5ed1d5b",
+      "raw_test_functions": [
+        "test_negative_values_are_clamped_to_zero",
+        "test_negative_values_are_clamped_to_zero_edge",
+        "test_exact_lower_bound_is_unchanged",
+        "test_exact_upper_bound_is_unchanged",
+        "test_values_inside_range_are_unchanged",
+        "test_values_inside_range_are_unchanged_edge_low",
+        "test_values_inside_range_are_unchanged_edge_high",
+        "test_large_positive_values_are_clamped_to_one_hundred",
+        "test_large_negative_values_are_clamped_to_zero"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "02d09503f9aedf7708775e37ac7d66581a3a692abed430fb14f0a884f3a79e7e",
+      "run_id": "valve-rep2",
+      "seconds": 7.69,
+      "task": "valve",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "2af49a0204010f603780dbe6106944404f907fa0642da7a45fc10de9b7ea0252",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not physically meaningful and must not be passed through or made positive.",
+          "test": "test_negative_values_are_clamped_to_zero"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_zero_is_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_upper_bound_is_inclusive"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_boundary_at_upper_limit"
+        }
+      ],
+      "kept_count": 4,
+      "prompt_sha256": "021226e46c918d24a183a052a611392fbf9f6472dacc61f9cf947f5fa5ed1d5b",
+      "raw_test_functions": [
+        "test_negative_values_are_clamped_to_zero",
+        "test_zero_is_unchanged",
+        "test_upper_bound_is_inclusive",
+        "test_boundary_at_upper_limit"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "c7a08e76aafa8bcbc2a7cc05d1632ce1dc6b2529d1cc8bf55705907cb6c724cf",
+      "run_id": "valve-rep3",
+      "seconds": 4.21,
+      "task": "valve",
+      "usable": true
+    }
+  ],
+  "raw_tests": 223,
+  "total_seconds": 333.2,
+  "usable": 24
+}

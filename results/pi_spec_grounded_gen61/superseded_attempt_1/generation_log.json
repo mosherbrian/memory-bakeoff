@@ -1,0 +1,1290 @@
+{
+  "accepted": 16,
+  "dropped_tests": 23,
+  "frozen": {
+    "contract": {
+      "comparison_rule": "case-folded, punctuation-stripped, whitespace-collapsed substring of the instruction",
+      "contract_sha256": "2e9ad9effd5d6ccf6d4c37f3f6c91d65d8162df096f90d95e582dc73f6028dd4",
+      "contract_version": "spec-grounded-assertion-provenance-v1",
+      "detection_is_not_diagnosis": "a flag records that the bank failed on a wrong tree, not that it failed for the requirement that tree breaks",
+      "exclusion_unit": "the whole test function, because that is what pytest reports",
+      "frozen_before_exposure": true,
+      "grounding_source": "spec.txt only - the text the generator was already shown; the hidden verifier and the named requirements in the truth package are never consulted",
+      "minimum_quote_words": 4,
+      "no_critic": "no second model, no critic pass, no cross-model check",
+      "primary_false_alarm_metric": "UNSAFE_AS_GATE rate; Gen60 baseline 4 of 8",
+      "question": "does forcing each generated test to quote the requirement it tests reduce the rate at which banks reject correct code?",
+      "single_change_from_gen58_gen60": "the generator prompt requires a verbatim REQUIREMENT citation per test, and a mechanical filter removes tests whose citation is not in the visible instruction",
+      "specificity_note": "retained for continuity but non-discriminating - it is measured after the validity gate has already removed every bank that rejects a correct tree",
+      "unchanged": [
+        "pinned model",
+        "sampling",
+        "repetitions per task",
+        "evidence-generation-gen59-v1 corpus",
+        "frozen task order",
+        "gen60-generated-evidence-screen-v1 at b694f7b8",
+        "bank assembly by concatenation, no semantic filtering"
+      ]
+    },
+    "endpoint": "local llama-swap on this host",
+    "gen60_baseline": {
+      "sensitivity": 1.0,
+      "unsafe_as_gate": "4 of 8"
+    },
+    "gen60_prompt_template_sha256": "41045b9789ce16fc78b28fb0928cefc281fe728a0a075e5914e5ed7f188206d4",
+    "inherited_sanitizer": {
+      "detects_tests": "top-level functions and methods inside test classes",
+      "forbidden_patterns": [
+        "\\bverifier\\b",
+        "\\breference_fix\\b",
+        "\\bsubprocess\\b",
+        "\\bsocket\\b",
+        "\\brequests\\b",
+        "\\burllib\\b"
+      ],
+      "frozen_before_exposure": true,
+      "max_output_bytes": 20000,
+      "rejects": [
+        "no code block",
+        "syntax error",
+        "no test functions",
+        "file access",
+        "module attribute assignment",
+        "size cap"
+      ]
+    },
+    "model": "qwen3.6-35b-vulkan-nothink",
+    "prompt_template_sha256": "efb130a0e6c1e89079ebda2ce004a1c3b68d0ef2d7ecf751f902bb035d241e69",
+    "repetitions": 3,
+    "ruler": "evidence-generation-gen59-v1",
+    "sampling": {
+      "max_tokens": 4096,
+      "min_p": 0.0,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.8
+    },
+    "screen_sha256": "b694f7b873c39731f043fffcee01437f530f82644d2bc1fe4aac73bcee42c3f5",
+    "session": "one stateless HTTP request per repetition; no conversation carried over",
+    "task_order": [
+      "culvert",
+      "dispatch",
+      "ledger",
+      "manifest",
+      "pathsafe",
+      "tally",
+      "thermo",
+      "valve"
+    ],
+    "total_calls": 24
+  },
+  "kept_tests": 134,
+  "outputs": [
+    {
+      "accepted": true,
+      "code_sha256": "7a6839cd6d499b98b5ad3010961924869bb8594eefe93e82ef0d8f90f9bdf495",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_80_steps_reports_10_mm"
+        },
+        {
+          "quote": "a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_40_steps_reports_5_mm"
+        },
+        {
+          "quote": "a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_0_steps_reports_0_mm"
+        },
+        {
+          "quote": "a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_16_steps_reports_2_mm"
+        },
+        {
+          "quote": "a reading of 80 steps must report 10 millimetres.",
+          "test": "test_position_7_steps_reports_0_mm_integer_division"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_frame_10_mm_reports_40_steps"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_frame_0_mm_reports_0_steps"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_frame_5_mm_reports_20_steps"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_frame_1_mm_reports_4_steps"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_frame_returns_dict_with_mm_and_steps_keys"
+        },
+        {
+          "quote": "A telemetry frame for 10 millimetres must still say 40 steps.",
+          "test": "test_frame_mm_value_matches_input"
+        }
+      ],
+      "kept_count": 11,
+      "prompt_sha256": "4c8f5e5af75f0ef722c12571ad400e618a068a82d8246352f0f4e8cb9234e8ab",
+      "raw_test_functions": [
+        "test_position_80_steps_reports_10_mm",
+        "test_position_40_steps_reports_5_mm",
+        "test_position_0_steps_reports_0_mm",
+        "test_position_16_steps_reports_2_mm",
+        "test_position_7_steps_reports_0_mm_integer_division",
+        "test_frame_10_mm_reports_40_steps",
+        "test_frame_0_mm_reports_0_steps",
+        "test_frame_5_mm_reports_20_steps",
+        "test_frame_1_mm_reports_4_steps",
+        "test_frame_returns_dict_with_mm_and_steps_keys",
+        "test_frame_mm_value_matches_input"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "efed5a9b641b7c17353f7593e1095c7583ac0e102c1edcb8ed48630373afe79b",
+      "run_id": "culvert-rep1",
+      "seconds": 15.01,
+      "task": "culvert",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "5e6a8530d464f76292c6d1c04a769fd1335c7f1c77fa438d73ca2f69e2ec7d84",
+      "dropped": [
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_steps_per_mm_is_8"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_position_80_steps_is_10_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_to_millimetres_80_is_10"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_steps_unchanged_for_10_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_10_mm_has_40_steps"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_10_mm_has_correct_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_5_mm_has_20_steps"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_1_mm_has_4_steps"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_position_40_steps_is_5_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_position_0_steps_is_0_mm"
+        }
+      ],
+      "dropped_count": 10,
+      "kept": [],
+      "kept_count": 0,
+      "prompt_sha256": "4c8f5e5af75f0ef722c12571ad400e618a068a82d8246352f0f4e8cb9234e8ab",
+      "raw_test_functions": [
+        "test_steps_per_mm_is_8",
+        "test_position_80_steps_is_10_mm",
+        "test_to_millimetres_80_is_10",
+        "test_frame_steps_unchanged_for_10_mm",
+        "test_frame_10_mm_has_40_steps",
+        "test_frame_10_mm_has_correct_mm",
+        "test_frame_5_mm_has_20_steps",
+        "test_frame_1_mm_has_4_steps",
+        "test_position_40_steps_is_5_mm",
+        "test_position_0_steps_is_0_mm"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "62092e8225a796dcf5b7fb6277882a3610379dac6d4cee9ce7ac15beb75c22ab",
+      "run_id": "culvert-rep2",
+      "seconds": 14.99,
+      "task": "culvert",
+      "usable": false
+    },
+    {
+      "accepted": true,
+      "code_sha256": "5e6a8530d464f76292c6d1c04a769fd1335c7f1c77fa438d73ca2f69e2ec7d84",
+      "dropped": [
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_steps_per_mm_is_eight"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_position_mm_80_steps_is_10_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_to_millimetres_80_steps_is_10_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_10_mm_reports_40_steps"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_10_mm_reports_10_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_to_steps_10_mm_is_40_steps"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_frame_other_position_5_mm_reports_20_steps"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_position_mm_40_steps_is_5_mm"
+        },
+        {
+          "quote": null,
+          "reason": "no citation",
+          "test": "test_to_millimetres_40_steps_is_5_mm"
+        }
+      ],
+      "dropped_count": 9,
+      "kept": [],
+      "kept_count": 0,
+      "prompt_sha256": "4c8f5e5af75f0ef722c12571ad400e618a068a82d8246352f0f4e8cb9234e8ab",
+      "raw_test_functions": [
+        "test_steps_per_mm_is_eight",
+        "test_position_mm_80_steps_is_10_mm",
+        "test_to_millimetres_80_steps_is_10_mm",
+        "test_frame_10_mm_reports_40_steps",
+        "test_frame_10_mm_reports_10_mm",
+        "test_to_steps_10_mm_is_40_steps",
+        "test_frame_other_position_5_mm_reports_20_steps",
+        "test_position_mm_40_steps_is_5_mm",
+        "test_to_millimetres_40_steps_is_5_mm"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "26593f94290bd495b87b85acc0b3bade40545f00bce86ace58b055409e74b0f3",
+      "run_id": "culvert-rep3",
+      "seconds": 11.62,
+      "task": "culvert",
+      "usable": false
+    },
+    {
+      "accepted": true,
+      "code_sha256": "6818c4d3bbecf53012bb16eb648254b470614747a5624c9fbeb83ddd7b09ff17",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_runs_before_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_added_before_ordinary_job_runs_after_ordinary_job"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_multiple_urgent_jobs_run_in_fifo_order"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_jobs_run_before_all_ordinary_jobs_when_mixed"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_added_after_ordinary_jobs_still_runs_first"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_ordinary_job_added_after_urgent_job_runs_after"
+        },
+        {
+          "quote": "push(name) adds an ordinary job. push(name, urgent=True) adds an urgent one.",
+          "test": "test_push_with_urgent_false_is_ordinary"
+        },
+        {
+          "quote": "pop() removes and returns the next job to run.",
+          "test": "test_pop_returns_correct_name"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting, and urgent jobs run among themselves in the order they were added.",
+          "test": "test_urgent_jobs_interleave_correctly_with_ordinary"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "69b3145cccdcfe265a6bff0c9a73b1c126e0a6c7a84406ac909715ff2d7c729b",
+      "raw_test_functions": [
+        "test_urgent_job_runs_before_ordinary_jobs",
+        "test_urgent_job_added_before_ordinary_job_runs_after_ordinary_job",
+        "test_multiple_urgent_jobs_run_in_fifo_order",
+        "test_urgent_jobs_run_before_all_ordinary_jobs_when_mixed",
+        "test_urgent_job_added_after_ordinary_jobs_still_runs_first",
+        "test_ordinary_job_added_after_urgent_job_runs_after",
+        "test_push_with_urgent_false_is_ordinary",
+        "test_pop_returns_correct_name",
+        "test_urgent_jobs_interleave_correctly_with_ordinary"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "29c35d683db2033735e97336fb5eff26f32f11ddabc5121bae0592ddb02dab9e",
+      "run_id": "dispatch-rep1",
+      "seconds": 16.89,
+      "task": "dispatch",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "36302fed10b59e27f63dc2cfdbdc96be5644869d2f5b6da3b163665684b98b3b",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_runs_before_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_urgent_jobs_run_in_order_among_themselves"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_inserted_before_multiple_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_mixed_urgent_and_ordinary_jobs_ordering"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_added_before_any_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_multiple_urgent_jobs_inserted_between_ordinary_jobs"
+        },
+        {
+          "quote": "pop() removes and returns the next job to run",
+          "test": "test_empty_queue_pop_raises_index_error"
+        },
+        {
+          "quote": "push(name) adds an ordinary job",
+          "test": "test_push_with_urgent_false_is_ordinary"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_after_ordinary_jobs_still_runs_first"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "69b3145cccdcfe265a6bff0c9a73b1c126e0a6c7a84406ac909715ff2d7c729b",
+      "raw_test_functions": [
+        "test_urgent_job_runs_before_ordinary_jobs",
+        "test_urgent_jobs_run_in_order_among_themselves",
+        "test_urgent_job_inserted_before_multiple_ordinary_jobs",
+        "test_mixed_urgent_and_ordinary_jobs_ordering",
+        "test_urgent_job_added_before_any_ordinary_jobs",
+        "test_multiple_urgent_jobs_inserted_between_ordinary_jobs",
+        "test_empty_queue_pop_raises_index_error",
+        "test_push_with_urgent_false_is_ordinary",
+        "test_urgent_job_after_ordinary_jobs_still_runs_first"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "e1e5730724af3d1d9c260b0a4013ec0046d0fae3bce5e0f58623c978ef6a2feb",
+      "run_id": "dispatch-rep2",
+      "seconds": 15.15,
+      "task": "dispatch",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "9bf8d7e40acfc136cf304718cca6240ae361784879f7b1cf37b9e0aa00a8cfb6",
+      "dropped": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting, and urgent jobs run among themselves in the order they were added. Ordinary jobs run in the order they were added.",
+          "reason": "citation not found in the instruction",
+          "test": "test_mixed_urgent_and_ordinary_jobs"
+        }
+      ],
+      "dropped_count": 1,
+      "kept": [
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_runs_before_ordinary_jobs"
+        },
+        {
+          "quote": "urgent jobs run among themselves in the order they were added",
+          "test": "test_multiple_urgent_jobs_run_in_fifo_order"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_inserted_before_multiple_ordinary_jobs"
+        },
+        {
+          "quote": "push(name, urgent=True) adds an urgent one.",
+          "test": "test_all_urgent_jobs"
+        },
+        {
+          "quote": "push(name) adds an ordinary job.",
+          "test": "test_all_ordinary_jobs"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting",
+          "test": "test_urgent_job_added_after_ordinary_jobs_runs_first"
+        },
+        {
+          "quote": "push(name, urgent=True) adds an urgent one.",
+          "test": "test_urgent_job_added_when_queue_empty"
+        },
+        {
+          "quote": "push(name) adds an ordinary job.",
+          "test": "test_ordinary_job_added_when_queue_empty"
+        },
+        {
+          "quote": "An urgent job runs before every ordinary job currently waiting, and urgent jobs run among themselves in the order they were added.",
+          "test": "test_urgent_job_between_ordinary_jobs"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "69b3145cccdcfe265a6bff0c9a73b1c126e0a6c7a84406ac909715ff2d7c729b",
+      "raw_test_functions": [
+        "test_urgent_job_runs_before_ordinary_jobs",
+        "test_multiple_urgent_jobs_run_in_fifo_order",
+        "test_urgent_job_inserted_before_multiple_ordinary_jobs",
+        "test_mixed_urgent_and_ordinary_jobs",
+        "test_all_urgent_jobs",
+        "test_all_ordinary_jobs",
+        "test_urgent_job_added_after_ordinary_jobs_runs_first",
+        "test_urgent_job_added_when_queue_empty",
+        "test_ordinary_job_added_when_queue_empty",
+        "test_urgent_job_between_ordinary_jobs"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "9428907ab56a0b5ddd7ec43190bbe9c8708b961ee1a602e844547ecdc1b790ee",
+      "run_id": "dispatch-rep3",
+      "seconds": 18.19,
+      "task": "dispatch",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "27f33af166ee407f24252279da0ff080b1ec95040eb3308f9969064b5906be6a",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\"",
+          "test": "test_halfway_rounds_half_away_from_zero_positive"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_halfway_rounds_half_away_from_zero_negative"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_negative_halfway_rounds_half_away_from_zero_positive_side"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_negative_halfway_rounds_half_away_from_zero_negative_side"
+        },
+        {
+          "quote": "returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals"
+        },
+        {
+          "quote": "returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals_zero"
+        },
+        {
+          "quote": "returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_returns_string_with_exactly_two_decimals_just_two"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_rounds_up_at_halfway"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_rounds_down_at_halfway_negative"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_no_rounding_needed"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_no_rounding_needed_negative"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_rounds_up_when_third_decimal_five"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_rounds_down_when_third_decimal_less_than_five"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude.",
+          "test": "test_rounds_up_when_third_decimal_more_than_five"
+        }
+      ],
+      "kept_count": 14,
+      "prompt_sha256": "54d11334e0456c2e4151624518d27fe8c5aaafdd169dc20b609a6d560ec27a05",
+      "raw_test_functions": [
+        "test_halfway_rounds_half_away_from_zero_positive",
+        "test_halfway_rounds_half_away_from_zero_negative",
+        "test_negative_halfway_rounds_half_away_from_zero_positive_side",
+        "test_negative_halfway_rounds_half_away_from_zero_negative_side",
+        "test_returns_string_with_exactly_two_decimals",
+        "test_returns_string_with_exactly_two_decimals_zero",
+        "test_returns_string_with_exactly_two_decimals_just_two",
+        "test_rounds_up_at_halfway",
+        "test_rounds_down_at_halfway_negative",
+        "test_no_rounding_needed",
+        "test_no_rounding_needed_negative",
+        "test_rounds_up_when_third_decimal_five",
+        "test_rounds_down_when_third_decimal_less_than_five",
+        "test_rounds_up_when_third_decimal_more_than_five"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "16e880e13048556578664aed86b94aab7f342f005d31b97ba13adad5bcde637f",
+      "run_id": "ledger-rep1",
+      "seconds": 16.44,
+      "task": "ledger",
+      "usable": true
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "54d11334e0456c2e4151624518d27fe8c5aaafdd169dc20b609a6d560ec27a05",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid syntax (<unknown>, line 8)",
+      "repetition": 2,
+      "response_sha256": "65ba27bcda04a45f5dd201270056a1c9b4449dbc48e380c3ebe35d56f6cafe0a",
+      "run_id": "ledger-rep2",
+      "seconds": 32.72,
+      "task": "ledger"
+    },
+    {
+      "accepted": true,
+      "code_sha256": "bdc012b9cba0d72e116fa9d702ae4e3747e781578c0974d5254dc0a578040150",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\"",
+          "test": "test_halfway_positive_rounds_up"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_halfway_negative_rounds_away_from_zero"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\"",
+          "test": "test_halfway_positive_small_amount"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_halfway_negative_small_amount"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_halfway_larger_negative_amount"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_non_halfway_positive"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_non_halfway_negative"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_non_halfway_positive_rounds_up"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_non_halfway_negative_rounds_up_magnitude"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_already_two_decimals"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_one_decimal"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_integer"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_zero"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_negative_zero"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_three_decimals_not_halfway"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_three_decimals_not_halfway_rounds_up"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_four_decimals_not_halfway"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_four_decimals_not_halfway_rounds_up"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_result_has_exactly_two_decimals"
+        },
+        {
+          "quote": "charge(amount) takes a money amount as a decimal string and returns it rounded to two decimal places, also as a string with exactly two decimals.",
+          "test": "test_result_has_exactly_two_decimals_negative"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"2.675\" becomes \"2.68\"",
+          "test": "test_halfway_edge_case_0_005"
+        },
+        {
+          "quote": "Rounding is half away from zero: an amount exactly halfway between two hundredths goes to the larger magnitude. \"-2.675\" becomes \"-2.68\"",
+          "test": "test_halfway_edge_case_negative_0_005"
+        }
+      ],
+      "kept_count": 22,
+      "prompt_sha256": "54d11334e0456c2e4151624518d27fe8c5aaafdd169dc20b609a6d560ec27a05",
+      "raw_test_functions": [
+        "test_halfway_positive_rounds_up",
+        "test_halfway_negative_rounds_away_from_zero",
+        "test_halfway_positive_small_amount",
+        "test_halfway_negative_small_amount",
+        "test_halfway_larger_negative_amount",
+        "test_non_halfway_positive",
+        "test_non_halfway_negative",
+        "test_non_halfway_positive_rounds_up",
+        "test_non_halfway_negative_rounds_up_magnitude",
+        "test_already_two_decimals",
+        "test_one_decimal",
+        "test_integer",
+        "test_zero",
+        "test_negative_zero",
+        "test_three_decimals_not_halfway",
+        "test_three_decimals_not_halfway_rounds_up",
+        "test_four_decimals_not_halfway",
+        "test_four_decimals_not_halfway_rounds_up",
+        "test_result_has_exactly_two_decimals",
+        "test_result_has_exactly_two_decimals_negative",
+        "test_halfway_edge_case_0_005",
+        "test_halfway_edge_case_negative_0_005"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "8a2d0a6b910bd75068b7bcc887a4b51e8177bbdb101b69d03a0930cc9e8c8098",
+      "run_id": "ledger-rep3",
+      "seconds": 27.03,
+      "task": "ledger",
+      "usable": true
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "dd01e6cdb336b489c61b8d8008f7ca97a98935630c79facb7902ed5fffecec36",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid character '\u2014' (U+2014) (<unknown>, line 20)",
+      "repetition": 1,
+      "response_sha256": "47934614cd795251eb24e18ad85532c34d58c75ca46a161888a65c905c8ff6de",
+      "run_id": "manifest-rep1",
+      "seconds": 16.57,
+      "task": "manifest"
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "dd01e6cdb336b489c61b8d8008f7ca97a98935630c79facb7902ed5fffecec36",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid character '\u2014' (U+2014) (<unknown>, line 23)",
+      "repetition": 2,
+      "response_sha256": "4cd437fec56746e8c4d4ee6c80e8fd44434b7c047345481b539ce169c7e4544f",
+      "run_id": "manifest-rep2",
+      "seconds": 16.39,
+      "task": "manifest"
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "dd01e6cdb336b489c61b8d8008f7ca97a98935630c79facb7902ed5fffecec36",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid character '\u2014' (U+2014) (<unknown>, line 20)",
+      "repetition": 3,
+      "response_sha256": "1bd3fb0c5f6df61854ffef03a58ae5cb6c39c3662b38020e4a4f54fa9b63b0a8",
+      "run_id": "manifest-rep3",
+      "seconds": 19.4,
+      "task": "manifest"
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "fb87e464dd857bbd4e59e90d83eabf58bb0f6b364d4b0ed559fe5584248e620e",
+      "raw_test_functions": [],
+      "reject_reason": "opens files",
+      "repetition": 1,
+      "response_sha256": "0ddb5188218fbd174635ba87357a80c9fa6cea42afa672263899b798bf390ac7",
+      "run_id": "pathsafe-rep1",
+      "seconds": 18.26,
+      "task": "pathsafe"
+    },
+    {
+      "accepted": true,
+      "code_sha256": "33942db19ccea4694da302bf4f81f0e29485540170de643fe82b016bc1e81a53",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_absolute_name_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_absolute_name_with_drive_letter_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_nested_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_hidden_parent_directory_escape_raises_valueerror"
+        },
+        {
+          "quote": "A relative name resolves to `depot/<name>`.",
+          "test": "test_current_directory_still_allowed"
+        },
+        {
+          "quote": "A name that is absolute, or that escapes the depot with `..`, must be refused by raising `ValueError`.",
+          "test": "test_dotdot_in_middle_of_path_raises_valueerror"
+        },
+        {
+          "quote": "It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_valueerror_message_indicates_rejection"
+        },
+        {
+          "quote": "It must not be silently rewritten, stripped or clamped into the depot \u2014 the caller needs to know the request was rejected.",
+          "test": "test_valueerror_raised_for_absolute_path"
+        }
+      ],
+      "kept_count": 9,
+      "prompt_sha256": "fb87e464dd857bbd4e59e90d83eabf58bb0f6b364d4b0ed559fe5584248e620e",
+      "raw_test_functions": [
+        "test_absolute_name_raises_valueerror",
+        "test_absolute_name_with_drive_letter_raises_valueerror",
+        "test_parent_directory_escape_raises_valueerror",
+        "test_nested_parent_directory_escape_raises_valueerror",
+        "test_hidden_parent_directory_escape_raises_valueerror",
+        "test_current_directory_still_allowed",
+        "test_dotdot_in_middle_of_path_raises_valueerror",
+        "test_valueerror_message_indicates_rejection",
+        "test_valueerror_raised_for_absolute_path"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "4a19c7767ee707b1886733bb1b15efcc29afe041e265d604553441824fed1f0d",
+      "run_id": "pathsafe-rep2",
+      "seconds": 12.01,
+      "task": "pathsafe",
+      "usable": true
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "fb87e464dd857bbd4e59e90d83eabf58bb0f6b364d4b0ed559fe5584248e620e",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid character '\u2014' (U+2014) (<unknown>, line 60)",
+      "repetition": 3,
+      "response_sha256": "d8cf1826efd2f42b83f8ba86e90601f92270138a8b2e223776acd772d69d1645",
+      "run_id": "pathsafe-rep3",
+      "seconds": 13.12,
+      "task": "pathsafe"
+    },
+    {
+      "accepted": true,
+      "code_sha256": "2f757212b813b27e02c25f7cb9232b3fe60e6ff7fc14919939731222a2972726",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "`close()` returns the running total AND resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "test": "test_close_returns_total"
+        },
+        {
+          "quote": "`close()` returns the running total AND resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "test": "test_close_resets_session_to_zero"
+        },
+        {
+          "quote": "Calling `total()` after `close()` must report 0 until something new is added.",
+          "test": "test_total_after_close_reports_zero"
+        },
+        {
+          "quote": "`close()` returns the running total AND resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "test": "test_add_after_close_starts_from_zero"
+        },
+        {
+          "quote": "`close()` returns the running total AND resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "test": "test_close_on_empty_session"
+        },
+        {
+          "quote": "`add(n)` adds n to the running total. `total()` reports the running total.",
+          "test": "test_multiple_adds_before_close"
+        },
+        {
+          "quote": "`close()` returns the running total AND resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "test": "test_close_then_add_then_close"
+        }
+      ],
+      "kept_count": 7,
+      "prompt_sha256": "db1dc63684811e0864022f4abe36e0fbb91137f99e2e7469d48c119a3f5551be",
+      "raw_test_functions": [
+        "test_close_returns_total",
+        "test_close_resets_session_to_zero",
+        "test_total_after_close_reports_zero",
+        "test_add_after_close_starts_from_zero",
+        "test_close_on_empty_session",
+        "test_multiple_adds_before_close",
+        "test_close_then_add_then_close"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "8640107dc9e05000d6a71d84e2f21b867d61ef4df5d2e9fc3189e4d8b4d7899e",
+      "run_id": "tally-rep1",
+      "seconds": 10.81,
+      "task": "tally",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "90c92889fc21d4c62a3a9cbeda181c996eccec25ea721842722fdaf8d3eed7ae",
+      "dropped": [
+        {
+          "quote": "`close()` ... resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "reason": "citation not found in the instruction",
+          "test": "test_close_resets_session_to_zero"
+        },
+        {
+          "quote": "`close()` ... resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "reason": "citation not found in the instruction",
+          "test": "test_session_can_be_reused_after_close"
+        }
+      ],
+      "dropped_count": 2,
+      "kept": [
+        {
+          "quote": "`close()` returns the running total",
+          "test": "test_close_returns_running_total"
+        },
+        {
+          "quote": "Calling `total()` after `close()` must report 0 until something new is added.",
+          "test": "test_total_after_close_reports_zero"
+        },
+        {
+          "quote": "`close()` returns the running total",
+          "test": "test_close_after_multiple_adds"
+        },
+        {
+          "quote": "Calling `total()` after `close()` must report 0 until something new is added.",
+          "test": "test_total_after_close_then_add"
+        }
+      ],
+      "kept_count": 4,
+      "prompt_sha256": "db1dc63684811e0864022f4abe36e0fbb91137f99e2e7469d48c119a3f5551be",
+      "raw_test_functions": [
+        "test_close_returns_running_total",
+        "test_close_resets_session_to_zero",
+        "test_total_after_close_reports_zero",
+        "test_session_can_be_reused_after_close",
+        "test_close_after_multiple_adds",
+        "test_total_after_close_then_add"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "62b8ce56526ba9a75d8f3ac3bca2ff68339c76166fedcee1763b84c3b3dc1c12",
+      "run_id": "tally-rep2",
+      "seconds": 7.36,
+      "task": "tally",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "6bf903de24f49190db59efe835e0df84acf89c1f5f9d35b0988c6f9f0f7871a0",
+      "dropped": [
+        {
+          "quote": "`close()` ... resets the session to zero, so that a session reused after `close()` starts from zero again.",
+          "reason": "citation not found in the instruction",
+          "test": "test_close_resets_session_to_zero"
+        }
+      ],
+      "dropped_count": 1,
+      "kept": [
+        {
+          "quote": "`close()` returns the running total",
+          "test": "test_close_returns_running_total"
+        },
+        {
+          "quote": "Calling `total()` after `close()` must report 0 until something new is added.",
+          "test": "test_total_after_close_reports_zero"
+        },
+        {
+          "quote": "`add(n)` adds n to the running total.",
+          "test": "test_add_after_close_accumulates_from_zero"
+        },
+        {
+          "quote": "`close()` returns the running total AND resets the session to zero",
+          "test": "test_multiple_close_calls_return_correct_totals"
+        },
+        {
+          "quote": "`close()` returns the running total",
+          "test": "test_close_on_empty_session_returns_zero"
+        }
+      ],
+      "kept_count": 5,
+      "prompt_sha256": "db1dc63684811e0864022f4abe36e0fbb91137f99e2e7469d48c119a3f5551be",
+      "raw_test_functions": [
+        "test_close_returns_running_total",
+        "test_close_resets_session_to_zero",
+        "test_total_after_close_reports_zero",
+        "test_add_after_close_accumulates_from_zero",
+        "test_multiple_close_calls_return_correct_totals",
+        "test_close_on_empty_session_returns_zero"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "76702468ae7fb0d4375838d6a71b0ca2f717469360ea644484c403fce707223a",
+      "run_id": "tally-rep3",
+      "seconds": 7.39,
+      "task": "tally",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "175fe42493838b84e94e9f4934723a9eda07ab0ce99582fe225677bd641c6143",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_is_one"
+        },
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_one_with_non_round_result"
+        },
+        {
+          "quote": "The places argument says how many decimal places to keep.",
+          "test": "test_places_zero"
+        },
+        {
+          "quote": "The places argument says how many decimal places to keep.",
+          "test": "test_places_three"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_negative_celsius"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_freezing_point"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_boiling_point"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_body_temperature_default"
+        },
+        {
+          "quote": "The places argument says how many decimal places to keep.",
+          "test": "test_places_argument_is_int"
+        },
+        {
+          "quote": "to_fahrenheit(celsius, places=1) converts a temperature and rounds the result to a number of decimal places.",
+          "test": "test_return_type_is_float"
+        }
+      ],
+      "kept_count": 10,
+      "prompt_sha256": "8e995afb99dcc0022b951d8a8e5145dee0eece48b79d14832687525c3f656274",
+      "raw_test_functions": [
+        "test_default_places_is_one",
+        "test_default_places_one_with_non_round_result",
+        "test_places_zero",
+        "test_places_three",
+        "test_negative_celsius",
+        "test_freezing_point",
+        "test_boiling_point",
+        "test_body_temperature_default",
+        "test_places_argument_is_int",
+        "test_return_type_is_float"
+      ],
+      "reject_reason": null,
+      "repetition": 1,
+      "response_sha256": "6dd590dbe18b89b09220663f0e4072270fd04984160207f287c7bee53b3f3b06",
+      "run_id": "thermo-rep1",
+      "seconds": 14.54,
+      "task": "thermo",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "d79060f2659bbac22f3c13ab95d9de9cae5658b58f3069c7e159fbf099114e15",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "When the caller does not supply it, the result is rounded to ONE decimal place.",
+          "test": "test_default_places_is_one"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_argument_specified_as_one"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_argument_specified_as_two"
+        },
+        {
+          "quote": "The `places` argument says how many decimal places to keep.",
+          "test": "test_places_argument_specified_as_zero"
+        },
+        {
+          "quote": "`to_fahrenheit(celsius, places=1)` converts a temperature",
+          "test": "test_conversion_formula_correctness"
+        },
+        {
+          "quote": "Rounding is ordinary nearest-value rounding; no midpoint case arises in this task.",
+          "test": "test_no_midpoint_case_arises"
+        }
+      ],
+      "kept_count": 6,
+      "prompt_sha256": "8e995afb99dcc0022b951d8a8e5145dee0eece48b79d14832687525c3f656274",
+      "raw_test_functions": [
+        "test_default_places_is_one",
+        "test_places_argument_specified_as_one",
+        "test_places_argument_specified_as_two",
+        "test_places_argument_specified_as_zero",
+        "test_conversion_formula_correctness",
+        "test_no_midpoint_case_arises"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "6945e6f2e3ffd51a0f3021e0aa4b0f1810b7aa83bf5067a2906be962bedbd550",
+      "run_id": "thermo-rep2",
+      "seconds": 11.63,
+      "task": "thermo",
+      "usable": true
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "8e995afb99dcc0022b951d8a8e5145dee0eece48b79d14832687525c3f656274",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid syntax (<unknown>, line 5)",
+      "repetition": 3,
+      "response_sha256": "959390fdd10b48b89e8beb36df7a231283091b5d33aade04973af126994a7a76",
+      "run_id": "thermo-rep3",
+      "seconds": 13.51,
+      "task": "thermo"
+    },
+    {
+      "accepted": false,
+      "prompt_sha256": "84c341c66c5ab1d0d20ab62d058c457e9964c7fc98c43f4262e269dd86d22322",
+      "raw_test_functions": [],
+      "reject_reason": "syntax error: invalid character '\u2014' (U+2014) (<unknown>, line 5)",
+      "repetition": 1,
+      "response_sha256": "2e5008d3c20a49bd58ff0c23707439e88bbdc82f96d135a91b6d22fcf7b37d66",
+      "run_id": "valve-rep1",
+      "seconds": 5.61,
+      "task": "valve"
+    },
+    {
+      "accepted": true,
+      "code_sha256": "bc29a502c16c1ada185bf1f3d8b52c41205a08f85e45226b47a4546edc3d827b",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not",
+          "test": "test_negative_raw_reports_zero"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not",
+          "test": "test_negative_raw_reports_zero_edge"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_zero_raw_reports_zero"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_upper_bound_raw_reports_hundred"
+        },
+        {
+          "quote": "The reading must be clamped to the range 0 to 100 inclusive. A raw reading above",
+          "test": "test_upper_bound_is_clamped"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_in_range_is_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_lower_boundary_is_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_upper_boundary_is_unchanged"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not",
+          "test": "test_just_below_zero_is_clamped"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_just_above_hundred_is_clamped"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not",
+          "test": "test_large_negative_is_clamped"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_large_positive_is_clamped"
+        }
+      ],
+      "kept_count": 12,
+      "prompt_sha256": "84c341c66c5ab1d0d20ab62d058c457e9964c7fc98c43f4262e269dd86d22322",
+      "raw_test_functions": [
+        "test_negative_raw_reports_zero",
+        "test_negative_raw_reports_zero_edge",
+        "test_zero_raw_reports_zero",
+        "test_upper_bound_raw_reports_hundred",
+        "test_upper_bound_is_clamped",
+        "test_in_range_is_unchanged",
+        "test_lower_boundary_is_unchanged",
+        "test_upper_boundary_is_unchanged",
+        "test_just_below_zero_is_clamped",
+        "test_just_above_hundred_is_clamped",
+        "test_large_negative_is_clamped",
+        "test_large_positive_is_clamped"
+      ],
+      "reject_reason": null,
+      "repetition": 2,
+      "response_sha256": "791f75d6684d69d2ffa53d0d3ee37ffa4db47b89f0e68537797bea0427bb2dea",
+      "run_id": "valve-rep2",
+      "seconds": 10.84,
+      "task": "valve",
+      "usable": true
+    },
+    {
+      "accepted": true,
+      "code_sha256": "64df9e4c368f5245f02a005d7e6ae848421113c29b86b5b64bf3129475830226",
+      "dropped": [],
+      "dropped_count": 0,
+      "kept": [
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not",
+          "test": "test_negative_raw_reports_zero"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_zero_raw_is_unchanged"
+        },
+        {
+          "quote": "A reading already inside the range is reported unchanged.",
+          "test": "test_one_hundred_raw_is_unchanged"
+        },
+        {
+          "quote": "The reading must be clamped to the range 0 to 100 inclusive.",
+          "test": "test_boundary_values"
+        },
+        {
+          "quote": "A raw reading below 0 reports 0 \u2014 negative openings are not",
+          "test": "test_large_negative_values"
+        },
+        {
+          "quote": "A raw reading above 100 reports 100.",
+          "test": "test_large_positive_values"
+        },
+        {
+          "quote": "opening_percent(raw) reports a valve opening as a percentage.",
+          "test": "test_return_type_is_int"
+        }
+      ],
+      "kept_count": 7,
+      "prompt_sha256": "84c341c66c5ab1d0d20ab62d058c457e9964c7fc98c43f4262e269dd86d22322",
+      "raw_test_functions": [
+        "test_negative_raw_reports_zero",
+        "test_zero_raw_is_unchanged",
+        "test_one_hundred_raw_is_unchanged",
+        "test_boundary_values",
+        "test_large_negative_values",
+        "test_large_positive_values",
+        "test_return_type_is_int"
+      ],
+      "reject_reason": null,
+      "repetition": 3,
+      "response_sha256": "1fc44365532b69d8c42bdd128e3bbdf411e92fc6c7255cbdff8c1ee971a9eb77",
+      "run_id": "valve-rep3",
+      "seconds": 7.95,
+      "task": "valve",
+      "usable": true
+    }
+  ],
+  "raw_tests": 157,
+  "total_seconds": 353.4,
+  "usable": 14
+}

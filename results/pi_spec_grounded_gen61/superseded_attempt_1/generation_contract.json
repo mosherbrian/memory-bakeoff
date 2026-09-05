@@ -1,0 +1,77 @@
+{
+  "contract": {
+    "comparison_rule": "case-folded, punctuation-stripped, whitespace-collapsed substring of the instruction",
+    "contract_sha256": "2e9ad9effd5d6ccf6d4c37f3f6c91d65d8162df096f90d95e582dc73f6028dd4",
+    "contract_version": "spec-grounded-assertion-provenance-v1",
+    "detection_is_not_diagnosis": "a flag records that the bank failed on a wrong tree, not that it failed for the requirement that tree breaks",
+    "exclusion_unit": "the whole test function, because that is what pytest reports",
+    "frozen_before_exposure": true,
+    "grounding_source": "spec.txt only - the text the generator was already shown; the hidden verifier and the named requirements in the truth package are never consulted",
+    "minimum_quote_words": 4,
+    "no_critic": "no second model, no critic pass, no cross-model check",
+    "primary_false_alarm_metric": "UNSAFE_AS_GATE rate; Gen60 baseline 4 of 8",
+    "question": "does forcing each generated test to quote the requirement it tests reduce the rate at which banks reject correct code?",
+    "single_change_from_gen58_gen60": "the generator prompt requires a verbatim REQUIREMENT citation per test, and a mechanical filter removes tests whose citation is not in the visible instruction",
+    "specificity_note": "retained for continuity but non-discriminating - it is measured after the validity gate has already removed every bank that rejects a correct tree",
+    "unchanged": [
+      "pinned model",
+      "sampling",
+      "repetitions per task",
+      "evidence-generation-gen59-v1 corpus",
+      "frozen task order",
+      "gen60-generated-evidence-screen-v1 at b694f7b8",
+      "bank assembly by concatenation, no semantic filtering"
+    ]
+  },
+  "endpoint": "local llama-swap on this host",
+  "gen60_baseline": {
+    "sensitivity": 1.0,
+    "unsafe_as_gate": "4 of 8"
+  },
+  "gen60_prompt_template_sha256": "41045b9789ce16fc78b28fb0928cefc281fe728a0a075e5914e5ed7f188206d4",
+  "inherited_sanitizer": {
+    "detects_tests": "top-level functions and methods inside test classes",
+    "forbidden_patterns": [
+      "\\bverifier\\b",
+      "\\breference_fix\\b",
+      "\\bsubprocess\\b",
+      "\\bsocket\\b",
+      "\\brequests\\b",
+      "\\burllib\\b"
+    ],
+    "frozen_before_exposure": true,
+    "max_output_bytes": 20000,
+    "rejects": [
+      "no code block",
+      "syntax error",
+      "no test functions",
+      "file access",
+      "module attribute assignment",
+      "size cap"
+    ]
+  },
+  "model": "qwen3.6-35b-vulkan-nothink",
+  "prompt_template_sha256": "efb130a0e6c1e89079ebda2ce004a1c3b68d0ef2d7ecf751f902bb035d241e69",
+  "repetitions": 3,
+  "ruler": "evidence-generation-gen59-v1",
+  "sampling": {
+    "max_tokens": 4096,
+    "min_p": 0.0,
+    "temperature": 0.6,
+    "top_k": 20,
+    "top_p": 0.8
+  },
+  "screen_sha256": "b694f7b873c39731f043fffcee01437f530f82644d2bc1fe4aac73bcee42c3f5",
+  "session": "one stateless HTTP request per repetition; no conversation carried over",
+  "task_order": [
+    "culvert",
+    "dispatch",
+    "ledger",
+    "manifest",
+    "pathsafe",
+    "tally",
+    "thermo",
+    "valve"
+  ],
+  "total_calls": 24
+}
