@@ -1,0 +1,160 @@
+{
+  "contract": {
+    "adds_to": "gen60-generated-evidence-screen-v1 at b694f7b8",
+    "applied_before": "the reference-validity check, so a hollowed bank is never labelled REFERENCE_VALID on its way out",
+    "contract_version": "gen63-retention-guardrail-v1",
+    "does_not_re_measure": "this says what the screen should have concluded about Gen62; it is not new evidence about critic quality",
+    "liveness_rule": "no bank may be emptied, whatever the ratio says",
+    "retention_rule": "a bank must retain at least 50% of its original distinct tests",
+    "retrospective": "re-reads recorded outcomes only; no model call, no regeneration, no change to any filter or generated test",
+    "why": "Gen62 achieved zero unsafe banks by deleting 158 of 188 tests, 142 of them sound, and the screen returned PASSED because every quantity it measured improves as evidence disappears"
+  },
+  "note": "Gen60 and Gen61 applied no deletion filter, so retention is total and their verdicts are unchanged by construction.",
+  "rescored": {
+    "gen60": {
+      "as_recorded": {
+        "sensitivity": 1.0,
+        "unsafe_as_gate_tasks": [
+          "culvert",
+          "ledger",
+          "manifest",
+          "pathsafe"
+        ],
+        "verdict": "PASSED"
+      },
+      "changed": false,
+      "under_guardrail": {
+        "hollowed_tasks": [],
+        "primary_population": {
+          "positive_candidates": 8,
+          "tasks": [
+            "dispatch",
+            "tally",
+            "thermo",
+            "valve"
+          ],
+          "wrong_candidates": 12
+        },
+        "reason": "flagged at least half of the known-wrong candidates, without rejecting known-correct code and without hollowing out the bank",
+        "reference_valid_tasks": [
+          "dispatch",
+          "tally",
+          "thermo",
+          "valve"
+        ],
+        "retention": {
+          "culvert": 1.0,
+          "dispatch": 1.0,
+          "ledger": 1.0,
+          "manifest": 1.0,
+          "pathsafe": 1.0,
+          "tally": 1.0,
+          "thermo": 1.0,
+          "valve": 1.0
+        },
+        "sensitivity": 1.0,
+        "specificity": 0.0,
+        "unsafe_as_gate_tasks": [
+          "culvert",
+          "ledger",
+          "manifest",
+          "pathsafe"
+        ],
+        "verdict": "PASSED"
+      }
+    },
+    "gen61": {
+      "as_recorded": {
+        "sensitivity": 1.0,
+        "unsafe_as_gate_tasks": [
+          "culvert",
+          "ledger",
+          "pathsafe",
+          "tally"
+        ],
+        "verdict": "PASSED"
+      },
+      "changed": false,
+      "under_guardrail": {
+        "hollowed_tasks": [],
+        "primary_population": {
+          "positive_candidates": 8,
+          "tasks": [
+            "dispatch",
+            "manifest",
+            "thermo",
+            "valve"
+          ],
+          "wrong_candidates": 12
+        },
+        "reason": "flagged at least half of the known-wrong candidates, without rejecting known-correct code and without hollowing out the bank",
+        "reference_valid_tasks": [
+          "dispatch",
+          "manifest",
+          "thermo",
+          "valve"
+        ],
+        "retention": {
+          "culvert": 1.0,
+          "dispatch": 1.0,
+          "ledger": 1.0,
+          "manifest": 1.0,
+          "pathsafe": 1.0,
+          "tally": 1.0,
+          "thermo": 1.0,
+          "valve": 1.0
+        },
+        "sensitivity": 1.0,
+        "specificity": 0.0,
+        "unsafe_as_gate_tasks": [
+          "culvert",
+          "ledger",
+          "pathsafe",
+          "tally"
+        ],
+        "verdict": "PASSED"
+      }
+    },
+    "gen62": {
+      "as_recorded": {
+        "sensitivity": 0.8571428571428571,
+        "unsafe_as_gate_tasks": [],
+        "verdict": "PASSED"
+      },
+      "changed": true,
+      "under_guardrail": {
+        "hollowed_tasks": [
+          "culvert",
+          "dispatch",
+          "ledger",
+          "manifest",
+          "pathsafe",
+          "tally",
+          "thermo",
+          "valve"
+        ],
+        "primary_population": {
+          "positive_candidates": 0,
+          "tasks": [],
+          "wrong_candidates": 0
+        },
+        "reason": "only 0 tasks carry an admissible bank with at least 2 wrong candidates; the screen requires 4. 8 bank(s) were discarded for retaining under 50% of their tests: culvert, dispatch, ledger, manifest, pathsafe, tally, thermo, valve",
+        "reference_valid_tasks": [],
+        "retention": {
+          "culvert": 0.10714285714285714,
+          "dispatch": 0.15384615384615385,
+          "ledger": 0.2916666666666667,
+          "manifest": 0.03571428571428571,
+          "pathsafe": 0.19230769230769232,
+          "tally": 0.25,
+          "thermo": 0.0,
+          "valve": 0.3333333333333333
+        },
+        "sensitivity": null,
+        "specificity": null,
+        "unsafe_as_gate_tasks": [],
+        "verdict": "UNEVALUABLE"
+      }
+    }
+  }
+}
