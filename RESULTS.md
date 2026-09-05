@@ -445,6 +445,37 @@ instead and flags that as a deviation: K=1's 24 extra firings save about three t
 runs that had already finished, which spends the whole safety margin for nothing.
 See `research/PI_TRACKED_DIGEST_GEN54.md`.
 
+## Gen55 - the corrected stop rule, live
+
+24 live runs, arm C against arm F, where F is C plus the completed controller: v2 semantics, K=3,
+the corrected tracked fingerprint, the every-tool-result snapshot, and the safe stop. The model is
+never told it exists, and the two arms compose byte-identical first requests on every task.
+
+**It behaved exactly as frozen.** Ten of twelve F runs became eligible, two triggered, and both
+triggers independently satisfied every condition: a real mutation, a receipt on the current tracked
+tree, a tree differing from its initial value, an idle count of exactly 3, the last visible check
+passing, and zero same-batch overshoot. **Zero stops on a tree equal to its start** - the hard
+failure that made the first version unusable. No contract violations of any kind.
+
+**The stall it targets is real and recurrent.** All three arm C timeouts are the same shape: finish
+the work, then re-run the passing check until the clock kills it - 279, 148 and 149 exact repeats.
+Two of the three ended holding a *correct* tree. That is 2,700 seconds spent on work already done,
+in the untreated arm, in one generation. Arm F had no timeouts.
+
+**The decisive pair** is `IP1-r2`, the slot that in Gen52 ran its passing test 144 times under the
+first version. Arm C timed out at 900 seconds and 161 calls; arm F stopped at 83 seconds and 16
+calls on the same wrong tree, recording `same_tree_passes_counted_idle: 1` - the repeated pass
+counted as silence instead of re-arming. Same outcome, a tenth of the cost.
+
+**Do not read 7/12 against 10/12 as a treatment effect.** Ten of F's twelve runs never triggered, so
+in those runs F is C; three of F's five failures are in that group, two never even becoming
+eligible. Exactly one run, `IP1-r1-F`, is a candidate for the stop having cost correctness, and that
+is not knowable from a live arm.
+
+All 24 raw streams retained and verified after cleanup: 73,080,123 bytes. Runtime 3,624 seconds,
+of which 2,700 is the three untreated timeouts.
+See `research/PI_QUIESCENT_COMPLETION_GEN55_LIVE.md`.
+
 ## Reading rules
 
 Retrieval, safety, lifecycle, and reader evidence are reported separately and

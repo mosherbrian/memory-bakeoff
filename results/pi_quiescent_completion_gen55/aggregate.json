@@ -1,0 +1,173 @@
+{
+  "arms": {
+    "pi_harness_state_control_quiescent_tracked_k3_v1": {
+      "control_valid_done": 12,
+      "failed_requirements": [
+        "A"
+      ],
+      "hidden_verifier_passed": 7,
+      "median_payload_bytes": 87565.5,
+      "median_repeated_or_redundant": 0.0,
+      "median_request_bytes": 56779.5,
+      "median_requests": 7.5,
+      "median_tool_calls": 10.5,
+      "median_wall_seconds": 41.730000000000004,
+      "runs": 12,
+      "termination": {
+        "crash_or_orchestration_failure": 0,
+        "model_completed": 10,
+        "quiescent_stop": 2,
+        "timeout": 0
+      },
+      "total_tool_calls": 132,
+      "total_wall_seconds": 516.2
+    },
+    "pi_harness_state_control_v1": {
+      "control_valid_done": 12,
+      "failed_requirements": [
+        "A"
+      ],
+      "hidden_verifier_passed": 10,
+      "median_payload_bytes": 84818.0,
+      "median_repeated_or_redundant": 0.0,
+      "median_request_bytes": 54278.0,
+      "median_requests": 7.5,
+      "median_tool_calls": 10.5,
+      "median_wall_seconds": 42.400000000000006,
+      "runs": 12,
+      "termination": {
+        "crash_or_orchestration_failure": 0,
+        "model_completed": 9,
+        "quiescent_stop": 0,
+        "timeout": 3
+      },
+      "total_tool_calls": 709,
+      "total_wall_seconds": 3107.6
+    }
+  },
+  "contract_audit": {
+    "all_triggers_satisfied_the_frozen_contract": true,
+    "stops_on_a_tree_equal_to_start": 0,
+    "triggers": [
+      {
+        "at_least_one_mutation": true,
+        "last_visible_check_passed": true,
+        "net_tree_changed": true,
+        "receipt_on_the_current_tree": true,
+        "run": "11-IP1-r1",
+        "stop": {
+          "became_eligible": true,
+          "contract": "quiescent-completion-toolcall-v2",
+          "current_tree_digest": "1835eed6d2cd52b032e124e5fc2dd180cf0c9392",
+          "effective_stop_tool_index": 19,
+          "eligible": true,
+          "idle_count": 3,
+          "initial_tree_digest": "732a4b97815b5738451feca8a95099ee2952b612",
+          "k": 3,
+          "last_visible_check_passed": true,
+          "mutations": 2,
+          "net_tree_changed": true,
+          "reason": "quiescent_stop",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle": 3,
+          "tool_index": 19,
+          "trigger_tool_index": 19,
+          "triggered": true,
+          "valid_receipt_tool_index": 16,
+          "valid_receipt_tree": "1835eed6d2cd52b032e124e5fc2dd180cf0c9392"
+        },
+        "stop_at_or_after_the_trigger": true,
+        "three_idle_completions": true
+      },
+      {
+        "at_least_one_mutation": true,
+        "last_visible_check_passed": true,
+        "net_tree_changed": true,
+        "receipt_on_the_current_tree": true,
+        "run": "23-IP1-r2",
+        "stop": {
+          "became_eligible": true,
+          "contract": "quiescent-completion-toolcall-v2",
+          "current_tree_digest": "4d692b3bbf51ce67085f4c53945b65cf11f7e5ad",
+          "effective_stop_tool_index": 16,
+          "eligible": true,
+          "idle_count": 3,
+          "initial_tree_digest": "732a4b97815b5738451feca8a95099ee2952b612",
+          "k": 3,
+          "last_visible_check_passed": true,
+          "mutations": 2,
+          "net_tree_changed": true,
+          "reason": "quiescent_stop",
+          "same_batch_overshoot_calls": 0,
+          "same_tree_passes_counted_idle": 1,
+          "tool_index": 16,
+          "trigger_tool_index": 16,
+          "triggered": true,
+          "valid_receipt_tool_index": 13,
+          "valid_receipt_tree": "4d692b3bbf51ce67085f4c53945b65cf11f7e5ad"
+        },
+        "stop_at_or_after_the_trigger": true,
+        "three_idle_completions": true
+      }
+    ],
+    "violations": []
+  },
+  "evidence_class": "architecture_quiescent_completion_ablation_paired_live",
+  "h1_first_request_bytes_by_task": {
+    "IP1": {
+      "pi_harness_state_control_quiescent_tracked_k3_v1": [
+        1364
+      ],
+      "pi_harness_state_control_v1": [
+        1364
+      ]
+    },
+    "IP2": {
+      "pi_harness_state_control_quiescent_tracked_k3_v1": [
+        1272
+      ],
+      "pi_harness_state_control_v1": [
+        1272
+      ]
+    },
+    "IP3": {
+      "pi_harness_state_control_quiescent_tracked_k3_v1": [
+        1288
+      ],
+      "pi_harness_state_control_v1": [
+        1288
+      ]
+    },
+    "IP4": {
+      "pi_harness_state_control_quiescent_tracked_k3_v1": [
+        1172
+      ],
+      "pi_harness_state_control_v1": [
+        1172
+      ]
+    }
+  },
+  "h1_first_request_bytes_identical_across_arms": true,
+  "pairs": 12,
+  "pairs_agreeing_on_verifier": 9,
+  "runs": 24,
+  "runtime_seconds": {
+    "C": 3107.6,
+    "E": 516.2,
+    "total": 3623.8
+  },
+  "stop_policy": {
+    "contract": "quiescent-completion-toolcall-v2",
+    "eligible_runs": 10,
+    "k": 3,
+    "k_choice": "frozen at 3 by the Gen55 brief; a deliberate, labelled deviation from the Gen54 historical rule that mechanically named K=1",
+    "live_stop_wrong_tree": 2,
+    "runs_looping_on_the_qualifying_check": 1,
+    "stopped_on_a_tree_identical_to_the_start": 0,
+    "total_same_batch_overshoot": 0,
+    "tree_digest_contract": "tracked-tree-digest-v1",
+    "tree_unchanged_between_receipt_and_stop_all_triggers": true,
+    "triggered_runs": 2,
+    "worst_repeat_run_length": 4
+  }
+}

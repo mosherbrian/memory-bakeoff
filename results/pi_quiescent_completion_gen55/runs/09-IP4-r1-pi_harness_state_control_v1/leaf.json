@@ -1,0 +1,184 @@
+{
+  "measured": {
+    "adoption": {
+      "propose_state_patch": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "record_receipt": {
+        "called": 0,
+        "first_call_turn": null
+      },
+      "request_transition": {
+        "called": 0,
+        "first_call_turn": null
+      }
+    },
+    "churn": {
+      "exact_repeated_tool_calls": 0,
+      "redundant_file_reads": 0,
+      "redundant_verifier_invocations": 0,
+      "repo_mutations": 2,
+      "tool_calls": 7,
+      "total_repeated_or_redundant": 0
+    },
+    "control_events": 0,
+    "counters": {},
+    "final_phase": "done",
+    "final_state": {},
+    "floor": null,
+    "harness": {
+      "derivation_events": 14,
+      "phase_path": [
+        "plan",
+        "implement",
+        "validate",
+        "done"
+      ],
+      "receipt_invalidations": 0,
+      "receipts": 1,
+      "state_bytes": 1096,
+      "transitions": [
+        {
+          "accepted": true,
+          "because": "enough inspection activity to have looked around",
+          "event": "e000003",
+          "from": "inspect",
+          "to": "plan"
+        },
+        {
+          "accepted": true,
+          "because": "the repository was modified",
+          "event": "e000008",
+          "from": "plan",
+          "to": "implement"
+        },
+        {
+          "accepted": true,
+          "because": "a visible check ran after a change",
+          "event": "e000013",
+          "from": "implement",
+          "to": "validate"
+        },
+        {
+          "accepted": true,
+          "because": "the run ended with a valid receipt for this tree",
+          "event": "e000014",
+          "from": "validate",
+          "to": "done"
+        }
+      ],
+      "transitions_accepted": 4,
+      "transitions_rejected": 0,
+      "valid_receipt_at_end": true
+    },
+    "payload_bytes_by_turn": [
+      6723,
+      7898,
+      9191,
+      10020,
+      10870,
+      13274
+    ],
+    "payload_bytes_total": 57976,
+    "payload_captures": 6,
+    "quiescent_stop": null,
+    "request_bytes_by_turn": [
+      1172,
+      2730,
+      4538,
+      6015,
+      7540,
+      10366
+    ],
+    "request_bytes_max": 10366,
+    "request_bytes_median": 6015,
+    "request_bytes_total": 32361,
+    "request_count": 6,
+    "task_prompt_aged_out": null,
+    "tool_calls": 7
+  },
+  "requests": [
+    {
+      "bytes": 1172,
+      "composed": true,
+      "messages": 2,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 228,
+      "state_bytes": 258
+    },
+    {
+      "bytes": 2730,
+      "composed": true,
+      "messages": 4,
+      "phase": "inspect",
+      "pi_would_have_sent_bytes": 1430,
+      "state_bytes": 316
+    },
+    {
+      "bytes": 4538,
+      "composed": true,
+      "messages": 8,
+      "phase": "plan",
+      "pi_would_have_sent_bytes": 3029,
+      "state_bytes": 503
+    },
+    {
+      "bytes": 6015,
+      "composed": true,
+      "messages": 10,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 4532,
+      "state_bytes": 589
+    },
+    {
+      "bytes": 7540,
+      "composed": true,
+      "messages": 12,
+      "phase": "implement",
+      "pi_would_have_sent_bytes": 5966,
+      "state_bytes": 674
+    },
+    {
+      "bytes": 10366,
+      "composed": true,
+      "messages": 14,
+      "phase": "validate",
+      "pi_would_have_sent_bytes": 7461,
+      "state_bytes": 1100
+    }
+  ],
+  "run": {
+    "exit_code": 0,
+    "raw_stream": {
+      "archive_relative_path": "09-IP4-r1-pi_harness_state_control_v1/stdout.txt",
+      "bytes": 1066077,
+      "sha256": "d45d36139f86ffea92edf788c6df3b2f308f508f66a3b64448de47a5b01192a6"
+    },
+    "status": "completed",
+    "stderr_bytes": 0,
+    "stdout_bytes": 1066077,
+    "wall_seconds": 29.88
+  },
+  "slot": {
+    "arm": "pi_harness_state_control_v1",
+    "index": 9,
+    "position_in_pair": 1,
+    "repetition": 1,
+    "task": "IP4"
+  },
+  "task": {
+    "final_tree": "0fa3398c7271fc8e299c448fbb089e3b69201212",
+    "id": "IP4",
+    "start_tree": "c769a25f3babe33dc8b7ba3f75b1611cd0fb2e9e",
+    "verifier_sha256": "fc89e179f95518d581d1969538d260a1cf245844adbf9df1f72060225738de8a"
+  },
+  "termination_class": "model_completed",
+  "verifier": {
+    "failed_requirement": null,
+    "passed": true,
+    "tail": [
+      "VERIFIER OK"
+    ]
+  }
+}
