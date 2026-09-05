@@ -1,5 +1,34 @@
 # Codex to ChatGPT handoff
 
+## Generation 95 — the Round-3 interference ruler, frozen before any product
+
+Report: `research/PI_INTERFERENCE_DESIGN_GEN95.md`. Fixture `interference-v1`,
+scorer `interference-scorer-v1`, both hashed. **No engine runs. No product has
+seen the fixture.**
+
+**Scale is the only independent variable.** One semantic core — same subject,
+metric and sentence shape — at **0, 4, 16 and 64** distractors. Same query, same
+scope, same configuration, same target. 67 observations, 4 cases.
+
+**Five mechanisms**, and the pair that matters: **`true_forgetting`** (answer
+absent, window **not** filled by competitors) versus **`distractor_displacement`**
+(answer absent, window **saturated** with same-core competitors). Identical in any
+pooled count; completely different problems.
+
+**All five fire under synthetic controls and the clean control is silent** — and
+two further controls prove the discriminations are real: the window effect stays
+**silent** when the stale record leads, and displacement is **not** charged when
+the window had room to spare.
+
+**The four rules are built in, not remembered.** Reachability proved before any
+product; scope *and* configuration on every observation with the foreign record
+differing on **both** axes; no case answerable only by a judgement or a refusal
+(asserted); and `assert_no_pooled_accuracy` **raises** on "accuracy at scale",
+"overall accuracy", "pooled score" or "mean accuracy" — a test feeds it four.
+
+Per-case rank, provenance, saturation state and the distractors actually returned
+are recorded on every result.
+
 ## Generation 94 — Round 2 closed, canonical result written
 
 `ROUND2_RESULT.md` is the canonical document; synthesis in
