@@ -148,8 +148,7 @@ def run_agentmemory(fixture, case, repetition, root):
             returned.append(native.get(hit.get("obsId")))
         return returned, arguments
     finally:
-        if launcher is not None:
-            g13.stop_service(launcher)
+        g13.stop_service(g33.AGENTMEMORY, state, repetition, agent, launcher)
 
 
 # --- hindsight ------------------------------------------------------------
