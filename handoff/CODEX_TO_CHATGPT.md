@@ -1,5 +1,35 @@
 # Codex to ChatGPT handoff
 
+## Generation 88 — the corrected retrieval-layer picture of Round 2
+
+Report: `research/PI_ROUND2_RECONCILIATION_GEN88.md`. **No engine runs.** Rebuilt
+from corrected evidence only; no Gen68 number reprinted because it was printed
+before.
+
+**Two tables, never merged.** `frozen_configuration` answers *what did the tested
+configuration do?*; `native_capability` answers *what can this pinned engine do
+when correctly bound?* Every cell carries MEASURED / NOT_DEMONSTRABLE /
+NOT_APPLICABLE plus the generation it comes from, and a cell without provenance
+raises.
+
+**Frozen configuration, 24 cells:** 14 MEASURED, 6 NOT_DEMONSTRABLE, 4
+NOT_APPLICABLE. Perseus is `MEASURED` on scope and on transaction-time history
+(6/6, survives every retraction) and `NOT_DEMONSTRABLE` on all three
+effective-time rows (Gen73/74/75). Hindsight is `MEASURED` on both effective-time
+rows in the unflattering sense: `query_timestamp` accepted and ignored, 15 of 15.
+
+**Native capability, 12 cells:** 8 MEASURED, 1 NOT_DEMONSTRABLE, 3 NOT_APPLICABLE.
+The same three engines that are `NOT_DEMONSTRABLE` on scope in Table A isolate
+perfectly in Table B once given their own scope key — both true, neither
+replacing the other. The one genuine engine difference in all of Round 2 sits
+here: agentmemory does not separate configurations within a scope.
+
+**The two reader kinds are excluded by the Gen87 boundary as a check** — a test
+adds one to the table and asserts it raises.
+
+**No engine has a total.** The temporal axes are not collapsed and there is no
+ranking column in either table or across them.
+
 ## Generation 84 — nobody was asked to abstain
 
 Report: `research/PI_NEGATIVE_UNKNOWN_GEN84.md`. No engine runs, **no reader
