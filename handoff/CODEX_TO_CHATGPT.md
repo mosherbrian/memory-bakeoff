@@ -1,5 +1,41 @@
 # Codex to ChatGPT handoff
 
+## Generation 99 — the replication run: Gen97's headline does not generalise
+
+Report: `research/PI_REPLICATION_RUN_GEN99.md`. Frozen `interference-v2`,
+unchanged Gen96 adapters and scorer. 4 cores x 4 loads x 3 repetitions x 4
+engines = 192 observations. Verdict rules applied exactly as frozen in Gen98.
+
+**Q1 — perseus rank declines with density: `FIXTURE_SPECIFIC`.** It holds in the
+atlas core only — the one Gen97 used. Perseus **keeps the target at every level
+in all three other cores**, including 64 distractors (vega 1/2→3→3→2, solstice
+1/2 throughout, kestrel 2 throughout). Gen97's headline was a property of that
+vocabulary.
+
+**Q2 — stale-version interference: `REPLICATED_ACROSS_CORES`, 192 of 192.** Every
+engine, core, load and repetition. The one Round-3 result so far that has earned
+the word general.
+
+**Q3 — the other three hold their shape: `PARTIAL_REPLICATION` for all three**, and
+they fail in different places. mem0 and hindsight hold in 3 of 4 (both failing in
+vega); **agentmemory holds in only 2**, failing in kestrel and solstice.
+
+**The finding only replication could surface: agentmemory never retrieves the
+current fact in the kestrel core — at ZERO distractors.** Three records in the
+store, nothing competing, and it returns one: the superseded version.
+`true_forgetting`, fully provenance-mapped, `unmapped` 0 at every level. The
+engine that ranked the current fact first at every level in Gen97 cannot find it
+at all in one of four neighbourhoods.
+
+**Two harness defects caught during the run.** Per-case working names were keyed
+on load alone and collided across cores — Perseus refused to overwrite another
+core's key file rather than silently reusing it, which is the good failure mode;
+keyed on `case.id` now. And `assert_no_core_pooling` flagged **its own frozen
+contract**, because the bare phrase "across cores" appears in Gen98's Q2. The term
+list is now the averaging phrasings only and the guard is applied to the summary
+rather than the contract. **Unlike Gen97's rename, that is a genuine loosening and
+is recorded as one.**
+
 ## Generation 98 — the replication fixture, with its questions declared first
 
 Report: `research/PI_GENERALIZATION_DESIGN_GEN98.md`. `interference-v2`: **4
