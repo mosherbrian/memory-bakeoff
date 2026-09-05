@@ -16,6 +16,20 @@ BRANCH=${BRANCH:-main}
 
 mac() { ssh "$MAC" "export PATH=/opt/homebrew/bin:\$PATH; cd '$MAC_REPO' && $1"; }
 
+# 0. Refuse to run from a different branch than the one being synced.
+#
+#    The first version took the Mac's branch from $BRANCH but built the bundle
+#    from whatever Linux HEAD happened to be. Run from a feature branch, it
+#    shipped that branch's commits and fast-forwarded MAIN onto them - which is
+#    how the work-trigger-canary commit landed on main and auto-closed its own
+#    PR as merged. The branch you are on must be the branch you are syncing.
+here=$(git rev-parse --abbrev-ref HEAD)
+if [ "$here" != "$BRANCH" ]; then
+    echo "refusing: on branch '$here' but syncing '$BRANCH'." >&2
+    echo "check out $BRANCH first, or run: BRANCH=$here $0" >&2
+    exit 2
+fi
+
 # 1. The Mac publishes anything it is holding. The omitted step, made mandatory.
 mac "git checkout -q $BRANCH && git fetch -q origin && git merge --ff-only origin/$BRANCH -q && git push -q origin $BRANCH"
 
