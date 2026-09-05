@@ -1,0 +1,1371 @@
+{
+  "contract": {
+    "clusters": {
+      "correction": "later fact, BACKDATED effective time (L001->L005)",
+      "invalidation": "later fact, aligned times (L012->L013->L014)",
+      "late_arrival": "earlier fact ingested out of order (L011)"
+    },
+    "contract_version": "correction-late-arrival-semantics-v1",
+    "mechanisms": [
+      "overwrote_prior_truth",
+      "belief_truth_confusion",
+      "correction_not_applied",
+      "late_arrival_not_integrated",
+      "late_arrival_misplaced",
+      "clean"
+    ],
+    "not_pooled": "these are different questions of the storage model and must not be averaged into one temporal-accuracy score",
+    "question": "is the Perseus-versus-others split distinct storage semantics or just retrieval behaviour?",
+    "reads_only": "committed Gen68 per-case records; no engine is run"
+  },
+  "engines": {
+    "agentmemory": {
+      "by_cluster": {
+        "correction": {
+          "belief_truth_confusion": 3,
+          "clean": 6,
+          "overwrote_prior_truth": 3
+        },
+        "invalidation": {
+          "belief_truth_confusion": 3,
+          "correction_not_applied": 3
+        },
+        "late_arrival": {
+          "clean": 3,
+          "late_arrival_misplaced": 3
+        }
+      },
+      "per_case": [
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "overwrote_prior_truth",
+          "returned": [
+            "L003",
+            "L004"
+          ],
+          "why": "neither the revision nor the original was returned"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L004",
+            "L005",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L005",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L004",
+            "L005",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_misplaced",
+          "returned": [
+            "L009",
+            "L010",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "why": "returned the backfilled fact alongside a later one it should have excluded"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "overwrote_prior_truth",
+          "returned": [
+            "L003",
+            "L004"
+          ],
+          "why": "neither the revision nor the original was returned"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L004",
+            "L005",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L005",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L004",
+            "L005",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_misplaced",
+          "returned": [
+            "L009",
+            "L010",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "why": "returned the backfilled fact alongside a later one it should have excluded"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "overwrote_prior_truth",
+          "returned": [
+            "L003",
+            "L004"
+          ],
+          "why": "neither the revision nor the original was returned"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L004",
+            "L005",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L005",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L004",
+            "L005",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_misplaced",
+          "returned": [
+            "L009",
+            "L010",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "why": "returned the backfilled fact alongside a later one it should have excluded"
+        }
+      ],
+      "storage_reading": {
+        "belief_truth_confusions": 6,
+        "caveat": "one fixture, one correction, one invalidation chain and one backfilled fact; this names a pattern, it does not prove a storage design",
+        "integrates_late_arrival": false,
+        "late_arrival_misplaced": 3,
+        "late_arrival_not_integrated": 0,
+        "reading": "neither superseded belief nor out-of-order arrival is handled",
+        "retains_superseded_belief": false
+      }
+    },
+    "hindsight": {
+      "by_cluster": {
+        "correction": {
+          "belief_truth_confusion": 3,
+          "clean": 3,
+          "correction_not_applied": 6
+        },
+        "invalidation": {
+          "belief_truth_confusion": 3,
+          "correction_not_applied": 3
+        },
+        "late_arrival": {
+          "clean": 6
+        }
+      },
+      "per_case": [
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L002",
+            "L007",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L005",
+            "L007",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L005",
+            "L007",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L011",
+            "L012",
+            "L013",
+            "L015",
+            "L016"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L002",
+            "L007",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L005",
+            "L007",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L005",
+            "L007",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L011",
+            "L012",
+            "L013",
+            "L015",
+            "L016"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L002",
+            "L007",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L005",
+            "L007",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L005",
+            "L007",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L011",
+            "L012",
+            "L013",
+            "L015",
+            "L016"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        }
+      ],
+      "storage_reading": {
+        "belief_truth_confusions": 6,
+        "caveat": "one fixture, one correction, one invalidation chain and one backfilled fact; this names a pattern, it does not prove a storage design",
+        "integrates_late_arrival": true,
+        "late_arrival_misplaced": 0,
+        "late_arrival_not_integrated": 0,
+        "reading": "files by event time, so backfill lands correctly, but the superseded version is not addressable",
+        "retains_superseded_belief": false
+      }
+    },
+    "mem0": {
+      "by_cluster": {
+        "correction": {
+          "belief_truth_confusion": 3,
+          "clean": 3,
+          "correction_not_applied": 6
+        },
+        "invalidation": {
+          "belief_truth_confusion": 3,
+          "correction_not_applied": 3
+        },
+        "late_arrival": {
+          "clean": 3,
+          "late_arrival_misplaced": 3
+        }
+      },
+      "per_case": [
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L002",
+            "L004",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L010",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L005",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_misplaced",
+          "returned": [
+            "L009",
+            "L010",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "why": "returned the backfilled fact alongside a later one it should have excluded"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L002",
+            "L004",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L010",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L005",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_misplaced",
+          "returned": [
+            "L009",
+            "L010",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "why": "returned the backfilled fact alongside a later one it should have excluded"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002",
+            "L003",
+            "L004",
+            "L005"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "clean",
+          "returned": [
+            "L002",
+            "L004",
+            "L009",
+            "L010",
+            "L011"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "belief_truth_confusion",
+          "returned": [
+            "L010",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "answered a question about a past belief with the version that superseded it"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L005",
+            "L011",
+            "L012",
+            "L013",
+            "L014"
+          ],
+          "why": "returned the revision together with the version it replaced"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_misplaced",
+          "returned": [
+            "L009",
+            "L010",
+            "L011",
+            "L012",
+            "L014"
+          ],
+          "why": "returned the backfilled fact alongside a later one it should have excluded"
+        }
+      ],
+      "storage_reading": {
+        "belief_truth_confusions": 6,
+        "caveat": "one fixture, one correction, one invalidation chain and one backfilled fact; this names a pattern, it does not prove a storage design",
+        "integrates_late_arrival": false,
+        "late_arrival_misplaced": 3,
+        "late_arrival_not_integrated": 0,
+        "reading": "neither superseded belief nor out-of-order arrival is handled",
+        "retains_superseded_belief": false
+      }
+    },
+    "perseus": {
+      "by_cluster": {
+        "correction": {
+          "clean": 6,
+          "correction_not_applied": 6
+        },
+        "invalidation": {
+          "clean": 3,
+          "correction_not_applied": 3
+        },
+        "late_arrival": {
+          "late_arrival_not_integrated": 6
+        }
+      },
+      "per_case": [
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "late_arrival_not_integrated",
+          "returned": [
+            "L009"
+          ],
+          "why": "the backfilled observation was not retrievable at all"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "clean",
+          "returned": [
+            "L010",
+            "L011",
+            "L012"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L009",
+            "L010",
+            "L012"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_not_integrated",
+          "returned": [
+            "L009"
+          ],
+          "why": "the backfilled observation was not retrievable at all"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "late_arrival_not_integrated",
+          "returned": [
+            "L009"
+          ],
+          "why": "the backfilled observation was not retrievable at all"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "clean",
+          "returned": [
+            "L010",
+            "L011",
+            "L012"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L009",
+            "L010",
+            "L012"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_not_integrated",
+          "returned": [
+            "L009"
+          ],
+          "why": "the backfilled observation was not retrievable at all"
+        },
+        {
+          "case_id": "LQ04",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ05",
+          "cluster": "correction",
+          "kind": "as_of_event_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ06",
+          "cluster": "correction",
+          "kind": "historical_belief",
+          "mechanism": "clean",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ07",
+          "cluster": "correction",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L001",
+            "L002"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ13",
+          "cluster": "late_arrival",
+          "kind": "late_arriving_history",
+          "mechanism": "late_arrival_not_integrated",
+          "returned": [
+            "L009"
+          ],
+          "why": "the backfilled observation was not retrievable at all"
+        },
+        {
+          "case_id": "LQ18",
+          "cluster": "invalidation",
+          "kind": "historical_belief",
+          "mechanism": "clean",
+          "returned": [
+            "L010",
+            "L011",
+            "L012"
+          ],
+          "why": "returned what the question asked for and nothing it forbade"
+        },
+        {
+          "case_id": "LQ19",
+          "cluster": "invalidation",
+          "kind": "corrected_historical_truth",
+          "mechanism": "correction_not_applied",
+          "returned": [
+            "L009",
+            "L010",
+            "L012"
+          ],
+          "why": "served the stale version; the revision exists but did not take effect for this question"
+        },
+        {
+          "case_id": "LQ20",
+          "cluster": "late_arrival",
+          "kind": "as_of_event_truth",
+          "mechanism": "late_arrival_not_integrated",
+          "returned": [
+            "L009"
+          ],
+          "why": "the backfilled observation was not retrievable at all"
+        }
+      ],
+      "storage_reading": {
+        "belief_truth_confusions": 0,
+        "caveat": "one fixture, one correction, one invalidation chain and one backfilled fact; this names a pattern, it does not prove a storage design",
+        "integrates_late_arrival": false,
+        "late_arrival_misplaced": 0,
+        "late_arrival_not_integrated": 6,
+        "reading": "keeps belief history, but a fact that arrives out of order is not addressable at its own event time",
+        "retains_superseded_belief": true
+      }
+    }
+  }
+}
