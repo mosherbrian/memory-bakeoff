@@ -1,0 +1,59 @@
+{
+ "defect": "the v3 contract digest committed to declarations only",
+ "executor_found_gap_in_its_own_repair": {
+  "detail": "v4's first prompt_hashes bound project_prompt at import, so runtime substitution left the digest unmoved - one of four mutations still missed, and the worst one",
+  "found_by": "executor, by running its own mutation probe",
+  "repair": "resolve through the module at call time"
+ },
+ "found_by": "control plane, reviewing the v3 payload against its implementation",
+ "gen112_files_modified": false,
+ "omitted_from_v3_payload": [
+  "parse_response",
+  "classify_answer",
+  "citation_relation",
+  "grade",
+  "project_prompt",
+  "build_fixture",
+  "truth_matrix",
+  "prompt hashes",
+  "control_passing_forms",
+  "source file bytes"
+ ],
+ "scientific_consequence": "parser, classifier, grading or prompt behaviour could change while contract_sha256 stayed constant - including a prompt that leaks which record is current, which is precisely what a freeze must detect",
+ "scientific_loss": "none",
+ "v3_never_executed": true,
+ "witnesses": [
+  {
+   "mutation": "classifier replaced",
+   "observable_effect": "every answer classifies NEITHER",
+   "v3_hash_after": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_before": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_moved": false,
+   "v4_hash_moved": true
+  },
+  {
+   "mutation": "grader replaced",
+   "observable_effect": "every response grades prohibited_stale",
+   "v3_hash_after": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_before": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_moved": false,
+   "v4_hash_moved": true
+  },
+  {
+   "mutation": "parser replaced",
+   "observable_effect": "malformed output parses as valid",
+   "v3_hash_after": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_before": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_moved": false,
+   "v4_hash_moved": true
+  },
+  {
+   "mutation": "prompt projection replaced",
+   "observable_effect": "the prompt hands the reader the answer",
+   "v3_hash_after": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_before": "c9b4196fcce35bbda1dc8cf9d241599d972c0ed4d731d7d7fe1a5f0f29be19ee",
+   "v3_hash_moved": false,
+   "v4_hash_moved": true
+  }
+ ]
+}

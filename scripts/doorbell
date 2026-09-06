@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""Ring a BAKEOFF_HANDOFF doorbell. Refuses without a plain-English recap.
+
+Brian follows this project through the recap, not the artifacts. When the loop
+moved from the ChatGPT chat onto GitHub and Drive, the recaps quietly stopped -
+the technical summaries kept flowing and the readable ones did not, for five
+generations. This makes that structurally impossible: no recap, no doorbell.
+
+Usage: scripts/doorbell <generation> <recap-file> <technical-file>
+"""
+from __future__ import annotations
+
+import json, subprocess, sys, urllib.request
+from pathlib import Path
+
+REPO = "mosherbrian/memory-bakeoff"
+MIN_RECAP_CHARS = 200
+JARGON = ("sha256", "manifest", "contract_version", "opaque_id", "attempt1",
+          "FROZEN_UNRUN", "NON_EVIDENCE", "source_commit", "truth_matrix")
+
+
+def token() -> str:
+    line = next(l for l in Path.home().joinpath(".config/gh/hosts.yml")
+                .read_text().splitlines() if "oauth_token:" in l)
+    return line.split(":", 1)[1].strip()
+
+
+def main() -> int:
+    if len(sys.argv) != 4:
+        print(__doc__)
+        return 2
+    generation, recap_path, technical_path = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
+    recap = recap_path.read_text().strip()
+
+    # The gate. A recap that is absent, stubbed, or written in contract-speak is
+    # not a recap.
+    if len(recap) < MIN_RECAP_CHARS:
+        raise SystemExit(f"REFUSED: recap is {len(recap)} chars, need "
+                         f"{MIN_RECAP_CHARS}. Brian reads this, not the artifacts.")
+    leaked = [j for j in JARGON if j.lower() in recap.lower()]
+    if leaked:
+        raise SystemExit(f"REFUSED: recap contains jargon {leaked}. Write it for "
+                         "someone who has not read the brief.")
+
+    sha = subprocess.run(["git", "rev-parse", "origin/main"],
+                         capture_output=True, text=True).stdout.strip()
+    body = (f"**source_generation: {generation}**\n**source_commit: {sha}**\n\n"
+            f"## In plain English\n\n{recap}\n\n---\n\n"
+            f"{technical_path.read_text().strip()}\n\n"
+            f"Please write the next instruction with "
+            f"`source_generation: {generation}`, `source_commit: {sha}`.\n\n"
+            "**main is frozen until consumed.** Doorbell only - do not merge.")
+    payload = json.dumps({
+        "title": f"BAKEOFF_HANDOFF Gen{generation}",
+        "head": f"bakeoff-handoff-gen{generation}", "base": "main",
+        "body": body}).encode()
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{REPO}/pulls", data=payload,
+        headers={"Authorization": f"Bearer {token()}",
+                 "Accept": "application/vnd.github+json",
+                 "X-GitHub-Api-Version": "2022-11-28"})
+    with urllib.request.urlopen(request) as response:
+        result = json.loads(response.read())
+    print(f"doorbell PR {result['number']} | recap {len(recap)} chars")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
