@@ -120,10 +120,23 @@ def preflight(source_commit: str) -> dict:
         problems.append(f"canonical attempt manifest failed: {ev}")
 
     contract = json.loads((CANONICAL / "reader_interference_v6_contract.json").read_text())
-    # The manifest already proves this file is the one the freeze wrote; the
-    # useful check is that its self-declared hash matches its own recomputation.
-    if contract["contract_sha256"] != _expected_contract():
-        problems.append("contract file disagrees with itself")
+    # RECOMPUTE the sealed hash from the sealed payload and source pins, exactly
+    # as the freeze computed it, and compare.
+    #
+    # This used to compare contract["contract_sha256"] against a helper that read
+    # THE SAME FIELD FROM THE SAME FILE, and its comment claimed it verified a
+    # recomputation. It could never fail. Nothing in the run path recomputed the
+    # sealed hash at all - it was protected only transitively, by the manifest
+    # binding the file's bytes. Found by glm-5.3-flash at Gen120: "a check that
+    # cannot fail reads exactly like a check that passes", in the file that
+    # anatomises that pattern.
+    payload = json.loads((CANONICAL / "reader_interference_v6_contract_payload.json").read_text())
+    recomputed = hashlib.sha256(json.dumps({**payload, "source_sha256": contract["source_sha256"]},
+                                           sort_keys=True, default=str).encode()).hexdigest()
+    if recomputed != contract["contract_sha256"]:
+        problems.append(f"SEALED CONTRACT HASH DOES NOT RECOMPUTE: declared "
+                        f"{contract['contract_sha256'][:16]}, recomputed "
+                        f"{recomputed[:16]}. The payload or its source pins changed.")
 
     # Every file the frozen contract pins must still be byte-identical. Without
     # this the "no repair after exposure" rule is a sentence in an instruction,

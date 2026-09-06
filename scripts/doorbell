@@ -76,6 +76,29 @@ def preflight(generation: str) -> str:
         raise SystemExit(f"REFUSED: the latest review ({reviews[-1].parent.name}) is "
                          "older than HEAD. Re-review the commit you are ringing.")
 
+    # The suite must be green AT THIS COMMIT, and green means "no failure we have
+    # not already accounted for" - not a familiar-looking total. Twice I reported
+    # a red suite as normal because the count matched; a count is not an identity,
+    # and 24 failures can become a different 24 while the number holds still.
+    #
+    # This RUNS the check rather than reading a recorded result. A receipt can be
+    # stale, and trusting one would repeat exactly the mistake the F2 finding was
+    # about: taking an authored claim where an observation was available.
+    root = Path(__file__).resolve().parents[1]
+    print("  running the known-failures gate (about 45s) ...")
+    baseline = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+         "tests/test_known_failures_baseline.py"],
+        cwd=root, capture_output=True, text=True,
+        env={"PYTHONPATH": "src:vendor/membukkit/src", "PATH": "/usr/bin:/bin"},
+        timeout=2400)
+    if baseline.returncode != 0:
+        tail = "\n".join((baseline.stdout + baseline.stderr).splitlines()[-25:])
+        raise SystemExit("REFUSED: the suite has failures that are not in "
+                         "tests/KNOWN_FAILURES.json, or listed ones that now pass. "
+                         "Either is a real change and must be understood before a "
+                         f"handoff claims a clean run:\n{tail}")
+
     ledger = Path(__file__).resolve().parents[1] / "reviews/LEDGER.md"
     if ledger.exists():
         open_rows = [l for l in ledger.read_text().splitlines() if "| OPEN |" in l]

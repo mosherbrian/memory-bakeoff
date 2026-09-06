@@ -1,0 +1,48 @@
+{
+ "_why": "A red suite that is 'normal' is how a real regression hides. These are the failures we have accepted, by exact node id, with the reason each is out of our control. Anything failing that is not listed here is a NEW regression and blocks the doorbell. Anything listed here that now PASSES must be removed - a baseline that only ever grows is a place to hide.",
+ "_recorded": "2026-09-06, Gen120 attempt10",
+ "_totals": {
+  "passed": 1475,
+  "failed": 24,
+  "skipped": 3,
+  "errors": 5
+ },
+ "clusters": {
+  "membukkit_run_provenance": {
+   "why": "These assert on artifacts from real recorded runs - device_proof, an empty load_trace.downloads. The engine itself is present: vendor/membukkit/src is on the path, the repo's own copy pinned to f28a2e58 with blob SHAs verified upstream. No path or install can satisfy these; only a recorded run can.",
+   "count": 8,
+   "node_ids": [
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[core-fallback_control-cpu]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[core-fallback_control-product_default]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[core-intended-cpu]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[core-intended-product_default]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[stress-fallback_control-cpu]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[stress-fallback_control-product_default]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[stress-intended-cpu]",
+    "tests/test_membukkit_gen41_round1.py::test_every_scored_run_proves_device_pins_and_provenance[stress-intended-product_default]"
+   ]
+  },
+  "memconflict_dataset_absent": {
+   "why": "The pinned MemConflict dataset is 182 MB of upstream data at external/MemConflict/, correctly not committed. Fetch it to run these.",
+   "count": 16,
+   "node_ids": [
+    "tests/test_memconflict_gen36_contract.py::test_calibration_subset_is_label_blind_and_deterministic",
+    "tests/test_memconflict_gen36_contract.py::test_dataset_parses_completely_and_totals_reconcile",
+    "tests/test_memconflict_gen36_contract.py::test_upstream_pin_is_exact",
+    "tests/test_memconflict_gen37_products.py::test_calibration_manifest_unchanged",
+    "tests/test_memconflict_gen37_products.py::test_credit_requires_session_identity_not_text",
+    "tests/test_memconflict_gen37_products.py::test_gen36_contract_and_dataset_pin_unchanged",
+    "tests/test_memconflict_gen37_products.py::test_malformed_message_exclusion_matches_gen36",
+    "tests/test_memconflict_gen37_products.py::test_one_message_one_write_and_ledger_reconciles",
+    "tests/test_memconflict_gen37_products.py::test_query_is_the_released_question_text_unmodified",
+    "tests/test_memconflict_gen38_full_release.py::test_heldout_is_exactly_release_minus_the_frozen_three",
+    "tests/test_memconflict_gen38_full_release.py::test_malformed_exclusion_list_is_unchanged",
+    "tests/test_memconflict_gen38_full_release.py::test_one_message_one_write_per_persona",
+    "tests/test_memconflict_gen38_full_release.py::test_pins_are_unchanged",
+    "tests/test_memconflict_gen38_full_release.py::test_release_totals_reconcile",
+    "tests/test_memconflict_gen38_full_release.py::test_repeat_set_selection_is_label_blind_and_deterministic",
+    "tests/test_memconflict_gen38_full_release.py::test_resume_rejects_a_tampered_or_partial_leaf"
+   ]
+  }
+ }
+}

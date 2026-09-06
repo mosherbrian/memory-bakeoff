@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt9` is canonical**, per the second Generation 120 rival review.
+**`attempt10` is canonical**, per the third Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -119,7 +119,7 @@
   rest are immutability guards that correctly pass in both trees. Recorded with
   method and node ids in `reviews/gen120-negative-control.md`.
   Contract `b38a33f33529dd2fe200315151746dd3702c4c042b0daf77a6ed2b1c1073f26f`.
-- `attempt9` - **canonical.** Byte-identical science to attempt8; it exists only
+- `attempt9` - superseded. Byte-identical science to attempt8; it exists only
   because two contract-bound test files were repaired after attempt8 sealed:
   `test_contract_binds_every_run_bearing_surface` still demanded the
   `v5_module_sha256` key that finding 3 renamed, and
@@ -127,6 +127,23 @@
   `results/gen116` - pinning in place the very vestige that finding had removed.
   A test that asserts the defect keeps the defect. Contract
   `85a5e8aa839bf6f0dcc23c0427379f8d5a89de69fa2f083c0d5bf3c72cd2861d`.
+- `attempt10` - **canonical.** Science identical a fifth time. Third review:
+  1. **a check that could never fail, in preflight.** "contract disagrees with
+     itself" compared `contract["contract_sha256"]` against a helper that read the
+     same field from the same file, while its comment claimed it verified a
+     recomputation. Nothing in the run path ever recomputed the sealed hash; it
+     was protected only transitively, by the manifest binding the file's bytes.
+     Preflight now recomputes sha256 over the sealed payload plus source pins,
+     exactly as the freeze does, and a witness confirms the value moves when a
+     pin is perturbed;
+  2. **the F1-F3 witnesses were the one unbound test file**, so the 37 checks for
+     the defects this generation headlines could have been weakened after the
+     freeze without invalidating it. Now bound. attempt9 exists BECAUSE
+     contract-bound tests drifted, which is exactly why the asymmetry mattered;
+  3. **the balance-gate control asserted against a lambda it defined itself**,
+     proving only that the test agreed with itself. The predicate is extracted as
+     `id_balance_ok` and the control now calls the function `main` gates on.
+  Contract `4179b1221bcbc82c2a6040fe69be23faa355afa70fda9333c7d58993accedba4`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

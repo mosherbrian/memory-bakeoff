@@ -25,7 +25,13 @@ SCIENTIFIC_SOURCES = ("src/memory_bakeoff/reader_interference_v6.py",
                       "scripts/run_gen118_freeze.py",
                       "scripts/grade_gen118_v6.py",
                       "scripts/verify_gen118_contract.py",
-                      "scripts/run_reader_v6.py")
+                      "scripts/run_reader_v6.py",
+                      # The 37 witnesses for F1-F3 - the defects this generation
+                      # headlines - were the one unbound test file, so they could
+                      # be weakened after the freeze without invalidating it.
+                      # attempt9 exists BECAUSE contract-bound tests drifted,
+                      # which makes the asymmetry worth closing. Found by glm-5.3.
+                      "tests/test_gen120_evidence_closure.py")
 # The four cores burned by Gen110-115, plus every value and answer string observed.
 def _burned() -> tuple[str, ...]:
     """Everything v4 and v5 put in front of the reader. Derived, not typed."""
@@ -184,6 +190,23 @@ def source_digests() -> dict:
     return out
 
 
+def id_balance_ok(id_first: int, cores: int) -> bool:
+    """EXACT, not within one.
+
+    This gate used to read `abs(id_first - cores // 2) > 1`, so 7/12 - the precise
+    imbalance attempt1 was superseded for, and the number every handoff since has
+    described as "a hard gate that fails closed" - would have PASSED. Every
+    published attempt was genuinely 6/12, so no artifact was ever wrong; the GATE
+    was weaker than every claim made about it. A tolerance nobody asked for is how
+    a declared invariant quietly becomes a preference. Found by glm-5.3 at Gen120.
+
+    It is a named function so its test can call THE GATE. The first control
+    asserted against a lambda reimplementing the same rule inside the test, which
+    proves only that the test agrees with itself. Found by glm-5.3-flash.
+    """
+    return id_first == cores // 2
+
+
 def main() -> None:
     payload = V6.contract_payload()
     payload_with_sources = {**payload, "source_sha256": source_digests()}
@@ -194,13 +217,7 @@ def main() -> None:
     # first freeze reported 7/12 and shipped anyway, because reporting a number
     # is not gating on it. Sol caught that.
     id_first = int(fx_audit["revision2_id_sorts_first_count"].split("/")[0])
-    # EXACT, not within one. The gate used to allow +/-1, which means 7/12 - the
-    # precise imbalance attempt1 was superseded for, and the number every handoff
-    # since has said "fails closed" - would have PASSED. The published attempts
-    # were genuinely 6/12, so no artifact was wrong; the GATE was weaker than
-    # every claim made about it. Found by glm-5.3 at Gen120. A tolerance nobody
-    # asked for is how a declared invariant quietly becomes a preference.
-    id_unbalanced = id_first != len(V6.CORES) // 2
+    id_unbalanced = not id_balance_ok(id_first, len(V6.CORES))
     hard_fail = (id_unbalanced or fx_audit["reused_exposed_terms"] or fx_audit["reused_record_ids"]
                  or fx_audit["reused_prompt_hashes"]
                  or not fx_audit["verbatim_rule_in_every_prompt"]

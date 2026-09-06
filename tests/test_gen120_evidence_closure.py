@@ -269,28 +269,60 @@ def test_no_prior_attempt_contains_a_reader_result(attempt):
 
 # ------------------------------------------------------- the gate on the gate
 def test_the_id_balance_gate_is_exact_not_within_one():
-    """7/12 must FAIL.
+    """7/12 must FAIL, asserted against THE GATE, not a copy of it.
 
     The gate read `abs(id_first - 6) > 1`, so 7/12 passed - the exact imbalance
-    attempt1 was superseded for, and the number every handoff since has described
-    as failing closed. No published artifact was wrong; the gate was weaker than
-    every claim made about it. A tolerance nobody asked for is how a declared
-    invariant quietly becomes a preference. Found by glm-5.3 at Gen120.
-    """
-    freeze = ROOT / "scripts/run_gen118_freeze.py"
-    src = freeze.read_text()
-    assert "abs(id_first - len(V6.CORES) // 2) > 1" not in src, "the tolerance is back"
-    assert "id_unbalanced = id_first != len(V6.CORES) // 2" in src
+    attempt1 was superseded for, and the number every handoff since called a hard
+    gate. No published artifact was wrong; the gate was weaker than every claim
+    made about it. Found by glm-5.3.
 
+    The first version of this control defined its own lambda with the corrected
+    rule and asserted against that, which proves only that the test agrees with
+    itself. Found by glm-5.3-flash. It now imports the freeze module and calls the
+    same function `main` calls.
+    """
     import importlib.util
+    freeze = ROOT / "scripts/run_gen118_freeze.py"
     spec = importlib.util.spec_from_file_location("freeze_under_test", freeze)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    cores = len(mod.V6.CORES)
-    unbalanced = lambda n: n != cores // 2
-    assert unbalanced(7), "7/12 must be rejected"
-    assert unbalanced(5), "5/12 must be rejected"
-    assert not unbalanced(6), "6/12 must be accepted"
+
+    assert "abs(id_first - len(V6.CORES) // 2) > 1" not in freeze.read_text(), "tolerance is back"
+    assert mod.id_balance_ok(6, 12) is True, "6/12 must be accepted"
+    assert mod.id_balance_ok(7, 12) is False, "7/12 must be rejected - attempt1 died on it"
+    assert mod.id_balance_ok(5, 12) is False, "5/12 must be rejected"
+    assert mod.id_balance_ok(0, 12) is False
+    assert "id_unbalanced = not id_balance_ok(" in freeze.read_text(), (
+        "main must gate on the function this test exercises, not an inline copy")
+
+
+def test_the_sealed_contract_hash_actually_recomputes():
+    """The preflight check used to compare a field against itself.
+
+    It read `contract["contract_sha256"]` and compared it to a helper that read
+    the same field from the same file, while its comment claimed it verified a
+    recomputation. Nothing in the run path ever recomputed the sealed hash.
+    Found by glm-5.3-flash at Gen120.
+    """
+    import hashlib
+    d = ROOT / "results/gen118" / (ROOT / "results/gen118/CANONICAL_ATTEMPT.md").read_text().split("`")[1]
+    contract = json.loads((d / "reader_interference_v6_contract.json").read_text())
+    payload = json.loads((d / "reader_interference_v6_contract_payload.json").read_text())
+    recomputed = hashlib.sha256(json.dumps({**payload, "source_sha256": contract["source_sha256"]},
+                                           sort_keys=True, default=str).encode()).hexdigest()
+    assert recomputed == contract["contract_sha256"], "the sealed hash does not recompute"
+
+    # It must be able to FAIL: perturb one source pin and the hash must move.
+    tampered = dict(contract["source_sha256"]); k = sorted(tampered)[0]
+    tampered[k] = "0" * 64
+    moved = hashlib.sha256(json.dumps({**payload, "source_sha256": tampered},
+                                      sort_keys=True, default=str).encode()).hexdigest()
+    assert moved != contract["contract_sha256"], "the recomputation ignores the source pins"
+
+    src = (ROOT / "scripts/run_reader_v6.py").read_text()
+    assert "SEALED CONTRACT HASH DOES NOT RECOMPUTE" in src
+    assert 'if contract["contract_sha256"] != _expected_contract():' not in src, (
+        "the tautological self-comparison is back")
 
 
 def test_gen117_raw_evidence_is_honestly_described():

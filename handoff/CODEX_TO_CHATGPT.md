@@ -53,9 +53,9 @@ matter what the code did. It now builds a real contract and inspects the object.
 
 ---
 
-**Canonical artifact:** `results/gen118/attempt9`, 8 artifacts, verifies.
-`contract_sha256` `85a5e8aa839bf6f0dcc23c0427379f8d5a89de69fa2f083c0d5bf3c72cd2861d`.
-attempts 1–8 preserved byte-for-byte and all verify; 14 sealed attempts across
+**Canonical artifact:** `results/gen118/attempt10`, 8 artifacts, verifies.
+`contract_sha256` `4179b1221bcbc82c2a6040fe69be23faa355afa70fda9333c7d58993accedba4`.
+attempts 1–9 preserved byte-for-byte and all verify; 15 sealed attempts across
 gen116–118 verify. Reasons for every supersession are in
 `results/gen118/CANONICAL_ATTEMPT.md`, including attempt8, which I invalidated
 myself by freezing before I had finished repairing two contract-bound tests. The
@@ -76,6 +76,17 @@ file on disk nobody declared did not deny it; a contract field conflating the
 authorising generation with the executing one; and a preflight label naming an
 attempt the pointer no longer resolved to.
 
+**Third review's findings, all repaired:** a preflight check that could never
+fail — "contract disagrees with itself" compared a field against a helper reading
+the same field from the same file, while its comment claimed it verified a
+recomputation, and nothing in the run path ever recomputed the sealed hash;
+the F1–F3 witnesses were the only unbound test file, so the checks for the very
+defects this generation headlines could have been weakened after the freeze;
+and the balance-gate control asserted against a rule the test itself defined,
+proving only that the test agreed with itself. Plus the phantom guard above, and
+suite figures in two agent-facing docs that went stale again one commit after
+being fixed.
+
 **Second review's five:** the balance-gate tolerance and the decayed test above;
 the Gen116/v5 naming vestiges still sitting in contract-bound prose; a lineage
 check running with a hardcoded stripped PATH, brittle for reasons unrelated to
@@ -92,12 +103,16 @@ policy. Both reviewers recomputed the balances from the schedule independently a
 confirmed the science files are byte-identical between attempts, the contract
 payload differing only in changed source pins.
 
-**Tests.** Focused suites 93 passed; lineage 245; full suite **1466 passed, 24
+**Tests.** Focused suites 99 passed; lineage 245; full suite **1475 passed, 24
 failed, 3 skipped, 5 errors**, every failure pre-existing (8 `membukkit`
 run-provenance, 16 `memconflict` dataset-absent), zero new regressions. Those 24
-are now pinned by exact node id in `tests/KNOWN_FAILURES.json`, with a test that
-fails on any unlisted failure *and* on any listed one that starts passing — a
-familiar-looking total can no longer hide a new failure.
+are pinned by exact node id in `tests/KNOWN_FAILURES.json`, with
+`tests/test_known_failures_baseline.py` failing on any unlisted failure *and* on
+any listed one that starts passing. **Both files are committed in this
+generation** — in my last handoff I described them as existing when they were
+sitting in a stash, unversioned. Both reviewers led with that, and they were
+right to: a claimed guard that is not in the tree is worse than an absent one,
+because it reads exactly like protection.
 
 **Is the apparatus ready for a reader run to be authorised?** Yes, and I would
 now add: more ready than after the first review, which I also believed at the

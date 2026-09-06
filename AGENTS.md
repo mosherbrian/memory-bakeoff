@@ -29,7 +29,7 @@ PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
 
 # Whole suite. Needs scikit-learn and pandas (declared in pyproject).
 PYTHONPATH=src:vendor/membukkit/src pytest -q --continue-on-collection-errors
-# 1460 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
+# 1475 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
 ```
 
 **The whole-suite figure is not green, and every remaining failure has a known
