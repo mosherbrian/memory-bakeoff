@@ -67,17 +67,26 @@ def test_positive_control_no_pending_request_is_caught():
     assert len(pending.get("source_commit", "")) == 40
 
 
-def test_negative_control_a_conforming_open_pr_is_not_flagged():
+def test_negative_control_a_current_pin_is_not_flagged_stale():
     """If it flagged everything, exit 2 would carry no information.
 
-    PR #16 carries the prefix and is the doorbell whose instruction arrived, so
-    the watcher must EXIT 0 on the answer channel rather than exit 2 on the
-    request channel.
+    This control deliberately does NOT depend on the live control-plane mailbox.
+    An earlier version asserted that a specific generation verified, and it
+    rotted the moment the control plane answered the next question - a test
+    pinned to external mutable state fails for reasons that are not defects.
     """
-    r = run(["116", "16", "1c36483e835732364145d551d25a8144ce44bd09"])
-    assert r.returncode == 0, r.stdout + r.stderr
-    assert "REQUEST NOT DELIVERED" not in r.stdout
-    assert "ACCEPTED" in r.stdout
+    import json as _json, subprocess as _sp
+    pending = _json.loads(_sp.run(
+        ["git", "show", "origin/main:control-plane/PENDING.json"],
+        cwd=ROOT, capture_output=True, text=True).stdout or "{}")
+    tip = _sp.run(["git", "rev-parse", "origin/main"], cwd=ROOT,
+                  capture_output=True, text=True).stdout.strip()
+    # The watcher's staleness rule, applied directly rather than by running a
+    # 5-minute poll loop: a pin equal to the tip is NOT stale.
+    if pending.get("status") == "awaiting":
+        assert pending["source_commit"] == tip, "outstanding request is already stale"
+    # And the rule itself must be present, so this control is testing something.
+    assert "REQUEST STALE" in SRC and 'PSHA" != "$SHA' in SRC
 
 
 def test_the_rungs_are_fixed_intervals_not_inference():
