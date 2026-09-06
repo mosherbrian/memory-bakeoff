@@ -49,6 +49,11 @@ ALLOWLIST = {
             "Contains the literal only inside an assertion that FORBIDS it. The "
             "line is the guard against the defect, not an instance of it."
         ),
+        "tests/test_gen119_run_apparatus.py": (
+            "Same reason: the literal appears only inside the assertion that "
+            "forbids authoring seed acceptance. The v6 apparatus tests inherit "
+            "that guard from the v5 ones, so they inherit the exemption too."
+        ),
     },
 }
 
