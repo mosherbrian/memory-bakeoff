@@ -20,11 +20,27 @@ Start with `STATUS_AND_FINDINGS.md`, then `CODEX_HANDOFF.md`.
 The handoff snapshot is expected to pass:
 
 ```bash
-pytest -q
-# 97 passed (node must be on PATH)
+# Authoritative gate on any host. Must be fully green.
+PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
+  tests/test_gen110_reader_execution.py tests/test_gen111_reader_v2.py \
+  tests/test_gen112_reader_v3.py tests/test_gen113_reader_v4.py \
+  tests/test_gen115_adjudication.py tests/test_gen116_reader_v5.py
+# 245 passed  (reader-interference lineage, 2026-09-06)
+
+# Whole suite. Needs sklearn and pandas, which are NOT installed on every host.
+PYTHONPATH=src pytest -q --continue-on-collection-errors
+# 1082 passed, 18 failed, 6 skipped, 47 errors  (2026-09-06)
 ```
 
-If that fails on a clean environment, diagnose the environment/setup before modifying benchmark logic.
+**The whole-suite figure is not green and has not been for some time.** The 18
+failures and 47 collection errors trace to four causes, none of them in the
+reader-interference line: missing result artifacts, the absent
+`external/MemConflict` dataset, assertions pinning macOS paths, and missing
+`sklearn`/`pandas`. Treat the lineage gate as the one that must pass; investigate
+any *change* in the whole-suite numbers rather than the numbers themselves.
+
+The "97 passed" figure that stood here until 2026-09-06 was a Gen28 snapshot. It
+was reported stale by review three separate times before anyone fixed it.
 
 ## Preferred next work
 

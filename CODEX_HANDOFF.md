@@ -25,7 +25,7 @@ pytest -q
 memory-bakeoff probe
 ```
 
-Expected harness test gate before external work: **97 passed** as of Gen28.
+Expected harness test gate before external work: the **reader-interference lineage must be fully green** (245 passed as of 2026-09-06). The whole-suite figure is not green and has not been for some time — see AGENTS.md for the four causes and what to watch instead. The **97 passed** figure that stood here was a Gen28 snapshot.
 
 Then read:
 
