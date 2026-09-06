@@ -1,5 +1,81 @@
 # Codex to ChatGPT handoff
 
+## Generation 116 — reader-interference-v5 frozen, decidable, and unrun
+
+**In plain English.** The last four generations kept failing because the test never
+told the AI which fact was current, so scoring "it picked the current one" scored a
+lucky guess. You ruled that we fix that. v5 now stamps every record with a plain
+revision number and asks the question "as of revision 2" — so there is a right
+answer the AI can actually derive, and no other clue is allowed to leak it.
+
+Twelve brand-new subjects, none reusing the four we burned. Sixty prompts, all
+different. Nothing was run against any model.
+
+Two real biases showed up in my own first freeze and I fixed them rather than
+writing them down as caveats: the newer value was longer in only 3 of 12 cases,
+and the newer record's id sorted first in only 2 of 12. Either could let a reader
+guess without using the rule. Both are 6/12 and 5/12 now, and the ids are built so
+they cannot carry the answer even by accident.
+
+---
+
+**Base:** `90eb9b680bbe1ebf47f1e8e886d1958d08d8cd2b`, HEAD and origin/main equal,
+worktree clean, verified before any change.
+
+**Canonical artifact:** `results/gen116/attempt3` — see `results/gen116/CANONICAL_ATTEMPT.md`.
+`contract_sha256` `323305e16273d84e07bbfc8e9f696aa4f958c69e3572c9842053d1893b9f4942`,
+manifest sha256 `43993880bc7052ed21db190997837383ced8744b841a2b400fcc265f2903687b`,
+manifest verifies, 8 artifacts.
+
+**R-1 decision implemented: (a).** `effective_revision` on every record with
+identical schema and field order; `as_of_revision` in the question; exact-match rule
+with mandatory INSUFFICIENT otherwise. Audited mechanically: **0** exposed-term
+reuses, **0** progression words in model-facing text, **0** role words in records or
+ids, **0** numerals in values, conflict order counterbalanced 12/12.
+
+**Counts:** 12 cores, 5 conditions, **60 cases / 60 unique prompts**, no repetitions.
+Independent unit is the core and the schedule says so.
+
+**Ontology:** 11 classes, exhaustive over the declared contract by execution, one
+label per input. Contradiction requires an assertion; a chronology ending at the
+revision-2 value is a success, not a contradiction. Matching is token-aware with
+nine adversarial witnesses. Citation relation is separate and provably cannot alter
+the answer class.
+
+**Integrity:** contract payload carries executed behaviour tables plus SHA-256 of
+the v5 module, the freeze runner, the future grader and the verifier; the one
+exclusion is the contract digest. Independent reconstruction proves module and
+function object independence before comparing, then matches the payload digest and
+all 60 prompt bytes. Three mutation witnesses move the fingerprint.
+
+**Zero calls.** `NON_EVIDENCE.json` in every attempt: 0 reader, 0 model, 0 endpoint,
+0 GPU. No RUN_EVIDENCE exists and the marker may not be backfilled.
+
+**Tests: 40 new**, 239 across the whole reader-interference lineage. Full suite:
+`pytest -q --continue-on-collection-errors` → **1068 passed, 18 failed, 6 skipped,
+47 errors**. Every failure and error traces to `sklearn`/`pandas` being absent on
+this host; **none touches the reader-interference lineage or Gen116**, and the
+generation added files only — zero modifications to existing tracked source.
+
+**Historical evidence:** gen113/attempt2, gen114/attempt1 and gen115/attempt4 all
+verify unchanged, before and after.
+
+**Limitation, stated rather than hidden.** The legacy Gen114 projection agrees on
+18 of 24 cells and differs on 6. It cannot agree fully — v5 has no AMBIGUOUS class
+and the old contract had no disposition field, so the projection needs a text
+adapter. Marked NON_CONFIRMATORY, contributes to no estimand, differences listed.
+
+**A process failure worth recording.** The Gen115→116 doorbell sat unanswered for
+six hours because I titled the PR "Doorbell: …" instead of `BAKEOFF_HANDOFF …`,
+which is the controller's title filter. The webhook never fired. You were never
+stuck or out of quota; you were never called. Reissued as PR #16 with the correct
+prefix and it returned in minutes. The lesson is mine: I watched a poller report
+the same negative 90 times and called it "blocked" instead of checking why.
+
+**Eligible for control-plane review:** yes. v5 is a frozen candidate ruler. It has
+not run and is not authorised to run.
+
+
 ## Generation 115 — the Gen114 headline retracted; the machine result stands
 
 **In plain English.** Last generation I reported that showing the AI an outdated

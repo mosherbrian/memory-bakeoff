@@ -2,7 +2,8 @@
 
 **Snapshot:** 2026-09-06 (America/Los_Angeles)  
 **Harness tests:** see the Gen107 handoff entry for the authoritative count  
-**Reader layer:** MEASURED at Gen114 — stale co-return makes this reader contradict itself in all four cores (21/24 conflict cells); order matters in one core. Configuration-scoped.  
+**Reader layer:** `reader-interference-v5` FROZEN and **UNRUN** at Gen116 — R-1(a) decidable recency (`effective_revision`/`as_of_revision`), 12 fresh cores, 60 unique prompts, zero model calls. Candidate ruler awaiting control-plane review.  
+**Reader layer:** Gen114's headline is **RETRACTED** at Gen115. Its bytes and machine labels reproduce exactly, but the reader gave the stale value **0/24** times, met the contradiction bar **0/24**, and 21 of 24 replies echo prompt order. No conflict prompt disclosed which record was current, so v4 scored a guess. Gen114 = `RESULT_PRESENT / PROTOCOL_INCOMPLETE / NOT_CONFIRMATORY`; its four cores are development-exposed. No causal claim that stale co-return costs correctness is supported.  
 **Reader layer:** `reader-interference-v4` frozen at Gen113 and **unrun**; v3 superseded for an incomplete freeze fingerprint, not for bad science.  
 **Reader layer:** `reader-interference-v3` frozen at Gen112 and **unrun**; v2 superseded after review found a contradiction could pass a control gate.  
 **Reader layer:** repaired ruler `reader-interference-v2` frozen at Gen111 and **unrun**; v1 superseded after four defects including a blinding failure.  
