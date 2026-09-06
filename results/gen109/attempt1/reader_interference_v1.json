@@ -1,0 +1,700 @@
+{
+ "across_core_verdicts": [
+  "REPLICATED_ACROSS_CORES",
+  "PARTIAL_REPLICATION",
+  "FIXTURE_SPECIFIC"
+ ],
+ "conditions": [
+  "CLEAN_CURRENT",
+  "CONFLICT_STALE_FIRST",
+  "CONFLICT_CURRENT_FIRST",
+  "CLEAN_STALE_NEGATIVE_CONTROL",
+  "INSUFFICIENT_CONTROL"
+ ],
+ "contract_sha256": "bc00267aed3da0e870387f3193c05536cd1cb5c1a2325d427d7a6b93915817a4",
+ "contract_version": "reader-interference-v1",
+ "decisions": [
+  "CURRENT",
+  "STALE",
+  "MIXED",
+  "INSUFFICIENT",
+  "UNPARSED"
+ ],
+ "execution_boundary": {
+  "future_run_must": [
+   "consume this fixture and contract unmodified",
+   "record model/backend, exact model id, prompt hash, temperature, seed when supported, request and response fingerprints, repetition number",
+   "use predeclared repetitions and REPORT variation when the backend cannot guarantee deterministic sampling, never silently pick one",
+   "write only under immutable-evidence-v1 attempt paths"
+  ],
+  "future_run_must_not": [
+   "manufacture a product-linked mapping from missing historical cells",
+   "use any fixed mutable result path or overwrite flag"
+  ],
+  "gen109_runs_nothing": true
+ },
+ "fixture": {
+  "cases": [
+   {
+    "answerable": true,
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "C1-CUR"
+    ],
+    "core": "branch:vega",
+    "current_answer": "Vega ships from branch release/vega-4.x.",
+    "current_id": "C1-CUR",
+    "id": "branch:vega|CLEAN_CURRENT",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-CUR",
+      "role": "current",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-4.x."
+     }
+    ],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "C1-SUP",
+     "C1-CUR"
+    ],
+    "core": "branch:vega",
+    "current_answer": "Vega ships from branch release/vega-4.x.",
+    "current_id": "C1-CUR",
+    "id": "branch:vega|CONFLICT_STALE_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-CUR",
+      "role": "current",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-4.x."
+     },
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-SUP",
+      "role": "superseded",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-3.x."
+     }
+    ],
+    "stale_answer": "Vega ships from branch release/vega-3.x.",
+    "stale_id": "C1-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "C1-CUR",
+     "C1-SUP"
+    ],
+    "core": "branch:vega",
+    "current_answer": "Vega ships from branch release/vega-4.x.",
+    "current_id": "C1-CUR",
+    "id": "branch:vega|CONFLICT_CURRENT_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-CUR",
+      "role": "current",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-4.x."
+     },
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-SUP",
+      "role": "superseded",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-3.x."
+     }
+    ],
+    "stale_answer": "Vega ships from branch release/vega-3.x.",
+    "stale_id": "C1-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "C1-SUP"
+    ],
+    "core": "branch:vega",
+    "current_answer": null,
+    "current_id": null,
+    "id": "branch:vega|CLEAN_STALE_NEGATIVE_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-SUP",
+      "role": "superseded",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-3.x."
+     }
+    ],
+    "stale_answer": "Vega ships from branch release/vega-3.x.",
+    "stale_id": "C1-SUP"
+   },
+   {
+    "answerable": false,
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "branch:vega",
+    "current_answer": null,
+    "current_id": null,
+    "id": "branch:vega|INSUFFICIENT_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Vega release branch",
+    "records": [],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "C3-CUR"
+    ],
+    "core": "budget:solstice",
+    "current_answer": "Solstice is provisioned with 512 GiB after the resize.",
+    "current_id": "C3-CUR",
+    "id": "budget:solstice|CLEAN_CURRENT",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-CUR",
+      "role": "current",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 512 GiB after the resize."
+     }
+    ],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "C3-SUP",
+     "C3-CUR"
+    ],
+    "core": "budget:solstice",
+    "current_answer": "Solstice is provisioned with 512 GiB after the resize.",
+    "current_id": "C3-CUR",
+    "id": "budget:solstice|CONFLICT_STALE_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-CUR",
+      "role": "current",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 512 GiB after the resize."
+     },
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-SUP",
+      "role": "superseded",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 256 GiB."
+     }
+    ],
+    "stale_answer": "Solstice is provisioned with 256 GiB.",
+    "stale_id": "C3-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "C3-CUR",
+     "C3-SUP"
+    ],
+    "core": "budget:solstice",
+    "current_answer": "Solstice is provisioned with 512 GiB after the resize.",
+    "current_id": "C3-CUR",
+    "id": "budget:solstice|CONFLICT_CURRENT_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-CUR",
+      "role": "current",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 512 GiB after the resize."
+     },
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-SUP",
+      "role": "superseded",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 256 GiB."
+     }
+    ],
+    "stale_answer": "Solstice is provisioned with 256 GiB.",
+    "stale_id": "C3-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "C3-SUP"
+    ],
+    "core": "budget:solstice",
+    "current_answer": null,
+    "current_id": null,
+    "id": "budget:solstice|CLEAN_STALE_NEGATIVE_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-SUP",
+      "role": "superseded",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 256 GiB."
+     }
+    ],
+    "stale_answer": "Solstice is provisioned with 256 GiB.",
+    "stale_id": "C3-SUP"
+   },
+   {
+    "answerable": false,
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "budget:solstice",
+    "current_answer": null,
+    "current_id": null,
+    "id": "budget:solstice|INSUFFICIENT_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Solstice provisioned capacity",
+    "records": [],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "C2-CUR"
+    ],
+    "core": "oncall:kestrel",
+    "current_answer": "Kestrel escalations route to the platform rota.",
+    "current_id": "C2-CUR",
+    "id": "oncall:kestrel|CLEAN_CURRENT",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-CUR",
+      "role": "current",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the platform rota."
+     }
+    ],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "C2-SUP",
+     "C2-CUR"
+    ],
+    "core": "oncall:kestrel",
+    "current_answer": "Kestrel escalations route to the platform rota.",
+    "current_id": "C2-CUR",
+    "id": "oncall:kestrel|CONFLICT_STALE_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-CUR",
+      "role": "current",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the platform rota."
+     },
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-SUP",
+      "role": "superseded",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the network rota."
+     }
+    ],
+    "stale_answer": "Kestrel escalations route to the network rota.",
+    "stale_id": "C2-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "C2-CUR",
+     "C2-SUP"
+    ],
+    "core": "oncall:kestrel",
+    "current_answer": "Kestrel escalations route to the platform rota.",
+    "current_id": "C2-CUR",
+    "id": "oncall:kestrel|CONFLICT_CURRENT_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-CUR",
+      "role": "current",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the platform rota."
+     },
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-SUP",
+      "role": "superseded",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the network rota."
+     }
+    ],
+    "stale_answer": "Kestrel escalations route to the network rota.",
+    "stale_id": "C2-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "C2-SUP"
+    ],
+    "core": "oncall:kestrel",
+    "current_answer": null,
+    "current_id": null,
+    "id": "oncall:kestrel|CLEAN_STALE_NEGATIVE_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-SUP",
+      "role": "superseded",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the network rota."
+     }
+    ],
+    "stale_answer": "Kestrel escalations route to the network rota.",
+    "stale_id": "C2-SUP"
+   },
+   {
+    "answerable": false,
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "oncall:kestrel",
+    "current_answer": null,
+    "current_id": null,
+    "id": "oncall:kestrel|INSUFFICIENT_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Kestrel escalation routing",
+    "records": [],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "C0-CUR"
+    ],
+    "core": "throughput:atlas",
+    "current_answer": "Atlas measured 41 t/s after the cache fix.",
+    "current_id": "C0-CUR",
+    "id": "throughput:atlas|CLEAN_CURRENT",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-CUR",
+      "role": "current",
+      "scope": "server:atlas",
+      "text": "Atlas measured 41 t/s after the cache fix."
+     }
+    ],
+    "stale_answer": null,
+    "stale_id": null
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "C0-SUP",
+     "C0-CUR"
+    ],
+    "core": "throughput:atlas",
+    "current_answer": "Atlas measured 41 t/s after the cache fix.",
+    "current_id": "C0-CUR",
+    "id": "throughput:atlas|CONFLICT_STALE_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-CUR",
+      "role": "current",
+      "scope": "server:atlas",
+      "text": "Atlas measured 41 t/s after the cache fix."
+     },
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-SUP",
+      "role": "superseded",
+      "scope": "server:atlas",
+      "text": "Atlas measured 27 t/s."
+     }
+    ],
+    "stale_answer": "Atlas measured 27 t/s.",
+    "stale_id": "C0-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "C0-CUR",
+     "C0-SUP"
+    ],
+    "core": "throughput:atlas",
+    "current_answer": "Atlas measured 41 t/s after the cache fix.",
+    "current_id": "C0-CUR",
+    "id": "throughput:atlas|CONFLICT_CURRENT_FIRST",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-CUR",
+      "role": "current",
+      "scope": "server:atlas",
+      "text": "Atlas measured 41 t/s after the cache fix."
+     },
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-SUP",
+      "role": "superseded",
+      "scope": "server:atlas",
+      "text": "Atlas measured 27 t/s."
+     }
+    ],
+    "stale_answer": "Atlas measured 27 t/s.",
+    "stale_id": "C0-SUP"
+   },
+   {
+    "answerable": true,
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "C0-SUP"
+    ],
+    "core": "throughput:atlas",
+    "current_answer": null,
+    "current_id": null,
+    "id": "throughput:atlas|CLEAN_STALE_NEGATIVE_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-SUP",
+      "role": "superseded",
+      "scope": "server:atlas",
+      "text": "Atlas measured 27 t/s."
+     }
+    ],
+    "stale_answer": "Atlas measured 27 t/s.",
+    "stale_id": "C0-SUP"
+   },
+   {
+    "answerable": false,
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "throughput:atlas",
+    "current_answer": null,
+    "current_id": null,
+    "id": "throughput:atlas|INSUFFICIENT_CONTROL",
+    "instruction": "Answer the question using only the records provided.\nWrite one line beginning ANSWER: with your answer.\nWrite CITE: followed by the record ids you used, or CITE: NONE if the records do not answer the question.\nIf the records do not contain the answer, say so and cite NONE.",
+    "question": "Atlas measured throughput",
+    "records": [],
+    "stale_answer": null,
+    "stale_id": null
+   }
+  ],
+  "contract_sha256": "bc00267aed3da0e870387f3193c05536cd1cb5c1a2325d427d7a6b93915817a4",
+  "contract_version": "reader-interference-v1",
+  "cores": [
+   "branch:vega",
+   "budget:solstice",
+   "oncall:kestrel",
+   "throughput:atlas"
+  ],
+  "source_fixture": "interference-v3"
+ },
+ "gen85": {
+  "defect": "attempt 1 anchored the citation as ^\\s*CITE: under MULTILINE, so a reply citing inline parsed as UNPARSED and was then scored as a substantive failure",
+  "location": "branch reader-layer-gen85 only; never merged",
+  "may_not": [
+   "seed a fixture",
+   "set a threshold",
+   "serve as a baseline",
+   "provide hand-tuning examples",
+   "influence a verdict rule"
+  ],
+  "on_main": false,
+  "verdict": "QUARANTINED / NOT EVIDENCE"
+ },
+ "grades": [
+  "correct_current_answer",
+  "prohibited_stale_answer",
+  "mixed_contradictory_answer",
+  "correct_insufficiency",
+  "incorrect_abstention",
+  "citation_mismatch",
+  "unparsed_response"
+ ],
+ "parser_fixtures": [
+  {
+   "expect_ids": [
+    "C2-CUR"
+   ],
+   "expect_parsed": true,
+   "name": "citation on its own line",
+   "text": "ANSWER: 240\nCITE: C2-CUR"
+  },
+  {
+   "expect_ids": [
+    "C2-CUR"
+   ],
+   "expect_parsed": true,
+   "name": "valid inline citation",
+   "text": "ANSWER: 240 CITE: C2-CUR"
+  },
+  {
+   "expect_ids": [
+    "C2-CUR",
+    "C2-SUP"
+   ],
+   "expect_parsed": true,
+   "name": "multiple cited record ids",
+   "text": "ANSWER: 240\nCITE: C2-CUR, C2-SUP"
+  },
+  {
+   "expect_ids": [],
+   "expect_parsed": false,
+   "name": "malformed citation",
+   "text": "ANSWER: 240\nCITE: ???"
+  },
+  {
+   "expect_ids": [],
+   "expect_parsed": false,
+   "name": "missing citation",
+   "text": "ANSWER: 240"
+  },
+  {
+   "expect_ids": [],
+   "expect_parsed": true,
+   "name": "contradictory answer and citation",
+   "text": "ANSWER: 240\nCITE: NONE"
+  },
+  {
+   "expect_ids": [
+    "C2-CUR"
+   ],
+   "expect_parsed": true,
+   "name": "extra prose around a valid response",
+   "text": "Let me think about this.\nANSWER: 240\nCITE: C2-CUR\nHope that helps."
+  }
+ ],
+ "questions": [
+  {
+   "compares": [
+    "CLEAN_CURRENT",
+    "CONFLICT_STALE_FIRST",
+    "CONFLICT_CURRENT_FIRST"
+   ],
+   "id": "Q1",
+   "question": "Does adding the stale record increase stale or mixed answers relative to CLEAN_CURRENT?",
+   "rule": "per core: effect if (PROHIBITED_STALE + MIXED_ANSWER) in either conflict condition exceeds CLEAN_CURRENT; no effect if equal or lower"
+  },
+  {
+   "compares": [
+    "CONFLICT_STALE_FIRST",
+    "CONFLICT_CURRENT_FIRST"
+   ],
+   "id": "Q2",
+   "question": "With identical records present, does swapping presentation order change the decision?",
+   "rule": "per core: order effect if the grade distributions of the two conflict conditions differ in any cell; otherwise none"
+  },
+  {
+   "compares": [
+    "CONFLICT_STALE_FIRST",
+    "CONFLICT_CURRENT_FIRST"
+   ],
+   "id": "Q3",
+   "question": "Does the reader consistently prefer current truth when both versions are available?",
+   "rule": "per core: prefers-current only if every conflict cell grades CORRECT_CURRENT; any stale or mixed answer refutes it"
+  },
+  {
+   "compares": [
+    "all cores"
+   ],
+   "id": "Q4",
+   "question": "Are observed effects replicated across all four cores, fixture-specific, or partial?",
+   "rule": "REPLICATED_ACROSS_CORES if the Q1 effect holds in 4 of 4 cores; FIXTURE_SPECIFIC if in exactly 1; PARTIAL_REPLICATION if 2 or 3. Cores are never averaged"
+  },
+  {
+   "compares": [
+    "parser regression fixtures"
+   ],
+   "id": "Q5",
+   "question": "Does the parser accept every contract-valid formatting variant without accepting malformed output?",
+   "rule": "pass only if every valid variant parses AND every malformed variant is UNPARSED. Placement may never change the outcome"
+  }
+ ],
+ "reader_question_state": "OPEN - this generation is NOT a reader result",
+ "status": "FROZEN_UNRUN"
+}

@@ -9,6 +9,14 @@ Round 1 is closed. Its authoritative narrative is
 [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md); prefer it
 over any older score text elsewhere in this repository.
 
+**The reader layer is OPEN and UNRUN (Gen109).** The contract
+`reader-interference-v1` is frozen at
+`results/gen109/attempt1/reader_interference_v1.json`; the design is
+[`research/PI_READER_INTERFERENCE_DESIGN_GEN109.md`](research/PI_READER_INTERFERENCE_DESIGN_GEN109.md).
+**No model has been asked anything** — there is no reader result. Gen85's earlier
+reader attempt is
+[`QUARANTINED / NOT EVIDENCE`](research/GEN85_READER_QUARANTINE.md).
+
 **Round 3 is closed (Gen107).** Its authoritative narrative is
 [`ROUND3_FINAL_READOUT.md`](ROUND3_FINAL_READOUT.md), with the supersession
 detail in [`ROUND3_SUPERSESSION_RESULT.md`](ROUND3_SUPERSESSION_RESULT.md) and a

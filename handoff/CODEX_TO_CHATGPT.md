@@ -1,5 +1,60 @@
 # Codex to ChatGPT handoff
 
+## Generation 109 — the reader layer opened as a ruler, not a result
+
+**The reader question is OPEN and UNRUN.** Nothing was executed: no engine,
+model, reader, sidecar or GPU. Design and integrity only.
+
+Frozen: `reader-interference-v1`, sha256 `bc00267aed3da0e8…`, at
+`results/gen109/attempt1/reader_interference_v1.json` with a verifying
+`MANIFEST.json`. Design report:
+`research/PI_READER_INTERFERENCE_DESIGN_GEN109.md`.
+
+**Gen85 audit — and one finding that matters for provenance.** Gen85's reader
+material is **not on `main`**; it exists only on the unmerged branch
+`reader-layer-gen85`. Nothing was reconstructed from narrative. The
+`superseded_attempt_1` directories on `main` belong to Gen58 and Gen61, different
+experiments entirely.
+
+The defect, read from that branch's source: attempt 1 compiled the citation as
+`^\s*CITE:` under `MULTILINE`, so a reply citing **inline** parsed as
+`UNPARSED` and was then scored by the substantive scorer as a failure. Two
+errors — placement decided parseability, and **parse status was entangled with
+semantic grade**. Every surviving Gen85 artefact is now marked
+`QUARANTINED / NOT EVIDENCE` in `research/GEN85_READER_QUARANTINE.md`.
+
+**What is frozen.** Five conditions over the four Round 3 cores verbatim, 20
+cases: `CLEAN_CURRENT`, `CONFLICT_STALE_FIRST`, `CONFLICT_CURRENT_FIRST`,
+`CLEAN_STALE_NEGATIVE_CONTROL`, `INSUFFICIENT_CONTROL`. The two conflict
+conditions differ in **sequence and nothing else**, enforced by a guard that
+also refuses if they ever present different records. Parsing and grading are
+separate functions with separate vocabularies; seven outcomes stay distinct and
+are never pooled; Q1–Q5 are pre-registered with mechanical rules, reported per
+core, with only the three predeclared across-core verdicts allowed and no
+averaging.
+
+**Tests: 40**, covering all ten failure conditions requested. The Gen85 defect is
+now a permanent regression test — inline and line-separated citations must parse
+byte-identically.
+
+**Execution boundary defined, not crossed.** A future run consumes the fixture
+and contract unmodified, records model/backend, exact model id, prompt hash,
+temperature, seed where supported, request/response fingerprints and repetition
+per cell, reports variation rather than silently picking one answer when
+sampling is non-deterministic, and writes only under `immutable-evidence-v1`.
+
+**Provenance note on this generation itself.** The Gen108 instruction pinned
+`5953d74`, but `main` had advanced by one control-plane tooling commit before it
+arrived, so the executor stopped on the HEAD mismatch as instructed rather than
+rebasing silently. The doorbell was reissued as PR #7 pinned to `1347793`, and
+this generation ran against a verified matching HEAD. `main` is frozen between
+ringing a doorbell and consuming its instruction from now on.
+
+**Recommended next control-plane decision:** authorise the first
+`reader-interference-v1` run against the pinned local reader, or say explicitly
+that the reader arm should wait. P1 and P2 remain eligible and parked.
+
+
 ## Generation 107 — Round 3 closed; the readout, and a Gen106 claim corrected
 
 **Round 3 is CLOSED.** Authoritative: `ROUND3_FINAL_READOUT.md`. Machine-readable
