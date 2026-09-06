@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Pull the control-plane instruction, verify its provenance, and - only if it
+# verifies - record the pending request as answered.
+#
+# The state transition is automatic on purpose. Marking PENDING.json answered was
+# a thing I had to remember, and this project's whole failure record is guards
+# that exist and are not reached. Now the act of consuming an instruction IS the
+# act of releasing the freeze; there is no second step to forget.
+#
+# Fails closed: an instruction that does not verify changes nothing at all.
+#
+# Usage: consume-instruction <source_generation>
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+GEN=${1:?usage: consume-instruction <source_generation>}
+MAC=bmosher@brians-macbook-air.local
+MAC_REPO=/Users/bmosher/source/repos/memory-bakeoff
+
+git fetch -q origin main
+SHA=$(git rev-parse origin/main)
+
+OUT=$(timeout 240 ssh "$MAC" "export PATH=/opt/homebrew/bin:\$PATH; cd $MAC_REPO && \
+      scripts/verify-chatgpt-handoff $GEN $SHA 2>&1" 2>&1 || true)
+printf '%s\n' "$OUT" | grep -E "generation|source_|VERDICT" | sed 's/^/  /'
+
+if ! printf '%s' "$OUT" | grep -q "VERDICT: ACCEPT"; then
+  echo
+  echo "NOT CONSUMED. The instruction does not verify against origin/main ($SHA)."
+  echo "Nothing changed. Do not act on it. Either the control plane pinned a"
+  echo "different commit, or main moved after the request was sent - which is the"
+  echo "stale-pin failure the freeze exists to prevent."
+  exit 1
+fi
+
+STATUS=$(python3 -c "import json;print(json.load(open('control-plane/PENDING.json')).get('status',''))" 2>/dev/null || echo "")
+if [ "$STATUS" = "awaiting" ]; then
+  scripts/pending answered "$GEN"
+  git add control-plane/PENDING.json
+  git commit -q -m "pending: gen$((GEN + 1)) instruction consumed and verified at ${SHA:0:12}"
+  echo "  freeze released: PENDING.json -> answered, committed"
+else
+  echo "  PENDING.json already '$STATUS'; nothing to release"
+fi
+echo "CONSUMED. Safe to act on the instruction."
