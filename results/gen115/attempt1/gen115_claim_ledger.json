@@ -1,0 +1,72 @@
+{
+ "claims": [
+  {
+   "basis": "independent regrade, 0/60 mismatches; 0/60 prompt-hash mismatches",
+   "claim": "All 60 reader calls completed; one model, HTTP 200, finish=stop, and the v4 grading reproduces exactly from sealed raw text.",
+   "status": "PRESERVED_RAW_OBSERVATION"
+  },
+  {
+   "basis": "reproducible machine output; a LABEL, not a semantic finding (R1)",
+   "claim": "v4 assigned mixed_contradictory_answer to 21 of 24 conflict cells.",
+   "status": "PRESERVED_RAW_OBSERVATION"
+  },
+  {
+   "basis": "0/24 answers assert the stale value as current; 0/24 meet R6. The v4 label buckets three distinct response forms together.",
+   "claim": "Stale context caused the reader to contradict itself.",
+   "status": "RETRACTED_UNSUPPORTED"
+  },
+  {
+   "basis": "21/24 answers list both values in the order the records appear in the prompt. The only grade difference (budget:solstice) is a temporal reconciliation ending at the current value, correct under R4.",
+   "claim": "A harmful correctness order effect exists between stale-first and current-first.",
+   "status": "RETRACTED_UNSUPPORTED"
+  },
+  {
+   "basis": "0/24 stale-only answers is a real observation, but the fixture is 4 cores, development-exposed, and gives no recency signal - so it bounds nothing about production memory systems.",
+   "claim": "The reader resists stale context in this fixture.",
+   "status": "PRESERVED_WITH_PROVENANCE_LIMITATION"
+  },
+  {
+   "basis": "the prompt is undecidable as to recency; the condition may instead measure behaviour under an unanswerable question. See decidability.",
+   "claim": "The conflict condition measures stale-memory interference.",
+   "status": "OPEN_EXPLORATORY"
+  }
+ ],
+ "contract": "gen115-adjudication-v1",
+ "contract_hash": "a1a9cb0f1ee05b53224a722f34ba7bfce35ffa0bf15a2398c4928afa0719294d",
+ "decision_rules": [
+  {
+   "id": "R1",
+   "rule": "A machine label is never by itself a semantic finding. v4 outputs a class; what the text MEANS is a separate question with a separate answer."
+  },
+  {
+   "id": "R2",
+   "rule": "All post-run semantic review is EXPLORATORY, without exception, because the outputs were already observed before the categories were written."
+  },
+  {
+   "id": "R3",
+   "rule": "Presence of a canonical substring never determines semantic category on its own. Every category carries a written rationale referring to the actual sentence."
+  },
+  {
+   "id": "R4",
+   "rule": "A response naming both values in an explicit temporal order that ENDS at the current value is a coherent reconciliation, not a contradiction. It answers the question and adds history."
+  },
+  {
+   "id": "R5",
+   "rule": "A response naming both values with no ordering, no resolution and no selection is UNRESOLVED_BOTH - a failure to select, which is NOT automatically a logical contradiction."
+  },
+  {
+   "id": "R6",
+   "rule": "EXPLICIT_CONTRADICTION requires the text to assert two incompatible states as simultaneously current. Nothing weaker earns that label."
+  },
+  {
+   "id": "R7",
+   "rule": "Gen114 bytes are immutable. No rescoring, no backfilled markers, no edits to results/gen114/attempt1."
+  }
+ ],
+ "evidence_classification": {
+  "development_exposed": "the four cores and all observed wording are now development-exposed and can NEVER serve as an independent confirmatory set for a repaired ruler",
+  "gen114": "RESULT_PRESENT / PROTOCOL_INCOMPLETE / NOT_CONFIRMATORY",
+  "raw_corpus": "PRESERVED - useful development evidence",
+  "why": "60 linked responses exist and the v4 machine grading reproduces exactly; the protocol was incomplete (no RUN_EVIDENCE marker, no focused tests, runner and grader absent from the pinned commit) and the semantic interpretation does not follow from the machine label"
+ }
+}

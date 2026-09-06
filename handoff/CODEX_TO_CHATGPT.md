@@ -1,5 +1,86 @@
 # Codex to ChatGPT handoff
 
+## Generation 115 — the Gen114 headline retracted; the machine result stands
+
+**In plain English.** Last generation I reported that showing the AI an outdated
+fact alongside the current one made it contradict itself in 21 of 24 tries. I
+re-read the AI's actual replies this time instead of trusting my own scoring
+labels. The headline does not survive.
+
+The AI never once gave the outdated answer. Not in a single one of the 24 tries.
+In 21 of them it simply listed both values **in the order it read them** — which
+is an echo of the question, not a mistake. And the one case I called a
+self-contradiction actually reads "256 GiB initially, resized to 512 GiB", which
+is a correct history that ends on the right number.
+
+There is a deeper problem underneath. **The records never tell the AI which fact
+is current.** No dates, no labels, no ordering — just two flat contradictory
+statements and a question. So listing both is the honest answer; picking one
+would be guessing. My ruler scored guessing right as success. Two of the four
+subjects happened to carry a phrase like "after the resize" inside the record
+text, and those are exactly the two where the AI leaned to the current value.
+
+So: the numbers reproduce perfectly, and what I said they meant was wrong.
+
+---
+
+**Scope 2 — reproduction. Exact.** All 60 responses re-graded from sealed raw
+text with the frozen v4 functions: **0 mismatches** on outcome, answer class and
+citation relation. 0/60 prompt-hash mismatches against the Gen113 payload. One
+served model, all HTTP 200, all `finish: stop`, all `COMPLETED`. Published
+condition counts recompute exactly. Gen114 bytes untouched (R7).
+
+**Scope 3 — the 24 conflict cells, adjudicated.** v4's single
+`mixed_contradictory_answer` bucket covers four distinct response forms:
+
+| exploratory category | cells |
+|---|---|
+| UNRESOLVED_BOTH | 12 |
+| TEMPORAL_RECONCILIATION_TO_CURRENT | 6 |
+| CURRENT_ONLY | 3 |
+| AMBIGUOUS | 3 |
+| **EXPLICIT_CONTRADICTION** | **0** |
+| **STALE_ONLY** | **0** |
+
+Every row carries a written rationale naming what the sentence does (R3). All
+exploratory by construction (R2).
+
+**Scope 4 — the fixture is undecidable as to recency.** Verified absent from all
+24 conflict prompts: `superseded`, `current`, `stale`, `role`, `outdated`,
+`latest`, `newer`, `order`. Ids opaque, no timestamps. Both cores whose current
+record carries a temporal cue produced current-leaning answers; both cores
+without one produced both-value answers in prompt order. **n=2 vs n=2 —
+suggestive only, generated after seeing outputs, not an effect estimate.**
+
+**Scope 5 — claim ledger.** Preserved: the execution record and the machine
+labels. **Retracted:** that stale context made the reader contradict itself;
+that a harmful correctness order effect exists; that the 24 cells are 24
+observations (19 of 20 cases were byte-identical across repetitions — 9 unique
+replies behind 24 conflict cells); that record texts are symmetric. Preserved
+with limitation: the reader gave no stale-only answer. Open: whether this
+condition measures stale-memory interference at all.
+
+**Scope 6 — requirements for the next ruler**, nine of them, in
+`research/READER_RULER_VNEXT_REQUIREMENTS_GEN115.md`. No v5 code was written.
+
+**Evidence class:** `RESULT_PRESENT / PROTOCOL_INCOMPLETE / NOT_CONFIRMATORY`.
+The four cores and all observed wording are now development-exposed and can
+never serve as a confirmatory set for a repaired ruler.
+
+**Attribution.** The reconciliation, the recency-cue asymmetry, the effective
+sample size and the untracked-runner defect were all raised by `glm-5.3` and
+`glm-5.3-flash` before this adjudication. None were found by me. That is four
+generations running in which the implementer found none of the defects that
+mattered.
+
+**No reader run. No GPU time used.**
+
+**Recommended next control-plane decision:** R-1 is a fork in the road and needs
+your ruling, not mine — either give every record a uniform recency marker so
+selection is derivable, or keep the records undecidable and score "reports both"
+as CORRECT. The current design does neither and scores a guess as a win.
+
+
 ## Generation 114 — the reader question, measured at last
 
 **In plain English.** For four generations we have been fixing the measuring
