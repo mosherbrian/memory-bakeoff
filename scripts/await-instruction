@@ -60,8 +60,17 @@ while :; do
     say "Nothing is asking the control plane for anything. Run: scripts/pending await <gen> <commit>"
     exit 2
   fi
+  # Two distinct questions, and collapsing them broke this once:
+  #   (a) does the state file still pin what THIS watch was started for?
+  #   (b) has content moved under the pin since the request was recorded?
+  # (a) alone misses main advancing; (b) alone misses watching the wrong thing.
   if [ "$PSHA" != "$SHA" ]; then
     say "REQUEST STALE: PENDING.json pins $PSHA but this watch expects $SHA."
+    say "Either the request was re-pinned or this watch is for a different one."
+    exit 2
+  fi
+  if ! scripts/pin-is-current >/dev/null 2>&1; then
+    say "REQUEST STALE: $(scripts/pin-is-current 2>&1 | head -3)"
     say "main advanced while the request was outstanding - the same stale-pin"
     say "failure as Gen107 to Gen108. Re-pin and tell the control plane."
     exit 2

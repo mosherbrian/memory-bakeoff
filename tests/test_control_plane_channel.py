@@ -64,11 +64,13 @@ def test_awaiting_requires_the_pin_to_be_origin_main():
     d = load()
     if d["status"] != "awaiting":
         pytest.skip("no request outstanding")
-    tip = subprocess.run(["git", "rev-parse", "origin/main"], cwd=ROOT,
-                         capture_output=True, text=True).stdout.strip()
-    assert d["source_commit"] == tip, (
-        f"PENDING pins {d['source_commit'][:12]} but origin/main is {tip[:12]}; "
-        "the control plane is answering a commit that no longer exists as the tip")
+    # NOT strict equality: recording the request is itself a commit, so that
+    # invariant is broken by the act of satisfying it - which is exactly what
+    # happened the first time this ran. The rule is that nothing but PENDING.json
+    # bookkeeping may follow the pin.
+    r = subprocess.run(["scripts/pin-is-current"], cwd=ROOT,
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
 
 
 def test_the_freeze_hook_exists_and_is_wired():

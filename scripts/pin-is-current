@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Is the pending request's pin still the state the control plane is answering?
+#
+# NOT "pin == tip". Recording the request is itself a commit, so a strict
+# equality invariant is violated by the act of satisfying it - which is exactly
+# what happened the first time this ran. The honest rule:
+#
+#   the pin is an ancestor of origin/main, AND every commit after it touches
+#   control-plane/PENDING.json and nothing else.
+#
+# Bookkeeping does not change what the control plane is being asked about.
+# Anything else does.
+#
+# exit 0 current | exit 1 stale, and says what moved
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+PIN=$(python3 -c "import json;print(json.load(open('control-plane/PENDING.json'))['source_commit'])")
+TIP=$(git rev-parse origin/main)
+[ "$PIN" = "$TIP" ] && { echo "current: pin is the tip"; exit 0; }
+git merge-base --is-ancestor "$PIN" "$TIP" 2>/dev/null || {
+  echo "STALE: $PIN is not an ancestor of origin/main"; exit 1; }
+DIRTY=$(git diff --name-only "$PIN..$TIP" | grep -v '^control-plane/PENDING.json$' || true)
+if [ -n "$DIRTY" ]; then
+  echo "STALE: content changed after the request was recorded:"
+  printf '%s\n' "$DIRTY" | sed 's/^/  /'
+  exit 1
+fi
+echo "current: only PENDING.json bookkeeping since the pin ($(git rev-list --count "$PIN..$TIP") commit(s))"

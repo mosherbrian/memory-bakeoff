@@ -8,7 +8,9 @@
 #
 # The exemption is narrow and mechanical: a commit that only touches
 # control-plane/PENDING.json is how the freeze is lifted, so the mechanism can
-# always release itself.
+# always release itself. scripts/pin-is-current applies the same rule when
+# judging whether an outstanding pin has gone stale - bookkeeping commits do not
+# change what the control plane is being asked about, anything else does.
 #
 # Install:  git config core.hooksPath .githooks
 set -euo pipefail

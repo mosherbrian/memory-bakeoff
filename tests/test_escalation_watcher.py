@@ -75,18 +75,21 @@ def test_negative_control_a_current_pin_is_not_flagged_stale():
     rotted the moment the control plane answered the next question - a test
     pinned to external mutable state fails for reasons that are not defects.
     """
-    import json as _json, subprocess as _sp
-    pending = _json.loads(_sp.run(
-        ["git", "show", "origin/main:control-plane/PENDING.json"],
-        cwd=ROOT, capture_output=True, text=True).stdout or "{}")
-    tip = _sp.run(["git", "rev-parse", "origin/main"], cwd=ROOT,
-                  capture_output=True, text=True).stdout.strip()
+    import subprocess as _sp
     # The watcher's staleness rule, applied directly rather than by running a
-    # 5-minute poll loop: a pin equal to the tip is NOT stale.
-    if pending.get("status") == "awaiting":
-        assert pending["source_commit"] == tip, "outstanding request is already stale"
+    # 5-minute poll loop. NOT strict equality against the tip: recording the
+    # request is itself a commit, so that invariant is broken by the act of
+    # satisfying it. Bookkeeping commits do not change what the control plane is
+    # being asked about; anything else does.
+    r = _sp.run(["scripts/pin-is-current"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
     # And the rule itself must be present, so this control is testing something.
-    assert "REQUEST STALE" in SRC and 'PSHA" != "$SHA' in SRC
+    # Both staleness questions must be present. Collapsing them into one -
+    # keeping only the content check - made a bogus expected SHA loop instead of
+    # failing, and the positive control caught it.
+    assert "REQUEST STALE" in SRC
+    assert 'PSHA" != "$SHA' in SRC, "must check the pin matches THIS watch"
+    assert "pin-is-current" in SRC, "must also check content has not moved"
 
 
 def test_the_rungs_are_fixed_intervals_not_inference():
