@@ -113,7 +113,7 @@ def preflight(source_commit: str) -> dict:
 
     ev = EV.verify(CANONICAL)
     if not ev["verified"]:
-        problems.append(f"attempt4 manifest failed: {ev}")
+        problems.append(f"canonical attempt manifest failed: {ev}")
 
     contract = json.loads((CANONICAL / "reader_interference_v6_contract.json").read_text())
     # The manifest already proves this file is the one the freeze wrote; the
@@ -176,7 +176,8 @@ def preflight(source_commit: str) -> dict:
         problems.append("an open review finding remains in reviews/LEDGER.md")
 
     return {"head": head, "source_commit_expected": source_commit,
-            "worktree_clean": not dirt, "attempt4_verified": ev["verified"],
+            "worktree_clean": not dirt, "canonical_attempt": str(CANONICAL.relative_to(ROOT)),
+            "canonical_verified": ev["verified"],
             "contract_sha256": contract["contract_sha256"],
             "cases": len(cases), "cores": len({c["core"] for c in cases}),
             "unique_prompt_hashes": len(set(hashes.values())),
@@ -203,7 +204,13 @@ def freeze_contract(cases: list[dict], generation: int, source_commit: str,
     bodies = {c["case_id"]: json.dumps(request_body(c), sort_keys=True) for c in cases}
     return {
         "generation": generation, "evidence_class": EVIDENCE_CLASS,
-        "authorisation": {"authorised_by_generation": authorised_by,
+        # Two separate facts, named separately. Calling the single value
+        # "authorised_by_generation" conflated the generation that AUTHORISED the
+        # run with the one EXECUTING it; they are required to match, which is the
+        # typo gate, but the record must not imply they are the same thing.
+        "authorisation": {"authorisation_generation": authorised_by,
+                          "execution_generation": generation,
+                          "required_to_match": True,
                           "source_commit": source_commit,
                           "supplied_at_runtime_not_hardcoded": True},
         "consumes": {"canonical_attempt": str(CANONICAL.relative_to(ROOT)),
@@ -323,7 +330,7 @@ def main() -> int:
     print(f"preflight: {'PASS' if pf['passed'] else 'FAIL'}")
     print(f"  generation            {args.generation}")
     print(f"  authorised_by         {args.authorised_by or '(none - dry run)'}")
-    for k in ("head", "worktree_clean", "attempt4_verified", "cases", "cores",
+    for k in ("head", "worktree_clean", "canonical_verified", "cases", "cores",
               "unique_prompt_hashes", "lineage_green"):
         print(f"  {k:<22}{pf[k]}")
     for problem in pf["problems"]:

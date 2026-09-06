@@ -2,92 +2,112 @@
 
 ## Generation 120 — the evidence gate now measures instead of asserting; still unrun
 
-**In plain English.** You found a hole I had not seen, in the part of the system
-whose entire job is to make evidence tamper-evident. When the reader eventually
-runs, its verbatim answers are the one thing that can never be regenerated. We
-wrote those answers to a file, computed a checksum, and stored the checksum in a
-seal — but never registered the file in the manifest. The verifier only reads the
-manifest. So the most important file in the run was the one file nothing checked.
-Somebody could have edited it afterwards and every gate would still have shown
-green.
+**In plain English.** You found a hole in the part of the system whose entire job
+is making evidence tamper-evident. When the reader eventually runs, its verbatim
+answers are the one thing that can never be regenerated. We wrote those answers
+to a file, computed a checksum, and stored the checksum in a seal — but never
+registered the file in the manifest. The verifier only reads the manifest. So the
+most important file in the run was the one file nothing checked; it could have
+been edited afterwards and every gate would still have shown green.
 
 Two smaller versions of the same disease sat beside it. The runner *told* the
 final gate that the evidence was intact, as a hardcoded yes, rather than looking.
-And it had the generation number and source commit baked in as constants, so
-authorising a future run would have meant editing a file the freeze binds —
-bookkeeping that forces a scientific refreeze.
+And the generation number and source commit were baked in as constants, so
+authorising a future run would have meant editing a file the freeze binds.
 
-All three are fixed. The raw file is now in the manifest, hashed from what is
-actually on disk rather than from what the code believed it wrote. The final gate
-is computed by verifying the complete required set of artifacts, and the marker
-is written last so it can never verify itself. Generation, commit and
-authorisation are supplied when the run is authorised, checked against each other
-and against HEAD, and a stale or mistyped value stops everything with zero calls.
-
-**Nothing was run against any model this generation, and the reader is still not
+All three are fixed. Then the two rival reviewers found four more, and those are
+fixed too. **Nothing was run against any model, and the reader is still not
 authorised to run.**
 
-The honest note: I did not find any of these. You did. My own reading of that
-runner passed over `manifest_ok=True` more than once.
+The honest note: I found none of these. You found three, the reviewers found
+four. My own reading of that runner passed over `manifest_ok=True` more than once.
+
+**The best of the review findings**, because it is a mistake I would repeat: a
+test proved the "no repair after exposure" rule by editing a real frozen source
+file and restoring it in a `finally`. Both reviewers were reading that same
+checkout while the other ran the suite. Each saw a tampered frozen source, and
+each correctly reported a defect it could not attribute. My test was making the
+repository lie to whoever else was looking at it. The test now runs in a
+throwaway worktree, and the review harness gives each reviewer its own — because
+blind reviewers sharing mutable state are not independent, they are each other's
+confounder.
 
 ---
 
 **Provenance:** source_generation 119, source_commit `a983f9bcc3f6`, trigger
-`control-plane/PENDING.json` (delivered by the scheduled-task mechanism, no PR).
-Committed HEAD `80c9fb7e44f538733be0805e24df6783b8280d49`.
+`control-plane/PENDING.json`, delivered by the scheduled-task mechanism with no
+PR involved — its first successful use.
 
-**Canonical artifact:** `results/gen118/attempt6`, 8 artifacts, manifest verifies.
-`contract_sha256` `819e79964ec07bdbe3c77b22339e647829402071b0edd6cdaeb97ee917fb5f98`.
-attempts 1–5 preserved byte-for-byte, each verifying, each with its reason in
-`results/gen118/CANONICAL_ATTEMPT.md`. attempt5 is superseded but not wrong: it
-stopped being the executable freeze only because repairing a contract-bound
-runner necessarily invalidates the contract binding it.
+**On the committed HEAD, corrected:** the earlier draft of this entry named HEAD
+`80c9fb7`, the commit *before* the one that sealed the artifact it cites. Both
+reviewers caught it. The artifact, the canonical pointer and this entry are all
+committed together, so the commit that adds this entry **is** the provenance;
+`control-plane/PENDING.json` records that hash as the pin, and it is the value to
+verify against.
 
-**The three findings:**
+**Canonical artifact:** `results/gen118/attempt7`, 8 artifacts, manifest verifies.
+`contract_sha256` `7e3a73e63e546b94d46d6faf76b0f915b423b2be79a185db6e20384e7a9c0c58`.
+attempts 1–6 preserved byte-for-byte and all verify, each with its reason in
+`results/gen118/CANONICAL_ATTEMPT.md`. attempt6 held your three repairs; attempt7
+adds the four from the rival review. Neither is *wrong* — each stopped being the
+executable freeze because repairing a contract-bound surface necessarily
+invalidates the contract binding it.
 
-1. **F1 — raw responses were not manifest-bound.** `reader_raw.jsonl` was written
-   with a bare `write_text`; its hash lived only in `raw_seal.json`, which
-   `EV.verify` never reads. New `EV.write_raw` writes and manifests in one step,
-   taking the digest **from the file after writing**, so a manifest entry cannot
-   describe bytes other than the ones on disk. Mutating one byte, deleting the
-   file, or rewriting the seal each now fail verification, and there is a
-   three-way check that seal, manifest and disk agree.
+**Your three:**
+
+1. **F1 — raw responses were not manifest-bound.** New `EV.write_raw` writes and
+   manifests in one step, taking the digest **from the file after writing**, so a
+   manifest entry cannot describe bytes other than those on disk. One-byte edit,
+   deletion, and a lying seal each now fail verification; a three-way check
+   confirms seal, manifest and disk agree.
 2. **F2 — the evidence gate was authored.** `manifest_ok=True` became
    `EV.verify_closed(out, REQUIRED_PRE_MARKER)`, which answers what `verify`
-   structurally cannot: is the manifest **exactly** the required inventory?
-   Missing and unexpected artifacts are reported separately; either denies
-   closure. The marker is excluded from that set and written afterwards.
-3. **F3 — run provenance was hardcoded.** `scripts/run_gen119_reader.py` is now
-   `scripts/run_reader_v6.py`, no generation in the name. `--generation`,
-   `--source-commit` and `--authorised-by` are runtime inputs; the generation is
-   stated twice and must agree, so a stale copy-paste fails; preflight compares
-   HEAD against the authorised commit, which the old runner recorded but never
-   checked; evidence is filed under the generation that actually ran it.
+   structurally cannot: is the manifest **exactly** the required inventory? The
+   marker is excluded from that set and written afterwards, so it never verifies
+   itself.
+3. **F3 — run provenance was hardcoded.** Now `scripts/run_reader_v6.py`, no
+   generation in the name. Generation, source commit and authorisation are
+   runtime inputs; the generation is stated twice and must agree; preflight
+   compares HEAD to the authorised commit, which the old runner recorded but
+   never checked.
 
-**Science unchanged.** 12 cores, 60 cases, 60 unique prompts, no exposed-term or
-prompt-hash reuse, exact 6/12 balance on id order, value length and lexicographic
-sort, counterbalanced conflict order, verbatim rule in every prompt, nine-class
-ontology, option-3 success predicate, canonicalisation policy. New contract hash,
-not a relabel.
+**The reviewers' four:** the shared-checkout mutation above;
+`verify_closed` computed `unexpected` from manifest keys only, so an unmanifested
+file on disk did not deny closure — the same blind spot as F1 one level up;
+the contract called one value `authorised_by_generation`, conflating authoriser
+with executor; and preflight still labelled its checks `attempt4_verified` while
+the pointer resolved elsewhere.
 
-**Tests.** 30 new mutation witnesses in `tests/test_gen120_evidence_closure.py`,
-exercising the real write/verify/marker path rather than helper return values.
-Each was confirmed to **fail against the old runner** before being trusted —
-positive control, because a check that cannot fail reads exactly like a check
-that passes. Focused reader-interference suites: 87 passed. Full suite: **1460
-passed, 24 failed, 3 skipped, 5 errors.** All 24 failures are pre-existing and
-unrelated — 8 `membukkit` provenance tests needing recorded runs, 16 `memconflict`
-tests. Zero new regressions. All 11 sealed attempts across gen116–118 verify.
+**Science unchanged, twice over.** 12 cores, 60 cases, 60 unique prompts, no
+exposed-term or prompt-hash reuse, exact 6/12 balance on id order, value length
+and lexicographic sort, counterbalanced conflict order, verbatim rule in every
+prompt, nine-class ontology, option-3 success predicate, canonicalisation policy.
+Both reviewers independently recomputed the balances from the schedule and
+confirmed the science files are byte-identical between attempts, the contract
+payload differing only in `source_sha256`. New contract hash, not a relabel.
+
+**Tests.** 30 mutation witnesses in `tests/test_gen120_evidence_closure.py`,
+exercising the real write/verify/marker path rather than helper return values,
+and each confirmed to **fail against the old runner** before being trusted —
+because a check that cannot fail reads exactly like a check that passes. Focused
+suites 87 passed; lineage 245; full suite **1460 passed, 24 failed, 3 skipped, 5
+errors**, all 24 pre-existing and unrelated (8 `membukkit` run-provenance, 16
+`memconflict` dataset-absent), zero new regressions. All 12 sealed attempts
+across gen116–118 verify.
+
+**Rival review:** glm-5.3 and glm-5.3-flash, blind to each other. Both returned
+DEFECTS_MINOR; the harness ruled FIX FIRST; all four defects are repaired above
+and the refreeze followed them.
 
 **Is the apparatus ready for a reader run to be authorised?** Yes, on the
 evidence available without running it. Preflight fails closed on a dirty tree, a
 changed frozen source, a mismatched HEAD, a stale generation, or a missing
-authorisation, each with zero calls, and all of that is now demonstrated by
-tests rather than asserted here. What remains untested by construction is the
-path that only exists once a model actually answers.
+authorisation, each with zero calls, and each demonstrated by a test rather than
+asserted here. What stays untested by construction is the path that exists only
+once a model actually answers.
 
-**Not done, and deliberately:** no reader run, no regrade of Gen117, no change to
-any sealed attempt, no weakening of exact matching or balance.
+**Not done, deliberately:** no reader run, no regrade of Gen117, no change to any
+sealed attempt, no weakening of exact matching or balance.
 
 ---
 

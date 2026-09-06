@@ -129,11 +129,20 @@ def verify_closed(directory: Path, required: "Any") -> dict[str, Any]:
     manifested = (set(json.loads(manifest_path.read_text())["artifacts"])
                   if manifest_path.exists() else set())
     required = set(required)
+    # Files present on disk that the manifest never listed. Computing `unexpected`
+    # from manifest keys alone answers only "what did we claim", so a smuggled
+    # file sitting beside the evidence was invisible - the same blind spot as F1
+    # one level up. Found by glm-5.3 reviewing the F1 fix.
+    on_disk = {f.name for f in Path(directory).iterdir()
+               if f.is_file() and f.name != MANIFEST} if Path(directory).is_dir() else set()
+    unmanifested = sorted(on_disk - manifested)
     missing_required = sorted(required - manifested)
-    unexpected = sorted(manifested - required)
+    unexpected = sorted((manifested - required) | set(unmanifested))
     result.update({
         "required": sorted(required),
         "manifested": sorted(manifested),
+        "on_disk": sorted(on_disk),
+        "unmanifested": unmanifested,
         "missing_required": missing_required,
         "unexpected": unexpected,
         "closed": bool(result["verified"]) and not missing_required and not unexpected,

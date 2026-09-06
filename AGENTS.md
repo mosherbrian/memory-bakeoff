@@ -28,19 +28,27 @@ PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
 # 245 passed  (reader-interference lineage, 2026-09-06)
 
 # Whole suite. Needs scikit-learn and pandas (declared in pyproject).
-PYTHONPATH=src pytest -q --continue-on-collection-errors
-# 1324 passed, 25 failed, 2 skipped, 5 errors  (2026-09-06, after deps installed)
+PYTHONPATH=src:vendor/membukkit/src pytest -q --continue-on-collection-errors
+# 1460 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
 ```
 
 **The whole-suite figure is not green, and every remaining failure has a known
 external cause.** As of 2026-09-06 they are exactly two clusters:
 
-- **21 items** (`test_memconflict_gen36/37/38`): the pinned MemConflict dataset
+- **16 items** (`test_memconflict_gen36/37/38`): the pinned MemConflict dataset
   is absent. It is 182 MB of upstream data at `external/MemConflict/`, correctly
   not committed, and it must be fetched to run those tests.
-- **9 items** (`test_membukkit_gen41_round1`): `membukkit` is not installed. It is
-  an ENGINE UNDER TEST, not tooling — install a version deliberately, matching the
-  frozen provider config, never whatever pip offers.
+- **8 items** (`test_membukkit_gen41_round1`): these assert on RUN PROVENANCE -
+  `device_proof`, an empty `load_trace.downloads` - and need artifacts from real
+  recorded runs. No path setting can satisfy them.
+
+  `membukkit` itself is no longer missing. Gen120 put `vendor/membukkit/src` on
+  the pytest path: that directory is the repo's OWN copy, pinned to commit
+  `f28a2e58` with blob SHAs verified against upstream. That is configuration, not
+  substitution. `pip install membukkit` would have been the substitution, pulling
+  an unpinned build into a module whose entire job is raising `FallbackDetected`
+  when something stands in for the intended artifact. Recovering those 14 tests
+  cost nothing and changed no engine.
 
 Nothing else fails. Treat the lineage gate as the one that must pass, and treat
 any failure outside those two clusters as a real regression.

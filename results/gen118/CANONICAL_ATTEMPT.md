@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt6` is canonical**, per the Generation 120 review.
+**`attempt7` is canonical**, per the Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -35,7 +35,7 @@
   error in a new place. The contract binds eight surfaces including
   `scripts/run_gen119_reader.py`, which refuses to `--fire` without explicit
   control-plane authorisation.
-- `attempt6` - **canonical.** Same science, byte-for-byte: 12 cores, 60 unique
+- `attempt6` - superseded. Same science, byte-for-byte: 12 cores, 60 unique
   prompts and cases, no exposed-term reuse, exact 6/12 balance on id order,
   value length and lexicographic sort, the verbatim rule in every prompt, the
   nine-class ontology and the option-3 success predicate unchanged. What changed
@@ -56,6 +56,31 @@
      refreeze. The runner is now `scripts/run_reader_v6.py`, with generation,
      source commit and authorisation supplied at runtime and checked fail-closed.
   Contract `819e79964ec07bdbe3c77b22339e647829402071b0edd6cdaeb97ee917fb5f98`.
+  Superseded within the same generation: the blind rival review (glm-5.3 and
+  glm-5.3-flash, independently) found four further defects, all in the apparatus
+  and none in the science.
+- `attempt7` - **canonical.** Science identical again; only the bound apparatus
+  changed. The four:
+  1. **a witness test rewrote a real frozen source in the shared checkout.**
+     `test_editing_a_frozen_source_blocks_the_run` mutated
+     `reader_interference_v6.py` and restored it in a `finally`. Both reviewers,
+     reading that same checkout while the other ran the suite, saw a tampered
+     frozen source and reported a defect neither could attribute. The test now
+     runs in a throwaway `git worktree`, so it cannot make the tree lie to anyone
+     else - and a `finally` was never protection against a crash between the two
+     writes anyway. The rival harness now gives each reviewer its own worktree
+     for the same reason: reviewers sharing mutable state are not independent,
+     they are each other's confounder;
+  2. **`verify_closed` computed `unexpected` from manifest keys only**, so a file
+     sitting on disk that the manifest never listed did not deny closure - the
+     same blind spot as F1, one level up. It now scans the directory;
+  3. **the execution contract called one value `authorised_by_generation`**,
+     conflating the generation that authorised a run with the one executing it.
+     They are required to match, which is the typo gate, but the record may not
+     imply they are the same fact. Now recorded separately;
+  4. **preflight still labelled its checks `attempt4_verified`** while the
+     canonical pointer resolved elsewhere. Renamed to `canonical_verified`.
+  Contract `7e3a73e63e546b94d46d6faf76b0f915b423b2be79a185db6e20384e7a9c0c58`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

@@ -61,7 +61,7 @@ def test_every_preflight_gate_other_than_tree_cleanliness_passes():
     scientific = [p for p in pf["problems"] if "worktree not clean" not in p]
     assert scientific == [], scientific
     assert pf["cases"] == 60 and pf["cores"] == 12 and pf["unique_prompt_hashes"] == 60
-    assert pf["attempt4_verified"] and pf["lineage_green"]
+    assert pf["canonical_verified"] and pf["lineage_green"]
 
 
 def test_preflight_does_not_filter_untracked_files():
@@ -86,23 +86,45 @@ def test_prompt_drift_is_detected(monkeypatch):
     assert any("drift" in p for p in pf["problems"]), pf["problems"]
 
 
-def test_editing_a_frozen_source_blocks_the_run(tmp_path, monkeypatch):
+def test_editing_a_frozen_source_blocks_the_run(tmp_path):
     """The whole point of 'no repair after exposure'.
 
     Before this gate existed, editing the value matcher and re-running produced a
     green preflight and a fresh attempt. The rule was a sentence in an
     instruction, not a property of the apparatus. Found by external review.
+
+    This runs in a THROWAWAY WORKTREE. The first version mutated the real
+    `src/memory_bakeoff/reader_interference_v6.py` and restored it in a `finally`,
+    which left the shared checkout dirty for as long as the assertion took - and
+    during the Gen120 review both rival reviewers, reading that same checkout,
+    saw a tampered frozen source and reported it as a defect they could not
+    attribute. A test may not make the tree lie to whoever else is reading it, and
+    a `finally` is no protection against a crash between the two writes.
     """
-    v5_path = ROOT / "src/memory_bakeoff/reader_interference_v6.py"
-    original = v5_path.read_text()
+    wt = tmp_path / "wt"
+    subprocess.run(["git", "worktree", "add", "--detach", str(wt), "HEAD"],
+                   cwd=ROOT, capture_output=True, text=True, check=True)
     try:
-        v5_path.write_text(original + "\n# a change after exposure\n")
-        pf = R.preflight(_head())
-        assert not pf["passed"]
-        assert any("FROZEN SOURCE CHANGED" in p for p in pf["problems"]), pf["problems"]
+        target = wt / "src/memory_bakeoff/reader_interference_v6.py"
+        target.write_text(target.read_text() + "\n# a change after exposure\n")
+        r = subprocess.run(
+            [sys.executable, "scripts/run_reader_v6.py",
+             "--generation", "120", "--source-commit", _head()],
+            cwd=wt, capture_output=True, text=True,
+            env={"PYTHONPATH": "src", "PATH": "/usr/bin:/bin"}, timeout=600)
+        out = r.stdout + r.stderr
+        assert "FROZEN SOURCE CHANGED" in out, out[-2000:]
+        assert "No attempt written, no calls made" in out
     finally:
-        v5_path.write_text(original)
-    assert v5_path.read_text() == original
+        subprocess.run(["git", "worktree", "remove", "--force", str(wt)],
+                       cwd=ROOT, capture_output=True)
+    # Not "the tree is clean" - that would fail for anyone with unrelated work in
+    # progress. The claim is narrower and exactly the one that was violated: THIS
+    # test does not touch the frozen source in the primary checkout.
+    dirty = subprocess.run(
+        ["git", "status", "--porcelain", "src/memory_bakeoff/reader_interference_v6.py"],
+        cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    assert not dirty, f"the frozen source was modified in the primary tree: {dirty}"
 
 
 def test_preflight_pins_every_file_the_contract_names():
