@@ -7,7 +7,18 @@ and the machine-readable artifacts behind it.
 
 Round 1 is closed. Its authoritative narrative is
 [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md); prefer it
-over any older score text elsewhere in this repository. Round 2 is the
+over any older score text elsewhere in this repository.
+
+**Round 3 is closed (Gen107).** Its authoritative narrative is
+[`ROUND3_FINAL_READOUT.md`](ROUND3_FINAL_READOUT.md), with the supersession
+detail in [`ROUND3_SUPERSESSION_RESULT.md`](ROUND3_SUPERSESSION_RESULT.md) and a
+machine-readable source registry at
+`results/gen107/attempt1/round3_closure.json`. Prefer those over any older
+Round-3 text. Two cautions travel with them: **no Round-3 conclusion is
+manifest-verified** (the evidence contract arrived at Gen106, after the evidence
+it would have protected), and
+[`research/PI_SUPERSESSION_ABLATION_GEN102.md`](research/PI_SUPERSESSION_ABLATION_GEN102.md)
+is **superseded** — preserved for history, not to be cited as current. Round 2 is the
 engine-independent point-in-time work and the pi-observational-memory
 generations. The full generation ledger is
 [`handoff/CODEX_TO_CHATGPT.md`](handoff/CODEX_TO_CHATGPT.md).

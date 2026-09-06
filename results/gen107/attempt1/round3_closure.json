@@ -1,0 +1,188 @@
+{
+ "contract_version": "round3-closure-v1",
+ "evidence_class_counts": {
+  "COMMITTED_REPORT": 6,
+  "LEGACY_UNMANIFESTED": 3,
+  "MANIFEST_VERIFIED": 0
+ },
+ "limitations": [
+  {
+   "id": "cell-level-diff-irrecoverable",
+   "no_backdated_manifest": true,
+   "not_reconstructed": true,
+   "statement": "Gen105 re-ran corrected arms into the directory the original run had used, so the pre-correction Gen102 cell-level artefacts were destroyed. Aggregates reproduce exactly; no old-versus-new cell diff is recoverable."
+  },
+  {
+   "id": "supersession-arms-are-legacy-unmanifested",
+   "no_backdated_manifest": true,
+   "not_reconstructed": true,
+   "statement": "The Gen104/105 arms were written before immutable-evidence-v1 existed, to an unmanifested legacy directory. They are COMMITTED_REPORT-grade at best, never MANIFEST_VERIFIED."
+  },
+  {
+   "id": "hindsight-internal-state-unknown",
+   "no_backdated_manifest": true,
+   "not_reconstructed": true,
+   "statement": "Hindsight accepted the invalidation call. Whether its stored state changed is not established - only that recall did not."
+  }
+ ],
+ "next_line": {
+  "eligible_but_not_opened": [
+   "P1 SKILL.state / structured operational state",
+   "P2 observational semantic state"
+  ],
+  "explicitly_not_opened_here": true,
+  "recommendation": "Take the retrieval-layer work no further. The next justified line is the READER layer: whether a model given a stale-and-current pair actually answers from the current one.",
+  "why": "Round 3's one general result is that every engine co-returns stale records (192/192), and only explicit lineage removes them. Whether that co-return actually harms an answer is untested - Gen85 tried and was quarantined for a parse defect, so the question is open and the fixture work already exists."
+ },
+ "not_established": [
+  "No cross-engine ranking. The engines were never scored against each other on a common ruler in Round 3, and the budgets differ by design.",
+  "No supersession score. Three mechanism kinds are not commensurable.",
+  "Nothing about semantic supersession. agentmemory's rule is LEXICAL; the fixtures never tested paraphrase.",
+  "Nothing about these engines outside the pinned Gen96 profiles."
+ ],
+ "retractions": [
+  {
+   "claim": "Gen85's reader-order effect",
+   "reason": "a CITE parse defect scored three inline replies as UNPARSED; the whole attempt was quarantined and the contract version bumped",
+   "retracted_by": 85
+  },
+  {
+   "claim": "Gen100's explanation of agentmemory's kestrel behaviour",
+   "reason": "the v3 repair was predicted to fix it and did not; the account predicted the v2 outcome by coincidence, not by mechanism",
+   "retracted_by": 102
+  },
+  {
+   "claim": "Gen102's agentmemory result (current record lost in kestrel at every load)",
+   "reason": "a harness defect, not product behaviour - the current record is present in 48/48 on the corrected ingest order",
+   "retracted_by": 104
+  },
+  {
+   "claim": "Gen103's named suspect (the provenance mapping)",
+   "reason": "the mapping was sound; the defect was ingest ORDER. Naming a likely area is still a guess",
+   "retracted_by": 104
+  }
+ ],
+ "round": 3,
+ "source_registry": [
+  {
+   "artifact": "research/PI_REPLICATION_RUN_GEN99.md",
+   "claim": "Every engine co-returns the superseded record alongside the current one, at every load, in every core.",
+   "corroborates": 97,
+   "evidence": "COMMITTED_REPORT",
+   "fixture": "interference-v2",
+   "id": "stale-version-interference-replicates",
+   "measure": "192 of 192 (4 cores x 4 loads x 3 repetitions x 4 engines)",
+   "mechanism_kind": null,
+   "replication": "REPLICATED_ACROSS_CORES",
+   "source_generation": 99,
+   "survives": true
+  },
+  {
+   "artifact": "research/PI_REPLICATION_RUN_GEN99.md",
+   "claim": "Perseus losing the target at 64 distractors did NOT reproduce in the other cores.",
+   "corroborates": 97,
+   "evidence": "COMMITTED_REPORT",
+   "fixture": "interference-v2",
+   "id": "perseus-rank-decline-is-fixture-specific",
+   "measure": "Gen98 Q1 verdict",
+   "mechanism_kind": null,
+   "replication": "FIXTURE_SPECIFIC",
+   "source_generation": 99,
+   "survives": true
+  },
+  {
+   "artifact": "research/PI_REPLICATION_RUN_GEN99.md",
+   "claim": "The other three engines hold their Gen97 shapes in some cores and not others; agentmemory holds in two of four.",
+   "evidence": "COMMITTED_REPORT",
+   "fixture": "interference-v2",
+   "id": "engine-shapes-hold-partially",
+   "measure": "Gen98 Q3 verdict",
+   "mechanism_kind": null,
+   "replication": "PARTIAL_REPLICATION",
+   "source_generation": 99,
+   "survives": true
+  },
+  {
+   "artifact": "research/PI_SUPERSESSION_SURFACE_GEN100.md",
+   "claim": "Three engines were never ASKED to express supersession; one does it automatically. No engine lacks a surface.",
+   "evidence": "COMMITTED_REPORT",
+   "fixture": null,
+   "id": "no-engine-lacks-a-supersession-surface",
+   "measure": "3 SURFACE_PRESENT_BUT_UNUSED, 1 ALREADY_EXERCISED, 0 NO_USABLE_SUPERSESSION_SURFACE",
+   "mechanism_kind": null,
+   "source_generation": 100,
+   "survives": true
+  },
+  {
+   "artifact": "ROUND3_SUPERSESSION_RESULT.md",
+   "claim": "Explicit lineage removes stale co-return completely and loses no current record.",
+   "configuration": "pinned Gen96 retrieval; Gen101 binding, from_key=OLD",
+   "evidence": "LEGACY_UNMANIFESTED",
+   "fixture": "interference-v3",
+   "id": "perseus-explicit-lineage-works",
+   "measure": "stale removed 48/48 cells; current lost 0/48; no mechanisms scored; rank rises in 41/48 as the stale record leaves the window",
+   "mechanism_kind": "EXPLICIT_LINEAGE",
+   "source_generation": 105,
+   "survives": true
+  },
+  {
+   "artifact": "ROUND3_SUPERSESSION_RESULT.md",
+   "claim": "update_memory(state='invalidated') is accepted and recall is unchanged - not one of 48 paired cells differs.",
+   "configuration": "pinned Gen96 retrieval; token budget, not a top-k window",
+   "evidence": "LEGACY_UNMANIFESTED",
+   "fixture": "interference-v3",
+   "id": "hindsight-invalidation-is-recall-identical",
+   "measure": "stale removed 0/48; identical mechanisms, target_present and ranks in every paired cell",
+   "mechanism_kind": "STATE_TRANSITION",
+   "note": "An accepted API call is an operation, not proof of an internal state change. Whether the store changed is NOT established; that recall is unchanged IS. Same shape as Gen70's query_timestamp.",
+   "source_generation": 105,
+   "survives": true
+  },
+  {
+   "artifact": "GEN104_RESULT.md",
+   "claim": "Current truth is kept everywhere; stale suppression fires only where the product's lexical threshold is met.",
+   "configuration": "unpaired by design - the mechanism is automatic, so an OFF arm is a configuration the product does not offer",
+   "evidence": "LEGACY_UNMANIFESTED",
+   "fixture": "interference-v3",
+   "id": "agentmemory-suppression-is-lexical",
+   "measure": "current kept 48/48; stale removed 12/48, all in oncall:kestrel",
+   "mechanism_kind": "PRODUCT_DECIDES",
+   "source_generation": 104,
+   "survives": true
+  },
+  {
+   "artifact": "ROUND3_SUPERSESSION_RESULT.md",
+   "claim": "infer=True routes through mem0's LLM extractor; the pinned profile is deliberately no-LLM.",
+   "evidence": "COMMITTED_REPORT",
+   "fixture": "interference-v3",
+   "id": "mem0-arm-unavailable-in-pinned-profile",
+   "measure": "NOT_AVAILABLE_IN_PINNED_PROFILE - measured, and the runner refuses the arm with that reason",
+   "mechanism_kind": "PRODUCT_DECIDES",
+   "note": "An unavailable configuration, NOT a failed product score.",
+   "source_generation": 102,
+   "survives": true
+  },
+  {
+   "artifact": "GEN104_RESULT.md",
+   "claim": "The ingest-order defect could only bite where resolver order differs from fixture-construction order.",
+   "evidence": "COMMITTED_REPORT",
+   "fixture": null,
+   "id": "ingest-order-blast-radius",
+   "measure": "interference-v1 0/4 cases changed; v2 0/16; v3 16/16",
+   "mechanism_kind": null,
+   "note": "This is why Gen97 and Gen99 stand. It retracts only v3 work.",
+   "source_generation": 104,
+   "survives": true
+  }
+ ],
+ "status": "CLOSED",
+ "supersessions": [
+  {
+   "at_generation": 106,
+   "by": "ROUND3_SUPERSESSION_RESULT.md",
+   "preserved": true,
+   "reason": "computed from a run whose ingest order was wrong",
+   "superseded": "research/PI_SUPERSESSION_ABLATION_GEN102.md"
+  }
+ ]
+}

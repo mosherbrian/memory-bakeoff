@@ -1,3 +1,14 @@
+<!-- superseded-by: ROUND3_SUPERSESSION_RESULT.md -->
+> **SUPERSEDED — DO NOT CITE AS CURRENT.** This report was computed from a run
+> whose ingest order was wrong: `set(visible_ids(...))` discarded the
+> `interference-v3` chronology, so Gen102 ran the v2 order while reporting
+> itself as v3 (located in Gen104). Its AgentMemory result is **retracted**; its
+> Perseus and Hindsight conclusions were re-measured in Gen105 and hold.
+>
+> Canonical account: **`ROUND3_SUPERSESSION_RESULT.md`**.
+>
+> Kept, not deleted — the same discipline this experiment measures.
+
 # Gen102 — Native Supersession Ablation Run
 
 **Fixture:** `interference-v3` (corrected chronology, frozen Gen101)

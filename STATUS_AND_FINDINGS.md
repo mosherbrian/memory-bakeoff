@@ -1,7 +1,8 @@
 # Memory Bake-off — Status and Findings
 
-**Snapshot:** 2026-09-02 (America/Los_Angeles)  
-**Harness tests:** 97/97 passing  
+**Snapshot:** 2026-09-06 (America/Los_Angeles)  
+**Harness tests:** see the Gen107 handoff entry for the authoritative count  
+**Round 3:** CLOSED at Gen107 — [`ROUND3_FINAL_READOUT.md`](ROUND3_FINAL_READOUT.md) is authoritative; [`ROUND3_SUPERSESSION_RESULT.md`](ROUND3_SUPERSESSION_RESULT.md) carries the per-mechanism detail. No Round-3 conclusion is manifest-verified, and the pre-correction Gen102 cell-level artefacts are irrecoverable.  
 **Evidence index:** [`RESULTS.md`](RESULTS.md) is the maintained map of every measured result; [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md) is the authoritative Round-1 view. Rows below that predate them are historical.  
 **Canonical corpus:** 50 coding-memory records, 26 held-out queries  
 **Stress corpus:** 500 total records = 50 core + 450 deterministic near-neighbor distractors  

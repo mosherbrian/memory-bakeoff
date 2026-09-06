@@ -1,5 +1,59 @@
 # Codex to ChatGPT handoff
 
+## Generation 107 — Round 3 closed; the readout, and a Gen106 claim corrected
+
+**Round 3 is CLOSED.** Authoritative: `ROUND3_FINAL_READOUT.md`. Machine-readable
+source registry: `results/gen107/attempt1/round3_closure.json`, written under
+`immutable-evidence-v1` with a `MANIFEST.json` that verifies. No engine, model,
+reader or GPU ran.
+
+**What Round 3 established.** One result generalises: every engine co-returns the
+superseded record alongside the current one — **192 of 192** across four
+independent semantic cores (Gen99, replicating Gen97's 48/48). Perseus's
+rank-decline headline did **not** replicate (`FIXTURE_SPECIFIC`); the other three
+engines hold their shapes only in some cores (`PARTIAL_REPLICATION`).
+
+**Supersession, per mechanism kind, never summed.** perseus `EXPLICIT_LINEAGE`
+removes stale co-return 48/48 at zero cost to the current record; hindsight
+`STATE_TRANSITION` is accepted and **recall-identical** — not one of 48 paired
+cells differs; agentmemory `PRODUCT_DECIDES` keeps current truth 48/48 and
+suppresses stale records 12/48, all in the one core clearing its **lexical**
+threshold; mem0 is `NOT_AVAILABLE_IN_PINNED_PROFILE`, an unavailable
+configuration and not a failed score.
+
+**Evidence classes, stated because they are uncomfortable.** 0
+`MANIFEST_VERIFIED`, 6 `COMMITTED_REPORT`, 3 `LEGACY_UNMANIFESTED`. **No Round-3
+conclusion is manifest-verified** — the contract arrived at Gen106, after the
+evidence it would have protected. The pre-correction Gen102 cell-level artefacts
+remain irrecoverable; nothing was reconstructed and no manifest was back-dated.
+
+**A Gen106 claim I have to correct.** Gen106's commit subject and handoff both
+said the Gen102 report was "marked superseded". **It was not.** The commit
+touched only two files. My idempotency guard keyed on the string `"SUPERSEDED."`,
+which the Gen102 report's own body already contained, so the guard suppressed my
+edit and I reported success without checking the file. The banner is applied now,
+keyed on a marker that cannot collide, and a test asserts it is present.
+
+**Also corrected inside this generation:** my first pooling guard scanned prose
+for "supersession score" and fired on this project's own line saying there is no
+such score — the Gen97 and Gen100 mistake a third time. It is now a structural
+walk over fields, and a test proves it tolerates prose while still firing on a
+real pooled field.
+
+**Round 3 does not establish** any cross-engine ranking, any supersession score,
+anything about *semantic* supersession (agentmemory's rule is lexical; paraphrase
+was never tested), anything outside the pinned Gen96 profiles, or whether stale
+co-return actually harms an answer.
+
+**One recommendation for the next line: the READER layer.** Round 3 proved stale
+records come back and that only explicit lineage removes them; whether that
+changes an answer is untested. Gen85 attempted it and was quarantined for a parse
+defect, so the question is open and the fixture work exists. **P1** (SKILL.state /
+structured operational state) and **P2** (observational semantic state) are now
+*eligible* — Round 3 supplies the supersession and interference evidence they
+were waiting on — but are named here and **deliberately not opened**.
+
+
 ## Generation 106 — supersession closed; artefact paths made immutable
 
 Canonical account: `ROUND3_SUPERSESSION_RESULT.md`, which **supersedes**
