@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Ring the control-plane doorbell for a completed generation.
+#
+# The controller is an event-driven GitHub webhook with a TITLE FILTER:
+# "BAKEOFF_HANDOFF…". On 2026-09-06 a doorbell was titled "Doorbell: …" instead,
+# the filter never matched, the webhook never fired, and the loop sat idle for six
+# hours while the control plane was assumed to be out of quota. It had never been
+# called. This script exists so that cannot happen again.
+#
+# Usage: scripts/ring-doorbell <source_generation> <title-suffix> <body-file>
+set -euo pipefail
+
+REQUIRED_PREFIX="BAKEOFF_HANDOFF"
+SRC_GEN=${1:?usage: ring-doorbell <source_generation> <title-suffix> <body-file>}
+SUFFIX=${2:?usage: ring-doorbell <source_generation> <title-suffix> <body-file>}
+BODY=${3:?usage: ring-doorbell <source_generation> <title-suffix> <body-file>}
+[ -r "$BODY" ] || { echo "REFUSING: body file $BODY is not readable"; exit 1; }
+
+cd "$(git rev-parse --show-toplevel)"
+git fetch -q origin main
+COMMIT=$(git rev-parse origin/main)
+LOCAL=$(git rev-parse main)
+[ "$COMMIT" = "$LOCAL" ] || { echo "REFUSING: local main $LOCAL != origin/main $COMMIT"; exit 1; }
+[ -z "$(git status --porcelain | grep -v '^??' || true)" ] || { echo "REFUSING: dirty worktree"; exit 1; }
+
+TITLE="$REQUIRED_PREFIX Gen$SRC_GEN - $SUFFIX"
+case "$TITLE" in
+  "$REQUIRED_PREFIX"*) ;;
+  *) echo "REFUSING: title must begin with $REQUIRED_PREFIX or the webhook will not fire"; exit 1 ;;
+esac
+
+BRANCH="bakeoff-handoff-gen$((SRC_GEN + 1))-$(date +%H%M%S)"
+git checkout -q -b "$BRANCH"
+printf 'doorbell: gen%s -> gen%s\nsource_generation: %s\nsource_commit: %s\nrung: %s\n' \
+  "$SRC_GEN" "$((SRC_GEN + 1))" "$SRC_GEN" "$COMMIT" "$(date -Iseconds)" > ".doorbell-gen$SRC_GEN.txt"
+git add ".doorbell-gen$SRC_GEN.txt"
+git commit -q -m "Doorbell: Gen$SRC_GEN complete, requesting the Gen$((SRC_GEN + 1)) instruction"
+git push -q -u origin "$BRANCH"
+git checkout -q main
+
+echo "title:  $TITLE"
+echo "pinned: $COMMIT"
+toolbox run -c fedora-toolbox-43 gh pr create --repo mosherbrian/memory-bakeoff \
+  --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY"
