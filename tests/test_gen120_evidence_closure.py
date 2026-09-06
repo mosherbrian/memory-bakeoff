@@ -219,14 +219,37 @@ def test_the_output_path_follows_the_authorised_generation():
 
 
 def test_the_contract_records_the_runtime_authorisation():
-    source = RUNNER.read_text()
-    for field in ("authorised_by_generation", "source_commit",
-                  "supplied_at_runtime_not_hardcoded"):
-        assert field in source
+    """Build a real contract and inspect it, rather than grepping the source.
+
+    The first version asserted `"authorised_by_generation" in source`. When the
+    attempt7 repair renamed the live fields, that string survived only in a
+    COMMENT explaining the rename - so the check passed no matter what the
+    contract actually contained. A check that cannot fail reads exactly like a
+    check that passes, which is the disease this very file was written about.
+    Found by glm-5.3 at Gen120.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("runner_under_test", RUNNER)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    schedule = json.loads((mod.CANONICAL / "reader_interference_v6_schedule.json").read_text())
+    contract = mod.freeze_contract(schedule["cases"], 123, "deadbeef" * 5, "123")
+
+    auth = contract["authorisation"]
+    assert auth["authorisation_generation"] == "123"
+    assert auth["execution_generation"] == 123
+    assert auth["required_to_match"] is True
+    assert auth["source_commit"] == "deadbeef" * 5
+    assert auth["supplied_at_runtime_not_hardcoded"] is True
+    assert contract["generation"] == 123, "the contract must carry the RUNTIME generation"
+    assert "authorised_by_generation" not in auth, (
+        "the conflated field name is back")
+    assert "v5_module_sha256" not in contract, "v5 naming vestige returned"
+    assert contract["v6_module_sha256"]
 
 
 # ------------------------------------------------- prior evidence stays immutable
-@pytest.mark.parametrize("attempt", [1, 2, 3, 4, 5])
+@pytest.mark.parametrize("attempt", [1, 2, 3, 4, 5, 6, 7])
 def test_every_prior_gen118_attempt_still_verifies(attempt):
     d = ROOT / f"results/gen118/attempt{attempt}"
     if not d.exists():
@@ -234,7 +257,7 @@ def test_every_prior_gen118_attempt_still_verifies(attempt):
     assert EV.verify(d)["verified"] is True, f"attempt{attempt} no longer verifies"
 
 
-@pytest.mark.parametrize("attempt", [1, 2, 3, 4, 5])
+@pytest.mark.parametrize("attempt", [1, 2, 3, 4, 5, 6, 7])
 def test_no_prior_attempt_contains_a_reader_result(attempt):
     d = ROOT / f"results/gen118/attempt{attempt}"
     if not d.exists():
@@ -242,3 +265,53 @@ def test_no_prior_attempt_contains_a_reader_result(attempt):
     assert not (d / "reader_raw.jsonl").exists(), "a freeze may not hold reader output"
     assert (d / "NON_EVIDENCE.json").exists()
     assert json.loads((d / "NON_EVIDENCE.json").read_text())["reader_calls"] == 0
+
+
+# ------------------------------------------------------- the gate on the gate
+def test_the_id_balance_gate_is_exact_not_within_one():
+    """7/12 must FAIL.
+
+    The gate read `abs(id_first - 6) > 1`, so 7/12 passed - the exact imbalance
+    attempt1 was superseded for, and the number every handoff since has described
+    as failing closed. No published artifact was wrong; the gate was weaker than
+    every claim made about it. A tolerance nobody asked for is how a declared
+    invariant quietly becomes a preference. Found by glm-5.3 at Gen120.
+    """
+    freeze = ROOT / "scripts/run_gen118_freeze.py"
+    src = freeze.read_text()
+    assert "abs(id_first - len(V6.CORES) // 2) > 1" not in src, "the tolerance is back"
+    assert "id_unbalanced = id_first != len(V6.CORES) // 2" in src
+
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("freeze_under_test", freeze)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    cores = len(mod.V6.CORES)
+    unbalanced = lambda n: n != cores // 2
+    assert unbalanced(7), "7/12 must be rejected"
+    assert unbalanced(5), "5/12 must be rejected"
+    assert not unbalanced(6), "6/12 must be accepted"
+
+
+def test_gen117_raw_evidence_is_honestly_described():
+    """gen117/attempt1 holds the only real reader run, and it PREDATES F1.
+
+    Its reader_raw.jsonl is not in its manifest, so it verifies under EV.verify
+    (which walks the manifest) but would NOT pass verify_closed's directory scan.
+    That attempt is sealed and may not be altered, so the honest move is to state
+    the limit rather than let 'all attempts verify' imply more than it does.
+    Raised by glm-5.3-flash at Gen120.
+    """
+    d = ROOT / "results/gen117/attempt1"
+    if not d.exists():
+        pytest.skip("gen117/attempt1 absent")
+    manifest = json.loads((d / EV.MANIFEST).read_text())["artifacts"]
+    raw = d / "reader_raw.jsonl"
+    if not raw.exists():
+        pytest.skip("no raw capture in gen117/attempt1")
+    assert "reader_raw.jsonl" not in manifest, (
+        "if this is now manifested, a sealed attempt was modified")
+    seal = json.loads((d / "raw_seal.json").read_text())
+    assert seal["sha256"] == EV.digest(raw.read_text()), (
+        "the seal no longer matches the bytes - the pre-F1 evidence has changed")
+    assert EV.verify(d)["verified"] is True

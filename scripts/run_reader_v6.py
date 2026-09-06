@@ -15,7 +15,8 @@ A contract that does not bind the thing that will run is not a freeze.
 
 NOT AUTHORISED TO RUN. --fire refuses without control-plane authorisation.
 
-60 frozen cases from the canonical Gen116 attempt4, executed once each. The
+60 frozen cases from the canonical gen118 attempt, resolved through
+results/gen118/CANONICAL_ATTEMPT.md and never named here, executed once each. The
 protocol is CONSUMED, never touched. Preflight fails closed with zero calls. Raw
 request and response bytes are sealed and hashed before anything is parsed.
 
@@ -30,7 +31,7 @@ Phases, in order, and the order is the point:
 """
 from __future__ import annotations
 
-import argparse, hashlib, json, subprocess, sys, time, urllib.error, urllib.request
+import argparse, hashlib, json, os, subprocess, sys, time, urllib.error, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -107,9 +108,12 @@ def preflight(source_commit: str) -> dict:
     if dirt:
         problems.append(f"worktree not clean: {dirt.splitlines()[:3]}")
 
-    canon = (ROOT / "results/gen116/CANONICAL_ATTEMPT.md").read_text()
-    if "`attempt4` is canonical" not in canon:
-        problems.append("CANONICAL_ATTEMPT.md does not resolve to attempt4")
+    # Check the pointer this runner actually consumes, not the vestigial gen116
+    # one. Reading a stale pointer to decide a live run is how a gate ends up
+    # guarding something nobody uses. Found by glm-5.3 at Gen120.
+    if not (CANONICAL / "reader_interference_v6_contract.json").exists():
+        problems.append(f"canonical pointer resolves to {CANONICAL.name}, which "
+                        "holds no v6 contract")
 
     ev = EV.verify(CANONICAL)
     if not ev["verified"]:
@@ -136,7 +140,8 @@ def preflight(source_commit: str) -> dict:
 
     marker = json.loads((CANONICAL / "NON_EVIDENCE.json").read_text())
     if marker.get("marker") != "NON_EVIDENCE" or marker.get("reader_calls") != 0:
-        problems.append("Gen116 NON_EVIDENCE marker is modified or reports prior calls")
+        problems.append("the canonical attempt's NON_EVIDENCE marker is modified "
+                        "or reports prior calls")
 
     schedule = json.loads((CANONICAL / "reader_interference_v6_schedule.json").read_text())
     cases = schedule["cases"]
@@ -167,7 +172,11 @@ def preflight(source_commit: str) -> dict:
          "tests/test_gen113_reader_v4.py", "tests/test_gen115_adjudication.py",
          "tests/test_gen116_reader_v5.py"],
         cwd=ROOT, capture_output=True, text=True,
-        env={"PYTHONPATH": "src", "PATH": "/usr/bin:/bin"})
+        # Inherit the real environment. A hardcoded PATH=/usr/bin:/bin is
+        # host-brittle: it fails in the SAFE direction (a spurious "lineage not
+        # green" blocks an authorised run rather than corrupting one), but a gate
+        # that fails for the wrong reason teaches people to ignore it.
+        env={**os.environ, "PYTHONPATH": "src"})
     if lineage.returncode != 0:
         problems.append("reader-interference lineage is not green")
 
@@ -229,7 +238,7 @@ def freeze_contract(cases: list[dict], generation: int, source_commit: str,
                     "seal": "sha256 over the raw jsonl, written into the manifest"},
         "runner_sha256": sha(Path(__file__).read_text()),
         "grader_sha256": sha((ROOT / "scripts/grade_gen118_v6.py").read_text()),
-        "v5_module_sha256": sha((ROOT / "src/memory_bakeoff/reader_interference_v6.py").read_text()),
+        "v6_module_sha256": sha((ROOT / "src/memory_bakeoff/reader_interference_v6.py").read_text()),
         "independent_unit": "core",
         "cells_are_not_observations": True,
     }

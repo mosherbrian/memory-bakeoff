@@ -194,7 +194,13 @@ def main() -> None:
     # first freeze reported 7/12 and shipped anyway, because reporting a number
     # is not gating on it. Sol caught that.
     id_first = int(fx_audit["revision2_id_sorts_first_count"].split("/")[0])
-    id_unbalanced = abs(id_first - len(V6.CORES) // 2) > 1
+    # EXACT, not within one. The gate used to allow +/-1, which means 7/12 - the
+    # precise imbalance attempt1 was superseded for, and the number every handoff
+    # since has said "fails closed" - would have PASSED. The published attempts
+    # were genuinely 6/12, so no artifact was wrong; the GATE was weaker than
+    # every claim made about it. Found by glm-5.3 at Gen120. A tolerance nobody
+    # asked for is how a declared invariant quietly becomes a preference.
+    id_unbalanced = id_first != len(V6.CORES) // 2
     hard_fail = (id_unbalanced or fx_audit["reused_exposed_terms"] or fx_audit["reused_record_ids"]
                  or fx_audit["reused_prompt_hashes"]
                  or not fx_audit["verbatim_rule_in_every_prompt"]

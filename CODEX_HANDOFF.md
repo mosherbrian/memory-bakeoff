@@ -25,7 +25,7 @@ pytest -q
 memory-bakeoff probe
 ```
 
-Expected harness test gate before external work: the **reader-interference lineage must be fully green** (245 passed as of 2026-09-06). The whole-suite figure is 1324 passed / 25 failed / 5 errors and is not green — see AGENTS.md for the four causes and what to watch instead. The **97 passed** figure that stood here was a Gen28 snapshot.
+Expected harness test gate before external work: the **reader-interference lineage must be fully green** (245 passed as of 2026-09-06). The whole-suite figure is **1460 passed / 24 failed / 3 skipped / 5 errors** and is not green — see AGENTS.md for the two remaining causes and what to watch instead. `tests/KNOWN_FAILURES.json` pins every accepted failure by exact node id, and `tests/test_known_failures_baseline.py` fails on any failure not listed there, so a familiar-looking total can no longer hide a new one. The **97 passed** figure that stood here was a Gen28 snapshot.
 
 Then read:
 
@@ -150,8 +150,13 @@ Existing result: the real bucket architecture with shared LSA preserved stress r
 Now test the actual product retrieval models.
 
 ```bash
-git clone https://github.com/memseekai/membukkit.git external/membukkit
-pip install -e ./external/membukkit
+# DO NOT pip install membukkit. The repo carries its own copy at
+# vendor/membukkit/, pinned to f28a2e58 with blob SHAs verified against upstream,
+# and pyproject puts vendor/membukkit/src on the pytest path. Installing from
+# PyPI or a fresh clone substitutes an unpinned build for the ENGINE UNDER TEST -
+# in a module whose whole job is raising FallbackDetected when a substitute
+# stands in for the intended artifact. The 8 tests that still fail need recorded
+# run provenance (device_proof, empty load_trace), which no install provides.
 ```
 
 Pin the upstream commit before the run. Let the intended encoder/reranker weights download normally and record their exact IDs/revisions.

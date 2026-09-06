@@ -1,4 +1,4 @@
-"""Independent verifier: rebuild the v5 contract WITHOUT importing the candidate.
+"""Independent verifier: rebuild the v6 contract WITHOUT importing the candidate.
 
 Loads reader_interference_v6.py a second time from its file path under a
 different module name, proves the two module objects and their functions are

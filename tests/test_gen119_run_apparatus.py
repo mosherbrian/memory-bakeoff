@@ -161,7 +161,7 @@ def test_ontology_size_is_gated(monkeypatch):
 def test_contract_binds_every_run_bearing_surface():
     c = R.freeze_contract(CASES, 120, _head(), '120')
     for key in ("request_body_sha256", "request_bodies_sha256_all", "runner_sha256",
-                "grader_sha256", "v5_module_sha256", "capture", "reader"):
+                "grader_sha256", "v6_module_sha256", "capture", "reader"):
         assert key in c, key
     for key in ("model", "endpoint", "temperature", "seed_requested", "thinking",
                 "timeout_s", "transport_retries"):
@@ -292,10 +292,20 @@ def test_every_sealed_attempt_remains_verifiable(path):
     assert EV.verify(ROOT / path)["verified"], path
 
 
-def test_runner_never_writes_into_gen116():
-    assert "results/gen116" in SRC  # it reads from it
-    for bad in ('write_evidence(CANONICAL', 'CANONICAL /', "open(CANONICAL"):
-        assert f"{bad}" not in SRC or "read_text" in SRC
+def test_the_runner_consumes_the_canonical_pointer_and_writes_only_forward():
+    """It reads the freeze through the pointer, and writes only under its own run.
+
+    This used to assert `"results/gen116" in SRC`, on the reasoning that the
+    runner reads from there. Gen120 removed that vestigial path - the runner
+    resolves results/gen118/CANONICAL_ATTEMPT.md - so the assertion was pinning a
+    defect in place. What actually matters is the direction of writes.
+    """
+    assert "results/gen118/CANONICAL_ATTEMPT.md" in SRC, (
+        "the runner must resolve the canonical attempt through the pointer")
+    assert "EV.next_attempt(ROOT, args.generation)" in SRC, (
+        "evidence is written under the generation that ran it, never the freeze")
+    for bad in ("write_evidence(CANONICAL", "write_raw(CANONICAL"):
+        assert bad not in SRC, f"the runner must never write into the freeze: {bad}"
 
 
 def test_dry_run_makes_no_calls_and_writes_no_attempt():

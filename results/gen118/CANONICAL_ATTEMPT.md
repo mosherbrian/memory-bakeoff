@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt7` is canonical**, per the Generation 120 rival review.
+**`attempt9` is canonical**, per the second Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -59,7 +59,7 @@
   Superseded within the same generation: the blind rival review (glm-5.3 and
   glm-5.3-flash, independently) found four further defects, all in the apparatus
   and none in the science.
-- `attempt7` - **canonical.** Science identical again; only the bound apparatus
+- `attempt7` - superseded. Science identical again; only the bound apparatus
   changed. The four:
   1. **a witness test rewrote a real frozen source in the shared checkout.**
      `test_editing_a_frozen_source_blocks_the_run` mutated
@@ -81,6 +81,52 @@
   4. **preflight still labelled its checks `attempt4_verified`** while the
      canonical pointer resolved elsewhere. Renamed to `canonical_verified`.
   Contract `7e3a73e63e546b94d46d6faf76b0f915b423b2be79a185db6e20384e7a9c0c58`.
+  Superseded after a SECOND blind rival review of the repaired code.
+- `attempt8` - superseded within minutes, by my own sequencing error, and kept
+  because evidence is append-only: I froze it and only then finished repairing two
+  contract-bound TESTS, which invalidated it immediately. The freeze must be the
+  last action of a generation, after every code and test edit. Science identical for the fourth time; apparatus
+  again. The findings, most serious first:
+  1. **the id-balance gate tolerated the imbalance it was named for.** It read
+     `abs(id_first - 6) > 1`, so **7/12 would have passed** - the exact number
+     attempt1 was superseded for, and the number every handoff since has
+     described as "a hard gate that fails closed". No published attempt was ever
+     wrong; all were genuinely 6/12. The GATE was weaker than every claim made
+     about it, and a tolerance nobody asked for is how a declared invariant
+     quietly becomes a preference. Now exact equality, with a control asserting
+     7/12 and 5/12 are both rejected;
+  2. **a mutation witness had decayed into a prose check.**
+     `test_the_contract_records_the_runtime_authorisation` asserted a field name
+     appeared in the source; after attempt7 renamed the field, the string
+     survived only in the COMMENT explaining the rename, so the test passed
+     regardless of what the contract contained. It now builds a real contract and
+     inspects the object. This is the disease the Gen120 test file was written
+     about, growing inside that same file within one generation;
+  3. **the Gen116/v5 naming vestiges** persisted in contract-bound prose: the
+     verifier claimed to rebuild "the v5 contract", the runner's docstring named
+     Gen116 attempt4 when it resolves the gen118 pointer, its preflight message
+     said "Gen116 NON_EVIDENCE", the contract labelled a hash `v5_module_sha256`,
+     and preflight validated the vestigial gen116 pointer rather than the one it
+     actually consumes;
+  4. **the lineage subprocess ran with a hardcoded `PATH=/usr/bin:/bin`**,
+     host-brittle and failing for a reason unrelated to the thing it gates;
+  5. **current-facing docs pointed at `attempt2`**, superseded twice over, and
+     `CODEX_HANDOFF.md` still carried Gen116-era suite figures and instructions to
+     `pip install` the engine under test - the sibling of the `AGENTS.md`
+     staleness repaired one commit earlier and missed here.
+  Also corrected, in the handoff rather than the code: the claim that 30 witnesses
+  each fail against the pre-fix runner. The measured number is **19 of 36**; the
+  rest are immutability guards that correctly pass in both trees. Recorded with
+  method and node ids in `reviews/gen120-negative-control.md`.
+  Contract `b38a33f33529dd2fe200315151746dd3702c4c042b0daf77a6ed2b1c1073f26f`.
+- `attempt9` - **canonical.** Byte-identical science to attempt8; it exists only
+  because two contract-bound test files were repaired after attempt8 sealed:
+  `test_contract_binds_every_run_bearing_surface` still demanded the
+  `v5_module_sha256` key that finding 3 renamed, and
+  `test_runner_never_writes_into_gen116` asserted the runner reads
+  `results/gen116` - pinning in place the very vestige that finding had removed.
+  A test that asserts the defect keeps the defect. Contract
+  `85a5e8aa839bf6f0dcc23c0427379f8d5a89de69fa2f083c0d5bf3c72cd2861d`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.
