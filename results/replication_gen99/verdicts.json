@@ -1,0 +1,1139 @@
+{
+ "Q1_perseus_rank_declines_with_density": {
+  "per_core": {
+   "branch:vega": false,
+   "budget:solstice": false,
+   "oncall:kestrel": false,
+   "throughput:atlas": true
+  },
+  "verdict": "FIXTURE_SPECIFIC"
+ },
+ "Q2_stale_interference_recurs": {
+  "per_core": {
+   "branch:vega": true,
+   "budget:solstice": true,
+   "oncall:kestrel": true,
+   "throughput:atlas": true
+  },
+  "verdict": "REPLICATED_ACROSS_CORES"
+ },
+ "Q3_other_engines_hold_their_shape": {
+  "agentmemory": {
+   "expected_rank": 1,
+   "per_core": {
+    "branch:vega": true,
+    "budget:solstice": false,
+    "oncall:kestrel": false,
+    "throughput:atlas": true
+   },
+   "verdict": "PARTIAL_REPLICATION"
+  },
+  "hindsight": {
+   "expected_rank": 2,
+   "per_core": {
+    "branch:vega": false,
+    "budget:solstice": true,
+    "oncall:kestrel": true,
+    "throughput:atlas": true
+   },
+   "verdict": "PARTIAL_REPLICATION"
+  },
+  "mem0": {
+   "expected_rank": 2,
+   "per_core": {
+    "branch:vega": false,
+    "budget:solstice": true,
+    "oncall:kestrel": true,
+    "throughput:atlas": true
+   },
+   "verdict": "PARTIAL_REPLICATION"
+  }
+ },
+ "fixture_contract_sha256": "985d707660df768ceb3ccf191d78a35cec47c885e3a8cfd9c2bf4d0d7dcccd20",
+ "fixture_version": "interference-v2",
+ "per_core_curves": {
+  "agentmemory": {
+   "branch:vega": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "budget:solstice": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      3
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      3
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      3
+     ],
+     "target_present": true
+    }
+   ],
+   "oncall:kestrel": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "true_forgetting",
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      null
+     ],
+     "returned": [
+      1
+     ],
+     "target_present": false
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "distractor_displacement",
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      null
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": false
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "distractor_displacement",
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      null
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": false
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "distractor_displacement",
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      null
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": false
+    }
+   ],
+   "throughput:atlas": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      3
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      3
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      3
+     ],
+     "target_present": true
+    }
+   ]
+  },
+  "hindsight": {
+   "branch:vega": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      6
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      9
+     ],
+     "returned": [
+      18
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      43
+     ],
+     "returned": [
+      66
+     ],
+     "target_present": true
+    }
+   ],
+   "budget:solstice": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      6
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      18
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      66
+     ],
+     "target_present": true
+    }
+   ],
+   "oncall:kestrel": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      6
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      18
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      66
+     ],
+     "target_present": true
+    }
+   ],
+   "throughput:atlas": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      6
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      18
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      66
+     ],
+     "target_present": true
+    }
+   ]
+  },
+  "mem0": {
+   "branch:vega": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "budget:solstice": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "oncall:kestrel": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "throughput:atlas": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ]
+  },
+  "perseus": {
+   "branch:vega": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      3
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      3
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "budget:solstice": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "oncall:kestrel": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    }
+   ],
+   "throughput:atlas": [
+    {
+     "load": 0,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ],
+      [
+       "stale_version_interference",
+       "retrieval_window_effect"
+      ]
+     ],
+     "ranks": [
+      1,
+      2
+     ],
+     "returned": [
+      2
+     ],
+     "target_present": true
+    },
+    {
+     "load": 4,
+     "mechanisms": [
+      [
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      4
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": true
+    },
+    {
+     "load": 16,
+     "mechanisms": [
+      [
+       "distractor_displacement",
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      null
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": false
+    },
+    {
+     "load": 64,
+     "mechanisms": [
+      [
+       "distractor_displacement",
+       "stale_version_interference"
+      ]
+     ],
+     "ranks": [
+      null
+     ],
+     "returned": [
+      5
+     ],
+     "target_present": false
+    }
+   ]
+  }
+ },
+ "questions_as_frozen": {
+  "Q1_perseus_rank_declines_with_density": {
+   "fixture_specific_if": "it holds in one core only",
+   "gen97_observation": "rank 2 -> 3/4 -> 5 -> absent, in one core",
+   "question": "does perseus's target rank decline with load in every core?",
+   "replicated_if": "the rank is monotonically non-improving with load in every core, and the target is lost at the top level in every core"
+  },
+  "Q2_stale_interference_recurs": {
+   "fixture_specific_if": "any core is free of it",
+   "gen97_observation": "48 of 48 observations, one core",
+   "question": "does stale-version interference appear across cores and loads?",
+   "replicated_if": "it appears at every load level of every core, for every engine"
+  },
+  "Q3_other_engines_hold_their_shape": {
+   "fixture_specific_if": "the shape holds in some cores and not others",
+   "gen97_observation": "mem0 flat at rank 2; agentmemory flat at rank 1; hindsight flat at rank 2 with unbounded volume",
+   "question": "do mem0, agentmemory and hindsight keep their Gen97 curves?",
+   "replicated_if": "each engine's rank is constant across loads in every core, at the rank Gen97 recorded"
+  }
+ }
+}

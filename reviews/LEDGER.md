@@ -47,7 +47,7 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 28 | Post-mortem | Fable | `scripts/doorbell` hardcodes the correct prefix and was never invoked | OPEN | remove it or route through ring-doorbell |
 | 29 | Post-mortem | Fable | doorbells rang without re-review after a FIX FIRST verdict | OPEN | ring-doorbell must gate on decision.txt |
 | 30 | Post-mortem | Fable | missing sklearn/pandas and 8 macOS-path assertions in the suite | OPEN | install; fix the path assertions |
-| 31 | Post-mortem | Fable | missing result artifacts — do NOT skip-mark, they may be real gaps | OPEN | check the Mac clone first |
+| 31 | Post-mortem | Fable | missing result artifacts — do NOT skip-mark, they may be real gaps | FIXED | this commit. Fable was right and it was worse than flagged: **9 evidence directories existed only on the Mac, untracked in git**. 24 files, verified byte-identical by sha256, now committed. |
 | 32 | Post-mortem | Fable | Gen116 attempt4 was shaped by Gen117, whose provenance is disclaimed | OPEN | needs Sol reissue against PR #16 |
 
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the

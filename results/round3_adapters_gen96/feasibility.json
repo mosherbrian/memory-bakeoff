@@ -1,0 +1,159 @@
+{
+ "bindings": {
+  "agentmemory": {
+   "configuration_primitive": "project",
+   "engine": "agentmemory",
+   "provenance": "scope binding from Gen77/78, configuration binding from Gen79/80; neither is re-derived here",
+   "query": {
+    "agentId": "r3-scope-695e10adfbba20b3f6eb07cc3570dd3b",
+    "project": "cfg-9f5fb8112fc4681172faabef57b376db"
+   },
+   "scope_primitive": "agentId",
+   "write": {
+    "agentId": "r3-scope-695e10adfbba20b3f6eb07cc3570dd3b",
+    "project": "cfg-9f5fb8112fc4681172faabef57b376db"
+   }
+  },
+  "hindsight": {
+   "configuration_primitive": "tags",
+   "engine": "hindsight",
+   "provenance": "scope binding from Gen77/78, configuration binding from Gen79/80; neither is re-derived here",
+   "query": {
+    "bank_id": "r3-scope-695e10adfbba20b3f6eb07cc3570dd3b",
+    "tags": [
+     "cfg-9f5fb8112fc4681172faabef57b376db"
+    ],
+    "tags_match": "all"
+   },
+   "scope_primitive": "bank_id",
+   "write": {
+    "bank_id": "r3-scope-695e10adfbba20b3f6eb07cc3570dd3b",
+    "tags": [
+     "cfg-9f5fb8112fc4681172faabef57b376db"
+    ]
+   }
+  },
+  "mem0": {
+   "configuration_primitive": "agent_id",
+   "engine": "mem0",
+   "provenance": "scope binding from Gen77/78, configuration binding from Gen79/80; neither is re-derived here",
+   "query": {
+    "filters": {
+     "agent_id": "cfg-9f5fb8112fc4681172faabef57b376db",
+     "user_id": "scope-695e10adfbba20b3f6eb07cc3570dd3b"
+    }
+   },
+   "scope_primitive": "user_id",
+   "write": {
+    "agent_id": "cfg-9f5fb8112fc4681172faabef57b376db",
+    "user_id": "scope-695e10adfbba20b3f6eb07cc3570dd3b"
+   }
+  },
+  "perseus": {
+   "configuration_primitive": "category",
+   "engine": "perseus",
+   "provenance": "scope binding from Gen77/78, configuration binding from Gen79/80; neither is re-derived here",
+   "query": {
+    "category": "cfg-9f5fb8112fc4681172faabef57b376db",
+    "workspace_hash": "695e10adfbba20b3f6eb07cc3570dd3b"
+   },
+   "scope_primitive": "workspace_hash",
+   "write": {
+    "category": "cfg-9f5fb8112fc4681172faabef57b376db",
+    "workspace_hash": "695e10adfbba20b3f6eb07cc3570dd3b"
+   }
+  }
+ },
+ "fixture_check": {
+  "levels": [
+   0,
+   4,
+   16,
+   64
+  ],
+  "one_configuration": [
+   "A1"
+  ],
+  "one_query": [
+   "Atlas measured throughput"
+  ],
+  "one_scope": [
+   "server:atlas"
+  ],
+  "one_semantic_core": [
+   "throughput:atlas"
+  ],
+  "visible_per_level": {
+   "IQ000": 3,
+   "IQ004": 7,
+   "IQ016": 19,
+   "IQ064": 67
+  }
+ },
+ "mode_substitution_checked": true,
+ "preflight": {
+  "adapter_version": "round3-adapters-v1",
+  "budget_surface": {
+   "agentmemory": {
+    "evidence": "search_arguments passes limit to the engine",
+    "kind": "native_result_count",
+    "parameter": "limit",
+    "read_path": "POST /agentmemory/smart-search {limit: N}",
+    "window_expressible": true
+   },
+   "hindsight": {
+    "contract_defect": "the frozen adapter contract says post_filtering 'none; native order and native limit are preserved' - accurate for the other three, inaccurate here, because no native limit exists to preserve",
+    "evidence": "recall_arguments accepts a `limit` argument and NEVER PASSES IT; the Round-2 harness truncated the reply with [:LIMIT] afterwards, so requested_limit was the harness's scissors",
+    "kind": "token_budget",
+    "parameter": "max_tokens",
+    "read_path": "recall(bank_id, query, max_tokens=4096)",
+    "window_expressible": false
+   },
+   "mem0": {
+    "evidence": "search_arguments passes limit to the engine",
+    "kind": "native_result_count",
+    "parameter": "limit",
+    "read_path": "Memory.search(query, filters, limit=N, threshold)",
+    "window_expressible": true
+   },
+   "perseus": {
+    "evidence": "recall_arguments passes limit to the engine",
+    "kind": "native_result_count",
+    "parameter": "limit",
+    "read_path": "perseus_vault_recall(mode=hybrid, limit=N)",
+    "window_expressible": true
+   }
+  },
+  "comparable_windows_expressible": false,
+  "identical_records_and_query_per_engine": "every engine receives the same observation texts and the same query string; only the binding primitives differ, and those are the Gen77/79 ones",
+  "no_engine_runs": true,
+  "run_design": "within-engine scale curves, not cross-engine pooled counts",
+  "saturation": {
+   "agentmemory": {
+    "because": "the engine was given limit=N and filled it or did not",
+    "engine": "agentmemory",
+    "saturated_is": "meaningful"
+   },
+   "hindsight": {
+    "because": "the engine was given a token budget, not a result count; a count equal to the harness limit would describe the truncation, not the engine",
+    "consequence": "true_forgetting and distractor_displacement cannot be separated for this engine from a result count alone",
+    "engine": "hindsight",
+    "saturated_is": "NOT_DEMONSTRABLE"
+   },
+   "mem0": {
+    "because": "the engine was given limit=N and filled it or did not",
+    "engine": "mem0",
+    "saturated_is": "meaningful"
+   },
+   "perseus": {
+    "because": "the engine was given limit=N and filled it or did not",
+    "engine": "perseus",
+    "saturated_is": "meaningful"
+   }
+  },
+  "scale_is_the_only_fixture_variable": "one semantic core, identical query, scope and configuration at every level; only the distractor count changes (asserted in the Gen95 tests)",
+  "strategies_unchanged": true,
+  "why_not": "hindsight expresses a token budget and the other three express a result count; those are different quantities and no setting of one equals a setting of the other"
+ },
+ "preflight_sha256": "e33ac63015d2799b90606ceea8cbeb219037b5cdbe09810caae902a19d30f0e1"
+}
