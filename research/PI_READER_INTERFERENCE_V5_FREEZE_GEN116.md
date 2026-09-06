@@ -3,8 +3,16 @@
 **Status: candidate protocol awaiting control-plane review. Not a result.**
 No reader, model, endpoint, sidecar, memory engine or GPU was called.
 
-Canonical attempt `results/gen116/attempt3`.
-`contract_sha256` `323305e16273d84e07bbfc8e9f696aa4f958c69e3572c9842053d1893b9f4942`.
+**Canonical attempt `results/gen116/attempt4`**, ratified by the Generation 117
+control-plane instruction (source generation 116, source commit `1c36483`,
+trigger PR #16).
+`contract_sha256` `bf1bb84ece274758fd2286e858e13bd18fe2f1329c021837a87fb725059f09a8`.
+
+attempt3 and its hash `323305e1…` are superseded. Review then found four
+load-bearing grader defects — value presence substituting for selecting the
+expected record, an incoherent `INSUFFICIENT` passing while selecting a value, an
+uncited answer passing, and the focused tests sitting outside the fingerprint —
+all repaired in attempt4. See `results/gen116/CANONICAL_ATTEMPT.md`.
 
 ## What v5 changes, and why
 
@@ -36,7 +44,7 @@ values sharing a head noun, matched token count, and length within two character
 
 Two biases were found by the audit and fixed rather than described:
 
-| bias | attempt1 | attempt3 |
+| bias | attempt1 | attempt4 |
 |---|---|---|
 | revision-2 value is longer | 3/12 | **6/12** |
 | revision-2 value sorts later | 7/12 | **6/12** |
@@ -57,7 +65,12 @@ Strict JSON with a machine-readable selection:
 `disposition` (RESOLVED/UNRESOLVED/INSUFFICIENT), `selected_record_id`,
 `selected_value`, `prior_values`, `citations`.
 
-Eleven mutually exclusive classes, exhaustive over that contract by execution.
+**Nine** mutually exclusive terminal classes, exhaustive over that contract by
+execution. The control plane ruled nine, not the eleven its own Gen116 brief
+listed: `CURRENT_WITH_HISTORY` and `STALE_WITH_HISTORY` already encode a resolved
+selection plus chronology, so a separate `TEMPORAL_RECONCILIATION_*` terminal
+label would be a second name for one response. Reconciliation is a derived
+reporting property of those two classes, never a terminal class.
 The three rules that killed v4 are now enforced:
 
 - **Contradiction is an assertion, never a substring.** Naming both values is
