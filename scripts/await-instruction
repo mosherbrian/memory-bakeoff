@@ -46,19 +46,24 @@ while :; do
     exit 0
   fi
 
-  # --- REQUEST channel: was our ask even delivered? -------------------------
-  PRJSON=$(toolbox run -c fedora-toolbox-43 gh pr view "$PR" --repo "$REPO" \
-           --json title,state 2>/dev/null || echo '{}')
-  TITLE=$(printf '%s' "$PRJSON" | python3 -c 'import json,sys;print((json.load(sys.stdin) or {}).get("title",""))' 2>/dev/null)
-  STATE=$(printf '%s' "$PRJSON" | python3 -c 'import json,sys;print((json.load(sys.stdin) or {}).get("state",""))' 2>/dev/null)
-  case "$TITLE" in
-    "$PREFIX"*) ;;
-    *) say "REQUEST NOT DELIVERED: PR #$PR title '$TITLE' does not carry '$PREFIX'."
-       say "The control plane was never called. Re-ring with a conforming title."
-       exit 2 ;;
-  esac
-  if [ "$STATE" != "OPEN" ]; then
-    say "REQUEST NOT DELIVERED: PR #$PR is $STATE, not OPEN."
+  # --- REQUEST channel: is the ask actually visible where it is read? -------
+  # The PR trigger was DISABLED on 2026-09-06. A well-formed PR now summons
+  # nothing, so checking its title would be theatre. What a scheduled control-
+  # plane task actually reads is control-plane/PENDING.json on origin/main, so
+  # that is the request channel and this is what must be verified.
+  git fetch -q origin main 2>/dev/null || true
+  PJSON=$(git show origin/main:control-plane/PENDING.json 2>/dev/null || echo '{}')
+  PSTATUS=$(printf '%s' "$PJSON" | python3 -c 'import json,sys;print((json.load(sys.stdin) or {}).get("status",""))' 2>/dev/null)
+  PSHA=$(printf '%s' "$PJSON" | python3 -c 'import json,sys;print((json.load(sys.stdin) or {}).get("source_commit",""))' 2>/dev/null)
+  if [ "$PSTATUS" != "awaiting" ]; then
+    say "REQUEST NOT VISIBLE: PENDING.json on origin/main says status='$PSTATUS'."
+    say "Nothing is asking the control plane for anything. Run: scripts/pending await <gen> <commit>"
+    exit 2
+  fi
+  if [ "$PSHA" != "$SHA" ]; then
+    say "REQUEST STALE: PENDING.json pins $PSHA but this watch expects $SHA."
+    say "main advanced while the request was outstanding - the same stale-pin"
+    say "failure as Gen107 to Gen108. Re-pin and tell the control plane."
     exit 2
   fi
 

@@ -151,14 +151,24 @@ def main() -> int:
         result = json.loads(response.read())
     number = result["number"]
 
-    # The ring ARMS the clock. There is no second decision about whether to
-    # watch, because "am I stuck?" is the judgement that cost 6h47m. The watcher
-    # checks the REQUEST channel - was this ask even delivered - which nothing
-    # did for the whole of that night.
+    # NOTE, 2026-09-06: the PR trigger is DISABLED. This PR no longer summons
+    # the control plane; it is an artifact record. Delivery now happens through
+    # control-plane/PENDING.json, which a scheduled task reads, so the doorbell
+    # updates that file and the watcher verifies it.
+    #
+    # The ring still ARMS the clock. There is no second decision about whether to
+    # watch, because "am I stuck?" is the judgement that cost 6h47m.
     title_back = result.get("title", "")
     if not title_back.startswith("BAKEOFF_HANDOFF"):
         raise SystemExit(f"RANG BUT MALFORMED: GitHub shows title {title_back!r}. "
                          "The control plane filter will not match it. Close it and re-ring.")
+    subprocess.run([str(Path(__file__).resolve().parent / "pending"),
+                    "await", str(generation), sha], check=True)
+    subprocess.run(["git", "add", "control-plane/PENDING.json"], check=False)
+    subprocess.run(["git", "commit", "-q", "-m",
+                    f"pending: awaiting gen{generation + 1} from {sha[:12]}"], check=False)
+    subprocess.run(["git", "push", "-q", "origin", "HEAD:main"], check=False)
+
     unit = f"doorbell-gen{generation}"
     subprocess.run(["systemd-run", "--user", f"--unit={unit}", "--collect",
                     str(Path(__file__).resolve().parent / "await-instruction"),

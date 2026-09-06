@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Maintain control-plane/PENDING.json - the ONE thing a scheduled control-plane
+# task reads. It is committed and pushed, so it is publicly readable on GitHub
+# and needs no credentials, no webhook, and no correctly-typed PR title.
+#
+# WHY THIS SHAPE. The webhook trigger depended on me ringing correctly. On
+# 2026-09-06 I mis-titled a doorbell, the filter never matched, and the control
+# plane was never called for 6h47m. A schedule fires whether or not I got
+# anything right. The failure mode moves from "silent non-delivery" to "this
+# file lies", which is at least a thing that can be tested.
+#
+# IDEMPOTENCE ACROSS SEVERAL CHATS. Nothing here locks. The ANSWER is the lock:
+# a task writes an instruction only if the Drive doc does not already answer this
+# exact generation+commit. Five chats offset around the hour therefore give ~12
+# minute latency with at most one write.
+#
+# Usage: pending await <generation> <commit>   # doorbell/handoff calls this
+#        pending answered <generation>         # set once an instruction verifies
+#        pending show
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+F=control-plane/PENDING.json
+
+case "${1:-show}" in
+  await)
+    GEN=${2:?usage: pending await <generation> <commit>}
+    SHA=${3:?}
+    [ "$SHA" = "$(git rev-parse origin/main)" ] || {
+      echo "REFUSING: $SHA is not origin/main. A pending request must pin the"
+      echo "published commit; pinning HEAD is how a doorbell once pinned its own"
+      echo "branch instead of the result."; exit 1; }
+    python3 - "$GEN" "$SHA" "$F" <<'PY'
+import json, sys, datetime
+gen, sha, f = sys.argv[1], sys.argv[2], sys.argv[3]
+json.dump({
+  "status": "awaiting",
+  "source_generation": int(gen),
+  "requested_generation": int(gen) + 1,
+  "source_commit": sha,
+  "rung_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
+  "instruction_goes_to": "the CHATGPT_TO_CODEX Google Doc",
+  "write_only_if": ("that doc does not already carry source_generation "
+                    f"{gen} and source_commit {sha}"),
+}, open(f, "w"), indent=2, sort_keys=True)
+open(f, "a").write("\n")
+print(f"{f}: awaiting gen{int(gen)+1} from {sha[:12]}")
+PY
+    ;;
+  answered)
+    GEN=${2:?usage: pending answered <generation>}
+    python3 - "$GEN" "$F" <<'PY'
+import json, sys, datetime
+gen, f = sys.argv[1], sys.argv[2]
+d = json.load(open(f))
+if int(d["source_generation"]) != int(gen):
+    raise SystemExit(f"REFUSING: pending is gen{d['source_generation']}, not {gen}")
+d["status"] = "answered"
+d["answered_at"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
+json.dump(d, open(f, "w"), indent=2, sort_keys=True); open(f, "a").write("\n")
+print(f"{f}: answered")
+PY
+    ;;
+  show) cat "$F" 2>/dev/null || echo "no pending request" ;;
+  *) echo "usage: pending [await <gen> <commit> | answered <gen> | show]"; exit 1 ;;
+esac
