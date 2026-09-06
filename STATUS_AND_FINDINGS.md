@@ -2,6 +2,7 @@
 
 **Snapshot:** 2026-09-06 (America/Los_Angeles)  
 **Harness tests:** see the Gen107 handoff entry for the authoritative count  
+**Reader layer:** `reader-interference-v3` frozen at Gen112 and **unrun**; v2 superseded after review found a contradiction could pass a control gate.  
 **Reader layer:** repaired ruler `reader-interference-v2` frozen at Gen111 and **unrun**; v1 superseded after four defects including a blinding failure.  
 **Reader layer:** first run at Gen110 produced **no result** — clean execution, defective ruler, attempt preserved as NON_EVIDENCE. No reader effect is claimed.  
 **Reader layer:** OPEN and UNRUN at Gen109 — `reader-interference-v1` is frozen (`results/gen109/attempt1/`), no model has been asked anything, and Gen85's attempt is [QUARANTINED](research/GEN85_READER_QUARANTINE.md).  

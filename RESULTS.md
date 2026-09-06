@@ -9,6 +9,8 @@ Round 1 is closed. Its authoritative narrative is
 [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md); prefer it
 over any older score text elsewhere in this repository.
 
+**Gen112 froze `reader-interference-v3`** (`results/gen112/attempt1/`, design [`research/PI_READER_INTERFERENCE_V3_GEN112.md`](research/PI_READER_INTERFERENCE_V3_GEN112.md)) after review found that v2 let a **self-contradicting answer pass a control gate** — semantic detection was gated by which records were presented. v2 is `SUPERSEDED_AS_RULER / NON_EVIDENCE` and was never run, so no result was lost. **Still unrun; the reader question remains OPEN.**
+
 **Gen111 froze the repaired ruler `reader-interference-v2`** (`results/gen111/attempt1/`, design [`research/PI_READER_INTERFERENCE_V2_GEN111.md`](research/PI_READER_INTERFERENCE_V2_GEN111.md)) after four defects were found in v1 — two by the executor, two by the control plane, including that **v1 was never blinded**: its record ids spelled out which record was current. v1 is `SUPERSEDED_AS_RULER / NON_EVIDENCE`. **Still unrun; the reader question remains OPEN.**
 
 **Gen110 ran the reader and produced NO result.** The execution was clean —

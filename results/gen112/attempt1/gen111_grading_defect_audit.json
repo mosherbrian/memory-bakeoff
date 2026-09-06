@@ -1,0 +1,35 @@
+{
+ "defect": "semantic detection was gated by presented-record pointers",
+ "found_by": "control plane, reviewing the frozen v2 truth table and grader",
+ "gen111_artifacts_modified": false,
+ "repair": "classify_answer() takes only the answer text and the core name, so the defect is unrepresentable rather than merely unwritten; BOTH always resolves to mixed_contradictory_answer",
+ "root_cause_branch": [
+  "said_current = case[\"current_opaque\"] is not None and contains_value(...)",
+  "said_stale   = case[\"stale_opaque\"]   is not None and contains_value(...)"
+ ],
+ "scientific_loss": "none - v2 was frozen and never run",
+ "v2_never_executed": true,
+ "why_it_matters": "an absent record-role pointer was read as absence of that value in the answer, so a self-contradicting reply could PASS a control gate and silently certify a core as interpretable",
+ "witnesses": [
+  {
+   "answer": "41 t/s, previously 27 t/s",
+   "citations": [
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "required": "mixed_contradictory_answer",
+   "v2_outcome": "correct_current_answer",
+   "v3_outcome": "mixed_contradictory_answer"
+  },
+  {
+   "answer": "27 t/s, now 41 t/s",
+   "citations": [
+    "REC-B211D4D705"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "required": "mixed_contradictory_answer",
+   "v2_outcome": "correct_stale_control_answer",
+   "v3_outcome": "mixed_contradictory_answer"
+  }
+ ]
+}
