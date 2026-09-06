@@ -9,9 +9,10 @@ labels. The headline does not survive.
 
 The AI never once gave the outdated answer. Not in a single one of the 24 tries.
 In 21 of them it simply listed both values **in the order it read them** — which
-is an echo of the question, not a mistake. And the one case I called a
-self-contradiction actually reads "256 GiB initially, resized to 512 GiB", which
-is a correct history that ends on the right number.
+is an echo of the question, not a mistake. Gen114 labelled 21 of the 24 cells
+self-contradictions; the three where the grade actually differed by order read
+"256 GiB initially, resized to 512 GiB", which is a correct history ending on
+the right number.
 
 There is a deeper problem underneath. **The records never tell the AI which fact
 is current.** No dates, no labels, no ordering — just two flat contradictory
@@ -55,8 +56,9 @@ suggestive only, generated after seeing outputs, not an effect estimate.**
 **Scope 5 — claim ledger.** Preserved: the execution record and the machine
 labels. **Retracted:** that stale context made the reader contradict itself;
 that a harmful correctness order effect exists; that the 24 cells are 24
-observations (19 of 20 cases were byte-identical across repetitions — 9 unique
-replies behind 24 conflict cells); that record texts are symmetric. Preserved
+observations (19 of 20 cases were byte-identical across repetitions; counting
+distinct answer text globally there are 17 unique replies behind the 60 cells
+and 9 behind the 24 conflict cells); that record texts are symmetric. Preserved
 with limitation: the reader gave no stale-only answer. Open: whether this
 condition measures stale-memory interference at all.
 
@@ -72,6 +74,22 @@ sample size and the untracked-runner defect were all raised by `glm-5.3` and
 `glm-5.3-flash` before this adjudication. None were found by me. That is four
 generations running in which the implementer found none of the defects that
 mattered.
+
+**Canonical artifact: `results/gen115/attempt4`.** Attempts 1-3 are preserved
+and superseded; `results/gen115/CANONICAL_ATTEMPT.md` says why. Both rivals
+reviewed attempt2 and returned `DEFECTS_MINOR`, so the loop said FIX FIRST. Four
+of their defects were the same habit this generation criticises: the per-row
+`asserts_stale_as_current` and `prompt_discloses_recency` fields and the
+`verified_absent_tokens` list were hardcoded constants the runner never
+computed, and the unique-reply count was a per-case number published under a
+global-sounding phrase (21, where the global figure is 17). attempt4 computes
+all of them and fails closed if any conflict prompt discloses recency. Their
+reviews are committed verbatim under `reviews/`.
+
+**Tests: 15** for the Gen115 schema, including that the R1 guard fires on the
+exact sentence that caused this generation. The reader-interference lineage
+still passes 184. `pytest` cannot run whole on this host: `sklearn` and `pandas`
+are declared in pyproject and absent here. Environment, not regression.
 
 **No reader run. No GPU time used.**
 

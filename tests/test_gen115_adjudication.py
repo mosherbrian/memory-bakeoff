@@ -70,7 +70,7 @@ def test_gen114_is_classified_as_not_confirmatory():
 def test_the_written_adjudication_obeys_its_own_contract():
     """The artifact this generation published must pass the guards it declares."""
     from pathlib import Path
-    out = Path(__file__).resolve().parents[1] / "results/gen115/attempt2"
+    out = Path(__file__).resolve().parents[1] / "results/gen115/attempt4"
     table = json.loads((out / "gen115_conflict_adjudication.json").read_text())
     rows = table["rows"]
     assert len(rows) == 24
@@ -79,13 +79,18 @@ def test_the_written_adjudication_obeys_its_own_contract():
         G.assert_not_confirmatory(row)
         assert row["semantic_category"] in G.SEMANTIC_CATEGORIES
     assert table["stale_only_answers"] == 0
-    assert table["explicit_contradictions_found"] == 0
+    # The retraction rests on these COMPUTED fields, not on the authored category.
+    assert table["computed_stale_only_answers"] == 0
+    assert table["computed_prompts_disclosing_recency"] == 0
+    assert table["explicit_contradiction_is_computed"] is False
+    assert all(r["asserts_stale_as_current"] is False for r in rows)
+    assert all(r["prompt_discloses_recency"] == [] for r in rows)
     assert table["status"] == G.OPEN_EXPLORATORY
 
 
 def test_the_claim_ledger_uses_only_declared_statuses():
     from pathlib import Path
-    out = Path(__file__).resolve().parents[1] / "results/gen115/attempt2"
+    out = Path(__file__).resolve().parents[1] / "results/gen115/attempt4"
     ledger = json.loads((out / "gen115_claim_ledger.json").read_text())
     assert ledger["contract_hash"] == G.contract_hash()
     for claim in ledger["claims"]:
@@ -93,3 +98,24 @@ def test_the_claim_ledger_uses_only_declared_statuses():
         assert claim["basis"].strip()
     retracted = [c for c in ledger["claims"] if c["status"] == G.RETRACTED]
     assert len(retracted) == 4
+
+
+def test_unique_counts_are_labelled_by_method():
+    """attempt1/2 published a per-case count under a global-sounding phrase."""
+    from pathlib import Path
+    out = Path(__file__).resolve().parents[1] / "results/gen115/attempt4"
+    u = json.loads((out / "gen115_conflict_adjudication.json").read_text())["uniqueness"]
+    assert u["all_cells_unique_global"] == 17
+    assert u["all_cells_unique_per_case"] == 21
+    assert u["conflict_unique_global"] == 9
+    assert u["all_cells_unique_global"] != u["all_cells_unique_per_case"], \
+        "the two methods differ; that is exactly why both must be published"
+
+
+def test_the_recency_scan_actually_ran():
+    from pathlib import Path
+    out = Path(__file__).resolve().parents[1] / "results/gen115/attempt4"
+    d = json.loads((out / "gen115_fixture_decidability.json").read_text())
+    assert d["tokens_found"] == []
+    assert "fails closed" in d["scan_performed_by"]
+    assert len(d["tokens_scanned_for"]) == 8

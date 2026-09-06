@@ -9,6 +9,11 @@ from memory_bakeoff import evidence as EV, gen115_adjudication as G115
 from memory_bakeoff import reader_interference_v4 as V4
 
 ROOT = Path(__file__).resolve().parents[1]
+# Words that would tell the reader which record is current, if any were present.
+DISCLOSURE_TOKENS = ("superseded", "current", "stale", "role", "outdated",
+                     "latest", "newer", "order")
+# Phrases that let a reply place the two values in time.
+TEMPORAL_MARKERS = ("initially", "resized", "after the", "previously", "then", "now")
 SRC = ROOT / "results/gen114/attempt1"
 CAN = V4.CANONICAL
 
@@ -103,8 +108,14 @@ def main() -> None:
             "answer_mention_order": ("current_first" if pc < ps else "stale_first")
                                     if pc >= 0 and ps >= 0 else
                                     ("current_only" if pc >= 0 else "stale_only" if ps >= 0 else "neither"),
-            "asserts_stale_as_current": False,
-            "prompt_discloses_recency": False,
+            # COMPUTED, not declared. Both were hardcoded False in attempt1/2,
+            # which is the declare-rather-than-measure habit this generation
+            # exists to criticise; both rivals caught it.
+            "asserts_stale_as_current": ps >= 0 and pc < 0,
+            "prompt_discloses_recency": sorted(t for t in DISCLOSURE_TOKENS
+                                               if t in prompt.lower()),
+            "answer_carries_temporal_marker": sorted(t for t in TEMPORAL_MARKERS
+                                                     if t in ans.lower()),
             "confirmatory": False,
         })
     for row in rows:
@@ -113,16 +124,58 @@ def main() -> None:
 
     echo = sum(1 for r in rows if r["answer_mention_order"] == r["context_order"])
     tally = collections.Counter(r["semantic_category"] for r in rows)
+    all_ans = [json.loads(r["text"])["answer"] for r in res]
+    conf_ans = [json.loads(r["text"])["answer"] for r in res
+                if r["condition"].startswith("CONFLICT")]
+    per_case = lambda rs: sum(len({json.loads(x["text"])["answer"] for x in rs
+                                   if x["case_id"] == c})
+                              for c in {x["case_id"] for x in rs})
+    uniqueness = {
+        "method": "distinct answer TEXT, counted globally; the per-case figure is "
+                  "given beside it because attempt1/2 published the per-case number "
+                  "under a global-sounding phrase",
+        "all_cells": len(res),
+        "all_cells_unique_global": len(set(all_ans)),
+        "all_cells_unique_per_case": per_case(res),
+        "conflict_cells": len(conf_ans),
+        "conflict_unique_global": len(set(conf_ans)),
+        "conflict_unique_per_case": per_case([r for r in res
+                                              if r["condition"].startswith("CONFLICT")]),
+    }
+
     conflict_table = {
         "contract": G115.CONTRACT_VERSION, "status": G115.OPEN_EXPLORATORY,
         "exploratory_by_construction": "R2 - outputs were observed before these categories existed",
         "rows": rows, "category_tally": dict(tally),
         "stale_only_answers": sum(1 for r in rows if r["answer_mention_order"] == "stale_only"),
         "mention_order_matches_context_order": f"{echo}/{len(rows)}",
-        "explicit_contradictions_found": tally.get(G115.EXPLICIT_CONTRADICTION, 0),
+        "uniqueness": uniqueness,
+        # HONESTY NOTE, raised by both rivals. The category of each row is an
+        # AUTHORED human judgment keyed by (core, condition); the pipeline has no
+        # path that could emit EXPLICIT_CONTRADICTION, so a zero there is not a
+        # computed finding. The two fields below ARE computed from the text and
+        # are what actually carry the retraction.
+        "category_assignment": "AUTHORED_HUMAN_JUDGMENT per (core, condition), "
+                               "rationale required by R3; not computed",
+        "explicit_contradiction_is_computed": False,
+        "explicit_contradictions_authored": tally.get(G115.EXPLICIT_CONTRADICTION, 0),
+        "computed_stale_only_answers": sum(1 for r in rows if r["asserts_stale_as_current"]),
+        "computed_prompts_disclosing_recency": sum(1 for r in rows
+                                                   if r["prompt_discloses_recency"]),
+        "computed_answers_with_temporal_marker": sum(1 for r in rows
+                                                     if r["answer_carries_temporal_marker"]),
     }
 
     # ---- scope 4: fixture-decidability finding ------------------------------
+    # Scanned here, not asserted. attempt1/2 published this list as
+    # "verified_absent_tokens" while the runner never looked.
+    leaked = {q["case_id"]: sorted(t for t in DISCLOSURE_TOKENS
+                                   if t in q["prompt"].lower())
+              for q in req.values() if "CONFLICT" in q["case_id"]}
+    leaked = {k: v for k, v in leaked.items() if v}
+    if leaked:
+        raise SystemExit(f"FAIL CLOSED: conflict prompts disclose recency: {leaked}")
+
     cue_terms = ("after the resize", "after the cache fix")
     cores = {}
     for c in V4.build_fixture()["cases"]:
@@ -134,8 +187,10 @@ def main() -> None:
         "status": G115.OPEN_EXPLORATORY,
         "observation": "No conflict prompt discloses which record is current. No role "
                        "label, no timestamp, no ordering semantics. Record ids are opaque.",
-        "verified_absent_tokens": ["superseded", "current", "stale", "role", "outdated",
-                                   "latest", "newer", "order"],
+        "tokens_scanned_for": sorted(DISCLOSURE_TOKENS),
+        "scan_performed_by": "run_gen115_adjudication.py over all 24 conflict prompts; "
+                             "fails closed if any token is present",
+        "tokens_found": [],
         "consequence": "Selecting the current value is not derivable from the records "
                        "except where the record text itself carries a temporal cue. v4 "
                        "nonetheless treats correct_current_answer as the success state.",
@@ -175,8 +230,9 @@ def main() -> None:
      {"claim": "The 24 conflict cells rest on 24 independent observations.",
       "status": G115.RETRACTED,
       "basis": "19 of 20 cases returned byte-identical text across all three "
-               "repetitions. The 60 cells carry 21 unique replies; the 24 "
-               "conflict cells carry 9. Repetition measured determinism, not "
+               "repetitions. Counting distinct answer TEXT globally, the 60 "
+               "cells carry 17 unique replies and the 24 conflict cells carry 9 "
+               "(per-case: 21 and 9). Repetition measured determinism, not "
                "variance, so counts like '21 of 24' overstate the evidence."},
      {"claim": "Record texts are symmetric between current and stale.",
       "status": G115.RETRACTED,
@@ -214,7 +270,11 @@ def main() -> None:
     print(f"WROTE {out}")
     print(f"  reproduces_exactly       : {reproduction['reproduces_exactly']}")
     print(f"  stale-only answers       : {conflict_table['stale_only_answers']}/24")
-    print(f"  explicit contradictions  : {conflict_table['explicit_contradictions_found']}/24")
+    print(f"  explicit contradictions  : {conflict_table['explicit_contradictions_authored']}/24 (authored)")
+    print(f"  computed stale-only      : {conflict_table['computed_stale_only_answers']}/24")
+    print(f"  prompts disclosing recency: {conflict_table['computed_prompts_disclosing_recency']}/24")
+    print(f"  unique replies (global)  : {uniqueness['all_cells_unique_global']} of 60 cells, "
+          f"{uniqueness['conflict_unique_global']} of 24 conflict")
     print(f"  mention order == ctx     : {conflict_table['mention_order_matches_context_order']}")
     print(f"  categories               : {conflict_table['category_tally']}")
     print(f"  verify                   : {EV.verify(out)}")

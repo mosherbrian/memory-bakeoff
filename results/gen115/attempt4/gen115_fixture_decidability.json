@@ -1,0 +1,41 @@
+{
+ "consequence": "Selecting the current value is not derivable from the records except where the record text itself carries a temporal cue. v4 nonetheless treats correct_current_answer as the success state.",
+ "cores": {
+  "branch:vega": {
+   "current_text": "Vega ships from branch release/vega-4.x.",
+   "in_text_recency_cue": []
+  },
+  "budget:solstice": {
+   "current_text": "Solstice is provisioned with 512 GiB after the resize.",
+   "in_text_recency_cue": [
+    "after the resize"
+   ]
+  },
+  "oncall:kestrel": {
+   "current_text": "Kestrel escalations route to the platform rota.",
+   "in_text_recency_cue": []
+  },
+  "throughput:atlas": {
+   "current_text": "Atlas measured 41 t/s after the cache fix.",
+   "in_text_recency_cue": [
+    "after the cache fix"
+   ]
+  }
+ },
+ "observation": "No conflict prompt discloses which record is current. No role label, no timestamp, no ordering semantics. Record ids are opaque.",
+ "pattern": "The 2 cores whose current record carries a cue (budget:solstice, throughput:atlas) produced current-leaning or reconciled answers. The 2 cores with no cue (branch:vega, oncall:kestrel) produced both-values answers in prompt order.",
+ "scan_performed_by": "run_gen115_adjudication.py over all 24 conflict prompts; fails closed if any token is present",
+ "status": "OPEN_EXPLORATORY",
+ "strength": "n=2 vs n=2 at core level. SUGGESTIVE ONLY - not an effect estimate, not confirmatory, and generated after seeing the outputs (R2).",
+ "tokens_found": [],
+ "tokens_scanned_for": [
+  "current",
+  "latest",
+  "newer",
+  "order",
+  "outdated",
+  "role",
+  "stale",
+  "superseded"
+ ]
+}

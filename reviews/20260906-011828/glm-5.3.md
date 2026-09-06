@@ -1,0 +1,12 @@
+VERDICT: DEFECTS_MINOR
+
+Every load-bearing Gen115 claim checks out against the sealed Gen114 bytes: I independently re-graded all 60 responses (0 mismatches), re-checked all 60 prompt hashes (0 mismatches), read all 8 unique conflict replies myself (0 stale-only, 0 explicit contradictions, 21/24 prompt-order echo), and scanned all 24 conflict prompts (all 8 claimed-absent tokens absent) — the retraction of the Gen114 headline is correct and stands.
+
+1. The decidability artifact's `verified_absent_tokens` list, and the per-row `asserts_stale_as_current: false` / `prompt_discloses_recency: false`, are hardcoded constants the runner never computes (unlike the regrade, which fails closed) — I verified all three true by my own scan, but the machine evidence for them is an assertion, not a check.
+2. The ledger's "the 60 cells carry 21 unique replies" is true only under a (case, reply) reading; distinct reply texts across the 60 cells number 17 — ambiguous count phrasing in a generation about count discipline.
+3. The claim "the one case I called a self-contradiction actually reads '256 GiB initially, resized to 512 GiB'" is loose: Gen114 labeled 21 of 24 cells contradictions, not one case (the adjudication artifact itself is precise).
+4. Attribution to the `glm-5.3` / `glm-5.3-flash` reviews (e.g. "review 20260906-004659") has no committed artifact in the repository; it cannot be verified from the repo.
+5. `results/gen115/attempt1` is a superseded partial ledger (missing two RETRACTED claims and the attribution block, written 85 s before attempt2); the handoff does not say which attempt is canonical — the requirements doc cites attempt2.
+6. The documented test gate is stale and this host cannot satisfy it: AGENTS.md expects "97 passed," the suite is now 1026 passed / 18 failed / 47 errors, and every failure traces to `sklearn` (declared in pyproject, not installed here) — an environment gap, not a Gen115 regression; the Gen115 module (13 tests) and the full reader-interference lineage (197 tests) pass.
+
+Cross-checks that passed: Gen114 bytes untouched (git clean, evidence verify true, both defect claims in the requirements doc — untracked runner at pinned commit b286c21, hardcoded `seed_accepted: true` — confirmed real); attempt2 artifacts reproduce byte-identically from the committed runner; the requirements doc contains exactly nine requirements; the fixture's cue asymmetry ("after the resize" / "after the cache fix" on current records only, stale records bare) is real.
