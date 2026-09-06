@@ -1,0 +1,92 @@
+"""The watcher replaces a judgement with a clock, so the clock must be tested.
+
+Every guard ships its positive AND negative control. A guard that fires on
+nothing reads as passing, which is worse than absent - four of this project's own
+tests were wrong that way in a single afternoon.
+"""
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+WATCHER = ROOT / "scripts" / "await-instruction"
+DOORBELL = ROOT / "scripts" / "doorbell"
+SRC = WATCHER.read_text()
+
+REAL_MISTITLED_PR = "15"   # "Doorbell: Gen115 complete..." - the actual failure
+GEN115_SHA = "90eb9b680bbe1ebf47f1e8e886d1958d08d8cd2b"
+
+
+def run(args, timeout=240):
+    return subprocess.run(["bash", str(WATCHER), *args], cwd=ROOT,
+                          capture_output=True, text=True, timeout=timeout)
+
+
+def test_watcher_exists_and_parses():
+    assert WATCHER.exists()
+    assert subprocess.run(["bash", "-n", str(WATCHER)]).returncode == 0
+
+
+def test_missing_arguments_refuse():
+    assert run([], timeout=60).returncode != 0
+
+
+def test_it_checks_the_REQUEST_channel_not_only_the_answer():
+    """Nothing checked the request channel for 6h47m. That is the whole point."""
+    assert "gh pr view" in SRC, "the watcher must read the PR back"
+    assert "REQUEST NOT DELIVERED" in SRC
+    assert 'PREFIX=BAKEOFF_HANDOFF' in SRC
+
+
+def test_positive_control_the_real_mistitled_pr_is_caught():
+    """PR #15 is the title that cost the night. It must fail, fast."""
+    r = run(["115", REAL_MISTITLED_PR, GEN115_SHA])
+    assert r.returncode == 2, r.stdout + r.stderr
+    assert "REQUEST NOT DELIVERED" in r.stdout
+    assert "BAKEOFF_HANDOFF" in r.stdout
+
+
+def test_negative_control_a_conforming_open_pr_is_not_flagged():
+    """If it flagged everything, exit 2 would carry no information.
+
+    PR #16 carries the prefix and is the doorbell whose instruction arrived, so
+    the watcher must EXIT 0 on the answer channel rather than exit 2 on the
+    request channel.
+    """
+    r = run(["116", "16", "1c36483e835732364145d551d25a8144ce44bd09"])
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "REQUEST NOT DELIVERED" not in r.stdout
+    assert "ACCEPTED" in r.stdout
+
+
+def test_the_rungs_are_fixed_intervals_not_inference():
+    """A 'smart' stall detector re-creates the failure it is meant to prevent."""
+    assert re.search(r"RUNG3=900\b", SRC), "agent rung must be a fixed 15 minutes"
+    assert re.search(r"RUNG4=2700\b", SRC), "human rung must be a fixed 45 minutes"
+    assert "sleep 300" in SRC
+
+
+def test_each_rung_carries_the_one_permitted_action():
+    """A wake-up that does not say what to do reproduces 'blocked'."""
+    assert "open the Work chat" in SRC and "CONTROL-PLANE RETRY 1" in SRC
+    assert "Send Brian on Signal" in SRC
+    assert "--since" in SRC, "relaunching must not reset the clock"
+
+
+def test_ringing_arms_the_watcher_in_the_same_call():
+    """There must be no second decision about whether to watch."""
+    d = DOORBELL.read_text()
+    assert "await-instruction" in d
+    assert "systemd-run" in d
+    i_post = d.index("urlopen(request)")
+    assert d.index("await-instruction") > i_post, "arm AFTER the ring succeeds"
+
+
+def test_doorbell_verifies_its_own_title_back_from_github():
+    """A declared title becomes an observed one."""
+    d = DOORBELL.read_text()
+    assert "RANG BUT MALFORMED" in d
+    assert 'title_back.startswith("BAKEOFF_HANDOFF")' in d
