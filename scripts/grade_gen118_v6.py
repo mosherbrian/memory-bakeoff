@@ -61,11 +61,23 @@ def control_gate(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 def estimands(rows: Sequence[Mapping[str, Any]], gates: Mapping[str, Any],
-              unique_prompts: int) -> dict[str, Any]:
+              unique_prompts: int,
+              expected_cores: Sequence[str] | None = None) -> dict[str, Any]:
     """Q1-Q9. The independent unit is the CORE; cells are never observations."""
     by = {(r["core"], r["condition"]): r for r in rows}
-    cores = sorted({r["core"] for r in rows})
-    ok = [c for c in cores if gates[c]["interpretable"]]
+    # The cores the CONTRACT says must be present, not the ones that survived.
+    #
+    # Gen120 round 6 made interpretability require every cell, but a core whose
+    # cells ALL failed produced no rows at all - so it vanished from `rows`, from
+    # `control_gate`'s by_core, and from this set, leaving `all_cells_graded`
+    # vacuously true over the survivors. glm-5.3 demonstrated `run_marker`
+    # returning RUN_EVIDENCE on 11 of 12 cores. Deriving the denominator from the
+    # numerator is the same mistake in a new place; the frozen schedule is the
+    # only honest source. Found at Gen120 round 7.
+    observed = {r["core"] for r in rows}
+    cores = sorted(set(expected_cores) | observed) if expected_cores else sorted(observed)
+    absent = sorted(set(expected_cores) - observed) if expected_cores else []
+    ok = [c for c in cores if c in gates and gates[c]["interpretable"]]
 
     def sel(core, cond):
         r = by.get((core, cond))
@@ -83,8 +95,11 @@ def estimands(rows: Sequence[Mapping[str, Any]], gates: Mapping[str, Any],
     return {
         "independent_unit": "core",
         "cores_total": len(cores), "cores_interpretable": len(ok),
-        "all_cells_graded": all(not gates[c].get("missing_cells") for c in cores),
-        "cores_with_missing_cells": [c for c in cores if gates[c].get("missing_cells")],
+        "cores_absent_entirely": absent,
+        "all_cells_graded": (not absent) and all(
+            c in gates and not gates[c].get("missing_cells") for c in cores),
+        "cores_with_missing_cells": [c for c in cores
+                                     if c in gates and gates[c].get("missing_cells")],
         "Q1_cores_selecting_current_in_both_orders": f"{len(q1)}/{len(ok)}",
         "Q2_cores_with_interference": [c for c in q2],
         "Q3_order_discordant_cores": q3,
@@ -96,7 +111,10 @@ def estimands(rows: Sequence[Mapping[str, Any]], gates: Mapping[str, Any],
         # non-success one under a single number.
         "Q6_reconciled_to_current_cells": tally[V6.CURRENT_WITH_HISTORY],
         "Q7_explicit_simultaneous_contradiction_cells": tally[V6.SIMULTANEOUS],
-        "Q8_all_cores_pass_all_controls": all(gates[c]["interpretable"] for c in cores),
+        # A core absent from `gates` produced no rows at all. It is not "passing";
+        # it is missing, and missing must fail this gate rather than skip it.
+        "Q8_all_cores_pass_all_controls": all(
+            c in gates and gates[c]["interpretable"] for c in cores),
         "conflict_cells": len(conflict_rows),
         "unique_prompts": unique_prompts,
         "cells_are_not_observations": True,

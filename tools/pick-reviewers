@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Which reviewers can we actually use right now?
+#
+# Tier 1  GLM 5.3 + 5.3-flash    two distinct models, a real quorum
+# Tier 2  ds4-flash (local)      ONE model - degraded, not a quorum
+#
+# Prints one line: TIER<n> <model> [<model>]
+# Deliberately does NOT fall back to qwen3.6-35b-vulkan-nothink: that is the
+# pinned READER under test, and a subject may not review its own experiment.
+set -euo pipefail
+PINNED_READER="qwen3.6-35b-vulkan-nothink"
+
+# RIVALS_FORCE_TIER2=1 exercises the local path while GLM is still healthy.
+# An untested fallback is not a fallback.
+if [ "${RIVALS_FORCE_TIER2:-0}" = "1" ]; then PCT=100; else
+PCT=$(~/rivals/glm-quota --json 2>/dev/null \
+      | python3 -c 'import json,sys
+try:
+    d=json.load(sys.stdin)
+    ls=[l for l in d.get("data",{}).get("limits",[]) if l.get("type")=="TOKENS_LIMIT"]
+    print(ls[0].get("percentage",0) if ls else 0)
+except Exception: print(-1)' 2>/dev/null || echo -1)
+fi
+
+if [ "$PCT" != "-1" ] && [ "${PCT%.*}" -lt 95 ] 2>/dev/null; then
+  echo "TIER1 glm/glm-5.3 glm/glm-5.3-flash"
+  exit 0
+fi
+
+# Two traps here, both of which fake a quorum if you trust the obvious thing:
+#
+#  1. /v1/models ADVERTISES models llama-swap cannot start. thinkingcap-27b was
+#     listed for days after its weights were deleted on 2026-08-31, and
+#     ds4-flash is listed but dead today. So PROBE each candidate for real.
+#  2. Distinct ALIASES can share one GGUF. All four qwen3.8-27b-* entries are
+#     the same weights with different flags. Two of them is one model twice -
+#     a pair that cannot disagree. So dedupe by the -m path, not the name.
+CFG="$HOME/llama-swap/config.yaml"
+weights_of() { python3 - "$CFG" "$1" <<'PY'
+import re, sys
+cfg, want = open(sys.argv[1]).read(), sys.argv[2]
+m = re.search(r'^  "%s":\n(.*?)(?=^  "|\Z)' % re.escape(want), cfg, re.M | re.S)
+g = re.search(r'-m\s+(\S+)', m.group(1)) if m else None
+print(g.group(1) if g else "")
+PY
+}
+alive() {
+  R=$(curl -sS --max-time 300 http://127.0.0.1:8080/v1/chat/completions \
+      -H 'Content-Type: application/json' \
+      -d "{\"model\":\"$1\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}],\"max_tokens\":1}" \
+      2>/dev/null || true)
+  case "$R" in *'"choices"'*) return 0 ;; *) return 1 ;; esac
+}
+READER_W=$(weights_of "$PINNED_READER")
+PAIR=""; PAIR_W=""; N=0
+for M in qwen3.8-27b-code ds4-flash thinkingcap-27b qwen3.8-27b-vulkan; do
+  W=$(weights_of "$M")
+  [ -z "$W" ] && continue
+  [ "$W" = "$READER_W" ] && continue          # never let the subject review itself
+  [ "$W" = "$PAIR_W" ] && continue            # same weights = not a second opinion
+  alive "$M" || continue
+  case $N in
+    0) PAIR="fb1/$M"; PAIR_W="$W"; N=1 ;;
+    1) echo "TIER2 $PAIR fb2/$M"; exit 0 ;;
+  esac
+done
+[ "$N" = "1" ] && { echo "TIER2 $PAIR"; exit 0; }
+echo "TIER0 none"

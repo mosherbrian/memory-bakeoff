@@ -490,3 +490,46 @@ def test_the_marker_requires_every_cell_graded():
     denied = g.run_marker(gates, starved, linkage_ok=True, seal_ok=True, manifest_ok=True)
     assert denied["marker"] == "NON_EVIDENCE", (
         "a run missing cells is not a weaker result, it is a different experiment")
+
+
+def test_a_core_that_vanished_entirely_denies_the_marker():
+    """The denominator comes from the contract, never from the survivors.
+
+    Round 6 made interpretability require every cell. But a core whose cells ALL
+    failed produced no graded rows at all, so it disappeared from `rows`, from
+    `control_gate`'s by_core, and from `estimands`' core set - leaving
+    `all_cells_graded` vacuously true over whatever survived. glm-5.3 demonstrated
+    `run_marker` returning RUN_EVIDENCE on 11 of 12 cores at Gen120 round 7: the
+    same defect as LEDGER #75, alive inside the gate built to close it.
+    """
+    g = _grader()
+    full = tuple(g.CONTROL_CONDITIONS) + tuple(g.CONFLICT_CONDITIONS)
+    expected = [f"core-{i}" for i in range(12)]
+    # Eleven cores answer completely; the twelfth returns nothing at all.
+    rows = [r for c in expected[:11] for r in _rows(c, full)]
+    gates = g.control_gate(rows)
+
+    blind = g.estimands(rows, gates, unique_prompts=60)
+    assert blind["all_cells_graded"] is True, (
+        "control: without the contracted cores this reads as complete - the defect")
+
+    honest = g.estimands(rows, gates, unique_prompts=60, expected_cores=expected)
+    assert honest["all_cells_graded"] is False
+    assert honest["cores_absent_entirely"] == ["core-11"]
+    marker = g.run_marker(gates, honest, linkage_ok=True, seal_ok=True, manifest_ok=True)
+    assert marker["marker"] == "NON_EVIDENCE", (
+        "a run that lost a whole core may not be published as evidence")
+
+
+def test_linkage_requires_every_response_completed():
+    src = RUNNER.read_text()
+    assert 'r["terminal_disposition"] == "COMPLETED") == 60' in src, (
+        "linkage counted 60 responses without requiring 60 COMPLETED ones, so a "
+        "run full of malformed answers satisfied it")
+
+
+def test_the_capture_docstring_matches_the_capture_block():
+    """The docstring promised 'sealed as it arrives'; the code batch-writes."""
+    src = RUNNER.read_text()
+    assert "sealed as it arrives" not in src
+    assert "not per call" in src

@@ -6,7 +6,7 @@ Read `STATUS_AND_FINDINGS.md` and `AGENTS.md` before changing code.
 
 Continue the memory-engine bake-off on a **normal networked development host** where packages, model weights, npm artifacts, and GitHub releases can be installed normally.
 
-The next goal is **not** to redesign the harness. The harness is already useful, though its full suite is **not** green: 1483 passed / 24 failed / 3 skipped / 5 errors as of Gen120, with every accepted failure pinned by node id in `tests/KNOWN_FAILURES.json` and a guard that fails on any unlisted one. (`node` must be on PATH.) The "97 as of Gen28" figure that stood here was a stale snapshot - reported by review five times across this project before it was finally deleted rather than merely annotated. The goal is to replace controlled/blocked rows with **faithful real-engine runs**, preserving exact configuration and provenance.
+The next goal is **not** to redesign the harness. The harness is already useful, though its full suite is **not** green: 1486 passed / 24 failed / 3 skipped / 5 errors as of Gen120, with every accepted failure pinned by node id in `tests/KNOWN_FAILURES.json` and a guard that fails on any unlisted one. (`node` must be on PATH.) The "97 as of Gen28" figure that stood here was a stale snapshot - reported by review five times across this project before it was finally deleted rather than merely annotated. The goal is to replace controlled/blocked rows with **faithful real-engine runs**, preserving exact configuration and provenance.
 
 Do not erase or overwrite existing result directories. Add new timestamped or clearly named result directories and update synthesis docs only after a run is validated.
 
@@ -25,7 +25,7 @@ python -m pytest -q
 memory-bakeoff probe
 ```
 
-Expected harness test gate before external work: the **reader-interference lineage must be fully green** (245 passed as of 2026-09-06). The whole-suite figure is **1483 passed / 24 failed / 3 skipped / 5 errors** and is not green — see AGENTS.md for the two remaining causes and what to watch instead. `tests/KNOWN_FAILURES.json` pins every accepted failure by exact node id, and `tests/test_known_failures_baseline.py` fails on any failure not listed there, so a familiar-looking total can no longer hide a new one. The **97 passed** figure that stood here was a Gen28 snapshot.
+Expected harness test gate before external work: the **reader-interference lineage must be fully green** (245 passed as of 2026-09-06). The whole-suite figure is **1486 passed / 24 failed / 3 skipped / 5 errors** and is not green — see AGENTS.md for the two remaining causes and what to watch instead. `tests/KNOWN_FAILURES.json` pins every accepted failure by exact node id, and `tests/test_known_failures_baseline.py` fails on any failure not listed there, so a familiar-looking total can no longer hide a new one. The **97 passed** figure that stood here was a Gen28 snapshot.
 
 Then read:
 

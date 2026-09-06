@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt15` is canonical**, per the sixth Generation 120 rival review.
+**`attempt16` is canonical**, per the seventh Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -211,7 +211,7 @@
   fail" with the 2-failed-2-passed output in front of me - the third recurrence of
   this overclaim class, caught by glm-5.3-flash. Everything else in this round was documentation accuracy.
   Contract `9d81fecfa86bdc0350a0556836aff7919c94a17dbba025ebb10556b42d972bce`.
-- `attempt15` - **canonical.** Science identical a ninth time, and this one is
+- `attempt15` - superseded. Science identical a ninth time, and this one is
   worth reading even though the sixth review again returned only DEFECTS_MINOR.
 
   **The grader could have awarded RUN_EVIDENCE to a run missing data, and
@@ -238,6 +238,28 @@
   `AGENTS.md`. Rounds 5 and 6 transcripts are committed - round 5 was cited as
   attempt14's authority while absent from the tree.
   Contract `35daba52150a28612dec28f2997d9aa469747748e14b7adec8e556a3f06713fc`.
+- `attempt16` - **canonical.** Science identical a tenth time. The seventh review
+  found that the attempt15 repair **was itself incomplete, in the way it was
+  written to prevent.**
+
+  attempt15 made a core interpretable only if every cell was present. But a core
+  whose cells ALL failed produced no graded rows at all, so it never entered
+  `rows`, never entered `control_gate`'s `by_core`, and never entered the core set
+  `estimands` measures - leaving `all_cells_graded` vacuously true over whatever
+  survived. glm-5.3 demonstrated `run_marker` returning **RUN_EVIDENCE on 11 of 12
+  cores**. The same defect as the one attempt15 closed, alive inside the gate
+  built to close it, because I derived the denominator from the numerator.
+
+  The estimator now takes the cores the frozen schedule CONTRACTS for and reports
+  any that are absent entirely; Q8 fails on an absent core rather than skipping
+  it; and linkage requires 60 COMPLETED dispositions, not merely 60 responses.
+  Three witnesses, all three failing at attempt15's commit.
+
+  Also: the runner's docstring promised raw evidence "sealed as it arrives" while
+  the capture block in the same contract-bound file recorded one batch write after
+  all 60 calls. The code was right and the prose was wrong; a crash mid-run seals
+  no raw evidence at all, which is now stated plainly where the claim used to be.
+  Contract `ee0da6047c1c45120061dd3511efe493c30de81601a3e92cf3cf1c62dfd61bdd`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

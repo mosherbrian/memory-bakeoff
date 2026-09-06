@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+# Team-of-rivals pre-flight for a completed bake-off generation.
+#
+# Purpose: spend the SCARCE reviewer (ChatGPT Work, quota-limited) only where it
+# adds something. GLM 5.3 and 5.3-flash review first, independently and blind to
+# each other, using Pi so they can read the repository themselves rather than
+# whatever Claude chose to paste - Claude is the weakest reviewer of its own work
+# AND the author of the handoff the others read.
+#
+#   agree, nothing found      -> proceed under preregistered rules
+#   agree, defects found      -> Claude fixes, re-runs this, then rings
+#   they disagree             -> ESCALATE, that disagreement is the signal
+#   ~15% of clean agreements  -> escalate anyway, to catch correlated blind spots
+#
+# Usage: review-generation <repo-path> [question]
+set -euo pipefail
+
+REPO=${1:?usage: review-generation <repo-path> [question]}
+QUESTION=${2:-"Review the most recent generation in this repository. Read the top entry of handoff/CODEX_TO_CHATGPT.md, then read the actual source and artifacts it cites - not just its claims about them.
+
+Your FIRST line must be exactly one of these three tokens and nothing else:
+VERDICT: SOUND            (nothing found that would invalidate the result)
+VERDICT: DEFECTS_MINOR    (defects found, but the published result still stands)
+VERDICT: DEFECTS_BLOCKING (a defect that invalidates the result or blocks a rerun)
+
+Then, from the second line on: your single most important finding in one sentence, followed by every other defect, numbered, most severe first."}
+OUT=${RIVALS_OUT:-$HOME/rivals/reviews/$(date +%Y%m%d-%H%M%S)}
+mkdir -p "$OUT"
+
+PICK=($("$HOME/rivals/pick-reviewers"))
+TIER=${PICK[0]}; SPECS=("${PICK[@]:1}")
+if [ "$TIER" = "TIER0" ]; then
+  echo "REFUSING: no reviewer available - GLM quota exhausted and no clean local model."
+  echo "The pinned reader is deliberately excluded; a subject may not review itself."
+  exit 1
+fi
+echo "$TIER" > "$OUT/tier"
+if [ "$TIER" != "TIER1" ]; then
+  echo "*** DEGRADED: ${#SPECS[@]} reviewer(s), not a rival pair. A single reviewer"
+  echo "*** cannot disagree with anyone, so its agreement means nothing. Escalating"
+  echo "*** regardless of what it says."
+fi
+
+echo "repo:     $REPO"
+echo "out:      $OUT"
+echo "reviewers run BLIND to each other, in parallel"
+echo
+
+# Each reviewer gets its OWN git worktree.
+#
+# They used to share $REPO. Both reviewers run the test suite, and this project's
+# own witness tests deliberately mutate a frozen source and restore it in a
+# `finally`. So reviewer A's test run made reviewer B see a tampered working tree
+# - and B correctly reported it as a defect it could not attribute. Gen120, found
+# by glm-5.3-flash. Blind reviewers must not share mutable state, or they are not
+# independent; they are each other's confounder.
+WT_BASE=$(mktemp -d "${TMPDIR:-/tmp}/rivals-wt.XXXXXX")
+CLEAN_WT=()
+cleanup() {
+  for W in "${CLEAN_WT[@]:-}"; do
+    git -C "$REPO" worktree remove --force "$W" >/dev/null 2>&1 || true
+  done
+  rm -rf "$WT_BASE"
+}
+trap cleanup EXIT
+
+REV=$(git -C "$REPO" rev-parse HEAD)
+echo "reviewing commit $REV, one isolated worktree each"
+
+for SPEC in "${SPECS[@]}"; do
+  NAME=${SPEC##*/}
+  WT="$WT_BASE/$NAME"
+  if git -C "$REPO" worktree add --detach "$WT" "$REV" >"$OUT/$NAME.worktree" 2>&1; then
+    CLEAN_WT+=("$WT")
+    echo "$WT" > "$OUT/$NAME.reviewed-in"
+  else
+    # Fail loudly rather than silently sharing a tree again. A review whose
+    # isolation quietly did not happen is worse than no review, because it reads
+    # exactly like one that worked.
+    echo "REFUSING: could not create an isolated worktree for $NAME" | tee "$OUT/$NAME.txt"
+    echo "1" > "$OUT/$NAME.exit"
+    continue
+  fi
+  ( cd "$WT"
+    timeout 1800 pi -p "$QUESTION" --model "$SPEC" > "$OUT/$NAME.txt" 2>"$OUT/$NAME.stderr"
+    echo "$?" > "$OUT/$NAME.exit" ) &
+done
+wait
+
+echo "== reviewer output"
+for SPEC in "${SPECS[@]}"; do
+  NAME=${SPEC##*/}
+  printf '   %-16s exit=%s %sB\n' "$NAME" \
+    "$(cat "$OUT/$NAME.exit" 2>/dev/null || echo '?')" \
+    "$(wc -c < "$OUT/$NAME.txt" 2>/dev/null || echo 0)"
+done
+
+python3 - "$OUT" <<'PY'
+import pathlib, random, re, sys
+out = pathlib.Path(sys.argv[1])
+texts = {f.stem: f.read_text() for f in sorted(out.glob("*.txt"))}
+tier = (out / "tier").read_text().strip() if (out / "tier").exists() else "TIER1"
+def verdict(t):
+    """Read the reviewer's OWN declared verdict. Never infer one from prose.
+
+    The first version regexed the opening 400 characters for phrases like "is
+    sound", and on its first live run it read two AGREEING reviews as a
+    disagreement - escalating to the scarce reviewer for nothing, which is the
+    precise waste this loop exists to prevent. If the token is absent, that is
+    UNDECLARED and escalates; it is not an excuse to guess.
+    """
+    if not t.strip():
+        return "NO OUTPUT"
+    # Tolerate **bold**, ## headings and case - glm-5.3 writes bold headings, and
+    # a false UNDECLARED spends the scarce reviewer for nothing.
+    pat = (r"^[ \t]*(?:\#{1,4}[ \t]*)?(?:\*\*|__)?VERDICT(?:\*\*|__)?[ \t]*:(?:\*\*|__)?[ \t]*"
+           r"(?:\*\*|__)?(SOUND|DEFECTS_MINOR|DEFECTS_BLOCKING)(?:\*\*|__)?[ \t]*$")
+    found = [m.group(1).upper() for m in re.finditer(pat, t, re.MULTILINE | re.IGNORECASE)]
+    if not found:
+        return "UNDECLARED"
+    # The PROMPT lists all three tokens. A reviewer that quotes the instructions
+    # back would otherwise hand us its first line - a FALSE clean verdict, which
+    # is far worse than escalating. Disagreement with itself is not a verdict.
+    if len(set(found)) > 1:
+        return "UNDECLARED"
+    return found[0]
+verdicts = {m: verdict(t) for m, t in texts.items()}
+print()
+for m, v in verdicts.items():
+    print(f"   {m:<16} {v}")
+vals = set(verdicts.values())
+if tier != "TIER1":
+    decision, why = "ESCALATE", (f"{tier}: a single degraded reviewer, not a quorum - "
+                                 "its agreement with nobody is not evidence")
+    print(f"\n   DECISION: {decision}\n   {why}")
+    (out / "decision.txt").write_text(f"{decision}\n{why}\n"); raise SystemExit(0)
+if "NO OUTPUT" in vals or "UNDECLARED" in vals:
+    decision, why = "ESCALATE", ("a reviewer produced nothing or no verdict token - "
+                                 "silence and ambiguity are never agreement")
+elif "DEFECTS_BLOCKING" in vals:
+    decision, why = "FIX FIRST", ("a BLOCKING defect was found - repair, re-review, then "
+                                  "ring. This is the case the gate exists for.")
+elif len(vals) > 1:
+    decision, why = "ESCALATE", "the reviewers DISAGREE; that disagreement is the signal"
+elif vals == {"DEFECTS_MINOR"}:
+    # The reviewers' OWN severity call, honoured. DEFECTS_MINOR means, in their
+    # words, "the published result still stands". Treating it as a blocker
+    # collapsed the distinction the three tokens exist to draw, and across five
+    # Gen120 rounds - not one of which returned DEFECTS_BLOCKING - it produced a
+    # loop with no exit while the experiment itself sat unrun. Findings are
+    # CARRIED: recorded in the ledger with an owner, visible, and carried into the
+    # next generation. Nothing is dropped. Authorised by Brian 2026-09-06; see
+    # decisions/gen120-review-severity.md.
+    decision, why = "CARRY", ("minor defects the result survives - record each in the "
+                              "ledger as CARRIED, then ring")
+else:
+    audit = random.random() < 0.15
+    decision = "ESCALATE (random audit)" if audit else "PROCEED"
+    why = ("clean agreement, sampled for audit - a policy of escalating only "
+           "disagreements can never discover CORRELATED blind spots"
+           if audit else "clean agreement; proceed under preregistered rules")
+print(f"\n   DECISION: {decision}\n   {why}")
+(out / "decision.txt").write_text(f"{decision}\n{why}\n")
+PY

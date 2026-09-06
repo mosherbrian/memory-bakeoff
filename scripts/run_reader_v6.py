@@ -17,13 +17,16 @@ NOT AUTHORISED TO RUN. --fire refuses without control-plane authorisation.
 
 60 frozen cases from the canonical gen118 attempt, resolved through
 results/gen118/CANONICAL_ATTEMPT.md and never named here, executed once each. The
-protocol is CONSUMED, never touched. Preflight fails closed with zero calls. Raw
-request and response bytes are sealed and hashed before anything is parsed.
+protocol is CONSUMED, never touched. Preflight fails closed with zero calls. Raw request and response bytes are hashed and sealed before anything is parsed,
+in ONE batch write after all 60 calls return - not per call. A crash mid-run
+therefore seals no raw evidence and writes no marker; it fails closed, but the
+bytes are lost. Said plainly here because the docstring used to promise "sealed
+as it arrives", which the capture block itself contradicted.
 
 Phases, in order, and the order is the point:
     preflight   every gate; any failure means zero model calls
     freeze      the execution contract, hashed BEFORE exposure
-    execute     60 calls, raw evidence sealed as it arrives
+    execute     60 calls, then ONE batch write of the raw evidence
     grade       once, with the FROZEN Gen116 grader, never a reimplementation
     marker      RUN_EVIDENCE or NON_EVIDENCE, derived by the frozen gate
 
@@ -291,7 +294,7 @@ def call_once(case: dict) -> dict:
         # was classified as transport, retried, and its raw bytes thrown away -
         # keeping only the exception type. That is sampling until a favourable
         # answer appears, which the contract forbids in the same breath it
-        # promises "raw sealed as it arrives". Found by glm-5.3 at Gen120 round 4.
+        # promised per-call sealing. Found by glm-5.3 at Gen120 round 4.
         try:
             obj = json.loads(raw)
             return {"case_id": case["case_id"], "core": case["core"],
@@ -436,8 +439,13 @@ def main() -> int:
     completed = [r for r in responses if r["terminal_disposition"] == "COMPLETED"]
     rows = G116.grade_all(completed, by_case)
     gates = G116.control_gate(rows)
-    estim = G116.estimands(rows, gates, unique_prompts=60)
+    estim = G116.estimands(rows, gates, unique_prompts=60,
+                           # From the frozen schedule, so a core that vanished
+                           # entirely is counted as absent rather than unseen.
+                           expected_cores=sorted({c["core"] for c in cases}))
     linkage_ok = (len(responses) == 60
+                  and sum(1 for r in responses
+                          if r["terminal_disposition"] == "COMPLETED") == 60
                   and len({r["case_id"] for r in responses}) == 60
                   and all(r["request_sha256"] == contract["request_body_sha256"][r["case_id"]]
                           for r in responses))

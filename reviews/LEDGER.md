@@ -112,6 +112,12 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 79 | Gen120 r6 | glm-5.3 | `test_the_sealed_contract_hash_actually_recomputes` resolves the canonical attempt with the same "first backtick in a prose file" parse that #63 removed from the runner - the brittle pattern copied into the file that polices it | CARRIED | Test-only: it mislocates the check's target, never a live run. Owner: me, Gen121. |
 
 
+| 80 | Gen120 r7 | glm-5.3 | **the attempt15 completeness repair was itself incomplete.** A core whose cells ALL failed produced no rows, so it never entered `rows`, `by_core`, or the core set - leaving `all_cells_graded` vacuously true over survivors. Demonstrated `run_marker` returning RUN_EVIDENCE on **11 of 12 cores** | FIXED | The estimator takes the cores the frozen schedule CONTRACTS for and reports any absent entirely; Q8 fails on an absent core rather than skipping it; linkage requires 60 COMPLETED, not 60 responses. Three witnesses, all failing at attempt15. I derived the denominator from the numerator - the same defect inside the gate built to close it. attempt16. |
+| 81 | Gen120 r7 | glm-5.3 | the runner's docstring promised raw evidence "sealed as it arrives" while the capture block in the same contract-bound file recorded one batch write after all 60 calls; a crash mid-run seals nothing | FIXED | Prose corrected to match the code, and the loss window stated plainly rather than papered over. The code was right; the claim was not. |
+| 82 | Gen120 r7 | glm-5.3 | every Gen120 refreeze carries a sealed marker reading "Generation 118 froze the v6 candidate protocol", and no sealed artifact records which generation actually wrote each attempt - the false-provenance class that superseded attempt1 | CARRIED | Defensible as naming the protocol's origin, and the writing generation is recoverable from git and CANONICAL_ATTEMPT.md. Owner: me, Gen121 - record the writing generation in the marker. |
+| 83 | Gen120 r7 | glm-5.3 | Gen116/v5 vestiges beyond #71: preflight says "success predicate differs from attempt4" when it compares against whatever the pointer resolves to, and the phase list says "the FROZEN Gen116 grader" | CARRIED | Prose only, in contract-bound files, so it costs a refreeze to fix. Owner: me, Gen121 - fold into the next freeze. |
+
+
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the
 reader-interference lineage. It imports `round3_adapters`; it is Round 3
 distractor work. The claim that no suite failure touches the reader-interference

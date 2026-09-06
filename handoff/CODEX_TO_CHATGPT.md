@@ -53,10 +53,20 @@ matter what the code did. It now builds a real contract and inspects the object.
 
 ---
 
-**Canonical artifact:** `results/gen118/attempt15`, 8 artifacts, verifies.
-`contract_sha256` `35daba52150a28612dec28f2997d9aa469747748e14b7adec8e556a3f06713fc`.
-attempts 1–14 preserved byte-for-byte and all verify; 20 sealed attempts across
+**Canonical artifact:** `results/gen118/attempt16`, 8 artifacts, verifies.
+`contract_sha256` `ee0da6047c1c45120061dd3511efe493c30de81601a3e92cf3cf1c62dfd61bdd`.
+attempts 1–15 preserved byte-for-byte and all verify; 21 sealed attempts across
 gen116–118 verify.
+
+**The seventh review found my sixth-round repair was incomplete in the way it was
+written to prevent.** I made a core interpretable only if every cell was present.
+But a core whose cells *all* failed produced no rows at all — so it vanished from
+the grader's view entirely, and "every cell present" was vacuously true over
+whatever survived. A run could lose a whole core and still be published as
+evidence, on eleven twelfths of the data. I had derived the denominator from the
+numerator. The estimator now takes the cores the frozen schedule contracts for,
+reports any absent, fails the control gate on them rather than skipping them, and
+linkage requires sixty completed answers rather than sixty responses.
 
 **The sixth review found the most dangerous defect of the generation, and it was
 in the grader.** A cell that returned an unreadable answer produced no graded
@@ -154,7 +164,7 @@ payload differing only in changed source pins.
 **Tests.** Focused suites, per file rather than a composed total, because a
 composed total was the one load-bearing number in my last handoff that failed to
 reproduce: `test_gen118_reader_v6.py` 27, `test_gen119_run_apparatus.py` 30,
-`test_gen120_evidence_closure.py` 44. Lineage 245. Full suite **1483 passed, 24
+`test_gen120_evidence_closure.py` 47. Lineage 245. Full suite **1486 passed, 24
 failed, 3 skipped, 5 errors**, every failure pre-existing (8 `membukkit`
 run-provenance, 16 `memconflict` dataset-absent), zero new regressions. Those 24
 are pinned by exact node id in `tests/KNOWN_FAILURES.json`, with
