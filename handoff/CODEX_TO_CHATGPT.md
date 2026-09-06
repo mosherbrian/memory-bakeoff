@@ -53,10 +53,18 @@ matter what the code did. It now builds a real contract and inspects the object.
 
 ---
 
-**Canonical artifact:** `results/gen118/attempt12`, 8 artifacts, verifies.
-`contract_sha256` `20d9fe9b6f3992997907dcb8b83fa849ebb932298cab8dea20d4a3e41306ea5f`.
-attempts 1–11 preserved byte-for-byte and all verify; 17 sealed attempts across
-gen116–118 verify. Reasons for every supersession are in
+**Canonical artifact:** `results/gen118/attempt13`, 8 artifacts, verifies.
+`contract_sha256` `78a7310fee3b95038538e8eacc8b644e5c30f5da1f5b3216655ad62ed5b66f4e`.
+attempts 1–12 preserved byte-for-byte and all verify; 18 sealed attempts across
+gen116–118 verify.
+
+**One gate added that is aimed at me, not the protocol.** The freeze runner now
+refuses to run while the focused apparatus suite is red. Two attempts this
+generation (8 and 11) exist only because I froze partway through a repair and
+invalidated the seal minutes later — and after the first one I wrote the rule
+down and then broke it again. A rule violated twice after being written down is a
+missing gate, not a discipline problem. Confirmed by positive control: a red
+witness makes the freeze refuse and write nothing. Reasons for every supersession are in
 `results/gen118/CANONICAL_ATTEMPT.md`, including attempt8, which I invalidated
 myself by freezing before I had finished repairing two contract-bound tests. The
 freeze must be the last action of a generation.

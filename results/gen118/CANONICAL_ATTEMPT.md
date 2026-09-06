@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt12` is canonical**, per the fourth Generation 120 rival review.
+**`attempt13` is canonical**, per the fourth Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -148,7 +148,7 @@
   produced attempt8: I ran the freeze after the first of six repairs instead of
   after all of them. Twice in one generation. Preserved because evidence is
   append-only.
-- `attempt12` - **canonical.** Science identical a sixth time. Fourth review:
+- `attempt12` - superseded. Science identical a sixth time. Fourth review:
   1. **the balance gate enforced ONE of the four invariants it publishes.**
      Value-length balance, lexicographic balance and the conflict-order
      counterbalance were computed, printed and shipped un-gated, so a future
@@ -175,6 +175,21 @@
      so any earlier backtick would silently retarget the run. It now matches the
      declaration itself and refuses when absent.
   Contract `20d9fe9b6f3992997907dcb8b83fa849ebb932298cab8dea20d4a3e41306ea5f`.
+- `attempt13` - **canonical.** Science identical a seventh time. One change, and
+  it is aimed at me rather than at the protocol: **the freeze runner now refuses
+  to run while the focused apparatus suite is red.**
+
+  attempt8 and attempt11 both exist because I froze partway through a repair
+  round and invalidated the seal minutes later. After attempt8 I wrote the rule -
+  "the freeze is the last action of a generation" - into this very file, and then
+  broke it again at attempt11. A rule violated twice after being written down is
+  not a discipline problem to note harder; it is a missing gate. Both mistakes
+  were visible as red focused tests at the moment of freezing, so that is what the
+  gate checks, excluding only the two tests that fail BY DESIGN when a bound
+  source has drifted - gating on those would deadlock the very act of refreezing.
+  Verified by positive control: a deliberately failing witness makes the freeze
+  refuse and write no attempt directory.
+  Contract `78a7310fee3b95038538e8eacc8b644e5c30f5da1f5b3216655ad62ed5b66f4e`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

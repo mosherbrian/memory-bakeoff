@@ -88,7 +88,7 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 62 | Gen120 r4 | glm-5.3 | `EV.record` wrote `MANIFEST.json` non-atomically, so a crash mid-write corrupts the index guarding the one artifact that can never be regenerated | FIXED | Temp file plus `os.replace`. It failed safe, but atomicity costs nothing. |
 | 63 | Gen120 r4 | glm-5.3 | `_canonical()` resolved the canonical attempt as "the first backtick-quoted token in a prose file", so any earlier backtick would silently retarget the run | FIXED | Matches the `**\`attemptN\` is canonical**` declaration and refuses when absent. |
 | 64 | Gen120 r4 | glm-5.3 | round-3 reviewer transcripts were not committed, making "both reviewers led with that" unverifiable from the repository - the class of #11 and #47 | FIXED | Rounds 3 and 4 archived under `reviews/gen120-rivals-round3/` and `round4/`. |
-| 65 | Gen120 r4 | self | attempt11 was frozen after the FIRST of six repairs - the same sequencing error as attempt8, twice in one generation | FIXED | attempt12 supersedes it; both preserved. The rule was already recorded at #51 and I broke it again, which says the rule needs a gate, not another note. |
+| 65 | Gen120 r4 | self | attempt11 was frozen after the FIRST of six repairs - the same sequencing error as attempt8, twice in one generation | FIXED BY GATE | The rule was already written at #51 and I broke it again, so it became a gate: `refuse_if_the_apparatus_is_red()` in the freeze runner, excluding only the two tests that fail by design on source drift. Positive control: a deliberately red witness makes the freeze refuse and write no attempt directory. attempt13. |
 
 
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the

@@ -7,6 +7,9 @@ canonical values, because reusing half a burned value is still reuse.
 Every published number here is computed. Nothing is asserted.
 """
 from __future__ import annotations
+import os
+import sys
+import subprocess
 import hashlib, json, re, collections
 from pathlib import Path
 from memory_bakeoff import evidence as EV
@@ -207,7 +210,45 @@ def id_balance_ok(id_first: int, cores: int) -> bool:
     return id_first == cores // 2
 
 
+DRIFT_SENSITIVE = (
+    # These two FAIL by design whenever a bound source has changed since the last
+    # freeze - which is exactly the moment you are about to freeze. Gating on them
+    # would deadlock, so they are excluded and only they are.
+    "tests/test_gen119_run_apparatus.py::test_every_preflight_gate_other_than_tree_cleanliness_passes",
+    "tests/test_gen119_run_apparatus.py::test_preflight_pins_every_file_the_contract_names",
+)
+
+
+def refuse_if_the_apparatus_is_red() -> None:
+    """The freeze is the LAST action of a generation. Enforce that, do not ask.
+
+    attempt8 and attempt11 both exist because I froze partway through a repair
+    round and invalidated the seal minutes later. After attempt8 I wrote the rule
+    into CANONICAL_ATTEMPT.md; I then broke it again at attempt11. A rule violated
+    twice after being written down needs a gate, not a third note.
+
+    Both mistakes were visible as red focused tests at the moment of freezing, so
+    that is what this checks.
+    """
+    deselect = [a for t in DRIFT_SENSITIVE for a in ("--deselect", t)]
+    r = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+         "tests/test_gen118_reader_v6.py", "tests/test_gen119_run_apparatus.py",
+         "tests/test_gen120_evidence_closure.py", *deselect],
+        cwd=ROOT, capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": "src:vendor/membukkit/src"}, timeout=1800)
+    if r.returncode != 0:
+        tail = "\n".join((r.stdout + r.stderr).splitlines()[-20:])
+        raise SystemExit(
+            "REFUSING TO FREEZE: the focused apparatus suite is red.\n"
+            "A freeze taken mid-repair is invalidated by the rest of the repair; "
+            "attempt8 and attempt11 both exist for exactly this reason. Finish the "
+            f"work, then freeze.\n\n{tail}")
+    print("  apparatus green; freezing")
+
+
 def main() -> None:
+    refuse_if_the_apparatus_is_red()
     payload = V6.contract_payload()
     payload_with_sources = {**payload, "source_sha256": source_digests()}
     csha = hashlib.sha256(json.dumps(payload_with_sources, sort_keys=True, default=str).encode()).hexdigest()
