@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Escalation ladder for a rung doorbell. A CLOCK decides whether we are stuck.
+#
+# On 2026-09-06 a doorbell whose title missed the control plane's filter was
+# never delivered. The implementer polled the ANSWER channel ~90 times over
+# 6h47m, answered ~70 check-ins with "blocked", and never once checked the
+# REQUEST channel. The judgement "am I stuck?" is the thing that failed, so this
+# removes it: fixed rungs, fixed intervals, no inference.
+#
+# Rungs, from the doorbell's ring time:
+#   every 5m   answer channel  - instruction arrived and verifies -> exit 0
+#   every 5m   REQUEST channel - PR still open, prefix intact     -> exit 2 if not
+#   15m        exit 3  wake the agent: check the Work chat, post a retry
+#   45m        exit 4  wake Brian, with the message already written
+#
+# Every non-zero exit is a wake-up carrying the ONE action permitted at that
+# rung. Nothing here decides anything; it only says what time it is.
+#
+# Usage: await-instruction <source_generation> <pr_number> <source_commit> [--since EPOCH]
+set -uo pipefail
+
+GEN=${1:?usage: await-instruction <source_generation> <pr_number> <source_commit>}
+PR=${2:?}
+SHA=${3:?}
+SINCE=$(date +%s)
+[ "${4:-}" = "--since" ] && SINCE=${5:-$SINCE}
+
+REPO=mosherbrian/memory-bakeoff
+MAC=bmosher@brians-macbook-air.local
+MAC_REPO=/Users/bmosher/source/repos/memory-bakeoff
+PREFIX=BAKEOFF_HANDOFF
+RUNG3=900     # 15m
+RUNG4=2700    # 45m
+rung3_done=0
+
+say() { printf '%s  %s\n' "$(date +%H:%M:%S)" "$*"; }
+elapsed() { echo $(( $(date +%s) - SINCE )); }
+
+while :; do
+  # --- answer channel -------------------------------------------------------
+  R=$(timeout 120 ssh "$MAC" "export PATH=/opt/homebrew/bin:\$PATH; cd $MAC_REPO && \
+      scripts/verify-chatgpt-handoff $GEN $SHA 2>&1" 2>&1 || true)
+  if printf '%s' "$R" | grep -q "VERDICT: ACCEPT"; then
+    say "ACCEPTED after $(elapsed)s - the instruction is in and verifies."
+    printf '%s\n' "$R" | grep -E "generation|source_|VERDICT"
+    exit 0
+  fi
+
+  # --- REQUEST channel: was our ask even delivered? -------------------------
+  PRJSON=$(toolbox run -c fedora-toolbox-43 gh pr view "$PR" --repo "$REPO" \
+           --json title,state 2>/dev/null || echo '{}')
+  TITLE=$(printf '%s' "$PRJSON" | python3 -c 'import json,sys;print((json.load(sys.stdin) or {}).get("title",""))' 2>/dev/null)
+  STATE=$(printf '%s' "$PRJSON" | python3 -c 'import json,sys;print((json.load(sys.stdin) or {}).get("state",""))' 2>/dev/null)
+  case "$TITLE" in
+    "$PREFIX"*) ;;
+    *) say "REQUEST NOT DELIVERED: PR #$PR title '$TITLE' does not carry '$PREFIX'."
+       say "The control plane was never called. Re-ring with a conforming title."
+       exit 2 ;;
+  esac
+  if [ "$STATE" != "OPEN" ]; then
+    say "REQUEST NOT DELIVERED: PR #$PR is $STATE, not OPEN."
+    exit 2
+  fi
+
+  E=$(elapsed)
+  if [ "$E" -ge "$RUNG4" ]; then
+    say "RUNG 4 - $((E/60))m, request VERIFIED DELIVERED, no answer."
+    say "Send Brian on Signal, verbatim:"
+    say "  Gen$GEN doorbell unanswered $((E/60))m. Request verified delivered (PR #$PR, title OK, open). Control plane silent."
+    exit 4
+  fi
+  if [ "$E" -ge "$RUNG3" ] && [ "$rung3_done" = "0" ]; then
+    say "RUNG 3 - $((E/60))m, request VERIFIED DELIVERED, no answer."
+    say "Do exactly this, now: open the Work chat in the browser, read the last"
+    say "controller message and any quota banner, then post CONTROL-PLANE RETRY 1."
+    say "Then relaunch: scripts/await-instruction $GEN $PR $SHA --since $SINCE"
+    exit 3
+  fi
+
+  say "waiting ${E}s - request delivered, answer not yet."
+  sleep 300
+done

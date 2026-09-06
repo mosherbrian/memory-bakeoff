@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# A DECISION is a reviewable artifact. Rivals review my code; they never review
+# my judgements - and every expensive failure in this project was a judgement.
+#
+#   "I am blocked"            held 6h47m while the request had never been sent
+#   "ring now"                11 minutes after a FIX FIRST verdict, unreviewed
+#   "this finding is closed"  the reviewed party fills in the form
+#   "delete that script"      wrong; Brian overruled it
+#
+# So: before an IRREVERSIBLE act - ring, close, choose a run-bearing option -
+# write what you chose, what you rejected, and the evidence. A rival is asked one
+# question: is this supported by what is in the repo? Their answer is committed
+# next to the decision, whether it agrees or not.
+#
+# This gates the irreversible only. Routine work does not pass through here;
+# latency on everything would be its own failure.
+#
+# Usage: scripts/decide <kind> <slug> <file>     kind: ring | close | choose | block
+#        scripts/decide --review <slug>          send it to a rival, commit the answer
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+D=decisions
+
+if [ "${1:-}" = "--review" ]; then
+  SLUG=${2:?usage: decide --review <slug>}
+  F="$D/$SLUG.md"
+  [ -r "$F" ] || { echo "REFUSING: no decision at $F"; exit 1; }
+  Q="Below is a DECISION taken by the implementer of this repository, in this repository.
+
+Answer ONE question: is this decision supported by what is actually in the repo?
+
+Check the claims yourself. You are not asked whether it is a good idea in the
+abstract - you are asked whether the evidence cited exists and says what it is
+said to say, and whether anything in the repo contradicts it. If the decision
+rests on something you cannot verify, say so plainly.
+
+Your FIRST line must be exactly one of:
+VERDICT: SUPPORTED
+VERDICT: UNSUPPORTED
+VERDICT: PARTLY_SUPPORTED
+
+Then the evidence you checked, and any claim you could not verify.
+
+--- THE DECISION ---
+$(cat "$F")"
+  echo "reviewing $SLUG with glm-5.3..."
+  timeout 2700 pi -p "$Q" --model glm/glm-5.3 > "$D/$SLUG.review.md" 2>"$D/.$SLUG.err" || true
+  V=$(grep -m1 -oE "VERDICT: (SUPPORTED|UNSUPPORTED|PARTLY_SUPPORTED)" "$D/$SLUG.review.md" 2>/dev/null || echo "VERDICT: UNDECLARED")
+  printf '\n%s\n' "$V"
+  [ -s "$D/$SLUG.review.md" ] || { echo "REFUSING to record: the reviewer produced nothing."; exit 1; }
+  git add "$F" "$D/$SLUG.review.md"
+  git commit -q -m "Decision $SLUG reviewed: ${V#VERDICT: }
+
+The rival's answer is committed beside the decision whether it agrees or not.
+A decision reviewed only by the party who made it is not reviewed."
+  echo "committed. An UNSUPPORTED or PARTLY_SUPPORTED verdict must be answered"
+  echo "in the decision file before the act it authorises."
+  exit 0
+fi
+
+KIND=${1:?usage: decide <ring|close|choose|block> <slug> <file>}
+SLUG=${2:?}
+SRC=${3:?}
+case "$KIND" in ring|close|choose|block) ;; *) echo "REFUSING: unknown kind '$KIND'"; exit 1 ;; esac
+[ -r "$SRC" ] || { echo "REFUSING: no decision text at $SRC"; exit 1; }
+BODY=$(cat "$SRC")
+[ "${#BODY}" -ge 300 ] || { echo "REFUSING: ${#BODY} chars. State what you chose, what you rejected, and the evidence."; exit 1; }
+for w in "chose" "rejected" "evidence"; do
+  printf '%s' "$BODY" | grep -qi "$w" || { echo "REFUSING: the decision does not say what was $w."; exit 1; }
+done
+mkdir -p "$D"
+{ printf '# DECISION %s: %s\n\n' "$KIND" "$SLUG"
+  printf -- '- taken: %s\n- commit: %s\n- kind: %s\n\n' "$(date -Iseconds)" "$(git rev-parse HEAD)" "$KIND"
+  printf '%s\n' "$BODY"; } > "$D/$SLUG.md"
+echo "wrote $D/$SLUG.md"
+echo "now: scripts/decide --review $SLUG"

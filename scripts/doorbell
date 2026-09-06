@@ -149,7 +149,22 @@ def main() -> int:
                  "X-GitHub-Api-Version": "2022-11-28"})
     with urllib.request.urlopen(request) as response:
         result = json.loads(response.read())
-    print(f"doorbell PR {result['number']} | recap {len(recap)} chars")
+    number = result["number"]
+
+    # The ring ARMS the clock. There is no second decision about whether to
+    # watch, because "am I stuck?" is the judgement that cost 6h47m. The watcher
+    # checks the REQUEST channel - was this ask even delivered - which nothing
+    # did for the whole of that night.
+    title_back = result.get("title", "")
+    if not title_back.startswith("BAKEOFF_HANDOFF"):
+        raise SystemExit(f"RANG BUT MALFORMED: GitHub shows title {title_back!r}. "
+                         "The control plane filter will not match it. Close it and re-ring.")
+    unit = f"doorbell-gen{generation}"
+    subprocess.run(["systemd-run", "--user", f"--unit={unit}", "--collect",
+                    str(Path(__file__).resolve().parent / "await-instruction"),
+                    str(generation), str(number), sha], check=False)
+    print(f"doorbell PR {number} | recap {len(recap)} chars | watcher {unit} armed")
+    print("  rungs: answer+request every 5m | 15m wake agent | 45m wake Brian")
     return 0
 
 
