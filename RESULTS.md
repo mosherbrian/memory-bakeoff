@@ -9,6 +9,15 @@ Round 1 is closed. Its authoritative narrative is
 [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md); prefer it
 over any older score text elsewhere in this repository.
 
+**Gen110 ran the reader and produced NO result.** The execution was clean —
+60/60 calls, identity and freeze gates held — but two defects in the Gen109
+ruler were found once real output existed, so the attempt is preserved and
+marked `NON_EVIDENCE`
+(`results/gen110/attempt1/NON_EVIDENCE.json`, report
+[`research/PI_READER_INTERFERENCE_RESULT_GEN110.md`](research/PI_READER_INTERFERENCE_RESULT_GEN110.md)).
+**No Q1–Q5 verdict, no reader-interference effect, no order effect.** The ruler
+was deliberately not patched and rescored.
+
 **The reader layer is OPEN and UNRUN (Gen109).** The contract
 `reader-interference-v1` is frozen at
 `results/gen109/attempt1/reader_interference_v1.json`; the design is

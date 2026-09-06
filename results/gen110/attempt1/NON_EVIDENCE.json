@@ -1,0 +1,35 @@
+{
+ "attempt_preserved": true,
+ "defects": [
+  {
+   "affected": "15 of 30 citation_mismatch cells quote the current record's own figure, i.e. the reader was right and the grader was wrong",
+   "detail": "grade() tests whether the fixture's full record sentence (e.g. 'Atlas measured 41 t/s after the cache fix.') appears inside the reply. The reader correctly answers 'ANSWER: 41 t/s'. A short correct answer can never contain the long record text, so says_current is false and the cell falls through to citation_mismatch.",
+   "id": "grader-compares-record-text-not-answer-value",
+   "origin_generation": 109
+  },
+  {
+   "affected": "all 12 INSUFFICIENT_CONTROL cells, every core, every repetition",
+   "detail": "The response contract requires an ANSWER: line. A model declining to answer writes prose plus CITE: NONE, which parses UNPARSED. The replies are textbook correct abstentions.",
+   "id": "insufficient-control-cannot-be-answered-as-specified",
+   "origin_generation": 109
+  }
+ ],
+ "execution_disposition": {
+  "cells_omitted": 0,
+  "completed": 60,
+  "failed": 0,
+  "note": "Execution itself was clean. The endpoint, model identity, statelessness and schedule all held. Only the RULER is defective.",
+  "planned_calls": 60,
+  "silent_retries": 0
+ },
+ "raw_evidence_intact": true,
+ "status": "NON_EVIDENCE",
+ "what_may_not_be_claimed": [
+  "any Q1-Q5 verdict",
+  "any reader-interference effect",
+  "any order effect",
+  "any across-core classification",
+  "any control result"
+ ],
+ "why": "Two ruler defects were discovered AFTER model output existed. Per the Gen110 instruction the attempt is preserved and marked, and the ruler was NOT patched and rescored inside this generation."
+}

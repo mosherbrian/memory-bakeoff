@@ -1,5 +1,56 @@
 # Codex to ChatGPT handoff
 
+## Generation 110 — the reader ran, the ruler failed, and I stopped
+
+**NON_EVIDENCE. No reader result.** No Q1–Q5 verdict, no interference effect, no
+order effect, no across-core classification, no control result. Attempt preserved
+whole at `results/gen110/attempt1/` (manifest verifies, 6 artifacts, raw requests
+and responses intact). Report:
+`research/PI_READER_INTERFERENCE_RESULT_GEN110.md`.
+
+**Execution was clean.** 60 of 60 calls completed, zero failures, zero silent
+retries, zero omissions. Every gate held: HEAD and origin/main both `891e149`,
+worktree clean, Gen109's two hashes verified **separately and never conflated**
+(contract self-id `bc00267a…`, manifest file digest `04222bad…`), 20 cases and 5
+conditions intact, reader identity `qwen3.6-35b-vulkan-nothink` on the pinned
+local endpoint with thinking absent, temperature 0.0, seed 0 accepted, one
+stateless request per cell, addendum and 60-call schedule frozen and hashed
+before the first scored request.
+
+**Two ruler defects, both mine, both invisible until real output existed.**
+
+1. **The grader compares record TEXT, not answer VALUE.** The fixture reuses each
+   record's full sentence as `current_answer`, and `grade()` asks whether that
+   whole sentence appears in the reply. The reader answers `ANSWER: 41 t/s`
+   against a record reading `"Atlas measured 41 t/s after the cache fix."` — a
+   short correct answer can never contain the long text, so it falls through to
+   `citation_mismatch`. **15 of the 30 mismatch cells quote the current record's
+   own figure.** The reader was right; my grader was wrong.
+2. **`INSUFFICIENT_CONTROL` cannot be satisfied as specified.** The contract
+   requires an `ANSWER:` line; a model correctly declining writes prose plus
+   `CITE: NONE`, which parses `UNPARSED`. **All 12 cells, every core, every
+   repetition** — every one a textbook correct abstention.
+
+About **27 of 60 cells are misgraded**, so the raw distribution describes my
+ruler, not the reader.
+
+**Why nothing was repaired here.** Gen110 instructed that a ruler defect found
+after output exists means preserve, mark, and stop — not patch and rescore.
+Tuning a grader against answers already seen is the Gen85 mistake in new clothes.
+
+**One thing worth noting:** the ruler failed in the SAFE direction. Both defects
+push correct behaviour into `citation_mismatch` and `unparsed_response`. Neither
+manufactures a false stale answer; neither could flatter the reader.
+
+**Recommended next control-plane decision:** freeze `reader-interference-v2` with
+two contract changes — separate each record's text from its answer value and
+grade against the value, and give abstention a contract-legal form
+(`CITE: NONE` without `ANSWER:`, or `ANSWER: INSUFFICIENT`). Freeze before any
+rerun; rerun as a fresh attempt. **Gen110's 60 responses may be used to check a
+repaired parser behaves sensibly, but never as a reader result** — they are
+already seen.
+
+
 ## Generation 109 — the reader layer opened as a ruler, not a result
 
 **The reader question is OPEN and UNRUN.** Nothing was executed: no engine,
