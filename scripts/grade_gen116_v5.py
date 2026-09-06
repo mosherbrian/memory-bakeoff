@@ -72,7 +72,11 @@ def estimands(rows: Sequence[Mapping[str, Any]], gates: Mapping[str, Any],
         "Q3_order_discordant_cores": q3,
         "Q4_stale_capture_cells": tally[V5.STALE_ONLY] + tally[V5.STALE_WITH_HISTORY],
         "Q5_unresolved_both_cells": tally[V5.UNRESOLVED_BOTH],
-        "Q6_reconciled_to_current_cells": tally[V5.CURRENT_WITH_HISTORY] + tally[V5.RECONCILED_CURRENT],
+        # CURRENT_WITH_HISTORY *is* the reconciliation under a structured
+        # contract, and it is a success state. The first draft added a separate
+        # RECONCILED_CURRENT count to it, summing a success class with a
+        # non-success one under a single number.
+        "Q6_reconciled_to_current_cells": tally[V5.CURRENT_WITH_HISTORY],
         "Q7_explicit_simultaneous_contradiction_cells": tally[V5.SIMULTANEOUS],
         "Q8_all_cores_pass_all_controls": all(gates[c]["interpretable"] for c in cores),
         "conflict_cells": len(conflict_rows),

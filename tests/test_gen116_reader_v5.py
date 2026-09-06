@@ -115,8 +115,35 @@ def test_contradiction_requires_assertion_not_substring():
     hist = {**both, "disposition": "RESOLVED", "selected_record_id": "R",
             "selected_value": "lane cobalt", "prior_values": ["lane amber"]}
     assert V5.classify_answer(hist, vals) == V5.CURRENT_WITH_HISTORY
-    asserted = {**both, "disposition": "RESOLVED"}
+    # Simultaneity must be ASSERTED - both values named as the selection. A null
+    # selection is not an assertion of anything.
+    asserted = {**both, "disposition": "RESOLVED", "selected_record_id": "R",
+                "selected_value": "lane amber and lane cobalt"}
     assert V5.classify_answer(asserted, vals) == V5.SIMULTANEOUS
+
+
+def test_parser_rejects_incoherent_dispositions():
+    """An abstention that still picks a value is not an abstention."""
+    bad = ('{"disposition":"INSUFFICIENT","selected_record_id":"R",'
+           '"selected_value":"lane amber","prior_values":[],"citations":[]}')
+    assert V5.parse_response(bad)["ok"] is False
+    bad2 = ('{"disposition":"RESOLVED","selected_record_id":null,'
+            '"selected_value":null,"prior_values":[],"citations":[]}')
+    assert V5.parse_response(bad2)["ok"] is False
+
+
+def test_success_requires_the_selection_and_the_citation():
+    """Naming the right value while pointing at the wrong record is not success."""
+    case = CASES["core01|CONFLICT_CURRENT_FIRST"]
+    right, wrong = case["expected_record_id"], case["records"][1]["record_id"]
+    def body(**kw):
+        return {"ok": True, "disposition": "RESOLVED", "selected_record_id": right,
+                "selected_value": case["expected_value"], "prior_values": [],
+                "citations": [right], **kw}
+    assert V5.grade(body(), case)["meets_success_state"] is True
+    assert V5.grade(body(selected_record_id=wrong), case)["meets_success_state"] is False
+    assert V5.grade(body(citations=[]), case)["meets_success_state"] is False
+    assert V5.grade(body(citations=["REC-NOTSHOWN"]), case)["meets_success_state"] is False
 
 
 @pytest.mark.parametrize("text,value,expected", [
@@ -205,6 +232,30 @@ def test_mutating_the_classifier_moves_the_fingerprint(monkeypatch):
     assert V5.contract_sha256() != before
 
 
+def test_mutating_the_response_schema_moves_the_fingerprint(monkeypatch):
+    before = V5.contract_sha256()
+    monkeypatch.setattr(V5, "SCHEMA", V5.SCHEMA.replace("prior_values", "history"))
+    assert V5.contract_sha256() != before
+
+
+def test_mutating_the_parser_moves_the_fingerprint(monkeypatch):
+    before = V5.contract_sha256()
+    monkeypatch.setattr(V5, "parse_response", lambda t: {"ok": True})
+    assert V5.contract_sha256() != before
+
+
+def test_mutating_the_success_table_moves_the_fingerprint(monkeypatch):
+    before = V5.contract_sha256()
+    monkeypatch.setattr(V5, "SUCCESS", {**V5.SUCCESS, "CONFLICT_STALE_FIRST": (V5.STALE_ONLY,)})
+    assert V5.contract_sha256() != before
+
+
+def test_mutating_the_citation_classifier_moves_the_fingerprint(monkeypatch):
+    before = V5.contract_sha256()
+    monkeypatch.setattr(V5, "citation_relation", lambda p, c: "CONSISTENT")
+    assert V5.contract_sha256() != before
+
+
 def test_mutating_a_core_value_moves_the_fingerprint(monkeypatch):
     before = V5.contract_sha256()
     cores = list(V5.CORES)
@@ -238,10 +289,12 @@ def test_canonical_attempt_verifies_and_is_non_evidence():
 
 
 def test_no_reader_result_exists_anywhere_in_gen116():
+    """No vacuous exemptions: NON_EVIDENCE.json never contains RUN_EVIDENCE, so
+    exempting it made the check unable to fail on that file."""
     for p in (ROOT / "results/gen116").rglob("*.json"):
         blob = p.read_text()
-        assert "RUN_EVIDENCE" not in blob or p.name == "NON_EVIDENCE.json"
-        assert "reader_responses" not in blob
+        assert "RUN_EVIDENCE" not in blob, p
+        assert "reader_responses" not in blob, p
 
 
 def test_legacy_projection_is_marked_non_confirmatory():

@@ -11,6 +11,7 @@ from memory_bakeoff import reader_interference_v4 as V4
 
 ROOT = Path(__file__).resolve().parents[1]
 SCIENTIFIC_SOURCES = ("src/memory_bakeoff/reader_interference_v5.py",
+                      "tests/test_gen116_reader_v5.py",
                       "scripts/run_gen116_freeze.py",
                       "scripts/grade_gen116_v5.py",
                       "scripts/verify_gen116_contract.py")

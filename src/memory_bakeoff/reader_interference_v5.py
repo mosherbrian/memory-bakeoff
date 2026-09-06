@@ -187,9 +187,18 @@ SIMULTANEOUS = "EXPLICIT_SIMULTANEOUS_CONTRADICTION"
 CORRECT_INSUFFICIENT = "CORRECT_INSUFFICIENT"
 UNSUPPORTED_VALUE = "UNSUPPORTED_VALUE"
 MALFORMED = "MALFORMED_RESPONSE"
+# Nine classes, not eleven. Under a structured response contract a chronology
+# that ends at a selected value IS *_WITH_HISTORY; keeping a separate
+# TEMPORAL_RECONCILIATION_* row would mean two labels for one response, which is
+# the ambiguity this ontology exists to remove. The Gen116 brief asked for both;
+# this deviation is deliberate and is recorded for the control plane to rule on.
 ONTOLOGY = (CURRENT_ONLY, CURRENT_WITH_HISTORY, STALE_ONLY, STALE_WITH_HISTORY,
-            UNRESOLVED_BOTH, RECONCILED_CURRENT, RECONCILED_STALE, SIMULTANEOUS,
-            CORRECT_INSUFFICIENT, UNSUPPORTED_VALUE, MALFORMED)
+            UNRESOLVED_BOTH, SIMULTANEOUS, CORRECT_INSUFFICIENT,
+            UNSUPPORTED_VALUE, MALFORMED)
+RECONCILIATION_IS_EXPRESSED_AS = {
+    RECONCILED_CURRENT: CURRENT_WITH_HISTORY,
+    RECONCILED_STALE: STALE_WITH_HISTORY,
+}
 
 
 def _norm(s: Any) -> str:
@@ -221,6 +230,17 @@ def parse_response(text: str) -> dict[str, Any]:
             return {"ok": False, "reason": f"{f} must be a string or null"}
     if any(not isinstance(x, str) for x in obj["prior_values"] + obj["citations"]):
         return {"ok": False, "reason": "array members must be strings"}
+    # Disposition coherence is part of the contract, not a matter of taste. An
+    # INSUFFICIENT reply that also selects a value is not an abstention, and a
+    # RESOLVED reply that selects nothing has not resolved anything. Accepting
+    # either let an incoherent answer pass a control gate - the Gen112 defect,
+    # reappearing in a new place.
+    selected = obj["selected_record_id"] is not None or obj["selected_value"] is not None
+    if obj["disposition"] in ("INSUFFICIENT", "UNRESOLVED") and selected:
+        return {"ok": False, "reason": f"{obj['disposition']} must not select a record or value"}
+    if obj["disposition"] == "RESOLVED" and (
+            obj["selected_record_id"] is None or obj["selected_value"] is None):
+        return {"ok": False, "reason": "RESOLVED must name both a record and a value"}
     return {"ok": True, **obj}
 
 
@@ -237,6 +257,12 @@ def classify_answer(parsed: Mapping[str, Any], values: Mapping[int, str]) -> str
     prior = parsed["prior_values"]
     disp = parsed["disposition"]
 
+    # A genuine assertion that both values hold at once is expressible in exactly
+    # one way under this contract: naming both inside the single selected_value.
+    # That is an assertion. Inferring it from a null selection, as the first
+    # freeze did, is reading meaning into a field that does not carry it.
+    if sel is not None and value_present(sel, v1) and value_present(sel, v2):
+        return SIMULTANEOUS
     sel_is = (2 if sel is not None and _norm(sel) == _norm(v2) else
               1 if sel is not None and _norm(sel) == _norm(v1) else None)
     if sel is not None and sel_is is None:
@@ -249,21 +275,15 @@ def classify_answer(parsed: Mapping[str, Any], values: Mapping[int, str]) -> str
 
     if disp == "INSUFFICIENT":
         return CORRECT_INSUFFICIENT
-    if disp == "RESOLVED":
-        if sel_is is None:
-            # Claims resolution while naming both values as the answer: an
-            # assertion that incompatible values hold at once. Nothing weaker
-            # earns this label.
-            return SIMULTANEOUS if (has1 and has2) else MALFORMED
-        if sel_is == 2:
-            return CURRENT_WITH_HISTORY if has1 else CURRENT_ONLY
-        return STALE_WITH_HISTORY if has2 else STALE_ONLY
-    # UNRESOLVED: a chronology may still terminate at one value.
+    if disp == "UNRESOLVED":
+        return UNRESOLVED_BOTH
+    # RESOLVED, with a selection the parser has already guaranteed is present.
+    # A selection that also carries the other value as history IS the temporal
+    # reconciliation; there is no separate class for it, because under a
+    # structured contract they are the same response.
     if sel_is == 2:
-        return RECONCILED_CURRENT
-    if sel_is == 1:
-        return RECONCILED_STALE
-    return UNRESOLVED_BOTH
+        return CURRENT_WITH_HISTORY if has1 else CURRENT_ONLY
+    return STALE_WITH_HISTORY if has2 else STALE_ONLY
 
 
 def citation_relation(parsed: Mapping[str, Any], case: Mapping[str, Any]) -> str:
@@ -297,12 +317,21 @@ def grade(parsed: Mapping[str, Any], case: Mapping[str, Any]) -> dict[str, Any]:
     # For CLEAN_HISTORICAL_AS_OF the target is revision 1, so the ontology's
     # revision-relative STALE_* names are the SUCCESS there. The ontology names a
     # revision, the success table names the condition; they are kept apart.
-    ok = cls in SUCCESS[case["condition"]]
+    rel = citation_relation(parsed, case)
     selected_ok = (parsed.get("ok") and parsed.get("selected_record_id") == case["expected_record_id"])
+    # Naming the right VALUE while pointing at the wrong record is not success.
+    # v4 scored on value presence and that is the habit this protocol exists to
+    # break, so the selection and the citation are load-bearing here.
+    if case["condition"] == "INSUFFICIENT_CURRENT":
+        citation_ok = rel == "ABSENT"
+    else:
+        citation_ok = rel == "CONSISTENT"
+    ok = (cls in SUCCESS[case["condition"]]) and selected_ok and citation_ok
     return {"answer_class": cls,
-            "citation_relation": citation_relation(parsed, case),
+            "citation_relation": rel,
             "meets_success_state": bool(ok),
             "selected_expected_record": bool(selected_ok),
+            "citation_supports_selection": bool(citation_ok),
             "as_of_revision": as_of}
 
 
@@ -358,7 +387,8 @@ def _ontology_table() -> list[dict[str, Any]]:
     values = {1: "lane amber", 2: "lane cobalt"}
     rows = []
     for disp in DISPOSITIONS:
-        for sel in (None, values[1], values[2], "lane ambergris"):
+        for sel in (None, values[1], values[2], "lane ambergris",
+                    f"{values[1]} and {values[2]}"):
             for prior in ([], [values[1]], [values[2]], [values[1], values[2]]):
                 body = {"disposition": disp, "selected_record_id": "REC-A" if sel else None,
                         "selected_value": sel, "prior_values": prior, "citations": []}
