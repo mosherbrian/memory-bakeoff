@@ -79,6 +79,19 @@ def preflight() -> dict:
     if contract["contract_sha256"] != EXPECT_CONTRACT:
         problems.append(f"contract hash {contract['contract_sha256'][:16]} != expected")
 
+    # Every file the frozen contract pins must still be byte-identical. Without
+    # this the "no repair after exposure" rule is a sentence in an instruction,
+    # not a property: edit the value matcher, re-run, and every other gate stays
+    # green. Found by the Fable determinism review, 2026-09-06.
+    for rel, frozen in contract.get("source_sha256", {}).items():
+        f = ROOT / rel
+        if not f.exists():
+            problems.append(f"frozen source missing: {rel}")
+        elif sha(f.read_text()) != frozen:
+            problems.append(f"FROZEN SOURCE CHANGED since the contract: {rel}. "
+                            "A run-bearing semantic may not be repaired after "
+                            "exposure; this needs a new freeze, not a re-run.")
+
     marker = json.loads((CANONICAL / "NON_EVIDENCE.json").read_text())
     if marker.get("marker") != "NON_EVIDENCE" or marker.get("reader_calls") != 0:
         problems.append("Gen116 NON_EVIDENCE marker is modified or reports prior calls")

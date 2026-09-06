@@ -60,6 +60,35 @@ def test_prompt_drift_is_detected(monkeypatch):
     assert any("drift" in p for p in pf["problems"]), pf["problems"]
 
 
+def test_editing_a_frozen_source_blocks_the_run(tmp_path, monkeypatch):
+    """The whole point of 'no repair after exposure'.
+
+    Before this gate existed, editing the value matcher and re-running produced a
+    green preflight and a fresh attempt. The rule was a sentence in an
+    instruction, not a property of the apparatus. Found by external review.
+    """
+    v5_path = ROOT / "src/memory_bakeoff/reader_interference_v5.py"
+    original = v5_path.read_text()
+    try:
+        v5_path.write_text(original + "\n# a change after exposure\n")
+        pf = R.preflight()
+        assert not pf["passed"]
+        assert any("FROZEN SOURCE CHANGED" in p for p in pf["problems"]), pf["problems"]
+    finally:
+        v5_path.write_text(original)
+    assert v5_path.read_text() == original
+
+
+def test_preflight_pins_every_file_the_contract_names():
+    import json as _json
+    contract = _json.loads(
+        (CANONICAL / "reader_interference_v5_contract.json").read_text())
+    assert len(contract["source_sha256"]) == 5
+    assert "source_sha256" in RUNNER_PATH.read_text(), "preflight must read the pins"
+    pf = R.preflight()
+    assert not any("FROZEN SOURCE" in p for p in pf["problems"]), pf["problems"]
+
+
 def test_ontology_size_is_gated(monkeypatch):
     monkeypatch.setattr(V5, "ONTOLOGY", V5.ONTOLOGY + ("EXTRA_CLASS",))
     pf = R.preflight()
@@ -202,9 +231,13 @@ def test_runner_never_writes_into_gen116():
 
 
 def test_dry_run_makes_no_calls_and_writes_no_attempt():
+    before = {d.name for d in (ROOT / "results/gen117").iterdir()} if (ROOT / "results/gen117").exists() else set()
     r = subprocess.run([sys.executable, str(RUNNER_PATH)], cwd=ROOT,
                        capture_output=True, text=True,
                        env={"PYTHONPATH": "src", "PATH": "/usr/bin:/bin"})
     assert "DRY RUN" in r.stdout, r.stdout + r.stderr
     assert "zero calls made" in r.stdout or "no calls made" in r.stdout
-    assert not (ROOT / "results/gen117").exists(), "a dry run must not create an attempt"
+    # Not "gen117 must not exist" - attempt1 is a real sealed run. A dry run must
+    # not create a NEW attempt.
+    after = {d.name for d in (ROOT / "results/gen117").iterdir()} if (ROOT / "results/gen117").exists() else set()
+    assert after == before, f"a dry run created {after - before}"
