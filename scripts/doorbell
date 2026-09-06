@@ -1,12 +1,30 @@
 #!/usr/bin/env python3
-"""Ring a BAKEOFF_HANDOFF doorbell. Refuses without a plain-English recap.
+"""Ring a BAKEOFF_HANDOFF doorbell. The only sanctioned way to ring one.
 
-Brian follows this project through the recap, not the artifacts. When the loop
-moved from the ChatGPT chat onto GitHub and Drive, the recaps quietly stopped -
-the technical summaries kept flowing and the readable ones did not, for five
-generations. This makes that structurally impossible: no recap, no doorbell.
+Refuses without a plain-English recap. Brian follows this project through the
+recap, not the artifacts. When the loop moved from the ChatGPT chat onto GitHub
+and Drive the recaps quietly stopped - the technical summaries kept flowing and
+the readable ones did not, for five generations. This makes that structurally
+impossible: no recap, no doorbell.
 
-Usage: scripts/doorbell <generation> <recap-file> <technical-file>
+Then this script itself was never invoked, so the guard against quiet lapses
+quietly lapsed, and on 2026-09-06 a hand-typed doorbell titled "Doorbell: ..."
+missed the control plane's BAKEOFF_HANDOFF title filter. The webhook never fired
+and the loop idled six hours against a control plane that was never called.
+Everything below exists because of a specific failure:
+
+  recap gate        recaps stopped for five generations
+  title built here  a hand-typed title cost six hours
+  origin/main pin   ringing leaves the checkout on the doorbell branch, and
+                    HEAD there is not the published result
+  clean-tree incl.
+  untracked files   filtering '??' let a drill fire a live doorbell (PR #17)
+  review gate       two doorbells rang after a FIX FIRST verdict, unreviewed
+  --fire required   a script whose only purpose is an irreversible outward
+                    effect had no safe way to test it
+
+Usage: scripts/doorbell [--fire] <generation> <recap-file> <technical-file>
+Without --fire it checks every gate and creates nothing.
 """
 from __future__ import annotations
 
@@ -25,11 +43,60 @@ def token() -> str:
     return line.split(":", 1)[1].strip()
 
 
+def git(*args: str) -> str:
+    return subprocess.run(["git", *args], capture_output=True, text=True).stdout.strip()
+
+
+def preflight(generation: str) -> str:
+    """Every gate that is not about the recap. Returns the commit to pin."""
+    git("fetch", "-q", "origin", "main")
+    commit, local = git("rev-parse", "origin/main"), git("rev-parse", "main")
+    if not commit:
+        raise SystemExit("REFUSED: cannot resolve origin/main")
+    if local != commit:
+        raise SystemExit(f"REFUSED: local main {local[:12]} != origin/main "
+                         f"{commit[:12]}; push or rebase first")
+    dirt = git("status", "--porcelain")
+    if dirt:
+        raise SystemExit("REFUSED: worktree is not clean (tracked or untracked):\n"
+                         + "\n".join("  " + l for l in dirt.splitlines()))
+
+    # A doorbell may not ring while review says otherwise, or on an unreviewed
+    # commit. Gen116 rang twice without the fix being re-reviewed.
+    reviews = sorted(Path.home().joinpath("rivals/reviews").glob("*/decision.txt"),
+                     key=lambda q: q.stat().st_mtime)
+    if not reviews:
+        raise SystemExit("REFUSED: no rival review found. Run review-generation first.")
+    verdict = reviews[-1].read_text().strip().splitlines()[0]
+    if verdict != "PROCEED":
+        raise SystemExit(f"REFUSED: latest rival verdict is {verdict!r}, not PROCEED "
+                         f"({reviews[-1].parent.name}). Fix, re-review, then ring.")
+    head_time = int(git("log", "-1", "--format=%ct") or 0)
+    if reviews[-1].stat().st_mtime < head_time:
+        raise SystemExit(f"REFUSED: the latest review ({reviews[-1].parent.name}) is "
+                         "older than HEAD. Re-review the commit you are ringing.")
+
+    ledger = Path(__file__).resolve().parents[1] / "reviews/LEDGER.md"
+    if ledger.exists():
+        open_rows = [l for l in ledger.read_text().splitlines() if "| OPEN |" in l]
+        if open_rows:
+            raise SystemExit(f"REFUSED: {len(open_rows)} finding(s) still OPEN in "
+                             "reviews/LEDGER.md. Close or explicitly defer them.")
+    return commit
+
+
 def main() -> int:
-    if len(sys.argv) != 4:
+    argv = sys.argv[1:]
+    fire = "--fire" in argv
+    argv = [a for a in argv if a != "--fire"]
+    if len(argv) != 3:
         print(__doc__)
         return 2
-    generation, recap_path, technical_path = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
+    generation, recap_path, technical_path = argv[0], Path(argv[1]), Path(argv[2])
+    if not recap_path.is_file():
+        raise SystemExit(f"REFUSED: no recap at {recap_path}")
+    if not technical_path.is_file():
+        raise SystemExit(f"REFUSED: no technical summary at {technical_path}")
     recap = recap_path.read_text().strip()
 
     # The gate. A recap that is absent, stubbed, or written in contract-speak is
@@ -42,16 +109,37 @@ def main() -> int:
         raise SystemExit(f"REFUSED: recap contains jargon {leaked}. Write it for "
                          "someone who has not read the brief.")
 
-    sha = subprocess.run(["git", "rev-parse", "origin/main"],
-                         capture_output=True, text=True).stdout.strip()
+    sha = preflight(generation)
     body = (f"**source_generation: {generation}**\n**source_commit: {sha}**\n\n"
             f"## In plain English\n\n{recap}\n\n---\n\n"
             f"{technical_path.read_text().strip()}\n\n"
             f"Please write the next instruction with "
             f"`source_generation: {generation}`, `source_commit: {sha}`.\n\n"
             "**main is frozen until consumed.** Doorbell only - do not merge.")
+    title = f"BAKEOFF_HANDOFF Gen{generation}"
+    if not title.startswith("BAKEOFF_HANDOFF"):
+        raise SystemExit("REFUSED: title must carry the control plane's filter prefix")
+    if not fire:
+        print("DRY RUN - nothing was created. Every gate passed.")
+        print(f"  title  : {title}")
+        print(f"  pin    : {sha}")
+        print(f"  recap  : {len(recap)} chars, no jargon")
+        print("Re-run with --fire to actually ring.")
+        return 0
+
+    branch = f"bakeoff-handoff-gen{generation}"
+    if branch not in git("ls-remote", "--heads", "origin", branch):
+        subprocess.run(["git", "checkout", "-q", "-b", branch], check=True)
+        Path(f".doorbell-gen{generation}.txt").write_text(
+            f"doorbell: gen{generation}\nsource_commit: {sha}\n")
+        subprocess.run(["git", "add", f".doorbell-gen{generation}.txt"], check=True)
+        subprocess.run(["git", "commit", "-q", "-m",
+                        f"Doorbell: Gen{generation} complete"], check=True)
+        subprocess.run(["git", "push", "-q", "-u", "origin", branch], check=True)
+        subprocess.run(["git", "checkout", "-q", "main"], check=True)
+
     payload = json.dumps({
-        "title": f"BAKEOFF_HANDOFF Gen{generation}",
+        "title": title,
         "head": f"bakeoff-handoff-gen{generation}", "base": "main",
         "body": body}).encode()
     request = urllib.request.Request(

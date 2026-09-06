@@ -44,8 +44,8 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 25 | Gen116 085401 | glm-5.3-flash | "zero modifications to tracked source" imprecise; 3 docs changed | FIXED | d6117b8 |
 | 26 | Post-mortem | Fable | `grep -v '^??'` hole **still live** in `propose-generation:32` | FIXED | this commit |
 | 27 | Post-mortem | Fable | `CODEX_HANDOFF.md` carries the same stale "97 passed" gate | FIXED | this commit |
-| 28 | Post-mortem | Fable | `scripts/doorbell` hardcodes the correct prefix and was never invoked | OPEN | remove it or route through ring-doorbell |
-| 29 | Post-mortem | Fable | doorbells rang without re-review after a FIX FIRST verdict | OPEN | ring-doorbell must gate on decision.txt |
+| 28 | Post-mortem | Fable | `scripts/doorbell` hardcodes the correct prefix and was never invoked | FIXED | this commit. Fable said delete it and I relayed that; **Brian overruled and was right** — it is the only thing enforcing the plain-English recap. Merged, not deleted; `ring-doorbell` retired. |
+| 29 | Post-mortem | Fable | doorbells rang without re-review after a FIX FIRST verdict | FIXED | this commit. `scripts/doorbell` refuses unless the latest rival verdict is PROCEED and the review is newer than HEAD. |
 | 30 | Post-mortem | Fable | missing sklearn/pandas and 8 macOS-path assertions in the suite | OPEN | install; fix the path assertions |
 | 31 | Post-mortem | Fable | missing result artifacts — do NOT skip-mark, they may be real gaps | FIXED | this commit. Fable was right and it was worse than flagged: **9 evidence directories existed only on the Mac, untracked in git**. 24 files, verified byte-identical by sha256, now committed. |
 | 32 | Post-mortem | Fable | Gen116 attempt4 was shaped by Gen117, whose provenance is disclaimed | OPEN | needs Sol reissue against PR #16 |
