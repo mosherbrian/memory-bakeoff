@@ -20,5 +20,13 @@ memory-bakeoff = "memory_bakeoff.cli:main"
 where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+# vendor/membukkit is the repo's OWN copy of the engine under test, pinned to
+# commit f28a2e58 with blob SHAs verified against upstream (see
+# vendor/membukkit/UPSTREAM.md). Putting it on the path makes that verified copy
+# importable; it does NOT substitute the engine. `pip install membukkit` would
+# have pulled an unpinned PyPI build - a substitution, in a module whose whole
+# job is raising FallbackDetected when a substitute stands in for the intended
+# artifact. That distinction is why this is configuration, not a scientific
+# choice.
+pythonpath = ["src", "vendor/membukkit/src"]
 testpaths = ["tests"]
