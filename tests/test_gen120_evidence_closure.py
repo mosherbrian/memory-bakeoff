@@ -427,3 +427,66 @@ def test_the_parse_is_outside_the_transport_handler():
     transport = src.index("# TRANSPORT only - retryable")
     parse = src.index("obj = json.loads(raw)")
     assert transport < parse, "the parse must sit outside the transport handler"
+
+
+# ------------------------------- data absence may never be read as an effect
+def _grader():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("grader_ut", ROOT / "scripts/grade_gen118_v6.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _rows(core: str, conditions, success=True):
+    return [{"core": core, "condition": c, "meets_success_state": success,
+             "answer_class": "CURRENT_ONLY"} for c in conditions]
+
+
+def test_a_core_missing_a_cell_is_not_interpretable():
+    """Data absence is not a result.
+
+    Rows come only from COMPLETED responses, so a malformed or transport-dead
+    cell simply has no row - and `estimands.sel()` reads a missing row as "did
+    not select current", which Q2 counts as INTERFERENCE. A core could pass its
+    three controls, keep counting toward Q8, and have its missing data published
+    as evidence of the effect. That is the shape of the Gen114 headline this
+    project retracted. Found by glm-5.3-flash at Gen120 round 6, before any run.
+    """
+    g = _grader()
+    full = tuple(g.CONTROL_CONDITIONS) + tuple(g.CONFLICT_CONDITIONS)
+    complete = g.control_gate(_rows("core-a", full))
+    assert complete["core-a"]["interpretable"] is True
+
+    partial = g.control_gate(_rows("core-b", g.CONTROL_CONDITIONS))
+    assert partial["core-b"]["interpretable"] is False, (
+        "a core whose conflict cells never returned data must not be interpretable")
+    assert partial["core-b"]["status"] == "NOT_INTERPRETABLE_INCOMPLETE_CELLS"
+    assert set(partial["core-b"]["missing_cells"]) == set(g.CONFLICT_CONDITIONS)
+
+
+def test_a_missing_cell_is_never_counted_as_interference():
+    g = _grader()
+    rows = _rows("core-b", g.CONTROL_CONDITIONS)
+    gates = g.control_gate(rows)
+    est = g.estimands(rows, gates, unique_prompts=60)
+    assert est["cores_interpretable"] == 0
+    assert est["all_cells_graded"] is False
+    assert "core-b" in est["cores_with_missing_cells"]
+    assert not est["Q2_cores_with_interference"], (
+        "a core with no conflict data was reported as showing interference")
+
+
+def test_the_marker_requires_every_cell_graded():
+    g = _grader()
+    full = tuple(g.CONTROL_CONDITIONS) + tuple(g.CONFLICT_CONDITIONS)
+    rows = _rows("core-a", full)
+    gates = g.control_gate(rows)
+    est = g.estimands(rows, gates, unique_prompts=60)
+    ok = g.run_marker(gates, est, linkage_ok=True, seal_ok=True, manifest_ok=True)
+    assert ok["all_cells_graded"] is True
+
+    starved = dict(est, all_cells_graded=False)
+    denied = g.run_marker(gates, starved, linkage_ok=True, seal_ok=True, manifest_ok=True)
+    assert denied["marker"] == "NON_EVIDENCE", (
+        "a run missing cells is not a weaker result, it is a different experiment")

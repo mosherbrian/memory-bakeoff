@@ -1,0 +1,17 @@
+All claims verified. Final assessment:
+
+**VERDICT: DEFECTS_MINOR**
+
+The most important finding: every substantive claim in the Generation 120 handoff reconstructs from the repository — attempt13 verifies with a recomputing contract hash (`78a7310f…`), all 18 sealed attempts across gen116–118 verify byte-for-byte, the four balance invariants gate exactly at an independently recomputed 6/12, the freeze-refusal gate demonstrably refuses on a red apparatus while writing nothing, and the full-suite figure 1475/24/3/5 plus the committed KNOWN_FAILURES guard reproduce exactly — but the negative-control correction the generation headlines ("the measured figure is 19 of 36") no longer reproduces by its own recorded method: `test_gen120_evidence_closure.py` has since grown to 37 tests, and running the doc's method against the pre-fix commit today yields 20 failed, not 19, because the doc pins neither the test-file version nor its hash.
+
+Other defects, most severe first:
+
+1. AGENTS.md's documented whole-suite command (`PYTHONPATH=src:vendor/membukkit/src pytest -q --continue-on-collection-errors`) yields **27 failed / 1472 passed**, not the documented 24/1475, because `test_procedure_reachability.py` (2 tests) and `test_negative_unknown.py` (1 test) do `from scripts.run_gen83_procedure_audit import …`, which resolves only under `python -m pytest` (cwd on sys.path) — the invocation the committed guard itself uses and the only one under which the published figures hold; an agent following AGENTS.md verbatim will see three unlisted failures and reasonably infer a new regression.
+
+2. `results/gen118/CANONICAL_ATTEMPT.md` misstates why attempt12 was superseded: its entry lists the fourth review's six findings as the reason, but attempt12's own source pins (verified: runner `f2714d69…`, evidence `f8eb249d…`, tests `0caa90b2…`) show it already *contains* those repairs — its actual supersession is solely attempt13's freeze gate, so a reader reconstructing the rejection reason from the runner-consumed pointer file gets the wrong answer.
+
+3. Gen116/v5 naming vestiges survive in contract-bound prose despite round-2's finding of exactly this class being declared repaired: `scripts/grade_gen118_v6.py`'s docstring still describes "a FUTURE reader-interference-v5 run… in Generation 116", and `scripts/run_reader_v6.py` still says "the FROZEN Gen116 grader" and binds the module as `G116`.
+
+4. `EV.verify_closed` scans only files (`f.is_file()`), so a stray *subdirectory* placed beside a sealed evidence set would not deny closure — a narrower instance of the on-disk smuggling blind spot the same function was written to close.
+
+5. The "Focused suites 99 passed" figure is correct but ambiguous as written: the three apparatus files give 94, and 99 only with `tests/test_per_generation_checklist.py` (5) added — an unpinned composition, in a repository where suite-figure drift has been a named, twice-repaired defect class.

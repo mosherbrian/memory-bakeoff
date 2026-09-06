@@ -53,10 +53,29 @@ matter what the code did. It now builds a real contract and inspects the object.
 
 ---
 
-**Canonical artifact:** `results/gen118/attempt14`, 8 artifacts, verifies.
-`contract_sha256` `9d81fecfa86bdc0350a0556836aff7919c94a17dbba025ebb10556b42d972bce`.
-attempts 1–13 preserved byte-for-byte and all verify; 19 sealed attempts across
+**Canonical artifact:** `results/gen118/attempt15`, 8 artifacts, verifies.
+`contract_sha256` `35daba52150a28612dec28f2997d9aa469747748e14b7adec8e556a3f06713fc`.
+attempts 1–14 preserved byte-for-byte and all verify; 20 sealed attempts across
 gen116–118 verify.
+
+**The sixth review found the most dangerous defect of the generation, and it was
+in the grader.** A cell that returned an unreadable answer produced no graded
+row, and the estimator reads a missing row as "the reader did not choose the
+current value" — which the interference count then treats as the effect. A core
+could lose both its conflict cells, keep its three passing controls, stay
+"interpretable", and contribute its own missing data to the headline. That is the
+exact shape of the Gen114 result we retracted, sitting inside the apparatus built
+in response to that retraction. Interpretability now requires every cell, and
+completeness gates the marker separately: a run missing cells is not a weaker
+result, it is a different experiment. Three witnesses, all three failing against
+the previous commit. Found before any run, which is the only reason this is a
+repair and not a second retraction.
+
+**And I overclaimed for the third time in this class.** I wrote that all four
+malformed-answer witnesses fail against the pre-fix code. Two of four do; the
+other two are negative controls that correctly pass in both trees. I wrote "all
+four" with the 2-failed-2-passed output on screen. Corrected in the handoff, the
+ledger, the canonical record and the commit message.
 
 **One gate added that is aimed at me, not the protocol.** The freeze runner now
 refuses to run while the focused apparatus suite is red. Two attempts this
@@ -135,7 +154,7 @@ payload differing only in changed source pins.
 **Tests.** Focused suites, per file rather than a composed total, because a
 composed total was the one load-bearing number in my last handoff that failed to
 reproduce: `test_gen118_reader_v6.py` 27, `test_gen119_run_apparatus.py` 30,
-`test_gen120_evidence_closure.py` 41. Lineage 245. Full suite **1480 passed, 24
+`test_gen120_evidence_closure.py` 44. Lineage 245. Full suite **1483 passed, 24
 failed, 3 skipped, 5 errors**, every failure pre-existing (8 `membukkit`
 run-provenance, 16 `memconflict` dataset-absent), zero new regressions. Those 24
 are pinned by exact node id in `tests/KNOWN_FAILURES.json`, with

@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt14` is canonical**, per the fifth Generation 120 rival review.
+**`attempt15` is canonical**, per the sixth Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -195,7 +195,7 @@
   Verified by positive control: a deliberately failing witness makes the freeze
   refuse and write no attempt directory.
   Contract `78a7310fee3b95038538e8eacc8b644e5c30f5da1f5b3216655ad62ed5b66f4e`.
-- `attempt14` - **canonical.** Science identical an eighth time. The fifth review
+- `attempt14` - superseded. Science identical an eighth time. The fifth review
   returned DEFECTS_MINOR from both reviewers, as all five have; four findings were
   repaired here and four are recorded as CARRIED in the ledger with an owner.
 
@@ -204,10 +204,40 @@
   a badly-formed 200 as a transport failure - which had it retrying and discarding
   the bytes, i.e. resampling until something parsed. Round 5 observed that the fix
   shipped without a test, so a regression back to retry-and-discard would have
-  passed the entire suite, the apparatus gate and the freeze. Four witnesses now
-  drive the real `call_once` against a fake endpoint, and they FAIL at the pre-fix
-  commit. Everything else in this round was documentation accuracy.
+  passed the entire suite, the apparatus gate and the freeze. Four witnesses now drive the
+  real `call_once` against a fake endpoint. **Two of the four** fail at the pre-fix
+  commit; the other two are negative controls that correctly pass in both trees,
+  because transport retries were never the broken part. I first wrote "all four
+  fail" with the 2-failed-2-passed output in front of me - the third recurrence of
+  this overclaim class, caught by glm-5.3-flash. Everything else in this round was documentation accuracy.
   Contract `9d81fecfa86bdc0350a0556836aff7919c94a17dbba025ebb10556b42d972bce`.
+- `attempt15` - **canonical.** Science identical a ninth time, and this one is
+  worth reading even though the sixth review again returned only DEFECTS_MINOR.
+
+  **The grader could have awarded RUN_EVIDENCE to a run missing data, and
+  published the absence as the effect.** Graded rows come only from COMPLETED
+  responses, so a cell that returned a malformed answer produced no row at all -
+  and `estimands.sel()` reads a missing row as "did not select current", which Q2
+  counts as INTERFERENCE. A core could fail two conflict cells, keep its three
+  passing controls, remain "interpretable", count toward Q8, and contribute its
+  own missing data to the headline finding. That is precisely the shape of the
+  Gen114 result this project retracted, sitting in the apparatus that was built
+  in response to that retraction.
+
+  Interpretability now requires every cell to be present, and completeness is its
+  own gate on the marker rather than an inference from the controls: a run
+  missing cells is not a weaker result, it is a different experiment. Three
+  witnesses, all three of which fail against the previous commit. Found by
+  glm-5.3-flash **before any run**, which is the only reason it is a repair
+  rather than a second retraction.
+
+  Also corrected: `CODEX_HANDOFF.md` still carried a live "97 as of Gen28" figure
+  nineteen lines above the corrected one, in the file whose own repair had added a
+  sentence acknowledging that figure was stale without deleting it; it also still
+  instructed bare `pytest`, the sibling of a fix made one commit earlier in
+  `AGENTS.md`. Rounds 5 and 6 transcripts are committed - round 5 was cited as
+  attempt14's authority while absent from the tree.
+  Contract `35daba52150a28612dec28f2997d9aa469747748e14b7adec8e556a3f06713fc`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

@@ -35,11 +35,27 @@ def control_gate(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     for row in rows:
         by_core[row["core"]][row["condition"]] = row["meets_success_state"]
     out = {}
+    all_conditions = tuple(CONTROL_CONDITIONS) + tuple(CONFLICT_CONDITIONS)
     for core, conds in by_core.items():
         passed = [c for c in CONTROL_CONDITIONS if conds.get(c)]
+        # A core is interpretable only if EVERY cell produced a graded row.
+        #
+        # Rows come from graded COMPLETED responses, so a cell that returned a
+        # malformed answer or exhausted transport simply has no row - and
+        # `estimands.sel()` reads a missing row as "did not select current",
+        # which Q2 then counts as INTERFERENCE. Data absence would have been
+        # published as evidence of the effect, on a core that still passed its
+        # three controls and still counted toward Q8. That is the shape of the
+        # Gen114 headline this project retracted. Found by glm-5.3-flash at
+        # Gen120 round 6, before any run.
+        missing = [c for c in all_conditions if c not in conds]
+        controls_ok = len(passed) == len(CONTROL_CONDITIONS)
         out[core] = {"controls_passed": f"{len(passed)}/{len(CONTROL_CONDITIONS)}",
-                     "interpretable": len(passed) == len(CONTROL_CONDITIONS),
-                     "status": ("INTERPRETABLE" if len(passed) == len(CONTROL_CONDITIONS)
+                     "cells_present": f"{len(conds)}/{len(all_conditions)}",
+                     "missing_cells": missing,
+                     "interpretable": controls_ok and not missing,
+                     "status": ("INTERPRETABLE" if controls_ok and not missing
+                                else "NOT_INTERPRETABLE_INCOMPLETE_CELLS" if missing
                                 else "NOT_INTERPRETABLE_CONTROL_FAILURE")}
     return out
 
@@ -67,6 +83,8 @@ def estimands(rows: Sequence[Mapping[str, Any]], gates: Mapping[str, Any],
     return {
         "independent_unit": "core",
         "cores_total": len(cores), "cores_interpretable": len(ok),
+        "all_cells_graded": all(not gates[c].get("missing_cells") for c in cores),
+        "cores_with_missing_cells": [c for c in cores if gates[c].get("missing_cells")],
         "Q1_cores_selecting_current_in_both_orders": f"{len(q1)}/{len(ok)}",
         "Q2_cores_with_interference": [c for c in q2],
         "Q3_order_discordant_cores": q3,
@@ -89,11 +107,16 @@ def estimands(rows: Sequence[Mapping[str, Any]], gates: Mapping[str, Any],
 def run_marker(gates: Mapping[str, Any], estim: Mapping[str, Any],
                linkage_ok: bool, seal_ok: bool, manifest_ok: bool) -> dict[str, Any]:
     """RUN_EVIDENCE only if every gate passed. Never backfilled."""
-    eligible = bool(linkage_ok and seal_ok and manifest_ok and estim["Q8_all_cores_pass_all_controls"])
+    # Completeness is its own gate, not an inference from the controls. A run
+    # missing cells is not a weaker result; it is a different experiment.
+    complete = bool(estim.get("all_cells_graded"))
+    eligible = bool(linkage_ok and seal_ok and manifest_ok and complete
+                    and estim["Q8_all_cores_pass_all_controls"])
     return {"marker": "RUN_EVIDENCE" if eligible else "NON_EVIDENCE",
             "linkage_complete": linkage_ok, "raw_sealed": seal_ok,
             "manifest_verified": manifest_ok,
             "all_controls_passed": estim["Q8_all_cores_pass_all_controls"],
+            "all_cells_graded": complete,
             "across_core_confirmatory_label_allowed": eligible and estim["cores_interpretable"] == 12,
             "may_not_be_backfilled": True}
 
