@@ -25,7 +25,7 @@ SCIENTIFIC_SOURCES = ("src/memory_bakeoff/reader_interference_v6.py",
                       "scripts/run_gen118_freeze.py",
                       "scripts/grade_gen118_v6.py",
                       "scripts/verify_gen118_contract.py",
-                      "scripts/run_gen119_reader.py")
+                      "scripts/run_reader_v6.py")
 # The four cores burned by Gen110-115, plus every value and answer string observed.
 def _burned() -> tuple[str, ...]:
     """Everything v4 and v5 put in front of the reader. Derived, not typed."""

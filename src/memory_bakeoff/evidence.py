@@ -86,6 +86,61 @@ def record(directory: Path, name: str, body: str) -> dict[str, Any]:
     return manifest
 
 
+def write_raw(directory: Path, name: str, text: str) -> Path:
+    """Write a verbatim artefact and manifest it from the bytes on disk.
+
+    `write_evidence` serialises a payload; raw reader responses are captured
+    verbatim and must not be re-serialised. Gen120 review found the runner wrote
+    `reader_raw.jsonl` with a bare `write_text` and recorded its hash only in
+    `raw_seal.json` - so `verify`, which walks the manifest, never checked the
+    single most important evidence file in the run. A hash stored in a seal is
+    not manifest-binding: the file could be edited afterwards and verification
+    would still report success.
+
+    The digest is taken from the file after writing, never from the argument, so
+    a manifest entry cannot describe bytes that are not the ones on disk.
+    """
+    directory = Path(directory)
+    path = directory / name
+    if path.exists():
+        raise FileExistsError(
+            f"{path} already holds raw evidence and will not be overwritten; "
+            "raw capture is the one artefact that can never be regenerated")
+    directory.mkdir(parents=True, exist_ok=True)
+    path.write_text(text)
+    record(directory, name, path.read_text())
+    return path
+
+
+def verify_closed(directory: Path, required: "Any") -> dict[str, Any]:
+    """`verify`, plus: is the manifest EXACTLY the required inventory?
+
+    `verify` answers "is every listed artefact unchanged", which is silent about
+    an artefact that was never listed - the F1 hole. Closure asks the other
+    question: is the set of manifested artefacts exactly the set this run was
+    required to produce? Missing and unexpected are reported separately because
+    they mean different things; either one denies closure.
+
+    This exists so an evidence gate can be derived from an observation instead of
+    authored as a constant.
+    """
+    result = verify(directory)
+    manifest_path = Path(directory) / MANIFEST
+    manifested = (set(json.loads(manifest_path.read_text())["artifacts"])
+                  if manifest_path.exists() else set())
+    required = set(required)
+    missing_required = sorted(required - manifested)
+    unexpected = sorted(manifested - required)
+    result.update({
+        "required": sorted(required),
+        "manifested": sorted(manifested),
+        "missing_required": missing_required,
+        "unexpected": unexpected,
+        "closed": bool(result["verified"]) and not missing_required and not unexpected,
+    })
+    return result
+
+
 def verify(directory: Path) -> dict[str, Any]:
     """Does each artefact still hash to what the manifest recorded?
 

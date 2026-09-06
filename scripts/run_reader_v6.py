@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Gen119+: the future controlled reader run against the v6 protocol.
+"""The controlled reader run against the v6 protocol. STABLE PATH, no generation in the name.
+
+Renamed from run_gen119_reader.py in Gen120. The old name carried GENERATION=119
+and a SOURCE_COMMIT from the Gen116 line as module constants, so authorising a
+run in any later generation meant editing a file the contract binds - which
+invalidates the freeze that binds it. Bookkeeping cannot require a scientific
+refreeze. Execution generation, source commit and authorisation are runtime
+inputs now, each checked fail-closed before the first call.
 
 Tracked and bound into the v6 contract BEFORE the freeze, because Gen118 hashed
 only five files and omitted every run-bearing surface - the runner, the request
@@ -36,7 +43,6 @@ import importlib.util as _ilu                                   # noqa: E402
 _spec = _ilu.spec_from_file_location("grade_gen118_v6", ROOT / "scripts/grade_gen118_v6.py")
 G116 = _ilu.module_from_spec(_spec); _spec.loader.exec_module(G116)   # noqa: E402
 
-GENERATION = 119
 def _canonical() -> "Path":
     """Read the canonical attempt rather than naming it.
 
@@ -60,7 +66,6 @@ def _expected_contract() -> str:
     import json as _j
     return _j.loads((CANONICAL / "reader_interference_v6_contract.json")
                     .read_text())["contract_sha256"]
-SOURCE_COMMIT = "1c36483e835732364145d551d25a8144ce44bd09"
 EVIDENCE_CLASS = "controlled_reader_interference"
 
 READER = "qwen3.6-35b-vulkan-nothink"
@@ -83,11 +88,18 @@ def git(*args: str) -> str:
 
 
 # --------------------------------------------------------------------- preflight
-def preflight() -> dict:
+def preflight(source_commit: str) -> dict:
     """Every gate. Any failure means zero model calls and a NON_EVIDENCE attempt."""
     problems: list[str] = []
 
     head = git("rev-parse", "HEAD")
+    # The old runner RECORDED source_commit_expected and never compared it to
+    # anything - provenance theatre. HEAD must be exactly the commit the
+    # authorising instruction named, or the evidence is filed against code that
+    # was not the code under authorisation.
+    if head != source_commit:
+        problems.append(f"HEAD {head[:12]} is not the authorised source commit "
+                        f"{source_commit[:12]}")
     # Untracked files COUNT. Filtering '??' is how Gen114 shipped a runner that
     # did not exist at its own pinned commit, and how a drill later fired a live
     # doorbell. The tree is clean or it is not.
@@ -163,7 +175,7 @@ def preflight() -> dict:
     if ledger.exists() and "| OPEN |" in ledger.read_text():
         problems.append("an open review finding remains in reviews/LEDGER.md")
 
-    return {"head": head, "source_commit_expected": SOURCE_COMMIT,
+    return {"head": head, "source_commit_expected": source_commit,
             "worktree_clean": not dirt, "attempt4_verified": ev["verified"],
             "contract_sha256": contract["contract_sha256"],
             "cases": len(cases), "cores": len({c["core"] for c in cases}),
@@ -186,13 +198,17 @@ def request_body(case: dict) -> dict:
             "max_tokens": MAX_TOKENS, "stream": False}
 
 
-def freeze_contract(cases: list[dict]) -> dict:
+def freeze_contract(cases: list[dict], generation: int, source_commit: str,
+                    authorised_by: str) -> dict:
     bodies = {c["case_id"]: json.dumps(request_body(c), sort_keys=True) for c in cases}
     return {
-        "generation": GENERATION, "evidence_class": EVIDENCE_CLASS,
+        "generation": generation, "evidence_class": EVIDENCE_CLASS,
+        "authorisation": {"authorised_by_generation": authorised_by,
+                          "source_commit": source_commit,
+                          "supplied_at_runtime_not_hardcoded": True},
         "consumes": {"canonical_attempt": str(CANONICAL.relative_to(ROOT)),
                      "v6_contract_sha256": _expected_contract(),
-                     "source_commit": SOURCE_COMMIT},
+                     "source_commit": source_commit},
         "reader": {"model": READER, "endpoint": ENDPOINT, "temperature": TEMPERATURE,
                    "seed_requested": SEED,
                    "seed_accepted": "NOT REPORTED - to be read from server evidence, never authored",
@@ -246,30 +262,72 @@ def call_once(case: dict) -> dict:
             "terminal_disposition": "TERMINAL_TRANSPORT_FAILURE"}
 
 
+def seal_agrees(out: Path) -> bool:
+    """Do the seal, the manifest and the bytes on disk all say the same thing?
+
+    Three sources that must agree. Comparing only two of them is how a hash in a
+    seal came to be mistaken for manifest-binding.
+    """
+    seal = json.loads((out / "raw_seal.json").read_text())
+    entry = json.loads((out / EV.MANIFEST).read_text())["artifacts"].get(seal["file"])
+    if not entry:
+        return False
+    return seal["sha256"] == entry["sha256"] == EV.digest((out / seal["file"]).read_text())
+
+
+# The exact inventory a run must have produced before its marker is derived. The
+# marker itself is deliberately absent: it is written last, from the observation
+# that this set is closed.
+REQUIRED_PRE_MARKER = ("preflight.json", "execution_contract.json",
+                       "reader_raw.jsonl", "raw_seal.json",
+                       "graded_rows.json", "control_gates.json", "estimands.json")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fire", action="store_true",
                     help="actually call the reader; without it nothing is sent")
+    ap.add_argument("--generation", type=int, required=True,
+                    help="the generation that will WRITE this run's evidence")
+    ap.add_argument("--source-commit", default="",
+                    help="the commit the authorising instruction named, verbatim")
     ap.add_argument("--authorised-by", default="",
                     help="the control-plane generation authorising this run")
     args = ap.parse_args()
-    if args.fire and not args.authorised_by:
-        raise SystemExit("REFUSING: a v6 run requires explicit control-plane "
-                         "authorisation. Gen118 and Gen119 both forbid it. Pass "
-                         "--authorised-by <generation> only when an instruction "
-                         "actually says so.")
 
-    pf = preflight()
+    # Authorisation is checked before anything else happens, and a non-empty
+    # string is not authorisation. The generation is stated twice, from two
+    # different places in the instruction, and both must agree - that is what
+    # makes a typo or a stale copy-paste fail instead of running under the wrong
+    # provenance. Zero calls, no attempt directory, on any disagreement.
+    if args.fire:
+        if not args.authorised_by:
+            ap.error("REFUSING: --fire will not run without explicit control-plane "
+                     "authorisation. Pass --authorised-by <generation> only when "
+                     "an instruction actually says so.")
+        if args.authorised_by.strip() != str(args.generation):
+            ap.error(f"authorisation is for generation {args.authorised_by!r} but "
+                     f"this run would write generation {args.generation}. Refusing "
+                     "with zero calls; a stale or mistyped generation files "
+                     "evidence under the wrong provenance.")
+        if not args.source_commit:
+            ap.error("--fire requires --source-commit, supplied verbatim from the "
+                     "authorising instruction. Provenance is not inferred.")
+
+    source_commit = args.source_commit or git("rev-parse", "HEAD")
+    pf = preflight(source_commit)
     schedule = json.loads((CANONICAL / "reader_interference_v6_schedule.json").read_text())
     cases = schedule["cases"]
-    contract = freeze_contract(cases)
+    contract = freeze_contract(cases, args.generation, source_commit, args.authorised_by)
 
     print(f"preflight: {'PASS' if pf['passed'] else 'FAIL'}")
+    print(f"  generation            {args.generation}")
+    print(f"  authorised_by         {args.authorised_by or '(none - dry run)'}")
     for k in ("head", "worktree_clean", "attempt4_verified", "cases", "cores",
               "unique_prompt_hashes", "lineage_green"):
         print(f"  {k:<22}{pf[k]}")
-    for p in pf["problems"]:
-        print(f"  PROBLEM: {p}")
+    for problem in pf["problems"]:
+        print(f"  PROBLEM: {problem}")
 
     if not pf["passed"]:
         if not args.fire:
@@ -277,7 +335,7 @@ def main() -> int:
             # and reported; it becomes an attempt only when a run was intended.
             print("\nDRY RUN - preflight failed. No attempt written, no calls made.")
             return 1
-        out = EV.next_attempt(ROOT, GENERATION)
+        out = EV.next_attempt(ROOT, args.generation)
         EV.write_evidence(out, "preflight.json", pf)
         EV.write_evidence(out, "NON_EVIDENCE.json",
                           {"marker": "NON_EVIDENCE", "reader_calls": 0,
@@ -294,7 +352,7 @@ def main() -> int:
         print("Re-run with --fire to execute the 60 cases once each.")
         return 0
 
-    out = EV.next_attempt(ROOT, GENERATION)
+    out = EV.next_attempt(ROOT, args.generation)
     EV.write_evidence(out, "preflight.json", pf)
     EV.write_evidence(out, "execution_contract.json", contract)   # BEFORE exposure
 
@@ -302,9 +360,11 @@ def main() -> int:
     responses = [call_once(c) for c in cases]
     elapsed = round(time.time() - started, 1)
 
-    # Seal raw BEFORE any parse.
-    raw_path = out / "reader_raw.jsonl"
-    raw_path.write_text("\n".join(json.dumps(r, sort_keys=True) for r in responses) + "\n")
+    # Seal raw BEFORE any parse, and MANIFEST it. A hash written only into
+    # raw_seal.json leaves the most important file in the run unverified by
+    # EV.verify, which walks the manifest and nothing else.
+    raw_text = "\n".join(json.dumps(r, sort_keys=True) for r in responses) + "\n"
+    raw_path = EV.write_raw(out, "reader_raw.jsonl", raw_text)
     raw_sha = sha(raw_path.read_text())
     EV.write_evidence(out, "raw_seal.json",
                       {"file": "reader_raw.jsonl", "sha256": raw_sha,
@@ -320,23 +380,38 @@ def main() -> int:
                   and len({r["case_id"] for r in responses}) == 60
                   and all(r["request_sha256"] == contract["request_body_sha256"][r["case_id"]]
                           for r in responses))
-    marker = G116.run_marker(gates, estim, linkage_ok=linkage_ok,
-                             seal_ok=bool(raw_sha), manifest_ok=True)
 
     EV.write_evidence(out, "graded_rows.json", rows)
     EV.write_evidence(out, "control_gates.json", gates)
     EV.write_evidence(out, "estimands.json", estim)
+
+    # The pre-marker evidence set is now complete and closed. VERIFY it, and let
+    # that observation decide the marker. The previous runner passed
+    # manifest_ok as a literal true, which made the strongest claim in the whole
+    # apparatus - "the evidence is intact" - an assertion by its author rather
+    # than a measurement. The marker is written last, so it is never verifying
+    # itself.
+    closure = EV.verify_closed(out, REQUIRED_PRE_MARKER)
+    seal_ok = seal_agrees(out)
+    marker = G116.run_marker(gates, estim, linkage_ok=linkage_ok,
+                             seal_ok=seal_ok, manifest_ok=closure["closed"])
+
     EV.write_evidence(out, f"{marker['marker']}.json",
                       {**marker, "elapsed_seconds": elapsed,
+                       "evidence_closure": closure,
+                       "seal_agrees_manifest_and_disk": seal_ok,
                        "served_models": sorted({r["served_model"] for r in responses}),
                        "dispositions": {d: sum(1 for r in responses
                                                if r["terminal_disposition"] == d)
                                         for d in {r["terminal_disposition"] for r in responses}}})
+    final = EV.verify(out)
     print(f"\nWROTE {out}  ({elapsed}s)")
     print(f"  marker              : {marker['marker']}")
+    print(f"  pre-marker closure  : {closure['closed']}")
+    print(f"  seal three-way      : {seal_ok}")
     print(f"  interpretable cores : {estim['cores_interpretable']}/12")
     print(f"  Q1 both orders      : {estim['Q1_cores_selecting_current_in_both_orders']}")
-    print(f"  verify              : {EV.verify(out)}")
+    print(f"  verify              : {final}")
     return 0
 
 

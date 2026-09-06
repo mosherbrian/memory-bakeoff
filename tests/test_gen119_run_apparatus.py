@@ -19,12 +19,21 @@ from memory_bakeoff import evidence as EV
 from memory_bakeoff import reader_interference_v6 as V6
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNNER_PATH = ROOT / "scripts" / "run_gen119_reader.py"
+RUNNER_PATH = ROOT / "scripts" / "run_reader_v6.py"
 SRC = RUNNER_PATH.read_text()
 
 _spec = importlib.util.spec_from_file_location("_gen117_runner", RUNNER_PATH)
 R = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(R)
+
+def _head() -> str:
+    """The commit under test. Gen120 made provenance a runtime input, so these
+    gate tests must supply it; passing HEAD keeps them about the gate they name
+    rather than about the new provenance check."""
+    import subprocess
+    return subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
+                          capture_output=True, text=True).stdout.strip()
+
 
 def _canonical() -> "Path":
     """Read the canonical attempt rather than naming it.
@@ -48,7 +57,7 @@ CASES = SCHEDULE["cases"]
 def test_every_preflight_gate_other_than_tree_cleanliness_passes():
     """Cleanliness is asserted separately: running the suite from a dirty tree is
     normal during development, but every scientific gate must be green now."""
-    pf = R.preflight()
+    pf = R.preflight(_head())
     scientific = [p for p in pf["problems"] if "worktree not clean" not in p]
     assert scientific == [], scientific
     assert pf["cases"] == 60 and pf["cores"] == 12 and pf["unique_prompt_hashes"] == 60
@@ -72,7 +81,7 @@ def test_preflight_checks_every_required_gate():
 def test_prompt_drift_is_detected(monkeypatch):
     """If the live prompt bytes stop matching the frozen hashes, refuse."""
     monkeypatch.setattr(V6, "RULE", V6.RULE + " Prefer the first record.")
-    pf = R.preflight()
+    pf = R.preflight(_head())
     assert not pf["passed"]
     assert any("drift" in p for p in pf["problems"]), pf["problems"]
 
@@ -88,7 +97,7 @@ def test_editing_a_frozen_source_blocks_the_run(tmp_path, monkeypatch):
     original = v5_path.read_text()
     try:
         v5_path.write_text(original + "\n# a change after exposure\n")
-        pf = R.preflight()
+        pf = R.preflight(_head())
         assert not pf["passed"]
         assert any("FROZEN SOURCE CHANGED" in p for p in pf["problems"]), pf["problems"]
     finally:
@@ -107,7 +116,7 @@ def test_preflight_pins_every_file_the_contract_names():
     bound = set(contract["source_sha256"])
     for required in ("src/memory_bakeoff/reader_interference_v6.py",
                      "src/memory_bakeoff/evidence.py",
-                     "scripts/run_gen119_reader.py",
+                     "scripts/run_reader_v6.py",
                      "scripts/grade_gen118_v6.py",
                      "scripts/verify_gen118_contract.py",
                      "scripts/run_gen118_freeze.py",
@@ -115,20 +124,20 @@ def test_preflight_pins_every_file_the_contract_names():
                      "tests/test_gen119_run_apparatus.py"):
         assert required in bound, f"{required} is not bound into the contract"
     assert "source_sha256" in RUNNER_PATH.read_text(), "preflight must read the pins"
-    pf = R.preflight()
+    pf = R.preflight(_head())
     assert not any("FROZEN SOURCE" in p for p in pf["problems"]), pf["problems"]
 
 
 def test_ontology_size_is_gated(monkeypatch):
     monkeypatch.setattr(V6, "ONTOLOGY", V6.ONTOLOGY + ("EXTRA_CLASS",))
-    pf = R.preflight()
+    pf = R.preflight(_head())
     assert not pf["passed"]
     assert any("ontology" in p for p in pf["problems"])
 
 
 # --- the contract is frozen before exposure ----------------------------------
 def test_contract_binds_every_run_bearing_surface():
-    c = R.freeze_contract(CASES)
+    c = R.freeze_contract(CASES, 120, _head(), '120')
     for key in ("request_body_sha256", "request_bodies_sha256_all", "runner_sha256",
                 "grader_sha256", "v5_module_sha256", "capture", "reader"):
         assert key in c, key
@@ -140,20 +149,20 @@ def test_contract_binds_every_run_bearing_surface():
 
 def test_seed_acceptance_is_not_authored():
     """Gen114 hardcoded seed_accepted: true. Never again."""
-    c = R.freeze_contract(CASES)
+    c = R.freeze_contract(CASES, 120, _head(), '120')
     assert c["reader"]["seed_accepted"].startswith("NOT REPORTED")
     assert "seed_accepted\": True" not in SRC and "seed_accepted=True" not in SRC
 
 
 def test_contract_moves_when_the_request_body_changes(monkeypatch):
-    before = R.freeze_contract(CASES)["request_bodies_sha256_all"]
+    before = R.freeze_contract(CASES, 120, _head(), '120')["request_bodies_sha256_all"]
     monkeypatch.setattr(R, "TEMPERATURE", 0.7)
-    assert R.freeze_contract(CASES)["request_bodies_sha256_all"] != before
+    assert R.freeze_contract(CASES, 120, _head(), '120')["request_bodies_sha256_all"] != before
 
 
 def test_contract_moves_when_the_runner_changes():
     """The runner hashes its own bytes, so editing it moves the fingerprint."""
-    c = R.freeze_contract(CASES)
+    c = R.freeze_contract(CASES, 120, _head(), '120')
     assert c["runner_sha256"] == R.sha(RUNNER_PATH.read_text())
 
 
@@ -244,7 +253,7 @@ def test_independent_unit_is_the_core_not_the_cell():
 def test_retries_are_transport_only():
     assert "scientific_response_may_never_be_replaced" in SRC
     assert R.TRANSPORT_RETRIES >= 0
-    body = R.freeze_contract(CASES)["reader"]
+    body = R.freeze_contract(CASES, 120, _head(), '120')["reader"]
     assert body["scientific_response_may_never_be_replaced"] is True
 
 
@@ -269,7 +278,8 @@ def test_runner_never_writes_into_gen116():
 
 def test_dry_run_makes_no_calls_and_writes_no_attempt():
     before = {d.name for d in (ROOT / "results/gen119").iterdir()} if (ROOT / "results/gen119").exists() else set()
-    r = subprocess.run([sys.executable, str(RUNNER_PATH)], cwd=ROOT,
+    r = subprocess.run([sys.executable, str(RUNNER_PATH), "--generation", "120",
+                        "--source-commit", _head()], cwd=ROOT,
                        capture_output=True, text=True,
                        env={"PYTHONPATH": "src", "PATH": "/usr/bin:/bin"})
     assert "DRY RUN" in r.stdout, r.stdout + r.stderr
@@ -283,7 +293,8 @@ def test_dry_run_makes_no_calls_and_writes_no_attempt():
 def test_a_v6_run_refuses_without_explicit_authorisation():
     """Gen118 and Gen119 both forbid running. The runner must enforce that
     itself rather than relying on me remembering."""
-    r = subprocess.run([sys.executable, str(RUNNER_PATH), "--fire"], cwd=ROOT,
+    r = subprocess.run([sys.executable, str(RUNNER_PATH), "--fire", "--generation", "120"],
+                       cwd=ROOT,
                        capture_output=True, text=True,
                        env={"PYTHONPATH": "src", "PATH": "/usr/bin:/bin"})
     assert r.returncode != 0
@@ -296,7 +307,7 @@ def test_the_contract_binds_the_future_runner():
     import json as _json
     c = _json.loads((CANONICAL / "reader_interference_v6_contract.json").read_text())
     bound = set(c["source_sha256"])
-    for required in ("scripts/run_gen119_reader.py",
+    for required in ("scripts/run_reader_v6.py",
                      "src/memory_bakeoff/evidence.py",
                      "tests/test_gen119_run_apparatus.py"):
         assert required in bound, f"{required} is not bound into the contract"
