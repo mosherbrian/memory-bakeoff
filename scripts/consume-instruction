@@ -17,7 +17,20 @@ MAC=bmosher@brians-macbook-air.local
 MAC_REPO=/Users/bmosher/source/repos/memory-bakeoff
 
 git fetch -q origin main
-SHA=$(git rev-parse origin/main)
+
+# Verify against the PIN the request was recorded with, not the bare tip.
+# Comparing to origin/main rejects a perfectly good instruction whenever a
+# PENDING.json bookkeeping commit has landed since - which is exactly what
+# happened the first time this ran, on an instruction pinned to precisely what we
+# asked for. pin-is-current then confirms no CONTENT moved under that pin.
+SHA=$(python3 -c "import json;print(json.load(open('control-plane/PENDING.json'))['source_commit'])")
+if ! scripts/pin-is-current; then
+  echo
+  echo "NOT CONSUMED. Content moved under the pin after the request was recorded,"
+  echo "so the control plane answered a state that no longer exists. Re-pin and ask"
+  echo "again rather than acting on it."
+  exit 1
+fi
 
 OUT=$(timeout 240 ssh "$MAC" "export PATH=/opt/homebrew/bin:\$PATH; cd $MAC_REPO && \
       scripts/verify-chatgpt-handoff $GEN $SHA 2>&1" 2>&1 || true)
@@ -25,7 +38,7 @@ printf '%s\n' "$OUT" | grep -E "generation|source_|VERDICT" | sed 's/^/  /'
 
 if ! printf '%s' "$OUT" | grep -q "VERDICT: ACCEPT"; then
   echo
-  echo "NOT CONSUMED. The instruction does not verify against origin/main ($SHA)."
+  echo "NOT CONSUMED. The instruction does not verify against the pinned commit ($SHA)."
   echo "Nothing changed. Do not act on it. Either the control plane pinned a"
   echo "different commit, or main moved after the request was sent - which is the"
   echo "stale-pin failure the freeze exists to prevent."

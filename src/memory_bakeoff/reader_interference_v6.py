@@ -95,7 +95,13 @@ BANNED_PROSE = ("after", "before", "initially", "resized", "previous", "previous
 BANNED_ROLE = ("current", "stale", "superseded", "latest", "winning", "correct",
                "prior", "old", "new", "canonical", "authoritative")
 
-_ID_SALT = "reader-interference-v6/opaque-record-id/v1"
+# The gate is on the REALIZED fixture, not the intent. Strict alternation of the
+# slot->revision map keeps ids revision-independent by construction, but the
+# realized digest ordering landed at 7/12 with the first salt, which fails the
+# declared balance gate. Only this arbitrary constant was re-rolled - the twelve
+# per-core assignments were NOT hand-picked to hit a number, which would be
+# fitting the fixture to its own audit.
+_ID_SALT = "reader-interference-v6/opaque-record-id/v13"
 
 
 def _slot_id(core_key: str, slot: int) -> str:

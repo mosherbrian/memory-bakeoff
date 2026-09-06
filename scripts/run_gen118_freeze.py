@@ -14,11 +14,18 @@ from memory_bakeoff import reader_interference_v6 as V6
 from memory_bakeoff import reader_interference_v4 as V4
 
 ROOT = Path(__file__).resolve().parents[1]
+# Every behaviour-bearing surface, including the FUTURE run path. Gen118 bound
+# five files and omitted the runner, the request projection, the capture/seal
+# path, the retry policy and the evidence-marker logic. A contract that does not
+# bind what will run is not a freeze - the control plane said so and was right.
 SCIENTIFIC_SOURCES = ("src/memory_bakeoff/reader_interference_v6.py",
+                      "src/memory_bakeoff/evidence.py",
                       "tests/test_gen118_reader_v6.py",
+                      "tests/test_gen119_run_apparatus.py",
                       "scripts/run_gen118_freeze.py",
                       "scripts/grade_gen118_v6.py",
-                      "scripts/verify_gen118_contract.py")
+                      "scripts/verify_gen118_contract.py",
+                      "scripts/run_gen119_reader.py")
 # The four cores burned by Gen110-115, plus every value and answer string observed.
 def _burned() -> tuple[str, ...]:
     """Everything v4 and v5 put in front of the reader. Derived, not typed."""
@@ -183,7 +190,12 @@ def main() -> None:
     csha = hashlib.sha256(json.dumps(payload_with_sources, sort_keys=True, default=str).encode()).hexdigest()
 
     fx_audit, on_audit, legacy = fixture_audit(), ontology_audit(), legacy_projection()
-    hard_fail = (fx_audit["reused_exposed_terms"] or fx_audit["reused_record_ids"]
+    # The Gen118 instruction required id ordering BALANCED across cores. The
+    # first freeze reported 7/12 and shipped anyway, because reporting a number
+    # is not gating on it. Sol caught that.
+    id_first = int(fx_audit["revision2_id_sorts_first_count"].split("/")[0])
+    id_unbalanced = abs(id_first - len(V6.CORES) // 2) > 1
+    hard_fail = (id_unbalanced or fx_audit["reused_exposed_terms"] or fx_audit["reused_record_ids"]
                  or fx_audit["reused_prompt_hashes"]
                  or not fx_audit["verbatim_rule_in_every_prompt"]
                  or fx_audit["banned_progression_words_in_model_facing_text"]
@@ -193,7 +205,8 @@ def main() -> None:
                  or fx_audit["unique_case_ids"] != 60
                  or on_audit["unreachable_classes"])
     if hard_fail:
-        raise SystemExit(f"FAIL CLOSED: fixture or ontology audit failed: "
+        raise SystemExit(f"FAIL CLOSED: id_balance={fx_audit['revision2_id_sorts_first_count']} "
+                         f"fixture or ontology audit failed: "
                          f"{fx_audit['reused_exposed_terms']} "
                          f"{fx_audit['banned_progression_words_in_model_facing_text']} "
                          f"{fx_audit['banned_role_words_in_records_or_ids']} "
@@ -225,7 +238,7 @@ def main() -> None:
     EV.write_evidence(out, "reader_interference_v6_legacy_development_projection.json", legacy)
     EV.write_evidence(out, "NON_EVIDENCE.json",
                       {"marker": "NON_EVIDENCE",
-                       "reason": "Generation 116 froze a candidate protocol and produced no reader result",
+                       "reason": "Generation 118 froze the v6 candidate protocol and produced no reader result",
                        "reader_calls": 0, "model_calls": 0, "endpoint_calls": 0, "gpu_calls": 0,
                        "may_not_be_upgraded_retrospectively": True})
     print(f"WROTE {out}")

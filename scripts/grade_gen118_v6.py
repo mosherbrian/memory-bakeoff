@@ -11,7 +11,7 @@ from __future__ import annotations
 import json, collections
 from pathlib import Path
 from typing import Any, Mapping, Sequence
-from memory_bakeoff import reader_interference_v6 as V5
+from memory_bakeoff import reader_interference_v6 as V6
 
 CONTROL_CONDITIONS = ("CLEAN_CURRENT", "CLEAN_HISTORICAL_AS_OF", "INSUFFICIENT_CURRENT")
 CONFLICT_CONDITIONS = ("CONFLICT_CURRENT_FIRST", "CONFLICT_STALE_FIRST")

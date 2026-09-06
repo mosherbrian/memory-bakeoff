@@ -2,7 +2,8 @@
 
 **Snapshot:** 2026-09-06 (America/Los_Angeles)  
 **Harness tests:** see the Gen107 handoff entry for the authoritative count  
-**Reader layer:** `reader-interference-v5` FROZEN and **UNRUN** at Gen116 — R-1(a) decidable recency (`effective_revision`/`as_of_revision`), 12 fresh cores, 60 unique prompts, zero model calls. Candidate ruler awaiting control-plane review.  
+**Reader layer:** `reader-interference-v6` FROZEN and **UNRUN** at Gen118, canonical `results/gen118/attempt2`. Adds the verbatim full-value copying rule the control plane ruled after Gen117, on 12 entirely fresh cores. attempt1 superseded for false marker provenance, a failed id-balance gate and a contract that did not bind the future runner. **Not authorised to run.**  
+**Reader layer:** Gen117 ran v5 and produced **NO result by design** — 60/60 clean calls, then every core failed its controls and the gate refused to publish. The fixture asked for a two-word value and the reader answered with one word in 36 of 48 selections. Not repaired after exposure; `results/gen117/attempt1` stays `NON_EVIDENCE`.  
 **Reader layer:** Gen114's headline is **RETRACTED** at Gen115. Its bytes and machine labels reproduce exactly, but the reader gave the stale value **0/24** times, met the contradiction bar **0/24**, and 21 of 24 replies echo prompt order. No conflict prompt disclosed which record was current, so v4 scored a guess. Gen114 = `RESULT_PRESENT / PROTOCOL_INCOMPLETE / NOT_CONFIRMATORY`; its four cores are development-exposed. No causal claim that stale co-return costs correctness is supported.  
 **Reader layer:** `reader-interference-v4` frozen at Gen113 and **unrun**; v3 superseded for an incomplete freeze fingerprint, not for bad science.  
 **Reader layer:** `reader-interference-v3` frozen at Gen112 and **unrun**; v2 superseded after review found a contradiction could pass a control gate.  
