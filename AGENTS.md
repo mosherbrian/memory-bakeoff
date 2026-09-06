@@ -27,17 +27,31 @@ PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
   tests/test_gen115_adjudication.py tests/test_gen116_reader_v5.py
 # 245 passed  (reader-interference lineage, 2026-09-06)
 
-# Whole suite. Needs sklearn and pandas, which are NOT installed on every host.
+# Whole suite. Needs scikit-learn and pandas (declared in pyproject).
 PYTHONPATH=src pytest -q --continue-on-collection-errors
-# 1082 passed, 18 failed, 6 skipped, 47 errors  (2026-09-06)
+# 1324 passed, 25 failed, 2 skipped, 5 errors  (2026-09-06, after deps installed)
 ```
 
-**The whole-suite figure is not green and has not been for some time.** The 18
-failures and 47 collection errors trace to four causes, none of them in the
-reader-interference line: missing result artifacts, the absent
-`external/MemConflict` dataset, assertions pinning macOS paths, and missing
-`sklearn`/`pandas`. Treat the lineage gate as the one that must pass; investigate
-any *change* in the whole-suite numbers rather than the numbers themselves.
+**The whole-suite figure is not green, and every remaining failure has a known
+external cause.** As of 2026-09-06 they are exactly two clusters:
+
+- **21 items** (`test_memconflict_gen36/37/38`): the pinned MemConflict dataset
+  is absent. It is 182 MB of upstream data at `external/MemConflict/`, correctly
+  not committed, and it must be fetched to run those tests.
+- **9 items** (`test_membukkit_gen41_round1`): `membukkit` is not installed. It is
+  an ENGINE UNDER TEST, not tooling — install a version deliberately, matching the
+  frozen provider config, never whatever pip offers.
+
+Nothing else fails. Treat the lineage gate as the one that must pass, and treat
+any failure outside those two clusters as a real regression.
+
+Earlier snapshots of this file were wrong in ways worth recording. "97 passed" was
+a Gen28 figure that survived three review reports. A later note claimed the
+failures traced to "missing result artifacts, macOS path assertions, and missing
+sklearn/pandas": the artifacts turned out to be nine evidence directories that
+existed only on one laptop and are now committed, and the macOS-path claim was an
+artefact of grepping pytest OUTPUT rather than source — there is one such path in
+the repo and it is an overridable default.
 
 The "97 passed" figure that stood here until 2026-09-06 was a Gen28 snapshot. It
 was reported stale by review three separate times before anyone fixed it.
