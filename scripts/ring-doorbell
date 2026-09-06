@@ -7,8 +7,16 @@
 # hours while the control plane was assumed to be out of quota. It had never been
 # called. This script exists so that cannot happen again.
 #
-# Usage: scripts/ring-doorbell <source_generation> <title-suffix> <body-file>
+# A doorbell has a real, outward effect: it wakes the control plane. So this
+# script defaults to DRY RUN and only fires when told to. Drilling it on
+# 2026-09-06 opened a live PR titled "BAKEOFF_HANDOFF Gen116 - x" because there
+# was no such guard; it had to be closed and retracted.
+#
+# Usage: scripts/ring-doorbell [--fire] <source_generation> <title-suffix> <body-file>
 set -euo pipefail
+
+FIRE=0
+if [ "${1:-}" = "--fire" ]; then FIRE=1; shift; fi
 
 REQUIRED_PREFIX="BAKEOFF_HANDOFF"
 SRC_GEN=${1:?usage: ring-doorbell <source_generation> <title-suffix> <body-file>}
@@ -21,13 +29,26 @@ git fetch -q origin main
 COMMIT=$(git rev-parse origin/main)
 LOCAL=$(git rev-parse main)
 [ "$COMMIT" = "$LOCAL" ] || { echo "REFUSING: local main $LOCAL != origin/main $COMMIT"; exit 1; }
-[ -z "$(git status --porcelain | grep -v '^??' || true)" ] || { echo "REFUSING: dirty worktree"; exit 1; }
+# Untracked files count. The preflight contract attests paths, and an untracked
+# file under an attested path is exactly the Gen114 defect.
+DIRT=$(git status --porcelain)
+[ -z "$DIRT" ] || { echo "REFUSING: worktree is not clean (tracked or untracked):"; \
+                    printf '%s\n' "$DIRT" | sed 's/^/  /'; exit 1; }
 
 TITLE="$REQUIRED_PREFIX Gen$SRC_GEN - $SUFFIX"
 case "$TITLE" in
   "$REQUIRED_PREFIX"*) ;;
   *) echo "REFUSING: title must begin with $REQUIRED_PREFIX or the webhook will not fire"; exit 1 ;;
 esac
+
+if [ "$FIRE" != "1" ]; then
+  echo "DRY RUN - nothing was created. All guards passed."
+  echo "  would title : $TITLE"
+  echo "  would pin   : $COMMIT"
+  echo "  would use   : $BODY"
+  echo "Re-run with --fire to actually ring the doorbell."
+  exit 0
+fi
 
 BRANCH="bakeoff-handoff-gen$((SRC_GEN + 1))-$(date +%H%M%S)"
 git checkout -q -b "$BRANCH"
