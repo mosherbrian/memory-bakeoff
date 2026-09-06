@@ -48,7 +48,7 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 29 | Post-mortem | Fable | doorbells rang without re-review after a FIX FIRST verdict | FIXED | this commit. `scripts/doorbell` refuses unless the latest rival verdict is PROCEED and the review is newer than HEAD. |
 | 30 | Post-mortem | Fable | missing sklearn/pandas and 8 macOS-path assertions in the suite | FIXED | this commit. scikit-learn 1.9.0 + pandas 3.0.5 installed `--user`; collection errors 47 -> 5, passing 1082 -> 1324. **The macOS-path half of this finding is REJECTED**: there is exactly one such path in the repo (`sync-mac.sh:14`) and it is an overridable `${MAC_REPO:-...}` default. The 16 hits came from grepping pytest OUTPUT, not source — my error, repeated by the post-mortem. |
 | 31 | Post-mortem | Fable | missing result artifacts — do NOT skip-mark, they may be real gaps | FIXED | this commit. Fable was right and it was worse than flagged: **9 evidence directories existed only on the Mac, untracked in git**. 24 files, verified byte-identical by sha256, now committed. |
-| 32 | Post-mortem | Fable | Gen116 attempt4 was shaped by Gen117, whose provenance is disclaimed | OPEN | needs Sol reissue against PR #16 |
+| 32 | Post-mortem | Fable | Gen116 attempt4 was shaped by Gen117, whose provenance is disclaimed | FIXED | Sol reissued Gen117 against PR #16 pinned to 1c36483, **ratifying attempt4**, declaring PR #17 and the old document void as provenance while allowing their findings to stand as review. |
 
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the
 reader-interference lineage. It imports `round3_adapters`; it is Round 3
