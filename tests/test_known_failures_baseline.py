@@ -12,6 +12,7 @@ a list that only ever grows is a place to hide things.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -39,10 +40,21 @@ def observed() -> set[str]:
          "--deselect", f"tests/{Path(__file__).name}",
          "--ignore", f"tests/{Path(__file__).name}"],
         cwd=ROOT, capture_output=True, text=True,
-        env={"PYTHONPATH": "src:vendor/membukkit/src", "PATH": "/usr/bin:/bin"},
+        # Inherit the real environment. A hardcoded PATH=/usr/bin:/bin is exactly
+        # the host-brittleness LEDGER #50 removed from the reader runner, and this
+        # guard reproduced it. Found by glm-5.3 at Gen120 r4.
+        env={**os.environ, "PYTHONPATH": "src:vendor/membukkit/src"},
         timeout=1800)
-    return {ln[len("FAILED "):].split(" - ")[0].strip()
-            for ln in r.stdout.splitlines() if ln.startswith("FAILED ")}
+    # BOTH classes. The first version read only FAILED lines, so the five
+    # collection errors were invisible to a guard whose docstring promised to
+    # catch "any unlisted failure" - a claim exceeding its mechanism, which is the
+    # disease this repository keeps diagnosing. Found by glm-5.3 at Gen120 r4.
+    out = set()
+    for ln in r.stdout.splitlines():
+        for prefix in ("FAILED ", "ERROR "):
+            if ln.startswith(prefix):
+                out.add(ln[len(prefix):].split(" - ")[0].strip())
+    return out
 
 
 def test_no_unlisted_failures(observed):

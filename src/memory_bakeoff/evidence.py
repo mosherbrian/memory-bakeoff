@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import time
 from pathlib import Path
 from typing import Any
@@ -82,7 +83,14 @@ def record(directory: Path, name: str, body: str) -> dict[str, Any]:
         "bytes": len(body.encode()),
         "written_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
     }
-    manifest_path.write_text(json.dumps(manifest, indent=1, sort_keys=True))
+    # Atomic. A crash midway through write_text leaves a truncated MANIFEST.json,
+    # which is a durability hole in the machinery guarding "the one file that can
+    # never be made again". Verification would fail loudly rather than silently,
+    # so it failed safe - but a temp file plus os.replace costs nothing. Found by
+    # glm-5.3 at Gen120 round 4.
+    tmp = manifest_path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(manifest, indent=1, sort_keys=True))
+    os.replace(tmp, manifest_path)
     return manifest
 
 

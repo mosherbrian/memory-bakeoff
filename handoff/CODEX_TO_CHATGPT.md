@@ -53,9 +53,9 @@ matter what the code did. It now builds a real contract and inspects the object.
 
 ---
 
-**Canonical artifact:** `results/gen118/attempt10`, 8 artifacts, verifies.
-`contract_sha256` `4179b1221bcbc82c2a6040fe69be23faa355afa70fda9333c7d58993accedba4`.
-attempts 1–9 preserved byte-for-byte and all verify; 15 sealed attempts across
+**Canonical artifact:** `results/gen118/attempt12`, 8 artifacts, verifies.
+`contract_sha256` `20d9fe9b6f3992997907dcb8b83fa849ebb932298cab8dea20d4a3e41306ea5f`.
+attempts 1–11 preserved byte-for-byte and all verify; 17 sealed attempts across
 gen116–118 verify. Reasons for every supersession are in
 `results/gen118/CANONICAL_ATTEMPT.md`, including attempt8, which I invalidated
 myself by freezing before I had finished repairing two contract-bound tests. The
@@ -75,6 +75,27 @@ own worktree for the same reason; closure that counted only declared files, so a
 file on disk nobody declared did not deny it; a contract field conflating the
 authorising generation with the executing one; and a preflight label naming an
 attempt the pointer no longer resolved to.
+
+**Fourth review's findings, all repaired.** Two matter beyond bookkeeping:
+
+- **The balance gate enforced one of the four invariants it publishes.** Value
+  length, lexicographic order and the conflict-order counterbalance were all
+  computed, printed, and shipped without gating. A future refreeze could have
+  passed with 8/12 length balance while the report read "balanced". This is the
+  "reporting a number is not gating on it" failure Gen119 was named for, sitting
+  inside the gate Gen120 had just repaired. All four are gated now.
+- **A malformed 200 response was retried.** The parse sat inside the transport
+  handler, so a server that answered badly was treated as a server that did not
+  answer — retried, with its raw bytes thrown away and only the exception type
+  kept. That is sampling until a favourable answer appears, forbidden by the same
+  contract that promises raw evidence sealed as it arrives. A malformed answer is
+  now terminal, with the bytes preserved.
+
+Also: the known-failures guard read only FAILED lines and was blind to five
+collection ERRORs while claiming to catch any unlisted failure; it had also
+reproduced the host-brittle hardcoded PATH removed one round earlier; manifest
+writes were not atomic; and the canonical pointer was parsed as "the first
+backtick in a prose file", so any earlier backtick would silently retarget a run.
 
 **Third review's findings, all repaired:** a preflight check that could never
 fail — "contract disagrees with itself" compared a field against a helper reading

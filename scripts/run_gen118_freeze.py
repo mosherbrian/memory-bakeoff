@@ -216,9 +216,25 @@ def main() -> None:
     # The Gen118 instruction required id ordering BALANCED across cores. The
     # first freeze reported 7/12 and shipped anyway, because reporting a number
     # is not gating on it. Sol caught that.
-    id_first = int(fx_audit["revision2_id_sorts_first_count"].split("/")[0])
-    id_unbalanced = not id_balance_ok(id_first, len(V6.CORES))
-    hard_fail = (id_unbalanced or fx_audit["reused_exposed_terms"] or fx_audit["reused_record_ids"]
+    # EVERY published balance invariant is gated, not just the one that was
+    # caught. The freeze computed value-length balance, lexicographic balance and
+    # the conflict-order counterbalance, PRINTED all three, and shipped on none of
+    # them - so a future refreeze could have passed with 8/12 length balance while
+    # the report said "balanced". That is the same "reporting a number is not
+    # gating on it" failure Gen119 was named for, surviving inside the gate Gen120
+    # had just repaired. Found by glm-5.3 at Gen120 round 4.
+    cores = len(V6.CORES)
+    balances = {
+        "id_sorts_first": int(fx_audit["revision2_id_sorts_first_count"].split("/")[0]),
+        "value_longer": int(fx_audit["revision2_value_longer_count"].split("/")[0]),
+        "value_lexicographically_larger":
+            int(fx_audit["revision2_value_lexicographically_larger_count"].split("/")[0]),
+    }
+    unbalanced = {k: v for k, v in balances.items() if not id_balance_ok(v, cores)}
+    id_first = balances["id_sorts_first"]
+    hard_fail = (unbalanced
+                 or not fx_audit["conflict_order_counterbalanced"]
+                 or fx_audit["reused_exposed_terms"] or fx_audit["reused_record_ids"]
                  or fx_audit["reused_prompt_hashes"]
                  or not fx_audit["verbatim_rule_in_every_prompt"]
                  or fx_audit["banned_progression_words_in_model_facing_text"]
@@ -228,7 +244,9 @@ def main() -> None:
                  or fx_audit["unique_case_ids"] != 60
                  or on_audit["unreachable_classes"])
     if hard_fail:
-        raise SystemExit(f"FAIL CLOSED: id_balance={fx_audit['revision2_id_sorts_first_count']} "
+        raise SystemExit(f"FAIL CLOSED: unbalanced={unbalanced or 'none'} "
+                         f"counterbalanced={fx_audit['conflict_order_counterbalanced']} "
+                         f"id_balance={fx_audit['revision2_id_sorts_first_count']} "
                          f"fixture or ontology audit failed: "
                          f"{fx_audit['reused_exposed_terms']} "
                          f"{fx_audit['banned_progression_words_in_model_facing_text']} "

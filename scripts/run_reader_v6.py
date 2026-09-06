@@ -53,8 +53,17 @@ def _canonical() -> "Path":
     source of truth; the manifest guards the contents.
     """
     marker = ROOT / "results/gen118/CANONICAL_ATTEMPT.md"
-    name = marker.read_text().split("`")[1]
-    return ROOT / "results/gen118" / name
+    # Match the declaration, not "whatever the first backtick holds". The old
+    # parse took the first backtick-quoted token in a prose document, so any
+    # edit introducing an earlier backtick silently retargeted the run or broke
+    # preflight - failing closed by accident rather than by design. Found by
+    # glm-5.3 at Gen120 round 4.
+    import re as _re
+    found = _re.search(r"\*\*`(attempt\d+)` is canonical\*\*", marker.read_text())
+    if not found:
+        raise SystemExit(f"REFUSING: {marker} carries no '**`attemptN` is canonical**' "
+                         "declaration; the canonical attempt is not resolvable")
+    return ROOT / "results/gen118" / found.group(1)
 
 
 CANONICAL = _canonical()
@@ -248,7 +257,9 @@ def freeze_contract(cases: list[dict], generation: int, source_commit: str,
         "request_bodies_sha256_all": sha("".join(bodies[k] for k in sorted(bodies))),
         "capture": {"raw_path": "reader_raw.jsonl",
                     "sealed_before_parse": True,
-                    "seal": "sha256 over the raw jsonl, written into the manifest"},
+                    "seal": "sha256 over the raw jsonl, written into the manifest",
+                    "written": "one batch write after all 60 calls return, not per call",
+                    "malformed_responses_are_terminal_never_retried": True},
         "runner_sha256": sha(Path(__file__).read_text()),
         "grader_sha256": sha((ROOT / "scripts/grade_gen118_v6.py").read_text()),
         "v6_module_sha256": sha((ROOT / "src/memory_bakeoff/reader_interference_v6.py").read_text()),
@@ -269,7 +280,20 @@ def call_once(case: dict) -> dict:
         try:
             with urllib.request.urlopen(req, timeout=TIMEOUT_S) as r:
                 raw = r.read().decode()
-                obj = json.loads(raw)
+        except Exception as exc:                       # TRANSPORT only - retryable
+            attempts.append({"attempt": attempt, "error": f"{type(exc).__name__}: {exc}",
+                             "seconds": round(time.time() - started, 3)})
+            continue
+        # Past this line the server ANSWERED. Anything wrong with what it said is
+        # a SCIENTIFIC outcome and may never be retried.
+        #
+        # The parse used to sit inside the transport `except`, so a malformed 200
+        # was classified as transport, retried, and its raw bytes thrown away -
+        # keeping only the exception type. That is sampling until a favourable
+        # answer appears, which the contract forbids in the same breath it
+        # promises "raw sealed as it arrives". Found by glm-5.3 at Gen120 round 4.
+        try:
+            obj = json.loads(raw)
             return {"case_id": case["case_id"], "core": case["core"],
                     "condition": case["condition"],
                     "request_sha256": sha(payload), "request_body": body,
@@ -280,9 +304,17 @@ def call_once(case: dict) -> dict:
                     "seconds": round(time.time() - started, 3),
                     "retry_history": attempts,
                     "terminal_disposition": "COMPLETED"}
-        except Exception as exc:                       # transport only
-            attempts.append({"attempt": attempt, "error": f"{type(exc).__name__}: {exc}",
-                             "seconds": round(time.time() - started, 3)})
+        except Exception as exc:
+            # The server answered and we could not read the answer. Terminal, with
+            # the raw bytes KEPT - they are the evidence of what actually arrived.
+            return {"case_id": case["case_id"], "core": case["core"],
+                    "condition": case["condition"], "request_sha256": sha(payload),
+                    "request_body": body, "http_status": 200, "raw_response": raw,
+                    "text": None, "served_model": None, "finish_reason": None,
+                    "parse_error": f"{type(exc).__name__}: {exc}",
+                    "seconds": round(time.time() - started, 3),
+                    "retry_history": attempts,
+                    "terminal_disposition": "TERMINAL_MALFORMED_RESPONSE"}
     return {"case_id": case["case_id"], "core": case["core"],
             "condition": case["condition"], "request_sha256": sha(payload),
             "request_body": body, "http_status": None, "raw_response": None,

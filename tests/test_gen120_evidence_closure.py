@@ -292,8 +292,16 @@ def test_the_id_balance_gate_is_exact_not_within_one():
     assert mod.id_balance_ok(7, 12) is False, "7/12 must be rejected - attempt1 died on it"
     assert mod.id_balance_ok(5, 12) is False, "5/12 must be rejected"
     assert mod.id_balance_ok(0, 12) is False
-    assert "id_unbalanced = not id_balance_ok(" in freeze.read_text(), (
+    src = freeze.read_text()
+    assert "id_balance_ok(v, cores)" in src, (
         "main must gate on the function this test exercises, not an inline copy")
+    # EVERY published balance is gated, not just the one that was caught. Three
+    # were computed, printed and shipped un-gated, so a refreeze could have passed
+    # with 8/12 length balance while reporting "balanced".
+    for invariant in ("id_sorts_first", "value_longer", "value_lexicographically_larger"):
+        assert invariant in src, f"{invariant} is not gated"
+    assert 'not fx_audit["conflict_order_counterbalanced"]' in src, (
+        "the conflict-order counterbalance is computed but not gated")
 
 
 def test_the_sealed_contract_hash_actually_recomputes():

@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt10` is canonical**, per the third Generation 120 rival review.
+**`attempt12` is canonical**, per the fourth Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -127,7 +127,7 @@
   `results/gen116` - pinning in place the very vestige that finding had removed.
   A test that asserts the defect keeps the defect. Contract
   `85a5e8aa839bf6f0dcc23c0427379f8d5a89de69fa2f083c0d5bf3c72cd2861d`.
-- `attempt10` - **canonical.** Science identical a fifth time. Third review:
+- `attempt10` - superseded. Science identical a fifth time. Third review:
   1. **a check that could never fail, in preflight.** "contract disagrees with
      itself" compared `contract["contract_sha256"]` against a helper that read the
      same field from the same file, while its comment claimed it verified a
@@ -144,6 +144,37 @@
      proving only that the test agreed with itself. The predicate is extracted as
      `id_balance_ok` and the control now calls the function `main` gates on.
   Contract `4179b1221bcbc82c2a6040fe69be23faa355afa70fda9333c7d58993accedba4`.
+- `attempt11` - superseded immediately, and by the SAME sequencing error that
+  produced attempt8: I ran the freeze after the first of six repairs instead of
+  after all of them. Twice in one generation. Preserved because evidence is
+  append-only.
+- `attempt12` - **canonical.** Science identical a sixth time. Fourth review:
+  1. **the balance gate enforced ONE of the four invariants it publishes.**
+     Value-length balance, lexicographic balance and the conflict-order
+     counterbalance were computed, printed and shipped un-gated, so a future
+     refreeze could have passed with 8/12 length balance while the report said
+     "balanced". This is the "reporting a number is not gating on it" failure
+     Gen119 was named for, surviving inside the gate Gen120 had just repaired.
+     All four are now gated;
+  2. **a malformed 200 response was treated as a transport failure and RETRIED**,
+     with its raw bytes discarded and only the exception type kept. The server
+     answering badly is a scientific outcome; retrying it is sampling until a
+     favourable answer appears, which the contract forbids in the same breath it
+     promises raw evidence sealed as it arrives. Parsing now sits outside the
+     transport handler; a malformed answer is `TERMINAL_MALFORMED_RESPONSE` with
+     the raw bytes kept;
+  3. **the known-failures guard was blind to ERROR-class outcomes.** It parsed
+     only `FAILED` lines, so five collection errors were invisible to a guard
+     whose docstring promised to catch any unlisted failure - a stated claim
+     exceeding its mechanism. It now reads both classes and the errors are pinned;
+  4. **that guard also reproduced the hardcoded `PATH=/usr/bin:/bin`** that the
+     previous round removed from the runner as host-brittle;
+  5. **manifest writes were not atomic**, a durability hole in the machinery
+     guarding the one artifact that can never be regenerated. Now temp + replace;
+  6. **the canonical pointer was parsed as "the first backtick in a prose file"**,
+     so any earlier backtick would silently retarget the run. It now matches the
+     declaration itself and refuses when absent.
+  Contract `20d9fe9b6f3992997907dcb8b83fa849ebb932298cab8dea20d4a3e41306ea5f`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

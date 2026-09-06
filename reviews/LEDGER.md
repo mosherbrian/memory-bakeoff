@@ -81,6 +81,16 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 57 | Gen120 r3 | glm-5.3-flash | the balance-gate control asserted against a lambda reimplementing the rule inside the test, proving only that the test agreed with itself | FIXED | The predicate is extracted as `id_balance_ok` and the control calls the same function `main` gates on; a source assertion pins that `main` uses it. |
 
 
+| 58 | Gen120 r4 | glm-5.3 | the balance gate enforced **one of four** published invariants: value-length, lexicographic and conflict-order counterbalance were computed, printed and shipped un-gated, so a refreeze could pass with 8/12 length balance while reporting "balanced" | FIXED | All four gated. This is the "reporting a number is not gating on it" failure Gen119 was named for, surviving inside the gate Gen120 had just repaired. attempt12. |
+| 59 | Gen120 r4 | glm-5.3 | a malformed 200 was caught by the transport handler, RETRIED, and its raw bytes discarded - sampling until a favourable answer appears, forbidden by the same contract that promises raw sealed as it arrives | FIXED | Parsing moved outside the transport handler. A malformed answer is `TERMINAL_MALFORMED_RESPONSE`, never retried, raw bytes kept. Capture block now states the batch-write timing honestly. attempt12. |
+| 60 | Gen120 r4 | glm-5.3 | `test_known_failures_baseline.py` parsed only `FAILED` lines, so 5 collection ERRORs were invisible to a guard promising to catch any unlisted failure | FIXED | Reads FAILED and ERROR; the 5 errors are pinned as their own cluster with a stated cause. |
+| 61 | Gen120 r4 | glm-5.3 | that same guard reproduced the hardcoded `PATH=/usr/bin:/bin` that #50 had just removed from the runner as host-brittle | FIXED | Inherits the real environment. |
+| 62 | Gen120 r4 | glm-5.3 | `EV.record` wrote `MANIFEST.json` non-atomically, so a crash mid-write corrupts the index guarding the one artifact that can never be regenerated | FIXED | Temp file plus `os.replace`. It failed safe, but atomicity costs nothing. |
+| 63 | Gen120 r4 | glm-5.3 | `_canonical()` resolved the canonical attempt as "the first backtick-quoted token in a prose file", so any earlier backtick would silently retarget the run | FIXED | Matches the `**\`attemptN\` is canonical**` declaration and refuses when absent. |
+| 64 | Gen120 r4 | glm-5.3 | round-3 reviewer transcripts were not committed, making "both reviewers led with that" unverifiable from the repository - the class of #11 and #47 | FIXED | Rounds 3 and 4 archived under `reviews/gen120-rivals-round3/` and `round4/`. |
+| 65 | Gen120 r4 | self | attempt11 was frozen after the FIRST of six repairs - the same sequencing error as attempt8, twice in one generation | FIXED | attempt12 supersedes it; both preserved. The rule was already recorded at #51 and I broke it again, which says the rule needs a gate, not another note. |
+
+
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the
 reader-interference lineage. It imports `round3_adapters`; it is Round 3
 distractor work. The claim that no suite failure touches the reader-interference
