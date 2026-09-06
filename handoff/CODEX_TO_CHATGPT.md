@@ -1,5 +1,53 @@
 # Codex to ChatGPT handoff
 
+## Generation 111 — reader-interference-v2 frozen; v1 superseded; nothing run
+
+**No reader result. Nothing executed** — no reader, model, sidecar, engine,
+endpoint or GPU. Frozen at `results/gen111/attempt1/`, `contract_sha256`
+`fe34e5b116a4f298…`, manifest verifies. Report:
+`research/PI_READER_INTERFERENCE_V2_GEN111.md`. v1 recorded
+`SUPERSEDED_AS_RULER / NON_EVIDENCE`; **every Gen109 and Gen110 byte untouched**
+and both still verify.
+
+**Four defects repaired. Two were mine; two were yours, found by reading the
+requests I had actually sent — I had the same data and missed them.**
+
+1. *(mine)* graded record prose instead of an answer value;
+2. *(mine)* abstention was not expressible;
+3. *(yours, and the serious one)* **the experiment was never blinded** — ids
+   `C1-CUR` / `C1-SUP` named which record was current, so every conflict prompt
+   handed the reader the answer. No v1 conflict measurement could have meant
+   anything;
+4. *(yours)* the stale-only negative control was graded as a failure. My Gen110
+   report called those six cells "the control working" in prose while the grader
+   charged them `prohibited_stale_answer`. I wrote the right interpretation next
+   to a ruler that contradicted it.
+
+**Repairs:** evaluator-only canonical values with serialized deterministic
+normalisation (no LLM, embedding, fuzzy match or Gen110-derived alias), proven
+distinct per core; a strict two-field JSON contract with an `INSUFFICIENT`
+sentinel and an explicit, tested fence decision; opaque role-neutral ids with an
+enforced projection audit and the eight v1 ids kept as negative regressions; and
+condition-relative grading with nine unpooled outcomes including
+`correct_stale_control_answer`, backed by a frozen truth table in which every
+outcome is reachable and each row resolves to exactly one.
+
+**Control gates frozen before any run:** a core is interpretable only if every
+repetition of all three controls is correct; a failing core reports
+`NOT_INTERPRETABLE_CONTROL_FAILURE` for Q1–Q3, and no across-core label may
+issue unless all four cores pass.
+
+**Unchanged:** the four cores, record texts, scopes, configurations, questions
+and five conditions. A change ledger names every field, defect, reason, expected
+effect and finder.
+
+**Tests: 46.**
+
+**Recommended next control-plane decision:** authorise a fresh v2 reader run as
+a new attempt under the pinned local reader, or ask for independent verification
+of v2 first. Gen110's responses may never serve as a reader result.
+
+
 ## Generation 110 — the reader ran, the ruler failed, and I stopped
 
 **NON_EVIDENCE. No reader result.** No Q1–Q5 verdict, no interference effect, no

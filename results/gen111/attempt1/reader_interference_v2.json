@@ -1,0 +1,1612 @@
+{
+ "accept_json_fence": true,
+ "across_core_verdicts": [
+  "REPLICATED_ACROSS_CORES",
+  "PARTIAL_REPLICATION",
+  "FIXTURE_SPECIFIC",
+  "NO_EFFECT",
+  "NOT_INTERPRETABLE_CONTROL_FAILURE"
+ ],
+ "canonical_values": {
+  "branch:vega": {
+   "casefold": true,
+   "current": "release/vega-4.x",
+   "stale": "release/vega-3.x"
+  },
+  "budget:solstice": {
+   "casefold": false,
+   "current": "512 GiB",
+   "stale": "256 GiB"
+  },
+  "oncall:kestrel": {
+   "casefold": true,
+   "current": "platform rota",
+   "stale": "network rota"
+  },
+  "throughput:atlas": {
+   "casefold": false,
+   "current": "41 t/s",
+   "stale": "27 t/s"
+  }
+ },
+ "change_ledger": [
+  {
+   "change": "ADDED",
+   "defect": "graded record prose instead of an answer value",
+   "expected_effect": "correct short and full-sentence answers now classify identically when citations match",
+   "field": "canonical answer values",
+   "found_by": "executor, from its own Gen110 output",
+   "reason": "a short correct answer can never contain the full record sentence, so correct answers fell through to citation_mismatch"
+  },
+  {
+   "change": "REPLACED",
+   "defect": "abstention was not expressible",
+   "expected_effect": "INSUFFICIENT is now contract-legal and unambiguous",
+   "field": "response schema",
+   "found_by": "executor, from its own Gen110 output",
+   "reason": "the contract demanded an ANSWER: line; a correct refusal is prose"
+  },
+  {
+   "change": "REPLACED",
+   "defect": "role leakage - ids C1-CUR and C1-SUP disclosed which record was current in every conflict prompt",
+   "expected_effect": "the reader can no longer read the answer off an id",
+   "field": "model-facing record ids",
+   "found_by": "control plane, by reading the actual Gen110 requests",
+   "reason": "the experiment was not blinded, so no conflict measurement could have meant anything"
+  },
+  {
+   "change": "MADE CONDITION-RELATIVE",
+   "defect": "the stale-only negative control was graded as a failure",
+   "expected_effect": "correct_stale_control_answer exists and the control can now pass",
+   "field": "grading",
+   "found_by": "control plane",
+   "reason": "answering with the stale value there is what makes the control succeed; v1 charged prohibited_stale_answer"
+  },
+  {
+   "change": "UNCHANGED",
+   "defect": null,
+   "expected_effect": "results remain comparable in kind to the v1 design",
+   "field": "semantic cores, record texts, scopes, configurations, questions, five conditions",
+   "found_by": null,
+   "reason": "v2 repairs the ruler, not the subject"
+  }
+ ],
+ "conditions": [
+  "CLEAN_CURRENT",
+  "CONFLICT_STALE_FIRST",
+  "CONFLICT_CURRENT_FIRST",
+  "CLEAN_STALE_NEGATIVE_CONTROL",
+  "INSUFFICIENT_CONTROL"
+ ],
+ "contract_sha256": "fe34e5b116a4f298e6f5dabe6b1acd4cc258ad306f95a000256d95405f1cec31",
+ "contract_version": "reader-interference-v2",
+ "control_gate": {
+  "expected": {
+   "CLEAN_CURRENT": "correct_current_answer",
+   "CLEAN_STALE_NEGATIVE_CONTROL": "correct_stale_control_answer",
+   "INSUFFICIENT_CONTROL": "correct_insufficiency"
+  },
+  "never": "control failure is never excluded, averaged away, or used to change the rule",
+  "on_failure": "Q1-Q3 for that core report NOT_INTERPRETABLE_CONTROL_FAILURE; Q4 issues no across-core label unless all four cores pass",
+  "rule": "conservative: EVERY planned repetition of all three controls must receive its corresponding correct outcome for that core"
+ },
+ "fixture": {
+  "cases": [
+   {
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "REC-677608760E"
+    ],
+    "core": "branch:vega",
+    "current_opaque": "REC-677608760E",
+    "id": "branch:vega|CLEAN_CURRENT",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-CUR",
+      "opaque_id": "REC-677608760E",
+      "role": "current",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-4.x."
+     }
+    ],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "REC-4FAADF1FD6",
+     "REC-677608760E"
+    ],
+    "core": "branch:vega",
+    "current_opaque": "REC-677608760E",
+    "id": "branch:vega|CONFLICT_STALE_FIRST",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-SUP",
+      "opaque_id": "REC-4FAADF1FD6",
+      "role": "superseded",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-3.x."
+     },
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-CUR",
+      "opaque_id": "REC-677608760E",
+      "role": "current",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-4.x."
+     }
+    ],
+    "stale_opaque": "REC-4FAADF1FD6"
+   },
+   {
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "REC-677608760E",
+     "REC-4FAADF1FD6"
+    ],
+    "core": "branch:vega",
+    "current_opaque": "REC-677608760E",
+    "id": "branch:vega|CONFLICT_CURRENT_FIRST",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-SUP",
+      "opaque_id": "REC-4FAADF1FD6",
+      "role": "superseded",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-3.x."
+     },
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-CUR",
+      "opaque_id": "REC-677608760E",
+      "role": "current",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-4.x."
+     }
+    ],
+    "stale_opaque": "REC-4FAADF1FD6"
+   },
+   {
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "REC-4FAADF1FD6"
+    ],
+    "core": "branch:vega",
+    "current_opaque": null,
+    "id": "branch:vega|CLEAN_STALE_NEGATIVE_CONTROL",
+    "question": "Vega release branch",
+    "records": [
+     {
+      "configuration": "V1",
+      "core": "branch:vega",
+      "id": "C1-SUP",
+      "opaque_id": "REC-4FAADF1FD6",
+      "role": "superseded",
+      "scope": "repo:vega",
+      "text": "Vega ships from branch release/vega-3.x."
+     }
+    ],
+    "stale_opaque": "REC-4FAADF1FD6"
+   },
+   {
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "branch:vega",
+    "current_opaque": null,
+    "id": "branch:vega|INSUFFICIENT_CONTROL",
+    "question": "Vega release branch",
+    "records": [],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "REC-70D1563EAE"
+    ],
+    "core": "budget:solstice",
+    "current_opaque": "REC-70D1563EAE",
+    "id": "budget:solstice|CLEAN_CURRENT",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-CUR",
+      "opaque_id": "REC-70D1563EAE",
+      "role": "current",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 512 GiB after the resize."
+     }
+    ],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "REC-7208A9FF12",
+     "REC-70D1563EAE"
+    ],
+    "core": "budget:solstice",
+    "current_opaque": "REC-70D1563EAE",
+    "id": "budget:solstice|CONFLICT_STALE_FIRST",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-SUP",
+      "opaque_id": "REC-7208A9FF12",
+      "role": "superseded",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 256 GiB."
+     },
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-CUR",
+      "opaque_id": "REC-70D1563EAE",
+      "role": "current",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 512 GiB after the resize."
+     }
+    ],
+    "stale_opaque": "REC-7208A9FF12"
+   },
+   {
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "REC-70D1563EAE",
+     "REC-7208A9FF12"
+    ],
+    "core": "budget:solstice",
+    "current_opaque": "REC-70D1563EAE",
+    "id": "budget:solstice|CONFLICT_CURRENT_FIRST",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-SUP",
+      "opaque_id": "REC-7208A9FF12",
+      "role": "superseded",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 256 GiB."
+     },
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-CUR",
+      "opaque_id": "REC-70D1563EAE",
+      "role": "current",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 512 GiB after the resize."
+     }
+    ],
+    "stale_opaque": "REC-7208A9FF12"
+   },
+   {
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "REC-7208A9FF12"
+    ],
+    "core": "budget:solstice",
+    "current_opaque": null,
+    "id": "budget:solstice|CLEAN_STALE_NEGATIVE_CONTROL",
+    "question": "Solstice provisioned capacity",
+    "records": [
+     {
+      "configuration": "S1",
+      "core": "budget:solstice",
+      "id": "C3-SUP",
+      "opaque_id": "REC-7208A9FF12",
+      "role": "superseded",
+      "scope": "cluster:solstice",
+      "text": "Solstice is provisioned with 256 GiB."
+     }
+    ],
+    "stale_opaque": "REC-7208A9FF12"
+   },
+   {
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "budget:solstice",
+    "current_opaque": null,
+    "id": "budget:solstice|INSUFFICIENT_CONTROL",
+    "question": "Solstice provisioned capacity",
+    "records": [],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "REC-D8F98A4FBB"
+    ],
+    "core": "oncall:kestrel",
+    "current_opaque": "REC-D8F98A4FBB",
+    "id": "oncall:kestrel|CLEAN_CURRENT",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-CUR",
+      "opaque_id": "REC-D8F98A4FBB",
+      "role": "current",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the platform rota."
+     }
+    ],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "REC-481EF95CE6",
+     "REC-D8F98A4FBB"
+    ],
+    "core": "oncall:kestrel",
+    "current_opaque": "REC-D8F98A4FBB",
+    "id": "oncall:kestrel|CONFLICT_STALE_FIRST",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-SUP",
+      "opaque_id": "REC-481EF95CE6",
+      "role": "superseded",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the network rota."
+     },
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-CUR",
+      "opaque_id": "REC-D8F98A4FBB",
+      "role": "current",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the platform rota."
+     }
+    ],
+    "stale_opaque": "REC-481EF95CE6"
+   },
+   {
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "REC-D8F98A4FBB",
+     "REC-481EF95CE6"
+    ],
+    "core": "oncall:kestrel",
+    "current_opaque": "REC-D8F98A4FBB",
+    "id": "oncall:kestrel|CONFLICT_CURRENT_FIRST",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-SUP",
+      "opaque_id": "REC-481EF95CE6",
+      "role": "superseded",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the network rota."
+     },
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-CUR",
+      "opaque_id": "REC-D8F98A4FBB",
+      "role": "current",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the platform rota."
+     }
+    ],
+    "stale_opaque": "REC-481EF95CE6"
+   },
+   {
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "REC-481EF95CE6"
+    ],
+    "core": "oncall:kestrel",
+    "current_opaque": null,
+    "id": "oncall:kestrel|CLEAN_STALE_NEGATIVE_CONTROL",
+    "question": "Kestrel escalation routing",
+    "records": [
+     {
+      "configuration": "K1",
+      "core": "oncall:kestrel",
+      "id": "C2-SUP",
+      "opaque_id": "REC-481EF95CE6",
+      "role": "superseded",
+      "scope": "service:kestrel",
+      "text": "Kestrel escalations route to the network rota."
+     }
+    ],
+    "stale_opaque": "REC-481EF95CE6"
+   },
+   {
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "oncall:kestrel",
+    "current_opaque": null,
+    "id": "oncall:kestrel|INSUFFICIENT_CONTROL",
+    "question": "Kestrel escalation routing",
+    "records": [],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CLEAN_CURRENT",
+    "context_order": [
+     "REC-6E236CCB3A"
+    ],
+    "core": "throughput:atlas",
+    "current_opaque": "REC-6E236CCB3A",
+    "id": "throughput:atlas|CLEAN_CURRENT",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-CUR",
+      "opaque_id": "REC-6E236CCB3A",
+      "role": "current",
+      "scope": "server:atlas",
+      "text": "Atlas measured 41 t/s after the cache fix."
+     }
+    ],
+    "stale_opaque": null
+   },
+   {
+    "condition": "CONFLICT_STALE_FIRST",
+    "context_order": [
+     "REC-B211D4D705",
+     "REC-6E236CCB3A"
+    ],
+    "core": "throughput:atlas",
+    "current_opaque": "REC-6E236CCB3A",
+    "id": "throughput:atlas|CONFLICT_STALE_FIRST",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-SUP",
+      "opaque_id": "REC-B211D4D705",
+      "role": "superseded",
+      "scope": "server:atlas",
+      "text": "Atlas measured 27 t/s."
+     },
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-CUR",
+      "opaque_id": "REC-6E236CCB3A",
+      "role": "current",
+      "scope": "server:atlas",
+      "text": "Atlas measured 41 t/s after the cache fix."
+     }
+    ],
+    "stale_opaque": "REC-B211D4D705"
+   },
+   {
+    "condition": "CONFLICT_CURRENT_FIRST",
+    "context_order": [
+     "REC-6E236CCB3A",
+     "REC-B211D4D705"
+    ],
+    "core": "throughput:atlas",
+    "current_opaque": "REC-6E236CCB3A",
+    "id": "throughput:atlas|CONFLICT_CURRENT_FIRST",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-SUP",
+      "opaque_id": "REC-B211D4D705",
+      "role": "superseded",
+      "scope": "server:atlas",
+      "text": "Atlas measured 27 t/s."
+     },
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-CUR",
+      "opaque_id": "REC-6E236CCB3A",
+      "role": "current",
+      "scope": "server:atlas",
+      "text": "Atlas measured 41 t/s after the cache fix."
+     }
+    ],
+    "stale_opaque": "REC-B211D4D705"
+   },
+   {
+    "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+    "context_order": [
+     "REC-B211D4D705"
+    ],
+    "core": "throughput:atlas",
+    "current_opaque": null,
+    "id": "throughput:atlas|CLEAN_STALE_NEGATIVE_CONTROL",
+    "question": "Atlas measured throughput",
+    "records": [
+     {
+      "configuration": "A1",
+      "core": "throughput:atlas",
+      "id": "C0-SUP",
+      "opaque_id": "REC-B211D4D705",
+      "role": "superseded",
+      "scope": "server:atlas",
+      "text": "Atlas measured 27 t/s."
+     }
+    ],
+    "stale_opaque": "REC-B211D4D705"
+   },
+   {
+    "condition": "INSUFFICIENT_CONTROL",
+    "context_order": [],
+    "core": "throughput:atlas",
+    "current_opaque": null,
+    "id": "throughput:atlas|INSUFFICIENT_CONTROL",
+    "question": "Atlas measured throughput",
+    "records": [],
+    "stale_opaque": null
+   }
+  ],
+  "contract_version": "reader-interference-v2",
+  "cores": [
+   "branch:vega",
+   "budget:solstice",
+   "oncall:kestrel",
+   "throughput:atlas"
+  ],
+  "source_fixture": "interference-v3"
+ },
+ "future_run": {
+  "gen111_runs_nothing": true,
+  "must": [
+   "consume this contract and fixture unmodified",
+   "verify contract_sha256 and the manifest digest separately",
+   "write only under immutable-evidence-v1 attempt paths",
+   "apply the control gate before reporting any Q1-Q4 result"
+  ],
+  "must_not": [
+   "reuse Gen110 responses as a reader result",
+   "derive aliases or tolerances from Gen110 wording"
+  ]
+ },
+ "instruction": "Answer the question using only the records provided.\nReply with a single JSON object and nothing else: {\"answer\": \"<your answer>\", \"citations\": [\"<record id>\", ...]}\nIf the records do not answer the question, reply exactly {\"answer\": \"INSUFFICIENT\", \"citations\": []}.",
+ "normalization": {
+  "forbidden": [
+   "LLM",
+   "embedding",
+   "fuzzy match",
+   "semantic similarity",
+   "substring of the full record sentence",
+   "alias list learned from Gen110 responses"
+  ],
+  "steps": [
+   "unicode NFKC",
+   "strip leading and trailing whitespace",
+   "collapse internal whitespace runs to one space",
+   "case-fold ONLY where the value definition permits it"
+  ]
+ },
+ "outcomes": [
+  "correct_current_answer",
+  "prohibited_stale_answer",
+  "mixed_contradictory_answer",
+  "correct_stale_control_answer",
+  "correct_insufficiency",
+  "incorrect_abstention",
+  "citation_mismatch",
+  "unsupported_answer_value",
+  "unparsed_response"
+ ],
+ "parser_fixtures": {
+  "invalid": [
+   {
+    "name": "malformed json",
+    "text": "{\"answer\": \"41 t/s\", "
+   },
+   {
+    "name": "missing field",
+    "text": "{\"answer\": \"41 t/s\"}"
+   },
+   {
+    "name": "extra field",
+    "text": "{\"answer\": \"41 t/s\", \"citations\": [], \"decision\": \"CURRENT\"}"
+   },
+   {
+    "name": "wrong type",
+    "text": "{\"answer\": 41, \"citations\": [\"REC-AAAAAAAAAA\"]}"
+   },
+   {
+    "name": "citations not a list",
+    "text": "{\"answer\": \"41 t/s\", \"citations\": \"REC-AAAAAAAAAA\"}"
+   },
+   {
+    "name": "multiple objects",
+    "text": "{\"answer\": \"41 t/s\", \"citations\": []} {\"answer\": \"27 t/s\", \"citations\": []}"
+   },
+   {
+    "name": "not an object",
+    "text": "[\"41 t/s\"]"
+   }
+  ],
+  "valid": [
+   {
+    "name": "current value, short",
+    "text": "{\"answer\": \"41 t/s\", \"citations\": [\"REC-AAAAAAAAAA\"]}"
+   },
+   {
+    "name": "current value in a full sentence",
+    "text": "{\"answer\": \"The throughput is 41 t/s.\", \"citations\": [\"REC-AAAAAAAAAA\"]}"
+   },
+   {
+    "name": "stale value, short",
+    "text": "{\"answer\": \"27 t/s\", \"citations\": [\"REC-BBBBBBBBBB\"]}"
+   },
+   {
+    "name": "both values",
+    "text": "{\"answer\": \"41 t/s, previously 27 t/s\", \"citations\": [\"REC-AAAAAAAAAA\"]}"
+   },
+   {
+    "name": "insufficient",
+    "text": "{\"answer\": \"INSUFFICIENT\", \"citations\": []}"
+   },
+   {
+    "name": "accepted json fence",
+    "text": "```json\n{\"answer\": \"41 t/s\", \"citations\": [\"REC-AAAAAAAAAA\"]}\n```"
+   }
+  ]
+ },
+ "questions": [
+  {
+   "id": "Q1",
+   "question": "Does adding the stale record increase prohibited-stale or mixed answers in either conflict condition relative to CLEAN_CURRENT?",
+   "rule": "effect if (prohibited_stale_answer + mixed_contradictory_answer) in either conflict condition exceeds CLEAN_CURRENT; else no effect",
+   "scope": "per interpretable core"
+  },
+  {
+   "id": "Q2",
+   "question": "With identical blinded records, does swapping only presentation order change the outcome distribution?",
+   "rule": "order effect if the two conflict outcome distributions differ in any cell; else none",
+   "scope": "per interpretable core"
+  },
+  {
+   "id": "Q3",
+   "question": "Does every conflict cell select current truth with a matching current citation?",
+   "rule": "prefers-current only if every conflict cell is correct_current_answer; any other outcome refutes it",
+   "scope": "per interpretable core"
+  },
+  {
+   "id": "Q4",
+   "question": "Is the Q1 effect replicated across cores?",
+   "rule": "REPLICATED_ACROSS_CORES if the Q1 effect holds in 4 of 4; PARTIAL_REPLICATION in 2 or 3; FIXTURE_SPECIFIC in exactly 1; NO_EFFECT in 0. If any core fails its control gate, report NOT_INTERPRETABLE_CONTROL_FAILURE and name the failed cores. Cores are never averaged",
+   "scope": "all four cores interpretable, else NOT_INTERPRETABLE"
+  },
+  {
+   "id": "Q5",
+   "question": "Does the strict parser accept every contract-valid synthetic form and reject every malformed one?",
+   "rule": "pass only if all valid fixtures PARSE and all invalid fixtures return an UNPARSED reason",
+   "scope": "parser"
+  },
+  {
+   "id": "Q6",
+   "question": "Do model-facing prompts leak no truth label, and do paired conflict prompts differ only in record order?",
+   "rule": "pass only if the projection audit finds no forbidden marker and the two conflict prompts are identical up to record order",
+   "scope": "prompt projection"
+  }
+ ],
+ "reader_question_state": "OPEN - Gen111 is NOT a reader result",
+ "status": "FROZEN_UNRUN",
+ "supersedes": {
+  "artifacts_unchanged": true,
+  "contract": "reader-interference-v1",
+  "gen110_attempt": "NON_EVIDENCE, preserved byte-for-byte",
+  "status": "SUPERSEDED_AS_RULER / NON_EVIDENCE"
+ },
+ "truth_table": [
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "unsupported_answer_value",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unsupported_answer_value",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "correct_stale_control_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "correct_stale_control_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "branch:vega",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "branch:vega",
+   "outcome": "correct_insufficiency",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "unsupported_answer_value",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unsupported_answer_value",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "correct_stale_control_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "correct_stale_control_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "budget:solstice",
+   "outcome": "correct_insufficiency",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "unsupported_answer_value",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unsupported_answer_value",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "correct_stale_control_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "correct_stale_control_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "oncall:kestrel",
+   "outcome": "correct_insufficiency",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "unsupported_answer_value",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_CURRENT",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_STALE_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "citation_mismatch",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "prohibited_stale_answer",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unsupported_answer_value",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "correct_stale_control_answer",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "correct_stale_control_answer",
+   "probe": "BOTH"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unsupported_answer_value",
+   "probe": "NEITHER"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "incorrect_abstention",
+   "probe": "INSUFFICIENT/empty"
+  },
+  {
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "INSUFFICIENT/cited"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "CURRENT/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "STALE/matching"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "unparsed_response",
+   "probe": "STALE/mismatched"
+  },
+  {
+   "condition": "INSUFFICIENT_CONTROL",
+   "core": "throughput:atlas",
+   "outcome": "correct_insufficiency",
+   "probe": "INSUFFICIENT/empty"
+  }
+ ]
+}

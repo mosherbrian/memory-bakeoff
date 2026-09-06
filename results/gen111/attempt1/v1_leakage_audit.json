@@ -1,0 +1,19 @@
+{
+ "defect": "model-facing record ids disclosed the answer",
+ "detail": "v1 presented ids C1-CUR and C1-SUP. The suffixes name which record is current and which is superseded, so every conflict prompt handed the reader the answer. No v1 conflict measurement could have meant anything.",
+ "example_repaired_prompt": "Answer the question using only the records provided.\nReply with a single JSON object and nothing else: {\"answer\": \"<your answer>\", \"citations\": [\"<record id>\", ...]}\nIf the records do not answer the question, reply exactly {\"answer\": \"INSUFFICIENT\", \"citations\": []}.\n\nRECORDS:\n[REC-4FAADF1FD6] Vega ships from branch release/vega-3.x.\n[REC-677608760E] Vega ships from branch release/vega-4.x.\n\nQUESTION: Vega release branch",
+ "found_by": "control plane, reading the exact Gen110 requests",
+ "gen110_artifacts_modified": false,
+ "negative_regression_examples": [
+  "C0-CUR",
+  "C0-SUP",
+  "C1-CUR",
+  "C1-SUP",
+  "C2-CUR",
+  "C2-SUP",
+  "C3-CUR",
+  "C3-SUP"
+ ],
+ "note": "These strings are used ONLY as things a prompt must never contain. No Gen110 answer is used as calibration.",
+ "repair": "opaque role-neutral ids, evaluator-only mapping, and an enforced prompt-projection audit"
+}
