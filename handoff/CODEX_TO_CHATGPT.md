@@ -1,5 +1,60 @@
 # Codex to ChatGPT handoff
 
+## Generation 106 — supersession closed; artefact paths made immutable
+
+Canonical account: `ROUND3_SUPERSESSION_RESULT.md`, which **supersedes**
+`research/PI_SUPERSESSION_ABLATION_GEN102.md` (kept, not deleted, and marked).
+No engine runs.
+
+Per mechanism kind, never summed:
+
+- **perseus `EXPLICIT_LINEAGE`** — stale co-return removed in **48/48** cells,
+  current record lost in **0**, no mechanisms at all. The only clean arm in
+  Round 3. Rank rises in 41/48, which is the stale record leaving the window.
+- **hindsight `STATE_TRANSITION`** — removed in **0/48**, and **not one of the
+  48 paired cells differs between arms**: same mechanisms, same
+  `target_present`, same ranks. `update_memory(state="invalidated")` is accepted
+  and recall is unchanged. Same shape as Gen70's `query_timestamp`.
+- **agentmemory `PRODUCT_DECIDES`** — current record kept in **48/48**; stale
+  removed in **12/48**, all in `oncall:kestrel`, the one core clearing the 0.7
+  Jaccard threshold. The mechanism is sound and **its reach is lexical**.
+- **mem0 `PRODUCT_DECIDES`** — `NOT_AVAILABLE_IN_PINNED_PROFILE`, measured.
+
+New contract `immutable-evidence-v1`: a run writes to
+`results/gen<N>/attempt<M>`, a write to an existing artefact **raises**, and
+every artefact is sha256'd into a `MANIFEST.json`. Six runners routed through
+it. Historical artefacts stay lost and no manifest is back-dated.
+
+## Generation 105 — Gen102's perseus and hindsight conclusions re-verified
+
+Both survive correct ingest order (numbers above). **The Gen104 defect had five
+sites, not one** — the main runner, three hindsight side-scripts and the Gen100
+audit had each independently written `set(visible_ids(...))` plus a fixture
+loop. Four read v1/v2 where the orders coincide; `gen102_hindsight_arms.py`
+reads v3, so **hindsight's Gen102 arms ran the wrong order too**. Fixed once in
+`interference.ordered_observations`, with an AST test against recurrence.
+
+**Damage I caused:** re-running overwrote the pre-correction Gen102 artefacts
+(fixed paths, untracked `results/`). Aggregates reproduce exactly, but **no
+cell-level diff against the old runs is recoverable**. That is what Gen106's
+evidence contract exists to prevent.
+
+## Generation 104 — Gen102's agentmemory result was a harness defect
+
+`observations_for` took `set(VISIBLE_IDS(...))` and iterated
+`fixture.observations`, discarding the resolver's sequence. **Gen102 ran the v2
+order while reporting itself as v3.** Blast radius measured, not assumed: v1
+0/4 cases changed, v2 0/16, **v3 16/16** — so Gen97 and Gen99 are untouched.
+
+**Retracted:** Gen102 reported the current record absent in kestrel at every
+load; it is present in 48/48. Also retracted: my Gen103 handoff named the
+provenance mapping as the likely area. It was sound; the trace found the real
+cause instead.
+
+Two invariants added, both raising: `assert_ingest_order_preserved` and
+`assert_hits_map_to_live_identity`.
+
+
 ## Generation 103 — agentmemory localised to write-time mutation; Gen102's result was ours
 
 Report: `research/PI_AGENTMEMORY_LOCALIZATION_GEN103.md`. AgentMemory only, no
