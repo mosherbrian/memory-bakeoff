@@ -9,6 +9,8 @@ Round 1 is closed. Its authoritative narrative is
 [`research/ROUND1_FINAL_READOUT.md`](research/ROUND1_FINAL_READOUT.md); prefer it
 over any older score text elsewhere in this repository.
 
+**Gen114 MEASURED the reader question — the first real result in this line.** All four cores passed their controls 9/9. Given only the current record the reader is correct 12/12; add the superseded version and it **contradicts itself in 21 of 24** conflict cells, `REPLICATED_ACROSS_CORES`. Order changes the outcome in one core of four. Configuration-scoped `controlled_reader_interference` evidence — [`research/PI_READER_INTERFERENCE_RESULT_GEN114.md`](research/PI_READER_INTERFERENCE_RESULT_GEN114.md), `results/gen114/attempt1/`. **Not** raw-product or full-product evidence.
+
 **Gen113 froze `reader-interference-v4`** (`results/gen113/attempt2/`, design [`research/PI_READER_INTERFERENCE_V4_GEN113.md`](research/PI_READER_INTERFERENCE_V4_GEN113.md)) after review found the v3 digest committed to declarations only — the parser, classifier, grader and even a prompt that **leaks the answer** could all change without moving it. v3 is superseded **for identity only; its science was sound**. **Still unrun.**
 
 **Gen112 froze `reader-interference-v3`** (`results/gen112/attempt1/`, design [`research/PI_READER_INTERFERENCE_V3_GEN112.md`](research/PI_READER_INTERFERENCE_V3_GEN112.md)) after review found that v2 let a **self-contradicting answer pass a control gate** — semantic detection was gated by which records were presented. v2 is `SUPERSEDED_AS_RULER / NON_EVIDENCE` and was never run, so no result was lost. **Still unrun; the reader question remains OPEN.**

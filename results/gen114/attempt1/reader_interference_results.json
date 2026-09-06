@@ -1,0 +1,1320 @@
+{
+ "Q4": "REPLICATED_ACROSS_CORES",
+ "Q4_effect_cores": [
+  "branch:vega",
+  "budget:solstice",
+  "oncall:kestrel",
+  "throughput:atlas"
+ ],
+ "Q5_parser_gate": "matched v4 before execution",
+ "Q6_prompt_gate": "matched v4 before execution",
+ "cells": [
+  {
+   "answer": "release/vega-4.x",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 1,
+   "case_id": "branch:vega|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-677608760E"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "480a60c3530e42d9dbe297684c569c95be6a6bddcbb685cc6e865a7a881079ea",
+   "response_sha256": "df9f7297cc9d18a6723fd2504c18ef48cd3d9de9771d2c1805f779593bf9939e",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "release/vega-3.x",
+   "answer_class": "STALE_ONLY",
+   "call_index": 2,
+   "case_id": "branch:vega|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-4FAADF1FD6"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "8bef8f5f7deda5711d44422a5bb57e23176f7f135d0ff1a2379060896b7990d7",
+   "response_sha256": "471d59aefd21f9793986eff968e083a6ba71960424061021569be08f3a175ace",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "release/vega-4.x, release/vega-3.x",
+   "answer_class": "BOTH",
+   "call_index": 3,
+   "case_id": "branch:vega|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-677608760E",
+    "REC-4FAADF1FD6"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "1c2154fde87ac83a8b70888c3860dd38eba3f6e9fdcc02bbb20c4bdf652d818e",
+   "response_sha256": "5af28a7249fdebf8a9e88008e100ef38ec191271e09518864e995b9995aa0c85",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "release/vega-3.x, release/vega-4.x",
+   "answer_class": "BOTH",
+   "call_index": 4,
+   "case_id": "branch:vega|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-4FAADF1FD6",
+    "REC-677608760E"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "4d3a6331aaf275774bb16cb3e0f16d2de735312da56785b380da653dcdfced8d",
+   "response_sha256": "73727c523e00410a07cba319cb343f23d9602fcd7989bd25135e07b80cb750d6",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 5,
+   "case_id": "branch:vega|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "d0483c5b2fee93616b46829d818269aa650f0feab2e26fedda6dbe1cc3b81f78",
+   "response_sha256": "4439dec5ce92df016f6523f522c5f30d9ec927edd573d5687ea9bfb3172e42cf",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "512 GiB",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 6,
+   "case_id": "budget:solstice|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-70D1563EAE"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "c84518fb935f02f47bbb4529a8eedbdc2ee09748b0445c8b4a2548b51ade877b",
+   "response_sha256": "e6237fcd7055d04dd7be45295d1cd1b1289f5f7aa0180319f71c60966deab137",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "256 GiB",
+   "answer_class": "STALE_ONLY",
+   "call_index": 7,
+   "case_id": "budget:solstice|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-7208A9FF12"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "cd5dbd51405c3c8239f8078ae8e38805faaa7bac85f14cbcb98b6e57b222fdf2",
+   "response_sha256": "0f8c1772d2cc9fdcb04044d5714b03fe6942f38110a597c81994bf85f94b6cd6",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "512 GiB",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 8,
+   "case_id": "budget:solstice|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-70D1563EAE"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "6a94b9e8950bfc53308d813f9e31e3617baf5335c2f028fe04a609867c9a6a11",
+   "response_sha256": "579d73060559ddfd3d201cf5d540e84b5cfd5743cec8ecfa309e5cb196d37dcb",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "256 GiB initially, resized to 512 GiB",
+   "answer_class": "BOTH",
+   "call_index": 9,
+   "case_id": "budget:solstice|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-7208A9FF12",
+    "REC-70D1563EAE"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "budget:solstice",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "f723de0a03f9c5881f9fde3e712a21e45d1c3d7d72fa251c56fcc7cda1fd2bef",
+   "response_sha256": "35f835b50f5482f809e7164a03d4592593f672b6dea3a6137f80e04be742ca22",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 10,
+   "case_id": "budget:solstice|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "6366ca57959f12e40aca62adcc83b99a310cb6a906e9df852de40cb645cbb15a",
+   "response_sha256": "23da2c89c36516e33e02a7a67b69b0b68b711745b49d32c067d2bc12eaf9be7d",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "Kestrel escalations route to the platform rota.",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 11,
+   "case_id": "oncall:kestrel|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-D8F98A4FBB"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "9e45d51a0d89175a8af59cbe1c8d22864e209b48eb3894781a80c6f5c264ca3d",
+   "response_sha256": "b167fd3b8c66477218ca6b33feede17c8da96f75af2ebafe10b183ea54075c1a",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "Kestrel escalations route to the network rota.",
+   "answer_class": "STALE_ONLY",
+   "call_index": 12,
+   "case_id": "oncall:kestrel|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-481EF95CE6"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "66997a3b0d3cbb87ccc52c21d4fa361afe90287f43cde6b7f92383323620e6c1",
+   "response_sha256": "8281ae2981eedc12dc2bf087fef0d3f9a462cedbc4cd2362f2c1fbe6bfbbf195",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "Kestrel escalations route to the platform rota and the network rota.",
+   "answer_class": "BOTH",
+   "call_index": 13,
+   "case_id": "oncall:kestrel|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-D8F98A4FBB",
+    "REC-481EF95CE6"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "afd8120388a54129566a851ec713dea94d0ed7c3a55e2df24d31dbfc23a3e9a7",
+   "response_sha256": "063b486a46ceb355a4f39fd77c7fa3a0b413872fafe73e1f01dd571a1a7220fb",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "Kestrel escalations route to the network rota and the platform rota.",
+   "answer_class": "BOTH",
+   "call_index": 14,
+   "case_id": "oncall:kestrel|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-481EF95CE6",
+    "REC-D8F98A4FBB"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "9458b531cb2fdcc933848146ae1fe7f158b05b2d1f1cdecdaa8eb75d516d3052",
+   "response_sha256": "f40c8eca09c17a529e6f54c01e7d03c8eda07da9dc3cbb78be0b5724bfd32ffe",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 15,
+   "case_id": "oncall:kestrel|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "82d4fc1c892a545146e3ede10740f8058af309225432b4fbd58aaa37e8ae0612",
+   "response_sha256": "4c0fb11f61b51ca9687623812efdc2979b717bd85d154a3367fba8829885c123",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "41 t/s",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 16,
+   "case_id": "throughput:atlas|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "80c659d6e5d1a2ba5a74d095ae314bd5455fadfab6c7c44742a1a5a56fe3772c",
+   "response_sha256": "d3c58907d47d5535a1d1cf1e4674ced96857067e11aa9a509e89eaa660ceec24",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "27 t/s",
+   "answer_class": "STALE_ONLY",
+   "call_index": 17,
+   "case_id": "throughput:atlas|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-B211D4D705"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "c3524ddb46bc26dd893e993241712e42f532c120e9eee28c7380101ba0d1b885",
+   "response_sha256": "de3c332478929f0bc3fca0af92de7099230bc1182664aa08854634b81ac77f84",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "41 t/s after the cache fix; 27 t/s",
+   "answer_class": "BOTH",
+   "call_index": 18,
+   "case_id": "throughput:atlas|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-6E236CCB3A",
+    "REC-B211D4D705"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "ff09e6d8647653562cf14348021a487896d858042e5a489b18b1ead77090ffad",
+   "response_sha256": "b0d0232d5b5a3200a7473129c4dcfea0d0a85b1daf55fc15ef7f73a49c3c34a9",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "27 t/s and 41 t/s after the cache fix",
+   "answer_class": "BOTH",
+   "call_index": 19,
+   "case_id": "throughput:atlas|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-B211D4D705",
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "ac0756f313922d3f7baccd47a61b45e7732ddf0c5ae68f00d86d8e847e9d8413",
+   "response_sha256": "8ff0bac7e0858981fce04d6cdf426012431273d11d0601ee43a40c44e16d7100",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 20,
+   "case_id": "throughput:atlas|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 1,
+   "request_fingerprint": "5cb825a091fbc31e35cd0c7a6fad907edf34ae86255b4f70ffce5e947266211c",
+   "response_sha256": "c3c1761342946b04211832a9cde0283b86b0de77447f6cd3b035c40ecaccb31c",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "release/vega-4.x",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 21,
+   "case_id": "branch:vega|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-677608760E"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "ddeb52d6418dc204df02506404ea3f7767fa91b3f79f614f90a2c1b7ed821937",
+   "response_sha256": "46da75c866bbf4b1d1240c373cde1cfe02a950fd9557eb5ba9d9b176901724dd",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "release/vega-3.x",
+   "answer_class": "STALE_ONLY",
+   "call_index": 22,
+   "case_id": "branch:vega|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-4FAADF1FD6"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "98bbdf3f66a37a9a7822d838938d68a94870553be948cf136253d36898b332fb",
+   "response_sha256": "86417963bd2bd52a0bced7bb09b9cc3d5d24a68804a065268c143b28673387b5",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "release/vega-4.x, release/vega-3.x",
+   "answer_class": "BOTH",
+   "call_index": 23,
+   "case_id": "branch:vega|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-677608760E",
+    "REC-4FAADF1FD6"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "4d678b3db05e5b3f13bfbd60488632fb87050aaaa23a66049b5cce177106d1b2",
+   "response_sha256": "53a8edb985febd99d313bdca2c1898140ebda37a8dff37af214f2f81283b4186",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "release/vega-3.x, release/vega-4.x",
+   "answer_class": "BOTH",
+   "call_index": 24,
+   "case_id": "branch:vega|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-4FAADF1FD6",
+    "REC-677608760E"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "bbd67991e7f96dc3ebd7efe02f2576dd2921158d5332e460085198048de8b760",
+   "response_sha256": "b5c522a61b767f2cba3a8deafa542af5d92361b251131849bc3ae5519024cc0e",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 25,
+   "case_id": "branch:vega|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "1f0fd42b31533778cd2d33bac6f8325e6e13499aae798b88196d5cf0baeee9e0",
+   "response_sha256": "12ea019ccb8f8a235a912a84d21a8d887c26909e9690ee044d5de98eef555a01",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "512 GiB",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 26,
+   "case_id": "budget:solstice|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-70D1563EAE"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "01f26a43e422fe31fa374584c11653d5ccd0f85ff8602c0a4633c0d725c469eb",
+   "response_sha256": "e6aa7dad7e6d9b1960e2fa7006cd2e66be994ee7ed1deb1003b9db9c7d355404",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "256 GiB",
+   "answer_class": "STALE_ONLY",
+   "call_index": 27,
+   "case_id": "budget:solstice|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-7208A9FF12"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "c8dfedef8cb133349991f9aab69e10c2121e2dd3c58bb757119293ae7c4cbdab",
+   "response_sha256": "de9a5c18427c5eae76f5bdca716b0fe1c2e20d22597f57ecef3b04a9e618034b",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "512 GiB",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 28,
+   "case_id": "budget:solstice|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-70D1563EAE"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "f02fbe00755c43df9c2d125420c4170d42602975ad36ce4ab8691ed50073e095",
+   "response_sha256": "e96565a0320298c0652412c0edb0cbb993dd8ba72728ecb5972420ad740d484f",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "256 GiB initially, resized to 512 GiB",
+   "answer_class": "BOTH",
+   "call_index": 29,
+   "case_id": "budget:solstice|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-7208A9FF12",
+    "REC-70D1563EAE"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "budget:solstice",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "dca514b9041ade78cf2ed21edce700a278025a4b76e1e59c87e989de33e2b2ed",
+   "response_sha256": "2b5468f7317279eb800c93bb48e8794ce534d23245f640321a7b259a6672b54f",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 30,
+   "case_id": "budget:solstice|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "489757a46f0848600588b4bdaa23ac7b4b5d2a162a8a97f3a6a2aa7caa1a4a8c",
+   "response_sha256": "9cd5115538419b883408c6f014959101c0cff76dd316b0148257125bba5b1798",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "Kestrel escalations route to the platform rota.",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 31,
+   "case_id": "oncall:kestrel|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-D8F98A4FBB"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "018c4252cab1aa8d91bcdde7708cdc92a9702c5626460c1156140f88bf032e8c",
+   "response_sha256": "265e789da3ad430d1f7a10f3d417ea733e445e0b30a8def3cb8e36e139272e92",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "Kestrel escalations route to the network rota.",
+   "answer_class": "STALE_ONLY",
+   "call_index": 32,
+   "case_id": "oncall:kestrel|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-481EF95CE6"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "0dc9f1873fe8ed832d1088459bb3c6857d38a8675fd0e4ddaac42ab8705d69e8",
+   "response_sha256": "13e113d7d9a91722eee2ef1d784353e6d3e1bccb23e0c913e0cbd14dbeb98483",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "Kestrel escalations route to the platform rota and the network rota.",
+   "answer_class": "BOTH",
+   "call_index": 33,
+   "case_id": "oncall:kestrel|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-D8F98A4FBB",
+    "REC-481EF95CE6"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "0e7ac3b3ec4eb63701cc21cdc1eae3c3c2733eb6839a92cab12fa54eae5d78f3",
+   "response_sha256": "4cd5625065c1c3396f17fa5441d8b5d9995dcb9d0de1f8bde5f9c9aa9638ac7a",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "Kestrel escalations route to the network rota and the platform rota.",
+   "answer_class": "BOTH",
+   "call_index": 34,
+   "case_id": "oncall:kestrel|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-481EF95CE6",
+    "REC-D8F98A4FBB"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "3f037ccc98cbbd3b2d9bb3253e5b6186073917dd9cd0d13f29583b8e9ef1f394",
+   "response_sha256": "2b97c95242d3316a9a937b7b1662f8f87ab00aa38b925d4fd82765a3b8e51a47",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 35,
+   "case_id": "oncall:kestrel|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "f33e3534976c0c0cde46d5e0c05cc69179b4c8dce6de69289f5f0d511b961566",
+   "response_sha256": "53b31d84da64b39229cb6b099f7f55b1ede88e7fe43aff6c34a19720c94cba8d",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "41 t/s",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 36,
+   "case_id": "throughput:atlas|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "1288e209e6a4f8d60b84fe0c5441bff8b2c298934a4b448019c276725980db9c",
+   "response_sha256": "a6a92643c2263d645fe5c8dcf5b132fa21ce0ba9b66a6fc78e3bf2495ddd2336",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "27 t/s",
+   "answer_class": "STALE_ONLY",
+   "call_index": 37,
+   "case_id": "throughput:atlas|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-B211D4D705"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "c7e7076337f0f107dc7167ce745189185896235e3bedfa56bbc42985af207450",
+   "response_sha256": "29ea390b630812a8aa5f7536ce036a2d35432ab7f76da425eff91db1f04d112a",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "41 t/s after the cache fix and 27 t/s",
+   "answer_class": "BOTH",
+   "call_index": 38,
+   "case_id": "throughput:atlas|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-6E236CCB3A",
+    "REC-B211D4D705"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "90aaec0701ecc1c4ca442e9b675df9eddfbb3756fd9a6396e861d846824bd5b5",
+   "response_sha256": "a60c5fc65f0b4de3760e08651c42b017f2614f4bb792ced1d94441a27ed48409",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "27 t/s and 41 t/s after the cache fix",
+   "answer_class": "BOTH",
+   "call_index": 39,
+   "case_id": "throughput:atlas|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-B211D4D705",
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "c9826e6f09cb0743fe3c6734994b324a6621159692e488ebf23e32cb7a78017c",
+   "response_sha256": "d2fe9504d5e2a6f11a4dbcd3f363f3062b9cc00fa70806f959e8203ad0900748",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 40,
+   "case_id": "throughput:atlas|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 2,
+   "request_fingerprint": "2814c68290fb89bbe05eaf658c64b14034f80b3985472ecef32cf6cdf1a2ebe5",
+   "response_sha256": "650ea8c7362b1a1402d0e4b18743bee037d796c74fdd5750970f574a0f170750",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "release/vega-4.x",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 41,
+   "case_id": "branch:vega|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-677608760E"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "22a9521d6ea319f4f57fca9dfa16ef4020e9233b88c94fbfd0d65a0fbde9b0d0",
+   "response_sha256": "648b09b72103a2afee92ed73ba2aa46e280bfd03c767dcfcb1e64a0b79c21bf4",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "release/vega-3.x",
+   "answer_class": "STALE_ONLY",
+   "call_index": 42,
+   "case_id": "branch:vega|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-4FAADF1FD6"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "f797415fa34d38f228c92903f24af7c8495323ecfc2f7cd1a9baaa6f7cf0df61",
+   "response_sha256": "c4c8867f0bab2c6035c8b444d4d147459dcc8801da37dd55c1d4b55d1ea1f5d9",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "release/vega-4.x, release/vega-3.x",
+   "answer_class": "BOTH",
+   "call_index": 43,
+   "case_id": "branch:vega|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-677608760E",
+    "REC-4FAADF1FD6"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "d514b5accc0ca560228ac9175a7b7d903ac784ef772bc05a66270dcae90abac4",
+   "response_sha256": "16233c3ba703382a8ab6bfd3012144669e5df8d3e1c2932e9f2234a930d777dc",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "release/vega-3.x, release/vega-4.x",
+   "answer_class": "BOTH",
+   "call_index": 44,
+   "case_id": "branch:vega|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-4FAADF1FD6",
+    "REC-677608760E"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "branch:vega",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "43de75b3031eff67e519332d76e61ae9367565837454798e04850d4c0fcc2d7f",
+   "response_sha256": "4493a284bdc1923a2aa31979cfa99653d2b402f8d1b726e3c0ed953958270658",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 45,
+   "case_id": "branch:vega|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "branch:vega",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "412806fae6a3a3ad1919b3c74f83b260c5c2280c58b327f2f084b0c14ced1bdc",
+   "response_sha256": "c43afabc7507d69a32b1662a8fd10bc6a31639977334cd6d522b1d17832f09fd",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "512 GiB",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 46,
+   "case_id": "budget:solstice|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-70D1563EAE"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "02398b2c87bc1ebbd1b8029366544b5e1f866d954d1b2b6627c6b3f16f1bec74",
+   "response_sha256": "6bdecf9a898db2b3e32247f3979f024e33b2424ebe98b7ba980114710b1f8e07",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "256 GiB",
+   "answer_class": "STALE_ONLY",
+   "call_index": 47,
+   "case_id": "budget:solstice|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-7208A9FF12"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "37b2ea28e4bdaac883082031511cf43ad036b9be186fd762b872bac503007fa0",
+   "response_sha256": "4ddf3ad780f36562410f603f4822067b263cc83ed5062e616f22b3435ff58b5d",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "512 GiB",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 48,
+   "case_id": "budget:solstice|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-70D1563EAE"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "budget:solstice",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "f92b71cd105a87140342eefdb2ff9c082ec5e97529b71bb080be48ced1926a03",
+   "response_sha256": "36d1a39eb6ec6597e0a06ba406da444a321699a320b7615d4f46a3a1dabd4052",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "256 GiB initially, resized to 512 GiB",
+   "answer_class": "BOTH",
+   "call_index": 49,
+   "case_id": "budget:solstice|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-7208A9FF12",
+    "REC-70D1563EAE"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "budget:solstice",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "496af45310be878e42b82a818857777e74dd954f3cfa7ae8d9233aa1cc038ba7",
+   "response_sha256": "5b15f3bbad6ce92bc20df600b182f9cee20c24456b339be824028c5d9174acc7",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 50,
+   "case_id": "budget:solstice|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "budget:solstice",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "8e4b9b5f2e2704f64b9403f4c233294a94400f202fbf4b4f2590ce2a51cc99b6",
+   "response_sha256": "efac9b879b5f3282c10ed50c9803d7b9e346d7acb026196efb86d38e3c3ddf07",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "Kestrel escalations route to the platform rota.",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 51,
+   "case_id": "oncall:kestrel|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-D8F98A4FBB"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "eeb82e2d9d866dc1e744fc5ce6ae35c39a06ba88078f68594b899ff86685b959",
+   "response_sha256": "f783ea4cb9e65662009d238ab484c05c1e84b0d784e48a63acd43f2128a2385f",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "Kestrel escalations route to the network rota.",
+   "answer_class": "STALE_ONLY",
+   "call_index": 52,
+   "case_id": "oncall:kestrel|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-481EF95CE6"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "ccdd4f5a95358a83e41296fbeb37d4c052ef28568c4225dde6edd55fe6213098",
+   "response_sha256": "23ada7dee1dfe9ac8835f0fcdf79f2caaa772a25b2e389370ca6dbb6bf6d15ef",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "Kestrel escalations route to the platform rota and the network rota.",
+   "answer_class": "BOTH",
+   "call_index": 53,
+   "case_id": "oncall:kestrel|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-D8F98A4FBB",
+    "REC-481EF95CE6"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "816fc2a0d929c6e0cd709412dbf7623176f8e628c3f0f4e8742ec2682c87daeb",
+   "response_sha256": "fd37defd54e57d0fe2599645292096e3077b5967a9e4320ffb33ee6dec9bf192",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "Kestrel escalations route to the network rota and the platform rota.",
+   "answer_class": "BOTH",
+   "call_index": 54,
+   "case_id": "oncall:kestrel|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-481EF95CE6",
+    "REC-D8F98A4FBB"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "oncall:kestrel",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "89a8b3138e30d963cb18b1bf7e0c93e4f4ca3626a01177cb07b3487c9ad0f773",
+   "response_sha256": "a8887921ae754dbb1ec60006980eaa63d89007002f41d2de2455afabd1b7d7dd",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 55,
+   "case_id": "oncall:kestrel|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "oncall:kestrel",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "83dbdc670bcab1f5885803782f2208e128ea493eab268cfdb774032c6e4ee1a0",
+   "response_sha256": "1269a0af4fa708cd1a47d7afe091cc7d36fa03ffca0fbca83980d36b045abfa0",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  },
+  {
+   "answer": "41 t/s",
+   "answer_class": "CURRENT_ONLY",
+   "call_index": 56,
+   "case_id": "throughput:atlas|CLEAN_CURRENT",
+   "citation_relation": "MATCHES_CURRENT",
+   "citations": [
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CLEAN_CURRENT",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_current_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "c018838ad82f95ef6ea876ecdf8b641cdc3e1833c56a70bf5a086943edb11476",
+   "response_sha256": "217f4f241be9cab708266d912c4d75ed961a8f5517f31c328bf552d680d6e65d",
+   "terminal_disposition": "COMPLETED",
+   "why": "current value with the matching current citation"
+  },
+  {
+   "answer": "27 t/s",
+   "answer_class": "STALE_ONLY",
+   "call_index": 57,
+   "case_id": "throughput:atlas|CLEAN_STALE_NEGATIVE_CONTROL",
+   "citation_relation": "MATCHES_STALE",
+   "citations": [
+    "REC-B211D4D705"
+   ],
+   "condition": "CLEAN_STALE_NEGATIVE_CONTROL",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_stale_control_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "cd523786f2d221bc313c7641b8630895e9e9e7c2a3e6ff8fecda78e27d58a436",
+   "response_sha256": "d8f3619879f059eb2699a76b66c3667b3ea91f362bcc81fe00d506c06003ea73",
+   "terminal_disposition": "COMPLETED",
+   "why": "the stale record is the only evidence; control works"
+  },
+  {
+   "answer": "41 t/s after the cache fix and 27 t/s",
+   "answer_class": "BOTH",
+   "call_index": 58,
+   "case_id": "throughput:atlas|CONFLICT_CURRENT_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-6E236CCB3A",
+    "REC-B211D4D705"
+   ],
+   "condition": "CONFLICT_CURRENT_FIRST",
+   "control_pass": false,
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "9708204a5278719346ac7e29a64017becaba17ef66c92d9c923a2c3df0f8e721",
+   "response_sha256": "b73ada8121147cf32046e1ab9a1b268099da0cf1d170755bc37e60be1f64f95e",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "27 t/s and 41 t/s after the cache fix",
+   "answer_class": "BOTH",
+   "call_index": 59,
+   "case_id": "throughput:atlas|CONFLICT_STALE_FIRST",
+   "citation_relation": "OTHER",
+   "citations": [
+    "REC-B211D4D705",
+    "REC-6E236CCB3A"
+   ],
+   "condition": "CONFLICT_STALE_FIRST",
+   "control_pass": false,
+   "core": "throughput:atlas",
+   "outcome": "mixed_contradictory_answer",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "354e107858a10375a3bf79ed59a6916ba5351a55fa7ff792e0a08bbcab67398d",
+   "response_sha256": "9424ecb877fdc36b73604e2a2d2e830c2cde96a39042c006c3f694aa37fe797d",
+   "terminal_disposition": "COMPLETED",
+   "why": "asserts both canonical values; a contradiction can never pass a control"
+  },
+  {
+   "answer": "INSUFFICIENT",
+   "answer_class": "INSUFFICIENT",
+   "call_index": 60,
+   "case_id": "throughput:atlas|INSUFFICIENT_CONTROL",
+   "citation_relation": "EMPTY",
+   "citations": [],
+   "condition": "INSUFFICIENT_CONTROL",
+   "control_pass": true,
+   "core": "throughput:atlas",
+   "outcome": "correct_insufficiency",
+   "parse_status": "PARSED",
+   "repetition": 3,
+   "request_fingerprint": "117d11dfb8c1d7209d44c63b67107dfcb191eb84b7fbc6f5da5f9571eae46404",
+   "response_sha256": "4d71803172949eec1e0793b7c5e5e42b2e294d348339a76a086c00f8d599bf9b",
+   "terminal_disposition": "COMPLETED",
+   "why": "nothing supported an answer"
+  }
+ ],
+ "completed": 60,
+ "contract_sha256": "2bc281b9dea248ce09b3b75392ffa91bb36a1a489468afed7dbda3fb43ff809d",
+ "control_gates": {
+  "branch:vega": {
+   "control_cells": 9,
+   "interpretable": true,
+   "passing": 9
+  },
+  "budget:solstice": {
+   "control_cells": 9,
+   "interpretable": true,
+   "passing": 9
+  },
+  "oncall:kestrel": {
+   "control_cells": 9,
+   "interpretable": true,
+   "passing": 9
+  },
+  "throughput:atlas": {
+   "control_cells": 9,
+   "interpretable": true,
+   "passing": 9
+  }
+ },
+ "evidence_class": "controlled_reader_interference",
+ "generation": 114,
+ "planned_calls": 60,
+ "questions": {
+  "branch:vega": {
+   "Q1": {
+    "clean_current_bad": 0,
+    "current_first_bad": 3,
+    "effect": true,
+    "stale_first_bad": 3
+   },
+   "Q2": {
+    "current_first": {
+     "mixed_contradictory_answer": 3
+    },
+    "distributions_differ": false,
+    "stale_first": {
+     "mixed_contradictory_answer": 3
+    }
+   },
+   "Q3": {
+    "all_conflict_cells_correct_current": false
+   }
+  },
+  "budget:solstice": {
+   "Q1": {
+    "clean_current_bad": 0,
+    "current_first_bad": 0,
+    "effect": true,
+    "stale_first_bad": 3
+   },
+   "Q2": {
+    "current_first": {
+     "correct_current_answer": 3
+    },
+    "distributions_differ": true,
+    "stale_first": {
+     "mixed_contradictory_answer": 3
+    }
+   },
+   "Q3": {
+    "all_conflict_cells_correct_current": false
+   }
+  },
+  "oncall:kestrel": {
+   "Q1": {
+    "clean_current_bad": 0,
+    "current_first_bad": 3,
+    "effect": true,
+    "stale_first_bad": 3
+   },
+   "Q2": {
+    "current_first": {
+     "mixed_contradictory_answer": 3
+    },
+    "distributions_differ": false,
+    "stale_first": {
+     "mixed_contradictory_answer": 3
+    }
+   },
+   "Q3": {
+    "all_conflict_cells_correct_current": false
+   }
+  },
+  "throughput:atlas": {
+   "Q1": {
+    "clean_current_bad": 0,
+    "current_first_bad": 3,
+    "effect": true,
+    "stale_first_bad": 3
+   },
+   "Q2": {
+    "current_first": {
+     "mixed_contradictory_answer": 3
+    },
+    "distributions_differ": false,
+    "stale_first": {
+     "mixed_contradictory_answer": 3
+    }
+   },
+   "Q3": {
+    "all_conflict_cells_correct_current": false
+   }
+  }
+ },
+ "scope_note": "Controls which benchmark-owned records the reader sees. Does NOT establish that any memory product supplies this context or this order. Not raw-product or full-product evidence."
+}

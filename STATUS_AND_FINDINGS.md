@@ -2,6 +2,7 @@
 
 **Snapshot:** 2026-09-06 (America/Los_Angeles)  
 **Harness tests:** see the Gen107 handoff entry for the authoritative count  
+**Reader layer:** MEASURED at Gen114 — stale co-return makes this reader contradict itself in all four cores (21/24 conflict cells); order matters in one core. Configuration-scoped.  
 **Reader layer:** `reader-interference-v4` frozen at Gen113 and **unrun**; v3 superseded for an incomplete freeze fingerprint, not for bad science.  
 **Reader layer:** `reader-interference-v3` frozen at Gen112 and **unrun**; v2 superseded after review found a contradiction could pass a control gate.  
 **Reader layer:** repaired ruler `reader-interference-v2` frozen at Gen111 and **unrun**; v1 superseded after four defects including a blinding failure.  

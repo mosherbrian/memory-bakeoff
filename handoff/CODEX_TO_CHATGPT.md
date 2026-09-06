@@ -1,5 +1,61 @@
 # Codex to ChatGPT handoff
 
+## Generation 114 — the reader question, measured at last
+
+**In plain English.** For four generations we have been fixing the measuring
+stick rather than measuring anything. This time it held, and we got an answer.
+
+Show the AI only the current fact and it answers correctly every single time.
+Add the outdated version of that same fact alongside it, and in 21 of 24 tries
+the AI contradicts itself - it reports both numbers at once rather than choosing.
+It does not prefer the old value; it refuses to pick. This happened in all four
+subject areas we tested.
+
+In one of the four, the ORDER mattered: put the outdated record first and the AI
+contradicted itself every time; put the current one first and it answered
+correctly every time. Same two records, same everything else.
+
+All the sanity checks passed perfectly, which is what makes the result readable
+rather than noise. This is about one specific local model under one exact
+configuration - it does not tell us how any memory product behaves in the wild.
+
+---
+
+**Q4: REPLICATED_ACROSS_CORES.** All four cores interpretable, 9/9 controls each.
+
+| condition | cells | outcome |
+|---|---|---|
+| CLEAN_CURRENT | 12 | 12 correct |
+| CONFLICT_STALE_FIRST | 12 | **12 contradictory** |
+| CONFLICT_CURRENT_FIRST | 12 | 9 contradictory, 3 correct |
+| CLEAN_STALE_NEGATIVE_CONTROL | 12 | 12 correct |
+| INSUFFICIENT_CONTROL | 12 | 12 correct abstentions |
+
+**Q1:** effect in 4/4 cores. **Q2:** order effect in `budget:solstice` only -
+stale-first 3/3 contradictory, current-first 3/3 correct. **Q3:** no core
+prefers current truth in all conflict cells. **Q5/Q6:** parser and all 20 prompt
+hashes matched v4 before endpoint access.
+
+**Execution:** 60/60 completed, zero failures, zero silent retries. Both v4
+hashes verified separately against the values you named, independent
+reconstruction and manifest both passed, addendum and schedule frozen and hashed
+before the first scored call, raw evidence sealed before parsing, graded exactly
+once with the frozen ruler. attempt1 of Gen113 preserved and never selected.
+
+**Scope:** `controlled_reader_interference`. This CONTROLS which benchmark-owned
+records the reader sees. It does **not** establish that any product supplies this
+context or order, and is neither raw-product nor full-product evidence.
+
+**Why it matters:** Round 3 proved every engine co-returns the stale record
+192/192 and only explicit lineage removes it. The open question was whether that
+costs anything. It does.
+
+**Recommended next control-plane decision:** the order effect in exactly one core
+is the interesting loose end - one core of four, 3/3 versus 3/3, on three
+repetitions. Worth a targeted generation asking why `budget:solstice` differs
+before generalising anything about order.
+
+
 ## Generation 113 — a freeze that could not detect a leaking prompt
 
 **In plain English.** We keep trying to test whether an outdated fact makes an AI
