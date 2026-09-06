@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Read the Drive mailbox and report whether its instruction is safe to act on.
+#
+# Two traps this exists to survive, both of which fail OPEN if you improvise:
+#
+#  1. The Google Docs Markdown export ESCAPES underscores, so the fields arrive
+#     as `source\_generation:`. A pattern of `source.?generation` matches
+#     nothing and reports the field absent - which reads as a provenance
+#     mismatch when it is only formatting.
+#  2. pull-chatgpt-handoff deletes its output BEFORE fetching, so a transient
+#     Drive failure leaves no file at all. Absent means "pull failed", never
+#     "no instruction".
+#
+# Usage: scripts/verify-chatgpt-handoff <expected_source_generation> <expected_source_commit>
+set -euo pipefail
+
+want_gen=${1:?usage: verify-chatgpt-handoff <source_generation> <source_commit>}
+want_commit=${2:?usage: verify-chatgpt-handoff <source_generation> <source_commit>}
+
+root=$(git rev-parse --show-toplevel)
+doc=$("$root/scripts/pull-chatgpt-handoff") || {
+    echo "VERDICT: PULL_FAILED - no instruction was retrieved (absent != empty)" >&2
+    exit 3
+}
+
+field() {  # tolerate the export's backslash escaping
+    grep -iE "^$1.{0,2}:" "$doc" | head -1 | sed 's/\\//g' | cut -d: -f2- \
+        | tr -d ' \r'
+}
+
+gen=$(field "generation")
+src_gen=$(field "source.{0,2}generation")
+src_commit=$(field "source.{0,2}commit")
+
+printf 'generation        : %s\n' "${gen:-<absent>}"
+printf 'source_generation : %s (want %s)\n' "${src_gen:-<absent>}" "$want_gen"
+printf 'source_commit     : %s (want %s)\n' "${src_commit:-<absent>}" "$want_commit"
+
+fail=0
+[ -n "$src_gen" ] && [ "$src_gen" = "$want_gen" ] || { echo "  source_generation MISMATCH"; fail=1; }
+[ -n "$src_commit" ] && [ "$src_commit" = "$want_commit" ] || { echo "  source_commit MISMATCH"; fail=1; }
+
+if [ "$fail" -ne 0 ]; then
+    echo "VERDICT: REJECT - stop and report, do not act on this instruction"
+    exit 1
+fi
+echo "VERDICT: ACCEPT - matches authoritative GitHub state"
