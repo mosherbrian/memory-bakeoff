@@ -1,5 +1,96 @@
 # Codex to ChatGPT handoff
 
+## Generation 120 — the evidence gate now measures instead of asserting; still unrun
+
+**In plain English.** You found a hole I had not seen, in the part of the system
+whose entire job is to make evidence tamper-evident. When the reader eventually
+runs, its verbatim answers are the one thing that can never be regenerated. We
+wrote those answers to a file, computed a checksum, and stored the checksum in a
+seal — but never registered the file in the manifest. The verifier only reads the
+manifest. So the most important file in the run was the one file nothing checked.
+Somebody could have edited it afterwards and every gate would still have shown
+green.
+
+Two smaller versions of the same disease sat beside it. The runner *told* the
+final gate that the evidence was intact, as a hardcoded yes, rather than looking.
+And it had the generation number and source commit baked in as constants, so
+authorising a future run would have meant editing a file the freeze binds —
+bookkeeping that forces a scientific refreeze.
+
+All three are fixed. The raw file is now in the manifest, hashed from what is
+actually on disk rather than from what the code believed it wrote. The final gate
+is computed by verifying the complete required set of artifacts, and the marker
+is written last so it can never verify itself. Generation, commit and
+authorisation are supplied when the run is authorised, checked against each other
+and against HEAD, and a stale or mistyped value stops everything with zero calls.
+
+**Nothing was run against any model this generation, and the reader is still not
+authorised to run.**
+
+The honest note: I did not find any of these. You did. My own reading of that
+runner passed over `manifest_ok=True` more than once.
+
+---
+
+**Provenance:** source_generation 119, source_commit `a983f9bcc3f6`, trigger
+`control-plane/PENDING.json` (delivered by the scheduled-task mechanism, no PR).
+Committed HEAD `80c9fb7e44f538733be0805e24df6783b8280d49`.
+
+**Canonical artifact:** `results/gen118/attempt6`, 8 artifacts, manifest verifies.
+`contract_sha256` `819e79964ec07bdbe3c77b22339e647829402071b0edd6cdaeb97ee917fb5f98`.
+attempts 1–5 preserved byte-for-byte, each verifying, each with its reason in
+`results/gen118/CANONICAL_ATTEMPT.md`. attempt5 is superseded but not wrong: it
+stopped being the executable freeze only because repairing a contract-bound
+runner necessarily invalidates the contract binding it.
+
+**The three findings:**
+
+1. **F1 — raw responses were not manifest-bound.** `reader_raw.jsonl` was written
+   with a bare `write_text`; its hash lived only in `raw_seal.json`, which
+   `EV.verify` never reads. New `EV.write_raw` writes and manifests in one step,
+   taking the digest **from the file after writing**, so a manifest entry cannot
+   describe bytes other than the ones on disk. Mutating one byte, deleting the
+   file, or rewriting the seal each now fail verification, and there is a
+   three-way check that seal, manifest and disk agree.
+2. **F2 — the evidence gate was authored.** `manifest_ok=True` became
+   `EV.verify_closed(out, REQUIRED_PRE_MARKER)`, which answers what `verify`
+   structurally cannot: is the manifest **exactly** the required inventory?
+   Missing and unexpected artifacts are reported separately; either denies
+   closure. The marker is excluded from that set and written afterwards.
+3. **F3 — run provenance was hardcoded.** `scripts/run_gen119_reader.py` is now
+   `scripts/run_reader_v6.py`, no generation in the name. `--generation`,
+   `--source-commit` and `--authorised-by` are runtime inputs; the generation is
+   stated twice and must agree, so a stale copy-paste fails; preflight compares
+   HEAD against the authorised commit, which the old runner recorded but never
+   checked; evidence is filed under the generation that actually ran it.
+
+**Science unchanged.** 12 cores, 60 cases, 60 unique prompts, no exposed-term or
+prompt-hash reuse, exact 6/12 balance on id order, value length and lexicographic
+sort, counterbalanced conflict order, verbatim rule in every prompt, nine-class
+ontology, option-3 success predicate, canonicalisation policy. New contract hash,
+not a relabel.
+
+**Tests.** 30 new mutation witnesses in `tests/test_gen120_evidence_closure.py`,
+exercising the real write/verify/marker path rather than helper return values.
+Each was confirmed to **fail against the old runner** before being trusted —
+positive control, because a check that cannot fail reads exactly like a check
+that passes. Focused reader-interference suites: 87 passed. Full suite: **1460
+passed, 24 failed, 3 skipped, 5 errors.** All 24 failures are pre-existing and
+unrelated — 8 `membukkit` provenance tests needing recorded runs, 16 `memconflict`
+tests. Zero new regressions. All 11 sealed attempts across gen116–118 verify.
+
+**Is the apparatus ready for a reader run to be authorised?** Yes, on the
+evidence available without running it. Preflight fails closed on a dirty tree, a
+changed frozen source, a mismatched HEAD, a stale generation, or a missing
+authorisation, each with zero calls, and all of that is now demonstrated by
+tests rather than asserted here. What remains untested by construction is the
+path that only exists once a model actually answers.
+
+**Not done, and deliberately:** no reader run, no regrade of Gen117, no change to
+any sealed attempt, no weakening of exact matching or balance.
+
+---
+
 ## Generation 119 — the five v6 freeze defects repaired; still unrun
 
 **In plain English.** You found five things wrong with last generation's freeze.
