@@ -95,8 +95,24 @@ def test_untracked_files_count_as_dirty():
 
 
 def test_review_verdict_and_ledger_are_gates():
-    assert 'verdict != "PROCEED"' in SRC
-    assert "LEDGER.md" in SRC and "| OPEN |" in SRC
+    """PROCEED and CARRY ring; anything else refuses.
+
+    This asserted the literal `verdict != "PROCEED"`, so when Gen120 changed the
+    rule to honour the reviewers' own severity, a correct change broke a test that
+    was pinning the old wording rather than the behaviour. Rewritten to state what
+    must be true: the two accepting verdicts, the refusal for everything else, and
+    the ledger conditions.
+    """
+    assert '"PROCEED", "CARRY"' in SRC, "both accepting verdicts must be named"
+    # A blocking review must still stop the bell: FIX FIRST is not in the accept
+    # set, so it falls through to the refusal.
+    accept = SRC[SRC.index('if verdict not in ("PROCEED", "CARRY")'):][:400]
+    assert "REFUSED" in accept
+
+    assert "LEDGER.md" in SRC and "| OPEN |" in SRC, "open findings must block"
+    # Carrying must be real, or "minor" becomes a way to drop findings silently.
+    assert '"| CARRIED |" not in text' in SRC
+    assert "carrying is not the same as ignoring" in SRC
 
 
 def test_firing_requires_an_explicit_flag():

@@ -41,3 +41,18 @@ FAILED tests/test_gen120_evidence_closure.py::test_the_marker_is_written_after_t
 FAILED tests/test_gen120_evidence_closure.py::test_the_output_path_follows_the_authorised_generation
 FAILED tests/test_gen120_evidence_closure.py::test_the_runner_carries_no_hardcoded_generation_or_commit
 ```
+
+
+## Addendum, round 5
+
+This document records **19 failed / 13 passed / 4 skipped**, which was accurate
+when measured. The witness file has since grown - round 3 added
+`test_the_sealed_contract_hash_actually_recomputes`, round 5 added four witnesses
+for the malformed-answer repair - so re-running the method today gives a
+different total against the same pre-fix commit.
+
+The document pinned neither the test-file version nor its hash, so its numbers
+were reproducible only on the day. Raised by both reviewers at round 5. The
+method remains correct; only the totals move as witnesses are added. Re-measure
+rather than cite these figures, and record the witness-file sha256 alongside any
+future control.

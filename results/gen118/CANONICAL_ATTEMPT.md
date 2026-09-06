@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt13` is canonical**, per the fourth Generation 120 rival review.
+**`attempt14` is canonical**, per the fifth Generation 120 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -148,7 +148,12 @@
   produced attempt8: I ran the freeze after the first of six repairs instead of
   after all of them. Twice in one generation. Preserved because evidence is
   append-only.
-- `attempt12` - superseded. Science identical a sixth time. Fourth review:
+- `attempt12` - superseded, and the reason is narrower than the list below might
+  suggest: attempt12 already CONTAINS every fourth-review repair. Its only
+  supersession is attempt13's freeze gate. The findings are listed here because
+  this is where they were repaired, not because attempt12 lacked them. Corrected
+  after glm-5.3 pointed out that a reader reconstructing the rejection reason from
+  this file would get the wrong answer. Science identical a sixth time. Fourth review:
   1. **the balance gate enforced ONE of the four invariants it publishes.**
      Value-length balance, lexicographic balance and the conflict-order
      counterbalance were computed, printed and shipped un-gated, so a future
@@ -175,7 +180,7 @@
      so any earlier backtick would silently retarget the run. It now matches the
      declaration itself and refuses when absent.
   Contract `20d9fe9b6f3992997907dcb8b83fa849ebb932298cab8dea20d4a3e41306ea5f`.
-- `attempt13` - **canonical.** Science identical a seventh time. One change, and
+- `attempt13` - superseded. Science identical a seventh time. One change, and
   it is aimed at me rather than at the protocol: **the freeze runner now refuses
   to run while the focused apparatus suite is red.**
 
@@ -190,6 +195,19 @@
   Verified by positive control: a deliberately failing witness makes the freeze
   refuse and write no attempt directory.
   Contract `78a7310fee3b95038538e8eacc8b644e5c30f5da1f5b3216655ad62ed5b66f4e`.
+- `attempt14` - **canonical.** Science identical an eighth time. The fifth review
+  returned DEFECTS_MINOR from both reviewers, as all five have; four findings were
+  repaired here and four are recorded as CARRIED in the ledger with an owner.
+
+  The one repaired rather than carried, because it protects the run itself: **the
+  malformed-answer fix had no witness.** Round 4 stopped `call_once` from treating
+  a badly-formed 200 as a transport failure - which had it retrying and discarding
+  the bytes, i.e. resampling until something parsed. Round 5 observed that the fix
+  shipped without a test, so a regression back to retry-and-discard would have
+  passed the entire suite, the apparatus gate and the freeze. Four witnesses now
+  drive the real `call_once` against a fake endpoint, and they FAIL at the pre-fix
+  commit. Everything else in this round was documentation accuracy.
+  Contract `9d81fecfa86bdc0350a0556836aff7919c94a17dbba025ebb10556b42d972bce`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

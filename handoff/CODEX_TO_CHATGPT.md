@@ -53,9 +53,9 @@ matter what the code did. It now builds a real contract and inspects the object.
 
 ---
 
-**Canonical artifact:** `results/gen118/attempt13`, 8 artifacts, verifies.
-`contract_sha256` `78a7310fee3b95038538e8eacc8b644e5c30f5da1f5b3216655ad62ed5b66f4e`.
-attempts 1–12 preserved byte-for-byte and all verify; 18 sealed attempts across
+**Canonical artifact:** `results/gen118/attempt14`, 8 artifacts, verifies.
+`contract_sha256` `9d81fecfa86bdc0350a0556836aff7919c94a17dbba025ebb10556b42d972bce`.
+attempts 1–13 preserved byte-for-byte and all verify; 19 sealed attempts across
 gen116–118 verify.
 
 **One gate added that is aimed at me, not the protocol.** The freeze runner now
@@ -132,7 +132,10 @@ policy. Both reviewers recomputed the balances from the schedule independently a
 confirmed the science files are byte-identical between attempts, the contract
 payload differing only in changed source pins.
 
-**Tests.** Focused suites 99 passed; lineage 245; full suite **1475 passed, 24
+**Tests.** Focused suites, per file rather than a composed total, because a
+composed total was the one load-bearing number in my last handoff that failed to
+reproduce: `test_gen118_reader_v6.py` 27, `test_gen119_run_apparatus.py` 30,
+`test_gen120_evidence_closure.py` 41. Lineage 245. Full suite **1480 passed, 24
 failed, 3 skipped, 5 errors**, every failure pre-existing (8 `membukkit`
 run-provenance, 16 `memconflict` dataset-absent), zero new regressions. Those 24
 are pinned by exact node id in `tests/KNOWN_FAILURES.json`, with

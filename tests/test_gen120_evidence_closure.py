@@ -355,3 +355,75 @@ def test_gen117_raw_evidence_is_honestly_described():
     assert seal["sha256"] == EV.digest(raw.read_text()), (
         "the seal no longer matches the bytes - the pre-F1 evidence has changed")
     assert EV.verify(d)["verified"] is True
+
+
+# ------------------------------------- the malformed-answer repair, witnessed
+def _call_once_with(monkeypatch, body: str, fail_times: int = 0):
+    """Drive the REAL call_once against a fake endpoint. No network."""
+    import importlib.util, io, urllib.request
+    spec = importlib.util.spec_from_file_location("runner_mw", RUNNER)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    calls = {"n": 0}
+
+    class _Resp(io.BytesIO):
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    def fake_urlopen(req, timeout=None):
+        calls["n"] += 1
+        if calls["n"] <= fail_times:
+            raise OSError("connection reset")
+        return _Resp(body.encode())
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    schedule = json.loads((mod.CANONICAL / "reader_interference_v6_schedule.json").read_text())
+    return mod.call_once(schedule["cases"][0]), calls
+
+
+def test_a_malformed_answer_is_terminal_and_is_never_retried(monkeypatch):
+    """The server answered. Answering badly is a SCIENTIFIC outcome.
+
+    The parse used to sit inside the transport handler, so a malformed 200 was
+    classified as a connection failure, RETRIED, and its bytes discarded - keeping
+    only the exception type. That is sampling until a favourable answer appears,
+    forbidden by the same contract promising raw evidence sealed as it arrives.
+    Found by glm-5.3 at Gen120 round 4; this witness added at round 5 after
+    glm-5.3-flash observed the repair shipped without one, so a regression would
+    have passed the whole suite.
+    """
+    result, calls = _call_once_with(monkeypatch, "this is not json at all")
+    assert result["terminal_disposition"] == "TERMINAL_MALFORMED_RESPONSE"
+    assert calls["n"] == 1, f"a malformed answer was retried {calls['n']} times"
+    assert result["raw_response"] == "this is not json at all", (
+        "the raw bytes must be KEPT - they are the evidence of what arrived")
+    assert result["parse_error"]
+    assert result["retry_history"] == []
+
+
+def test_a_transport_failure_is_still_retried(monkeypatch):
+    """The negative control: the retry path must still work for real transport."""
+    good = json.dumps({"choices": [{"message": {"content": "x"}, "finish_reason": "stop"}],
+                       "model": "test-model"})
+    result, calls = _call_once_with(monkeypatch, good, fail_times=2)
+    assert result["terminal_disposition"] == "COMPLETED"
+    assert calls["n"] == 3, "two transport failures should have been retried"
+    assert len(result["retry_history"]) == 2
+
+
+def test_transport_exhaustion_is_terminal_and_distinct(monkeypatch):
+    result, calls = _call_once_with(monkeypatch, "{}", fail_times=99)
+    assert result["terminal_disposition"] == "TERMINAL_TRANSPORT_FAILURE"
+    assert result["raw_response"] is None
+    assert calls["n"] == 3, "transport retries are bounded at TRANSPORT_RETRIES + 1"
+    assert len(result["retry_history"]) == 3
+
+
+def test_the_parse_is_outside_the_transport_handler():
+    src = RUNNER.read_text()
+    assert "# TRANSPORT only - retryable" in src
+    assert "TERMINAL_MALFORMED_RESPONSE" in src
+    transport = src.index("# TRANSPORT only - retryable")
+    parse = src.index("obj = json.loads(raw)")
+    assert transport < parse, "the parse must sit outside the transport handler"

@@ -119,3 +119,32 @@ def test_the_allowlisted_file_really_does_contain_the_pattern():
         for rel in entries:
             assert pattern.search((ROOT / rel).read_text()), \
                 f"{rel} no longer matches {pattern_name}; drop the exemption"
+
+
+def test_no_assertion_can_be_trivially_true():
+    """`assert X or True`, `assert True`, `assert 1` - checks that cannot fail.
+
+    I wrote one of these twice in a single session, the second time minutes after
+    describing the disease out loud. That is not a vigilance problem; a mistake
+    made twice after being named needs a lint. This is the cheapest possible one:
+    it walks the AST of every test and refuses an assertion whose test expression
+    is a constant, or an `or` chain ending in a truthy constant.
+    """
+    import ast
+
+    offences = []
+    for path in sorted(Path(__file__).parent.glob("test_*.py")):
+        tree = ast.parse(path.read_text())
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Assert):
+                continue
+            test = node.test
+            if isinstance(test, ast.Constant) and test.value:
+                offences.append(f"{path.name}:{node.lineno} assert <constant>")
+            elif isinstance(test, ast.BoolOp) and isinstance(test.op, ast.Or):
+                for operand in test.values:
+                    if isinstance(operand, ast.Constant) and operand.value:
+                        offences.append(f"{path.name}:{node.lineno} assert ... or <truthy>")
+    assert not offences, (
+        "these assertions can never fail, which reads exactly like a passing "
+        "check:\n  " + "\n  ".join(offences))

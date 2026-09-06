@@ -28,8 +28,13 @@ PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
 # 245 passed  (reader-interference lineage, 2026-09-06)
 
 # Whole suite. Needs scikit-learn and pandas (declared in pyproject).
-PYTHONPATH=src:vendor/membukkit/src pytest -q --continue-on-collection-errors
-# 1475 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
+# `python -m pytest`, NOT bare `pytest`. Three tests import from `scripts.`, which
+# resolves only when the working directory is on sys.path - which `-m` does and
+# the bare entry point does not. Bare `pytest` gives 27 failed / 1472 passed, and
+# an agent following this file verbatim would reasonably read those three as a
+# new regression. Found by glm-5.3 at Gen120 round 5.
+PYTHONPATH=src:vendor/membukkit/src python -m pytest -q --continue-on-collection-errors
+# 1480 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
 ```
 
 **The whole-suite figure is not green, and every remaining failure has a known

@@ -1,7 +1,10 @@
 # Review findings ledger
 
 Every numbered finding from a rival or control-plane review, tracked to a status
-and a commit. Verbatim reviews live beside this file; they are the evidence, this
+and a commit. **`CARRIED`** means review ruled it minor, it is accepted knowingly,
+it has an owner and a generation, and it is not fixed yet - it is not a synonym
+for closed, and the doorbell refuses a CARRY verdict unless carried findings are
+actually recorded here. Verbatim reviews live beside this file; they are the evidence, this
 is the accounting.
 
 **Why this exists.** The stale `97 passed` test gate in `AGENTS.md` was reported
@@ -89,6 +92,16 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 63 | Gen120 r4 | glm-5.3 | `_canonical()` resolved the canonical attempt as "the first backtick-quoted token in a prose file", so any earlier backtick would silently retarget the run | FIXED | Matches the `**\`attemptN\` is canonical**` declaration and refuses when absent. |
 | 64 | Gen120 r4 | glm-5.3 | round-3 reviewer transcripts were not committed, making "both reviewers led with that" unverifiable from the repository - the class of #11 and #47 | FIXED | Rounds 3 and 4 archived under `reviews/gen120-rivals-round3/` and `round4/`. |
 | 65 | Gen120 r4 | self | attempt11 was frozen after the FIRST of six repairs - the same sequencing error as attempt8, twice in one generation | FIXED BY GATE | The rule was already written at #51 and I broke it again, so it became a gate: `refuse_if_the_apparatus_is_red()` in the freeze runner, excluding only the two tests that fail by design on source drift. Positive control: a deliberately red witness makes the freeze refuse and write no attempt directory. attempt13. |
+
+
+| 66 | Gen120 r5 | glm-5.3-flash | the malformed-200 repair (#59), a headline fix, shipped with **no witness test** - a regression to retry-and-discard would have passed the entire suite, the apparatus gate and the freeze | FIXED | Four witnesses added driving the real `call_once` against a fake endpoint: a malformed answer is terminal, unretried, bytes kept; transport failures still retry; exhaustion is distinct; the parse sits outside the transport handler. Confirmed to FAIL at the pre-fix commit. attempt14. |
+| 67 | Gen120 r5 | glm-5.3 | `AGENTS.md`'s documented whole-suite command gives 27 failed / 1472 passed, not the documented figures: three tests import from `scripts.`, which resolves only under `python -m pytest` | FIXED | Command corrected to `python -m pytest` with the reason stated, so an agent following the file verbatim does not read three import failures as a regression. |
+| 68 | Gen120 r5 | glm-5.3 | `CANONICAL_ATTEMPT.md` implied attempt12 lacked the fourth-review repairs; its pins show it already contained them, and its only supersession is attempt13's freeze gate | FIXED | Entry corrected. The runner consumes this file, so a wrong rejection reason here is a wrong answer at the point of use. |
+| 69 | Gen120 r5 | glm-5.3-flash | `reviews/gen120-negative-control.md` records 19/36, but the witness file has grown since, so its totals no longer reproduce | FIXED | Addendum recording why, and instructing future controls to pin the witness-file sha256 alongside the figures. |
+| 70 | Gen120 r5 | glm-5.3 + flash | the "focused suites 99 passed" figure in the handoff matches no reproducible composition | CARRIED | Handoff now states the per-file counts rather than a total. Owner: me, next handoff - stop quoting composed totals without naming their parts. |
+| 71 | Gen120 r5 | glm-5.3 | Gen116/v5 naming vestiges remain in contract-bound prose: `grade_gen118_v6.py`'s docstring says "reader-interference-v5 ... Generation 116", and the runner binds the grader as `G116` | CARRIED | Cosmetic, in prose only; every behaviour-bearing name was corrected at #44. Owner: me, Gen121 - fold into the next freeze rather than spending an attempt on a docstring. |
+| 72 | Gen120 r5 | glm-5.3 | `EV.verify_closed` scans only files, so a stray SUBDIRECTORY beside a sealed evidence set would not deny closure | CARRIED | Narrower instance of #37. No run writes subdirectories and none exists in any sealed attempt. Owner: me, Gen121. |
+| 73 | Gen120 r5 | glm-5.3-flash | the freeze red-suite gate's positive control left no repository artifact, unlike the negative control - the "ran it and kept no artifact" class this generation already had to retract once | CARRIED | The reviewer independently reproduced the mechanism, so the claim is now externally verified. Owner: me, Gen121 - record the control as a test rather than a transcript. |
 
 
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the

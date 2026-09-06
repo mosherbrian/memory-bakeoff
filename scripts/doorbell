@@ -68,8 +68,14 @@ def preflight(generation: str) -> str:
     if not reviews:
         raise SystemExit("REFUSED: no rival review found. Run review-generation first.")
     verdict = reviews[-1].read_text().strip().splitlines()[0]
-    if verdict != "PROCEED":
-        raise SystemExit(f"REFUSED: latest rival verdict is {verdict!r}, not PROCEED "
+    # PROCEED or CARRY. The reviewers assign severity; this honours it rather than
+    # overriding it. DEFECTS_BLOCKING still produces FIX FIRST and still refuses -
+    # that is the case this gate exists for. DEFECTS_MINOR produces CARRY, and its
+    # findings must be in the ledger as CARRIED before the bell rings, so nothing
+    # is dropped by proceeding. See decisions/gen120-review-severity.md; authorised
+    # by Brian 2026-09-06 after five rounds none of which returned BLOCKING.
+    if verdict not in ("PROCEED", "CARRY"):
+        raise SystemExit(f"REFUSED: latest rival verdict is {verdict!r} "
                          f"({reviews[-1].parent.name}). Fix, re-review, then ring.")
     head_time = int(git("log", "-1", "--format=%ct") or 0)
     if reviews[-1].stat().st_mtime < head_time:
@@ -101,10 +107,19 @@ def preflight(generation: str) -> str:
 
     ledger = Path(__file__).resolve().parents[1] / "reviews/LEDGER.md"
     if ledger.exists():
-        open_rows = [l for l in ledger.read_text().splitlines() if "| OPEN |" in l]
+        text = ledger.read_text()
+        open_rows = [l for l in text.splitlines() if "| OPEN |" in l]
         if open_rows:
             raise SystemExit(f"REFUSED: {len(open_rows)} finding(s) still OPEN in "
-                             "reviews/LEDGER.md. Close or explicitly defer them.")
+                             "reviews/LEDGER.md. Close them, or mark them CARRIED "
+                             "with an owner if review ruled them minor.")
+        # A CARRY verdict requires that the carrying actually happened. Otherwise
+        # "minor" becomes a way to drop findings silently, which is the failure
+        # the ledger was built to stop.
+        if verdict == "CARRY" and "| CARRIED |" not in text:
+            raise SystemExit("REFUSED: review returned CARRY but no finding is "
+                             "marked CARRIED in reviews/LEDGER.md. Record them "
+                             "before ringing - carrying is not the same as ignoring.")
     return commit
 
 
