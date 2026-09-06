@@ -35,18 +35,36 @@ def test_missing_arguments_refuse():
 
 
 def test_it_checks_the_REQUEST_channel_not_only_the_answer():
-    """Nothing checked the request channel for 6h47m. That is the whole point."""
-    assert "gh pr view" in SRC, "the watcher must read the PR back"
-    assert "REQUEST NOT DELIVERED" in SRC
-    assert 'PREFIX=BAKEOFF_HANDOFF' in SRC
+    """Nothing checked the request channel for 6h47m. That is the whole point.
+
+    The channel changed on 2026-09-06 when the PR trigger was disabled: a
+    well-formed PR now summons nothing, so checking its title would be theatre.
+    The request now lives in control-plane/PENDING.json, read on a schedule.
+    """
+    assert "PENDING.json" in SRC, "the watcher must read the state file"
+    assert "REQUEST NOT VISIBLE" in SRC and "REQUEST STALE" in SRC
+    assert "git show origin/main:control-plane/PENDING.json" in SRC
+    assert "gh pr view" not in SRC, "the inert PR check must be gone, not dormant"
 
 
-def test_positive_control_the_real_mistitled_pr_is_caught():
-    """PR #15 is the title that cost the night. It must fail, fast."""
-    r = run(["115", REAL_MISTITLED_PR, GEN115_SHA])
+def test_positive_control_a_stale_pin_is_caught():
+    """main advancing while a request is outstanding is the Gen107->108 failure,
+    and it happened again today. A watch expecting a commit the state file does
+    not pin must refuse rather than wait."""
+    r = run(["117", "16", "0" * 40])
     assert r.returncode == 2, r.stdout + r.stderr
-    assert "REQUEST NOT DELIVERED" in r.stdout
-    assert "BAKEOFF_HANDOFF" in r.stdout
+    assert "REQUEST STALE" in r.stdout or "REQUEST NOT VISIBLE" in r.stdout
+
+
+def test_positive_control_no_pending_request_is_caught():
+    """If nothing is asking, waiting is not 'blocked' - it is nothing happening."""
+    import json as _json, subprocess as _sp
+    pending = _json.loads(_sp.run(
+        ["git", "show", "origin/main:control-plane/PENDING.json"],
+        cwd=ROOT, capture_output=True, text=True).stdout or "{}")
+    assert "status" in pending, "PENDING.json must exist on origin/main to be a channel"
+    assert pending["status"] in ("awaiting", "answered")
+    assert len(pending.get("source_commit", "")) == 40
 
 
 def test_negative_control_a_conforming_open_pr_is_not_flagged():

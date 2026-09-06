@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Refuse to advance main while a control-plane request is outstanding.
+#
+# Three times on 2026-09-06 an instruction went stale because main moved after
+# the request was sent. The third time was ten minutes after I had corrected the
+# second and written that I would stop. Stating the rule does not work; this
+# does.
+#
+# The exemption is narrow and mechanical: a commit that only touches
+# control-plane/PENDING.json is how the freeze is lifted, so the mechanism can
+# always release itself.
+#
+# Install:  git config core.hooksPath .githooks
+set -euo pipefail
+F=control-plane/PENDING.json
+[ -r "$F" ] || exit 0
+
+STATUS=$(python3 -c "import json;print(json.load(open('$F')).get('status',''))" 2>/dev/null || echo "")
+[ "$STATUS" = "awaiting" ] || exit 0
+
+STAGED=$(git diff --cached --name-only)
+OTHER=$(printf '%s\n' "$STAGED" | grep -v "^control-plane/PENDING.json$" | grep -v '^$' || true)
+[ -z "$OTHER" ] && exit 0
+
+PIN=$(python3 -c "import json;print(json.load(open('$F')).get('source_commit','')[:12])" 2>/dev/null)
+cat <<MSG
+REFUSING: a control-plane request is outstanding.
+
+  control-plane/PENDING.json  status: awaiting, pinned to $PIN
+
+The control plane is writing an instruction against that exact commit. Advancing
+main now makes its answer stale before it arrives - that happened three times on
+2026-09-06, the third time ten minutes after I promised to stop.
+
+Staged anyway:
+$(printf '%s\n' "$OTHER" | sed 's/^/  /')
+
+Either wait for the answer, or record it first:
+  scripts/pending answered <generation>
+
+To lift deliberately and take responsibility:
+  git commit --no-verify
+MSG
+exit 1
