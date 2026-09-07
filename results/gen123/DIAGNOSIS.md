@@ -32,14 +32,41 @@ be a serious misreading - one nearly made while writing this.
 
 The experimental conditions:
 
+### CORRECTED — the orders are NOT identical
+
+The first version of this section said the two orders were identical and that
+presenting the outdated record first changed nothing. **That was wrong, and the
+sealed `estimands.json` in this very attempt says so:**
+
+```
+Q1_cores_selecting_current_in_both_orders: 2/4
+Q3_order_discordant_cores:
+  core03: current_first=False, stale_first=True    <- succeeded only when STALE was first
+  core07: current_first=True,  stale_first=False   <- succeeded only when CURRENT was first
+```
+
+**Two of the four interpretable cores FLIPPED with order**, in opposite
+directions. The marginal counts below are identical only because those two flips
+cancel each other out.
+
 | condition | all 12 cores | the 4 interpretable cores |
 |---|---|---|
 | `CONFLICT_CURRENT_FIRST` | 5 current-with-history, 7 unsupported | 3 current-with-history, 1 unsupported |
 | `CONFLICT_STALE_FIRST` | 5 current-with-history, 7 unsupported | 3 current-with-history, 1 unsupported |
 
-**The two orders are identical, at both scopes.** Presenting the outdated record
-first did not change what the reader selected. Gen114 claimed the opposite before
-being retracted; this run points the other way, and cannot be cited either.
+I read those marginals as the result. **The core is the independent unit of this
+experiment and cells are never observations** - a rule this project has enforced
+since Gen98, which I wrote into `docs/GLOSSARY.md` hours before violating it here.
+Aggregating cells across cores is exactly what it forbids, and it produced a
+headline that the per-core data contradicts.
+
+**What the run actually supports: nothing.** Two discordant cores out of four, in
+opposite directions, is not evidence of an order effect and is not evidence
+against one. It is four cores, below any threshold worth interpreting, in a run
+already marked NON_EVIDENCE. Gen114 claimed an order effect and was retracted; I
+briefly claimed the absence of one on weaker data than Gen114 had.
+
+Found by glm-5.3, which read the sealed estimands rather than my summary of them.
 
 `INSUFFICIENT_CURRENT` is 12/12 correct for the second run running.
 
