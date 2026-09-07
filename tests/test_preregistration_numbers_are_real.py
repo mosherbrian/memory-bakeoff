@@ -104,26 +104,67 @@ def test_the_substrate_partition_in_prose_matches_the_committed_artifact():
 
 
 def test_the_pilot_headline_in_prose_is_what_the_code_computes():
-    """Round-7 NEW-1: the published 'cleaned n=30 / 14 vs 0' was producible by no
-    committed rule - the pre-rewrite cleaning, left standing through two scorer
-    rewrites, with 34 - 10 = 30 wrong on its face. Sixth recurrence. The headline
-    is now computed by scripts/recompute_pilot.py and this pins the prose to it."""
+    """Round-8 defect 1: the first version of this asserted only that each file
+    contained "of {n}" or "n={n}". In PILOT_ORDERING_RESULT.md the only "of 17"
+    was in the DATE-WORD CAVEAT, not the headline - and that caveat's number was
+    itself wrong, so the guard passed on a borrowed error and would have FAILED
+    once the caveat was corrected. Review demonstrated both by mutation. A guard
+    sustained by a number known to be wrong is worse than none.
+
+    So: every figure of the cleaned block, in every document, located as a group.
+    """
     import json
+    import re
     import subprocess
     subprocess.run([sys.executable, str(ROOT / "scripts/recompute_pilot.py")],
                    capture_output=True, cwd=ROOT, check=True)
     h = json.loads((ROOT / "research/pilot_ordering/PILOT_HEADLINE.json").read_text())
-    c = h["dates_stripped"]["cleaned"]
-    n, b = c["n"], c["discordant_chronological_only"]
+    d, st = h["dated"]["cleaned"], h["dates_stripped"]["cleaned"]
+    assert d["n"] == st["n"]
+    n = d["n"]
+
+    def block(txt):
+        """The two cleaned rows must appear together: dated hits, then stripped
+        hits, then both discordances - within one span, not scattered."""
+        sep = rf"\s*(?:/|of)\s*{n}"      # documents write both "15/17" and "15 of 17"
+        pat = (rf"{d['chronological_hits']}{sep}\D{{1,60}}"
+               rf"{d['reversed_hits']}{sep}"
+               rf"[\s\S]{{0,200}}"
+               rf"{st['chronological_hits']}{sep}\D{{1,60}}"
+               rf"{st['reversed_hits']}{sep}")
+        return re.search(pat, txt)
+
     for name in ("handoff/GEN124_RECAP.md",
                  "handoff/GEN124_TECHNICAL.md",
                  "research/pilot_ordering/PILOT_ORDERING_RESULT.md"):
         txt = (ROOT / name).read_text()
-        assert f"of {n}" in txt or f"n={n}" in txt, f"{name} does not state n={n}"
+        assert block(txt), (
+            f"{name} does not carry the cleaned block as a located group: "
+            f"dated {d['chronological_hits']}/{n} vs {d['reversed_hits']}/{n}, "
+            f"stripped {st['chronological_hits']}/{n} vs {st['reversed_hits']}/{n}")
+
     for name in ("handoff/GEN124_TECHNICAL.md",
                  "research/pilot_ordering/PILOT_ORDERING_RESULT.md"):
         txt = (ROOT / name).read_text()
-        assert f"{b} vs 0" in txt, f"{name} does not state the {b} vs 0 discordance"
+        for v in (d["discordant_chronological_only"], st["discordant_chronological_only"]):
+            assert f"{v} vs 0" in txt, f"{name} does not state the {v} vs 0 discordance"
+
+
+def test_the_date_word_caveats_are_computed_not_counted():
+    """Round-8 defect 2 / LEDGER 154. The caveat said 29 and 17; no rule produced
+    either, and one of them was propping up the guard above."""
+    import json
+    h = json.loads((ROOT / "research/pilot_ordering/PILOT_HEADLINE.json").read_text())
+    dw = h["date_words"]
+    for name in ("handoff/GEN124_RECAP.md",
+                 "handoff/GEN124_TECHNICAL.md",
+                 "research/pilot_ordering/PILOT_ORDERING_RESULT.md"):
+        txt = (ROOT / name).read_text()
+        assert f"{dw['month_or_year']} of the {dw['n_pilot']}" in txt, (
+            f"{name} does not state the computed month-or-year count "
+            f"{dw['month_or_year']} of {dw['n_pilot']}")
+        for dead in ("29 of 34", "17 of 34 items"):
+            assert dead not in txt, f"{name} still states the uncomputed {dead!r}"
 
 
 def test_no_document_still_claims_the_superseded_cleaned_headline():

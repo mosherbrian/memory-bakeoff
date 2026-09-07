@@ -89,7 +89,7 @@ recovered anything.
 
 The tempting conclusion is "it follows position, not dates". We cannot say that
 yet, and our own technical record says so. Two things other than position are
-still in the prompt: most items mention a month or a weekday inside the
+still in the prompt: 28 of the 34 items mention a month or a year inside the
 conversation text, and - worse - the question we asked ended with "as of the
 most recent conversation", which points at POSITION in the transcript rather
 than at time. A model that assumes the conversations are in date order would
@@ -111,7 +111,8 @@ This is a pilot, not a result. Three reasons, all of them real:
    "four". Good enough to see whether an effect exists, not good enough to
    publish a number.
 2. The date removal is partial. The headings are gone, but 29 of the 34 items
-   still mention a month or a year somewhere inside the conversation. So the
+   mention a month or a year somewhere inside the conversation - 28 of 34,
+   counted by a stated rule rather than by eye. So the
    second pass is "most of the date cue removed", not "no date cue", and the
    real effect of dates sits somewhere at or beyond what we measured.
 3. Half the items were deliberately NOT used. Anything we look at tonight is

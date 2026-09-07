@@ -75,8 +75,8 @@ the pilot's only reversed-favouring item.
 Excluding, by the committed §2 rule, every pilot-half item whose gold is not
 uniquely in the later session - 17 of 34 - n=17:
 
-    dates shown      chrono 15  reversed 12   discordant 3 vs 0
-    dates stripped   chrono 14  reversed  5   discordant 9 vs 0
+    dates shown      chrono 15/17  reversed 12/17   discordant 3 vs 0
+    dates stripped   chrono 14/17  reversed  5/17   discordant 9 vs 0
 
 Computed by `scripts/recompute_pilot.py` into `PILOT_HEADLINE.json`. An earlier
 version said n=30 and 14 vs 0, which no committed rule produces.
@@ -104,7 +104,8 @@ removed, reader, and a McNemar exact test on the discordant pair. 14 unspent
 items after eligibility. It does not authorise the run.
 Header dates replaced with `=== conversation N ===` and the lead sentence
 changed from "in the order they happened" - false under `current_first` - to a
-neutral one. Date words remain in the conversation text of 29 of 34 items;
+neutral one. Month or year words remain in the conversation text of 28 of the 34 pilot
+items, computed into `PILOT_HEADLINE.json` under a stated rule;
 the strip is partial (finding 118).
 
 ## Scorer

@@ -52,8 +52,45 @@ def arms():
     return out
 
 
+MONTHS = ("january february march april may june july august september october "
+          "november december jan feb mar apr jun jul aug sep sept oct nov dec").split()
+WEEKDAYS = ("monday tuesday wednesday thursday friday saturday sunday "
+            "mon tue tues wed thu thur thurs fri sat sun").split()
+
+
+def date_words():
+    """Round-8 defect 2 / LEDGER 154: the date-word caveats were typed, wrong,
+    and load-bearing. Stated rule, computed number.
+
+    Scope: the CONVERSATION TEXT of the pilot-half items only - every turn's
+    content, both roles, both sessions. Not the headers, which the stripped arm
+    removes anyway. Whole-word, case-folded. Years are 19xx or 20xx.
+    """
+    import re
+    items = {x["question_id"]: x for x in json.loads(SRC.read_text())}
+    dirs = sorted(glob.glob(str(ROOT / "research/pilot_ordering" / "*-nodates")))
+    rows = json.loads((Path(dirs[-1]) / "rows.json").read_text())
+    pilot = sorted({r["question_id"] for r in rows})
+    month = re.compile(r"\b(" + "|".join(MONTHS) + r")\b", re.I)
+    weekday = re.compile(r"\b(" + "|".join(WEEKDAYS) + r")\b", re.I)
+    year = re.compile(r"\b(19|20)\d\d\b")
+    counts = {"n_pilot": len(pilot), "month_or_year": 0, "month_and_weekday": 0,
+              "month_or_year_or_weekday": 0}
+    for q in pilot:
+        text = " ".join(t["content"] for s in items[q]["haystack_sessions"] for t in s)
+        m, w, y = bool(month.search(text)), bool(weekday.search(text)), bool(year.search(text))
+        counts["month_or_year"] += m or y
+        counts["month_and_weekday"] += m and w
+        counts["month_or_year_or_weekday"] += m or y or w
+    counts["_rule"] = ("conversation text only, both roles, both sessions; whole-word "
+                       "month names and abbreviations, weekday names and abbreviations, "
+                       "years 19xx/20xx")
+    return counts
+
+
 def main():
     res = arms()
+    res["date_words"] = date_words()
     res["_rule"] = ("cleaned = PREREGISTRATION section 2 as committed: "
                     "ordering_scorer.hit, whole session, both roles")
     res["_status"] = "PILOT. Exploratory. Held-out items untouched."

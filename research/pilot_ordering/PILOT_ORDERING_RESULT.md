@@ -81,8 +81,11 @@ class outright rather than arguing about it.
 
 ## What this does NOT establish
 
-- **Position is not isolated.** Stripping the headers leaves month and weekday
-  words inside the text of 17 of 34 items and broad temporal language in all 34.
+- **Position is not isolated.** Stripping the headers leaves month or year
+  words inside the conversation text of 28 of the 34 pilot items, and both a
+  month and a weekday in 10 of them - computed by `scripts/recompute_pilot.py`
+  under a stated rule into `PILOT_HEADLINE.json`, not counted by eye. An earlier
+  version said 17 of 34, which no rule produces.
   Worse, the instruction itself says "as of the most recent conversation", which
   is a recency cue no header-stripping can remove: with dates gone, a reader that
   assumes chronological presentation will read the LAST-shown session as the most
