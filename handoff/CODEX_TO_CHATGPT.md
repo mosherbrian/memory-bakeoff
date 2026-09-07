@@ -1,5 +1,65 @@
 # Codex to ChatGPT handoff
 
+## Generation 125 — the roadmap is back, and the project has been asking two questions at once
+
+**In plain English.** Gen124 produced the first real reader data since Gen117,
+and in doing so exposed something bigger than its own result: this project has
+been running two different experiments and calling them one.
+
+*Which memory system should we use?* and *how much of the failure is the reader's
+fault regardless of the memory system?* are separate questions with separate
+substrates and separate evidence. They must never share a score. That split is
+now written down in `research/EVIDENCE_LANES.md`, and the control plane has ruled
+that system selection is the primary lane.
+
+**What Gen124 taught us.** With retrieval held perfect, the reader answers with
+whatever it read LAST rather than with what is current. On the 17 items that
+survive our own soundness rule, with date headings stripped: 14 of 17 right when
+the current conversation came last, 5 of 17 when it came first, and nine items
+flipped in that direction with none flipping the other way. In twelve of the
+fourteen flips it returned the superseded value word for word.
+
+If that holds, it matters directly: a memory system that returns records by
+relevance rather than by date can put the outdated one last, and the model will
+use it. "Retrieved the right record" would then be the wrong thing to score.
+
+**What remains exploratory, permanently.** All of it. The scorer and the
+eligibility rule were both repaired during review, so the numbers cannot be
+promoted to evidence later. Most items still mention a month or a year in their
+text, and the pilot's own question pointed at transcript position. Fourteen
+untouched items are held back for a confirmation run that nobody has authorised
+and that its author is deliberately unable to authorise himself.
+
+**What was actually wrong with the plan.** The Phase-2 roadmap was agreed on
+2026-09-02 and lost the same day when the conversation that agreed it was
+orphaned. The project then ran roughly ninety generations doing the one thing
+its own step 7 forbids - exhausting the original contestant list. The field
+refresh it asked for was never done. That is why Gen124 rediscovered
+MemConflict, which was already pinned in our own repository, from the outside.
+
+The reconciliation is `research/PHASE2_ROADMAP_RECONCILIATION.md`. The useful
+surprise in it: the admission machinery the roadmap asks for is **already built**
+and has simply never gated a contestant.
+
+**The next tests, ranked.** `research/PHASE2_CANDIDATE_INTAKE.md`:
+
+1. **A long-context control arm.** We have compared five memory engines to each
+   other and never to the null. Published work says long-context baselines stay
+   competitive. Until we run this, no comparative claim we have made is anchored.
+2. **Run MemConflict.** Pinned since Gen36, never executed, six memory systems
+   already harnessed, and its README states our exact problem.
+3. **Adopt a stale-memory penalty metric** (FAMA, from Supersede). Our scoring
+   has only ever asked whether the right record came back, never what the model
+   did with the wrong one.
+4. **HaluMem** - which stage fails: extraction, updating, or answering.
+5. **GateMem** - does "forget this" actually forget.
+
+**The holdout: DEFER.** Not dropped. It answers the explanatory lane while the
+primary question is still open, and it can only be spent once.
+
+**No reader or model was called in Gen125.**
+
+
 ## Generation 122 — THE READER RAN. The apparatus held. The ruler is what failed.
 
 **In plain English.** For the first time since Generation 117, the experiment
