@@ -47,12 +47,35 @@ disagreeing with it.
 The paper does not measure or report where the current fact sits relative to the
 superseded one in the context. That much is checked.
 
-The broader claim - that no published work measures it - is NOT established. It
-rests on one paper and two searches. Not checked: the repo's own Phase-B harvest
-list (HaluMem, STALE, Supersede, EvoMemBench, GateMem, LongMemEval-V2), whether
-the pinned MemConflict generator ablates order, and the position-bias literature,
-which has studied where a fact sits in a context for years. Until those are read,
-"nobody has done this" is a hope, not a finding.
+The broader claim - that no published work measures it - is FALSE, and was
+checked the same night it was written. Two searches found it immediately:
+
+- **ConflictQA** (arXiv:2604.11209, `github.com/Tianzhe26/ConflictQA`) runs
+  exactly this manipulation: it "records results when conflicting evidence is
+  present before and after the correct evidence", and reports that for models
+  vulnerable to conflicting evidence, putting the correct evidence FIRST
+  improves performance. Data and code are released.
+- **Position bias** is a measured, benchmarked phenomenon: across 36 models the
+  first-shown option is picked 64.3% of the time, a 15.7 point lift, and the
+  median model flips its choice on 41.3% of decisive swapped-order pairs
+  (`github.com/lechmazur/position_bias`).
+- **evolveQA** (arXiv:2510.19172) probes models on evolving knowledge.
+
+So "the one thing our apparatus does that the published work does not" was
+wrong when written. What survives is narrower and must be stated as the narrow
+thing it is:
+
+  ConflictQA orders CONTRADICTORY evidence in a RAG setting. The conflicts are
+  counterfactual - two sources disagreeing. It does not order a SUPERSEDED
+  earlier value against the CURRENT one, where both are true statements made by
+  the same user at different times, and where the task is to report the current
+  state rather than to pick a trustworthy source.
+
+That distinction is real but it is a niche inside a studied problem, not virgin
+ground, and the next handoff must present it that way. Before any claim of
+novelty: read ConflictQA's ordering ablation properly, and check the Phase-B
+harvest list (HaluMem, STALE, Supersede, EvoMemBench, GateMem, LongMemEval-V2)
+and whether the pinned MemConflict generator ablates order.
 
 ## Finding 4: LongMemEval is public; MemConflict is already pinned here
 
