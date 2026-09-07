@@ -21,9 +21,31 @@ the context window, on our workload?
 
 **Why first.** EvoMemBench reports that long-context baselines remain highly
 competitive and that memory helps most only when context is insufficient or the
-task is hard. We have measured five engines against each other and never against
-the null. Every comparative claim the project has made is therefore unanchored:
-we can say Perseus beat Mem0, and cannot say either beat doing nothing.
+task is hard.
+
+**Correction, found by self-checking this claim before a reviewer did.** An
+earlier draft said "we have measured five engines against each other and never
+against the null". That is FALSE. `results/BASELINE_FINDINGS.md` holds three
+retrieval baselines - bm25, dense_lsa, hybrid_rrf - and they are strong:
+Hit@5 0.917-0.958, all-relevant@5 up to 0.958.
+
+The claim survives in narrowed form, and the baselines document makes the case
+better than I did:
+
+> "Simple lexical/LSA retrieval is strong on this small corpus, so a
+> sophisticated engine needs to win on temporal correctness, conflict handling,
+> multi-hop completeness, procedural success-vs-failure ranking, or learning
+> over time, not merely Hit@5."
+
+So the missing arm is not "a baseline" - it is a **LONG-CONTEXT** baseline: put
+the history in the window and ask the question, no retrieval step at all. That
+is a different null from bm25. bm25 answers "does the engine beat cheap
+retrieval"; long-context answers "does retrieval need to happen". EvoMemBench's
+result is about the second, and we have never run it.
+
+Note also that all three existing baselines surface stale evidence at
+`prohibited@5 = 0.125`, which is the same failure the reader lane studies from
+the other end.
 
 It is also the cheapest item here - no new system, no adapter, no admission
 gate. It is a configuration of the harness we already run.
