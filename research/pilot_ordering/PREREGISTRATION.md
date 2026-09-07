@@ -72,8 +72,8 @@ unaffected by the error. (Membership was 11 when that error was found and is 14
 after the §4 unit fix logged below; the table error touched neither.)
 
 **The strictest reading is adopted: §4 hit, session scope, 14 unspent items.**
-Not because it is convenient - it is by far the most expensive, costing 17 of
-28 items - but because it is the only reading under which "the earlier session
+Not because it is convenient - it is by far the most expensive, discarding
+half of the unspent half - but because it is the only reading under which "the earlier session
 does not contain the answer" is actually true, and because adopting the loose
 reading after seeing that it preserves more of the effect is the precise move
 this document exists to forbid.
@@ -181,8 +181,8 @@ Primary: the count of items HIT in chronological but not reversed, against the
 count HIT in reversed but not chronological. A McNemar exact test on that
 discordant pair, two-sided, alpha 0.05.
 
-Preregistered direction: chronological > reversed. The pilot showed 14 vs 0 on
-30 items, so the discordant pair is the whole test; if the effect is real this run should reproduce it, and if it does not
+Preregistered direction: chronological > reversed. Under this same rule the pilot
+showed 9 vs 0 on 17 items, so the discordant pair is the whole test; if the effect is real this run should reproduce it, and if it does not
 that null is the result and will be published as one.
 
 Secondary, descriptive only, no test: of the items HIT in chronological and
@@ -253,7 +253,7 @@ Neither touches the adopted rule, the membership, or the test.
 
 ## 10. What this run still cannot establish
 
-One reader, one temperature, one prompt, one dataset, ~30 items. It cannot
+One reader, one temperature, one prompt, one dataset, 14 items. It cannot
 establish a ceiling for any other model, cannot generalise past this substrate,
 and cannot separate position from residual textual chronology. It can only say
 whether, on these items and this reader, order changes what is reported as

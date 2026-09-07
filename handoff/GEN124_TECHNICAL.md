@@ -72,13 +72,19 @@ turn-scoped crude-matcher numbers from before the ledger-135 rewrite, left
 standing after the script was changed under them. The 8 break the design assumption; e66b632c is among them and was
 the pilot's only reversed-favouring item.
 
-Excluding the 10 (8 + 2 ambiguous), n=30:
+Excluding, by the committed §2 rule, every pilot-half item whose gold is not
+uniquely in the later session - 17 of 34 - n=17:
 
-    dates shown      chrono 22  reversed 16   discordant  6 vs 0
-    dates stripped   chrono 21  reversed  7   discordant 14 vs 0
+    dates shown      chrono 15  reversed 12   discordant 3 vs 0
+    dates stripped   chrono 14  reversed  5   discordant 9 vs 0
 
-Directionality check on the 14: 12 of the reversed answers contain the
-superseded value.
+Computed by `scripts/recompute_pilot.py` into `PILOT_HEADLINE.json`. An earlier
+version said n=30 and 14 vs 0, which no committed rule produces.
+
+Directionality check, on the 14 discordant items of the AS-RUN stripped arm
+(the set that check was performed over): 12 of the reversed answers contain the
+superseded value. Under the cleaned n=17 the discordant set is 9, all of them
+inside that 14.
 
 The claim that "scorer crudeness produces concordant misses and cannot generate
 a direction" is WITHDRAWN - it is false. Counter-case (review, round 3): earlier

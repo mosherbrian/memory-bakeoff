@@ -37,17 +37,24 @@ breaks the whole setup. One of those 8 was the single item in the entire pilot
 that favoured the reversed order - so the one piece of evidence against the
 effect came from an item where the assumption does not hold.
 
-Dropping those, on the 30 items that are sound:
+Dropping every item that fails our own soundness rule - 17 of the 34 - on the
+17 that are sound:
 
-    dates shown      old first 22 of 30    current first 16 of 30
-    dates removed    old first 21 of 30    current first  7 of 30
+    dates shown      old first 15 of 17    current first 12 of 17
+    dates removed    old first 14 of 17    current first  5 of 17
 
-Fourteen items are right only when the current conversation comes last. None go
-the other way.
+Nine items are right only when the current conversation comes last. None go the
+other way.
+
+(An earlier version said 30 items and fourteen. That was arithmetic from an older
+version of our own soundness rule, left standing after the rule changed twice -
+and 34 minus 10 is not 30, which I should have seen. The direction did not
+change; the counts did.)
 
 And when it got them wrong, it answered with the outdated value. We checked all
-fourteen: twelve of the wrong answers are word-for-word the superseded value
-from the earlier conversation.
+fourteen from the uncleaned run: twelve of the wrong answers are word-for-word
+the superseded value from the earlier conversation. The nine that survive
+cleaning are among those fourteen.
 
     correct answer $400,000   ->  it said $350,000
     correct answer Paris      ->  it said Hawaii
@@ -109,7 +116,9 @@ This is a pilot, not a result. Three reasons, all of them real:
    real effect of dates sits somewhere at or beyond what we measured.
 3. Half the items were deliberately NOT used. Anything we look at tonight is
    exploratory forever, because a rule chosen after seeing an outcome is the
-   error that cost us Gen114. Thirty-four items are held back, untouched, for a
+   error that cost us Gen114. Thirty-four items were held back and never shown to
+   the model; fourteen pass the soundness rule and are what a registered run
+   would use. They are untouched, for a
    run whose rule is fixed before anyone looks.
 
 ## What I got wrong, and had to retract

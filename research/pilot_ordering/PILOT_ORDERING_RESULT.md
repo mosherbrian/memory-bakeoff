@@ -24,11 +24,20 @@ As run, 34 items:
     dates shown      chronological 23/34   reversed 18/34   discordant  6 vs 1
     dates stripped   chronological 22/34   reversed  9/34   discordant 14 vs 1
 
-After excluding 10 items whose gold value is not uniquely in the later session
-(see Contamination), 30 items:
+After excluding, by the committed §2 rule, every item whose gold value is not
+uniquely in the later session - 17 of the 34 in the pilot half - **17 items**:
 
-    dates shown      chronological 22/30   reversed 16/30   discordant  6 vs 0
-    dates stripped   chronological 21/30   reversed  7/30   discordant 14 vs 0
+    dates shown      chronological 15/17   reversed 12/17   discordant 3 vs 0
+    dates stripped   chronological 14/17   reversed  5/17   discordant 9 vs 0
+
+These are computed by `scripts/recompute_pilot.py` into
+`research/pilot_ordering/PILOT_HEADLINE.json` and quoted from there, never typed.
+
+**An earlier version of this block said "excluding 10 items ... 30 items ...
+14 vs 0". No committed rule produces it.** It was the pre-rewrite crude,
+turn-scoped cleaning, left standing through two scorer rewrites, and 34 - 10 is
+not 30 - the arithmetic was wrong on its face and I never looked. Round 7 caught
+it; sixth recurrence of the same class.
 
 The single counter-directional item disappears on cleaning. Every discordant
 item now runs the same way: right when the current conversation is last, wrong
