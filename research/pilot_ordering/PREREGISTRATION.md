@@ -46,8 +46,9 @@ the single `has_answer`-marked TURN. Measured, on the pinned file:
     the ORIGINAL §2 wording as frozen at bb93785
     (crude, turn, PLUS retaining 11 unlocatable) 58       28      14 vs 0
 
-Under single consistent rules the frozen sets differ by 13 items (24 -> 11); the
-original wording, which was not a single rule, gives 28.
+Under single consistent rules the frozen sets differ by 10 items (24 -> 14); the
+original wording, which was not a single rule, gives 28. (Before the §4 unit fix
+logged in §11 the adopted row was 11, and the spread was 13.)
 
 **The first version of this table was itself a defect of the class it
 documents.** It paired the crude+turn rule's `eligible` (47) with the ORIGINAL
@@ -59,10 +60,11 @@ occurred inside the passage whose subject is that a sentence must determine its
 own membership.
 
 Every row above is now the output of one stated rule, and each is reproducible
-from the pinned file. The adopted rule, its membership of 11, and the direction
-were unaffected by the error.
+from the pinned file. The adopted rule, its membership, and the direction were
+unaffected by the error. (Membership was 11 when that error was found and is 14
+after the §4 unit fix logged below; the table error touched neither.)
 
-**The strictest reading is adopted: §4 hit, session scope, 11 unspent items.**
+**The strictest reading is adopted: §4 hit, session scope, 14 unspent items.**
 Not because it is convenient - it is by far the most expensive, costing 17 of
 28 items - but because it is the only reading under which "the earlier session
 does not contain the answer" is actually true, and because adopting the loose
@@ -230,7 +232,7 @@ negative controls added. No outcome consulted.
 **2026-09-07, §2 table and §8 p-value.** Corrected, not amended in substance:
 the justification table mixed two rules into one row, and the power sentence
 quoted 2^-8 where 2^-11 was meant. Reason: round-4 review, defects 1 and 3.
-Neither touches the adopted rule, the membership of 11, or the test.
+Neither touches the adopted rule, the membership, or the test.
 
 ## 10. What this run still cannot establish
 
