@@ -59,8 +59,15 @@ Normalised containment against the gold value:
     casefold; strip terminal punctuation
     map spelled numbers zero..twenty and their ordinals to digits, both ways
     strip currency symbols and thousands separators for numeric comparison
-    HIT iff the normalised gold is a substring of the normalised answer,
-        or every numeric token of the gold appears in the answer
+    HIT iff the normalised gold occurs in the normalised answer AT WORD
+        BOUNDARIES, or every numeric token of the gold appears in the answer
+
+Amended before any unspent item was run, after the scorer's own negative control
+caught plain substring containment scoring gold `one` against "I spent the
+money". This repo has shipped that bug before - a bare `sol` matching inside
+`resolver` - so the boundary is the known failure mode of this operation, not a
+refinement. The amendment removes a FALSE-POSITIVE class and was made without
+reference to any outcome.
 
 This is fixed to remove the known false-negative class (`four` vs `4`) that the
 pilot's crude scorer produced. It is NOT an LLM judge and adds no component.
