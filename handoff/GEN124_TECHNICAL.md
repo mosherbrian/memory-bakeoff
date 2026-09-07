@@ -52,6 +52,30 @@ model is largely following position, and the visible dates were a weak partial
 correction rather than the thing it reasons from.
 
 `research/pilot_ordering/COMBINED.json` carries both arms.
+
+## Contamination, and the cleaned result
+
+`scripts/verify_substrate.py` over all 68 clean items: gold only in the later
+session 47, only in the EARLIER session 8, in both 2, unlocatable by the crude
+matcher 11. The 8 break the design assumption; e66b632c is among them and was
+the pilot's only reversed-favouring item.
+
+Excluding the 10 (8 + 2 ambiguous), n=30:
+
+    dates shown      chrono 22  reversed 16   discordant  6 vs 0
+    dates stripped   chrono 21  reversed  7   discordant 14 vs 0
+
+Directionality check on the 14: 12 of the reversed answers contain the
+superseded value. Scorer crudeness produces concordant misses and cannot
+generate a direction.
+
+## Preregistration
+
+`research/pilot_ordering/PREREGISTRATION.md` fixes substrate hash, eligibility,
+split seed (not re-drawn), normalised scorer, two arms (dated condition
+deliberately excluded), verbatim prompt with the recency-cue instruction
+removed, reader, and a McNemar exact test on the discordant pair. 28 unspent
+items after eligibility. It does not authorise the run.
 Header dates replaced with `=== conversation N ===` and the lead sentence
 changed from "in the order they happened" - false under `current_first` - to a
 neutral one. Date words remain in the conversation text of 29 of 34 items;

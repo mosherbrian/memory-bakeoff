@@ -30,14 +30,36 @@ Then we removed the dates and asked all 34 again:
     current one first, old one last             9 of 34 right
 
 Removing the dates barely touched the first case and cut the second in half.
-Fourteen items were then right only when the current conversation came last;
-one was right only the other way.
 
-And when it got them wrong, it answered with the outdated value:
+Then we found a problem with the material itself. Checking every item instead of
+a sample, 8 of them have the correct answer in the EARLIER conversation, which
+breaks the whole setup. One of those 8 was the single item in the entire pilot
+that favoured the reversed order - so the one piece of evidence against the
+effect came from an item where the assumption does not hold.
 
-    correct answer $400,000  ->  it said $350,000
-    correct answer Paris     ->  it said Hawaii
-    correct answer 120       ->  it said 125
+Dropping those, on the 30 items that are sound:
+
+    dates shown      old first 22 of 30    current first 16 of 30
+    dates removed    old first 21 of 30    current first  7 of 30
+
+Fourteen items are right only when the current conversation comes last. None go
+the other way.
+
+And when it got them wrong, it answered with the outdated value. We checked all
+fourteen: twelve of the wrong answers are word-for-word the superseded value
+from the earlier conversation.
+
+    correct answer $400,000   ->  it said $350,000
+    correct answer Paris      ->  it said Hawaii
+    correct answer Friday     ->  it said Thursday
+    correct answer Ford F-150 ->  it said Ford Mustang Shelby GT350
+    correct answer Yes        ->  it said No
+
+That matters because the reviewers argued our scoring was too crude to trust at
+this size. It is crude - it marks "4" wrong when the expected answer is "four".
+But a scorer that cannot read "four" gets it wrong in BOTH orders, so it cannot
+create a difference between them. Answering with the specific old value, twelve
+times, in one order only, is not something a sloppy scorer can manufacture.
 
 ## What it means
 
