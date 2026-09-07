@@ -17,16 +17,21 @@ NOT AUTHORISED TO RUN. --fire refuses without control-plane authorisation.
 
 60 frozen cases from the canonical gen118 attempt, resolved through
 results/gen118/CANONICAL_ATTEMPT.md and never named here, executed once each. The
-protocol is CONSUMED, never touched. Preflight fails closed with zero calls. Raw request and response bytes are hashed and sealed before anything is parsed,
-in ONE batch write after all 60 calls return - not per call. A crash mid-run
-therefore seals no raw evidence and writes no marker; it fails closed, but the
-bytes are lost. Said plainly here because the docstring used to promise "sealed
-as it arrives", which the capture block itself contradicted.
+protocol is CONSUMED, never touched. Preflight fails closed with zero calls. Exact response bytes are appended to reader_journal.jsonl and FSYNCED as each
+answer arrives, before any decode or parse. An interruption after case N leaves
+N durable captures; the run is then over, and refuses to resume, because those
+cases have already been exposed and the schedule is only valid once.
+
+This paragraph has been wrong twice. It first promised bytes "sealed as it
+arrives" while the code batched them after all 60 calls. It was then corrected to
+describe the batch honestly - which made the docstring true and left the defect
+in place. Sol ruled at Gen121 that the ordering itself was the problem, not the
+description of it.
 
 Phases, in order, and the order is the point:
     preflight   every gate; any failure means zero model calls
     freeze      the execution contract, hashed BEFORE exposure
-    execute     60 calls, then ONE batch write of the raw evidence
+    execute     60 calls; each answer journalled and fsynced as it arrives
     grade       once, with the FROZEN Gen116 grader, never a reimplementation
     marker      RUN_EVIDENCE or NON_EVIDENCE, derived by the frozen gate
 
@@ -34,7 +39,7 @@ Phases, in order, and the order is the point:
 """
 from __future__ import annotations
 
-import argparse, hashlib, json, os, subprocess, sys, time, urllib.error, urllib.request
+import argparse, base64, hashlib, json, os, subprocess, sys, time, urllib.error, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -258,11 +263,18 @@ def freeze_contract(cases: list[dict], generation: int, source_commit: str,
                    "scientific_response_may_never_be_replaced": True},
         "request_body_sha256": {k: sha(v) for k, v in bodies.items()},
         "request_bodies_sha256_all": sha("".join(bodies[k] for k in sorted(bodies))),
-        "capture": {"raw_path": "reader_raw.jsonl",
-                    "sealed_before_parse": True,
-                    "seal": "sha256 over the raw jsonl, written into the manifest",
-                    "written": "one batch write after all 60 calls return, not per call",
-                    "malformed_responses_are_terminal_never_retried": True},
+        "capture": {
+            "raw_path": JOURNAL,
+            "raw_is": "exact response bytes, base64, one append-only record per call",
+            "written": "per call, flushed and fsynced BEFORE any decode or parse",
+            "parsed_view": "reader_records.jsonl - re-serialised objects, NOT raw bytes",
+            "seal": "sha256 over the journal, bound into the manifest",
+            "transport_try_contains_only": "reading the response bytes",
+            "after_bytes_exist_no_failure_may_retry": True,
+            "undecodable_is_terminal": "TERMINAL_UNDECODABLE_RESPONSE",
+            "malformed_json_is_terminal": "TERMINAL_MALFORMED_RESPONSE",
+            "interrupted_run_is_not_resumable": True,
+        },
         "runner_sha256": sha(Path(__file__).read_text()),
         "grader_sha256": sha((ROOT / "scripts/grade_gen118_v6.py").read_text()),
         "v6_module_sha256": sha((ROOT / "src/memory_bakeoff/reader_interference_v6.py").read_text()),
@@ -272,58 +284,114 @@ def freeze_contract(cases: list[dict], generation: int, source_commit: str,
 
 
 # ---------------------------------------------------------------------- execution
-def call_once(case: dict) -> dict:
+JOURNAL = "reader_journal.jsonl"
+
+
+def call_once(case: dict, journal: Path) -> dict:
+    """One case, once. Exact bytes on disk before anything interprets them.
+
+    The ordering IS the science here, and it used to be wrong in two ways that
+    the docstring cheerfully denied. Sol found both at Gen121:
+
+    - `r.read().decode()` sat inside the transport `try`, so an HTTP 200 whose
+      body was not valid UTF-8 raised inside the retry handler, its bytes were
+      discarded, and the same case was asked again. That is retrying a scientific
+      outcome - sampling until an answer parses.
+    - nothing was written to disk until all sixty calls had returned, so a crash
+      at call 59 destroyed fifty-nine answers that had already been given.
+
+    The rule now: **the transport `try` contains exactly one thing, reading the
+    bytes.** The moment bytes exist they are journalled and fsynced. Only then may
+    anything decode, parse, inspect or classify them, and from that point no
+    failure of any kind may cause a retry.
+    """
     body = request_body(case)
     payload = json.dumps(body, sort_keys=True)
-    attempts = []
+    attempts: list[dict] = []
     for attempt in range(TRANSPORT_RETRIES + 1):
         started = time.time()
         req = urllib.request.Request(ENDPOINT, data=payload.encode(),
                                      headers={"Content-Type": "application/json"})
         try:
+            # TRANSPORT ONLY. Nothing but obtaining the bytes belongs in here -
+            # every line added to this block becomes retryable, and a retryable
+            # scientific outcome is a repeatable experiment run until it agrees.
             with urllib.request.urlopen(req, timeout=TIMEOUT_S) as r:
-                raw = r.read().decode()
-        except Exception as exc:                       # TRANSPORT only - retryable
+                raw_bytes = r.read()
+                status = r.status
+        except Exception as exc:
             attempts.append({"attempt": attempt, "error": f"{type(exc).__name__}: {exc}",
                              "seconds": round(time.time() - started, 3)})
             continue
-        # Past this line the server ANSWERED. Anything wrong with what it said is
-        # a SCIENTIFIC outcome and may never be retried.
-        #
-        # The parse used to sit inside the transport `except`, so a malformed 200
-        # was classified as transport, retried, and its raw bytes thrown away -
-        # keeping only the exception type. That is sampling until a favourable
-        # answer appears, which the contract forbids in the same breath it
-        # promised per-call sealing. Found by glm-5.3 at Gen120 round 4.
+
+        # The server ANSWERED. Persist the exact bytes before anything reads them.
+        seconds = round(time.time() - started, 3)
+        EV.journal_append(journal, {
+            "case_id": case["case_id"], "core": case["core"],
+            "condition": case["condition"], "attempt": attempt,
+            "request_sha256": sha(payload),
+            "request_body_b64": base64.b64encode(payload.encode()).decode(),
+            "http_status": status,
+            "response_bytes_b64": base64.b64encode(raw_bytes).decode(),
+            "response_sha256": hashlib.sha256(raw_bytes).hexdigest(),
+            "response_len": len(raw_bytes),
+            "captured_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "seconds": seconds, "retry_history": attempts,
+            "captured_before_any_decode": True,
+        })
+
+        common = {"case_id": case["case_id"], "core": case["core"],
+                  "condition": case["condition"], "request_sha256": sha(payload),
+                  "request_body": body, "http_status": status,
+                  "response_sha256": hashlib.sha256(raw_bytes).hexdigest(),
+                  "response_len": len(raw_bytes),
+                  "seconds": seconds, "retry_history": attempts}
+
+        try:
+            raw = raw_bytes.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            # Bytes arrived and are journalled. Undecodable is a RESULT.
+            return {**common, "raw_response": None, "text": None,
+                    "served_model": None, "finish_reason": None,
+                    "decode_error": f"{type(exc).__name__}: {exc}",
+                    "terminal_disposition": "TERMINAL_UNDECODABLE_RESPONSE"}
         try:
             obj = json.loads(raw)
-            return {"case_id": case["case_id"], "core": case["core"],
-                    "condition": case["condition"],
-                    "request_sha256": sha(payload), "request_body": body,
-                    "http_status": 200, "raw_response": raw,
+            return {**common, "raw_response": raw,
                     "text": obj["choices"][0]["message"]["content"],
                     "served_model": obj.get("model"),
                     "finish_reason": obj["choices"][0].get("finish_reason"),
-                    "seconds": round(time.time() - started, 3),
-                    "retry_history": attempts,
                     "terminal_disposition": "COMPLETED"}
         except Exception as exc:
-            # The server answered and we could not read the answer. Terminal, with
-            # the raw bytes KEPT - they are the evidence of what actually arrived.
-            return {"case_id": case["case_id"], "core": case["core"],
-                    "condition": case["condition"], "request_sha256": sha(payload),
-                    "request_body": body, "http_status": 200, "raw_response": raw,
-                    "text": None, "served_model": None, "finish_reason": None,
+            return {**common, "raw_response": raw, "text": None,
+                    "served_model": None, "finish_reason": None,
                     "parse_error": f"{type(exc).__name__}: {exc}",
-                    "seconds": round(time.time() - started, 3),
-                    "retry_history": attempts,
                     "terminal_disposition": "TERMINAL_MALFORMED_RESPONSE"}
+
     return {"case_id": case["case_id"], "core": case["core"],
             "condition": case["condition"], "request_sha256": sha(payload),
             "request_body": body, "http_status": None, "raw_response": None,
             "text": None, "served_model": None, "finish_reason": None,
             "retry_history": attempts,
             "terminal_disposition": "TERMINAL_TRANSPORT_FAILURE"}
+
+
+def refuse_to_resume_an_exposed_run(out: Path) -> None:
+    """An interrupted exposed run is finished, not paused.
+
+    If a journal already exists in this attempt directory, cases have already
+    been put in front of the reader. Continuing would silently re-expose them,
+    and the schedule is only valid once. The run is over; whether a FRESH
+    experiment happens is a control-plane decision, not a recovery step.
+    """
+    journal = Path(out) / JOURNAL
+    if journal.exists():
+        seen = sum(1 for line in journal.read_text().splitlines() if line.strip())
+        raise SystemExit(
+            f"REFUSING: {journal} already holds {seen} captured response(s). This "
+            "attempt was interrupted after exposure. Those cases have been seen by "
+            "the reader and may not be replayed. The attempt is NON_EVIDENCE; a "
+            "fresh run requires a new control-plane authorisation, not a resume.")
 
 
 def seal_agrees(out: Path) -> bool:
@@ -343,7 +411,7 @@ def seal_agrees(out: Path) -> bool:
 # marker itself is deliberately absent: it is written last, from the observation
 # that this set is closed.
 REQUIRED_PRE_MARKER = ("preflight.json", "execution_contract.json",
-                       "reader_raw.jsonl", "raw_seal.json",
+                       JOURNAL, "reader_records.jsonl", "raw_seal.json",
                        "graded_rows.json", "control_gates.json", "estimands.json")
 
 
@@ -417,22 +485,35 @@ def main() -> int:
         return 0
 
     out = EV.next_attempt(ROOT, args.generation)
+    refuse_to_resume_an_exposed_run(out)
+    journal = out / JOURNAL
     EV.write_evidence(out, "preflight.json", pf)
     EV.write_evidence(out, "execution_contract.json", contract)   # BEFORE exposure
 
     started = time.time()
-    responses = [call_once(c) for c in cases]
+    # Each call journals its own bytes and fsyncs before the next begins, so an
+    # interruption after case N leaves exactly N durable captures.
+    responses = [call_once(c, journal) for c in cases]
     elapsed = round(time.time() - started, 1)
 
-    # Seal raw BEFORE any parse, and MANIFEST it. A hash written only into
-    # raw_seal.json leaves the most important file in the run unverified by
-    # EV.verify, which walks the manifest and nothing else.
-    raw_text = "\n".join(json.dumps(r, sort_keys=True) for r in responses) + "\n"
-    raw_path = EV.write_raw(out, "reader_raw.jsonl", raw_text)
-    raw_sha = sha(raw_path.read_text())
+    # The JOURNAL is the raw evidence - exact response bytes, base64, written and
+    # fsynced as each answer arrived. It is bound into the manifest here because
+    # it can only be sealed once the run is over, not because it was written now.
+    #
+    # `reader_records.jsonl` is the PARSED view. It used to be called
+    # reader_raw.jsonl, which was false: it is re-serialised Python objects, and
+    # calling that "raw bytes" is what let a decode failure look survivable.
+    EV.manifest_existing(out, JOURNAL)
+    raw_sha = EV.digest(journal.read_text())
+    records = "\n".join(json.dumps(r, sort_keys=True) for r in responses) + "\n"
+    EV.write_raw(out, "reader_records.jsonl", records)
     EV.write_evidence(out, "raw_seal.json",
-                      {"file": "reader_raw.jsonl", "sha256": raw_sha,
-                       "sealed_before_parse": True, "responses": len(responses),
+                      {"file": JOURNAL, "sha256": raw_sha,
+                       "captured_before_any_decode": True,
+                       "written_per_call_and_fsynced": True,
+                       "parsed_view_is_separate": "reader_records.jsonl",
+                       "responses": len(responses),
+                       "journal_lines": sum(1 for l in journal.read_text().splitlines() if l.strip()),
                        "elapsed_seconds": elapsed})
 
     by_case = {c["case_id"]: c for c in cases}

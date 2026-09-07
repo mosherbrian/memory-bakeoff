@@ -128,6 +128,11 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 91 | Gen120 | self | the watcher was armed immediately after the push, read a pre-push origin/main, reported "REQUEST NOT VISIBLE" and exited 5s later - while I reported it armed | FIXED | The doorbell now confirms the request is visible on origin/main before arming, and I verified the re-armed watcher stayed up rather than assuming it. |
 
 
+| 92 | Gen121 | Sol | **"sealed before parse" was false.** `call_once` decoded and parsed before anything reached disk, and `reader_raw.jsonl` was re-serialised Python objects written after all 60 calls - so a crash at call 59 destroyed 59 answers already given | FIXED | Exact bytes appended to `reader_journal.jsonl` and **fsynced** the instant they exist, before any decode. The journal is the manifest-bound raw evidence; the parsed view is honestly renamed `reader_records.jsonl`. attempt17. |
+| 93 | Gen121 | Sol | `r.read().decode()` sat inside the transport `try`, so an HTTP 200 with non-UTF-8 bytes raised in the retry handler, lost its bytes, and had its case retried - sampling a scientific outcome until it parsed | FIXED | The transport `try` now contains exactly one thing: reading the bytes. `TERMINAL_UNDECODABLE_RESPONSE` and `TERMINAL_MALFORMED_RESPONSE` are both terminal with bytes kept. Surfaced first by glm-5.3-flash at Gen120 r9, then ruled by Sol. attempt17. |
+| 94 | Gen121 | Sol | a mid-run crash destroyed every already-observed outcome, and nothing defined what an interrupted exposed run means | FIXED | Per-call fsync leaves N durable captures after an interruption at N+1, and `refuse_to_resume_an_exposed_run` refuses to continue: exposed cases may not be replayed, and a fresh experiment is a control-plane decision. Eleven witnesses, all eleven failing pre-fix. |
+
+
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the
 reader-interference lineage. It imports `round3_adapters`; it is Round 3
 distractor work. The claim that no suite failure touches the reader-interference

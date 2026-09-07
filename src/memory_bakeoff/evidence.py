@@ -120,6 +120,42 @@ def write_raw(directory: Path, name: str, text: str) -> Path:
     return path
 
 
+def journal_append(path: Path, record: "Any") -> None:
+    """Append one record and force it to disk BEFORE returning.
+
+    The reader run used to hold all sixty responses in memory and serialise them
+    after the last call returned, which meant a crash at call 59 destroyed
+    fifty-nine scientific outcomes that had already happened. Exposure is not
+    reversible: once the model has answered, that answer exists whether or not we
+    kept it.
+
+    `flush` alone is not enough - it moves bytes to the OS, not to the platter.
+    The `fsync` is the whole point of this function.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    line = json.dumps(record, sort_keys=True, default=str) + "\n"
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(line)
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def manifest_existing(directory: Path, name: str) -> dict[str, "Any"]:
+    """Bind a file that already exists on disk into the manifest.
+
+    `write_evidence` and `write_raw` both create the file they record, which an
+    append-only journal cannot use: the journal is written a line at a time
+    during the run and can only be sealed once the run is over. The digest is
+    taken from the bytes on disk, so this cannot describe anything else.
+    """
+    directory = Path(directory)
+    path = directory / name
+    if not path.exists():
+        raise FileNotFoundError(f"{path} does not exist; nothing to bind")
+    return record(directory, name, path.read_text())
+
+
 def verify_closed(directory: Path, required: "Any") -> dict[str, Any]:
     """`verify`, plus: is the manifest EXACTLY the required inventory?
 

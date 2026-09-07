@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt16` is canonical**, per the seventh Generation 120 rival review.
+**`attempt17` is canonical**, per the Generation 121 control-plane instruction.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -238,7 +238,7 @@
   `AGENTS.md`. Rounds 5 and 6 transcripts are committed - round 5 was cited as
   attempt14's authority while absent from the tree.
   Contract `35daba52150a28612dec28f2997d9aa469747748e14b7adec8e556a3f06713fc`.
-- `attempt16` - **canonical.** Science identical a tenth time. The seventh review
+- `attempt16` - superseded. Science identical a tenth time. The seventh review
   found that the attempt15 repair **was itself incomplete, in the way it was
   written to prevent.**
 
@@ -260,6 +260,41 @@
   all 60 calls. The code was right and the prose was wrong; a crash mid-run seals
   no raw evidence at all, which is now stated plainly where the claim used to be.
   Contract `ee0da6047c1c45120061dd3511efe493c30de81601a3e92cf3cf1c62dfd61bdd`.
+- `attempt17` - **canonical.** Science identical an eleventh time. Generation 121,
+  and the defect is one the runner's own docstring denied for three generations:
+  **"sealed before parse" was false.**
+
+  `call_once` read the body, decoded it, parsed it, and returned a Python object.
+  Nothing reached disk until all sixty calls had finished, whereupon those objects
+  were re-serialised into a file named `reader_raw.jsonl`. So the "verbatim raw
+  capture" was neither verbatim nor a capture: a crash at call 59 destroyed
+  fifty-nine answers that had already been given, and `r.read().decode()` sat
+  inside the transport `try`, so an HTTP 200 whose body was not valid UTF-8 raised
+  inside the retry handler, lost its bytes, and had its case asked again -
+  retrying a scientific outcome until it parsed.
+
+  The ordering is now the invariant, and it is enforced rather than described:
+  1. the transport `try` contains exactly one thing, reading the bytes. Every line
+     added there becomes retryable, and a retryable scientific outcome is an
+     experiment repeated until it agrees;
+  2. the instant bytes exist they are appended to `reader_journal.jsonl` and
+     **fsynced** - `flush` moves bytes to the OS, not to the platter;
+  3. only then may anything decode, parse or classify, and from that point no
+     failure of any kind may retry. Undecodable and unparseable are each terminal
+     dispositions with their bytes kept;
+  4. an interruption after case N leaves N durable captures, and the run then
+     REFUSES to resume: those cases have been exposed, and the schedule is valid
+     once. Whether a fresh experiment happens is a control-plane decision.
+
+  The journal is the manifest-bound raw evidence. The parsed view is now honestly
+  named `reader_records.jsonl`, because calling re-serialised objects "raw bytes"
+  is precisely what made a decode failure look survivable.
+
+  Eleven witnesses in `tests/test_gen121_raw_capture.py`, **all eleven** failing at
+  the pre-fix commit, driving the real `call_once` against a fake endpoint -
+  including a non-UTF-8 body reproduced byte-for-byte out of the journal, and an
+  injected interruption at the boundary between capture and the next call.
+  Contract `671be26e45b601d4e4698e0c570cb05a05e323f131cace6e16ddd9da8bbaee95`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

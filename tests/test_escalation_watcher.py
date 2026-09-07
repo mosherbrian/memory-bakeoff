@@ -116,7 +116,25 @@ def test_ringing_arms_the_watcher_in_the_same_call():
 
 
 def test_doorbell_verifies_its_own_title_back_from_github():
-    """A declared title becomes an observed one."""
+    """A declared title still becomes an observed one - but no longer aborts.
+
+    This asserted that a mismatched title raised RANG BUT MALFORMED, which was
+    right when the PR title was the trigger: a wrong prefix meant the control
+    plane was never called, and that cost 6h47m. Brian has since disabled the PR
+    webhook, and delivery goes through control-plane/PENDING.json. So the PR is an
+    artifact record, the title is checked and reported, and neither a bad title
+    nor a failed PR may stop the ring - a 422 on that dead path killed the first
+    real Gen120 handoff after every gate had passed.
+
+    What must NOT regress: the check still happens, and the request must still be
+    published and verified through the channel that is live.
+    """
     d = DOORBELL.read_text()
-    assert "RANG BUT MALFORMED" in d
-    assert 'title_back.startswith("BAKEOFF_HANDOFF")' in d
+    assert 'title_back.startswith("BAKEOFF_HANDOFF")' in d, "the title is still checked"
+    assert "WARNING" in d, "a mismatch must still be reported"
+    assert "RANG BUT MALFORMED" not in d, (
+        "a dead trigger's title may no longer abort a ring that passed every gate")
+    assert "PR record not created" in d, "a PR failure must be survivable"
+    assert '"status": "awaiting"' in d, (
+        "the ring must confirm the request is visible on origin/main before "
+        "arming the watcher - arming into a pre-push state killed it in 5s")

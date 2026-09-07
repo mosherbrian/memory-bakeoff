@@ -34,7 +34,10 @@ SCIENTIFIC_SOURCES = ("src/memory_bakeoff/reader_interference_v6.py",
                       # be weakened after the freeze without invalidating it.
                       # attempt9 exists BECAUSE contract-bound tests drifted,
                       # which makes the asymmetry worth closing. Found by glm-5.3.
-                      "tests/test_gen120_evidence_closure.py")
+                      "tests/test_gen120_evidence_closure.py",
+                      # Gen121 moved the raw capture ahead of the parse; its
+                      # witnesses are as run-bearing as the code they pin.
+                      "tests/test_gen121_raw_capture.py")
 # The four cores burned by Gen110-115, plus every value and answer string observed.
 def _burned() -> tuple[str, ...]:
     """Everything v4 and v5 put in front of the reader. Derived, not typed."""

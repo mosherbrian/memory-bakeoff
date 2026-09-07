@@ -358,8 +358,11 @@ def test_gen117_raw_evidence_is_honestly_described():
 
 
 # ------------------------------------- the malformed-answer repair, witnessed
-def _call_once_with(monkeypatch, body: str, fail_times: int = 0):
-    """Drive the REAL call_once against a fake endpoint. No network."""
+def _call_once_with(monkeypatch, body, fail_times: int = 0, journal=None):
+    """Drive the REAL call_once against a fake endpoint. No network.
+
+    `body` may be str or bytes; Gen121 made the distinction load-bearing.
+    """
     import importlib.util, io, urllib.request
     spec = importlib.util.spec_from_file_location("runner_mw", RUNNER)
     mod = importlib.util.module_from_spec(spec)
@@ -368,6 +371,7 @@ def _call_once_with(monkeypatch, body: str, fail_times: int = 0):
     calls = {"n": 0}
 
     class _Resp(io.BytesIO):
+        status = 200
         def __enter__(self): return self
         def __exit__(self, *a): return False
 
@@ -375,11 +379,14 @@ def _call_once_with(monkeypatch, body: str, fail_times: int = 0):
         calls["n"] += 1
         if calls["n"] <= fail_times:
             raise OSError("connection reset")
-        return _Resp(body.encode())
+        return _Resp(body if isinstance(body, bytes) else body.encode())
 
     monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
     schedule = json.loads((mod.CANONICAL / "reader_interference_v6_schedule.json").read_text())
-    return mod.call_once(schedule["cases"][0]), calls
+    if journal is None:
+        import tempfile
+        journal = Path(tempfile.mkdtemp()) / mod.JOURNAL
+    return mod.call_once(schedule["cases"][0], journal), calls
 
 
 def test_a_malformed_answer_is_terminal_and_is_never_retried(monkeypatch):
@@ -422,11 +429,14 @@ def test_transport_exhaustion_is_terminal_and_distinct(monkeypatch):
 
 def test_the_parse_is_outside_the_transport_handler():
     src = RUNNER.read_text()
-    assert "# TRANSPORT only - retryable" in src
     assert "TERMINAL_MALFORMED_RESPONSE" in src
-    transport = src.index("# TRANSPORT only - retryable")
+    transport = src.index("# TRANSPORT ONLY.")
+    journalled = src.index("EV.journal_append(journal,")
+    decode = src.index('raw_bytes.decode("utf-8")')
     parse = src.index("obj = json.loads(raw)")
-    assert transport < parse, "the parse must sit outside the transport handler"
+    assert transport < journalled < decode < parse, (
+        "ordering is the science: transport, then durable capture, then decode, "
+        "then parse - and nothing after the capture may retry")
 
 
 # ------------------------------- data absence may never be read as an effect
@@ -529,7 +539,7 @@ def test_linkage_requires_every_response_completed():
 
 
 def test_the_capture_docstring_matches_the_capture_block():
-    """The docstring promised 'sealed as it arrives'; the code batch-writes."""
+    """The prose has been wrong twice; it must now match the ordering."""
     src = RUNNER.read_text()
-    assert "sealed as it arrives" not in src
-    assert "not per call" in src
+    assert "ONE batch write" not in src
+    assert "fsynced as each" in src or "fsynced BEFORE any decode" in src
