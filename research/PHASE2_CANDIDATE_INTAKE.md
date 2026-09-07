@@ -23,11 +23,16 @@ the context window, on our workload?
 competitive and that memory helps most only when context is insufficient or the
 task is hard.
 
-**Correction, found by self-checking this claim before a reviewer did.** An
-earlier draft said "we have measured five engines against each other and never
-against the null". That is FALSE. `results/BASELINE_FINDINGS.md` holds three
-retrieval baselines - bm25, dense_lsa, hybrid_rrf - and they are strong:
-Hit@5 0.917-0.958, all-relevant@5 up to 0.958.
+**Correction, in two passes.** An earlier draft said "we have measured five
+engines against each other and never against the null", and that "every
+comparative claim the project has made is therefore unanchored". Both are FALSE.
+
+`results/BASELINE_FINDINGS.md` holds three retrieval baselines - bm25,
+dense_lsa, hybrid_rrf - at Hit@5 0.917-0.958. I found that one myself. Review
+then found more: engines ARE anchored against those baselines in the same tables
+in `results/current_full_core5/summary.md`, and Membukkit was anchored against a
+full dense scan. The project has also never claimed "Perseus beat Mem0" - I
+invented that example to dramatise a gap smaller than I said it was.
 
 The claim survives in narrowed form, and the baselines document makes the case
 better than I did:
@@ -135,6 +140,50 @@ moment any of this touches real user data.
   discovering systems we have not heard of. Not an intake row.
 - **"STALE"** — UNRESOLVED. Named in the roadmap; no benchmark of that name
   located. Renamed, absorbed, or imprecise. Do not cite it until resolved.
+### The eight the instruction named that I silently dropped
+
+Review found this: the control-plane instruction named twelve systems to
+reassess and I addressed four, dropping eight without a word. The intake's own
+rule says rejections are written down BY NAME so a candidate cannot quietly
+re-enter later, and I broke it in the document that states it.
+
+Assessed now, honestly - including where the assessment is thin:
+
+- **MemOS** (`github.com/MemTensor/MemOS`) — **STRONGEST OF THE EIGHT, admit to
+  the next intake round.** A memory operating system treating memory as a
+  first-class resource; MemCube abstraction over parametric, activation and
+  plaintext memory in three layers. Claims 35.24% token savings. Distinct
+  architectural question: *does treating memory as an OS-level resource with a
+  unified abstraction beat per-product memory design?* Same group as HaluMem,
+  which is a reason to read both together. Not admitted THIS round only because
+  five rows is the cap and it duplicates no existing row's lane cleanly - it is
+  a system, and rows 2 and 4 already load the system-selection lane.
+- **A-Mem** — **NOT SEPARATELY ADMITTED, and this is a merge not a rejection.**
+  It is already one of the six harnesses inside MemConflict (`eval_a_mem.py`),
+  so intake row 2 measures it. Running it separately would duplicate.
+- **MemHarness** (arXiv:2607.28272, "Memory Is Reconstructed, Not Replayed") —
+  **DEFER, genuinely interesting.** Agents actively reconstruct past experience
+  from present context rather than replaying stored text. That is a different
+  mechanism from everything we have measured. It loses this round to items with
+  released harnesses.
+- **AgentRunbook-C** — **DEFER.** Augments a coding-agent harness with workflow
+  documents and query-time artifacts; reported 72.5% accuracy and 32% faster
+  than Codex. It answers a workflow-reuse question, not a state-maintenance one,
+  and workflow reuse is not the roadmap's governing question.
+- **StateMem** — **CANNOT ADMIT.** The method from the StateMemBench paper; the
+  benchmark is unlocatable, and nothing found suggests the method was released
+  separately. Same status as its benchmark.
+- **MemStrata** — **NOT LOCATED.** No result under that name. Either renamed,
+  private, or the name in the instruction is imprecise. Do not cite it.
+- **Attestor** — **NOT LOCATED.** Same.
+- **EvoMem** — **NOT LOCATED** as a system. Search returns EvoMemBench, which is
+  a different object and is handled in the field refresh. Possibly the
+  instruction means the benchmark.
+
+**Three of the eight could not be found at all.** That is recorded rather than
+smoothed over: it may mean my search was too shallow, and it must not be read as
+"these do not exist".
+
 - **Membukkit and Claude-Mem re-rank** — the control plane asked for these to be
   revisited. Both are already measured here and neither answers a question the
   five rows above do not, so neither earns an intake slot this round. Claude-Mem

@@ -18,7 +18,7 @@ them.
 
 Gen33 completed. The pause did not happen. The roadmap says "Do not immediately
 issue Gen34 from the old contestant list"; Gen34 through Gen124 did exactly
-that, and `results/` now holds 236 directories.
+that, and `results/` now holds 212 directories and 24 files.
 
 Decision Gate A asked for a short "Round 2 interim findings" note before
 admitting more contestants. `ROUND3_FINAL_READOUT.md` and
@@ -65,9 +65,10 @@ Measured engines in the repository: Perseus, Mem0, AgentMemory, Hindsight,
 Membukkit. Those are the ORIGINAL pool. No candidate discovered after
 2026-09-02 has entered.
 
-`project_memconflict_derivation_backlog.md` in project memory records that
-deriving from MemConflict was agreed and deferred on 2026-09-06 - so the roster
-question was raised, parked, and then rediscovered from outside in Gen124.
+Deriving contestants from MemConflict was agreed and deferred on 2026-09-06.
+That record lives in the implementer's project memory, OUTSIDE this repository,
+and cannot be verified from the tree - noted because this document's stated
+method is repository evidence, and one citation of mine did not meet it.
 
 ## PHASE D — common admission gate before longitudinal-v1
 
@@ -107,13 +108,44 @@ gates this on "enough Phase-2 evidence", which we do not have.
 
 ## PHASE G — prototype the composite
 
-**Status: correctly not started.** The roadmap says do not build until the
-evidence supports it. It does not.
+**Status: PARTLY BUILT AND ALREADY MEASURED, and an earlier version of this
+section said the opposite.**
 
-Adjacent work exists and should not be confused with it: `pi-lcm` is live and
-carries eager compaction and prefix pre-warming, so one layer of the intended
-composite is real. The state projection, lifecycle, and single context composer
-are not.
+**Correction.** This section first read "correctly not started" and claimed the
+state projection, lifecycle and single context composer "are not" real. That is
+false, and it was false in the direction that flatters the rest of this
+document's story. Round-1 review of Gen125 found it; I verified every citation
+before accepting it.
+
+What actually exists, all committed 2026-09-04/05 - AFTER the roadmap was
+agreed, so this is the one phase with rich post-roadmap activity:
+
+- `research/PI_STATE_CONTROL_GEN43_PROTOTYPE.md`
+- `research/PI_STATE_CONTROL_GEN44_PILOT_DESIGN.md` - line 68 freezes a
+  composition order: `immutable_instructions, control, state, recent_window,
+  latest_observation, artifact_refs`. **That is a single context composer**, the
+  thing the previous wording denied existed.
+- `research/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md` - 24 live paired runs.
+- `PI_STATE_CONTROL_GEN46/47` - harness-maintained state, then live, with a
+  human-direction floor at Gen49 and a stop rule at Gen52/55.
+
+**And it produced a NEGATIVE result that this document erased:**
+
+    verifier passes    arm A `pi_default_v1`  12/12
+                       arm B `pi_state_control_v1`   7/12
+
+The composite lost to stock Pi, using more requests to do it. That is precisely
+the evidence a future Phase-G decision needs, and it was already on disk.
+
+**What is still true:** none of it was gated on the Phase B-F evidence the
+roadmap demands, so it is Phase-G-*adjacent* work done out of order rather than
+Phase G executed. But "not started" was wrong.
+
+**Why this matters beyond the correction:** the "nobody could see the roadmap"
+story holds for Phases B, C, D, E, F and H - review verified each independently -
+and fails exactly here. A narrative that explains every gap by an external cause
+should be checked hardest where it is most convenient, and this is where it
+broke.
 
 ## PHASE H — realism endgame
 

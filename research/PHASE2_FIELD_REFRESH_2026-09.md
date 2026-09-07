@@ -122,6 +122,28 @@ roadmap's name is imprecise. Unresolved; do not cite.
 
 ---
 
+## Required metadata, per control-plane item 7
+
+Review found the narrative above carries attribution but NOT the provenance
+fields the instruction mandates. Recorded here rather than left implicit.
+Blank means NOT ASSESSED, which is different from absent.
+
+| | version / date | open? | code | evaluator assumptions | architectural or model-driven? | evidence weight |
+|---|---|---|---|---|---|---|
+| HaluMem | arXiv 2511.03506 | yes | `MemTensor/HaluMem` | not assessed - LLM-judged stages, judge identity unread | not assessed | state, extraction |
+| Supersede / FAMA | arXiv 2606.27472 | unknown | **NOT LOCATED** | not assessed | not assessed | state |
+| EvoMemBench | arXiv 2605.18421 | yes | `DSAIL-Memory/EvoMemBench` | not assessed | its headline IS the question - long-context vs memory | workflow, execution |
+| LongMemEval-V2 | arXiv 2605.12493, May 2026, upd. Aug 2026 | yes | `xiaowu0162/LongMemEval-V2` + HF dataset | not assessed | not assessed | state, workflow |
+| GateMem | arXiv 2606.18829 | yes | `rzhub/GateMem` | not assessed | not assessed | governance |
+| AML leaderboard | launched 2026-07-29 | yes | `AML-memory/agent-memory-leaderboard` | versioned shared protocol - the point of it | n/a, infrastructure | n/a |
+| StateMemBench | arXiv 2608.19652 | **NOT FOUND** | none found | n/a | n/a | n/a |
+
+**"Not assessed" appears eleven times, and that is the honest state.** Reading
+each paper's evaluator setup and separating architectural gains from
+model-driven ones is a per-paper job that this refresh did not do. It is the
+first work of whichever intake row admits that benchmark, and no candidate
+passes the Phase-D gate without it.
+
 ## What changed in the field since the roadmap was written
 
 1. **The frontier moved from recall to state and governance.** Five of the six

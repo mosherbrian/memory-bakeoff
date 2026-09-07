@@ -2,7 +2,8 @@
 
 ## Generation 125 — the roadmap is back, and the project has been asking two questions at once
 
-**In plain English.** Gen124 produced the first real reader data since Gen117,
+**In plain English.** Gen124 produced the first reader data since Gen117 that
+survived its own evidence gate,
 and in doing so exposed something bigger than its own result: this project has
 been running two different experiments and calling them one.
 
@@ -12,12 +13,18 @@ substrates and separate evidence. They must never share a score. That split is
 now written down in `research/EVIDENCE_LANES.md`, and the control plane has ruled
 that system selection is the primary lane.
 
-**What Gen124 taught us.** With retrieval held perfect, the reader answers with
-whatever it read LAST rather than with what is current. On the 17 items that
-survive our own soundness rule, with date headings stripped: 14 of 17 right when
-the current conversation came last, 5 of 17 when it came first, and nine items
-flipped in that direction with none flipping the other way. In twelve of the
-fourteen flips it returned the superseded value word for word.
+**What Gen124 taught us.** With retrieval held perfect, the reader LOOKS LIKE it
+answers with whatever it read last rather than with what is current. On the 17
+items that survive our own soundness rule, with date headings stripped: 14 of 17
+right when the current conversation came last, 5 of 17 when it came first, and
+nine items flipped in that direction with none flipping the other way.
+
+When it flipped, it returned the outdated value itself. That check was made on
+the UNCLEANED run, where there were fourteen flips: twelve of the fourteen wrong
+answers were the superseded value word for word. The nine that survive cleaning
+are among those fourteen. (An earlier version of this entry put "nine" and
+"twelve of the fourteen" in one sentence, which is incoherent - they come from
+different arms.)
 
 If that holds, it matters directly: a memory system that returns records by
 relevance rather than by date can put the outdated one last, and the model will
@@ -58,6 +65,14 @@ and has simply never gated a contestant.
 primary question is still open, and it can only be spent once.
 
 **No reader or model was called in Gen125.**
+
+**Tests.** Gen125 changed no machinery - the diff is documents, the archived
+instruction, and `PENDING.json`. The suite was run anyway rather than declared
+vacuously green: 26 failed, 1557 passed, 3 skipped, 5 errors, matching
+`tests/KNOWN_FAILURES.json` exactly. Those 26 are the long-standing membukkit
+and memconflict failures, listed there with causes; none is new. Stating the
+vacuity is the point - this project has twice been misled by a check that could
+not report its own failure.
 
 
 ## Generation 122 — THE READER RAN. The apparatus held. The ruler is what failed.
