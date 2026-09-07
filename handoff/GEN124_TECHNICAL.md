@@ -40,7 +40,18 @@ answer is the superseded value.
 
 ## Result, date-stripped arm
 
-Running at time of writing; `research/pilot_ordering/COMBINED.json` carries both.
+    n_items 34
+    stale_first_hits 22      (dated arm: 23)
+    current_first_hits 9     (dated arm: 18)
+    discordant_stale_first_only 14   (dated arm: 6)
+    discordant_current_first_only 1  (dated arm: 1)
+
+Removing the header dates left the chronological arm unchanged within noise and
+halved the reversed arm. The discordant count more than doubled. Read as: the
+model is largely following position, and the visible dates were a weak partial
+correction rather than the thing it reasons from.
+
+`research/pilot_ordering/COMBINED.json` carries both arms.
 Header dates replaced with `=== conversation N ===` and the lead sentence
 changed from "in the order they happened" - false under `current_first` - to a
 neutral one. Date words remain in the conversation text of 29 of 34 items;

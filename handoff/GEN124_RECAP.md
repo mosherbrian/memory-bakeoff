@@ -19,12 +19,21 @@ content, same question.
 
 ## What happened
 
+With the conversation dates shown, as the dataset ships them:
+
     old conversation first, current one last   23 of 34 right
     current one first, old one last            18 of 34 right
 
-Six items were right only when the current conversation came last. One was right
-only the other way. And when it got them wrong, it answered with the outdated
-value:
+Then we removed the dates and asked all 34 again:
+
+    old conversation first, current one last   22 of 34 right
+    current one first, old one last             9 of 34 right
+
+Removing the dates barely touched the first case and cut the second in half.
+Fourteen items were then right only when the current conversation came last;
+one was right only the other way.
+
+And when it got them wrong, it answered with the outdated value:
 
     correct answer $400,000  ->  it said $350,000
     correct answer Paris     ->  it said Hawaii
@@ -35,6 +44,11 @@ value:
 The reader looks like it answers with whatever it read last, rather than with
 whatever is current. Putting the conversations in date order protects it by
 accident, because the current fact happens to end up at the end.
+
+The dates were doing some work, and not much. When they were visible the model
+recovered about half of what position cost it. When they were gone it barely
+recovered anything. So it is not reading the dates and reasoning about which is
+newer - it is mostly following position, with the dates as a weak correction.
 
 If that holds, it matters directly for the thing this project is choosing
 between: a memory system that returns records in relevance order rather than date
@@ -48,10 +62,10 @@ This is a pilot, not a result. Three reasons, all of them real:
 1. The scorer is crude. It marks the answer "4" wrong when the expected answer is
    "four". Good enough to see whether an effect exists, not good enough to
    publish a number.
-2. The first pass left the conversation dates visible, so the model could still
-   tell which was newer. A second pass with the dates removed is running now.
-   Even there, most items mention a month or a year inside the conversation
-   itself, so the removal is partial and is recorded as partial.
+2. The date removal is partial. The headings are gone, but 29 of the 34 items
+   still mention a month or a year somewhere inside the conversation. So the
+   second pass is "most of the date cue removed", not "no date cue", and the
+   real effect of dates sits somewhere at or beyond what we measured.
 3. Half the items were deliberately NOT used. Anything we look at tonight is
    exploratory forever, because a rule chosen after seeing an outcome is the
    error that cost us Gen114. Thirty-four items are held back, untouched, for a
