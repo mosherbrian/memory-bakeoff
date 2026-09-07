@@ -38,8 +38,17 @@ when it is first.
 
 Review found the crude scorer's false-negative rate (`four` scored against `4`)
 is about 8 in 34, the same order as the dated arm's discordant count. That
-objection is answered directly: a scorer that cannot read `four` misses in BOTH
-arms, so it produces concordant misses and cannot manufacture a direction.
+objection first drew an impossibility argument from me - a scorer that cannot
+read `four` misses in BOTH arms, so it cannot manufacture a direction.
+
+**That argument is false and is withdrawn.** It assumes the model emits the same
+answer string in both arms, which is the one assumption this experiment's thesis
+denies. Counter-case: the earlier session writes "four", the later writes "4",
+gold is "4"; a reader echoing the last-read form answers "four" under reversal -
+semantically right, crude-scored MISS in one arm only. A manufactured discordant
+pair. Substring false positives arm-correlate the same way.
+
+What stands is the direct check, not the argument.
 
 Checked on the 14 discordant items of the cleaned, date-stripped arm - is the
 reversed-order answer present in the EARLIER, superseded conversation?
@@ -55,7 +64,11 @@ reversed-order answer present in the EARLIER, superseded conversation?
 The two exceptions (`3`->`2`, `Two`->`one`) are word/digit forms the substring
 check could not locate; they are not counter-examples in the model's favour.
 
-This is a directional, semantic pattern. The scorer's crudeness cannot produce it.
+This is a directional, semantic pattern, and on THIS data no discordance is a
+form artifact - review reproduced that independently at 0 of 15. That is an
+empirical finding about these items, not a guarantee about crude scorers in
+general. The preregistered run uses the normalised scorer, which removes the
+class outright rather than arguing about it.
 
 ## What this does NOT establish
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Close the substrate findings that need no reviewer and no control plane.
+"""Eligibility per PREREGISTRATION section 2: memory_bakeoff.ordering_scorer.hit,
+SESSION scope, both roles.
+
+Closes the substrate findings that need no reviewer and no control plane.
 
 Finding 121: stale-earlier / current-later was SAMPLED, not verified.
 Finding 125: the dataset is not content-pinned.
@@ -7,8 +10,11 @@ Plus: the 4 items whose gold value looked like it sits in the EARLIER session.
 
 Reads only. Runs no reader. Touches no held-out item.
 """
-import json, hashlib, re
+import json, hashlib, sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from memory_bakeoff.ordering_scorer import hit  # noqa: E402
 
 SRC = Path("/home/bmosher/.cache/huggingface/hub/datasets--xiaowu0162--longmemeval-cleaned/"
            "snapshots/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_oracle.json")
@@ -24,19 +30,19 @@ ku = [x for x in d if x["question_type"] == "knowledge-update"
 clean = [x for x in ku
          if [sum(1 for t in s if t.get("has_answer")) for s in x["haystack_sessions"]] == [1, 1]]
 
-def marked(x):
-    return [[t["content"] for t in s if t.get("has_answer")][0] for s in x["haystack_sessions"]]
+def sessions(x):
+    """ALL text of each session, both roles - the scope PREREGISTRATION section 2
+    now names. An earlier version of this script read only the has_answer TURN,
+    which is a narrower scope than the words 'the later session', and that gap
+    made three different frozen sets readable out of one sentence."""
+    return [" ".join(t["content"] for t in s) for s in x["haystack_sessions"]]
 
 print(f"\nGOLD LOCATION (finding 121), {len(clean)} clean items:")
 rows = []
 for x in clean:
-    g = str(x["answer"]).strip().rstrip(".")
-    e, l = marked(x)
-    gl, el, ll = g.lower(), e.lower(), l.lower()
-    nums = re.findall(r"\d[\d,:.]*", g)
-    in_e = gl in el or (bool(nums) and all(n in e for n in nums))
-    in_l = gl in ll or (bool(nums) and all(n in l for n in nums))
-    rows.append((x["question_id"], in_e, in_l, g))
+    g = str(x["answer"])
+    e, l = sessions(x)
+    rows.append((x["question_id"], hit(g, e), hit(g, l), g.strip()))
 only_l = [r for r in rows if r[2] and not r[1]]
 only_e = [r for r in rows if r[1] and not r[2]]
 both = [r for r in rows if r[1] and r[2]]

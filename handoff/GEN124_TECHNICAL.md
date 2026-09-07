@@ -66,8 +66,16 @@ Excluding the 10 (8 + 2 ambiguous), n=30:
     dates stripped   chrono 21  reversed  7   discordant 14 vs 0
 
 Directionality check on the 14: 12 of the reversed answers contain the
-superseded value. Scorer crudeness produces concordant misses and cannot
-generate a direction.
+superseded value.
+
+The claim that "scorer crudeness produces concordant misses and cannot generate
+a direction" is WITHDRAWN - it is false. Counter-case (review, round 3): earlier
+session writes "four", later writes "4", gold "4"; a reader echoing the
+last-read form answers "four" under reversal, which is semantically correct and
+crude-scored MISS in exactly one arm. Substring false positives arm-correlate
+too. The result rests on the direct semantic check above, which review
+independently reproduced at 0 of 15 discordances being form artifacts - not on
+an impossibility argument.
 
 ## Preregistration
 

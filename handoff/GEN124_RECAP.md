@@ -57,9 +57,18 @@ from the earlier conversation.
 
 That matters because the reviewers argued our scoring was too crude to trust at
 this size. It is crude - it marks "4" wrong when the expected answer is "four".
-But a scorer that cannot read "four" gets it wrong in BOTH orders, so it cannot
-create a difference between them. Answering with the specific old value, twelve
-times, in one order only, is not something a sloppy scorer can manufacture.
+
+I first answered that a crude scorer gets it wrong in both orders, so it cannot
+create a difference. That reply was wrong, and a reviewer built the case that
+breaks it: if the old conversation writes a number as "four" and the new one as
+"4", a model that echoes whatever form it read last would answer "four" when the
+order is reversed - correct in meaning, marked wrong by a crude scorer, in one
+order only. That is a manufactured difference.
+
+So the argument is dead and the check is what stands: we read all fourteen and
+twelve are the specific old value, not a formatting variant. A reviewer
+independently confirmed none of them are form artifacts. The result survives on
+the evidence rather than on the argument I made for it.
 
 ## What it means
 
@@ -69,8 +78,18 @@ accident, because the current fact happens to end up at the end.
 
 The dates were doing some work, and not much. When they were visible the model
 recovered about half of what position cost it. When they were gone it barely
-recovered anything. So it is not reading the dates and reasoning about which is
-newer - it is mostly following position, with the dates as a weak correction.
+recovered anything.
+
+The tempting conclusion is "it follows position, not dates". We cannot say that
+yet, and our own technical record says so. Two things other than position are
+still in the prompt: most items mention a month or a weekday inside the
+conversation text, and - worse - the question we asked ended with "as of the
+most recent conversation", which points at POSITION in the transcript rather
+than at time. A model that assumes the conversations are in date order would
+read the last-shown one as the newest, which in the reversed case is the old
+one. So the honest statement is that order changes the answer, and we have not
+yet separated position from the leftover time words and our own badly worded
+question. The next run's question is already rewritten to fix the second one.
 
 If that holds, it matters directly for the thing this project is choosing
 between: a memory system that returns records in relevance order rather than date
