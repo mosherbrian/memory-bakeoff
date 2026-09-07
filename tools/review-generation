@@ -82,7 +82,19 @@ for SPEC in "${SPECS[@]}"; do
     continue
   fi
   ( cd "$WT"
-    timeout 1800 pi -p "$QUESTION" --model "$SPEC" > "$OUT/$NAME.txt" 2>"$OUT/$NAME.stderr"
+    # -ne disables extension discovery, which turns OFF pi-lcm.
+    #
+    # LCM exists to make a small context window survivable. GLM 5.3 and 5.3-flash
+    # are BOTH 1M-context, so the reviewer never approaches the limit - yet LCM
+    # compacts on `keepRecentTokens` (19,660) regardless of window size, and calls
+    # a summariser that errors on every invocation. Measured 2026-09-06: 56
+    # compaction events in one review of a ~400KB session, roughly half the
+    # wall-clock spent summarising context it never needed to drop.
+    #
+    # Verified before adopting: with -ne the reviewer still reads files and runs
+    # commands normally, and logs zero compaction events. Brian spotted that LCM
+    # is simply unnecessary here.
+    timeout 1800 pi -p "$QUESTION" -ne --model "$SPEC" > "$OUT/$NAME.txt" 2>"$OUT/$NAME.stderr"
     echo "$?" > "$OUT/$NAME.exit" ) &
 done
 wait

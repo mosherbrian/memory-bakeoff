@@ -62,12 +62,32 @@ def _burned() -> tuple[str, ...]:
             out.add(v.casefold())
             out.update(w.casefold() for w in v.split())
 
-    # DISTINCTIVE material only - values, their words, subject head nouns, record
-    # ids. The first version of this swallowed every word of every response, which
-    # burned ordinary English: "the", "in", "at", "bay", "floor", and even "null"
-    # and "disposition" from the reply schema. The freshness gate then refused any
-    # fixture written in English. Caught by the gate itself on the first fixture-2
-    # freeze attempt, which is the gate working - on my defect.
+    # DISTINCTIVE material only, from EVERY evidence shape this project has used.
+    #
+    # Two earlier versions of this were wrong. The first swallowed every word of
+    # every response and burned ordinary English, refusing any fixture written in
+    # it. The second read only `*_schedule.json` with a `cases` key - so Gen110
+    # and Gen114, whose schedules carry nothing but prompt hashes and whose text
+    # lives in `reader_requests.jsonl`, contributed NOTHING. Fixture 2 then reused
+    # `platform`, exposed in both, while this file claimed the check had passed.
+    # Found by glm-5.3 at Gen123.
+    #
+    # A record line is `[ID] Subject verb value.` in every generation, so the last
+    # two words of the statement are the value region - head noun plus
+    # distinguishing word. Structural, and it does not burn English.
+    record_line = re.compile(r"^\[([^\]]+)\]\s*(?:effective_revision:\s*\d+\s*\|\s*)?(.+)$", re.M)
+
+    def _from_prompt(text: str) -> None:
+        for rec_id, statement in record_line.findall(text):
+            out.add(rec_id.casefold())
+            words = statement.rstrip(". ").split()
+            if len(words) > 1:
+                out.add(words[1].casefold())            # the subject's noun
+            for w in words[-2:]:                        # the value region
+                out.add(w.rstrip(".").casefold())
+            if len(words) >= 2:
+                out.add(" ".join(w.rstrip(".") for w in words[-2:]).casefold())
+
     for sched in sorted(Path(ROOT, "results").glob("gen*/attempt*/*_schedule.json")):
         for case in json.loads(sched.read_text()).get("cases", []):
             for v in (case.get("canonical_values") or {}).values():
@@ -75,10 +95,28 @@ def _burned() -> tuple[str, ...]:
                 out.update(w.casefold() for w in str(v).split())
             for rec in case.get("records", []):
                 out.add(rec.get("record_id", "").casefold())
-                # the subject's distinguishing noun: "The Ambergris terminal" -> ambergris
                 words = rec.get("statement", "").split()
                 if len(words) > 1:
                     out.add(words[1].casefold())
+
+    # Every prompt actually sent, in whatever file the generation used.
+    for req in sorted(Path(ROOT, "results").glob("gen*/attempt*/reader_requests.jsonl")):
+        for line in req.read_text().splitlines():
+            if line.strip():
+                _from_prompt(json.loads(line).get("prompt", ""))
+
+    for jr in sorted(Path(ROOT, "results").glob("gen*/attempt*/reader_*.jsonl")):
+        if jr.name in ("reader_requests.jsonl", "reader_records.jsonl"):
+            continue
+        for line in jr.read_text().splitlines():
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            blob = rec.get("request_body_b64")
+            if blob:
+                _from_prompt(base64.b64decode(blob).decode("utf-8", "ignore"))
+            elif rec.get("request_body"):
+                _from_prompt(json.dumps(rec["request_body"]))
 
     out.discard("")
     return tuple(sorted(out))
