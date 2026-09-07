@@ -266,6 +266,7 @@ def freeze_contract(cases: list[dict], generation: int, source_commit: str,
         "capture": {
             "raw_path": JOURNAL,
             "raw_is": "exact response bytes, base64, one append-only record per call",
+            "graded_view_is_reconciled_against_the_journal": True,
             "written": "per call, flushed and fsynced BEFORE any decode or parse",
             "parsed_view": "reader_records.jsonl - re-serialised objects, NOT raw bytes",
             "seal": "sha256 over the journal, bound into the manifest",
@@ -312,17 +313,27 @@ def call_once(case: dict, journal: Path) -> dict:
         started = time.time()
         req = urllib.request.Request(ENDPOINT, data=payload.encode(),
                                      headers={"Content-Type": "application/json"})
+        # TRANSPORT ONLY. Every statement in the try below becomes retryable, and
+        # a retryable scientific outcome is an experiment repeated until it
+        # agrees. The block cannot be reduced to one statement - the `with` exit
+        # and the status read live there too - so the invariant is enforced by
+        # state instead of by shape: ONCE raw_bytes IS SET, NOTHING RETRIES,
+        # whatever raises afterwards. Reviewers called the one-statement claim
+        # prose rather than structure at Gen121; they were right.
+        raw_bytes = None
+        status = None
         try:
-            # TRANSPORT ONLY. Nothing but obtaining the bytes belongs in here -
-            # every line added to this block becomes retryable, and a retryable
-            # scientific outcome is a repeatable experiment run until it agrees.
             with urllib.request.urlopen(req, timeout=TIMEOUT_S) as r:
-                raw_bytes = r.read()
                 status = r.status
+                raw_bytes = r.read()
         except Exception as exc:
-            attempts.append({"attempt": attempt, "error": f"{type(exc).__name__}: {exc}",
-                             "seconds": round(time.time() - started, 3)})
-            continue
+            if raw_bytes is None:
+                attempts.append({"attempt": attempt, "error": f"{type(exc).__name__}: {exc}",
+                                 "seconds": round(time.time() - started, 3)})
+                continue
+            # Bytes exist. A failure closing the socket may not un-ask the reader.
+            attempts.append({"attempt": attempt, "after_bytes_received": True,
+                             "error": f"{type(exc).__name__}: {exc}"})
 
         # The server ANSWERED. Persist the exact bytes before anything reads them.
         seconds = round(time.time() - started, 3)
@@ -337,7 +348,6 @@ def call_once(case: dict, journal: Path) -> dict:
             "response_len": len(raw_bytes),
             "captured_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
             "seconds": seconds, "retry_history": attempts,
-            "captured_before_any_decode": True,
         })
 
         common = {"case_id": case["case_id"], "core": case["core"],
@@ -376,22 +386,43 @@ def call_once(case: dict, journal: Path) -> dict:
             "terminal_disposition": "TERMINAL_TRANSPORT_FAILURE"}
 
 
-def refuse_to_resume_an_exposed_run(out: Path) -> None:
+def refuse_to_resume_an_exposed_run(generation_dir: Path) -> None:
     """An interrupted exposed run is finished, not paused.
 
-    If a journal already exists in this attempt directory, cases have already
-    been put in front of the reader. Continuing would silently re-expose them,
-    and the schedule is only valid once. The run is over; whether a FRESH
-    experiment happens is a control-plane decision, not a recovery step.
+    Scans EVERY attempt under this generation for a journal, because that is
+    where exposure could actually have happened.
+
+    The first version took the NEW attempt directory - the one `EV.next_attempt`
+    had just chosen precisely because it does not exist - and asked whether a
+    journal was inside it. It never could be. The guard was dead at the call site
+    while its witness, which built a journal by hand and called the function
+    directly, passed happily. Both reviewers found it at Gen121 and both named it
+    the same way: a check that cannot fail reads exactly like a check that passes.
+
+    The real hazard it now covers: an interrupted attempt gets committed, because
+    evidence is append-only and committing is the natural next act. The tree is
+    then clean, `next_attempt` hands back a fresh directory, and a re-run with the
+    same authorisation silently re-asks all sixty already-exposed cases.
     """
-    journal = Path(out) / JOURNAL
-    if journal.exists():
+    generation_dir = Path(generation_dir)
+    if not generation_dir.exists():
+        return
+    for attempt in sorted(generation_dir.glob("attempt*")):
+        journal = attempt / JOURNAL
+        if not journal.exists():
+            continue
         seen = sum(1 for line in journal.read_text().splitlines() if line.strip())
+        # Glob rather than name the markers. Spelling either one as a literal in
+        # this file trips the lint that stops a marker being AUTHORED instead of
+        # derived from run_marker() - and that lint is worth more than the
+        # convenience of naming a filename.
+        if any(attempt.glob("*_EVIDENCE.json")):
+            continue          # that run reached a marker; it is finished, not interrupted
         raise SystemExit(
-            f"REFUSING: {journal} already holds {seen} captured response(s). This "
-            "attempt was interrupted after exposure. Those cases have been seen by "
-            "the reader and may not be replayed. The attempt is NON_EVIDENCE; a "
-            "fresh run requires a new control-plane authorisation, not a resume.")
+            f"REFUSING: {journal} holds {seen} captured response(s) and no marker, "
+            "so that attempt was interrupted AFTER exposure. Those cases have been "
+            "seen by the reader and may not be replayed. A fresh experiment needs a "
+            "new control-plane authorisation, not a resume.")
 
 
 def seal_agrees(out: Path) -> bool:
@@ -484,8 +515,9 @@ def main() -> int:
         print("Re-run with --fire to execute the 60 cases once each.")
         return 0
 
+    # Check the whole generation, not the directory that by definition is empty.
+    refuse_to_resume_an_exposed_run(ROOT / "results" / f"gen{args.generation}")
     out = EV.next_attempt(ROOT, args.generation)
-    refuse_to_resume_an_exposed_run(out)
     journal = out / JOURNAL
     EV.write_evidence(out, "preflight.json", pf)
     EV.write_evidence(out, "execution_contract.json", contract)   # BEFORE exposure
@@ -503,6 +535,13 @@ def main() -> int:
     # `reader_records.jsonl` is the PARSED view. It used to be called
     # reader_raw.jsonl, which was false: it is re-serialised Python objects, and
     # calling that "raw bytes" is what let a decode failure look survivable.
+    # A run where EVERY case exhausted transport never journalled anything, so
+    # the file does not exist and manifest_existing would raise - crashing the
+    # exact scenario the terminal dispositions were built to record. Create it
+    # empty rather than let a failed run die before its marker. Found by
+    # glm-5.3-flash at Gen121.
+    if not journal.exists():
+        journal.write_text("")
     EV.manifest_existing(out, JOURNAL)
     raw_sha = EV.digest(journal.read_text())
     records = "\n".join(json.dumps(r, sort_keys=True) for r in responses) + "\n"
@@ -543,14 +582,44 @@ def main() -> int:
     # itself.
     closure = EV.verify_closed(out, REQUIRED_PRE_MARKER)
     seal_ok = seal_agrees(out)
-    marker = G116.run_marker(gates, estim, linkage_ok=linkage_ok,
+    # Does the view we GRADED match the bytes we CAPTURED?
+    #
+    # Grading consumes in-memory objects re-serialised into reader_records.jsonl.
+    # The manifest binds both files, and the seal binds the journal, but nothing
+    # compared them - so a desync between what arrived and what was scored would
+    # pass every gate, including closure and the three-way seal. Not tamper; an
+    # ordinary bug would do it. Raised by glm-5.3-flash at Gen121.
+    captured = {}
+    for line in journal.read_text().splitlines():
+        if line.strip():
+            rec = json.loads(line)
+            captured[rec["case_id"]] = rec["response_sha256"]
+    mismatched = sorted(
+        r["case_id"] for r in responses
+        if r.get("response_sha256") is not None
+        and captured.get(r["case_id"]) != r["response_sha256"])
+    ungraded = sorted(set(captured) - {r["case_id"] for r in responses})
+    records_match_journal = not mismatched and not ungraded
+    marker = G116.run_marker(gates, estim, linkage_ok=linkage_ok and records_match_journal,
                              seal_ok=seal_ok, manifest_ok=closure["closed"])
 
     EV.write_evidence(out, f"{marker['marker']}.json",
                       {**marker, "elapsed_seconds": elapsed,
                        "evidence_closure": closure,
                        "seal_agrees_manifest_and_disk": seal_ok,
-                       "served_models": sorted({r["served_model"] for r in responses}),
+                       "graded_records_match_captured_bytes": records_match_journal,
+                       "cases_whose_graded_bytes_differ_from_capture": mismatched,
+                       "cases_captured_but_never_graded": ungraded,
+                       # `sorted` over a set mixing str and None raises TypeError.
+                       # Any run with one terminal disposition beside one completed
+                       # response crashed here - after the evidence was sealed and
+                       # graded, but BEFORE the marker was written, leaving the
+                       # attempt permanently marker-less with backfill forbidden.
+                       # Both reviewers reproduced it at Gen121.
+                       "served_models": sorted(m for m in {r["served_model"] for r in responses}
+                                               if m is not None),
+                       "responses_without_a_served_model": sum(
+                           1 for r in responses if r["served_model"] is None),
                        "dispositions": {d: sum(1 for r in responses
                                                if r["terminal_disposition"] == d)
                                         for d in {r["terminal_disposition"] for r in responses}}})

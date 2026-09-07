@@ -34,7 +34,7 @@ PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
 # an agent following this file verbatim would reasonably read those three as a
 # new regression. Found by glm-5.3 at Gen120 round 5.
 PYTHONPATH=src:vendor/membukkit/src python -m pytest -q --continue-on-collection-errors
-# 1498 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
+# 1502 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
 ```
 
 **The whole-suite figure is not green, and every remaining failure has a known

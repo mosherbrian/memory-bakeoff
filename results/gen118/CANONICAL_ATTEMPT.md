@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt17` is canonical**, per the Generation 121 control-plane instruction.
+**`attempt18` is canonical**, per the Generation 121 rival review.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -260,7 +260,7 @@
   all 60 calls. The code was right and the prose was wrong; a crash mid-run seals
   no raw evidence at all, which is now stated plainly where the claim used to be.
   Contract `ee0da6047c1c45120061dd3511efe493c30de81601a3e92cf3cf1c62dfd61bdd`.
-- `attempt17` - **canonical.** Science identical an eleventh time. Generation 121,
+- `attempt17` - superseded. Science identical an eleventh time. Generation 121,
   and the defect is one the runner's own docstring denied for three generations:
   **"sealed before parse" was false.**
 
@@ -295,6 +295,38 @@
   including a non-UTF-8 body reproduced byte-for-byte out of the journal, and an
   injected interruption at the boundary between capture and the next call.
   Contract `671be26e45b601d4e4698e0c570cb05a05e323f131cace6e16ddd9da8bbaee95`.
+- `attempt18` - **canonical.** Science identical a twelfth time. The lifecycle
+  review found the capture ordering genuinely correct - and then found that three
+  of the paths around it could not survive their own failure cases:
+
+  1. **the resume guard could never fire.** `main` handed
+     `refuse_to_resume_an_exposed_run` the directory `EV.next_attempt` had just
+     chosen *because it does not exist*, then asked whether a journal was inside
+     it. Both reviewers found it, and both named it the same way: a check that
+     cannot fail reads exactly like a check that passes. Its witness passed
+     throughout, because it called the function directly with a hand-built
+     journal instead of testing the wiring. The guard now scans every attempt in
+     the generation, skipping those that reached a marker, and a second witness
+     asserts the wiring rather than the function;
+  2. **any run mixing one terminal disposition with one completed response
+     crashed** on `sorted()` over a set holding both `None` and a string - after
+     the evidence was sealed and graded, but before the marker was written,
+     leaving the attempt permanently marker-less with backfill forbidden. So the
+     graceful NON_EVIDENCE path built across four rounds could never execute for
+     precisely the partial-failure runs it was built for;
+  3. **a run where every case exhausted transport crashed** in
+     `manifest_existing`, because no journal was ever created and there was
+     nothing to bind.
+
+  Also: nothing compared the GRADED view against the CAPTURED bytes, so an
+  ordinary desync between arrival and scoring would have passed closure, the
+  three-way seal and every other gate - that reconciliation now gates the marker;
+  the journal's `captured_before_any_decode: true` was a constant vouching for
+  the code that wrote it, the same shape as Gen114's `seed_accepted`, and is
+  gone; the fsync witness was a source grep and now observes the syscall; and
+  `journal_append` fsyncs the parent directory on first append, since a file can
+  otherwise have durable bytes and no name.
+  Contract `6ca148c53517e3f06646a6c988d02020f73c382c7b69cefc684166cca5c8e9e0`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

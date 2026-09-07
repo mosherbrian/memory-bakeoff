@@ -134,11 +134,23 @@ def journal_append(path: Path, record: "Any") -> None:
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    first = not path.exists()
     line = json.dumps(record, sort_keys=True, default=str) + "\n"
     with path.open("a", encoding="utf-8") as handle:
         handle.write(line)
         handle.flush()
         os.fsync(handle.fileno())
+    if first:
+        # fsync on the file persists its CONTENT; the directory entry that makes
+        # the file findable is a separate write. On power loss a freshly created
+        # journal could otherwise have durable bytes and no name. Raised by
+        # glm-5.3-flash at Gen121 against this function's own "fsync is the whole
+        # point" claim.
+        fd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
 
 
 def manifest_existing(directory: Path, name: str) -> dict[str, "Any"]:
