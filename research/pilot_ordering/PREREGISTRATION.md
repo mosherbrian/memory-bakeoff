@@ -39,9 +39,12 @@ the single `has_answer`-marked TURN. Measured, on the pinned file:
 
     rule                                   eligible  unspent  discordant
     crude matcher, turn scope                  47       24      12 vs 0
-    §4 hit, turn scope                         47       23      11 vs 0
+    §4 hit, turn scope                         45       22      10 vs 0
     §4 hit, session scope  (ADOPTED)           31       14       9 vs 0
-      - as measured before the §4 unit fix:     23       11       8 vs 0
+
+    the same two §4 rows BEFORE the §4 unit fix logged in §11:
+    §4 hit, turn scope                         47       23      11 vs 0
+    §4 hit, session scope                      23       11       8 vs 0
 
     the ORIGINAL §2 wording as frozen at bb93785
     (crude, turn, PLUS retaining 11 unlocatable) 58       28      14 vs 0
@@ -59,8 +62,12 @@ non-reproducible-number class in this repo (LEDGER 47, 69, 74, 115), and it
 occurred inside the passage whose subject is that a sentence must determine its
 own membership.
 
-Every row above is now the output of one stated rule, and each is reproducible
-from the pinned file. The adopted rule, its membership, and the direction were
+Every row above is the output of one stated rule against one stated version of
+§4, and each is reproducible from the pinned file. The §4 rows are given twice
+because §4 itself changed: quoting a `§4 hit` number without saying which §4 is
+the same error in a smaller form, and round 6 caught exactly that - the
+`hit + turn` row still held its pre-fix 47/23/11 after the fix made it
+45/22/10. The adopted rule, its membership, and the direction were
 unaffected by the error. (Membership was 11 when that error was found and is 14
 after the §4 unit fix logged below; the table error touched neither.)
 
@@ -71,8 +78,10 @@ does not contain the answer" is actually true, and because adopting the loose
 reading after seeing that it preserves more of the effect is the precise move
 this document exists to forbid.
 
-The direction is unchanged under all three readings (14 vs 0, 11 vs 0, 8 vs 0).
-That is reassurance about the finding, not a defence of the sentence.
+The direction is unchanged under every reading and every §4 version measured:
+12 vs 0, 10 vs 0, 9 vs 0 under the current scorer, and 11 vs 0, 8 vs 0 under the
+previous one. That is reassurance about the finding, not a defence of the
+sentence.
 
 With 14 pairs and a preregistered direction, McNemar exact two-sided reaches
 p = 0.00012 if all 14 run one way, and p = 0.03125 at 6 discordant pairs, so the
@@ -219,9 +228,17 @@ fallback now fires only for a gold that is purely numeric.
 This change made `hit` STRICTER, which made fewer items "ambiguous", which
 RAISED the unspent set from 11 to 14 - a change in my favour, so it is stated
 first. It was made because round-4 review found `hit("4 weeks", "4 days")` was
-True, a defect about units that has nothing to do with which items survive; the
-membership effect was discovered afterwards, when the runner's own gate test
-failed on the item count. The pilot-arm discordance under the new rule is 9 vs 0
+True.
+
+**An earlier version of this entry said the unit defect "has nothing to do with
+which items survive". That was false, and round 6 was right to call it a
+minimising claim.** §2's second condition is literally
+`not hit(gold, ALL TEXT OF THE EARLIER SESSION)`, so a false-positive generator
+inside `hit` is a false-positive generator for eligibility itself. Any change to
+`hit` can move membership, necessarily, and reading §2 was enough to know it.
+I did not foresee it - the runner's own gate test failed on the item count and
+that is how I found out - but "did not foresee" is not "could not have", and the
+disclosure should not have implied otherwise. The pilot-arm discordance under the new rule is 9 vs 0
 (was 8 vs 0). The reason for the change came from a reviewer, not from me, and
 the direction of the effect is unchanged. Reason: round-4 review, defect 4 - it dropped units, so
 `hit("4 weeks", "4 days")` was True. A unit mismatch can arm-correlate exactly

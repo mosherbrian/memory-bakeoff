@@ -64,3 +64,31 @@ def test_no_superseded_membership_count_stands_as_current():
                 if int(num) != n and int(num) not in (28,):
                     live.append(f"{i}: {line.strip()[:100]}")
     assert not live, "a superseded membership count is stated as current:\n  " + "\n  ".join(live)
+
+
+def test_the_handoff_states_the_same_membership():
+    """Round-6 N2: the technical handoff said 28 where the answer was 14. The
+    executable check covered PREREGISTRATION.md and not the handoff, which is
+    exactly how it survived. A number that matters is checked wherever it is
+    written, not only where it was first written."""
+    n = _runner_unspent_count()
+    tech = (ROOT / "handoff/GEN124_TECHNICAL.md").read_text()
+    assert f"{n} unspent" in tech, f"the handoff does not state {n} unspent items"
+    for stale in ("28 unspent", "11 unspent"):
+        assert stale not in tech, f"the handoff still states {stale!r}"
+
+
+def test_the_substrate_partition_in_prose_matches_the_committed_artifact():
+    """Round-6 N3: two documents reported 47/8/2/11 while the script and its own
+    artifact said 31/8/18/11. Prose describing a measurement must agree with the
+    measurement's committed output."""
+    import json
+    sv = json.loads((ROOT / "research/pilot_ordering/SUBSTRATE_VERIFY.json").read_text())
+    later, earlier = len(sv["gold_only_later"]), len(sv["gold_only_earlier"])
+    both, blind = len(sv["gold_both"]), len(sv["gold_unlocatable_by_matcher"])
+    for name in ("handoff/GEN124_TECHNICAL.md",
+                 "research/pilot_ordering/PILOT_ORDERING_RESULT.md"):
+        txt = (ROOT / name).read_text()
+        assert str(later) in txt and str(both) in txt, (
+            f"{name} does not carry the committed partition "
+            f"{later}/{earlier}/{both}/{blind}")

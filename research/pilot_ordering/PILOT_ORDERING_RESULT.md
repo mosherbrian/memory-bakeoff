@@ -89,10 +89,15 @@ class outright rather than arguing about it.
 
 `scripts/verify_substrate.py` checked all 68 clean items instead of sampling:
 
-    gold ONLY in the later session (as assumed)   47
-    gold ONLY in the EARLIER session              8
-    gold in BOTH                                  2
-    not locatable by the matcher (string answers) 11
+    gold ONLY in the later session (as assumed)   31
+    gold ONLY in the EARLIER session               8
+    gold in BOTH                                  18
+    not locatable by the matcher                  11
+
+(An earlier version of this block read 47 / 8 / 2 / 11. Those were the
+turn-scoped crude-matcher numbers, left standing after LEDGER 135 rewrote the
+script to the session-scoped §4 rule underneath them. The current figures match
+`SUBSTRATE_VERIFY.json` as committed.)
 
 The 8 break the design assumption outright. One of them, `e66b632c`, was the
 ONLY item in the whole pilot that favoured the reversed order - so the single

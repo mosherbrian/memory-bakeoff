@@ -62,9 +62,14 @@ establish", and PREREGISTRATION.md §6.
 
 ## Contamination, and the cleaned result
 
-`scripts/verify_substrate.py` over all 68 clean items: gold only in the later
-session 47, only in the EARLIER session 8, in both 2, unlocatable by the crude
-matcher 11. The 8 break the design assumption; e66b632c is among them and was
+`scripts/verify_substrate.py` over all 68 clean items, under the §2 rule it now
+implements (ordering_scorer.hit, whole session, both roles): gold only in the
+later session 31, only in the EARLIER session 8, in both 18, unlocatable 11 -
+matching `research/pilot_ordering/SUBSTRATE_VERIFY.json` exactly.
+
+An earlier version of this paragraph reported 47 / 8 / 2 / 11. Those were the
+turn-scoped crude-matcher numbers from before the ledger-135 rewrite, left
+standing after the script was changed under them. The 8 break the design assumption; e66b632c is among them and was
 the pilot's only reversed-favouring item.
 
 Excluding the 10 (8 + 2 ambiguous), n=30:
@@ -89,7 +94,7 @@ an impossibility argument.
 `research/pilot_ordering/PREREGISTRATION.md` fixes substrate hash, eligibility,
 split seed (not re-drawn), normalised scorer, two arms (dated condition
 deliberately excluded), verbatim prompt with the recency-cue instruction
-removed, reader, and a McNemar exact test on the discordant pair. 28 unspent
+removed, reader, and a McNemar exact test on the discordant pair. 14 unspent
 items after eligibility. It does not authorise the run.
 Header dates replaced with `=== conversation N ===` and the lead sentence
 changed from "in the order they happened" - false under `current_first` - to a
