@@ -28,7 +28,7 @@ Without --fire it checks every gate and creates nothing.
 """
 from __future__ import annotations
 
-import json, subprocess, sys, urllib.request
+import json, os, subprocess, sys, urllib.request
 from pathlib import Path
 
 REPO = "mosherbrian/memory-bakeoff"
@@ -91,12 +91,24 @@ def preflight(generation: str) -> str:
     # stale, and trusting one would repeat exactly the mistake the F2 finding was
     # about: taking an authored claim where an observation was available.
     root = Path(__file__).resolve().parents[1]
+    # RECURSION GUARD. The gate runs the suite; the suite contains
+    # tests/test_doorbell_guards.py, which invokes this very script; that nested
+    # doorbell would run the suite again, forever. I introduced this loop in the
+    # same commit that added the gate, and it hung the first real ring.
+    #
+    # The nested call inherits this variable and skips the gate. The outer call -
+    # the one a human or the handoff actually made - still runs it, so the gate
+    # keeps its teeth exactly where it matters.
+    if os.environ.get("DOORBELL_SUITE_RUNNING"):
+        print("  known-failures gate: SKIPPED (nested inside the suite it would run)")
+        return commit
     print("  running the known-failures gate (about 45s) ...")
     baseline = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
          "tests/test_known_failures_baseline.py"],
         cwd=root, capture_output=True, text=True,
-        env={"PYTHONPATH": "src:vendor/membukkit/src", "PATH": "/usr/bin:/bin"},
+        env={**os.environ, "PYTHONPATH": "src:vendor/membukkit/src",
+             "DOORBELL_SUITE_RUNNING": "1"},
         timeout=2400)
     if baseline.returncode != 0:
         tail = "\n".join((baseline.stdout + baseline.stderr).splitlines()[-25:])

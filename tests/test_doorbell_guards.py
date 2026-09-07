@@ -129,3 +129,22 @@ def test_dry_run_creates_nothing(recap):
     assert before == after, "a run without --fire must not create a branch"
     out = r.stdout + r.stderr
     assert ("REFUSED" in out) or ("DRY RUN" in out), out
+
+
+def test_the_suite_gate_cannot_recurse():
+    """The gate runs the suite; the suite runs this file; this file runs the doorbell.
+
+    I added the known-failures gate to the doorbell and created an infinite loop
+    in the same commit: doorbell -> suite -> test_doorbell_guards -> doorbell ->
+    suite -> ... It hung the first real ring for ten minutes before I noticed.
+
+    The nested call inherits DOORBELL_SUITE_RUNNING and skips the gate; the outer
+    call still runs it. Both halves are asserted here, because a guard that
+    skipped in BOTH directions would be no gate at all.
+    """
+    assert 'os.environ.get("DOORBELL_SUITE_RUNNING")' in SRC, "no recursion guard"
+    assert '"DOORBELL_SUITE_RUNNING": "1"' in SRC, (
+        "the gate must mark its own subprocess, or the guard never trips")
+    guard = SRC.index('os.environ.get("DOORBELL_SUITE_RUNNING")')
+    runs = SRC.index("running the known-failures gate")
+    assert guard < runs, "the guard must be checked BEFORE the suite is launched"
