@@ -59,15 +59,34 @@ gate. It is a configuration of the harness we already run.
 longitudinal-v1. **Cost:** low. **Risk:** it may show the memory systems are not
 earning their complexity, which is a result, not a failure.
 
-## 2. Run MemConflict — pinned since Gen36, never executed
+## 2. EXTEND MemConflict — two engines measured, four not
 
 **Distinct question:** which memory system maintains the CURRENT valid state
 after true user updates, end to end, with ingestion and retrieval under test?
 
-**Why second.** `MEMCONFLICT_PIN.json` records `Code/` stages as `not_run` and
-`external/MemConflict` is gitignored and absent. The benchmark harnesses six
-systems (a_mem, langmem, letta, memobase, memos, mem0) and its README states our
-exact problem. Three generations built the contract and none ran it.
+**Correction, from the independent accounting of 2026-09-07.** This row first
+said "never executed", citing `MEMCONFLICT_PIN.json`'s `Code/` stages as
+`not_run`. That reads the wrong thing: those are the benchmark's own UPSTREAM
+pipeline stages. **The benchmark itself ran at Gen38** - a full release against a
+held-out 27-persona slice no adapter was tuned on:
+
+    Hit@3, held-out slice        perseus   mem0    bm25
+    conditional conflict          0.987    0.974   0.915
+    DYNAMIC conflict              0.434    0.419   0.226
+    static conflict               0.343    0.383   0.312
+
+The dynamic row is this project's actual question, on third-party data, with a
+baseline. Both engines roughly double bm25 and **both sit below 44% absolute**;
+on static conflict everything lands within seven points of `bm25`. That is real
+system-selection evidence and it is not flattering to the category.
+
+**Why second, restated.** What has NOT run is the rest: four of the six locally
+harnessed engines (Habitus, agentmemory, Hindsight, MemBukkit), and all six of
+the benchmark's own upstream harnesses (a_mem, langmem, letta, memobase, memos,
+mem0). `external/MemConflict` is gitignored and absent, so the 182 MB pinned
+dataset must be materialised first. Extending a lane that already has two engines
+and a baseline is far cheaper than opening a new one, and the agentmemory
+lifecycle result makes including it mandatory rather than optional.
 
 **Lane:** system-selection, external benchmark. **Assign:** Phase E.
 **Cost:** medium - the checkout must be materialised and the six harnesses

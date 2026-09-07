@@ -92,14 +92,20 @@ seven generations.
 
 ## PHASE E — external benchmark lanes
 
-**Status: pinned, never run.**
+**Status: PARTLY RUN, and an earlier version of this section said otherwise.**
 
-`MEMCONFLICT_PIN.json` records `Code/` stages as `not_run`, and
-`external/MemConflict` is gitignored and absent from the tree. Gen36-38 built
-the contract and the release checks; nothing executed the benchmark.
+**Correction.** This first read "pinned, never run", citing `Code/` stages as
+`not_run`. Those are the benchmark's UPSTREAM stages. Gen38 ran a full release
+against a held-out 27-persona slice: perseus, mem0 and a bm25 baseline, with
+Hit@3 of 0.434 / 0.419 / 0.226 on dynamic conflict - the supersession question.
+See `research/MEMCONFLICT_GEN38_FULL_RELEASE.md`.
 
-Gen124 establishes what it would measure and that it is the right lane for the
-system-selection question.
+So Phase E is not unstarted. It is **two engines of six, one slice, never
+extended** - which is a much better position than this document first claimed,
+and it means the primary lane already has an anchored result.
+
+What remains: four locally harnessed engines, the six upstream harnesses, and
+materialising `external/MemConflict`, which is gitignored and absent.
 
 ## PHASE F — synthesize the architecture, not the leaderboard
 
