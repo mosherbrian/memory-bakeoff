@@ -32,6 +32,10 @@ reproduced the failure it was written to prevent. Brian caught the omission.
 
 ## 1. Receive
 
+- [ ] Archive the previous generation's review transcripts, first commit  «reviews/»
+      (the doorbell demands a review newer than HEAD, so a round's transcripts
+      can never be committed in the ring that cites them - it must happen here)
+
 - [ ] `scripts/consume-instruction <gen>` - verify against the recorded PIN,  «scripts/consume-instruction»
       never the bare tip; the freeze releases only on a verified match
 - [ ] Read the instruction end to end before touching anything  «judgment»

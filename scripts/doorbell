@@ -28,7 +28,7 @@ Without --fire it checks every gate and creates nothing.
 """
 from __future__ import annotations
 
-import json, os, subprocess, sys, urllib.request
+import json, os, subprocess, sys, time, urllib.request
 from pathlib import Path
 
 REPO = "mosherbrian/memory-bakeoff"
@@ -197,9 +197,24 @@ def main() -> int:
         headers={"Authorization": f"Bearer {token()}",
                  "Accept": "application/vnd.github+json",
                  "X-GitHub-Api-Version": "2022-11-28"})
-    with urllib.request.urlopen(request) as response:
-        result = json.loads(response.read())
-    number = result["number"]
+    # The PR is an ARTIFACT RECORD, not the trigger. Brian disabled the PR
+    # webhook; delivery happens through control-plane/PENDING.json, which a
+    # scheduled task reads. So a PR failure must not stop the ring - it did
+    # exactly that on the first real Gen120 handoff, dying on HTTP 422 after
+    # every gate had already passed, and leaving nothing recorded.
+    try:
+        with urllib.request.urlopen(request) as response:
+            result = json.loads(response.read())
+        number = result["number"]
+        title_back = result.get("title", "")
+        if not title_back.startswith("BAKEOFF_HANDOFF"):
+            print(f"  WARNING: GitHub shows title {title_back!r}, which the old "
+                  "webhook filter would not match. Harmless while the PR trigger "
+                  "is disabled, but the record is mislabelled.")
+    except Exception as exc:
+        number = 0
+        print(f"  PR record not created ({type(exc).__name__}). Continuing: the PR "
+              "is not the delivery channel. PENDING.json is.")
 
     # NOTE, 2026-09-06: the PR trigger is DISABLED. This PR no longer summons
     # the control plane; it is an artifact record. Delivery now happens through
@@ -208,16 +223,27 @@ def main() -> int:
     #
     # The ring still ARMS the clock. There is no second decision about whether to
     # watch, because "am I stuck?" is the judgement that cost 6h47m.
-    title_back = result.get("title", "")
-    if not title_back.startswith("BAKEOFF_HANDOFF"):
-        raise SystemExit(f"RANG BUT MALFORMED: GitHub shows title {title_back!r}. "
-                         "The control plane filter will not match it. Close it and re-ring.")
     subprocess.run([str(Path(__file__).resolve().parent / "pending"),
                     "await", str(generation), sha], check=True)
     subprocess.run(["git", "add", "control-plane/PENDING.json"], check=False)
     subprocess.run(["git", "commit", "-q", "-m",
                     f"pending: awaiting gen{generation + 1} from {sha[:12]}"], check=False)
     subprocess.run(["git", "push", "-q", "origin", "HEAD:main"], check=False)
+
+    # The watcher checks origin/main for the request. Armed immediately after the
+    # push it can read a pre-push state and exit at once - which is what happened
+    # on the first real ring: "REQUEST NOT VISIBLE", dead five seconds in, while I
+    # reported it armed. Confirm the request is actually visible first.
+    for _ in range(12):
+        seen = subprocess.run(["git", "show", "origin/main:control-plane/PENDING.json"],
+                              cwd=root, capture_output=True, text=True)
+        if seen.returncode == 0 and '"status": "awaiting"' in seen.stdout:
+            break
+        subprocess.run(["git", "fetch", "-q", "origin", "main"], cwd=root, check=False)
+        time.sleep(5)
+    else:
+        print("  WARNING: the request is not yet visible on origin/main; the "
+              "watcher may exit immediately. Check it after arming.")
 
     unit = f"doorbell-gen{generation}"
     subprocess.run(["systemd-run", "--user", f"--unit={unit}", "--collect",
