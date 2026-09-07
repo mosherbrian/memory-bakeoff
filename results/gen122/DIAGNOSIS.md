@@ -88,8 +88,27 @@ after seeing the results it rejected is repair-after-exposure, and it is how
 Gen114's headline came to be retracted. This attempt is sealed as NON_EVIDENCE
 and stays that way whatever is decided.
 
-Any repair belongs in a **new freeze with a new schedule**, because these 60
-prompts have now been exposed to the reader and the schedule is valid once.
+Any repair belongs in a **new freeze**. But "the schedule is spent" - which the
+first version of this document said - overstates the cost, and Brian challenged
+it correctly.
+
+The reader is stateless at temperature 0 and seed 0. It remembers nothing between
+calls; re-asking an identical prompt returns identical bytes, as this run's own
+single server fingerprint and uniform `attempt:0` confirm. Nothing is contaminated
+on the model's side.
+
+What is spent is **our blindness**. We now know how this reader answers these
+cases, so a rule validated on them is fitted to outcomes we have already seen -
+the Gen114 error, and the reason option 3 refused a class "suggested by the
+observed failures". So:
+
+- re-running unchanged is harmless and pointless;
+- iterating on the prompt to DIAGNOSE what this reader will comply with is cheap
+  and legitimate;
+- a CONFIRMATORY result needs cases whose outcomes did not inform the rule.
+
+Fixing this therefore costs a prompt edit and further 106-second runs, not a
+fixture rebuild.
 
 ## Provenance, stated plainly
 

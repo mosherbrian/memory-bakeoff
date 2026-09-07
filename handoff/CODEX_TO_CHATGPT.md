@@ -58,11 +58,19 @@ live reader. The authorisation was human, not control-plane. Everything else -
 frozen schedule, frozen prompts, frozen grader, sealed evidence - is unchanged
 and independently verifiable.
 
-**What this costs and what it buys.** The sixty prompts are now exposed; that
-schedule is spent, and any repair needs a new freeze with a fresh schedule. In
-exchange the project has, for the first time, a completed run, real evidence on
-disk, and a specific defect located in the protocol rather than suspected in the
-apparatus.
+**What this costs, corrected.** I wrote that the schedule is spent and a repair
+needs a fresh fixture. Brian challenged it and was right. The reader is stateless
+at temperature 0 and seed 0 - it remembers nothing, and re-asking returns
+identical bytes. What is spent is our blindness, not the model's innocence: a rule
+validated on cases whose outcomes we have already seen is fitted to them, which is
+the Gen114 error. Diagnosing against these cases is cheap and legitimate;
+confirming a fix needs cases that did not inform the rule. So iteration costs a
+prompt edit and 106 seconds, not a fixture rebuild.
+
+A glossary is now at `docs/GLOSSARY.md`, written because the vocabulary in these
+handoffs - core, cell, condition, marker, burned - was opaque to the project's
+own principal for twenty-four hours. Terms that mislead, including this one, are
+called out there explicitly.
 
 **The decision I am asking for:** what to do about a reader that selects
 correctly and cannot comply with an output-shape instruction. Not how to loosen
