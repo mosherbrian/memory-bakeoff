@@ -101,6 +101,9 @@ def test_editing_a_frozen_source_blocks_the_run(tmp_path):
     attribute. A test may not make the tree lie to whoever else is reading it, and
     a `finally` is no protection against a crash between the two writes.
     """
+    before = subprocess.run(
+        ["git", "status", "--porcelain", "src/memory_bakeoff/reader_interference_v6.py"],
+        cwd=ROOT, capture_output=True, text=True).stdout.strip()
     wt = tmp_path / "wt"
     subprocess.run(["git", "worktree", "add", "--detach", str(wt), "HEAD"],
                    cwd=ROOT, capture_output=True, text=True, check=True)
@@ -118,13 +121,18 @@ def test_editing_a_frozen_source_blocks_the_run(tmp_path):
     finally:
         subprocess.run(["git", "worktree", "remove", "--force", str(wt)],
                        cwd=ROOT, capture_output=True)
-    # Not "the tree is clean" - that would fail for anyone with unrelated work in
-    # progress. The claim is narrower and exactly the one that was violated: THIS
-    # test does not touch the frozen source in the primary checkout.
-    dirty = subprocess.run(
+    # The claim is that THIS TEST did not touch the frozen source in the primary
+    # checkout - not that the file is globally unmodified.
+    #
+    # It asserted the latter, which fails for anyone legitimately editing the
+    # fixture, and did exactly that when Gen123 wrote fixture 2: a real edit was
+    # reported as contamination by the guard meant to catch contamination. The
+    # honest property is a comparison against the state this test found.
+    after = subprocess.run(
         ["git", "status", "--porcelain", "src/memory_bakeoff/reader_interference_v6.py"],
         cwd=ROOT, capture_output=True, text=True).stdout.strip()
-    assert not dirty, f"the frozen source was modified in the primary tree: {dirty}"
+    assert after == before, (
+        f"this test changed the frozen source in the primary tree: {before!r} -> {after!r}")
 
 
 def test_preflight_pins_every_file_the_contract_names():

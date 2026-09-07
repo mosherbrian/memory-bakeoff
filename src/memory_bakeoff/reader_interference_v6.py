@@ -56,30 +56,51 @@ VERBATIM_RULING = ("Gen118 option 3: the reader must copy the COMPLETE value phr
 # `rev2_is_b` alternates so the revision-2 value is not systematically longer,
 # lexicographically larger, or first-listed.
 CORES: tuple[dict[str, Any], ...] = (
-    {"key": "core01", "subject": 'The Ambergris terminal', "question": 'Ambergris terminal berthing bay',
-     "verb": 'berths at', "a": 'bay tolliver', "b": 'bay quillon', "rev2_is_b": False},
-    {"key": "core02", "subject": 'The Nocturne foundry', "question": 'Nocturne foundry casting floor',
-     "verb": 'casts on', "a": 'floor pemberly', "b": 'floor darnwick', "rev2_is_b": False},
-    {"key": "core03", "subject": 'The Selvage exchange', "question": 'Selvage exchange trading pit',
-     "verb": 'trades in', "a": 'pit halloway', "b": 'pit merrivale', "rev2_is_b": False},
-    {"key": "core04", "subject": 'The Fathom conservatory', "question": 'Fathom conservatory glass annex',
-     "verb": 'is kept in', "a": 'annex brackenby', "b": 'annex solvane', "rev2_is_b": False},
-    {"key": "core05", "subject": 'The Kestrelmoor mill', "question": 'Kestrelmoor mill grinding stage',
-     "verb": 'grinds at', "a": 'stage crowther', "b": 'stage abernay', "rev2_is_b": False},
-    {"key": "core06", "subject": 'The Lantern reservoir', "question": 'Lantern reservoir intake channel',
-     "verb": 'draws by', "a": 'channel wrenfell', "b": 'channel maddox', "rev2_is_b": False},
-    {"key": "core07", "subject": 'The Palisade infirmary', "question": 'Palisade infirmary triage ward',
-     "verb": 'admits to', "a": 'ward tillingham', "b": 'ward stonebrook', "rev2_is_b": False},
-    {"key": "core08", "subject": 'The Cordwain atelier', "question": 'Cordwain atelier cutting bench',
-     "verb": 'cuts at', "a": 'bench farrowly', "b": 'bench ondrimor', "rev2_is_b": False},
-    {"key": "core09", "subject": 'The Wrackline observatory', "question": 'Wrackline observatory sighting arc',
-     "verb": 'sights along', "a": 'arc penderyn', "b": 'arc glasswych', "rev2_is_b": True},
-    {"key": "core10", "subject": 'The Tamarind depot', "question": 'Tamarind depot loading ramp',
-     "verb": 'loads by', "a": 'ramp shawcross', "b": 'ramp ellerby', "rev2_is_b": False},
-    {"key": "core11", "subject": 'The Vellum bindery', "question": 'Vellum bindery stitching table',
-     "verb": 'stitches at', "a": 'table norrington', "b": 'table caskwell', "rev2_is_b": True},
-    {"key": "core12", "subject": 'The Ossuary cloister', "question": 'Ossuary cloister east walk',
-     "verb": 'runs along', "a": 'walk emberline', "b": 'walk thanewood', "rev2_is_b": False},
+    # FIXTURE 2, written 2026-09-06 after Gen122 ran fixture 1 against the reader.
+    #
+    # Two changes, both in the STIMULUS. The protocol, conditions, ontology,
+    # success predicate, canonicalisation and grader are untouched.
+    #
+    # 1. Values are ORDINARY WORDS now. Fixture 1 used invented ones and the
+    #    reader mis-copied them: 'farrowly' came back 'farroly', 'thanewood' came
+    #    back 'thewood'. Exact-matching a low-frequency invented string measures
+    #    transcription fidelity - a nuisance variable, not the thing under study.
+    #    Removing it from the stimulus is experimental design. It is NOT the
+    #    acceptance-class change option 3 refused and Sol reaffirmed at Gen123:
+    #    what counts as correct has not moved a millimetre.
+    # 2. Nothing here has been exposed. The freshness gate derives the burned set
+    #    from sealed schedules and the Gen122 journal, so this is checked.
+    #
+    # SEARCHED, not hand-picked. A generator drew head nouns, value words and
+    # subjects from the unburned pool, then solved the rev2_is_b assignment for
+    # exact 6/12 on both value-length and lexicographic balance, then searched
+    # salts for exact 6/12 id-order with 24 unexposed ids. Hand-tuning any of
+    # those to hit the number would be fitting the fixture to its own audit -
+    # the error Gen118 attempt1 was superseded for.
+    {"key": "core01", "subject": 'The Harbour office', "question": 'Harbour office terrace',
+     "verb": 'meets in', "a": 'terrace hazel', "b": 'terrace harvest', "rev2_is_b": True},
+    {"key": "core02", "subject": 'The Quarry works', "question": 'Quarry works platform',
+     "verb": 'loads at', "a": 'platform hollow', "b": 'platform sorrel', "rev2_is_b": True},
+    {"key": "core03", "subject": 'The Weaver mill', "question": 'Weaver mill booth',
+     "verb": 'spins by', "a": 'booth marble', "b": 'booth canvas', "rev2_is_b": False},
+    {"key": "core04", "subject": 'The Signal station', "question": 'Signal station niche',
+     "verb": 'relays from', "a": 'niche maple', "b": 'niche sienna', "rev2_is_b": True},
+    {"key": "core05", "subject": 'The Orchard estate', "question": 'Orchard estate shelf',
+     "verb": 'presses in', "a": 'shelf slate', "b": 'shelf granite', "rev2_is_b": True},
+    {"key": "core06", "subject": 'The Cutler workshop', "question": 'Cutler workshop cradle',
+     "verb": 'grinds at', "a": 'cradle summit', "b": 'cradle willow', "rev2_is_b": True},
+    {"key": "core07", "subject": 'The Ferry landing', "question": 'Ferry landing stall',
+     "verb": 'moors at', "a": 'stall pewter', "b": 'stall russet', "rev2_is_b": False},
+    {"key": "core08", "subject": 'The Bakery yard', "question": 'Bakery yard alcove',
+     "verb": 'proves in', "a": 'alcove myrtle', "b": 'alcove flint', "rev2_is_b": False},
+    {"key": "core09", "subject": 'The Printer floorplan', "question": 'Printer floorplan ledge',
+     "verb": 'binds at', "a": 'ledge laurel', "b": 'ledge meadow', "rev2_is_b": False},
+    {"key": "core10", "subject": 'The Kiln house', "question": 'Kiln house landing',
+     "verb": 'dries on', "a": 'landing quartz', "b": 'landing cedar', "rev2_is_b": False},
+    {"key": "core11", "subject": 'The Cooper shed', "question": 'Cooper shed trestle',
+     "verb": 'shapes on', "a": 'trestle birch', "b": 'trestle umber', "rev2_is_b": False},
+    {"key": "core12", "subject": 'The Tannery row', "question": 'Tannery row pier',
+     "verb": 'cures in', "a": 'pier linen', "b": 'pier clover', "rev2_is_b": True},
 )
 
 CONDITIONS = ("CLEAN_CURRENT", "CONFLICT_CURRENT_FIRST", "CONFLICT_STALE_FIRST",
@@ -101,7 +122,16 @@ BANNED_ROLE = ("current", "stale", "superseded", "latest", "winning", "correct",
 # declared balance gate. Only this arbitrary constant was re-rolled - the twelve
 # per-core assignments were NOT hand-picked to hit a number, which would be
 # fitting the fixture to its own audit.
-_ID_SALT = "reader-interference-v6/opaque-record-id/v13"
+# Re-rolled for fixture 2. The ids hash SALT|core_key|slot, and the core keys are
+# unchanged, so keeping the old salt would have reproduced all 24 record ids
+# EXACTLY - the ids Gen122 already put in front of the reader. Found by rendering
+# a prompt and noticing REC-6C69462DEB staring back.
+#
+# Chosen by searching salts for the first that gives 24 unique ids, zero collision
+# with any id in any sealed schedule, AND an exact 6/12 id-order balance - the
+# same method Gen119 used, and for the same reason: hand-picking per-core
+# assignments to hit the number would be fitting the fixture to its own audit.
+_ID_SALT = 'reader-interference-v6/opaque-record-id/fixture2-s5'
 
 
 def _slot_id(core_key: str, slot: int) -> str:
@@ -175,7 +205,26 @@ RULE = ("Select the record whose effective_revision is exactly equal to as_of_re
         "rather than infer, extrapolate, or choose the closest record. "
         "For selected_value, copy the ENTIRE value phrase exactly as written in the "
         "selected record. Do not abbreviate it, omit a word, return only the "
-        "distinguishing word, paraphrase it, or place it inside a sentence.")
+        "distinguishing word, paraphrase it, or place it inside a sentence.\n"
+        # A WORKED EXAMPLE, added 2026-09-06 after Gen122 measured the rule above
+        # failing on its own: 48 of 48 answerable cells violated it, 47 by wrapping
+        # the value in a sentence and 1 by returning the distinguishing word alone -
+        # both explicitly forbidden by the sentence directly above this one.
+        #
+        # Measured on the exposed fixture-1 cases before adopting: the rule alone
+        # gave 1/8 exact, the rule plus this example gave 8/8, and across all 60
+        # cases it moved 12/60 to 53/60. Describing the span in prose instead
+        # ("the text after the verb phrase") scored WORSE at 4/8, and combining
+        # the description with the example was worse again at 5/8. The example
+        # alone is what works.
+        #
+        # This changes what the reader is TOLD, not what counts as correct. The
+        # success predicate, canonicalisation, ontology and grader are untouched.
+        # The example uses a subject and value that appear in no fixture.
+        'EXAMPLE. Record: "The Ashford junction routes via terrace flint." '
+        'CORRECT selected_value: "terrace flint". '
+        'WRONG: "The Ashford junction routes via terrace flint." (a sentence). '
+        'WRONG: "flint" (only the distinguishing word).')
 
 SCHEMA = ('{"disposition": "RESOLVED|UNRESOLVED|INSUFFICIENT", '
           '"selected_record_id": "<record id or null>", '

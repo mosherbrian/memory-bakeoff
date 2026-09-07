@@ -10,6 +10,8 @@ from __future__ import annotations
 import os
 import sys
 import subprocess
+import base64
+import re
 import hashlib, json, re, collections
 from pathlib import Path
 from memory_bakeoff import evidence as EV
@@ -40,7 +42,17 @@ SCIENTIFIC_SOURCES = ("src/memory_bakeoff/reader_interference_v6.py",
                       "tests/test_gen121_raw_capture.py")
 # The four cores burned by Gen110-115, plus every value and answer string observed.
 def _burned() -> tuple[str, ...]:
-    """Everything v4 and v5 put in front of the reader. Derived, not typed."""
+    """Everything ever put in front of the reader. Derived from EVIDENCE, not code.
+
+    v4/v5 come from the module, because those runs predate the journal. Everything
+    later is read from SEALED ARTIFACTS - the frozen schedules and, where a run
+    actually happened, the response journal itself.
+
+    Reading the live v6 module would be circular the moment its cores are
+    replaced: the new cores would be checked against themselves and pass. The
+    sealed schedule records what was genuinely exposed, which is the only honest
+    source. Gen122 exposed the gen118 fixture for real, on 2026-09-06.
+    """
     from memory_bakeoff import reader_interference_v5 as V5
     out = {"branch:vega", "budget:solstice", "oncall:kestrel", "throughput:atlas",
            "vega", "solstice", "kestrel", "atlas", "rota", "gib", "t/s"}
@@ -49,6 +61,26 @@ def _burned() -> tuple[str, ...]:
         for v in V5.canonical_values(c).values():
             out.add(v.casefold())
             out.update(w.casefold() for w in v.split())
+
+    # DISTINCTIVE material only - values, their words, subject head nouns, record
+    # ids. The first version of this swallowed every word of every response, which
+    # burned ordinary English: "the", "in", "at", "bay", "floor", and even "null"
+    # and "disposition" from the reply schema. The freshness gate then refused any
+    # fixture written in English. Caught by the gate itself on the first fixture-2
+    # freeze attempt, which is the gate working - on my defect.
+    for sched in sorted(Path(ROOT, "results").glob("gen*/attempt*/*_schedule.json")):
+        for case in json.loads(sched.read_text()).get("cases", []):
+            for v in (case.get("canonical_values") or {}).values():
+                out.add(str(v).casefold())
+                out.update(w.casefold() for w in str(v).split())
+            for rec in case.get("records", []):
+                out.add(rec.get("record_id", "").casefold())
+                # the subject's distinguishing noun: "The Ambergris terminal" -> ambergris
+                words = rec.get("statement", "").split()
+                if len(words) > 1:
+                    out.add(words[1].casefold())
+
+    out.discard("")
     return tuple(sorted(out))
 
 

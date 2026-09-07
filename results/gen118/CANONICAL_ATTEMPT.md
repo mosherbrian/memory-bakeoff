@@ -1,6 +1,6 @@
 # Generation 118 - canonical attempt
 
-**`attempt18` is canonical**, per the Generation 121 rival review.
+**`attempt19` is canonical**, per Brian's direction at Generation 123.
 
 - `attempt1` - superseded. The science was right: option 3 correctly implemented,
   12 fresh cores, 60 unique prompts, zero reuse, zero model calls. But review
@@ -295,7 +295,7 @@
   including a non-UTF-8 body reproduced byte-for-byte out of the journal, and an
   injected interruption at the boundary between capture and the next call.
   Contract `671be26e45b601d4e4698e0c570cb05a05e323f131cace6e16ddd9da8bbaee95`.
-- `attempt18` - **canonical.** Science identical a twelfth time. The lifecycle
+- `attempt18` - superseded. Science identical a twelfth time. The lifecycle
   review found the capture ordering genuinely correct - and then found that three
   of the paths around it could not survive their own failure cases:
 
@@ -327,6 +327,39 @@
   `journal_append` fsyncs the parent directory on first append, since a file can
   otherwise have durable bytes and no name.
   Contract `6ca148c53517e3f06646a6c988d02020f73c382c7b69cefc684166cca5c8e9e0`.
+- `attempt19` - **canonical. FIXTURE 2.** The first attempt whose SCIENCE differs,
+  and it differs because Gen122 finally ran the experiment and told us two things
+  about the stimulus that no amount of inspection had.
+
+  1. **Values are ordinary words now.** Fixture 1 used invented ones and the
+     reader mis-copied them - `farrowly` came back `farroly`, `thanewood` came
+     back `thewood`. Exact-matching a low-frequency invented string measures
+     transcription fidelity, a nuisance variable rather than the thing under
+     study.
+  2. **The prompt carries a worked example.** Measured on the exposed fixture-1
+     cases before adopting: the rule alone gave 1/8 exact, the rule plus this
+     example 8/8, and across all 60 cases it moved 12/60 to 53/60. Describing the
+     span in prose scored WORSE (4/8), and description plus example worse again
+     (5/8). The example alone is what works.
+
+  **Neither change touches what counts as correct.** The success predicate,
+  canonicalisation, ontology, conditions and grader are byte-identical. Sol
+  reaffirmed at Gen123 that loosening the matcher to accept sentence-form or
+  distinguishing-word answers is forbidden, because those classes were suggested
+  by observed failures. Nothing here does that: the stimulus got cleaner and the
+  instruction got clearer, while the bar stayed exactly where it was.
+
+  **Searched, not hand-picked.** A generator drew subjects, head nouns and value
+  words from the unburned pool, solved the `rev2_is_b` assignment for exact 6/12
+  on value length and lexicographic order, then searched salts for exact 6/12
+  id-order with 24 never-exposed ids. Hand-tuning to hit those numbers is what
+  attempt1 was superseded for.
+
+  **The freshness gate now derives the burned set from EVIDENCE** - every sealed
+  schedule and the Gen122 response journal - rather than from the live module,
+  which would check new cores against themselves. It caught four collisions with
+  v5 material on the first try, including one in my own worked example.
+  Contract `4c4561b2949dc8dacc7a831fd69d91b22bca747202e91d4982c6c750cf8db007`.
 
 No attempt ran the reader. Every one carries `NON_EVIDENCE` with zero calls. Gen116 attempts 1-4
 and Gen117 attempt1 verify byte-for-byte unchanged.

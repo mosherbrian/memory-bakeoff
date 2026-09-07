@@ -75,13 +75,31 @@ def test_the_shared_head_noun_alone_fails():
     assert V6.classify_answer(body(selected_value=HEAD), VALS) == V6.UNSUPPORTED_VALUE
 
 
+def _lookalike(text: str) -> str:
+    """Swap the first Latin letter that has a confusable for its lookalike.
+
+    This was `FULL.replace("o", "\u03bf", 1)`, which is a NO-OP on any value
+    containing no "o" - the mutation silently produced the original string, the
+    test then asserted that string must be rejected, and it was accepted because
+    it was correct. A mutation that can fail to mutate is a check that cannot
+    fail. Found when fixture 2's first value, "terrace harvest", contained no o.
+    """
+    confusable = {"o": "\u03bf", "a": "\u0430", "e": "\u0435", "c": "\u0441", "p": "\u0440"}
+    for i, ch in enumerate(text):
+        if ch in confusable:
+            out = text[:i] + confusable[ch] + text[i + 1:]
+            assert out != text, "lookalike substitution must actually substitute"
+            return out
+    raise AssertionError(f"no confusable letter in {text!r}; the mutation cannot be built")
+
+
 @pytest.mark.parametrize("bad", [
     lambda: f"The terminal berths at {FULL}.",     # embedded in a sentence
     lambda: f"{FULL}.",                            # trailing punctuation
     lambda: f"the {FULL}",                         # prefix
     lambda: f"{FULL}s",                            # suffix
     lambda: " ".join(reversed(FULL.split())),      # reordered
-    lambda: FULL.replace("o", "ο", 1),        # Greek omicron lookalike
+    lambda: _lookalike(FULL),                      # Cyrillic/Greek lookalike
     lambda: FULL + " " + OTHER,                    # both values
 ])
 def test_near_misses_are_not_the_exact_value(bad):
