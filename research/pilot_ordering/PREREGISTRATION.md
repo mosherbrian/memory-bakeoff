@@ -24,17 +24,47 @@ An item is eligible iff ALL hold:
     question_id does not end with '_abs'
     exactly two sessions
     exactly one has_answer turn in each session
-    the gold value is locatable in the LATER session and NOT in the earlier one
+    hit(gold, ALL TEXT OF THE LATER SESSION) is True
+    hit(gold, ALL TEXT OF THE EARLIER SESSION) is False
 
-The last clause excludes 10 items (8 gold-only-earlier, 2 gold-in-both). It is a
-property of the dataset, checkable without running anything, and was applied
-because the assumption it tests was found false - not because of how any item
-scored. `research/pilot_ordering/SUBSTRATE_VERIFY.json` records the full
-partition.
+where `hit` is exactly `memory_bakeoff.ordering_scorer.hit` from §4, and "all
+text of a session" is every turn's `content` in that session joined by single
+spaces, both roles, not only the `has_answer` turn.
 
-11 items whose gold the matcher cannot locate at all (string answers like "Yes")
-are RETAINED. Their eligibility is decided by the normalised matcher in §4, not
-by the crude one that produced that list.
+**This wording is precise because the previous wording was not, and the
+imprecision was load-bearing.** Round-3 review found that "locatable in the
+later session" admitted two readings, and that the committed
+`scripts/verify_substrate.py` silently used the narrower one - it checked only
+the single `has_answer`-marked TURN. Measured, on the pinned file:
+
+    matcher    scope     eligible   unspent   stripped-arm discordant
+    crude      turn         47        28         14 vs 0
+    §4 hit     turn         47        23         11 vs 0
+    §4 hit     session      23        11          8 vs 0
+
+Three readings of one sentence, giving frozen sets that differ by 17 items. A
+preregistration that does not determine its own membership does not bind. (I
+could not reproduce review's exact figures of 17 and 15; the defect is confirmed
+and is larger than its numbers, not smaller. Its finding stands, my arithmetic
+of it differs, and I am recording mine rather than repeating theirs.)
+
+**The strictest reading is adopted: §4 hit, session scope, 11 unspent items.**
+Not because it is convenient - it is by far the most expensive, costing 17 of
+28 items - but because it is the only reading under which "the earlier session
+does not contain the answer" is actually true, and because adopting the loose
+reading after seeing that it preserves more of the effect is the precise move
+this document exists to forbid.
+
+The direction is unchanged under all three readings (14 vs 0, 11 vs 0, 8 vs 0).
+That is reassurance about the finding, not a defence of the sentence.
+
+With 11 pairs and a preregistered direction, McNemar exact two-sided reaches
+p = 0.0078 if all discordant pairs run one way, so the reduced set can still
+resolve the question. If fewer than 6 discordant pairs appear the run is
+underpowered and will say so rather than report a null as evidence of absence.
+
+No item is retained by a deferred rule. Every eligibility decision above is
+computable from the pinned file and §4 alone.
 
 ## 3. Split, unchanged
 
@@ -43,14 +73,11 @@ The seed is NOT re-drawn. Re-splitting after seeing pilot outcomes would let the
 split be chosen; keeping it means the unspent set is whatever it already was,
 minus any item §2 excludes.
 
-## 3a. The unspent set, enumerated
+## 3a. The unspent set
 
-Applying §2 to the §3 split leaves **28 items**. Six are excluded from the
-unspent half by the eligibility rule: 07741c44, 0977f2af, 0ddfec37, 10e09553,
-50635ada, 9bbe84a2.
-
-The 28 are not listed here by id on purpose - the ids are derivable from §§1-3
-by anyone with the pinned file, and writing them out invites reading them.
+Applying §2 as now worded to the §3 split leaves **11 items**. They are not
+listed by id here - they are computable from §§1-4 and the pinned file by
+anyone, and writing them out invites reading them.
 
 ## 4. Scorer, fixed here
 
@@ -139,6 +166,34 @@ missed in reversed, how many reversed answers contain the superseded value.
 - any change to §§1-8 after the run starts
 - any reader call against an unspent item before this document is authorised
 - resuming a partially completed run
+- **any amendment to this document that is not recorded in §11 before
+  authorisation**
+
+Round-3 review found the original list bound only "after the run starts", so a
+pre-run edit - including a convenient clarification made after another look at
+pilot-adjacent data - would leave the run fully preregistered. A document whose
+whole purpose is to make post-hoc choice impossible permitted exactly that. §11
+closes it: every amendment is dated, given a reason, and states whether any
+outcome was known when it was made.
+
+## 11. Amendment log
+
+Amendments before authorisation are legitimate; unrecorded ones are not.
+
+**2026-09-07, §4.** Word-boundary containment replaced plain substring
+containment. Reason: the scorer's own negative control caught gold `one`
+matching inside "money". Removes a false-positive class. No outcome consulted.
+
+**2026-09-07, §2 and §3a.** Eligibility rewritten from "locatable in the LATER
+session" to an exact `hit`-and-scope statement, and the strictest of the three
+readings adopted, reducing the unspent set from 28 to 11. Reason: round-3 review
+found the sentence admitted three readings differing by 17 items. Pilot-arm
+discordance under each reading WAS known when this was written and is recorded
+above; the strictest reading was adopted despite being the one that discards the
+most evidence.
+
+**2026-09-07, §9 and §11.** Added the pre-run amendment binding and this log.
+Reason: round-3 review, defect 3. No outcome consulted.
 
 ## 10. What this run still cannot establish
 
