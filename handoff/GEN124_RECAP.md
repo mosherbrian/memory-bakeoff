@@ -124,6 +124,36 @@ current one - and the next steps have to be argued on that narrower ground.
 I also described a benchmark as being in our repository when it is not, and it
 was the pin file that told me so, which I cited without reading.
 
+## Something I found late, which may matter more than the result
+
+I went and read the two published projects nearest to ours, from their actual
+data rather than from summaries of them.
+
+**MemConflict** turns out to be much closer to us than I told you earlier. Its
+own description is "identify the current valid state after true user updates" -
+that is our sentence, written by someone else - and it already harnesses six
+real memory systems. It is also already pinned in our repository, and I had
+described it in a handoff without reading what it does.
+
+It varies four things: how far apart the two conflicting statements sit, how
+long the dialogue is, how many distractors there are, and how the question is
+phrased. It does not appear to vary which statement comes first. So our piece
+survives, but it is small, and it should be described as small: hold retrieval
+perfect, and swap the order.
+
+**The bigger point is that we have been running two different experiments and
+calling them one.**
+
+- *Which memory system should we use?* MemConflict is the better ground - it
+  already has six systems in a harness.
+- *How much of the failure is the reader's fault, whatever the memory system
+  did?* LongMemEval-oracle is the better ground, because retrieval there is
+  perfect by construction and cannot be blamed.
+
+Both are worth doing and they answer different questions. Deciding which one
+Phase 2 is actually asking is the first thing the control plane should rule on,
+ahead of anything else in this handoff.
+
 ## What comes next
 
 The apparatus - the runner, the sealing, the freeze gates - is reusable and is
