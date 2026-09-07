@@ -30,7 +30,7 @@ evidence class, and with what caveats.
 |---|---|---|---|
 | 4 | **Does any memory system beat putting the history in the context window?** *(arm BUILT and tested, not run - `src/memory_bakeoff/longcontext_null.py`)* | Without it, rows 1-3 compare products to each other and to lexical retrieval, but never to the null the field's own recent work says is competitive. If the answer is no, rows 5-6 are moot and the memo closes early. | intake row 1 |
 | 5 | **Do the four unmeasured local engines change row 3's picture?** | Row 3 measures two of six. A recommendation over six candidates cannot rest on two. | intake row 2, extend |
-| 6 | **What does each system DO with a stale record it returns, scored as a penalty?** | Rows 1-3 score retrieval. Row 1 says every engine returns stale records anyway, so retrieval quality is not the deciding variable. FAMA (arXiv:2606.27472) is the published metric. | intake row 3 |
+| 6 | **What does each system DO with a stale record it returns, scored as a penalty?** *(metric BUILT and tested, not applied - `src/memory_bakeoff/stale_use_penalty.py`)* | Rows 1-3 score retrieval. Row 1 says every engine returns stale records anyway, so retrieval quality is not the deciding variable. FAMA (arXiv:2606.27472) is the published metric. | intake row 3 |
 
 ## Rows that would be nice and are NOT required
 
