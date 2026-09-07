@@ -1,5 +1,70 @@
 # Codex to ChatGPT handoff
 
+## Generation 122 — THE READER RAN. The apparatus held. The ruler is what failed.
+
+**In plain English.** For the first time since Generation 117, the experiment
+executed. Sixty questions went to the reader, sixty answers came back, and every
+byte of every answer is on disk and verified. It took 106 seconds.
+
+**The apparatus did everything it was built to do**, including the part that
+matters most: it refused to call the result evidence. The marker is
+`NON_EVIDENCE` and nothing here may be cited.
+
+**But look at what the reader actually did.** In all 48 cases that had a correct
+record to find, it chose the correct record. Not most - all forty-eight, zero
+wrong, including both conflict orders, current-first and stale-first alike. And
+in the twelve cases where the honest answer was "there isn't enough information",
+it said so twelve times out of twelve.
+
+**Forty-eight cells were scored as failures anyway**, because the answer had to
+match an expected phrase exactly and the reader replied with the sentence
+containing it:
+
+    expected : bay tolliver
+    reader   : The Ambergris terminal berths at bay tolliver.
+    record   : correct
+
+In 47 of those 48, the expected phrase sits verbatim inside what the reader said.
+The reader is not wrong about the fact. It is answering in a shape the matcher
+does not accept.
+
+**This is the Gen117 failure returning in a new form.** Gen117 died on value
+surface form, and option 3 was ruled in response: make the prompt demand the
+reader copy the entire value phrase exactly as written. That instruction is in
+all sixty prompts. It produced complete sentences - a defensible reading of it -
+and the exact matcher rejects them. The prompt and the matcher disagree about
+what a value is, and they cannot both be satisfied as written.
+
+**What I have not done, and will not:** the grader has not been touched. Adjusting
+a matcher after seeing the answers it rejected is repair-after-exposure, and it
+is precisely how the Gen114 headline came to be retracted. The attempt is sealed
+as NON_EVIDENCE and stays so regardless of what is decided.
+
+**Provenance, stated plainly.** The Gen122 instruction said NO READER RUN and
+directed a plan-recovery generation. Brian directed the run anyway, over that
+instruction, after the apparatus was demonstrated working end to end against the
+live reader. The authorisation was human, not control-plane. Everything else -
+frozen schedule, frozen prompts, frozen grader, sealed evidence - is unchanged
+and independently verifiable.
+
+**What this costs and what it buys.** The sixty prompts are now exposed; that
+schedule is spent, and any repair needs a new freeze with a fresh schedule. In
+exchange the project has, for the first time, a completed run, real evidence on
+disk, and a specific defect located in the protocol rather than suspected in the
+apparatus.
+
+**The decision I am asking for:** how to reconcile the prompt instruction with
+the value matcher. The full diagnosis is in `results/gen122/DIAGNOSIS.md`. The
+recovered Phase-2 roadmap in `research/PHASE2_ROADMAP.md` remains outstanding and
+this does not displace it.
+
+**Evidence:** `results/gen122/attempt1`, 9 artifacts, manifest verifies, journal
+holds 60 byte-exact captures, closure complete, three-way seal agrees, marker
+derived from observation. Gen118 attempt18 remains the canonical freeze and is
+untouched; all 23 prior sealed attempts still verify.
+
+---
+
 ## Generation 120 — the evidence gate now measures instead of asserting; still unrun
 
 **In plain English.** You found three problems in the machinery that will one day

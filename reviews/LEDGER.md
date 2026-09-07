@@ -150,6 +150,9 @@ REJECTED (with reason). Do not ring a doorbell while a finding is OPEN.
 | 107 | Gen121 verify | glm-5.3 | the three new failure-path witnesses assert on source text or inline replicas rather than executing `main()` - the same function-vs-wiring asymmetry that let the dead resume guard pass review for a generation | CARRIED | Both reviewers drove the real `main()` themselves and confirmed the paths work, so the repairs are verified - by them, not by the suite. Owner: me, Gen122. |
 
 
+| 108 | Gen122 | the run itself | **the prompt instruction and the value matcher disagree about what a value is.** Option 3 told the prompt to demand the reader "copy the ENTIRE value phrase exactly as written"; the reader returns the sentence containing the value, and the exact matcher scores it `UNSUPPORTED_VALUE`. 48 of 60 cells failed this way, with the CORRECT record selected in all 48 and the expected phrase present verbatim in 47 | OPEN - CONTROL PLANE | Found by RUNNING, not by inspection; ten generations of review never surfaced it. The grader has NOT been touched: adjusting a matcher after seeing the answers it rejected is repair-after-exposure, which is how Gen114 was retracted. The schedule is now exposed and spent; any repair needs a new freeze with a fresh schedule. `results/gen122/DIAGNOSIS.md`. |
+
+
 **Rejected:** Fable's claim that `test_interference_run_gen97.py` is in the
 reader-interference lineage. It imports `round3_adapters`; it is Round 3
 distractor work. The claim that no suite failure touches the reader-interference
