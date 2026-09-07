@@ -37,16 +37,30 @@ later session" admitted two readings, and that the committed
 `scripts/verify_substrate.py` silently used the narrower one - it checked only
 the single `has_answer`-marked TURN. Measured, on the pinned file:
 
-    matcher    scope     eligible   unspent   stripped-arm discordant
-    crude      turn         47        28         14 vs 0
-    §4 hit     turn         47        23         11 vs 0
-    §4 hit     session      23        11          8 vs 0
+    rule                                   eligible  unspent  discordant
+    crude matcher, turn scope                  47       24      12 vs 0
+    §4 hit, turn scope                         47       23      11 vs 0
+    §4 hit, session scope  (ADOPTED)           31       14       9 vs 0
+      - as measured before the §4 unit fix:     23       11       8 vs 0
 
-Three readings of one sentence, giving frozen sets that differ by 17 items. A
-preregistration that does not determine its own membership does not bind. (I
-could not reproduce review's exact figures of 17 and 15; the defect is confirmed
-and is larger than its numbers, not smaller. Its finding stands, my arithmetic
-of it differs, and I am recording mine rather than repeating theirs.)
+    the ORIGINAL §2 wording as frozen at bb93785
+    (crude, turn, PLUS retaining 11 unlocatable) 58       28      14 vs 0
+
+Under single consistent rules the frozen sets differ by 13 items (24 -> 11); the
+original wording, which was not a single rule, gives 28.
+
+**The first version of this table was itself a defect of the class it
+documents.** It paired the crude+turn rule's `eligible` (47) with the ORIGINAL
+rule's `unspent` and `discordant` (28, 14 vs 0), producing a row no single rule
+generates, and drew "17 items" from that mixture. Round-4 review reproduced every
+correct row and caught it. That is the fourth recurrence of the
+non-reproducible-number class in this repo (LEDGER 47, 69, 74, 115), and it
+occurred inside the passage whose subject is that a sentence must determine its
+own membership.
+
+Every row above is now the output of one stated rule, and each is reproducible
+from the pinned file. The adopted rule, its membership of 11, and the direction
+were unaffected by the error.
 
 **The strictest reading is adopted: §4 hit, session scope, 11 unspent items.**
 Not because it is convenient - it is by far the most expensive, costing 17 of
@@ -58,9 +72,11 @@ this document exists to forbid.
 The direction is unchanged under all three readings (14 vs 0, 11 vs 0, 8 vs 0).
 That is reassurance about the finding, not a defence of the sentence.
 
-With 11 pairs and a preregistered direction, McNemar exact two-sided reaches
-p = 0.0078 if all discordant pairs run one way, so the reduced set can still
-resolve the question. If fewer than 6 discordant pairs appear the run is
+With 14 pairs and a preregistered direction, McNemar exact two-sided reaches
+p = 0.00012 if all 14 run one way, and p = 0.03125 at 6 discordant pairs, so the
+reduced set can still resolve the question. (An earlier draft said 0.0078, which
+is 2 x 2^-8 - the pilot's OBSERVED 8 discordances, not the pair count.
+Conservative, and still wrong.) If fewer than 6 discordant pairs appear the run is
 underpowered and will say so rather than report a null as evidence of absence.
 
 No item is retained by a deferred rule. Every eligibility decision above is
@@ -75,7 +91,7 @@ minus any item §2 excludes.
 
 ## 3a. The unspent set
 
-Applying §2 as now worded to the §3 split leaves **11 items**. They are not
+Applying §2 as now worded to the §3 split leaves **14 items**. They are not
 listed by id here - they are computable from §§1-4 and the pinned file by
 anyone, and writing them out invites reading them.
 
@@ -194,6 +210,27 @@ most evidence.
 
 **2026-09-07, §9 and §11.** Added the pre-run amendment binding and this log.
 Reason: round-3 review, defect 3. No outcome consulted.
+
+**2026-09-07, §4 - WITH A MEMBERSHIP CONSEQUENCE, DISCLOSED.** The numeric
+fallback now fires only for a gold that is purely numeric.
+
+This change made `hit` STRICTER, which made fewer items "ambiguous", which
+RAISED the unspent set from 11 to 14 - a change in my favour, so it is stated
+first. It was made because round-4 review found `hit("4 weeks", "4 days")` was
+True, a defect about units that has nothing to do with which items survive; the
+membership effect was discovered afterwards, when the runner's own gate test
+failed on the item count. The pilot-arm discordance under the new rule is 9 vs 0
+(was 8 vs 0). The reason for the change came from a reviewer, not from me, and
+the direction of the effect is unchanged. Reason: round-4 review, defect 4 - it dropped units, so
+`hit("4 weeks", "4 days")` was True. A unit mismatch can arm-correlate exactly
+the way the retracted crude-scorer argument assumed it could not, and this
+scorer is the run's primary endpoint. Removes a false-positive class. Five
+negative controls added. No outcome consulted.
+
+**2026-09-07, §2 table and §8 p-value.** Corrected, not amended in substance:
+the justification table mixed two rules into one row, and the power sentence
+quoted 2^-8 where 2^-11 was meant. Reason: round-4 review, defects 1 and 3.
+Neither touches the adopted rule, the membership of 11, or the test.
 
 ## 10. What this run still cannot establish
 

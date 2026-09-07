@@ -2,9 +2,13 @@
 
 Written to the specification, not tuned to any outcome. Every rule here is
 traceable to a line of that document; nothing was added because it improved a
-number. The pilot's crude scorer marked `4` wrong against gold `four`, a
-false-negative class that hits BOTH arms and so cannot create a direction - but
-it wastes items, so the specification removes it.
+number. The pilot's crude scorer marked `4` wrong against gold `four`. The
+specification removes that class because it wastes items - NOT because such
+errors are harmless. The argument that they cannot bias a paired comparison
+(they miss in both arms) is FALSE and was retracted: if the earlier session
+writes "four" and the later writes "4", a reader echoing the last-read form
+answers "four" under reversal, which is correct and yet scored MISS in exactly
+one arm. See reviews/LEDGER.md 136.
 
 Deliberately NOT an LLM judge and NOT a new dependency.
 """
@@ -55,6 +59,20 @@ def numeric_tokens(text: str) -> list[str]:
     return nums
 
 
+def _is_purely_numeric(normalised_gold: str) -> bool:
+    """True when the gold carries no word other than numbers and their forms.
+
+    `400000` and `25:50` qualify. `4 weeks`, `600 dollars` and `132 points` do
+    not: their unit is part of the answer and dropping it is a false positive.
+    """
+    for tok in normalised_gold.split():
+        t = tok.strip("()[]")
+        if _NUM.fullmatch(t.replace(",", "")) or t in _WORD_TO_DIGIT:
+            continue
+        return False
+    return bool(normalised_gold.strip())
+
+
 def _contains_at_word_boundary(haystack: str, needle: str) -> bool:
     """Containment that will not match `one` inside `money`.
 
@@ -81,8 +99,12 @@ def hit(gold: str, answer: str) -> bool:
     gv, av = _number_variants(g), _number_variants(a)
     if any(_contains_at_word_boundary(y, x) for x in gv for y in av):
         return True
-    gn = numeric_tokens(gold)
-    if gn:
-        an = set(numeric_tokens(answer))
-        return all(n in an for n in gn)
+    # The numeric fallback fires ONLY for a gold that is purely numeric.
+    # It used to fire for any gold containing a number, which made
+    # hit("4 weeks", "4 days") True - the unit was simply dropped. A unit
+    # mismatch can arm-correlate exactly the way the retracted crude-scorer
+    # argument assumed it could not, and this is the run's primary endpoint.
+    if _is_purely_numeric(g):
+        gn, an = numeric_tokens(gold), set(numeric_tokens(answer))
+        return bool(gn) and all(n in an for n in gn)
     return False

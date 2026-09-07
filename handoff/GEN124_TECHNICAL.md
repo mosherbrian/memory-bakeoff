@@ -47,9 +47,16 @@ answer is the superseded value.
     discordant_current_first_only 1  (dated arm: 1)
 
 Removing the header dates left the chronological arm unchanged within noise and
-halved the reversed arm. The discordant count more than doubled. Read as: the
-model is largely following position, and the visible dates were a weak partial
-correction rather than the thing it reasons from.
+halved the reversed arm. The discordant count more than doubled.
+
+It must NOT be read as "the model follows position rather than dates". The
+stripped arm does not isolate position: month and weekday words remain in most
+items, and the pilot's own question ended "as of the most recent conversation",
+which points at transcript POSITION rather than at time. What the arm supports
+is that order changes the answer, and that removing the header dates makes the
+change larger. Separating position from residual chronology and from the
+instruction is not done. See PILOT_ORDERING_RESULT.md, "What this does NOT
+establish", and PREREGISTRATION.md §6.
 
 `research/pilot_ordering/COMBINED.json` carries both arms.
 

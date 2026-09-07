@@ -64,3 +64,28 @@ def test_thousands_separators_do_not_change_the_number():
 def test_a_bare_substring_of_a_word_is_not_a_hit():
     """'one' inside 'money' must not score. The pilot's crude matcher would."""
     assert not hit("one", "I spent the money")
+
+
+@pytest.mark.parametrize("gold,answer", [
+    ("4 weeks", "4 days"),        # the unit is part of the answer
+    ("600 dollars", "600 euros"),
+    ("132 points", "132 minutes"),
+    ("5 hours", "5 minutes"),
+    ("two cups", "two litres"),
+])
+def test_a_matching_number_with_a_different_unit_is_not_a_hit(gold, answer):
+    """Round-4 defect 4: the numeric fallback dropped units, so `4 weeks` scored
+    against `4 days`. A unit mismatch can arm-correlate the same way the
+    retracted crude-scorer argument assumed it could not."""
+    assert not hit(gold, answer)
+
+
+@pytest.mark.parametrize("gold,answer", [
+    ("$400,000", "400000"),
+    ("25:50", "your best time is 25:50"),
+    ("four", "4"),
+    ("4 weeks", "4 weeks"),
+    ("4 weeks", "about 4 weeks now"),
+])
+def test_the_unit_fix_does_not_break_the_cases_it_must_keep(gold, answer):
+    assert hit(gold, answer)

@@ -48,7 +48,7 @@ def test_the_eligible_set_is_the_size_the_preregistration_claims():
     """Two independent implementations - scripts/verify_substrate.py and the
     runner - must agree, or section 2 admits more than one reading again."""
     r = run("--dry-run")
-    assert "unspent and eligible: 11 items" in r.stdout, r.stdout
+    assert "unspent and eligible: 14 items" in r.stdout, r.stdout
 
 
 def test_mcnemar_is_exact_and_two_sided():
