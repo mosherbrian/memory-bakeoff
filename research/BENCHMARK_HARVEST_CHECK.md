@@ -90,10 +90,24 @@ and whether the pinned MemConflict generator ablates order.
 
 Building a fixture 3 to raise interpretable-core count is the wrong next move.
 The substrate should be a public dataset with real questions, and the
-manipulation should be the ordering - the part nobody has published.
+manipulation should be the ordering - NOT because nobody has published it
+(Finding 3 above retracts that; ConflictQA has), but because the narrow version
+we can do is supersession ordering in a memory setting, and because it is the
+failure mode that decides whether retrieval hit-rate is the right thing to
+score at all.
 
-The apparatus built over Gen118-123 (runner, sealing, closed-pool grading,
-freeze gates) is reusable against a different substrate. The hand-written
+The apparatus built over Gen118-123 is PARTLY reusable: the runner, the
+evidence sealing and the freeze gates carry over unchanged. The GRADER does
+NOT. `scripts/grade_gen118_v6.py` requires five conditions per core
+(`CLEAN_CURRENT`, `CLEAN_HISTORICAL_AS_OF`, `INSUFFICIENT_CURRENT`, and the two
+conflict orders); a natural two-session item affords at most the two conflict
+orders, so every core would come out `NOT_INTERPRETABLE_INCOMPLETE_CELLS`.
+
+An earlier version of this sentence said "closed-pool grading" was reusable.
+That was wrong twice over: the grader is not reusable, and "closed-pool
+grading" is not a thing this repo has - the phrase was borrowed from the
+StateMemBench paper. The grading rule for this substrate is UNDECIDED and is
+the first control-plane question of the next generation. The hand-written
 fixtures are not the part worth keeping.
 
 Sources:
