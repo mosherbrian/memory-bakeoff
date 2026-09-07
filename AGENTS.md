@@ -34,7 +34,9 @@ PYTHONPATH=src pytest -q tests/test_gen109_reader_interference.py \
 # an agent following this file verbatim would reasonably read those three as a
 # new regression. Found by glm-5.3 at Gen120 round 5.
 PYTHONPATH=src:vendor/membukkit/src python -m pytest -q --continue-on-collection-errors
-# 1502 passed, 24 failed, 3 skipped, 5 errors  (2026-09-06, Gen120)
+# 1557 passed, 26 failed, 3 skipped, 5 errors  (2026-09-07, Gen125)
+# Pinned by tests/test_preregistration_numbers_are_real.py against
+# tests/KNOWN_FAILURES.json - this line cannot go stale silently again.
 ```
 
 **The whole-suite figure is not green, and every remaining failure has a known
@@ -83,7 +85,7 @@ See `CODEX_HANDOFF.md` for exact guidance and stop conditions.
 ## Existing findings to protect
 
 - agentmemory controlled lifecycle: 418/450 stress distractors falsely superseded (92.9%).
-- MemBukkit controlled bucket routing: same shared-LSA stress Hit/all-relevant as full dense scan while opening ~32.9% of the bank.
+- MemBukkit controlled bucket routing: same shared-LSA stress Hit/all-relevant as full dense scan. The scan fraction for this configuration was never measured; the ~32.9% figure is RETRACTED (research/MEMBUKKIT_SCAN_FRACTION_AUDIT.md).
 - Claude-Mem controlled semantic policy: implicit 90-day window reduces Hit@5 to 0.208; disabling the window restores the dense-LSA result.
 - Habitus real runtime: stress Hit@5 0.792 with prohibited@5 0.025.
 - Baseline real reader trace: BM25 12/14, TF-IDF 12/14 with one prohibited stale answer, dense LSA 14/14, hybrid RRF 14/14.

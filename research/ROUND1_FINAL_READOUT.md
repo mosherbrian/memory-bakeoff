@@ -11,7 +11,7 @@ only comparable within their stated experiment class and evaluated profile.
 |---|---|---|---|
 | BM25, TF-IDF, dense LSA, hybrid RRF | baseline | BM25/TF-IDF Hit@5 0.792; dense 0.583; hybrid 0.708 | deterministic harness anchors, not products |
 | Habitus real pinned core | controlled_core | Hit@5 0.792, prohibited@5 0.025 | core diagnostic; no full product claim |
-| MemBukkit shared-LSA bucket routing | controlled_core | Hit/all 0.583/0.542, ~32.9% bank opened | routing finding only, not intended encoder/reranker |
+| MemBukkit shared-LSA bucket routing | controlled_core | Hit/all 0.583/0.542; bank fraction unmeasured (~32.9% RETRACTED) | routing finding only, not intended encoder/reranker |
 | MemBukkit documented fallback | raw_product | Hit/all 0.875/0.750 | intended fine-tuned model repositories unavailable |
 | Mem0 infer=False, explicit dense+BM25 stack | raw_product | Hit/all 0.958/0.917; negative-empty 0 | no LLM update/lifecycle semantics in this lane |
 | Hindsight v0.9.2 raw/no-LLM learned-reranker path | raw_product | Hit/all 0.833/0.708 | composite DB/model/runtime identity must travel with row |

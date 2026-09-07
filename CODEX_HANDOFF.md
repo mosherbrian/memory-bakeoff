@@ -145,7 +145,7 @@ If provenance cannot be made exact, stop and document the block rather than publ
 
 # Priority 2 — MemBukkit intended models
 
-Existing result: the real bucket architecture with shared LSA preserved stress recall while opening ~32.9% of the bank.
+Existing result: the real bucket architecture with shared LSA preserved stress recall. Scan fraction unmeasured for this configuration; ~32.9% is RETRACTED (research/MEMBUKKIT_SCAN_FRACTION_AUDIT.md).
 
 Now test the actual product retrieval models.
 

@@ -55,7 +55,7 @@ The next phase should run the **complete products with their intended models/ser
 | Dense LSA | complete baseline | deterministic 32-D corpus-fit LSA | Perfect 14/14 reader result on current reader set; stress recall drops under near-neighbor load | add modern pretrained dense baseline |
 | Hybrid RRF | complete baseline | BM25 + dense-LSA RRF | Perfect 14/14 reader result; stress better than dense alone | keep as anchor |
 | Habitus | **real pinned runtime core** | upstream remember/recall core, byte-verified | Stress Hit@5 ties BM25/TF-IDF with much lower prohibited-memory rate | product/learning round and retrieval-credit experiment |
-| MemBukkit | **controlled real core** | upstream MemorySystem bucket routing/storage with shared LSA | Same stress Hit/all-relevant as full dense scan while opening 32.9% of bank | run intended encoder/reranker weights |
+| MemBukkit | **controlled real core** | upstream MemorySystem bucket routing/storage with shared LSA | Same stress Hit/all-relevant as full dense scan; scan fraction unmeasured (32.9% RETRACTED) | run intended encoder/reranker weights |
 | agentmemory | **controlled real core + lifecycle** | upstream BM25/vector indexes and `/remember` supersession behavior | 92.9% false supersession of distinct stress memories | run full service, graph lane, real embeddings/reranker; lifecycle remains separate score |
 | Mem0 | **controlled search-policy arm** | pinned scoring policy + shared LSA | Positive retrieval ~= dense control; threshold abstains on half of negative cases | run full Qdrant/fastembed/entity/reranker stack |
 | Claude-Mem | **controlled search-policy arms** | current FTS5 and semantic-recency policy, not compression worker | Default 90-day window reduces current semantic Hit@5 to 0.208; disabling it restores dense-LSA result | run actual worker + compression pipeline |
@@ -87,7 +87,7 @@ The next phase should run the **complete products with their intended models/ser
 | Dense LSA | 0.583 | 0.542 | 0.050 | near-neighbor pressure hurts corpus-fit LSA |
 | Hybrid RRF | 0.708 | 0.667 | 0.058 | recovers some dense loss |
 | Habitus | **0.792** | 0.667 | **0.025** | unusually clean evidence set |
-| MemBukkit bucketed/shared-LSA | 0.583 | 0.542 | 0.042 | same recall as dense with ~32.9% bank opened |
+| MemBukkit bucketed/shared-LSA | 0.583 | 0.542 | 0.042 | same recall as dense; bank fraction unmeasured (~32.9% RETRACTED) |
 | agentmemory core/shared-LSA | 0.583 | 0.500 | 0.042 | all 500 records retained; lifecycle off |
 | Mem0 policy/shared-LSA | 0.583 | 0.542 | 0.050 | same semantic representation as dense control |
 
@@ -144,7 +144,7 @@ Nine semantics-bearing routing/storage/pipeline files match upstream Git blob SH
 Key result on 500 memories:
 
 - full dense LSA: Hit@5 0.583 / all-relevant 0.542, scanning all records;
-- MemBukkit bucketed/shared-LSA: **0.583 / 0.542**, opening **32.9%** of the bank on average.
+- MemBukkit bucketed/shared-LSA: **0.583 / 0.542**. Bank fraction unmeasured for this configuration; **32.9% RETRACTED**.
 
 This is the strongest clean architectural result so far: substantial scan reduction with no top-5 recall loss in the controlled arm.
 

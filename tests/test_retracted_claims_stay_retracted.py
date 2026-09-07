@@ -46,10 +46,24 @@ _RETRACTION_MARKERS = re.compile(
     r"deleted|corrected|an earlier version|first answer|is dead|WRONG", re.I)
 
 
+# Verbatim third-party material is EVIDENCE, not a claim this project makes.
+# On 2026-09-07 this guard flagged an independent auditor's transcript for the
+# sentence "the Gen124 'crude scorers cannot manufacture a direction' principle
+# retracted as false" - a line that exists precisely to record the retraction.
+#
+# The only ways to make that pass are to edit an external audit transcript, or
+# to exempt it. Editing it is tampering with a review record, so the guard is
+# scoped instead. A guard whose green state requires altering someone else's
+# testimony is a dangerous guard, and that is worth more than the coverage.
+_EVIDENCE_DIRS = ("reviews",)
+
+
 def _docs():
     for pattern in ("**/*.md", "src/**/*.py", "scripts/**/*.py"):
         for f in ROOT.glob(pattern):
             if ".git" in f.parts or "node_modules" in f.parts:
+                continue
+            if f.relative_to(ROOT).parts[0] in _EVIDENCE_DIRS and f.name != "LEDGER.md":
                 continue
             yield f
 

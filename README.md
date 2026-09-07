@@ -164,7 +164,7 @@ representation as the `dense_lsa` baseline and MemBukkit's upstream bucketed
 than pretending a random CI test encoder is a product model.
 
 On the 500-memory stress corpus, MemBukkit preserves the dense-LSA baseline's exact
-Hit@5/all-relevant@5 (**0.583 / 0.542**) while opening **32.9% of the bank on average**
+Hit@5/all-relevant@5 (**0.583 / 0.542**); the scan fraction for this configuration was never measured and the **32.9%** figure is RETRACTED (research/MEMBUKKIT_SCAN_FRACTION_AUDIT.md)
 (min 30.0%, max 37.8%). Prohibited@5 is 0.042 versus dense-LSA's 0.050. At k=5:
 
 | Provider | Core Hit | Core all-relevant | Stress Hit | Stress all-relevant | Stress prohibited |
