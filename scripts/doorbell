@@ -227,7 +227,7 @@ def main() -> int:
                     "await", str(generation), sha], check=True)
     subprocess.run(["git", "add", "control-plane/PENDING.json"], check=False)
     subprocess.run(["git", "commit", "-q", "-m",
-                    f"pending: awaiting gen{generation + 1} from {sha[:12]}"], check=False)
+                    f"pending: awaiting gen{int(generation) + 1} from {sha[:12]}"], check=False)
     subprocess.run(["git", "push", "-q", "origin", "HEAD:main"], check=False)
 
     # The watcher checks origin/main for the request. Armed immediately after the

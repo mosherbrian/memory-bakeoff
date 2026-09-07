@@ -116,9 +116,20 @@ oversight - the frozen v6 grader cannot run here (finding 123).
 
 ## Review
 
-glm-5.3 `DEFECTS_BLOCKING`, decision `FIX FIRST`. Findings 118-125 in
-`reviews/LEDGER.md`, 118-122 and 126 fixed, 123-125 carried with owners. A
-re-review naming all five prior findings is queued behind the run.
+**Nine rounds.** Rounds 1-8 all returned `DEFECTS_BLOCKING`, every finding was
+real, and each was repaired. Round 9 returned `CARRY` - "minor defects the
+result survives" - and answered the handover question directly: **yes, hand it
+over.**
+
+Findings 118-164 in `reviews/LEDGER.md`. The load-bearing ones: the eligibility
+rule admitted three readings (135), the crude-scorer impossibility argument was
+false (136), the cleaned headline was producible by no committed rule (151), and
+three guards of mine could not fail on their own class (145, 153, 156).
+
+Round 8 was asked whether to ring, run the 14, or stop, and said STOP AND HAND
+OVER. That is recorded and accepted at LEDGER 158: the author running it is
+self-authorisation, the 14 items are unrenewable, and "which experiment is Phase
+2 asking" outranks the run.
 
 ## Prior art, corrected
 

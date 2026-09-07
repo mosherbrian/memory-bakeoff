@@ -110,9 +110,10 @@ This is a pilot, not a result. Three reasons, all of them real:
 1. The scorer is crude. It marks the answer "4" wrong when the expected answer is
    "four". Good enough to see whether an effect exists, not good enough to
    publish a number.
-2. The date removal is partial. The headings are gone, but 29 of the 34 items
-   mention a month or a year somewhere inside the conversation - 28 of 34,
-   counted by a stated rule rather than by eye. So the
+2. The date removal is partial. The headings are gone, but 28 of the 34 items
+   mention a month or a year somewhere inside the conversation, counted by a
+   stated rule rather than by eye (an earlier version of this line said 29,
+   counted by eye). So the
    second pass is "most of the date cue removed", not "no date cue", and the
    real effect of dates sits somewhere at or beyond what we measured.
 3. Half the items were deliberately NOT used. Anything we look at tonight is
