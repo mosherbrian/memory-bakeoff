@@ -9,11 +9,15 @@ check to run before the pivot decision.
 StateMemBench (234 multi-session scenarios, 322 graded probes) and StateMem.
 It is the closest published work to reader-interference-v6.
 
-## Finding 1: StateMemBench is not obtainable
+## Finding 1: StateMemBench was not FOUND. That is weaker than "not released".
 
-No repository URL in the abstract or the paper body. Nothing on HuggingFace
-(`statemem`, `StateMemBench` both return empty). No project page. We cannot
-harvest the questions or the grader.
+No repository URL in the abstract or the paper body. Nothing on HuggingFace for
+`statemem` or `StateMemBench`. No project page in two web searches.
+
+What was NOT done, and must be before this negative is treated as settled: a
+GitHub code search, papers-with-code, the authors' other repositories, or an
+email. The network was working - a 15.4 MB HuggingFace file downloaded the same
+evening. This is an unfinished search, recorded as one.
 
 ## Finding 2: the paper already measured our ceiling, on LongMemEval oracle
 
@@ -23,26 +27,41 @@ retrieval recall is 1.0. That is exactly the "perfect records" arm.
 > "DeepSeek-V4-Flash fails 36 of 306 questions; judges from two model families
 > both confirm 44.4% (16/36; Wilson 95% CI [30%,60%]) as state drift"
 
+Note the denominator: 306, on a paper that elsewhere reports 234 scenarios and
+322 probes. Which subset the oracle condition ran on is NOT recorded here and
+must be read from the paper before the figure is cited again.
+
 So: ~88.2% correct under guaranteed evidence, and drift toward a superseded
 value is the largest confirmed failure category once retrieval is eliminated.
 
-This is the number reader-interference-v6 was being built to produce. It exists,
-on a public dataset, with a stated CI. Our own 24/48 is NOT comparable - a
+This is the SHAPE of number reader-interference-v6 was being built to produce.
+It is not ours and cannot stand in for ours: different model, different judge,
+different success predicate. It tells us the question is answerable and roughly
+where the ceiling sits for a strong model. It does not calibrate our arm. Our own 24/48 is NOT comparable - a
 different reader and a much harsher success predicate (verbatim value AND
 citation AND disposition) - and should not be presented as agreeing or
 disagreeing with it.
 
-## Finding 3: the ordering question is open
+## Finding 3: the ordering question is open IN THIS PAPER
 
 The paper does not measure or report where the current fact sits relative to the
-superseded one in the context. Neither does any benchmark found in the search.
-This is the one thing our apparatus does that the published work does not.
+superseded one in the context. That much is checked.
+
+The broader claim - that no published work measures it - is NOT established. It
+rests on one paper and two searches. Not checked: the repo's own Phase-B harvest
+list (HaluMem, STALE, Supersede, EvoMemBench, GateMem, LongMemEval-V2), whether
+the pinned MemConflict generator ablates order, and the position-bias literature,
+which has studied where a fact sits in a context for years. Until those are read,
+"nobody has done this" is a hope, not a finding.
 
 ## Finding 4: LongMemEval is public; MemConflict is already pinned here
 
 - `xiaowu0162/longmemeval-cleaned` on HuggingFace, 17.5k downloads.
-- MemConflict is already vendored and pinned in this repo
-  (`research/MEMCONFLICT_PIN.json`), 3,750 questions, 360 static-conflict items.
+- MemConflict is PINNED but NOT vendored. `research/MEMCONFLICT_PIN.json` records
+  the upstream commit and dataset sha256, and says in its own `checkout` field:
+  `external/MemConflict (gitignored; not vendored)`. That directory does not
+  exist in this tree. An earlier version of this document called it vendored;
+  that was wrong, and AGENTS.md records 16 test failures caused by its absence.
 
 ## What this changes
 

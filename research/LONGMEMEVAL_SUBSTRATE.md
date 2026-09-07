@@ -17,12 +17,13 @@ on real questions - the thing Gen118-123 was hand-writing fixtures to create.
       main items with exactly one          68
         answer-bearing turn per session
 
-Structure, verified over all 78:
+Structure. The first four are counted over all 78 and hold; the last two are
+read from a sample and are NOT yet verified item by item:
 
 - every item has EXACTLY 2 sessions
 - every item lists them in chronological order (78/78)
-- the earlier session states the superseded value
-- the later session states the current value
+- the earlier session states the superseded value  (SAMPLED, NOT VERIFIED)
+- the later session states the current value      (SAMPLED, NOT VERIFIED)
 - `answer` is the current value
 - `has_answer` marks the exact turn in each session
 
@@ -34,7 +35,8 @@ Worked example, `945e3d21`:
     [2023/11/30] answer_6a4f8626_2: (states three times a week)
 
 That is a core. Two records, one superseded, one current, a question whose
-correct answer is the current one - built by someone else, at 68x our count.
+correct answer is the current one - built by someone else. 68 items against 12 hand-written cores is 5.7x, and
+against the 4 that Gen123 could actually interpret, 17x.
 
 ## The manipulation is free
 
