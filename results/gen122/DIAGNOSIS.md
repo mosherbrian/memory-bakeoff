@@ -8,7 +8,9 @@ the run showed, and does not repair anything.
 ## What ran
 
 60 cases, once each, against the pinned reader `qwen3.6-35b-vulkan-nothink`,
-106.2 seconds. Every case returned HTTP 200. All 60 responses were journalled
+106.2 seconds. The execution contract was written at 21:20:03, two seconds before
+the first response was captured at 21:20:05 - the contract provably predates the
+data, which a reviewer verified independently. Every case returned HTTP 200. All 60 responses were journalled
 byte-for-byte and fsynced before any decode. Closure complete, seal agrees across
 journal, manifest and disk, marker derived from observation and written last.
 
@@ -19,6 +21,7 @@ one: it declined to call a broken measurement evidence.
 
 | | |
 |---|---|
+| cells | 60 |
 | cases with a correct record to find | 48 |
 | reader selected the **correct** record | **48** |
 | reader selected a wrong record | **0** |
@@ -46,17 +49,37 @@ In **47 of the 48**, the expected value appears verbatim inside the returned
 string. The reader is not wrong about the fact. It is answering in a different
 shape than the matcher accepts.
 
-## Why this is a protocol defect and not a reader finding
+## CORRECTED: this is a reader finding, not a protocol defect
 
-This is the Gen117 failure mode returning in a new form. Gen117 died on value
-surface form; the control plane ruled option 3 in response, requiring the prompt
-to demand the reader "copy the ENTIRE value phrase exactly as written". That
-instruction is present in all 60 prompts and verified by the freeze audit.
+**The first version of this document was wrong, and wrong in the exact way this
+project keeps having to retract.** It claimed the prompt and the matcher disagree
+about what a value is. They do not. The frozen prompt says, verbatim:
 
-What the run shows is that the instruction produces **complete sentences**, which
-is a defensible reading of "the entire value phrase", and that the exact matcher
-rejects them. The prompt and the matcher disagree about what a value is. Neither
-is obviously wrong in isolation; together they cannot both be satisfied.
+> copy the ENTIRE value phrase exactly as written in the selected record. Do not
+> abbreviate it, omit a word, **return only the distinguishing word**, paraphrase
+> it, or **place it inside a sentence**.
+
+Both observed failure shapes are named and forbidden by the instruction itself.
+47 answers placed the value inside a sentence. One returned only the
+distinguishing word. The prompt and the matcher agree completely.
+
+**The honest finding is therefore about the reader:** given an explicit,
+unambiguous instruction not to do two specific things, this reader did one or the
+other in 48 of 48 cells - while selecting the correct record in every one of
+them.
+
+That is a far more interesting observation than a formatting mismatch. It
+separates two capabilities that are usually measured together: this reader
+identified the right record under every condition, including both conflict
+orders, and could not comply with a simple output-shape constraint.
+
+**Why the original framing was dangerous.** It invited "reconciling" the prompt
+with the matcher, and the only available reconciliation is accepting sentence-form
+answers - an acceptance class suggested by these very failures. Gen118's option-3
+ruling refused precisely that, on the grounds that a class suggested by observed
+failures may not be adopted after seeing them. I reproduced the Gen114 error
+inside a document warning against it. Caught by glm-5.3-flash, which called the
+original framing a decision trap.
 
 ## What must not happen next
 

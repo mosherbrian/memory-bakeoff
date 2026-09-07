@@ -28,12 +28,23 @@ In 47 of those 48, the expected phrase sits verbatim inside what the reader said
 The reader is not wrong about the fact. It is answering in a shape the matcher
 does not accept.
 
-**This is the Gen117 failure returning in a new form.** Gen117 died on value
-surface form, and option 3 was ruled in response: make the prompt demand the
-reader copy the entire value phrase exactly as written. That instruction is in
-all sixty prompts. It produced complete sentences - a defensible reading of it -
-and the exact matcher rejects them. The prompt and the matcher disagree about
-what a value is, and they cannot both be satisfied as written.
+**CORRECTION, after review.** My first account of this said the prompt and the
+matcher disagree about what a value is. That was wrong. The frozen prompt says:
+"copy the ENTIRE value phrase exactly as written… Do not abbreviate it, omit a
+word, return only the distinguishing word, paraphrase it, or place it inside a
+sentence." **Both observed failure shapes are named and forbidden by the
+instruction.** The prompt and matcher agree completely.
+
+The honest finding is about the reader: given an explicit instruction not to do
+two specific things, it did one or the other in 48 of 48 cells - while selecting
+the correct record in every one. It separates two capabilities usually measured
+together: record selection was perfect; output-shape compliance failed entirely.
+
+My original framing was worse than merely wrong. It asked you to "reconcile" the
+prompt with the matcher, and the only reconciliation available is accepting
+sentence-form answers - an acceptance class suggested by these very failures,
+which option 3 refused on exactly those grounds. I reproduced the Gen114 error
+inside the document warning about it. A reviewer named it a decision trap.
 
 **What I have not done, and will not:** the grader has not been touched. Adjusting
 a matcher after seeing the answers it rejected is repair-after-exposure, and it
@@ -53,15 +64,16 @@ exchange the project has, for the first time, a completed run, real evidence on
 disk, and a specific defect located in the protocol rather than suspected in the
 apparatus.
 
-**The decision I am asking for:** how to reconcile the prompt instruction with
-the value matcher. The full diagnosis is in `results/gen122/DIAGNOSIS.md`. The
+**The decision I am asking for:** what to do about a reader that selects
+correctly and cannot comply with an output-shape instruction. Not how to loosen
+the matcher. The full diagnosis is in `results/gen122/DIAGNOSIS.md`. The
 recovered Phase-2 roadmap in `research/PHASE2_ROADMAP.md` remains outstanding and
 this does not displace it.
 
-**Evidence:** `results/gen122/attempt1`, 9 artifacts, manifest verifies, journal
+**Evidence:** `results/gen122/attempt1`, 8 artifacts plus the manifest, verifies, journal
 holds 60 byte-exact captures, closure complete, three-way seal agrees, marker
 derived from observation. Gen118 attempt18 remains the canonical freeze and is
-untouched; all 23 prior sealed attempts still verify.
+untouched; all 35 prior sealed attempts still verify - 230 of 230 artifact files across every manifest, checked by a reviewer.
 
 ---
 
