@@ -1,10 +1,20 @@
-<!-- Implementer binding note (the transcript below is the reviewer's verbatim
-output, relayed by conductor-glm from worker-glm-3 and committed here by the
-implementer per the one-writer-per-tree rule). Reviewed: R2 deliverable on
-reset/practical-pi-20260907 -- approval 88699e0, extension 88b5e9b, harness
-d19971b, result 2729917, accuracy repairs c2c2cbe. Repair pass: this commit.
-Blocker independently reproduced by the implementer before repair (both path
-spellings hash to the two observed db filenames; seed files wal/shm-free). -->
+# Reset R3 result review — verbatim transcript, as relayed
+
+Provenance: written into this tree by the implementer per the
+one-writer-per-tree rule, from the conductor relay
+`dispatch/review-R3-relay.md` (worker-glm-3, GLM-5.3-Flash, review pass 1 of
+1, reply 2026-09-10 03:13 PDT). Verbatim below, including the relay transport
+line wraps. Reviewed commits on `reset/practical-pi-20260907`: approval
+record `88699e0`, extension `88b5e9b`, harness/cases `d19971b`, result
+`2729917`, accuracy repairs `c2c2cbe`. Verdict: the §6 decision RETAIN
+BASELINE is supported and stands; one blocker on the executive
+interpretation (seeded store unreachable in every treatment run) plus
+required documentation repairs. Consolidated repair pass: `06a29a1`; the
+blocker's hash chain was independently reproduced by the implementer before
+repair (both path spellings hash to the two observed db filenames; seed
+files wal/shm-free).
+
+---
 
 # Reset R3 result review — worker-glm-3 (GLM-5.3-Flash)
 
