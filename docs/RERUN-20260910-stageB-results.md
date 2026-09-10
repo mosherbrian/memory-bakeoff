@@ -71,12 +71,13 @@ path (wiring held throughout).
   (call `fwO1wyIc…`) returns `seed-c2-prior` (dockers' wrap complaint,
   rejected wrap-marker approach, agreed None-return); the assistant then
   states "the agreed approach is: `next_sailing` returns None …", implements
-  that plus the 12:00 sailing, verifier passes. c4-b-rep2 — recalls surface
-  `seed-c4-newer` (planned zero-for-negatives) and the stale 80 % cap in
-  `seed-c4-older`; the assistant treats 100 as current ("past sessions
-  confirm: the `clamp` function currently has an upper bound (100 %)"),
-  implements negatives→zero, keeps the bound at 100, verifier passes — no
-  stale action.
+  that plus the 12:00 sailing, verifier passes. c4, both reps: rep1
+  recalled the seed's authoritative bound-100 / deferred-negatives decision
+  (`seed-c4-newer`); rep2 additionally retrieved the superseded 80 % cap
+  (`seed-c4-older`) and did not act on it — the assistant treats 100 as
+  current ("past sessions confirm: the `clamp` function currently has an
+  upper bound (100 %)"), implements negatives→zero, and the final bound is
+  100 with the verifier passing in both reps (no stale action).
 - Verifier outcomes: c1 fails in both F2 reps (same requirement B as F1,
   arm-independent); c2/c3/c4 pass in all reps.
 
