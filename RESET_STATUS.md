@@ -132,6 +132,22 @@ is sound and reversible and stays in the repository at
 `extensions/pi-project-recall/` — installing it remains a one-line `packages`
 entry if Brian ever wants it, and removing it undoes everything.
 
+**Final decision (2026-09-10, closeout): UNRESOLVED — sponsor override of
+the §6 default.** Brian adopts UNRESOLVED as the final classification of the
+pilot and keeps Pi-LCM unchanged for now. His stated rationale, relayed by
+conductor-glm from a project planner's recommendation he adopted: *"keep
+Pi-LCM unchanged for now, and classify the pilot as UNRESOLVED. This run did
+not successfully test whether cross-session recall helps."* Per plan §1 the
+sponsor's explicit direction outranks the §6 default rules; the
+retain-baseline paragraph above remains the reviewed position, and this
+paragraph records the decision that governs. The exact missing observation,
+per §6's unresolved rule: whether cross-session recall changes coding
+outcomes was not successfully tested — the seeded stores were unreachable at
+runtime (limitation 2) and the model never invoked the tool spontaneously
+(0/8). Another attempt requires a new explicit budget and rationale; the
+work is preserved (extension, harness, cases, analysis, and both evidence
+directories).
+
 **What happened.** All 16 evaluation runs (4 cases × 2 arms × 2 repetitions,
 8-minute ceiling, none timed out — median 31 s) completed, except c2-B-rep1,
 which I interrupted myself during a containment check that proved negative
@@ -256,13 +272,13 @@ harness: `scripts/run_pi_pilot_r2.py`, analysis: `scripts/r2_pilot/analyze.py`.
 |---|---|
 | **Completed** | R0: legacy launchers verified inactive (no project units/timers/processes; `PENDING.json` was `answered`, now truthfully `paused`); incumbent workspace preserved untouched; isolated clone, origin repointed to GitHub, base reconciled `5d1d6a0` → `9dfea2c`; reset branch + baseline ref created. R1: entry-point repairs on this branch (this page, RESET_PLAN.md, AGENTS.md, control-plane and handoff pointers). R1 review: **PASS, no blockers**, four non-blocking notes (verbatim transcript in [reviews/reset-R1.md](reviews/reset-R1.md)); consolidated repair pass applied — Note 1 driver spec corrected to `node:sqlite`, Note 2 config values stated, Note 3 cluster phrasing split, Note 4 carried as a reporting limitation. **R2: implemented, validated and run** — `extensions/pi-project-recall/` (12/12 bun unit tests, 7/7 node-runtime driver smoke, registration verified on the real Pi 0.84.4 runtime under node:sqlite, feature-active/disabled smoke checks passed) plus the 16-slot paired pilot above. **R3 review: decision supported, one interpretation blocker** (verbatim transcript in [reviews/reset-R3.md](reviews/reset-R3.md)); consolidated repair pass applied 2026-09-10 — two-null headline, seeded-store unreachability recorded as a post-exposure defect per §5 with the corrected path-spelling/hash story, limitation 4 narrowed to corrected wiring, cosmetic notes folded in, private evidence copied to the durable path below |
 | **Remaining uncertainty** | Whether a corrected-wiring re-run (needs a new explicit budget per plan §2/§6) would show the model using recall when it is actually reachable; whether an explicitly prompted "check past sessions" pattern would change behaviour; whether a different coding model would use the tool spontaneously |
-| **Decision recorded** | **Brian approved the R2 pilot as specified on 2026-09-09 ~20:55 PDT** (relayed by conductor-glm), with the **default 25% overhead threshold** for the R3 trial decision per RESET_PLAN.md §6: 25% for median run time and available token usage over paired successful runs; unavailable or insufficient cost comparisons are labelled unresolved, not passed |
-| **Next action** | Targeted R3 recheck by worker-glm-3 of `092ab6c` (branch head; documentation-only repair, so it can be brief); then Brian's final adopt / retain / unresolved decision per §6 |
-| **Implementer time (cumulative)** | R0 ≈ 0.3 h · R1 ≈ 0.2 h · session 3 closeout ≈ 0.1 h · repair pass ≈ 0.1 h. R2 ≈ 0.8 h (reflog-dated commits 22:26–23:01 PDT ≈ 0.6 h: extension, harness, cases, smokes, 16-run walk, containment audit, analysis, result page; plus ≈ 0.2 h post-result verification and accuracy repairs). R3 ≈ 0.3 h (2026-09-10 05:00–05:12 PDT: independent blocker-hash reproduction, evidence copy, consolidated repair pass and relayed items 1–6). Total ≈ 1.8 h — the reviewer's ≈ 1.5 h cumulative figure is the pre-repair snapshot at reply time (03:13 PDT). R2 ceiling 4.5 h — not reached |
+| **Decision recorded** | **FINAL (2026-09-10, conductor relay): UNRESOLVED** — Brian overrides the §6 retain-baseline default and keeps Pi-LCM unchanged for now. Stated rationale, adopted from a project planner's recommendation: "keep Pi-LCM unchanged for now, and classify the pilot as UNRESOLVED. This run did not successfully test whether cross-session recall helps." Earlier: R2 pilot approved 2026-09-09 ~20:55 PDT (relayed by conductor-glm) with the default 25% overhead threshold for the trial decision |
+| **Next action** | Reset closed at the final decision (2026-09-10). Practical state: Pi-LCM unchanged; `extensions/pi-project-recall/` remains in the repository as a reversible, unexercised artifact (install = one `packages` line; disable = remove it). The branch may merge through the normal repository process; any renewed attempt needs a new explicit budget and rationale per §6 |
+| **Implementer time (cumulative)** | R0 ≈ 0.3 h · R1 ≈ 0.2 h · session 3 closeout ≈ 0.1 h · repair pass ≈ 0.1 h. R2 ≈ 0.8 h (reflog-dated commits 22:26–23:01 PDT ≈ 0.6 h: extension, harness, cases, smokes, 16-run walk, containment audit, analysis, result page; plus ≈ 0.2 h post-result verification and accuracy repairs). R3 ≈ 0.3 h (2026-09-10 05:00–05:12 PDT: independent blocker-hash reproduction, evidence copy, consolidated repair pass and relayed items 1–6). Closeout ≈ 0.1 h (2026-09-10: final-decision recording). Total ≈ 1.9 h — the reviewer's ≈ 1.5 h cumulative figure is the pre-repair snapshot at reply time (03:13 PDT). R2 ceiling 4.5 h — not reached |
 | **Reviewer time** | ≤ 0.9 h R1 (review + recheck, [reviews/reset-R1.md](reviews/reset-R1.md)). R3 ≤ 1.0 h (review pass 1 replied 03:13 PDT 2026-09-10, reviewer's own accounting in [reviews/reset-R3.md](reviews/reset-R3.md)). Cumulative ≈ 1.9 h across R0–R3 (reviewer's accounting); targeted recheck pending within the R3 1.0 h ceiling |
 | **Experiment machine time** | ≈ 0.2 h of the 6 h ceiling (2 smoke runs + 16 evaluation walk slots, sum of wall times ≈ 8 min 20 s; local llama-swap server was already running and is not counted) |
 | **Token/cost figures** | Per-run usage totals available and recorded in the private ledger (`r2/ledger.jsonl`, `ANALYSIS.json`); model inference cost $0 (local server); implementer-harness token/cost figures unavailable in this harness, logged as unavailable, not zero |
-| **Brian attention used** | ≈ 5 min launch (conductor dispatch, estimated); R1 pilot-scope decision spent 2026-09-09 ~20:55 PDT (approval + default threshold); final-decision minutes remain |
+| **Brian attention used** | ≈ 5 min launch (conductor dispatch, estimated); R1 pilot-scope decision spent 2026-09-09 ~20:55 PDT (approval + default threshold); final decision spent 2026-09-10 (conductor relay; exact minutes unavailable) — the 30-minute attention budget is now fully allocated |
 
 **Substitutions recorded (plan §1):** implementer GLM-5.3 under ZCode
 (conductor routing; the plan's Codex default was not used, 2026-09-09);
