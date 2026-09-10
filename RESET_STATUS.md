@@ -122,19 +122,103 @@ are not claimed by this pilot.
 
 ---
 
+## R2 result (2026-09-10)
+
+**Recommendation per RESET_PLAN.md §6: retain the baseline (Pi-LCM alone).**
+No predeclared practical failure was fixed by arm B in any repetition, which
+fails the "limited personal trial" rule at its first condition. The extension
+itself is sound and reversible and stays in the repository at
+`extensions/pi-project-recall/` — installing it remains a one-line `packages`
+entry if Brian ever wants it, and removing it undoes everything.
+
+**What happened.** All 16 evaluation runs (4 cases × 2 arms × 2 repetitions,
+8-minute ceiling, none timed out — median 31 s) completed, except c2-B-rep1,
+which I interrupted myself during a containment check that proved negative
+(details below). Outcome by case: c1 — the strong recall opportunity — failed
+its hidden requirement (telemetry display stability) in **all four runs, both
+arms**: the model set the shared `STEPS_PER_MM` constant to 8 everywhere,
+exactly the predeclared practical failure, even though the prior session in
+its store contained the split-constant decision verbatim. c2, c3, c4 passed
+in every completed run; c4's stale-harm probe never fired (upper bound stayed
+100 everywhere). The decisive fact: **`project_recall` was invoked in 0 of 8
+treatment runs.** The coding model (qwen3.6-35b-vulkan-nothink) treats a
+natural "returning to this project after a break" prompt as self-contained;
+it never searches prior sessions, so arm B's information state equalled arm
+A's in every run. The tool was verifiably present and active (registration on
+the real Pi runtime, node:sqlite driver; ≈ +1 k input tokens of tool schema),
+cost ~3 % median wall overhead, wrote nothing, and misled no one.
+
+**Overhead (6 completed pairs).** Median wall time A 31.2 s → B 32.2 s
+(+2.9 %); median total tokens A 38 070 → B 34 148 (−10 %, dominated by
+sampling variance — one 11 k-token A outlier; labelled noise, not a saving).
+Both far inside the accepted 25 % threshold; the cost comparison is passed
+but moot given the null outcome.
+
+**Run table** (verifier requirement labels: A/B; c1 requirement A passed in
+all runs — the assertion order proves it — requirement B is the failure).
+Full per-run rows with tool calls, usage, receipts and the recall traces:
+`~/.local/share/memory-bakeoff/reset-20260907/r2/ANALYSIS.json` (private);
+harness: `scripts/run_pi_pilot_r2.py`, analysis: `scripts/r2_pilot/analyze.py`.
+
+| Run | Arm | Verdict | Wall s | Tokens | recall calls |
+|---|---|---|---:|---:|---:|
+| c1-a-rep1 | A | fail (req B) | 31.2 | 38 786 | – |
+| c1-b-rep1 | B | fail (req B) | 29.9 | 39 832 | 0 |
+| c1-a-rep2 | A | fail (req B) | 32.9 | 42 663 | – |
+| c1-b-rep2 | B | fail (req B) | 34.7 | 70 988 | 0 |
+| c2-a-rep1 | A | pass | 25.2 | 27 789 | – |
+| c2-b-rep1 | B | **interrupted** (experimenter stop; partial preserved, not restarted — cap slot spent) | – | – | – |
+| c2-b-rep2 | B | pass | 32.4 | 34 148 | 0 |
+| c2-a-rep2 | A | pass | 27.8 | 28 778 | – |
+| c3-a-rep1 | A | pass | 33.6 | 38 070 | – |
+| c3-b-rep1 | B | pass | 32.2 | 33 301 | 0 |
+| c3-a-rep2 | A | pass | 34.4 | 38 169 | – |
+| c3-b-rep2 | B | pass | 35.8 | 40 155 | 0 |
+| c4-a-rep1 | A | pass | 29.2 | 31 529 | – |
+| c4-b-rep1 | B | pass | 27.5 | 26 350 | 0 |
+| c4-b-rep2 | B | pass | 25.5 | 25 821 | 0 |
+| c4-a-rep2 | A | pass | 12.9 | 11 053 | – |
+
+**Limitations, recorded plainly.**
+
+1. **c2-B-rep1 hole.** I stopped the walk mid-run on a suspected
+   cross-run-contamination signal that the audit disproved (0 out-of-worktree
+   accesses in every run; the alarming-looking `find` started at the run's own
+   worktree). The slot was spent and not restarted, so c2's rep-1 pair is
+   missing and the overhead medians rest on 6 pairs.
+2. **pi-lcm config fidelity.** pi-lcm resolves its settings from
+   `homedir()/.pi/agent/settings.json` and ignores `PI_CODING_AGENT_DIR`, so
+   under the isolated harness both arms ran pi-lcm with **defaults**, not
+   Brian's tuned values, and pi-lcm's persist path stayed inert under
+   `pi --print` (no run conversation appears in any store — only the seeded
+   prior sessions). Both arms were affected identically, so the A/B
+   comparison is internally valid, but arm A was "pi-lcm present, persistence
+   inert", not the full daily interactive behaviour; compaction never became
+   reachable in either arm.
+3. **Synthetic recall opportunities** (prepared, checksummed transcripts —
+   `PREP_MANIFEST.json`, private), not Brian's real saved sessions; carried
+   review Note 4 restated here.
+4. **One coding model, no seeds** (qwen sampling seed unavailable, recorded),
+   8 treatment runs; the null is about *unprompted spontaneous* tool use with
+   natural resume prompts. An explicit "check past sessions first" habit is a
+   different usage pattern — plausible, unmeasured, and the natural next
+   thing for Brian to try by hand before any further budget.
+
+---
+
 ## Status
 
 | | |
 |---|---|
-| **Completed** | R0: legacy launchers verified inactive (no project units/timers/processes; `PENDING.json` was `answered`, now truthfully `paused`); incumbent workspace preserved untouched; isolated clone, origin repointed to GitHub, base reconciled `5d1d6a0` → `9dfea2c`; reset branch + baseline ref created. R1: entry-point repairs on this branch (this page, RESET_PLAN.md, AGENTS.md, control-plane and handoff pointers). R1 review: **PASS, no blockers**, four non-blocking notes (verbatim transcript in [reviews/reset-R1.md](reviews/reset-R1.md)); consolidated repair pass applied — Note 1 driver spec corrected to `node:sqlite`, Note 2 config values stated, Note 3 cluster phrasing split, Note 4 carried as a reporting limitation |
-| **Remaining uncertainty** | Whether real sessions hit the recall boundary (the pilot's question) |
+| **Completed** | R0: legacy launchers verified inactive (no project units/timers/processes; `PENDING.json` was `answered`, now truthfully `paused`); incumbent workspace preserved untouched; isolated clone, origin repointed to GitHub, base reconciled `5d1d6a0` → `9dfea2c`; reset branch + baseline ref created. R1: entry-point repairs on this branch (this page, RESET_PLAN.md, AGENTS.md, control-plane and handoff pointers). R1 review: **PASS, no blockers**, four non-blocking notes (verbatim transcript in [reviews/reset-R1.md](reviews/reset-R1.md)); consolidated repair pass applied — Note 1 driver spec corrected to `node:sqlite`, Note 2 config values stated, Note 3 cluster phrasing split, Note 4 carried as a reporting limitation. **R2: implemented, validated and run** — `extensions/pi-project-recall/` (12/12 bun unit tests, 7/7 node-runtime driver smoke, registration verified on the real Pi 0.84.4 runtime under node:sqlite, feature-active/disabled smoke checks passed) plus the 16-slot paired pilot above |
+| **Remaining uncertainty** | Whether an explicitly prompted "check past sessions" usage pattern (unmeasured) would change the model's behaviour; whether a different coding model would use the tool spontaneously |
 | **Decision recorded** | **Brian approved the R2 pilot as specified on 2026-09-09 ~20:55 PDT** (relayed by conductor-glm), with the **default 25% overhead threshold** for the R3 trial decision per RESET_PLAN.md §6: 25% for median run time and available token usage over paired successful runs; unavailable or insufficient cost comparisons are labelled unresolved, not passed |
-| **Next action** | R2: implement `extensions/pi-project-recall/` per the exact specification above, validate (unit tests, driver-load smoke under node, feature-active/original-path checks), then run the ≤16-run paired pilot. Stop rules per RESET_PLAN.md §2 are hard stops |
-| **Implementer time (cumulative)** | R0 ≈ 0.3 h (session 1, 18:10–18:21: discovery, clone, branch; session 2 re-verification to 18:29). R1 ≈ 0.2 h (18:29–18:38: reading, edits, focused tests, commit). Session 3 ≈ 0.1 h (closeout reconstruction after bridge reset). Repair pass ≈ 0.1 h (review transcript + this diff). Total ≈ 0.7 h against the 2.5 h R0+R1 ceiling |
-| **Reviewer time** | ≤ 0.9 h (review pass 1, reply 19:34 PDT, own accounting in [reviews/reset-R1.md](reviews/reset-R1.md)). Targeted recheck pending |
-| **Experiment machine time** | 0 h — no experiments run |
-| **Token/cost figures** | Unavailable in this harness; logged as unavailable, not zero |
-| **Brian attention used** | ≈ 5 min launch (conductor dispatch, estimated); R1 pilot-scope decision spent 2026-09-09 ~20:55 PDT (approval + default threshold; exact minutes unavailable); final-decision minutes remain |
+| **Next action** | R3: conductor dispatches the result review to worker-glm-3 (GLM-5.3-Flash) against the R2 commits and result table; then Brian's final adopt / retain / unresolved decision per §6 |
+| **Implementer time (cumulative)** | R0 ≈ 0.3 h · R1 ≈ 0.2 h · session 3 closeout ≈ 0.1 h · repair pass ≈ 0.1 h. R2 ≈ 1.7 h (pre-stall session 22:26–22:33 ≈ 0.1 h; continuation 22:35–00:10 ≈ 1.6 h: verification, harness, cases, smokes, 16-run walk, containment audit, analysis, this page). Total ≈ 2.4 h. R2 ceiling 4.5 h aggregate (incl. review) — not reached |
+| **Reviewer time** | ≤ 0.9 h R1 (review + recheck, [reviews/reset-R1.md](reviews/reset-R1.md)). R3 review pending within its own 1.0 h stage ceiling |
+| **Experiment machine time** | ≈ 0.2 h (2 smoke runs + 16 evaluation walk slots, sum of wall times ≈ 8 min 20 s; local llama-swap server was already running and is not counted) |
+| **Token/cost figures** | Per-run usage totals available and recorded in the private ledger (`r2/ledger.jsonl`, `ANALYSIS.json`); model inference cost $0 (local server); implementer-harness token/cost figures unavailable in this harness, logged as unavailable, not zero |
+| **Brian attention used** | ≈ 5 min launch (conductor dispatch, estimated); R1 pilot-scope decision spent 2026-09-09 ~20:55 PDT (approval + default threshold); final-decision minutes remain |
 
 **Substitutions recorded (plan §1):** implementer GLM-5.3 under ZCode
 (conductor routing; the plan's Codex default was not used, 2026-09-09);
