@@ -218,9 +218,10 @@ harness: `scripts/run_pi_pilot_r2.py`, analysis: `scripts/r2_pilot/analyze.py`.
    seeded-recall check ever ran through the real path: the unit tests bypass
    `process.cwd()`, and the smoke task had no seed and never called the tool.
    Per RESET_PLAN.md §5 this defect was recorded after evaluation exposure:
-   the runs are preserved, nothing was rerun or rescored, and a corrected
-   re-run needs a new explicit budget (plan §2/§6) — it is not this reset's
-   to spend. Relatedly, pi-lcm resolves its settings from
+   the runs are preserved, nothing was rerun or rescored. A corrected-wiring
+   re-run is a **new-budget decision for Brian, outside this reset**
+   (plan §2/§6); it has not been attempted and will not be inside this
+   reset's budget. Relatedly, pi-lcm resolves its settings from
    `homedir()/.pi/agent/settings.json` and ignores `PI_CODING_AGENT_DIR`, so
    both arms ran pi-lcm with **defaults**, not Brian's tuned values, and
    compaction never became reachable in either arm. Both arms were affected
