@@ -1,5 +1,33 @@
 # Codex to ChatGPT handoff
 
+## Reset 2026-09-09 — the generation loop is suspended
+
+The autonomous loop that produced the entries below is paused
+(`control-plane/PENDING.json` status `paused`). The project is now governed by
+[RESET_PLAN.md](../RESET_PLAN.md) with one current decision page,
+[RESET_STATUS.md](../RESET_STATUS.md): a bounded recommendation and pilot
+specification over Brian's live Pi/Pi-LCM workflow, awaiting his single
+pilot-scope decision. No new generation instruction is requested or awaited.
+
+**Two claims in the Gen125 entry immediately below are superseded**, so the
+account stays recoverable while the top of this file tells the truth:
+
+1. *"Pinned since Gen36, never executed"* (Gen125, next-tests item 2) —
+   **superseded.** MemConflict ran at Gen38: a full release against a held-out
+   27-persona slice with an exact-provenance lane (perseus 0.434 / mem0 0.419
+   / bm25 0.226 Hit@3 on dynamic conflict). What has *not* run is the
+   extension to the other four harnessed engines and the upstream harnesses —
+   see [research/PHASE2_CANDIDATE_INTAKE.md](../research/PHASE2_CANDIDATE_INTAKE.md)
+   row 2 and [research/MEMCONFLICT_GEN38_FULL_RELEASE.md](../research/MEMCONFLICT_GEN38_FULL_RELEASE.md).
+2. *"Until we run this, no comparative claim we have made is anchored"*
+   (Gen125, next-tests item 1) — **superseded.** Engines are anchored against
+   bm25/dense-LSA/hybrid baselines in
+   [results/BASELINE_FINDINGS.md](../results/BASELINE_FINDINGS.md) and
+   `results/current_full_core5/summary.md`; the still-missing arm is the
+   **long-context null** specifically, as the corrected intake states.
+
+Everything below this entry is the historical record, kept verbatim.
+
 ## Generation 125 — the roadmap is back, and the project has been asking two questions at once
 
 **In plain English.** Gen124 produced the first reader data since Gen117 that

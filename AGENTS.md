@@ -1,6 +1,23 @@
 # Codex instructions for this repository
 
-Start with `STATUS_AND_FINDINGS.md`, then `CODEX_HANDOFF.md`.
+**Reading order (reset, current):** `RESET_PLAN.md` (the governing reset
+instruction) → `RESET_STATUS.md` (the one current status and decision page).
+Everything below the non-negotiable rules is historical context from the
+pre-reset generation loop; where the two differ, the reset documents win.
+
+**The automated generation workflow is suspended** (2026-09-09,
+`control-plane/PENDING.json` status `paused`). Do not deliver reset work
+through consume-instruction, await-instruction, decide, doorbell, ring,
+converge, after-converge, overnight or fallback-proposing scripts. The reset
+uses direct, bounded handoffs described in RESET_PLAN.md.
+
+## Current task (reset)
+
+R1 (make the project legible, deliver the pilot recommendation) is on branch
+`reset/practical-pi-20260907`. R2 — one bounded pilot over Brian's live
+Pi/Pi-LCM setup, specified in RESET_STATUS.md — begins only after Brian's
+explicit pilot-scope decision. The old "Preferred next work" list below is
+superseded and retained as history.
 
 ## Non-negotiable evaluation rules
 
@@ -15,7 +32,26 @@ Start with `STATUS_AND_FINDINGS.md`, then `CODEX_HANDOFF.md`.
 - Always report exact returned context size and harmful/prohibited presence; do not rely on prohibited fraction alone.
 - Before changing benchmark semantics, run the existing tests and inspect whether the proposed change invalidates prior result comparability.
 
-## Current test gate
+## Test gate (reset policy — supersedes the per-generation mandate below)
+
+For this reset, verification is scoped (RESET_PLAN.md §7):
+
+- Documentation-only changes need direct source/diff checks, not suite runs.
+- Run focused tests only where a changed document or field is actually
+  consumed by code. Do not rerun the whole historical suite to edit a status
+  page.
+- For R2 code, run the focused tests covering the changed boundary plus one
+  relevant regression path. A critical new check must reject one
+  representative bad input through the real path it protects.
+- Never disable installed hooks or use `--no-verify` to pass a gate.
+
+The known-failure description below is reconciled with
+`tests/KNOWN_FAILURES.json` (measured 2026-09-07, Gen125: 1557 passed, 26
+failed, 3 skipped, 5 errors — 8 membukkit run-provenance, 16+5 absent
+MemConflict dataset, 2 frozen-source drift after Gen123). Match failures by
+test identity and cause; do not copy an old pass count as a current run.
+
+## Historical test gate (pre-reset)
 
 The handoff snapshot is expected to pass:
 
@@ -71,7 +107,10 @@ the repo and it is an overridable default.
 The "97 passed" figure that stood here until 2026-09-06 was a Gen28 snapshot. It
 was reported stale by review three separate times before anyone fixed it.
 
-## Preferred next work
+## Preferred next work (SUPERSEDED 2026-09-09 — historical)
+
+> Superseded by the reset: the current queue is in `RESET_STATUS.md`. This
+> list is retained as history of where the pre-reset loop was pointed.
 
 1. Run Hindsight v0.9.2 faithfully on a normal networked host.
 2. Run MemBukkit with intended pretrained encoder/reranker.

@@ -1,5 +1,11 @@
 # Evidence index
 
+> **Reset pointer (2026-09-09):** this index is the historical measured
+> record of the pre-reset programme and is not being extended by the reset.
+> The current decision, recommendation and pilot specification live in
+> [RESET_STATUS.md](RESET_STATUS.md); no result below changes. New rows resume
+> only through the reviewed reset process, not the old generation loop.
+
 This is a map of what has actually been measured, not a leaderboard. A score is
 only comparable inside its own experiment class and evaluated configuration, so
 every row carries its class, its caveat, and links to the authoritative write-up

@@ -38,7 +38,11 @@ def test_it_is_readable_on_origin_main():
 
 
 def test_status_is_one_of_two_words():
-    assert load()["status"] in ("awaiting", "answered")
+    # "paused" joined the vocabulary with the 2026-09-09 reset (RESET_PLAN.md
+    # §4): the generation loop is suspended and PENDING.json must say so
+    # truthfully. The scheduler still triggers only on "awaiting"; "paused"
+    # carries paused_at/paused_reason and requests nothing.
+    assert load()["status"] in ("awaiting", "answered", "paused")
 
 
 def test_a_pending_request_pins_a_full_commit():

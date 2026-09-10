@@ -1,5 +1,13 @@
 # ChatGPT ↔ Codex control plane
 
+> **SUSPENDED 2026-09-09 (reset).** The automated generation workflow
+> described below is not in use: `control-plane/PENDING.json` is `paused`, and
+> the reset is governed by [RESET_PLAN.md](RESET_PLAN.md) with current status
+> in [RESET_STATUS.md](RESET_STATUS.md), using direct, bounded handoffs. Do
+> not invoke consume-instruction, await-instruction, decide, doorbell, ring,
+> converge, after-converge, overnight or fallback proposing to deliver reset
+> work. The rest of this file is retained as the historical mechanism.
+
 This repository uses a deliberately lightweight, explicit handoff mechanism:
 
 - **ChatGPT → Codex:** Google Drive is an outgoing mailbox from ChatGPT only. ChatGPT updates the native Google Doc `memory-bakeoff-control-plane/CHATGPT_TO_CODEX`; Codex explicitly pulls a Markdown export with `scripts/pull-chatgpt-handoff`.

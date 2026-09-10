@@ -1,5 +1,13 @@
 # What I do every generation
 
+> **SUSPENDED 2026-09-09 (reset).** This per-generation routine belongs to
+> the autonomous loop, which is paused (`PENDING.json` status `paused`; see
+> [RESET_PLAN.md](../RESET_PLAN.md), [RESET_STATUS.md](../RESET_STATUS.md)).
+> Reset work uses direct, bounded handoffs and the scoped verification policy
+> in the reset plan §7 — do not run the doorbell, ring, rivals, decide or
+> consume-instruction machinery for it. Retained below as the historical
+> routine.
+
 > Every `- [ ]` below carries a tag in `«»`: either the file that ENFORCES it, or
 > `«judgment»` for the ones no script can check. `tests/test_per_generation_checklist.py`
 > refuses any item with neither. That is the point: a rule nobody enforces decays

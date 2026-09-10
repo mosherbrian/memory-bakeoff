@@ -1,5 +1,11 @@
 # Codex handoff — next real-memory runs
 
+> **Reset pointer (2026-09-09):** the priorities in this document are
+> historical from the start of the reset. The active queue and pending
+> decision live in [RESET_STATUS.md](RESET_STATUS.md); the governing
+> instruction is [RESET_PLAN.md](RESET_PLAN.md). Do not resume the
+> run-the-products programme below without a new explicit decision.
+
 Read `STATUS_AND_FINDINGS.md` and `AGENTS.md` before changing code.
 
 ## Mission

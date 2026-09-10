@@ -1,5 +1,10 @@
 # Memory Bake-off — Status and Findings
 
+> **Reset pointer (2026-09-09):** this snapshot is historical from the start
+> of the reset. Current status, next actions and the pending decision live in
+> [RESET_STATUS.md](RESET_STATUS.md); the governing instruction is
+> [RESET_PLAN.md](RESET_PLAN.md). Nothing below is the active queue.
+
 **Snapshot:** 2026-09-06 (America/Los_Angeles)  
 **Harness tests:** see the Gen107 handoff entry for the authoritative count  
 **Reader layer:** `reader-interference-v6` FROZEN and **UNRUN** at Gen118, canonical `results/gen118/attempt19`. Adds the verbatim full-value copying rule the control plane ruled after Gen117, on 12 entirely fresh cores. attempts 1-18 superseded, each for a stated reason in `results/gen118/CANONICAL_ATTEMPT.md`: false marker provenance, a failed id-balance gate, a contract that did not bind the future runner, a sed artefact, two circularities, raw evidence that was never manifest-bound, an evidence gate that asserted rather than measured, and an id-balance gate that tolerated the very imbalance it was named for. **Not authorised to run.**  
