@@ -150,3 +150,21 @@ tests 12/12. Targeted verification by worker-glm-3: 4/4 PASS, no blockers
 `~/.local/share/memory-bakeoff/rerun-20260910/query-rel/VALIDATION.md`
 (battery numbers are scope=all: message FTS hits + seeded summary LIKE
 hits; the review's message-only basis differs by the summary hit).
+
+## f3 — outcome test: relaxed recall on c1 (2026-09-10, 11:31–11:34 PDT)
+
+Predeclared in the plan of record BEFORE runs (`dispatch/RERUN-20260910.md`
+f3 section): the two F2 c1 nudged slots re-run under the current extension
+(relaxation active), tag f3, fresh worktree + seeded store per run, wiring
+guard on, 8-min cap. Predeclared branches (a)/(b)/(c), no post-hoc
+reframing. **Result: branch (a) in both slots** — relaxation fired in-run,
+`seed-c1-prior` content surfaced in every relaxed result, and c1
+requirement B **passed 2/2 (VERIFIER OK; prior c1 B-arm record 0/4)**.
+Mechanism receipts: rep1 3/6 and rep2 4/6 recall calls relaxation-sourced,
+followed in both runs by exact seed-vocabulary queries hitting without
+relaxation (e.g. "encoder ratio doubles 8 steps per millimetre instead of
+4"). Interpretation, exactly as predeclared: relaxed recall improves the
+outcome on the failure-critical case — **n=2, SUGGESTIVE ONLY**; no
+changes to F1/F2 records, no rescoring. Evidence (private):
+`~/.local/share/memory-bakeoff/rerun-20260910/f3/` (ledger, runs,
+RESULTS.md with query-level receipts).
