@@ -85,15 +85,19 @@ def c4_bound(run_dir: Path) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--ledger", default=str(PRIVATE / "ledger.jsonl"))
+    ap.add_argument("--runs", default=str(RUNS),
+                    help="run-dirs root matching the ledger (Stage B uses the rerun tree)")
     args = ap.parse_args()
+    runs_root = Path(args.runs)
 
     rows = [json.loads(l) for l in open(args.ledger) if l.strip()]
     rows = [r for r in rows if not r["run"].startswith("smoke")]
 
-    # The experimenter-interrupted cell, if absent from the ledger.
+    # The R2-tree interrupted cell, if absent from that ledger (Stage B trees
+    # never carry this history).
     have = {r["run"] for r in rows}
     interrupted = "c2-b-rep1"
-    if interrupted not in have:
+    if interrupted not in have and runs_root == RUNS:
         rows.append({
             "run": interrupted, "case": "c2", "arm": "B", "rep": 1,
             "status": "interrupted", "note":
@@ -106,7 +110,7 @@ def main() -> None:
 
     table = []
     for r in rows:
-        run_dir = RUNS / r["run"]
+        run_dir = runs_root / r["run"]
         entry = {
             "run": r["run"], "case": r["case"], "arm": r["arm"], "rep": r.get("rep"),
             "status": r.get("status"),
@@ -154,7 +158,7 @@ def main() -> None:
             summary["median_tokens_B"] = statistics.median(tb)
 
     out = {"table": table, "overhead": summary}
-    dest = PRIVATE / "ANALYSIS.json"
+    dest = Path(args.ledger).parent / "ANALYSIS.json"
     dest.write_text(json.dumps(out, indent=1))
 
     for e in table:

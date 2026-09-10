@@ -27,7 +27,11 @@ import argparse, hashlib, json, os, shutil, subprocess, sys, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PRIVATE = Path.home() / ".local/share/memory-bakeoff/reset-20260907/r2"
+# Stage B (RERUN-20260910) writes to its own tree via PILOT_R2_PRIVATE so the
+# closed reset's reviewed ledger/runs are never appended to.
+PRIVATE = Path(os.environ.get(
+    "PILOT_R2_PRIVATE",
+    str(Path.home() / ".local/share/memory-bakeoff/reset-20260907/r2")))
 RUNS = PRIVATE / "runs"
 AGENT_BASE = Path.home() / ".pi-pilot-r2"
 PI = "/var/home/bmosher/.bun/bin/pi"
@@ -38,6 +42,13 @@ FIXTURES = ROOT / "fixtures/intent_persistence_gen48"
 
 RUN_TIMEOUT_SECONDS = 480  # 8-minute ceiling per the specification
 PREP_EPOCH_NOTE = "transcripts authored 2026-09-09 before any treatment outcome"
+
+# F2 nudge sentence - fixed wording predeclared in dispatch/RERUN-20260910.md
+# before any Stage B run; identical for all F2 slots.
+F2_NUDGE = (
+    "Before you edit anything, use the project_recall tool to check this "
+    "project's past sessions for decisions or constraints relevant to the task."
+)
 
 RESUME_PREFIX = "I'm returning to this project after a break. "
 
@@ -305,7 +316,8 @@ def tree_digest(path: Path) -> str:
                           text=True, check=True).stdout.strip()
 
 
-def do_run(name: str, arm: str, rep: int | None, smoke: bool) -> dict:
+def do_run(name: str, arm: str, rep: int | None, smoke: bool,
+           nudge: bool = False, tag: str = "") -> dict:
     if smoke:
         run_dir = RUNS / f"smoke-{name}"
         source = RUNS / "_smoke_src"
@@ -319,9 +331,10 @@ def do_run(name: str, arm: str, rep: int | None, smoke: bool) -> dict:
         transcript = None
     else:
         case = CASES[name]
-        run_dir = RUNS / f"{name}-{arm.lower()}-rep{rep}"
+        suffix = f"-{tag}" if tag else ""
+        run_dir = RUNS / f"{name}-{arm.lower()}-rep{rep}{suffix}"
         source = FIXTURES / case["fixture"] / "repo"
-        prompt = case["prompt"]
+        prompt = case["prompt"] + (" " + F2_NUDGE if nudge else "")
         fixture = case["fixture"]
         transcript = CASES_DIR / case["transcript"]
 
@@ -343,7 +356,9 @@ def do_run(name: str, arm: str, rep: int | None, smoke: bool) -> dict:
     parsed = parse_events((run_dir / "stdout.txt").read_text())
     row = {
         "run": run_dir.name, "case": "smoke" if smoke else name, "arm": arm,
-        "rep": rep, "config_ref": f"~/.pi-pilot-r2/arm-{arm.lower()}/settings.json",
+        "rep": rep, "phase": tag or "f1", "nudge": nudge,
+        "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
+        "config_ref": f"~/.pi-pilot-r2/arm-{arm.lower()}/settings.json",
         **result, **parsed, "prep_seconds": prep_seconds,
         "digest_initial": subprocess.run(["git", "rev-parse", "HEAD^{tree}"], cwd=worktree,
                                          capture_output=True, text=True).stdout.strip(),
@@ -449,6 +464,9 @@ def main() -> None:
     p = sub.add_parser("smoke"); p.add_argument("arm", choices=["A", "B"])
     p = sub.add_parser("run"); p.add_argument("case", choices=list(CASES))
     p.add_argument("arm", choices=["A", "B"]); p.add_argument("rep", type=int, choices=[1, 2])
+    p.add_argument("--nudge", action="store_true",
+                   help="append the predeclared F2 nudge sentence to the case prompt")
+    p.add_argument("--tag", default="", help="run-name/phase tag (e.g. f2)")
     sub.add_parser("walk")
     p = sub.add_parser("score"); p.add_argument("rundir")
     p = sub.add_parser("receipt"); p.add_argument("--out", required=True)
@@ -458,7 +476,8 @@ def main() -> None:
     elif args.cmd == "smoke":
         do_run(f"task-{args.arm.lower()}", args.arm, None, smoke=True)
     elif args.cmd == "run":
-        do_run(args.case, args.arm, args.rep, smoke=False)
+        do_run(args.case, args.arm, args.rep, smoke=False,
+               nudge=args.nudge, tag=args.tag)
     elif args.cmd == "walk":
         cmd_walk(args)
     elif args.cmd == "score":
