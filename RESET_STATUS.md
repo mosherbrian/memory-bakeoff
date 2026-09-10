@@ -122,7 +122,7 @@ are not claimed by this pilot.
 
 ---
 
-## R2 result (2026-09-10)
+## R2 result (recorded 2026-09-09 ≈23:00 PDT / 2026-09-10 UTC)
 
 **Recommendation per RESET_PLAN.md §6: retain the baseline (Pi-LCM alone).**
 No predeclared practical failure was fixed by arm B in any repetition, which
@@ -148,11 +148,14 @@ A's in every run. The tool was verifiably present and active (registration on
 the real Pi runtime, node:sqlite driver; ≈ +1 k input tokens of tool schema),
 cost ~3 % median wall overhead, wrote nothing, and misled no one.
 
-**Overhead (6 completed pairs).** Median wall time A 31.2 s → B 32.2 s
-(+2.9 %); median total tokens A 38 070 → B 34 148 (−10 %, dominated by
-sampling variance — one 11 k-token A outlier; labelled noise, not a saving).
-Both far inside the accepted 25 % threshold; the cost comparison is passed
-but moot given the null outcome.
+**Overhead.** Over the 7 pairs where both runs completed (any verdict):
+median wall A 31.2 s → B 32.2 s (+2.9 %); median total tokens A 38 070 →
+B 34 148 (−10 %). On the plan's threshold basis — the 5 pairs where both
+runs **passed** (c1 excluded) — median wall 29.2 s → 32.2 s (+10.3 %) and
+median tokens 31 529 → 33 301 (+5.6 %). Both bases sit far inside the
+accepted 25 % threshold; the differences are labelled noise (no seed, small
+samples, and B's tool never executed), not savings. The cost comparison
+passes but is moot given the null outcome.
 
 **Run table** (verifier requirement labels: A/B; c1 requirement A passed in
 all runs — the assertion order proves it — requirement B is the failure).
@@ -189,12 +192,17 @@ harness: `scripts/run_pi_pilot_r2.py`, analysis: `scripts/r2_pilot/analyze.py`.
 2. **pi-lcm config fidelity.** pi-lcm resolves its settings from
    `homedir()/.pi/agent/settings.json` and ignores `PI_CODING_AGENT_DIR`, so
    under the isolated harness both arms ran pi-lcm with **defaults**, not
-   Brian's tuned values, and pi-lcm's persist path stayed inert under
-   `pi --print` (no run conversation appears in any store — only the seeded
-   prior sessions). Both arms were affected identically, so the A/B
+   Brian's tuned values; persistence changed shape rather than going inert —
+   each run wrote its own conversation to a UUID-named database inside
+   `LCM_DB_DIR` instead of the cwd-hash-named file of the daily setup
+   (verified post-hoc: every run dir holds the seeded cwd-hash file,
+   untouched, plus one UUID file carrying that run's messages). `lcm_grep`
+   therefore saw only the live conversation — the c4-b-rep1 trace shows
+   exactly that — and the seeded prior sessions were reachable only through
+   `project_recall`. Both arms were affected identically, so the A/B
    comparison is internally valid, but arm A was "pi-lcm present, persistence
-   inert", not the full daily interactive behaviour; compaction never became
-   reachable in either arm.
+   reshaped", not the full daily interactive behaviour; compaction never
+   became reachable in either arm.
 3. **Synthetic recall opportunities** (prepared, checksummed transcripts —
    `PREP_MANIFEST.json`, private), not Brian's real saved sessions; carried
    review Note 4 restated here.
@@ -214,7 +222,7 @@ harness: `scripts/run_pi_pilot_r2.py`, analysis: `scripts/r2_pilot/analyze.py`.
 | **Remaining uncertainty** | Whether an explicitly prompted "check past sessions" usage pattern (unmeasured) would change the model's behaviour; whether a different coding model would use the tool spontaneously |
 | **Decision recorded** | **Brian approved the R2 pilot as specified on 2026-09-09 ~20:55 PDT** (relayed by conductor-glm), with the **default 25% overhead threshold** for the R3 trial decision per RESET_PLAN.md §6: 25% for median run time and available token usage over paired successful runs; unavailable or insufficient cost comparisons are labelled unresolved, not passed |
 | **Next action** | R3: conductor dispatches the result review to worker-glm-3 (GLM-5.3-Flash) against the R2 commits and result table; then Brian's final adopt / retain / unresolved decision per §6 |
-| **Implementer time (cumulative)** | R0 ≈ 0.3 h · R1 ≈ 0.2 h · session 3 closeout ≈ 0.1 h · repair pass ≈ 0.1 h. R2 ≈ 1.7 h (pre-stall session 22:26–22:33 ≈ 0.1 h; continuation 22:35–00:10 ≈ 1.6 h: verification, harness, cases, smokes, 16-run walk, containment audit, analysis, this page). Total ≈ 2.4 h. R2 ceiling 4.5 h aggregate (incl. review) — not reached |
+| **Implementer time (cumulative)** | R0 ≈ 0.3 h · R1 ≈ 0.2 h · session 3 closeout ≈ 0.1 h · repair pass ≈ 0.1 h. R2 ≈ 0.8 h (reflog-dated commits 22:26–23:01 PDT ≈ 0.6 h: extension, harness, cases, smokes, 16-run walk, containment audit, analysis, result page; plus ≈ 0.2 h post-result verification and accuracy repairs). Total ≈ 1.5 h. R2 ceiling 4.5 h aggregate (incl. review) — not reached |
 | **Reviewer time** | ≤ 0.9 h R1 (review + recheck, [reviews/reset-R1.md](reviews/reset-R1.md)). R3 review pending within its own 1.0 h stage ceiling |
 | **Experiment machine time** | ≈ 0.2 h (2 smoke runs + 16 evaluation walk slots, sum of wall times ≈ 8 min 20 s; local llama-swap server was already running and is not counted) |
 | **Token/cost figures** | Per-run usage totals available and recorded in the private ledger (`r2/ledger.jsonl`, `ANALYSIS.json`); model inference cost $0 (local server); implementer-harness token/cost figures unavailable in this harness, logged as unavailable, not zero |
