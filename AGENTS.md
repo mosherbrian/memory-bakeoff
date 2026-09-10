@@ -47,8 +47,10 @@ For this reset, verification is scoped (RESET_PLAN.md §7):
 
 The known-failure description below is reconciled with
 `tests/KNOWN_FAILURES.json` (measured 2026-09-07, Gen125: 1557 passed, 26
-failed, 3 skipped, 5 errors — 8 membukkit run-provenance, 16+5 absent
-MemConflict dataset, 2 frozen-source drift after Gen123). Match failures by
+failed, 3 skipped, 5 errors — 8 membukkit run-provenance, 16
+`memconflict_dataset_absent` failures + 5
+`memconflict_collection_errors` errors (both dataset-absence-caused), 2
+frozen-source drift after Gen123). Match failures by
 test identity and cause; do not copy an old pass count as a current run.
 
 ## Historical test gate (pre-reset)
