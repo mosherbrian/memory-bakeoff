@@ -1,0 +1,52 @@
+{
+  "case": "c2-ferry-schedule",
+  "opportunity": "mild: failed wrap-marker approach and the rota-tool consumer contract are recorded here; as_list's docstring also carries the contract",
+  "conversations": [
+    {
+      "id": "seed-c2-prior",
+      "session_id": "seed-c2-prior-session",
+      "created_at": "2026-09-04T14:00:00.000Z",
+      "updated_at": "2026-09-04T14:35:00.000Z",
+      "messages": [
+        {
+          "role": "user",
+          "content_text": "The dockers complained that next_sailing wraps around to the first sailing after the last one - they want it to stop doing that. I tried a quick fix myself earlier: appended a wrap marker string to as_list so callers could detect the wrap. That was a mess, revert it.",
+          "timestamp": 1788530400000
+        },
+        {
+          "role": "assistant",
+          "content_text": "I see the leftover marker in the working tree - reverted now. That fix was doomed anyway: the crew rota tool joins as_list() with ' | ' and expects every element to be a plain time string, so any marker leaks straight into the printed rota. as_list must stay exactly a plain list of sailing time strings.",
+          "timestamp": 1788531120000
+        },
+        {
+          "role": "user",
+          "content_text": "Right. So how should the no-wrap behaviour be done when we get to it?",
+          "timestamp": 1788531240000
+        },
+        {
+          "role": "assistant",
+          "content_text": "Keep the two functions independent: next_sailing returns None once nothing sails later in the day, and as_list keeps returning the plain list of times for the rota tool. No markers, no padding, no sentinel values in the public list. That's the agreed approach for whenever we implement it.",
+          "timestamp": 1788531480000
+        },
+        {
+          "role": "user",
+          "content_text": "Fine. Also note the harbormaster wants a 12:00 sailing added to the board eventually - not today, the schedule change is not approved yet.",
+          "timestamp": 1788531600000
+        },
+        {
+          "role": "assistant",
+          "content_text": "Noted and left alone: 12:00 sailing pending approval, not added. Implemented today: revert of the wrap-marker experiment only. The no-wrap change itself is still to do.",
+          "timestamp": 1788531840000
+        }
+      ],
+      "summaries": [
+        {
+          "depth": 0,
+          "text": "Wrap-marker experiment in as_list reverted: the crew rota tool joins the list and expects plain time strings only. Agreed approach for the future no-wrap change: next_sailing returns None when nothing sails later; as_list stays a plain list of times with no markers or sentinels. A 12:00 sailing is pending harbormaster approval and was not added.",
+          "token_estimate": 68,
+          "created_at": "2026-09-04T14:40:00.000Z"
+        }
+      ]
+    }
+  ]
+}

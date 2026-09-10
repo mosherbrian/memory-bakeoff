@@ -1,0 +1,42 @@
+{
+  "case": "c3-tally-report",
+  "opportunity": "none: control case - both requirements are stated in the run prompt; prior session is unrelated to the task",
+  "conversations": [
+    {
+      "id": "seed-c3-prior",
+      "session_id": "seed-c3-prior-session",
+      "created_at": "2026-09-05T11:00:00.000Z",
+      "updated_at": "2026-09-05T11:25:00.000Z",
+      "messages": [
+        {
+          "role": "user",
+          "content_text": "Different topic: the nightly packaging job still uses pack.sh and I keep typing the wrong name. Rename it to build_all.sh everywhere and while you're at it mention it in the README.",
+          "timestamp": 1788606000000
+        },
+        {
+          "role": "assistant",
+          "content_text": "Renamed pack.sh to build_all.sh and updated the README reference. The cron entry you mentioned lives in the ops repo, not here, so I left it alone.",
+          "timestamp": 1788608400000
+        },
+        {
+          "role": "user",
+          "content_text": "Thanks. One more thing - can you double check the port authority manifest format? They compare line by line.",
+          "timestamp": 1788608880000
+        },
+        {
+          "role": "assistant",
+          "content_text": "The printed manifest is produced by the tally report summary - as long as it is generated the same way each night the line-by-line comparison holds. I did not change any manifest formatting today.",
+          "timestamp": 1788609240000
+        }
+      ],
+      "summaries": [
+        {
+          "depth": 0,
+          "text": "Housekeeping session: packaging script renamed from pack.sh to build_all.sh with the README updated; cron entry lives in the ops repo. No changes to tally behaviour or manifest formatting.",
+          "token_estimate": 40,
+          "created_at": "2026-09-05T11:30:00.000Z"
+        }
+      ]
+    }
+  ]
+}

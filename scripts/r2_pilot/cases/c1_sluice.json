@@ -1,0 +1,52 @@
+{
+  "case": "c1-sluice-firmware",
+  "opportunity": "strong: requirement B (telemetry display stability) is stated only in this prior session",
+  "conversations": [
+    {
+      "id": "seed-c1-prior",
+      "session_id": "seed-c1-prior-session",
+      "created_at": "2026-09-06T09:00:00.000Z",
+      "updated_at": "2026-09-06T09:41:00.000Z",
+      "messages": [
+        {
+          "role": "user",
+          "content_text": "Heads up before you touch anything: the sluice controller is getting a firmware swap next week. Same protocol, but the encoder ratio doubles - it will report 8 steps per millimetre instead of 4.",
+          "timestamp": 1788685200000
+        },
+        {
+          "role": "assistant",
+          "content_text": "Understood. The conversion lives in sluice/units.py as a single STEPS_PER_MM constant used by both to_millimetres (gauge position) and to_steps (telemetry frames). Before we change anything: what does the control room side expect when the ratio changes?",
+          "timestamp": 1788685320000
+        },
+        {
+          "role": "user",
+          "content_text": "That's the catch. The control room displays are calibrated to the steps value they have always received for a given millimetre position, and they cannot be recalibrated this quarter. So whatever we do for gauge positions, the telemetry frames must keep reporting the same steps value for the same millimetre position as they do today.",
+          "timestamp": 1788685440000
+        },
+        {
+          "role": "assistant",
+          "content_text": "Then the single shared constant has to be split. Decision for the firmware swap: to_millimetres moves to the new 8 steps/mm ratio so gate positions stay physically correct, while to_steps keeps the legacy 4 steps/mm conversion so a given millimetre position keeps producing the same steps value the displays are calibrated to. I would add a separate constant (e.g. TELEMETRY_STEPS_PER_MM = 4) rather than editing STEPS_PER_MM in place, so the telemetry path is explicitly pinned. I have not edited anything yet - the swap is next week.",
+          "timestamp": 1788685600000
+        },
+        {
+          "role": "user",
+          "content_text": "Good. Make that change when the firmware actually lands, not before - if we ship the new ratio early every gate position reads double. Leave a note in the session summary so we don't lose the plan.",
+          "timestamp": 1788685720000
+        },
+        {
+          "role": "assistant",
+          "content_text": "Agreed - no edits until the firmware lands. Summary recorded: firmware doubles the encoder to 8 steps/mm; gauge conversion follows it; telemetry keeps the legacy 4 steps/mm calibration so the control room displays stay stable.",
+          "timestamp": 1788685840000
+        }
+      ],
+      "summaries": [
+        {
+          "depth": 0,
+          "text": "Firmware swap planned: encoder ratio doubles to 8 steps per millimetre. Decision: split the shared constant - gauge conversion (to_millimetres) uses the new 8 steps/mm, telemetry conversion (to_steps) keeps the legacy 4 steps/mm so the steps value per millimetre position stays unchanged for the calibrated control-room displays. Change to be applied only when the firmware lands.",
+          "token_estimate": 78,
+          "created_at": "2026-09-06T09:45:00.000Z"
+        }
+      ]
+    }
+  ]
+}
