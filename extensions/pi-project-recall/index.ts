@@ -111,6 +111,35 @@ export function sanitizeFtsQuery(query: string): string {
     .join(" ");
 }
 
+/**
+ * Relaxation candidates for a multi-term AND query: progressively drop
+ * trailing terms (keep the leading, usually most content-bearing,
+ * vocabulary). Bounded by MAX_RELAXATION_ATTEMPTS.
+ */
+export const MAX_RELAXATION_ATTEMPTS = 6;
+
+export function relaxedVariants(query: string): string[] {
+  const tokens = query.split(/\s+/).filter(Boolean);
+  const variants: string[] = [];
+  for (let keep = tokens.length - 1; keep >= 2 && variants.length < MAX_RELAXATION_ATTEMPTS; keep--) {
+    variants.push(tokens.slice(0, keep).join(" "));
+  }
+  // Then each single token, last first - prefix drops keep leading terms, so
+  // the trailing vocabulary (often the discriminating one) is tried here.
+  for (let i = tokens.length - 1; i >= 0 && variants.length < MAX_RELAXATION_ATTEMPTS; i--) {
+    variants.push(tokens[i]);
+  }
+  return variants;
+}
+
+/** Newest session start + conversation count, to detect live-only results. */
+function storeSessionBounds(db: ReadOnlyDb): { maxStart: string; conversations: number } {
+  const row = db.prepare(
+    "SELECT MAX(created_at) AS maxStart, COUNT(*) AS n FROM conversations",
+  ).all() as any[];
+  return { maxStart: iso(row[0]?.maxStart), conversations: Number(row[0]?.n ?? 0) };
+}
+
 export interface RecallHit {
   source: "messages" | "summaries";
   conversation_id: string;
@@ -241,7 +270,7 @@ export function openStore(cwd: string): { db: ReadOnlyDb; path: string } | null 
 const parameters = {
   type: "object",
   properties: {
-    query: { type: "string", description: "Search query (FTS5 text; terms are ANDed)" },
+    query: { type: "string", description: "Search query (FTS5 text; terms are ANDed; on an empty result the query is auto-relaxed by dropping trailing terms, marked as relaxation-sourced)" },
     scope: {
       type: "string",
       enum: ["messages", "summaries", "all"],
@@ -298,11 +327,47 @@ export async function runRecall(
     const parts: string[] = [];
     let mHits: RecallHit[] = [];
     let sHits: RecallHit[] = [];
-    if (scope === "messages" || scope === "all") mHits = queryMessages(store.db, query, limit, params?.after, params?.before);
-    if (scope === "summaries" || scope === "all") sHits = querySummaries(store.db, query, limit);
+    let relaxedWith: string | null = null;
+    let relaxReason = "";
+    const search = (q: string) => {
+      const m = scope === "messages" || scope === "all"
+        ? queryMessages(store.db, q, limit, params?.after, params?.before) : [];
+      const s = scope === "summaries" || scope === "all"
+        ? querySummaries(store.db, q, limit) : [];
+      return { m, s };
+    };
+    ({ m: mHits, s: sHits } = search(query));
+    // Read-path relaxation, bounded and marked. The tool's entire purpose is
+    // CROSS-session recall, so relaxation fires when the exact AND query
+    // returns nothing at all OR nothing outside the current (most recent)
+    // session - the recorded c1 failure mode, where the query terms all
+    // matched the live prompt echo. A relaxed variant is accepted only if it
+    // reaches prior-session content; otherwise the original result stands,
+    // unmarked. Read-only throughout: same queries, less restrictive.
+    const bounds = storeSessionBounds(store.db);
+    const reachesPrior = (m: RecallHit[], s: RecallHit[]) =>
+      [...m, ...s].some((h) => h.session_start < bounds.maxStart);
+    const liveOnly = (mHits.length || sHits.length) && !reachesPrior(mHits, sHits)
+      ? "matched only the current (most recent) session"
+      : "";
+    if (bounds.conversations > 1 && (!mHits.length && !sHits.length || liveOnly)) {
+      relaxReason = liveOnly || "returned nothing";
+      for (const variant of relaxedVariants(query)) {
+        const r = search(variant);
+        if (reachesPrior(r.m, r.s)) {
+          mHits = r.m; sHits = r.s; relaxedWith = variant;
+          break;
+        }
+      }
+      if (!relaxedWith) relaxReason = "";
+    }
     parts.push(
       `project_recall "${query}" (scope ${scope}, store ${store.path}, driver ${detectDriver()}, read-only): ` +
       `${mHits.length} message hit(s), ${sHits.length} summary hit(s). ` +
+      (relaxedWith
+        ? `RELAXATION-SOURCED: the exact query ${relaxReason}; results come from the relaxed query "${relaxedWith}" ` +
+          `(progressive term-drop, still AND semantics) - check that these hits actually match your intent. `
+        : "") +
       `Hits span ALL sessions of this project. Timestamps and source sessions are shown per hit - ` +
       `prefer the most recent statement of any value; older hits may be superseded.`
     );
