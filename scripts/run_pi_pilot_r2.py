@@ -399,7 +399,8 @@ def cmd_receipt(args) -> None:
              f"worktree (resolved): {resolved}"]
 
     # (a) filename identity: exactly one db, named by the runtime hash, and
-    # pi-lcm wrote the run's conversation into it (wal/shm + new conv row).
+    # pi-lcm wrote the run's conversation into that same seeded store (wal/shm
+    # sidecars are informational only - a clean sqlite close checkpoints them).
     dbs = sorted(p.name for p in store_dir.glob("*.db"))
     runtime_hash = node_cwd_hash(worktree)
     sidecars = sorted(p.name for p in store_dir.iterdir() if p.suffix in ("-wal", "-shm"))
@@ -409,10 +410,10 @@ def cmd_receipt(args) -> None:
         con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
         convs = con.execute("select id, session_id from conversations").fetchall()
         con.close()
-    lines.append(f"db files: {dbs} | runtime hash: {runtime_hash} | sidecars: {sidecars}")
+    lines.append(f"db files: {dbs} | runtime hash: {runtime_hash} | sidecars (info only): {sidecars}")
     lines.append(f"conversations in seeded store: {convs}")
-    a_ok = (dbs == [db.name] and db.stem == runtime_hash and sidecars
-            and len(convs) >= 2 and any(c[0] == "seed-receipt-prior" for c in convs)
+    a_ok = (dbs == [db.name] and db.stem == runtime_hash
+            and any(c[0] == "seed-receipt-prior" for c in convs)
             and any(c[0] != "seed-receipt-prior" for c in convs))
 
     # (b) content surfacing: a project_recall call whose result carries the
