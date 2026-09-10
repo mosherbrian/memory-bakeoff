@@ -179,7 +179,31 @@ def cmd_setup(args) -> None:
 
 
 def hash_cwd(path: str) -> str:
-    return hashlib.sha256(path.encode()).hexdigest()[:16]
+    # Resolve to the physical path first: node's process.cwd() (getcwd)
+    # returns the symlink-resolved path, and both pi-lcm and the extension
+    # hash that string. Hashing the /home symlink spelling was the R3 blocker.
+    return hashlib.sha256(os.path.realpath(path).encode()).hexdigest()[:16]
+
+
+def node_cwd_hash(worktree: Path) -> str:
+    """The store-name hash a node process actually computes from
+    process.cwd() inside the worktree - the authoritative runtime key."""
+    out = subprocess.run(
+        ["node", "-e",
+         "console.log(require('node:crypto').createHash('sha256')"
+         ".update(process.cwd()).digest('hex').slice(0,16))"],
+        cwd=worktree, capture_output=True, text=True, check=True, timeout=30)
+    return out.stdout.strip()
+
+
+def verify_store_reachable(worktree: Path, db: Path) -> None:
+    """Fail fast (wiring-recurrence) if the seeded filename is not the one
+    the runtime will open - receipts, not claims."""
+    runtime = node_cwd_hash(worktree)
+    if runtime != db.stem:
+        raise SystemExit(
+            f"wiring-recurrence: seeded {db.name} but the runtime hashes "
+            f"{runtime}; aborting before any pi invocation")
 
 
 def reset_worktree(source: Path, target: Path) -> None:
@@ -305,9 +329,11 @@ def do_run(name: str, arm: str, rep: int | None, smoke: bool) -> dict:
     prep_started = time.time()
     reset_worktree(source, worktree)
     store_dir = run_dir / "lcm"
-    db = store_dir / f"{hash_cwd(str(worktree))}.db"
+    resolved = str(worktree.resolve())
+    db = store_dir / f"{hash_cwd(resolved)}.db"
     if transcript is not None:
-        seed_store(transcript, db, str(worktree))
+        seed_store(transcript, db, resolved)
+        verify_store_reachable(worktree, db)
     elif smoke:
         # No seeded history for the smoke task: it is unrelated by design.
         pass
@@ -342,6 +368,79 @@ def cmd_walk(args) -> None:
         do_run(cid, arm, rep, smoke=False)
 
 
+def cmd_receipt(args) -> None:
+    """Stage A reachability receipt: one probe run through the REAL path
+    (real pi invocation, arm B packages, seeded prior-session store). Not an
+    evaluation slot; consumes no F1/F2 budget. Writes RECEIPT.txt with the
+    verbatim evidence lines into --out."""
+    out = Path(args.out).expanduser().resolve()
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+    source = out / "_src"
+    source.mkdir()
+    for rel, content in SMOKE_FILES.items():
+        f = source / rel
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(content)
+    worktree = out / "repo"
+    reset_worktree(source, worktree)
+    store_dir = out / "lcm"
+    resolved = str(worktree.resolve())
+    db = store_dir / f"{hash_cwd(resolved)}.db"
+    seed_store(RECEIPT_TRANSCRIPT, db, resolved)
+    verify_store_reachable(worktree, db)
+
+    result = execute("B", worktree, RECEIPT_PROMPT, out, store_dir)
+    parsed = parse_events((out / "stdout.txt").read_text())
+
+    lines = [f"receipt run: status={result['status']} wall={result['wall_seconds']}s "
+             f"exit={result.get('exit_code')} events={parsed['event_count']}",
+             f"worktree (resolved): {resolved}"]
+
+    # (a) filename identity: exactly one db, named by the runtime hash, and
+    # pi-lcm wrote the run's conversation into it (wal/shm + new conv row).
+    dbs = sorted(p.name for p in store_dir.glob("*.db"))
+    runtime_hash = node_cwd_hash(worktree)
+    sidecars = sorted(p.name for p in store_dir.iterdir() if p.suffix in ("-wal", "-shm"))
+    import sqlite3
+    convs = []
+    if db.exists():
+        con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+        convs = con.execute("select id, session_id from conversations").fetchall()
+        con.close()
+    lines.append(f"db files: {dbs} | runtime hash: {runtime_hash} | sidecars: {sidecars}")
+    lines.append(f"conversations in seeded store: {convs}")
+    a_ok = (dbs == [db.name] and db.stem == runtime_hash and sidecars
+            and len(convs) >= 2 and any(c[0] == "seed-receipt-prior" for c in convs)
+            and any(c[0] != "seed-receipt-prior" for c in convs))
+
+    # (b) content surfacing: a project_recall call whose result carries the
+    # seeded probe string and the seeded conversation id.
+    stdout = (out / "stdout.txt").read_text(errors="replace")
+    b_ok = False
+    for line in stdout.splitlines():
+        if "RECEIPT-PROBE-7f3a" in line and "seed-receipt-prior" in line:
+            lines.append(f"evidence: {line.strip()[:600]}")
+            b_ok = True
+    recall_calls = [t for t in parsed["tool_calls"] if t == "project_recall"]
+    lines.append(f"project_recall calls in transcript: {len(recall_calls)}")
+
+    verdict = "REACHABILITY RECEIPT: PASS" if (a_ok and b_ok) else \
+              "REACHABILITY RECEIPT: FAIL"
+    lines.append(verdict)
+    (out / "RECEIPT.txt").write_text("\n".join(lines) + "\n")
+    print("\n".join(lines))
+
+
+RECEIPT_TRANSCRIPT = CASES_DIR / "receipt_probe.json"
+RECEIPT_PROMPT = (
+    "Use the project_recall tool now with query \"RECEIPT-PROBE-7f3a\" and scope \"all\". "
+    "Reply with the timestamps, session ids and text of whatever it returns. "
+    "Do not edit any files."
+)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -351,6 +450,7 @@ def main() -> None:
     p.add_argument("arm", choices=["A", "B"]); p.add_argument("rep", type=int, choices=[1, 2])
     sub.add_parser("walk")
     p = sub.add_parser("score"); p.add_argument("rundir")
+    p = sub.add_parser("receipt"); p.add_argument("--out", required=True)
     args = ap.parse_args()
     if args.cmd == "setup":
         cmd_setup(args)
@@ -362,6 +462,8 @@ def main() -> None:
         cmd_walk(args)
     elif args.cmd == "score":
         print("rescoring from run dir:", args.rundir)
+    elif args.cmd == "receipt":
+        cmd_receipt(args)
 
 
 if __name__ == "__main__":
