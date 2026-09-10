@@ -270,7 +270,7 @@ export function openStore(cwd: string): { db: ReadOnlyDb; path: string } | null 
 const parameters = {
   type: "object",
   properties: {
-    query: { type: "string", description: "Search query (FTS5 text; terms are ANDed; on an empty result the query is auto-relaxed by dropping trailing terms, marked as relaxation-sourced)" },
+    query: { type: "string", description: "Search query (FTS5 text; terms are ANDed; auto-relaxes by dropping terms - marked relaxation-sourced - when the exact query returns nothing or no hits from any prior session)" },
     scope: {
       type: "string",
       enum: ["messages", "summaries", "all"],

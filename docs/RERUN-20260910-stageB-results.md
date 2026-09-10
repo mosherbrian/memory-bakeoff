@@ -126,3 +126,27 @@ none lost or duplicated. No runs, code or evidence were affected.
 Stage B ends here per the stage table. No further runs, no re-scoring, no
 R2-style follow-on without new sponsor budget. Next action is the
 conductor-dispatched Stage C review.
+
+## Addendum (2026-09-10 ≈11:05–11:10 PDT): query-relaxation mechanism test
+
+**DESCRIPTIVE MECHANISM TEST ONLY — does NOT change any F1/F2 outcome.**
+Small-scope dispatch (planner-directed, Brian-relayed ~10:5x): bounded
+read-path relaxation in `extensions/pi-project-recall` — when the exact AND
+query returns nothing at all or no hits from any prior session (the c1
+live-echo failure mode), retry relaxed variants (trailing-term drops, then
+single tokens last-first; ≤6 attempts; per-variant FTS5/LIKE semantics
+unchanged), accept only variants reaching prior-session content, and mark
+accepted results `RELAXATION-SOURCED` with the variant and reason. Still
+strictly read-only; revert = revert the commit. Validated ONLY against the
+recorded c1 battery, on a copy of the c1-b-rep1-f2 store (no pi runs, no
+new slots, no rescoring): 5 of 6 recorded model-query invocations that
+returned 0 seed hits now return seed content; the sixth shares zero
+vocabulary with the seed (unreachable by term-based relaxation); all seven
+short-vocabulary battery queries identical (relaxation never fired).
+Noise widened honestly: accepted variants also return live-session hits;
+single-token variants are the noisiest boundary, tried last. Extension
+tests 12/12. Targeted verification by worker-glm-3: 4/4 PASS, no blockers
+(`reviews/query-relax-review.md`). Evidence and count bases:
+`~/.local/share/memory-bakeoff/rerun-20260910/query-rel/VALIDATION.md`
+(battery numbers are scope=all: message FTS hits + seeded summary LIKE
+hits; the review's message-only basis differs by the summary hit).
