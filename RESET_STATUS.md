@@ -127,13 +127,14 @@ are not claimed by this pilot.
 | | |
 |---|---|
 | **Completed** | R0: legacy launchers verified inactive (no project units/timers/processes; `PENDING.json` was `answered`, now truthfully `paused`); incumbent workspace preserved untouched; isolated clone, origin repointed to GitHub, base reconciled `5d1d6a0` → `9dfea2c`; reset branch + baseline ref created. R1: entry-point repairs on this branch (this page, RESET_PLAN.md, AGENTS.md, control-plane and handoff pointers). R1 review: **PASS, no blockers**, four non-blocking notes (verbatim transcript in [reviews/reset-R1.md](reviews/reset-R1.md)); consolidated repair pass applied — Note 1 driver spec corrected to `node:sqlite`, Note 2 config values stated, Note 3 cluster phrasing split, Note 4 carried as a reporting limitation |
-| **Remaining uncertainty** | Whether real sessions hit the recall boundary (pilot's question); one targeted recheck of the repair diff pending |
-| **Next action** | Targeted recheck by worker-glm-3 on the repair commit, then Brian's single pilot-scope decision on the recommendation above. R2 does not start without it |
+| **Remaining uncertainty** | Whether real sessions hit the recall boundary (the pilot's question) |
+| **Decision recorded** | **Brian approved the R2 pilot as specified on 2026-09-09 ~20:55 PDT** (relayed by conductor-glm), with the **default 25% overhead threshold** for the R3 trial decision per RESET_PLAN.md §6: 25% for median run time and available token usage over paired successful runs; unavailable or insufficient cost comparisons are labelled unresolved, not passed |
+| **Next action** | R2: implement `extensions/pi-project-recall/` per the exact specification above, validate (unit tests, driver-load smoke under node, feature-active/original-path checks), then run the ≤16-run paired pilot. Stop rules per RESET_PLAN.md §2 are hard stops |
 | **Implementer time (cumulative)** | R0 ≈ 0.3 h (session 1, 18:10–18:21: discovery, clone, branch; session 2 re-verification to 18:29). R1 ≈ 0.2 h (18:29–18:38: reading, edits, focused tests, commit). Session 3 ≈ 0.1 h (closeout reconstruction after bridge reset). Repair pass ≈ 0.1 h (review transcript + this diff). Total ≈ 0.7 h against the 2.5 h R0+R1 ceiling |
 | **Reviewer time** | ≤ 0.9 h (review pass 1, reply 19:34 PDT, own accounting in [reviews/reset-R1.md](reviews/reset-R1.md)). Targeted recheck pending |
 | **Experiment machine time** | 0 h — no experiments run |
 | **Token/cost figures** | Unavailable in this harness; logged as unavailable, not zero |
-| **Brian attention used** | ≈ 5 min launch (conductor dispatch, estimated); decision minutes not yet spent |
+| **Brian attention used** | ≈ 5 min launch (conductor dispatch, estimated); R1 pilot-scope decision spent 2026-09-09 ~20:55 PDT (approval + default threshold; exact minutes unavailable); final-decision minutes remain |
 
 **Substitutions recorded (plan §1):** implementer GLM-5.3 under ZCode
 (conductor routing; the plan's Codex default was not used, 2026-09-09);
