@@ -146,15 +146,17 @@ The pilot establishes **two independent nulls**. (i) The model never
 spontaneously invokes a newly registered recall tool under natural resume
 prompts: `project_recall` was invoked in 0 of 8 treatment runs
 (receipt-backed — parsed events and raw grep, re-verified by the R3
-reviewer). (ii) The integration was silently mis-wired in every treatment
-run (the R3 blocker, limitation 2): the seeded prior-session store was never
-reachable through the tool's real path, so even a call would have returned
-"No matches." Registration on the real Pi runtime was verified (node:sqlite
-driver; a few hundred input tokens of schema, ≈ +230–300 observed);
-**reachability was not — it was absent.** The extension's unit and node
-tests exercise its search path; no treatment run did. The tool wrote nothing
-and misled no one, and arm B's information state equalled arm A's in every
-run.
+reviewer). (ii) As wired, the integration could not have surfaced
+prior-session content anyway: the harness named each seed from the `/home`
+symlink spelling of the worktree path while the runtime hashed the physical
+`/var/home` spelling that `process.cwd()` returns, so the seeded store was
+unreachable through the tool's real path (the R3 blocker; detail in
+limitation 2) and even a call would have returned "No matches." Registration
+on the real Pi runtime was verified (node:sqlite driver; a few hundred input
+tokens of schema, ≈ +230–300 observed); **reachability was not — it was
+absent.** The extension's unit and node tests exercise its search path; no
+treatment run did. The tool wrote nothing and misled no one, and arm B's
+information state equalled arm A's in every run.
 
 **Overhead.** Over the 7 pairs where both runs completed (any verdict):
 median wall A 31.2 s → B 32.2 s (+2.9 %); median total tokens A 38 070 →
