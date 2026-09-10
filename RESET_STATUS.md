@@ -233,12 +233,14 @@ harness: `scripts/run_pi_pilot_r2.py`, analysis: `scripts/r2_pilot/analyze.py`.
    8 treatment runs; the null is about *unprompted spontaneous* tool use with
    natural resume prompts. An explicit "check past sessions first" habit is a
    different usage pattern — plausible, unmeasured, and the natural next
-   thing for Brian to try by hand before any further budget — **but only
-   against corrected wiring**: the daily setup has no seeding and no symlink
-   divergence (pi-lcm writes and reads one store named from the same resolved
-   cwd every time), so this harness defect would not exist there. What
-   remains unmeasured in the daily setting is only whether the model ever
-   reaches for the tool.
+   thing for Brian to try by hand before any further budget. The reviewer's
+   precision applies: by-hand prompting is only meaningful against wiring in
+   which the tool can actually reach the store — and the by-hand setting,
+   **Brian's real HOME, would not have this defect**. There is no seeding
+   there and no symlink divergence: pi-lcm and the extension both name the
+   store from the same resolved cwd on every launch, so `project_recall`
+   reads exactly the store pi-lcm writes. What remains unmeasured in the
+   daily setting is only whether the model ever reaches for the tool.
 5. **Containment audit not preserved as an artifact.** The "0
    out-of-worktree accesses" result of the c2-B-rep1 interruption audit
    survives only in the ledger note and commit message; the method —
