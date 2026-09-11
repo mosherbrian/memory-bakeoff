@@ -1,0 +1,21 @@
+BUILD-20260911 DECISION-MEMORY SMOKE RECEIPT
+binary: /var/home/bmosher/perseus-build/src/target/release/perseus-vault (self-reports perseus-vault 2.23.2 (9c82920))
+when: 2026-09-11T19:43:48.278Z
+
+[PASS] binary-provenance — /var/home/bmosher/perseus-build/src/target/release/perseus-vault sha256=c8a222ec7077d713212c2414d440586f564338aaa153eeb13b08ebf14854a172 self-reports "perseus-vault 2.23.2 (9c82920)"
+[PASS] registration-7d — tools=project_perseus_recall,project_perseus_remember,project_perseus_supersede,project_perseus_confirm
+[PASS] vault-path-7c — db=/tmp/perseus-decision-smoke-gIUJ1n/agent/perseus/1c77703f291e361d.vault (derived, not yet created)
+[PASS] recall-truthful-empty — No vault exists yet for this project (/tmp/perseus-decision-smoke-gIUJ1n/agent/perseus/1c77703f291e361d.vault). Nothing recorded to recall.
+[PASS] draft-remember — draft_id=draft-2ce077 code=e583ad63; vault still absent
+[PASS] gate-wrong-code — [perseus-write] NOT WRITTEN — confirmation code does not match draft draft-2ce077 (attempt 1/5) — nothing was written; the operator's code arrives only from the in-session draft presentation
+[PASS] confirm-creates — [perseus-write] WRITTEN (draft draft-2ce077, confirmed_by=operator)
+[PASS] vault-state-after-create — scan: record-helm-001/active/env=project
+[PASS] draft-supersede — draft_id=draft-dd0c3d
+[PASS] confirm-supersede-status-delivery — supersede: lineage applied — |   status flip delivered: record-helm-001 status_updated="deprecated" |   valid_to delivered: from_valid_to_unix_ms=1789155828114 |   (the superseded record has left hybrid recall; this receipt is the status delivery)
+[PASS] recall-after-supersede — hits=record-argo-002; [project_perseus_recall] key=record-argo-002 id=cli-a12c7c50189d recorded=1789155828039 status=active
+[PASS] guard-blocks-disjoint-env — [perseus-write] DRAFT REFUSED — NOTHING IS WRITTEN.
+[PASS] guard-override-drafts-but-writes-nothing — override draft draft-b6c8eb pending; project workspace still has 1 record(s)
+[PASS] key-reuse-refused — [perseus-write] DRAFT REFUSED — NOTHING IS WRITTEN.
+[PASS] no-vault-path-escape — scratch=/tmp/perseus-decision-smoke-gIUJ1n
+
+SMOKE RECEIPT: PASS — create -> supersede -> recall cycle proven (status flip + status/valid_to delivered; gate + §2 guard + key rules enforced)
