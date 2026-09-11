@@ -127,7 +127,7 @@ Tests never touch the network: the seam has no transport at all.
 ## Test + smoke
 
 ```
-bun test extensions/pi-perseus-recall/test/          # 39 unit tests
+bun test extensions/pi-perseus-recall/test/          # 46 unit tests
 bun extensions/pi-perseus-recall/smoke_receipt.ts    # real create→supersede→receipt cycle
 ```
 
