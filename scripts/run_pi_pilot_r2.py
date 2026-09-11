@@ -37,6 +37,7 @@ AGENT_BASE = Path.home() / ".pi-pilot-r2"
 PI = "/var/home/bmosher/.bun/bin/pi"
 PI_LCM = "/var/home/bmosher/projects/pi-lcm-bun"
 RECALL = ROOT / "extensions/pi-project-recall"
+NUDGE_EXT = ROOT / "extensions/pi-recall-nudge"
 CASES_DIR = ROOT / "scripts/r2_pilot/cases"
 FIXTURES = ROOT / "fixtures/intent_persistence_gen48"
 
@@ -87,6 +88,9 @@ CASES = {
 ARMS = {
     "A": {"packages": [PI_LCM]},
     "B": {"packages": [PI_LCM, str(RECALL)]},
+    # One-time nudge-trial arm: recall + the companion that appends the F2
+    # nudge sentence itself (harness prompt stays natural).
+    "N": {"packages": [PI_LCM, str(RECALL), str(NUDGE_EXT)]},
 }
 
 # The unrelated smoke task (adapted from the Gen49 harness smoke fixture).
@@ -457,6 +461,124 @@ RECEIPT_PROMPT = (
 )
 
 
+def cmd_nudge_trial(args) -> None:
+    """One-time trial verification of the pi-recall-nudge companion
+    extension: a SINGLE run through the REAL path (real pi invocation, arm N
+    packages = pi-lcm + pi-project-recall + pi-recall-nudge) with the c1
+    fixture, the c1 seeded prior-session store and the NATURAL c1 resume
+    prompt - the harness does NOT append the F2 nudge; the extension must
+    supply it. Not an evaluation slot; no outcome is rescored. Writes
+    TRIAL_RECEIPT.txt with verbatim evidence lines into --out."""
+    out = Path(args.out).expanduser().resolve()
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+    case = CASES["c1"]
+    worktree = out / "repo"
+    reset_worktree(FIXTURES / case["fixture"] / "repo", worktree)
+    store_dir = out / "lcm"
+    resolved = str(worktree.resolve())
+    db = store_dir / f"{hash_cwd(resolved)}.db"
+    seed_store(CASES_DIR / case["transcript"], db, resolved)
+    verify_store_reachable(worktree, db)
+
+    prompt = case["prompt"]  # natural resume prompt: no F2_NUDGE anywhere
+    natural_sha = hashlib.sha256(prompt.encode()).hexdigest()
+    harness_nudged_sha = hashlib.sha256((prompt + " " + F2_NUDGE).encode()).hexdigest()
+
+    result = execute("N", worktree, prompt, out, store_dir)
+    parsed = parse_events((out / "stdout.txt").read_text())
+    row = {
+        "run": "c1-n-trial", "case": "c1", "arm": "N", "rep": 1,
+        "phase": "nudge-trial", "nudge": False,
+        "prompt_sha256": natural_sha,
+        "prompt_sha256_if_harness_nudged": harness_nudged_sha,
+        "config_ref": "~/.pi-pilot-r2/arm-n/settings.json",
+        **result, **parsed,
+    }
+    row.update(run_verifier(case["fixture"], worktree))
+    row["store_db"] = str(db)
+    (out / "ledger.jsonl").write_text(json.dumps(row) + "\n")
+
+    lines = [f"nudge trial: status={result['status']} wall={result['wall_seconds']}s "
+             f"exit={result.get('exit_code')} events={parsed['event_count']}",
+             f"worktree (resolved): {resolved}",
+             f"prompt_sha256 (natural c1): {natural_sha}"]
+
+    # (p) prompt purity: the harness passed the natural prompt; the F2-nudged
+    # sha (what a harness-appended nudge would hash to) must differ.
+    p_ok = natural_sha != harness_nudged_sha
+    lines.append(f"prompt purity: natural sha != harness-nudged sha "
+                 f"({harness_nudged_sha[:16]}...): {p_ok}")
+
+    # (w) wiring: one db named by the runtime hash, holding the seeded
+    # conversation and the live one.
+    dbs = sorted(p.name for p in store_dir.glob("*.db"))
+    runtime_hash = node_cwd_hash(worktree)
+    import sqlite3
+    convs = []
+    if db.exists():
+        con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+        convs = con.execute("select id, session_id from conversations").fetchall()
+        con.close()
+    lines.append(f"db files: {dbs} | runtime hash: {runtime_hash}")
+    lines.append(f"conversations in store: {convs}")
+    w_ok = (dbs == [db.name] and db.stem == runtime_hash
+            and any(c[0] == "seed-c1-prior" for c in convs)
+            and any(c[0] != "seed-c1-prior" for c in convs))
+
+    # (n) injection receipt: the extension appended the nudge (stderr line),
+    # and registered itself at startup.
+    stderr = (out / "stderr.txt").read_text(errors="replace")
+    stdout = (out / "stdout.txt").read_text(errors="replace")
+    injected = [l for l in stderr.splitlines() if "appended the F2 nudge sentence" in l]
+    registered = any("pi-recall-nudge: registered" in l for l in stderr.splitlines())
+    lines.append(f"pi-recall-nudge registered: {registered}")
+    for l in injected:
+        lines.append(f"injection evidence (stderr): {l.strip()[:400]}")
+    n_ok = registered and bool(injected)
+
+    # (t) transcript purity: the user message the transcript recorded is the
+    # natural prompt - the sentence appears nowhere in any user message (the
+    # model may still echo it in its own assistant text, which is fine).
+    user_texts = []
+    for line in stdout.splitlines():
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            e = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if e.get("type") == "message_start" and (e.get("message") or {}).get("role") == "user":
+            content = e["message"].get("content")
+            if isinstance(content, str):
+                user_texts.append(content)
+            elif isinstance(content, list):
+                user_texts.append(" ".join(b.get("text", "") for b in content
+                                           if isinstance(b, dict) and b.get("type") == "text"))
+    leaked = [t for t in user_texts if F2_NUDGE in t]
+    lines.append(f"user messages in transcript: {len(user_texts)}; containing the nudge sentence: {len(leaked)}")
+    t_ok = bool(user_texts) and not leaked
+
+    # (e) effect: the model invoked project_recall; relaxation markers and
+    # seeded prior-session content surfaced in results.
+    recall_calls = sum(1 for t in parsed["tool_calls"] if t == "project_recall")
+    relaxation_marks = stdout.count("RELAXATION-SOURCED")
+    seed_surfaced = "seed-c1-prior" in stdout
+    lines.append(f"project_recall calls: {recall_calls} | RELAXATION-SOURCED markers: "
+                 f"{relaxation_marks} | seed-c1-prior surfaced: {seed_surfaced}")
+    e_ok = recall_calls >= 1
+
+    lines.append(f"verifier (c1 observable, not a trial gate): {row['verifier']} "
+                 f"[{row.get('verifier_stdout', '')[:60]}]")
+    verdict = "NUDGE-TRIAL RECEIPT: PASS" if (p_ok and w_ok and n_ok and t_ok and e_ok) \
+        else "NUDGE-TRIAL RECEIPT: FAIL"
+    lines.append(verdict)
+    (out / "TRIAL_RECEIPT.txt").write_text("\n".join(lines) + "\n")
+    print("\n".join(lines))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -470,6 +592,7 @@ def main() -> None:
     sub.add_parser("walk")
     p = sub.add_parser("score"); p.add_argument("rundir")
     p = sub.add_parser("receipt"); p.add_argument("--out", required=True)
+    p = sub.add_parser("nudge-trial"); p.add_argument("--out", required=True)
     args = ap.parse_args()
     if args.cmd == "setup":
         cmd_setup(args)
@@ -484,6 +607,8 @@ def main() -> None:
         print("rescoring from run dir:", args.rundir)
     elif args.cmd == "receipt":
         cmd_receipt(args)
+    elif args.cmd == "nudge-trial":
+        cmd_nudge_trial(args)
 
 
 if __name__ == "__main__":

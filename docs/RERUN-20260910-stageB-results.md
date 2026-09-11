@@ -171,3 +171,74 @@ outcome on the failure-critical case — **n=2, SUGGESTIVE ONLY**; no
 changes to F1/F2 records, no rescoring. Evidence (private):
 `~/.local/share/memory-bakeoff/rerun-20260910/f3/` (ledger, runs,
 RESULTS.md with query-level receipts).
+
+## f4 — pi-recall-nudge companion extension + one-time trial verification (2026-09-10, ≈18:10–18:35 PDT)
+
+Dispatch (conductor, 2026-09-10): build the companion extension that
+automates the F2 nudge, and verify it once end-to-end. Engineering
+verification, not an evaluation: ONE run, no evaluation slots consumed, no
+predeclared outcome criteria, no rescoring (f3 already carries the
+suggestive n=2 outcome; this run verifies the mechanism that would deliver
+the nudge in daily use).
+
+**Extension** `extensions/pi-recall-nudge/`: no tools, no writes. On the
+session's first LLM call, if and only if every gate passes — no
+`PI_RECALL_NUDGE=0` kill switch, `project_recall` actually registered, the
+project's store holds ≥ 2 conversations (live + prior), the prompt does not
+already contain the sentence, and `project_recall` has not been used this
+session — it appends the fixed F2 nudge sentence (predeclared wording,
+verbatim) to the current user prompt via the `context` event transform,
+**for the model's eyes only**: the session transcript and the pi-lcm store
+keep the prompt exactly as typed. Within that first turn the sentence is
+re-applied on every LLM call so the model's context stays consistent; later
+turns are untouched. Every application and every skip emits a stderr line
+with its reason plus a durable `pi-recall-nudge` session entry
+(`appendEntry`). Tests: 14/14 bun unit (sentence verbatim; idempotent
+append; message objects never mutated; every gate skips with its reason;
+mid-turn consistency; fresh-project quiet), node:sqlite runtime smoke, and
+a factory smoke driving the real event handlers through a fake pi handle;
+sibling extension tests still 12/12.
+
+**One-time trial** (`nudge-trial` subcommand; arm N = pi-lcm +
+pi-project-recall + pi-recall-nudge; c1 fixture, seeded c1 store, wiring
+guard active, NATURAL c1 resume prompt — the harness did not append the
+nudge). **Result: NUDGE-TRIAL RECEIPT: PASS — first run, zero retries.**
+Verbatim evidence in
+`~/.local/share/memory-bakeoff/rerun-20260910/nudge-trial/TRIAL_RECEIPT.txt`
+(ledger row, run tree, session file alongside):
+
+- **Prompt purity:** prompt_sha256 `9a732a3c290a…` (the natural c1 prompt),
+  distinct from the F2-nudged hash `134bdfacabe5…` — proof the sentence was
+  not in the harness prompt.
+- **Wiring:** exactly one db `61ea01c83ad8a665.db`; the runtime
+  `sha256(process.cwd())[:16]` equals its name; the store holds
+  `seed-c1-prior` and the live conversation.
+- **Injection:** stderr line "pi-recall-nudge: appended the F2 nudge
+  sentence to this session's first prompt (185 -> 328 chars …)"; durable
+  session entry `pi-recall-nudge` action=nudge at 01:32:58.875Z — 221 ms
+  after session start.
+- **Transcript purity:** the transcript's single user message contains the
+  nudge sentence 0 times — the sentence reached the model only through the
+  extension's per-request transform.
+- **Effect:** `project_recall` invoked 5 times (`tool_execution_start`
+  receipts); 3 of 5 results relaxation-sourced (authoritative
+  `tool_execution_end` basis; the receipt's raw substring count of 15
+  includes stream echoes); `seed-c1-prior` content surfaced. The first
+  query is the recorded c1 exploratory failure-mode query ("steps per
+  millimetre controller firmware gate positions"); later queries pivot to
+  seed vocabulary — the f3 pattern.
+- **c1 verifier: pass (VERIFIER OK)** — recorded as an observable; n=1, no
+  outcome claim.
+- Wall 64.46 s; usage 92 502 total tokens (informational; F1 B medians
+  ≈ 30 k, F2 B ≈ 39 k — no comparison drawn at n=1).
+
+**What this verifies — and what it does not.** Verified: the automated
+nudge is delivered through the real Pi runtime with receipts, and the model
+then uses `project_recall` with no nudge typed by the user — the F2 habit
+without the typing. Not shown: outcome effects at any reliable n (f3's
+suggestive 2/2 remains the only outcome signal); behavior on Brian's real
+projects and vocabulary; multi-session daily-use effects.
+
+Accounting: machine one 64.46 s pi run + tests (negligible); implementer
+≈ 0.7 h (extension, tests, harness subcommand, trial, recording);
+implementer-harness token/cost figures unavailable, logged as unavailable.
