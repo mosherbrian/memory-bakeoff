@@ -294,3 +294,52 @@ implementer ≈ 0.5 h (18:38–18:50 PDT + recording); machine 67 s run +
 tests. Implementer-harness token/cost figures unavailable, logged as
 unavailable. No benchmark runs, no rescoring, F1/F2/f3 records untouched,
 no settings.json edits (Brian installs extensions himself).
+
+### f4 v2 replacement pass — reconciliation, independent verification, delivery (2026-09-10, 18:41–19:0x PDT)
+
+The prior session ended before reporting; it committed its v2 as `5d6947f`
+(18:46:42 PDT) just before stopping, so the conductor's re-dispatch still
+described the rewrite as uncommitted. The replacement implementer (GLM-5.3
+under ZCode) reconciled that committed v2 against the full dispatch spec
+and delivered the remainder:
+
+- Spec reconciliation confirmed every predeclared element (gates and
+  defaults, one-nudge-per-prompt union, tool guard, message delivery with
+  `display: true` + `[recall-nudge]` prefix, F2 sentence byte-identical to
+  `scripts/run_pi_pilot_r2.py`, `recallNudge` config, `PI_RECALL_NUDGE=0`,
+  loud config rejection, README regimes + counter caveat). One residue
+  fixed: package.json still carried the v1 description.
+- Re-ran verification on the reconciled tree: 22/22 bun unit, node smoke
+  ALL PASS, sibling pi-project-recall 12/12 with `git diff` vs `85d69be`
+  still empty (byte-identical).
+- **Independent Deliverable-2 confirmation run under normal settings**
+  (no isolated agent dir): `--no-extensions` + explicit `-e` (only
+  pi-project-recall; the global pi-lcm writer never loaded), `HOME` at the
+  real home, no `LCM_DB_DIR`/`PI_CODING_AGENT_DIR` overrides, cwd
+  /var/home/bmosher/acp-pi, model night/qwen3.8-27b-code. PASS in ~36 s:
+  4 `project_recall` invocations, every result names the real store, prior
+  conversation `21592f51-adda…` surfaced, first query RELAXATION-SOURCED
+  ("acp pi decisions constraints" → "acp pi"), final answer cites the
+  conversation honestly ("clean slate" — this run's queries matched only
+  liveness markers). Zero writes: db/wal sha256 and mtimes identical
+  before/after. Attempt record: 2 fast setup failures before the clean
+  run (agent-deck `$HOME` shadowed the real `~/.pi` → "Unknown provider";
+  then an `env` flag-ordering typo; no model call in either).
+- Disclosure: the replacement's `RECEIPT.txt` write (18:53) overwrote the
+  prior session's RECEIPT.txt in `trial-verify/`. Primary evidence was
+  never touched; the prior run's doc claims above were re-verified from
+  its `stdout.txt` (6 invocations, queries, both conversation ids,
+  1 relaxation-sourced — all confirmed). Both runs are on record; same
+  store, different query phrasing, different yield — query formulation
+  remains the binding constraint (Stage-B finding).
+- Delivery: committed through the pre-commit hook and pushed to
+  `origin/reset/practical-pi-20260907` — history: v1 `2a8ab28`, v2
+  `5d6947f` (prior session), then this replacement-pass commit.
+
+Accounting for the replacement pass: implementer ≈ 0.6 h of wall time
+(18:41:35–19:1x PDT, including discovery of the inherited state); machine
+≈ 2 min (38 s failed attempts + 36 s run + test suites) of ≤ 15 min.
+Cumulative f4 implementer time across both sessions ≈ 1.8 h — over the
+dispatch's 30-min implementer ceiling; recorded as such, not hidden.
+Token/cost figures for the harness unavailable; the verification run's
+own usage receipts live in its stdout events.
