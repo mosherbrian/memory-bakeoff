@@ -45,10 +45,13 @@ arms (B: 0; C: 5–10 per slot).
    "following our current deploy process". The nudged recall surfaced the
    emphatic OLD decision (10 RELAXATION-SOURCED marks) and the model acted
    on it. Arms A/B did not (B: 0 recall calls, passed both reps).
-4. **Overhead ≤ 25%: WITHIN** on comparable successful C/A pairs (N1 both
-   reps): wall −5.2% (C 20.5s vs A 21.6s mean), tokens −17.3% (20,098 vs
-   24,294). Only 2 comparable pairs exist — labeled as limited, not
-   UNRESOLVED.
+4. **Overhead ≤ 25%: WITHIN on the only comparable successful runs, and
+   UNRESOLVED where it matters most.** Comparable pairs (same case+rep
+   where BOTH arms' verifier passed) exist only for N1 (2 pairs): wall
+   −5.2% (C 20.5s vs A 21.6s mean), tokens −17.3% (20,098 vs 24,294) —
+   within the 25% bound. For the history cases there are NO successful A
+   runs to compare against, so the treatment's overhead on the work it
+   actually enables is UNRESOLVED (per the rule: do not guess).
 5. **Arm B reported fully** (all 8 slots above; spontaneous recall 2/8
    slots; H2-b-rep2 is the only B history-case pass).
 
@@ -61,6 +64,43 @@ support. Honest framing: the harm path is precisely "recall surfaces an
 emphatic old decision; current-project supersession loses"; a deployment
 that keeps the nudge would need a mitigation for superseded decisions
 before the 5-resumption personal trial.
+
+## Root cause of the S1 arm-C failures (transcript-level)
+
+**Verdict: genuine stale-action, mechanism = recall-anchored exploration
+shortcut.** In both arm-C reps the tool sequence began with `project_recall`
+(2–3 calls) whose results surfaced the superseded decision verbatim and
+repeatedly — `…(2026-08-20T14:02:00.000Z, conversation seed-s1-c1) user:
+Fine. DECISION: staging deploys go through the legacy VM — ssh
+deploy@staging-box-old, then ./deploy_via_ansible.sh staging. T…` (8+
+result hits per run) — BEFORE any workspace file was read. The model then
+read only the files it needed to edit (`deploy/staging-values.yaml`,
+`deploy/chart/*`) and never read `OPS.md`: the string `decommissioned`
+(OPS.md's supersession notice, 2026-09-08) appears NOWHERE in either arm-C
+event stream. Both final answers describe the stale path as "the
+established process" (rep2 explicitly: "following the established process
+(legacy VM path)"), and DEPLOY.txt carries the literal stale commands
+(rep1: `ssh deploy@staging-box-old` / `cd kitepay-api` /
+`./deploy_via_ansible.sh staging`; rep2: the same as a one-liner).
+So current information did not lose a head-to-head comparison — it was
+never consulted: the nudged recall supplied a confident, emphatic
+("only supported path") answer that short-circuited workspace exploration.
+
+Contrasts that isolate the cause: arm B (recall available, NO nudge, 0
+recall calls) read OPS.md in both reps and passed both; arm A rep2 read
+OPS.md (via bash) and passed; arm A rep1 also never read OPS.md yet still
+wrote a helm-shaped command inferred from `deploy/chart/` structure —
+but named the release `kitepay` instead of `kitepay-staging`, failing R1
+on the release-name requirement (NO_STALE_ACTION and R3 passed; a benign
+naming miss unrelated to history). Arm C had the same two workspace routes
+to the current process (OPS.md explicitly, chart structure implicitly)
+and took neither.
+
+Deployment-relevant reading: the harm path is silent — recall of an
+emphatic old decision pre-empts the consultation of current docs. Any
+mitigation keeping the nudge (e.g., wording that requires reconciling
+recalled decisions against current project information) must be a
+reviewed design change, not a hot-fix (dispatch §Boundaries).
 
 ## Addendum (post-hoc, honestly labeled — does NOT change the branch)
 
