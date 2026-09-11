@@ -1,0 +1,64 @@
+{
+ "records": [
+  {
+   "key": "record-p1-c1",
+   "category": "decision",
+   "kind": "conversation",
+   "body": {
+    "title": "load-bearing",
+    "date": "2026-09-02",
+    "messages": [
+     {
+      "role": "user",
+      "at": "2026-09-02 11:04",
+      "text": "Two more export batches came back corrupted overnight. The worker logs show the license connection dropping mid-run."
+     },
+     {
+      "role": "assistant",
+      "at": "2026-09-02 11:07",
+      "text": "Found it — the license server hard-drops connections above 3 concurrent exports. Every batch that had 4 or more workers in flight got an HTTP 429 mid-export, and a dropped license corrupts the batch."
+     },
+     {
+      "role": "user",
+      "at": "2026-09-02 11:09",
+      "text": "So the worker pool size is the problem?"
+     },
+     {
+      "role": "assistant",
+      "at": "2026-09-02 11:11",
+      "text": "Yes. DECISION: tessellate-export workers cap concurrency at 3 — the license server drops anything above 3 concurrent exports, and a dropped license mid-export corrupts the batch."
+     },
+     {
+      "role": "user",
+      "at": "2026-09-02 11:12",
+      "text": "Agreed. That goes in the deploy config, not just the launcher flags."
+     }
+    ],
+    "verbatim_sentence": "DECISION: tessellate-export workers cap concurrency at 3 — the license server drops anything above 3 concurrent exports, and a dropped license mid-export corrupts the batch."
+   }
+  },
+  {
+   "key": "record-p1-c2",
+   "category": "decision",
+   "kind": "conversation",
+   "body": {
+    "title": "filler (irrelevant)",
+    "date": "2026-08-19",
+    "messages": [
+     {
+      "role": "user",
+      "at": "2026-08-19 16:20",
+      "text": "The summary reports look washed out. Pick a stronger accent color."
+     },
+     {
+      "role": "assistant",
+      "at": "2026-08-19 16:23",
+      "text": "Switched the accent to deep teal; the neutral stays warm gray."
+     }
+    ],
+    "verbatim_sentence": null
+   }
+  }
+ ],
+ "links": []
+}

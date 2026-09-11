@@ -1,0 +1,76 @@
+{
+ "records": [
+  {
+   "key": "record-p2-c1",
+   "category": "decision",
+   "kind": "conversation",
+   "body": {
+    "title": "load-bearing (SUPERSEDED by current workspace info)",
+    "date": "2026-07-08",
+    "messages": [
+     {
+      "role": "user",
+      "at": "2026-07-08 15:41",
+      "text": "The product DBs need a real maintenance pass nightly — vacuum, reindex, integrity check. What's the cleanest way to run it from here?"
+     },
+     {
+      "role": "assistant",
+      "at": "2026-07-08 15:44",
+      "text": "The straightforward path is the maintenance script from the bastion: it sshes in, then runs scripts/maint_v1.sh with the target DB name. That covers vacuum, reindex, and the integrity check in one pass."
+     },
+     {
+      "role": "user",
+      "at": "2026-07-08 15:46",
+      "text": "Works for me. DECISION: quarryline-ci nightly DB maintenance runs via cron on the bastion — scripts/maint_v1.sh at 02:30, targeting the product DBs."
+     },
+     {
+      "role": "assistant",
+      "at": "2026-07-08 15:48",
+      "text": "Recorded. That's the maintenance path until we say otherwise."
+     }
+    ],
+    "verbatim_sentence": "DECISION: quarryline-ci nightly DB maintenance runs via cron on the bastion — scripts/maint_v1.sh at 02:30, targeting the product DBs."
+   }
+  },
+  {
+   "key": "record-p2-c2",
+   "category": "decision",
+   "kind": "conversation",
+   "body": {
+    "title": "filler (irrelevant)",
+    "date": "2026-08-01",
+    "messages": [
+     {
+      "role": "user",
+      "at": "2026-08-01 10:12",
+      "text": "The README still shows build badges for the old jenkins instance. Drop them."
+     },
+     {
+      "role": "assistant",
+      "at": "2026-08-01 10:15",
+      "text": "Removed the jenkins badges; the README now links only the current pipeline board."
+     }
+    ],
+    "verbatim_sentence": null
+   }
+  },
+  {
+   "key": "record-p2-d2-current",
+   "category": "decision",
+   "kind": "lineage-mirror",
+   "body": {
+    "title": "current decision (mirrors workspace doc)",
+    "source_doc": "MAINTENANCE.md (2026-09-10)",
+    "decision": "maintenance runs through the scheduler service as job `maint` via `schedulerctl run maint`; D1 is decommissioned."
+   }
+  }
+ ],
+ "links": [
+  {
+   "from_key": "record-p2-c1",
+   "to_key": "record-p2-d2-current",
+   "relationship": "supersedes",
+   "reason": "STUDY-P1 lineage map (P1-2-quarryline-ci): current replaces D1 scope=all environments"
+  }
+ ]
+}

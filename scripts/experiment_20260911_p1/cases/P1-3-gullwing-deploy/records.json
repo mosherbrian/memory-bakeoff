@@ -1,0 +1,86 @@
+{
+ "records": [
+  {
+   "key": "record-p3-c1",
+   "category": "decision",
+   "kind": "conversation",
+   "body": {
+    "title": "load-bearing (partially superseded: production scope)",
+    "date": "2026-06-12",
+    "messages": [
+     {
+      "role": "user",
+      "at": "2026-06-12 10:02",
+      "text": "We keep improvising deploys per environment. Can we standardize how gullwing-deploy ships builds?"
+     },
+     {
+      "role": "assistant",
+      "at": "2026-06-12 10:05",
+      "text": "The in-house process fits both targets: scripts/pull_deploy.sh runs on the target host, pulls the tagged build, swaps the symlink, and reloads. Same flow works for staging and production."
+     },
+     {
+      "role": "user",
+      "at": "2026-06-12 10:07",
+      "text": "Good enough to standardize on. DECISION: gullwing-deploy ships every environment — staging and production alike — with the pull-deploy process (scripts/pull_deploy.sh)."
+     },
+     {
+      "role": "assistant",
+      "at": "2026-06-12 10:09",
+      "text": "Recorded as the standard for all environments."
+     }
+    ],
+    "verbatim_sentence": "DECISION: gullwing-deploy ships every environment — staging and production alike — with the pull-deploy process (scripts/pull_deploy.sh)."
+   }
+  },
+  {
+   "key": "record-p3-c2",
+   "category": "decision",
+   "kind": "conversation",
+   "body": {
+    "title": "filler (irrelevant)",
+    "date": "2026-07-20",
+    "messages": [
+     {
+      "role": "user",
+      "at": "2026-07-20 09:30",
+      "text": "August on-call flips to the platform duo on the 1st. Update the rotation page."
+     },
+     {
+      "role": "assistant",
+      "at": "2026-07-20 09:33",
+      "text": "Rotation page updated; the platform duo is primary from 2026-08-01."
+     }
+    ],
+    "verbatim_sentence": null
+   }
+  },
+  {
+   "key": "record-p3-d2-current",
+   "category": "decision",
+   "kind": "lineage-mirror",
+   "body": {
+    "title": "current decision (mirrors workspace doc)",
+    "source_doc": "DEPLOY.md (2026-09-05)",
+    "decision": "production ships via flux-managed GitOps."
+   }
+  },
+  {
+   "key": "record-p3-d1-staging",
+   "category": "decision",
+   "kind": "scope-derivative",
+   "body": {
+    "title": "staging deploy strategy (scope derivative of the 2026-06-12 decision)",
+    "scope": "staging",
+    "decision": "DECISION: gullwing-deploy ships every environment — staging and production alike — with the pull-deploy process (scripts/pull_deploy.sh)."
+   }
+  }
+ ],
+ "links": [
+  {
+   "from_key": "record-p3-c1",
+   "to_key": "record-p3-d2-current",
+   "relationship": "supersedes",
+   "reason": "STUDY-P1 lineage map (P1-3-gullwing-deploy): current replaces D1 scope=production-only; staging preserved by the d1-staging derivative"
+  }
+ ]
+}
