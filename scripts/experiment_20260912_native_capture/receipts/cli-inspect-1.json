@@ -1,0 +1,90 @@
+--- scan-pre-admission
+{
+ "body": {
+  "has_more": false,
+  "items": [],
+  "next_cursor": null,
+  "total": 0
+ },
+ "isError": false
+}
+--- history-note-1
+{
+ "body": {
+  "category": "capture",
+  "key": "production-deploys-with-docker-compose",
+  "limit": 20,
+  "offset": 0,
+  "returned": 0,
+  "total": 0,
+  "versions": []
+ },
+ "isError": false
+}
+--- history-note-2
+{
+ "body": {
+  "category": "capture",
+  "key": "production-now-uses-helm-development-still-uses-docker-compose",
+  "limit": 20,
+  "offset": 0,
+  "returned": 0,
+  "total": 0,
+  "versions": []
+ },
+ "isError": false
+}
+--- get-entity-note-1
+{
+ "body": {
+  "content": [
+   {
+    "text": "Entity not found: mem-c15fbc19e031",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}
+--- get-entity-note-2
+{
+ "body": {
+  "content": [
+   {
+    "text": "Entity not found: mem-a68d598b37e3",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}
+--- recall-pre-admission
+{
+ "body": {
+  "diagnostic": {
+   "active_memories": 4,
+   "embedded_memories": 4,
+   "hint": "the store is populated and the backend is healthy \u2014 this query simply had no matches; broaden the query or mode before assuming a fault",
+   "reason": "no_match",
+   "semantic_recall": "available"
+  },
+  "items": [],
+  "outcome": {
+   "abstained": true,
+   "backend_health": {
+    "active_memories": 4,
+    "embedded_memories": 4,
+    "enabled": true,
+    "pending_embed_jobs": 0,
+    "query_embedding_available": true
+   },
+   "completeness": "Abstain",
+   "reason": "no_match",
+   "status": "Empty"
+  },
+  "total": 0
+ },
+ "isError": false
+}

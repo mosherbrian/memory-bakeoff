@@ -1,0 +1,91 @@
+--- agent-register
+{
+ "body": {
+  "agent": {
+   "agent_id": "probe-operator",
+   "fleet_id": "",
+   "name": "probe operator",
+   "trust_tier": 3
+  },
+  "created": true,
+  "found": true
+ },
+ "isError": false
+}
+--- authority-set
+{
+ "body": {
+  "agent_id": "probe-operator",
+  "allowed_capabilities": [
+   "memory.admission.review"
+  ],
+  "allowed_inbound_principals": [],
+  "approval_required_capabilities": [],
+  "approver_principals": [
+   "probe-operator"
+  ],
+  "capability_constraints_json": "{}",
+  "created_at_unix_ms": 1789168769800,
+  "expires_at_unix_ms": null,
+  "id": "auth-85c3166969494307b78f0e7c641af66e",
+  "max_parallel_actions": 1,
+  "mode": "enforce",
+  "permitted_external_ref_prefixes": [],
+  "revoked_at_unix_ms": null,
+  "scope_anchors": [
+   "ws-probe-native"
+  ],
+  "version": 1,
+  "workspace_hash": "ws-probe-native"
+ },
+ "isError": false
+}
+--- admit-note-1
+{
+ "body": {
+  "content": [
+   {
+    "text": "admission_decide candidate has no admission evidence",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}
+--- admit-note-2
+{
+ "body": {
+  "content": [
+   {
+    "text": "admission_decide candidate has no admission evidence",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}
+--- scan-post-admission-attempt
+{
+ "body": {
+  "has_more": false,
+  "items": [],
+  "next_cursor": null,
+  "total": 0
+ },
+ "isError": false
+}
+--- recall-post-admission-attempt
+{
+ "body": {
+  "content": [
+   {
+    "text": "recall denied: agent probe-operator lacks required capability memory.read (manifest allows: memory.admission.review)",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}

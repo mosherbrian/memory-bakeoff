@@ -1,0 +1,176 @@
+--- capture-1
+{
+ "body": {
+  "candidates": 1,
+  "captured": 1,
+  "created": 1,
+  "distiller": "rule_based",
+  "dropped": 0,
+  "dry_run": false,
+  "merged": 0,
+  "notes": [
+   {
+    "action": "created",
+    "id": "mem-fe202f618b28",
+    "key": "production-deploys-with-docker-compose",
+    "summary": "Production deploys with Docker Compose.",
+    "type": "takeaway"
+   }
+  ],
+  "proposed": true,
+  "provenance": {
+   "hash_only": true,
+   "state": "proposed",
+   "writer": "capture"
+  },
+  "requires_review": true,
+  "transcript": {
+   "id": "mem-fba10ae2f882",
+   "key": "transcript-c72618599614bf90",
+   "retained": true
+  },
+  "updated": 0
+ },
+ "isError": false
+}
+--- capture-2
+{
+ "body": {
+  "candidates": 1,
+  "captured": 1,
+  "created": 1,
+  "distiller": "rule_based",
+  "dropped": 0,
+  "dry_run": false,
+  "merged": 0,
+  "notes": [
+   {
+    "action": "created",
+    "id": "mem-d89c06fdea42",
+    "key": "production-now-uses-helm-development-still-uses-docker-compose",
+    "summary": "Production now uses Helm. Development still uses Docker Compose.",
+    "type": "takeaway"
+   }
+  ],
+  "proposed": true,
+  "provenance": {
+   "hash_only": true,
+   "state": "proposed",
+   "writer": "capture"
+  },
+  "requires_review": true,
+  "transcript": {
+   "id": "mem-b3485013b4f6",
+   "key": "transcript-187be4a58e88ead3",
+   "retained": true
+  },
+  "updated": 0
+ },
+ "isError": false
+}
+--- scan-pre-admission
+{
+ "body": {
+  "has_more": false,
+  "items": [],
+  "next_cursor": null,
+  "total": 0
+ },
+ "isError": false
+}
+--- recall-pre-admission
+{
+ "body": {
+  "diagnostic": {
+   "active_memories": 4,
+   "embedded_memories": 4,
+   "hint": "the store is populated and the backend is healthy \u2014 this query simply had no matches; broaden the query or mode before assuming a fault",
+   "reason": "no_match",
+   "semantic_recall": "available"
+  },
+  "items": [],
+  "outcome": {
+   "abstained": true,
+   "backend_health": {
+    "active_memories": 4,
+    "embedded_memories": 4,
+    "enabled": true,
+    "pending_embed_jobs": 0,
+    "query_embedding_available": true
+   },
+   "completeness": "Abstain",
+   "reason": "no_match",
+   "status": "Empty"
+  },
+  "total": 0
+ },
+ "isError": false
+}
+--- agent-register
+{
+ "body": {
+  "agent": {
+   "agent_id": "probe-operator",
+   "fleet_id": "",
+   "name": "probe operator",
+   "trust_tier": 3
+  },
+  "created": true,
+  "found": true
+ },
+ "isError": false
+}
+--- authority-set
+{
+ "body": {
+  "agent_id": "probe-operator",
+  "allowed_capabilities": [
+   "memory.admission.review"
+  ],
+  "allowed_inbound_principals": [],
+  "approval_required_capabilities": [],
+  "approver_principals": [
+   "probe-operator"
+  ],
+  "capability_constraints_json": "{}",
+  "created_at_unix_ms": 1789168769937,
+  "expires_at_unix_ms": null,
+  "id": "auth-b2f585619a784517816b68302be262d1",
+  "max_parallel_actions": 1,
+  "mode": "enforce",
+  "permitted_external_ref_prefixes": [],
+  "revoked_at_unix_ms": null,
+  "scope_anchors": [
+   "ws-probe-native"
+  ],
+  "version": 1,
+  "workspace_hash": "ws-probe-native"
+ },
+ "isError": false
+}
+--- admit-note-1
+{
+ "body": {
+  "content": [
+   {
+    "text": "admission_decide candidate has no admission evidence",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}
+--- recall-post-admission-attempt
+{
+ "body": {
+  "content": [
+   {
+    "text": "recall denied: agent probe-operator lacks required capability memory.read (manifest allows: memory.admission.review)",
+    "type": "text"
+   }
+  ],
+  "isError": true
+ },
+ "isError": true
+}
