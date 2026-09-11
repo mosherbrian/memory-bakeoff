@@ -32,10 +32,15 @@ Operationalizations (documented for the reviewer):
 - Rule 4: both comparators reported - C vs B (cost of supersession) and
   C vs A (cost of recall vs baseline) on same case+rep successful pairs.
 """
-import json, re, sys
+import json, os, re, sys
 from pathlib import Path
 
-PRIVATE = Path("/var/home/bmosher/.local/share/memory-bakeoff/experiment-20260911-p1")
+# P1B rerun: same frozen decision logic; the evidence dir is overridable so
+# this script can evaluate the p1b ledger (EXPERIMENT_P1_PRIVATE convention
+# used by run_p1.py). Default remains the original p1 walk.
+PRIVATE = Path(os.environ.get(
+    "EXPERIMENT_P1_PRIVATE",
+    "/var/home/bmosher/.local/share/memory-bakeoff/experiment-20260911-p1"))
 RUNS = PRIVATE / "runs"
 rows = [json.loads(l) for l in (PRIVATE / "ledger.jsonl").read_text().splitlines() if l.strip()]
 

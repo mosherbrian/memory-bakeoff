@@ -182,8 +182,14 @@ export default function (pi: any) {
         const limit = typeof params.limit === "number" && params.limit >= 1
           ? params.limit : config!.limit;
         const hits = await srv.recall(params.query, limit, config!.workspaceHash);
-        if (hits.length === 0) return "No prior-session records matched that query.";
-        return hits.map((h: any) => {
+        // P1B fix: return the MCP tool-result shape — a bare string is recorded
+        // in the execution stream but delivered to the model as an EMPTY
+        // toolResult (STUDY-20260911-P1 root cause 1). Same shape as
+        // pi-project-recall/index.ts.
+        if (hits.length === 0) {
+          return { content: [{ type: "text", text: "No prior-session records matched that query." }] };
+        }
+        const text = hits.map((h: any) => {
           const body = typeof h.body_json === "string" ? h.body_json
             : JSON.stringify(h.body_json ?? h.assertion_text ?? h, null, 1);
           return `[project_recall] key=${h.key} id=${h.id} recorded=${h.created_at_unix_ms}`
@@ -191,8 +197,9 @@ export default function (pi: any) {
             + (h.valid_to_unix_ms ? ` valid_to=${h.valid_to_unix_ms}` : "")
             + `\n${body}`;
         }).join("\n---\n");
+        return { content: [{ type: "text", text }] };
       } catch (e: any) {
-        return `project_recall failed: ${e?.message ?? e}`;
+        return { content: [{ type: "text", text: `project_recall failed: ${e?.message ?? e}` }] };
       }
     },
   });
