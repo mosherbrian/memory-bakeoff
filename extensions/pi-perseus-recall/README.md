@@ -81,20 +81,49 @@ before.
     "defaultEnvironment": "project",
     "allowAgentConfirmed": false,            // the 7a exception switch
     "notifyFile": null,                      // default <vaultDir>/notifications.jsonl
-    "notifiers": ["in-session", "file"]      // known: in-session, file, noop
+    "notifiers": ["in-session", "file"],     // known: in-session, file, noop, clawdbot-signal
+    "signal": {                              // required only for "clawdbot-signal"
+      "account": "<daemon signal account>",  // e.g. from ~/clawdbot/trigger-*.py
+      "recipients": ["<recipient uuid>"],    // typically the operator
+      "url": "http://127.0.0.1:8081/api/v1/rpc", // default; signal-cli JSON-RPC
+      "timeoutMs": 10000
+    }
   }
 }
 ```
 
 Kill switch: `PI_PERSEUS_RECALL=0` disables the whole extension.
 
-## Notifier seam (7b — stub only)
+## Notifier seam (7b, as amended — clawdbot Signal wired)
 
 `notifier.ts` defines the `WriteNotifier` interface fired whenever a draft
-waits for the operator. `in-session` marks the draft tool result as the
-prompt; `file` appends one JSONL line per pending draft. The out-of-band
-Signal sender for automated experiments is deliberately NOT built — it pins
-here later as one more `WriteNotifier` implementation, nothing else changes.
+waits for the operator. Channels:
+
+- `in-session` — the draft tool result IS the confirmation prompt.
+- `file` — one JSONL line per pending draft (stub).
+- `clawdbot-signal` — a real sender behind the seam, wired per Brian's
+  amendment confirming clawdbot as the Signal channel. It POSTs the
+  clawdbot envelope (`method: "send"`) to the local signal-cli daemon
+  (JSON-RPC, default `http://127.0.0.1:8081/api/v1/rpc`, daemon 0.14.1 —
+  the exact send-path clawdbot's `~/clawdbot/trigger-*.py` scripts use,
+  verified read-only 2026-09-11 via the `version` method). Best-effort and
+  never blocking: a failed send never blocks the gate or the in-session
+  prompt. **The daemon account and recipient UUIDs are operator
+  identifiers — they are read from `perseusRecall.write.signal`, never
+  hardcoded in the repo.** Requesting the channel without valid signal
+  config is rejected loudly and the channel is dropped; the remaining
+  channels stay active.
+
+Opt-in live one-shot test (operator-run; sends one real Signal):
+
+```
+bun -e 'import {ClawdbotSignalNotifier} from "./extensions/pi-perseus-recall/notifier.ts";
+new ClawdbotSignalNotifier({account:"<account>",recipients:["<uuid>"],url:"http://127.0.0.1:8081/api/v1/rpc",timeoutMs:10000})
+.notify({kind:"pending_confirmation",at:new Date().toISOString(),draft_id:"draft-test",confirmation_code:"00000000",tool:"manual-test",summary:"live-path check",expires_at:new Date().toISOString(),agent_confirmed_allowed:false}).then(console.log)'
+```
+
+Tests never send: the transport is injected in unit tests, and the wiring
+test uses a dead endpoint.
 
 ## Test + smoke
 

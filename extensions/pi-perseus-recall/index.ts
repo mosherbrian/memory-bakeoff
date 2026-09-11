@@ -34,10 +34,12 @@
  * confirms the write. The old record's environment is verified against the
  * vault's own stored value, fail-closed.
  *
- * Notifier seam (7b): the confirmation gate notifies the operator through
- * a clean WriteNotifier interface (in-session + file stubs). The Signal
- * sender for automated experiments is deliberately NOT built; its send-path
- * gets pinned separately. See notifier.ts.
+ * Notifier seam (7b, as amended): the confirmation gate notifies the
+ * operator through a clean WriteNotifier interface — in-session + file
+ * stubs, plus the clawdbot Signal channel wired behind the seam (local
+ * signal-cli daemon JSON-RPC "send", the exact path clawdbot's own
+ * trigger scripts use; account/recipients come from settings.json, never
+ * hardcoded). See notifier.ts.
  *
  * Provenance (recorded per conductor instruction, mandatory in every run
  * record + results doc): study binary
@@ -68,7 +70,7 @@ import {
 } from "./records.ts";
 import { evaluateScopeGuard, verifySourceRecord, OVERRIDE_PARAM } from "./guard.ts";
 import { ConfirmationGate, type PendingOperation, type ConfirmOutcome, type DraftPresentation } from "./gate.ts";
-import { notifierFromConfig } from "./notifier.ts";
+import { notifierFromConfig, validateSignalConfig, type ClawdbotSignalConfig } from "./notifier.ts";
 
 interface WriteConfig {
   enabled: boolean;
@@ -76,6 +78,7 @@ interface WriteConfig {
   allowAgentConfirmed: boolean;
   notifyFile: string | null;
   notifiers: string[];
+  signal: ClawdbotSignalConfig | null;
 }
 
 interface PerseusRecallConfig {
@@ -89,7 +92,7 @@ interface PerseusRecallConfig {
 
 const DEFAULTS = { limit: 5 };
 
-const KNOWN_NOTIFIERS = ["in-session", "file", "noop"];
+const KNOWN_NOTIFIERS = ["in-session", "file", "noop", "clawdbot-signal"];
 
 function loadConfig(): { config: PerseusRecallConfig | null; problems: string[] } {
   const problems: string[] = [];
@@ -124,6 +127,7 @@ function loadConfig(): { config: PerseusRecallConfig | null; problems: string[] 
     allowAgentConfirmed: false,
     notifyFile: null,
     notifiers: ["in-session", "file"],
+    signal: null,
   };
   if (typeof writeRaw !== "object" || Array.isArray(writeRaw)) {
     problems.push("perseusRecall.write must be an object - using all write defaults");
@@ -154,11 +158,19 @@ function loadConfig(): { config: PerseusRecallConfig | null; problems: string[] 
         write.notifyFile = writeRaw.notifyFile;
       }
     }
+    // 7b amendment: clawdbot Signal channel config (identifiers live here, never in the repo)
+    const signal = validateSignalConfig(writeRaw.signal);
+    for (const p of signal.problems) problems.push(p);
+    write.signal = signal.config;
     if (writeRaw.notifiers !== undefined) {
       const ok = Array.isArray(writeRaw.notifiers)
         && writeRaw.notifiers.every((n: unknown) => typeof n === "string" && KNOWN_NOTIFIERS.includes(n));
       if (!ok) {
         problems.push(`perseusRecall.write.notifiers must be a subset of ${JSON.stringify(KNOWN_NOTIFIERS)} - using default`);
+      } else if (Array.isArray(writeRaw.notifiers) && writeRaw.notifiers.includes("clawdbot-signal") && !write.signal) {
+        // requested but not usable: drop the channel loudly, keep the rest
+        problems.push('perseusRecall.write.signal (account + recipients) is required for the "clawdbot-signal" notifier - channel dropped');
+        write.notifiers = (writeRaw.notifiers as string[]).filter((n) => n !== "clawdbot-signal");
       } else {
         write.notifiers = writeRaw.notifiers;
       }
@@ -364,7 +376,7 @@ export default function (pi: any) {
 
   const gate = new ConfirmationGate(
     executor,
-    notifierFromConfig(writeCfg.notifiers, writeCfg.notifyFile ?? join(paths.vaultDir, "notifications.jsonl")),
+    notifierFromConfig(writeCfg.notifiers, writeCfg.notifyFile ?? join(paths.vaultDir, "notifications.jsonl"), writeCfg.signal),
     { allowAgentConfirmed: writeCfg.allowAgentConfirmed },
   );
 
