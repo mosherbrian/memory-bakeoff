@@ -242,3 +242,55 @@ projects and vocabulary; multi-session daily-use effects.
 Accounting: machine one 64.46 s pi run + tests (negligible); implementer
 ≈ 0.7 h (extension, tests, harness subcommand, trial, recording);
 implementer-harness token/cost figures unavailable, logged as unavailable.
+
+## f4 v2 — predeclared dispatch spec (recall-nudge-20260910.md) + trial-prerequisite verification (2026-09-10, ≈18:38–18:50 PDT)
+
+The full dispatch (`dispatch/recall-nudge-20260910.md`, funded by Brian)
+landed at 18:24 PDT — during the f4 v1 turn, which had only the dispatch
+title to work from. v1 (commit `2a8ab28`: context-event prompt transform)
+predates reading it and is superseded; history retained, nothing rewritten.
+v2 implements the dispatch's predeclared behavior exactly:
+
+- `session_start` reason `resume`/`fork` arms a once-per-process
+  resumption flag; `before_agent_start` evaluates gates per prompt and
+  injects at most ONE nudge (union, deduped): `onResume` (default true),
+  `everyPrompt` (default false), `everyNPrompts` (default 0; counter
+  in-memory, resets per Pi process — documented caveat for long-lived deck
+  workers).
+- Delivery: persistent visible message `{ customType: "recall-nudge",
+  content: "[recall-nudge] " + <F2 sentence>, display: true }` (message
+  injection the required default — matches what F2/f3 tested);
+  `delivery: "systemPrompt"` additionally appends to the system prompt.
+- Guard: inject only when project_recall is active this turn
+  (`selectedTools`, falling back to registration); else skip silently.
+- Config under `recallNudge` in the agent settings.json (pi-lcm's
+  mechanism); `PI_RECALL_NUDGE=0` kills everything; nonsensical config
+  rejected loudly with defaults holding; overlapping gates resolved as
+  union (predeclared implementer choice, documented + tested).
+- Tests 22/22 bun + node smoke + wiring tests through a fake pi handle;
+  sibling pi-project-recall untouched (byte-identical to reviewed f3
+  state, `git diff` empty) and still 12/12.
+
+**Deliverable 2 — trial-prerequisite verification (planner's check):
+TRIAL-PREREQUISITE RECEIPT: PASS.** ONE headless pi run, cwd
+/var/home/bmosher/acp-pi, ONLY pi-project-recall via `-e`, model
+`night/qwen3.8-27b-code` (the untested deck model), isolated agent dir
+with no packages (pi-lcm NOT loaded → no writer), LCM_DB_DIR at the real
+lcm dir; 67 s of the 480 s cap. Receipts (verbatim events):
+`project_recall` invoked **6 times** (tool_execution_start/end), queries
+["decision","work","constraint","acp pi agent","implement bug
+fix","summary"], all 6 results name the real store
+`.../lcm/84117073c4ead03d.db`, real prior conversation ids surfaced
+(`21592f51-adda…`, `6d7a5360-8961…`), 1 result RELAXATION-SOURCED, and the
+assistant answer cites them. Zero writes: the store files are byte- and
+meta-identical before/after (db sha256 `565711dd03fa…`; pre-existing
+wal/shm from the live deck worker untouched); acp-pi directory unchanged.
+**The deck model does invoke the tool when nudged — the trial's deck arm
+is viable.** Evidence: `~/.local/share/memory-bakeoff/rerun-20260910/trial-verify/`
+(RECEIPT.txt, stdout/stderr, store snapshots, isolated agent dir).
+
+Accounting (dispatch budget: implementer ≤ 30 min, machine ≤ 15 min):
+implementer ≈ 0.5 h (18:38–18:50 PDT + recording); machine 67 s run +
+tests. Implementer-harness token/cost figures unavailable, logged as
+unavailable. No benchmark runs, no rescoring, F1/F2/f3 records untouched,
+no settings.json edits (Brian installs extensions himself).

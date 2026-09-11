@@ -1,88 +1,110 @@
 # pi-recall-nudge
 
-Companion to
-[pi-project-recall](../pi-project-recall/): appends the fixed **F2 nudge
-sentence** to the first prompt of each session so the recall habit does not
-depend on the user remembering to type it. No tools, no writes.
+Companion to [pi-project-recall](../pi-project-recall/): automatically
+delivers the tested recall nudge so Brian's personal trial (planner
+recommendation: 5 session resumptions, same short nudge) needs no manual
+coaxing. No tools, no store access, no writes — it only injects a visible
+message on prompts its gates select.
 
-## Why this exists
+## What it injects
 
-The RERUN-20260910 evidence chain, in one line each:
-
-- **F1 (null):** with the store verifiably reachable and natural resume
-  prompts, the model used `project_recall` **0/8** — spontaneity is not there.
-- **F2 (descriptive, both criteria met):** with one fixed nudge sentence
-  appended to the prompt, the model used the tool **8/8**, and seeded
-  prior-session content surfaced and was used.
-- **f3 (exploratory, n=2, suggestive):** with read-path relaxation active,
-  the nudged runs flipped the failure-critical case from 0/4 to 2/2.
-
-This extension automates exactly the F2 intervention — same sentence, same
-delivery shape (appended to the current user prompt, seen on the model's
-first LLM call of the session) — so the prompted half of the habit is
-always on when the recall tool is installed.
-
-## What it does
-
-On the session's first LLM call, if all gates pass, the sentence
+By default, the exact F2 sentence (byte-for-byte, the wording F2/f3 tested):
 
 > Before you edit anything, use the project_recall tool to check this
 > project's past sessions for decisions or constraints relevant to the task.
 
-is appended to the current user prompt **for the model's eyes only** — the
-`context` event's message list is transformed per request; the session
-transcript and the pi-lcm store keep the prompt exactly as typed. Within
-that first turn the appended sentence is re-applied on every LLM call so the
-model's context stays consistent; later turns are untouched.
+delivered as a persistent, displayed session message —
+`[recall-nudge] <sentence>` — so every firing is visible in the UI and
+logged in the session file for the trial record. Message injection (not
+system-prompt) is the default because it matches what F2/f3 actually
+tested: the nudge riding in the message stream. A durable
+`pi-recall-nudge` session entry (`appendEntry`) records each firing with
+its gates and timestamp.
 
-Gates (any miss ⇒ quiet skip, logged to stderr with the reason):
+## Gates (union, deduped — at most ONE nudge per prompt)
 
-- `PI_RECALL_NUDGE=0` — runtime kill switch, no settings edit needed.
-- `project_recall` actually registered (never nudge toward a missing tool).
-- The project's store exists with ≥ 2 conversations — the live session plus
-  at least one prior one. Fresh projects have nothing to recall and stay
-  quiet.
-- The prompt does not already contain the sentence (no double-appending).
-- `project_recall` not already invoked this session.
+| Gate | Default | Fires on |
+|---|---|---|
+| `onResume` | `true` | the first prompt after a `session_start` with reason `resume` or `fork` |
+| `everyPrompt` | `false` | every prompt |
+| `everyNPrompts` | `0` (off) | every Nth prompt, N ≥ 1 |
 
-Receipts, not claims: every application (and every skip) emits one stderr
-line and a durable `pi-recall-nudge` session entry via `appendEntry`.
+Overlapping gates never double-nudge: a prompt matching several gates gets
+one message, and the receipt names every gate that fired. The resumption
+window is the *first* prompt after resume/fork and is consumed even if that
+prompt is skipped (kill switch, absent tool) — it does not slide to the
+next prompt.
 
-## Install (one line, fully reversible)
+**Counter caveat (documented per dispatch):** the `everyNPrompts` counter
+is in-memory and resets per Pi process. A console Pi lives minutes; a deck
+worker's `pi --mode rpc` process can live for days — which is exactly why
+the gate exists — but restart the worker and the count starts over.
 
-Add the absolute path after `pi-project-recall` in `packages` in
-`~/.pi/agent/settings.json`:
+**Tool guard:** a nudge is injected only when `project_recall` is active
+this turn (the turn's `selectedTools`, falling back to registered tools);
+otherwise the extension skips silently — a nudge toward a nonexistent tool
+is noise.
+
+## Config (`recallNudge` key in the agent `settings.json`)
 
 ```json
-{ "packages": [
-    "/abs/path/to/extensions/pi-project-recall",
-    "/abs/path/to/extensions/pi-recall-nudge"
-] }
+{
+  "recallNudge": {
+    "enabled": true,
+    "nudge": "Before you edit anything, use the project_recall tool to check this project's past sessions for decisions or constraints relevant to the task.",
+    "onResume": true,
+    "everyPrompt": false,
+    "everyNPrompts": 0,
+    "delivery": "message"
+  }
+}
 ```
 
-Remove the line to uninstall. Nothing is ever written; there is no state to
-clean up. Without `pi-project-recall` the extension stays silent.
+- `delivery`: `"message"` (default, required mode) — the visible session
+  message; `"systemPrompt"` — that message **plus** the sentence appended
+  to the system prompt.
+- `PI_RECALL_NUDGE=0` in the environment overrides everything (mirrors
+  `PI_PROJECT_RECALL=0`).
+- Nonsensical values (wrong types, negative/fractional N, unknown keys) are
+  rejected **loudly** at load: an explicit notice names the key and the
+  default that took its place.
 
-## Properties
+### The two real trial regimes
 
-- **No tools, no writes**: only the per-request `context` transform plus
-  stderr/session-entry receipts.
-- **Read-only store check**: opens the store with `node:sqlite`'s readOnly
-  flag (WAL-permitted alongside pi-lcm's writer) to count conversations,
-  then closes it. Any error means "do not nudge" — this extension must
-  never be the reason a request fails.
-- **No dependencies**: node builtins only (Pi 0.84.4 runs under node
-  ≥ 22.13; `bun:sqlite` fallback for store parity with the sibling
-  extension).
+Console, resume-only (the default config — install and forget):
+
+```json
+{ "recallNudge": { "onResume": true } }
+```
+
+agent-deck long-lived worker — nudge every 4th prompt because the worker
+process survives for days and `resume` only fires on respawns:
+
+```json
+{ "recallNudge": { "onResume": true, "everyNPrompts": 4 } }
+```
+
+## Install / uninstall (one line, fully reversible)
+
+Add the absolute path to `packages` in the agent `settings.json` (the same
+mechanism pi-lcm uses; `pi-project-recall/` itself stays untouched):
+
+```json
+{ "packages": ["/abs/path/to/extensions/pi-recall-nudge"] }
+```
+
+Remove the line to uninstall. Without `project_recall` registered the
+extension stays silent.
 
 ## Tests
 
 ```bash
-bun test extensions/pi-recall-nudge/                     # unit + gate controls
-node extensions/pi-recall-nudge/test/node_smoke.ts       # node:sqlite runtime smoke
+bun test extensions/pi-recall-nudge/                # 22 unit tests
+node extensions/pi-recall-nudge/test/node_smoke.ts  # node-runtime smoke
 ```
 
-Controls included: the sentence is the predeclared F2 wording verbatim;
-append is idempotent and never mutates message objects; every gate skips
-with its reason; mid-turn consistency holds and later turns are untouched;
-a 1-conversation (fresh-project) store yields no nudge.
+Controls included: the sentence is the F2 wording byte-for-byte;
+resume-only, everyPrompt and every-N gating (including the per-process
+counter reset), union dedupe, tool-absent skip, env kill switch, loud
+config rejection with defaults holding, and the required delivery shape
+(`customType: "recall-nudge"`, `[recall-nudge] ` prefix, `display: true`).
