@@ -31,9 +31,12 @@ received record content (mean 2–3 delivered recall results per slot).
 | P1-3 gullwing-deploy (scope-preservation) | pass / pass | fail / pass | fail / pass |
 | P1-4 cobalt-invoice (current-only-noise) | fail / pass | pass / pass | pass / pass |
 
-`†` contaminated (out-of-bounds host reads, NO answer transfer — see
-Contamination section). `††` contaminated (answer extracted from the study
-ledger — the pass is void in-substance). Both P1-1 A slots reclassified
+`†` contaminated reads but NO answer transfer — the failure remains
+usable as the one CLEAN history-case failure. `††` answer extracted from
+the study ledger — pass void and EXCLUDED (not a clean fail). Planner
+classification (handover 2026-09-11): the A side of
+P1-1 = one clean history-case failure (a-rep1) + one excluded
+contaminated repetition (a-rep2). Both slots reclassified
 2026-09-11 on reviewer verification; frozen ledger verdicts stand.
 
 **Every frozen-verifier FAIL decomposes to two verifier spelling artifacts
@@ -66,8 +69,10 @@ arms B or C:**
   — meaning the expected concurrency value is **3**. This is confirmed
   by all passing runs (arms B and C)…"; final answer: "**Why:** The
   experiment verifier (`R2_concurrency_is_3`) explicitly checks that the
-  concurrency setting equals 3." Not luck — extraction. In-substance,
-  the memory-less baseline FAILS P1-1 in both reps.
+  concurrency setting equals 3." Not luck — extraction. Planner
+  classification (handover 2026-09-11): the A side of P1-1 is ONE CLEAN
+  HISTORY-CASE FAILURE (a-rep1) + ONE EXCLUDED CONTAMINATED REPETITION
+  (a-rep2 — excluded, not a clean fail).
 - **P1-4 a-rep1** (degenerate 5,077-token run wrote `csv`/`2`/90;
   a-rep2 normal pass; scan-confirmed clean) → A fail/pass. B/C passed
   4/4 WITH the noise records delivered — the no-regression-from-noise
@@ -135,18 +140,22 @@ EXPERIMENT_P1_PRIVATE=…-p1b)
    substance, now with delivered-level proof that the failure mode had
    its chance in B and did not fire.
 3. **C improves ≥1 history-dependent case over A in BOTH repetitions, no
-   regression elsewhere: NOT MET (frozen emission) — substantively MET
-   after the contamination reclassification.** The frozen ledger credits
-   A with a P1-1 rep2 pass; that pass is void (answer extracted from the
-   study ledger — Contamination section), so in-substance the memory-less
-   baseline FAILS P1-1 in both reps while B and C pass both, applying the
-   seeded license decision verbatim (P1-1 c-rep1 final answer: "The
-   license server hard-drops connections when more than 3 concurrent
-   exports are in flight… Capping concurrency at 3…", at ~9 s / ~11 K
-   tokens). The only "regression elsewhere" is the P1-3 R2 phrasing
-   artifact, which hits B and C identically — not a C-specific
-   regression. History-improvement condition: substantively MET on P1-1;
-   frozen verdict stands in the ledger.
+   regression elsewhere: NOT MET (frozen emission) — corrected reading
+   uses the planner's precise classification (planner handover
+   2026-09-11): the A side of P1-1 is ONE CLEAN HISTORY-CASE FAILURE
+   (a-rep1) + ONE EXCLUDED CONTAMINATED REPETITION (a-rep2 — its pass is
+   void and EXCLUDED, not counted as a clean fail). B and C pass both
+   repetitions, applying the seeded license decision verbatim (P1-1
+   c-rep1 final answer: "The license server hard-drops connections when
+   more than 3 concurrent exports are in flight… Capping concurrency at
+   3…", at ~9 s / ~11 K tokens), and the improvement holds on every
+   clean A repetition available (one: rep1, where clean A failed at
+   34.5 s / 67.9 K tokens). The both-repetitions contrast is therefore
+   one-sided in clean data: improvement is DEMONSTRATED ON THE SINGLE
+   CLEAN A REPETITION, not "A fails both reps". The only "regression
+   elsewhere" is the P1-3 R2 phrasing artifact, which hits B and C
+   identically — not a C-specific regression. Frozen verdict stands in
+   the ledger.
 4. **Overhead within 25%: WITHIN (both comparators; corrected-pair note
    below).** Frozen emission: C vs B (5 pairs) wall −1.8%, tokens +1.7%;
    C vs A (3 pairs) wall −47.4%, tokens −66.9%. **Corrected pairs**
@@ -214,9 +223,11 @@ repair turn):
   vault fully co-returning stale+current 4/4. Suppression is at the
   delivery boundary, before model context — the stale instruction never
   exists in C's world.
-- **Practical (bounded by what fired):** recall benefit realized (P1-1:
-  B/C 4/4 vs A 0/2 in-substance — both A slots contaminated, the void
-  pass having extracted the answer from the study ledger); cost parity
+- **Practical (bounded by what fired):** recall benefit realized on the
+  clean evidence available (P1-1: B/C 4/4 passes; A = one clean failure
+  (a-rep1) + one excluded contaminated repetition (a-rep2, void pass
+  extracted from the study ledger) — planner classification, handover
+  2026-09-11); cost parity
   on clean comparable pairs with the baseline (C vs A wall −0.5% /
   tokens +1.2%), with B/C completing P1-1 at ~9 s / ~11 K tokens while
   the clean A exploration failed at 34.5 s / 67.9 K tokens; no noise
@@ -228,9 +239,11 @@ repair turn):
   unproven by absence of the failure itself — what IS proven is that
   supersession changes what the model can see (stale record in B's
   context, never in C's).
-- **Bounds:** 4 cases × 2 reps; both P1-1 A slots contaminated (one
-  answer-bearing, one access-only), one degenerate P1-4 A run —
-  single-run effects can flip frozen operationalizations, reported
+- **Bounds:** 4 cases × 2 reps; the A side of P1-1 is one clean failure +
+  one excluded contaminated repetition (planner classification, handover
+  2026-09-11 — the both-repetitions contrast on P1-1 is one-sided in
+  clean data), plus one degenerate P1-4 A run — single-run effects can
+  flip frozen operationalizations, reported
   as-is with corrected readings; frozen verifiers certify
   spelling-strict outcomes (two documented artifacts); planner's
   "supersession given correct lineage" framing retained (discovery out
