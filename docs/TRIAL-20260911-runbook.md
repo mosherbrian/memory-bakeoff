@@ -114,6 +114,28 @@ Nothing writes without Brian's code. `confirmed_by: "agent"` is refused
 (`allowAgentConfirmed: false`). Draft TTL 60 min; 5 wrong codes destroy the
 draft. TTL expiry is SAFE: the draft is dropped, nothing was ever written.
 
+### Draft presentation format (REQUIRED)
+
+Trial finding #1 (Brian, first live cycle): the mechanical draft output was
+not self-explanatory — he confirmed without being 100% sure what he was
+confirming. Every time the worker presents a draft for confirmation, it
+MUST open with a plain-language block, in this shape, before any
+mechanical details:
+
+> **I want to save this decision:** \<one sentence, no jargon\>
+> **Where:** \<vault path\>
+> **If you confirm:** this ONE record becomes persistent memory I will
+> retrieve in later sessions.
+> **If you ignore:** nothing happens — the draft expires in 60 minutes.
+
+For the trial the vault path is `/home/bmosher/acp-pi/trial.vault`. Only
+after that block come the mechanical details (record fields, `draft_id`,
+`confirmation_code`, expiry) so the operator can act. The code must still
+be presented verbatim — it is the gate. The same discipline applies to a
+`project_perseus_supersede` draft: say in plain language what the NEW
+decision is and that confirming retires the OLD one ("the old record stops
+showing up when I search").
+
 ## 2. Conductor side
 
 **Primary detection — poll the notify file** (pi-acp sessions may not fire
