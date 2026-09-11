@@ -73,13 +73,36 @@ this build (labeled per the provenance block: this linux-x86_64 binary is
 source-identical, NOT byte-identical, to the Gen21-measured arm64
 artifact).
 
+**Delivered vs stream — the two levels, and why only one of them is
+behavioral.** The frozen rule-1 operationalization (`decide_p1.py`
+`keys_surfaced`) regexes the run's stdout, which includes harness-side
+`tool_execution_end` events: it measures the STREAM — what the
+vault/adapter emitted — not what the model received. The p1 walk's
+rule-1 MET was exactly this level, and it was fully compatible with the
+delivery defect: stream showed every key (46/46 recall executions) while
+model-visible toolResults were empty 16/16, so MET-at-stream coexisted
+with zero behavioral effect. P1B measures both levels independently
+(`delivery.jsonl`, G1 parity per toolCallId) and they AGREE in all 16 B/C
+slots: every record key present in a streamed recall result is present in
+the delivered toolResult text, with nothing extra delivered and nothing
+dropped. Rule 1 is therefore MET at BOTH levels in P1B, and the delivered
+level — the one that can influence behavior — is what the table above
+documents. This distinction is also the retroactive explanation of p1:
+identical stream evidence, empty delivered channel.
+
 ## Decision-rule evaluation (planner's four; frozen decide_p1.py emission,
 EXPERIMENT_P1_PRIVATE=…-p1b)
 
 1. **C retrieves the applicable replacement without presenting the
    superseded instruction as current, while preserving valid
-   differently-scoped records: MET** — and now evidenced at the delivered
-   level (table above), not merely the adapter stream.
+   differently-scoped records: MET at BOTH levels.** The frozen
+   operationalization certifies the stream level (deprecated c1 absent
+   from C's stream 0/4 surfacings, current d2 4/4, d1-staging preserved
+   2/2, c1 present in B 4/4 — same as p1); the delivered-level gates add
+   the model-context proof (delivered-vs-stream section above): stale
+   record in B's context 4/4, NEVER in C's, current + scoped records
+   delivered to C 4/4. In p1 only the stream half held — which is why p1's
+   rule-1 MET did not translate into behavior.
 2. **C prevents a stale-action failure observed in B: NOT MET (frozen
    operationalization; C P1-2 fail/fail).** Corrected reading: **B never
    exhibited a stale-action failure** — NO_STALE_SELECTION 12/12 in P1-2,
