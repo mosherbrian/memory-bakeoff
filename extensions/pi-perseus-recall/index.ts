@@ -2,9 +2,11 @@
  * pi-perseus-recall: Pi recall path backed by a Perseus vault (MCP).
  *
  * STUDY-20260911-P1 adapter. Separate path by design: pi-project-recall/
- * and pi-recall-nudge/ stay untouched. Registers the SAME tool name
- * `project_recall` (same description text) so the untouched pi-recall-nudge
- * companion's active-tool guard and the F2-style nudge work unchanged.
+ * and pi-recall-nudge/ stay untouched. BUILD-20260911 decision 7d RENAMED
+ * this adapter's tool from `project_recall` to `project_perseus_recall`
+ * so both recall paths can be registered side by side: pi-project-recall
+ * keeps `project_recall`, and the untouched pi-recall-nudge companion
+ * keeps gating on `project_recall` (pi-project-recall's tool).
  *
  * The extension is READ-ONLY over the vault: it spawns `perseus-vault serve`
  * and speaks newline-delimited JSON-RPC on stdio, issuing only
@@ -160,10 +162,10 @@ export default function (pi: any) {
   };
 
   pi.registerTool({
-    name: "project_recall",
-    label: "Project Recall",
+    name: "project_perseus_recall",
+    label: "Project Recall (Perseus)",
     description:
-      "Search THIS PROJECT's memory store across ALL past sessions (not just this conversation): " +
+      "Search THIS PROJECT's Perseus decision memory across ALL past sessions (not just this conversation): " +
       "messages and summaries recorded by earlier sessions in the same project directory. " +
       "Use it to find decisions, rejected approaches, failure explanations and prior work state " +
       "from previous sessions. Every hit carries its timestamp and source session - check them: " +
@@ -192,17 +194,17 @@ export default function (pi: any) {
         const text = hits.map((h: any) => {
           const body = typeof h.body_json === "string" ? h.body_json
             : JSON.stringify(h.body_json ?? h.assertion_text ?? h, null, 1);
-          return `[project_recall] key=${h.key} id=${h.id} recorded=${h.created_at_unix_ms}`
+          return `[project_perseus_recall] key=${h.key} id=${h.id} recorded=${h.created_at_unix_ms}`
             + (h.status ? ` status=${h.status}` : "")
             + (h.valid_to_unix_ms ? ` valid_to=${h.valid_to_unix_ms}` : "")
             + `\n${body}`;
         }).join("\n---\n");
         return { content: [{ type: "text", text }] };
       } catch (e: any) {
-        return { content: [{ type: "text", text: `project_recall failed: ${e?.message ?? e}` }] };
+        return { content: [{ type: "text", text: `project_perseus_recall failed: ${e?.message ?? e}` }] };
       }
     },
   });
-  console.error("pi-perseus-recall: registered project_recall (Perseus vault, read-only, "
+  console.error("pi-perseus-recall: registered project_perseus_recall (Perseus vault, read-only, "
     + `db=${config.db})`);
 }
