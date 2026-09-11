@@ -1,0 +1,66 @@
+{
+ "conversations": [
+  {
+   "id": "seed-s1-c1",
+   "session_id": "seed-s1-c1-session",
+   "created_at": "2026-08-20T14:02:00.000Z",
+   "updated_at": "2026-08-20T14:08:00.000Z",
+   "messages": [
+    {
+     "role": "user",
+     "content_text": "We need staging deploys to stop being manual ssh snowflake work. Can we standardize?",
+     "timestamp": 1787234520000
+    },
+    {
+     "role": "assistant",
+     "content_text": "For what staging runs on today, the workable path is the VM: ssh deploy@staging-box-old, then run ./deploy_via_ansible.sh staging from the checkout. That wraps the ansible playbook and does health-gated rollout.",
+     "timestamp": 1787234700000
+    },
+    {
+     "role": "user",
+     "content_text": "Fine. DECISION: staging deploys go through the legacy VM \u2014 ssh deploy@staging-box-old, then ./deploy_via_ansible.sh staging. This is the only supported path for staging.",
+     "timestamp": 1787234760000
+    },
+    {
+     "role": "assistant",
+     "content_text": "Recorded. I'll use that path for every staging deploy until we say otherwise.",
+     "timestamp": 1787234880000
+    }
+   ],
+   "summaries": [
+    {
+     "depth": 1,
+     "text": "load-bearing (the superseded decision): DECISION: staging deploys go through the legacy VM \u2014 ssh deploy@staging-box-old, then ./deploy_via_ansible.sh staging. This is the only supported path for staging.",
+     "token_estimate": 50,
+     "created_at": "2026-08-20T14:02:00.000Z"
+    }
+   ]
+  },
+  {
+   "id": "seed-s1-c2",
+   "session_id": "seed-s1-c2-session",
+   "created_at": "2026-08-25T09:15:00.000Z",
+   "updated_at": "2026-08-25T09:17:00.000Z",
+   "messages": [
+    {
+     "role": "user",
+     "content_text": "The demo tenant needs fresher invoices before the sales call.",
+     "timestamp": 1787649300000
+    },
+    {
+     "role": "assistant",
+     "content_text": "Regenerated the demo tenant's invoices from the fixtures; amounts now show this quarter's numbers.",
+     "timestamp": 1787649420000
+    }
+   ],
+   "summaries": [
+    {
+     "depth": 1,
+     "text": "filler (irrelevant)",
+     "token_estimate": 4,
+     "created_at": "2026-08-25T09:15:00.000Z"
+    }
+   ]
+  }
+ ]
+}

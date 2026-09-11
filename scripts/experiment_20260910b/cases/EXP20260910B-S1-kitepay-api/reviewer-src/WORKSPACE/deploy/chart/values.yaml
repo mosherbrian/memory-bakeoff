@@ -1,0 +1,14 @@
+# Default values; per-environment overrides live in deploy/*-values.yaml.
+replicaCount: 2
+
+image:
+  repository: registry.internal/kitepay/kitepay-api
+  tag: "v0.9.1"
+
+service:
+  port: 8080
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi

@@ -1,0 +1,86 @@
+{
+ "conversations": [
+  {
+   "id": "seed-h1-c1",
+   "session_id": "seed-h1-c1-session",
+   "created_at": "2026-08-28T10:12:00.000Z",
+   "updated_at": "2026-08-28T10:20:00.000Z",
+   "messages": [
+    {
+     "role": "user",
+     "content_text": "Ops walked me through the host today. We need to lock the production serving setup for the dashboard before tonight.",
+     "timestamp": 1787911920000
+    },
+    {
+     "role": "assistant",
+     "content_text": "Understood. The reverse proxy (nginx) on that host fronts the app, so the app itself should never listen on a public interface \u2014 it must bind to 127.0.0.1 only and let the proxy handle the outside world.",
+     "timestamp": 1787912040000
+    },
+    {
+     "role": "user",
+     "content_text": "What about the port?",
+     "timestamp": 1787912100000
+    },
+    {
+     "role": "assistant",
+     "content_text": "Not 8080 \u2014 the metrics sidecar already owns 8080 on that host, which is why the staging attempt failed to start last week. Use port 4370 for the app.",
+     "timestamp": 1787912160000
+    },
+    {
+     "role": "user",
+     "content_text": "And certificates?",
+     "timestamp": 1787912280000
+    },
+    {
+     "role": "assistant",
+     "content_text": "TLS terminates at the nginx proxy, so the app must serve plain HTTP: keep tls OFF in the app config. If you enable tls in the app too you get a double-termination loop and the health checks die.",
+     "timestamp": 1787912340000
+    },
+    {
+     "role": "user",
+     "content_text": "Agreed. DECISION: ledger-web production serves on 127.0.0.1:4370, plain HTTP, TLS off in the app \u2014 the proxy terminates TLS. I'll put it in the deployment ticket too.",
+     "timestamp": 1787912400000
+    }
+   ],
+   "summaries": [
+    {
+     "depth": 1,
+     "text": "load-bearing: DECISION: ledger-web production serves on 127.0.0.1:4370, plain HTTP, TLS off in the app \u2014 the proxy terminates TLS.",
+     "token_estimate": 32,
+     "created_at": "2026-08-28T10:12:00.000Z"
+    }
+   ]
+  },
+  {
+   "id": "seed-h1-c2",
+   "session_id": "seed-h1-c2-session",
+   "created_at": "2026-08-30T15:02:00.000Z",
+   "updated_at": "2026-08-30T15:05:00.000Z",
+   "messages": [
+    {
+     "role": "user",
+     "content_text": "The usage charts are hard to read. Pick a palette.",
+     "timestamp": 1788102120000
+    },
+    {
+     "role": "assistant",
+     "content_text": "Use indigo for the primary series and amber for the comparison series; both clear on the dark theme.",
+     "timestamp": 1788102240000
+    },
+    {
+     "role": "user",
+     "content_text": "Fine, indigo + amber it is.",
+     "timestamp": 1788102300000
+    }
+   ],
+   "summaries": [
+    {
+     "depth": 1,
+     "text": "filler (irrelevant)",
+     "token_estimate": 4,
+     "created_at": "2026-08-30T15:02:00.000Z"
+    }
+   ]
+  }
+ ]
+}

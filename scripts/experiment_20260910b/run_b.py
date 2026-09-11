@@ -270,6 +270,32 @@ def nudge_evidence(stderr: str, stdout: str) -> dict:
     }
 
 
+def final_answer_text(stdout: str) -> str:
+    """Last assistant message text from the event stream (verifiers score
+    the agent's final answer; H2's work product IS the plan)."""
+    best = ""
+    for line in stdout.splitlines():
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            e = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if e.get("type") != "message_end":
+            continue
+        msg = e.get("message") or {}
+        if msg.get("role") != "assistant":
+            continue
+        content = msg.get("content")
+        if isinstance(content, str):
+            best = content
+        elif isinstance(content, list):
+            best = "\n".join(b.get("text", "") for b in content
+                             if isinstance(b, dict) and b.get("type") == "text")
+    return best
+
+
 def do_slot(case: dict, cid: str, arm: str, rep: int, tag: str = "") -> dict:
     run_dir = RUNS / f"{cid}-{arm.lower()}-rep{rep}{'-' + tag if tag else ''}"
     if run_dir.exists():
@@ -305,9 +331,15 @@ def do_slot(case: dict, cid: str, arm: str, rep: int, tag: str = "") -> dict:
     new_ids = sorted(set(after["convs"]) - set(before["convs"]))
 
     v = case["verifier"]
+    final_answer_path = run_dir / "final-answer.txt"
+    final_answer_path.write_text(final_answer_text(stdout))
+    v_env = dict(os.environ,
+                 EXPERIMENT_B_FINAL_ANSWER=str(final_answer_path),
+                 EXPERIMENT_B_PRISTINE_DIR=str(case["repo"]))
     try:
         proc = subprocess.run([sys.executable, str(v)], cwd=worktree,
-                              capture_output=True, text=True, timeout=60)
+                              capture_output=True, text=True, timeout=60,
+                              env=v_env)
         verdict = "pass" if "VERIFIER OK" in proc.stdout else "fail"
         v_stdout = proc.stdout.strip()[:400]
     except Exception as exc:  # noqa: BLE001

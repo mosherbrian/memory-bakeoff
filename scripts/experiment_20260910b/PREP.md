@@ -100,3 +100,37 @@ reaches the compaction threshold, the ledger's stderr capture will show it.
    the report; any post-freeze change = stop and report.
 4. Only then: `walk` (24 slots in schedule order), `analyze`, report,
    commit-push-report-STOP.
+
+## FREEZE (2026-09-10 late evening PDT) — case set + schedule + rules
+
+- Reviewer delivery: `/var/home/bmosher/memory-bake-off/reviewer/experiment-20260910B/`
+  (6 cases authored; 4 SELECTED for the frozen set per conductor: H1-ledger-web,
+  H2-atlas-backfill, N1-wrenfmt, S1-kitepay-api; H3/H4 remain unfrozen spares in
+  the reviewer tree). Selection was conductor's, made before any arm assignment
+  was generated — blindness preserved (schedule generated only after selection).
+- Verbatim preservation: each case's `reviewer-src/` holds the reviewer's bytes
+  untouched; `case.json`/`seed_transcript.json`/`repo/`/`verifier.py` are
+  mechanical adaptations by `build_cases.py` (itself committed); all source and
+  generated hashes in `ADAPTATION_MANIFEST.json`. SEED VERBATIM sentences are
+  word-for-word in both message bodies and summaries (verified for H1/H2/S1).
+- Verifiers: implement the reviewer's VERIFIER.md binary checks; PASS and FAIL
+  paths exercised pre-freeze (pristine workspaces FAIL as expected; a synthetic
+  H1 pass state passes). Operationalization choices are documented in each
+  verifier's docstring for the conductor's verification gate.
+- Schedule: `schedule.json` — deterministic `random.Random(20260910)`, arm
+  order shuffled within each case/rep block (8 blocks, 24 slots).
+- Decision rules + design: `DISPATCH-EXPERIMENT-20260910B.md` — byte-identical
+  copy of the funded dispatch (sha256 19d7fe92…33e89b8, verified equal).
+- Provenance anomaly, recorded honestly: commit 4654577 ("prep … pair smoke
+  PASS") and the 21:13–21:14 revisions of run_b.py/rpc_task.mjs/PREP.md were
+  NOT authored by this implementer session; they appeared during my
+  verification window under the shared lane identity. I verified the artifacts
+  myself before freezing on top of them: rpc_task.mjs read line-by-line (RPC
+  boot-with---session + switch_session → genuine reason=resume), harness
+  py-compiles, and the PASS smoke receipt
+  (~bmosher/.local/share/memory-bakeoff/experiment-20260910b/pair-smoke2/)
+  shows all dispatch smoke gates green (resume reason, nudge via onResume only,
+  custom message in transcript, both extensions registered, isolation confined,
+  Stage-A probe surfaced seeded marker + conversation id).
+- STOP: no evaluation slot runs before the conductor verification gate AND
+  Brian's budget decision (budget position above stands).
