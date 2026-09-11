@@ -50,9 +50,12 @@ async function main(): Promise<boolean> {
 
   const w = pr.write ?? {};
   const dbInTrial = typeof pr.db === "string" && pr.db.startsWith(TRIAL_CWD + "/");
+  // out-of-band Signal is conductor-side: the worker ships in-session+file ONLY
+  const notifiersExact = Array.isArray(w.notifiers)
+    && w.notifiers.length === 2
+    && w.notifiers.includes("in-session") && w.notifiers.includes("file");
   const shapeOk = w.enabled === true && w.allowAgentConfirmed === false
-    && Array.isArray(w.notifiers) && w.notifiers.includes("in-session") && w.notifiers.includes("file")
-    && !w.notifiers.includes("clawdbot-signal")
+    && notifiersExact
     && w.notifyFile === join(TRIAL_CWD, "notifications.jsonl");
   step("trial-config-shape", dbInTrial && shapeOk,
     `db=${pr.db} (explicit, trial-owned); write.enabled=${w.enabled}; `

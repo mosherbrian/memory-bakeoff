@@ -35,9 +35,11 @@ Trial `perseusRecall` config: `bin` = the provenance-verified study binary;
 7c default derivation is for production later); `workspaceHash` omitted →
 derived from cwd, per-project by construction; `write.enabled: true`;
 `allowAgentConfirmed: false` (7a — operator confirms everything);
-`notifiers: ["in-session", "file"]` — **clawdbot-signal stays OFF in the
-worker** (the CONDUCTOR sends the Signal: no double-paging, no identifiers
-on the worker); `notifyFile` explicit as above; `PI_PERSEUS_RECALL` unset.
+`notifiers: ["in-session", "file"]` — the extension ships NO out-of-band
+channel at all (Brian's scope correction: Signal is conductor-side; the
+briefly-wired clawdbot channel was removed from the extension), so the
+CONDUCTOR sends the Signal summons from the notify file; `notifyFile`
+explicit as above; `PI_PERSEUS_RECALL` unset.
 
 Part 1 smoke — all PASS:
 - registration in a real worker-pi session (`pi-local -p`): extension loads

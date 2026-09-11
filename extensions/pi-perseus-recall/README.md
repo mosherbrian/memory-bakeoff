@@ -98,49 +98,31 @@ before.
     "defaultEnvironment": "project",
     "allowAgentConfirmed": false,            // the 7a exception switch
     "notifyFile": null,                      // default <vaultDir>/notifications.jsonl
-    "notifiers": ["in-session", "file"],     // known: in-session, file, noop, clawdbot-signal
-    "signal": {                              // required only for "clawdbot-signal"
-      "account": "<daemon signal account>",  // e.g. from ~/clawdbot/trigger-*.py
-      "recipients": ["<recipient uuid>"],    // typically the operator
-      "url": "http://127.0.0.1:8081/api/v1/rpc", // default; signal-cli JSON-RPC
-      "timeoutMs": 10000
-    }
+    "notifiers": ["in-session", "file"]      // known: in-session, file, noop
   }
 }
 ```
 
 Kill switch: `PI_PERSEUS_RECALL=0` disables the whole extension.
 
-## Notifier seam (7b, as amended — clawdbot Signal wired)
+## Notifier seam (7b)
 
 `notifier.ts` defines the `WriteNotifier` interface fired whenever a draft
-waits for the operator. Channels:
+waits for the operator. The extension ships with in-repo channels only:
 
 - `in-session` — the draft tool result IS the confirmation prompt.
-- `file` — one JSONL line per pending draft (stub).
-- `clawdbot-signal` — a real sender behind the seam, wired per Brian's
-  amendment confirming clawdbot as the Signal channel. It POSTs the
-  clawdbot envelope (`method: "send"`) to the local signal-cli daemon
-  (JSON-RPC, default `http://127.0.0.1:8081/api/v1/rpc`, daemon 0.14.1 —
-  the exact send-path clawdbot's `~/clawdbot/trigger-*.py` scripts use,
-  verified read-only 2026-09-11 via the `version` method). Best-effort and
-  never blocking: a failed send never blocks the gate or the in-session
-  prompt. **The daemon account and recipient UUIDs are operator
-  identifiers — they are read from `perseusRecall.write.signal`, never
-  hardcoded in the repo.** Requesting the channel without valid signal
-  config is rejected loudly and the channel is dropped; the remaining
-  channels stay active.
+- `file` — one JSONL line per pending draft (the conductor or a human
+  watcher consumes it).
+- `noop` — explicit no-op.
 
-Opt-in live one-shot test (operator-run; sends one real Signal):
+**Out-of-band sending is NOT an extension feature.** In the decision-memory
+experiment the CONDUCTOR sends the Signal summons (Brian's scope
+correction; the briefly-wired clawdbot channel was removed after e9e5621).
+Unknown channel names in `notifiers` are rejected loudly at load and the
+defaults take over — never a silent drop. See
+`docs/TRIAL-20260911-runbook.md` for the conductor side.
 
-```
-bun -e 'import {ClawdbotSignalNotifier} from "./extensions/pi-perseus-recall/notifier.ts";
-new ClawdbotSignalNotifier({account:"<account>",recipients:["<uuid>"],url:"http://127.0.0.1:8081/api/v1/rpc",timeoutMs:10000})
-.notify({kind:"pending_confirmation",at:new Date().toISOString(),draft_id:"draft-test",confirmation_code:"00000000",tool:"manual-test",summary:"live-path check",expires_at:new Date().toISOString(),agent_confirmed_allowed:false}).then(console.log)'
-```
-
-Tests never send: the transport is injected in unit tests, and the wiring
-test uses a dead endpoint.
+Tests never touch the network: the seam has no transport at all.
 
 ## Test + smoke
 
