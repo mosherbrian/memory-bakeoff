@@ -30,6 +30,44 @@ Brian's personal sessions are untouched: the shared
 `/home/bmosher/.pi/agent/settings.json` was checksummed before/after setup
 (`0a073043…` both times) and nothing in his agent dir changed.
 
+### FIX-20260911 — why deck-launched worker-pi initially missed the trial config
+
+**Root cause (launcher/bridge, not extension):** restarting worker-pi from
+the deck re-uses a stable deck instance id, and the worker client
+(`acp-worker`) resumes by calling ACP `session/load` with the session id
+stored in `/home/bmosher/.config/agent-deck/acp-sessions/<instance>.json`.
+pi-acp resolves that id through its own persistent map
+(`~/.pi/pi-acp/session-map.json`) to an **absolute session-file path** and
+spawns `pi --mode rpc --session <file>`. The stored binding predated the
+trial: it pointed into the OLD shared agent dir
+(`~/.pi/agent/sessions/--var-home-bmosher-acp-pi--/…`), so every deck
+start resumed the pre-trial conversation with its pinned config — perseus
+tools absent, turns appending to the old file. `PI_CODING_AGENT_DIR`
+(which enters the chain only inside `pi-local`, at the pi leaf) was
+irrelevant to this: the resume is decided before pi's config is consulted.
+
+**Fix (state-only, no source changes):** cleared worker-pi's stale deck
+binding (`acp-sessions/721125ec-1788910840.json`, prior content kept in
+the private evidence dir) and restarted the deck session. `resume()` found
+no stored id → fresh `session/new` → pi spawned via `pi-local` → trial
+agent dir.
+
+**Verified after a real deck restart + probe turn:** banner shows
+`pi-acp 0.0.33` with NO `(resumed)`; binding re-created with a NEW session
+id; session file lands under
+`/home/bmosher/acp-pi/.pi-agent/sessions/…/2026-09-11T21-39-32Z_01a09269….jsonl`;
+pi-acp's map now points that id at the trial file (so future resumes
+re-inherit the trial config correctly); a probe turn successfully drafted
+via `project_perseus_remember` (draft-cda288, notify line in
+`notifications.jsonl`, `trial.vault` still absent — the gate held).
+
+**Knob for the future:** to force worker-pi onto a fresh conversation,
+remove its deck binding file
+`/home/bmosher/.config/agent-deck/acp-sessions/<AGENTDECK_INSTANCE_ID>.json`
+while the worker is stopped and restart the deck session — it starts fresh
+and re-binds on first save. Normal restarts resume the (trial) session,
+which now carries the trial tool set.
+
 Trial `perseusRecall` config: `bin` = the provenance-verified study binary;
 `db` = explicit `/home/bmosher/acp-pi/trial.vault` (trial owns its data; the
 7c default derivation is for production later); `workspaceHash` omitted →
