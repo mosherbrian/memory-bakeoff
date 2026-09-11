@@ -66,7 +66,7 @@ import { VaultServer, cliWrite, ensureKeyFile } from "./vault.ts";
 import { resolveVaultPaths } from "./paths.ts";
 import {
   workspaceHashFor, bodyEnvelope, freshKey, validateKey, validateEnvironment,
-  summarize, DEFAULT_ENVIRONMENT, DEFAULT_CATEGORY,
+  validateSource, summarize, DEFAULT_ENVIRONMENT, DEFAULT_CATEGORY,
 } from "./records.ts";
 import { evaluateScopeGuard, verifySourceRecord, OVERRIDE_PARAM } from "./guard.ts";
 import { ConfirmationGate, type PendingOperation, type ConfirmOutcome, type DraftPresentation } from "./gate.ts";
@@ -208,6 +208,8 @@ function formatDraft(p: DraftPresentation): string {
     `notifier: ${p.notifier_receipts}`,
     `record: category=${op.category} key=${op.key}`,
     `environment: ${op.environment} (workspace ${op.workspaceHash.slice(0, 16)}…)`,
+    `source: kind=${op.source.kind} ref=${op.source.ref}`
+      + (op.source.timestamp ? ` at=${op.source.timestamp}` : ""),
     `content: ${op.content}`,
   ];
   if (op.kind === "supersede" && op.supersede) {
@@ -350,6 +352,7 @@ export default function (pi: any) {
         content: op.content,
         environment: op.environment,
         recordedAtMs: Date.now(),
+        source: op.source,
         supersession: op.supersede
           ? { supersedes_key: op.supersede.from_key, reason: op.supersede.reason }
           : undefined,
@@ -387,21 +390,29 @@ export default function (pi: any) {
     return items.some((i: any) => i.category === category && i.key === key);
   };
 
-  interface CommonParams { content?: string; category?: string; key?: string; environment?: string }
+  interface CommonParams {
+    content?: string; category?: string; key?: string; environment?: string;
+    source?: unknown;
+  }
 
-  function parseCommon(params: CommonParams): { error?: string; category: string; key: string; environment: string; ws: string } {
+  function parseCommon(params: CommonParams): {
+    error?: string; category: string; key: string; environment: string; ws: string;
+    source: ReturnType<typeof validateSource>["source"];
+  } {
     const content = typeof params.content === "string" ? params.content.trim() : "";
-    if (!content) return { error: "content must be a non-empty string (the assertion to record)", category: "", key: "", environment: "", ws: "" };
+    if (!content) return { error: "content must be a non-empty string (the assertion to record)", category: "", key: "", environment: "", ws: "", source: null };
     const category = typeof params.category === "string" && params.category.trim()
       ? params.category.trim() : DEFAULT_CATEGORY;
     const key = params.key === undefined || params.key === "" ? freshKey() : params.key;
     const keyProblem = validateKey(key);
-    if (keyProblem) return { error: keyProblem, category: "", key: "", environment: "", ws: "" };
+    if (keyProblem) return { error: keyProblem, category: "", key: "", environment: "", ws: "", source: null };
     const environment = typeof params.environment === "string" && params.environment
       ? params.environment : resolvedEnv.defaultEnvironment;
     const envProblem = validateEnvironment(environment);
-    if (envProblem) return { error: envProblem, category: "", key: "", environment: "", ws: "" };
-    return { category, key, environment, ws: workspaceHashFor(environment, resolvedEnv) };
+    if (envProblem) return { error: envProblem, category: "", key: "", environment: "", ws: "", source: null };
+    const src = validateSource(params.source);
+    if (src.problem) return { error: src.problem, category: "", key: "", environment: "", ws: "", source: null };
+    return { category, key, environment, ws: workspaceHashFor(environment, resolvedEnv), source: src.source };
   }
 
   pi.registerTool({
@@ -416,11 +427,21 @@ export default function (pi: any) {
       type: "object",
       properties: {
         content: { type: "string", description: "The decision/assertion text to record." },
+        source: {
+          type: "object",
+          description: "REQUIRED provenance of this record (proposal §1): where the assertion came from.",
+          properties: {
+            kind: { type: "string", enum: ["task", "artifact", "instruction"], description: "What kind of source this came from." },
+            ref: { type: "string", description: "Non-empty pointer to the source (task id, artifact path, instruction context...)." },
+            timestamp: { type: "string", description: "Optional ISO-8601 timestamp of the source event." },
+          },
+          required: ["kind", "ref"],
+        },
         category: { type: "string", description: `Record category (default "${DEFAULT_CATEGORY}").` },
         key: { type: "string", description: "Record key (default: fresh record-<hex>; keys are never reused)." },
         environment: { type: "string", description: `Environment scope (default "${writeCfg.defaultEnvironment}").` },
       },
-      required: ["content"],
+      required: ["content", "source"],
     },
     async execute(_toolCallId: string, params: CommonParams) {
       try {
@@ -434,6 +455,7 @@ export default function (pi: any) {
         const op: PendingOperation = {
           kind: "remember", category: p.category, key: p.key,
           content: (params.content as string).trim(), environment: p.environment, workspaceHash: p.ws,
+          source: p.source!,
         };
         const presentation = await gate.register(
           "project_perseus_remember", op,
@@ -459,6 +481,16 @@ export default function (pi: any) {
       type: "object",
       properties: {
         content: { type: "string", description: "The NEW decision/assertion text." },
+        source: {
+          type: "object",
+          description: "REQUIRED provenance of the NEW record (proposal §1): where the new assertion came from.",
+          properties: {
+            kind: { type: "string", enum: ["task", "artifact", "instruction"], description: "What kind of source this came from." },
+            ref: { type: "string", description: "Non-empty pointer to the source." },
+            timestamp: { type: "string", description: "Optional ISO-8601 timestamp of the source event." },
+          },
+          required: ["kind", "ref"],
+        },
         from_key: { type: "string", description: "Key of the OLD record being superseded." },
         from_category: { type: "string", description: "Category of the OLD record (default: same as category)." },
         reason: { type: "string", description: "Why the new record replaces the old one (required)." },
@@ -468,7 +500,7 @@ export default function (pi: any) {
         from_environment: { type: "string", description: `Old record's environment (default "${writeCfg.defaultEnvironment}").` },
         allow_cross_environment: { type: "boolean", description: "Explicit §2 override for non-overlapping environments (default false)." },
       },
-      required: ["content", "from_key", "reason"],
+      required: ["content", "source", "from_key", "reason"],
     },
     async execute(_toolCallId: string, params: {
       content?: string; from_key?: string; from_category?: string; reason?: string;
@@ -512,6 +544,7 @@ export default function (pi: any) {
         const op: PendingOperation = {
           kind: "supersede", category: p.category, key: p.key,
           content: (params.content as string).trim(), environment: p.environment, workspaceHash: p.ws,
+          source: p.source!,
           supersede: {
             from_category, from_key,
             from_environment: fromEnvVerified, from_workspace_hash: fromWs,

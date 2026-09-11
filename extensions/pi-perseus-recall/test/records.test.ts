@@ -7,7 +7,7 @@
 import { describe, test, expect } from "bun:test";
 import { createHash } from "node:crypto";
 import {
-  workspaceHashFor, freshKey, validateKey, validateEnvironment, bodyEnvelope,
+  workspaceHashFor, freshKey, validateKey, validateEnvironment, validateSource, bodyEnvelope,
   DEFAULT_ENVIRONMENT, DEFAULT_CATEGORY, SOURCE_KIND,
 } from "../records.ts";
 
@@ -62,24 +62,69 @@ describe("keys and environments", () => {
 });
 
 describe("body envelope", () => {
-  test("carries assertion_text + environment (vault-projected) and provenance", () => {
+  test("carries assertion_text + environment (vault-projected), structured source, and provenance", () => {
     const body = bodyEnvelope({
       content: "staging deploys via helm", environment: "project",
       recordedAtMs: 1_789_154_697_908,
+      source: { kind: "task", ref: "task-123", timestamp: "2026-09-11T10:00:00.000Z" },
     });
     expect(body.assertion_text).toBe("staging deploys via helm");
     expect(body.environment).toBe("project");
-    expect(body.source_kind).toBe(SOURCE_KIND);
+    expect(body.source_kind).toBe(SOURCE_KIND); // constant surface tag retained
+    expect(body.source).toEqual({ kind: "task", ref: "task-123", timestamp: "2026-09-11T10:00:00.000Z" });
     expect(body.recorded_at_unix_ms).toBe(1_789_154_697_908);
     expect(body.supersedes).toBeUndefined();
+  });
+
+  test("source block is present without timestamp when omitted", () => {
+    const body = bodyEnvelope({
+      content: "x", environment: "project", recordedAtMs: 1,
+      source: { kind: "artifact", ref: "docs/plan.md" },
+    });
+    expect(body.source).toEqual({ kind: "artifact", ref: "docs/plan.md" });
   });
 
   test("supersession provenance is recorded when the write is part of a supersede", () => {
     const body = bodyEnvelope({
       content: "staging deploys via argo rollouts", environment: "project",
-      recordedAtMs: 1, supersession: { supersedes_key: "record-helm-001", reason: "platform moved" },
+      recordedAtMs: 1, source: { kind: "instruction", ref: "operator in-session" },
+      supersession: { supersedes_key: "record-helm-001", reason: "platform moved" },
     });
     expect(body.supersedes).toEqual({ supersedes_key: "record-helm-001", reason: "platform moved" });
+    expect((body.source as any).kind).toBe("instruction");
+  });
+});
+
+describe("structured source provenance (proposal §1, R1)", () => {
+  test("all three kinds validate; ref is trimmed; timestamp optional", () => {
+    for (const kind of ["task", "artifact", "instruction"]) {
+      const r = validateSource({ kind, ref: "  some ref  " });
+      expect(r.problem).toBeNull();
+      expect(r.source).toEqual({ kind, ref: "some ref" });
+    }
+    const withTs = validateSource({ kind: "task", ref: "t1", timestamp: "2026-09-11T09:30:00Z" });
+    expect(withTs.source).toEqual({ kind: "task", ref: "t1", timestamp: "2026-09-11T09:30:00Z" });
+  });
+
+  test("missing source is a problem (fail-closed, not optional)", () => {
+    for (const raw of [undefined, null]) {
+      const r = validateSource(raw);
+      expect(r.source).toBeNull();
+      expect(r.problem).toContain("source is required");
+    }
+  });
+
+  test("bad kind / empty ref / non-object / bad timestamp all refused", () => {
+    for (const raw of [
+      {}, { kind: "other", ref: "x" }, { kind: "task" }, { kind: "task", ref: "" },
+      { kind: "task", ref: "   " }, "task", 42,
+      { kind: "task", ref: "x", timestamp: "not-a-date" },
+      { kind: "task", ref: "x", timestamp: 17 },
+    ]) {
+      const r = validateSource(raw);
+      expect(r.source).toBeNull();
+      expect(r.problem).toBeTruthy();
+    }
   });
 });
 

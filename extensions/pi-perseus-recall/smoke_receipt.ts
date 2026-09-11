@@ -84,15 +84,23 @@ async function main(): Promise<boolean> {
   const r0 = text(await call("project_perseus_recall", { query: "anything" }));
   step("recall-truthful-empty", r0.includes("No vault exists yet"), r0.split("\n")[0]);
 
-  // S3: draft remember — NOT written
+  // S3: draft remember — NOT written; provenance block included (proposal §1)
   const d1 = text(await call("project_perseus_remember", {
     content: "STAGING-DEPLOY: staging deploys via helm on the kite-k8s cluster",
     key: "record-helm-001",
+    source: { kind: "task", ref: "smoke/staging-migration", timestamp: "2026-09-11T09:00:00.000Z" },
   }));
   const id1 = d1.match(/^draft_id: (draft-[0-9a-f]+)$/m)?.[1] ?? "";
   const code1 = d1.match(/^confirmation_code: ([0-9a-f]+)$/m)?.[1] ?? "";
-  step("draft-remember", d1.includes("NOTHING IS WRITTEN YET") && !!id1 && !!code1
-    && !existsSync(expectedDb), `draft_id=${id1} code=${code1}; vault still absent`);
+  step("draft-remember", d1.includes("NOTHING IS WRITTEN YET") && d1.includes("source: kind=task ref=smoke/staging-migration")
+    && !!id1 && !!code1 && !existsSync(expectedDb), `draft_id=${id1} code=${code1}; vault still absent`);
+
+  // S3b: the source block is REQUIRED — a draft without it is refused
+  const noSrc = text(await call("project_perseus_remember", {
+    content: "draft without provenance", key: "record-nosource-000",
+  }));
+  step("source-required-fail-closed", noSrc.includes("DRAFT REFUSED") && noSrc.includes("source is required"),
+    noSrc.split("\n")[0]);
 
   // S4: wrong code -> nothing written
   const wrong = text(await call("project_perseus_confirm", { draft_id: id1, confirmation_code: "00000000" }));
@@ -121,6 +129,7 @@ async function main(): Promise<boolean> {
     const d2 = text(await call("project_perseus_supersede", {
       content: "STAGING-DEPLOY: staging deploys via argo rollouts on kite-k8s",
       key: "record-argo-002",
+      source: { kind: "artifact", ref: "runbooks/staging-argo.md" },
       from_key: "record-helm-001",
       reason: "platform moved from helm to argo rollouts",
     }));
@@ -140,14 +149,20 @@ async function main(): Promise<boolean> {
     const headers = [...rec.matchAll(/^\[project_perseus_recall\] key=([^\s]+)/gm)].map((m) => m[1]);
     const deliversNew = headers.includes("record-argo-002") && rec.includes("argo rollouts");
     const hidesOld = headers.length === 1 && headers[0] === "record-argo-002";
-    step("recall-after-supersede", deliversNew && hidesOld && rec.includes("status=active"),
-      `hits=${headers.join(",")}; ${rec.split("\n")[0].slice(0, 120)}`);
+    // proposal §1: the structured provenance must be recall-visible in body_json
+    const sourceVisible = rec.includes("staging-argo.md") && rec.includes('"source"');
+    step("recall-after-supersede", deliversNew && hidesOld && sourceVisible && rec.includes("status=active"),
+      `hits=${headers.join(",")}; source block delivered in body_json`);
+    if (!sourceVisible) {
+      console.error("recall text was: " + rec.slice(0, 600));
+    }
 
     // S9: §2 scope guard — a genuinely disjoint environment is blocked by default
     const dq = text(await call("project_perseus_remember", {
       content: "QUARANTINE-EXCEPTION: temporary waiver for the flaky integration test",
       key: "record-quarantine-001",
       environment: "quarantine",
+      source: { kind: "instruction", ref: "operator waiver, flaky integration test" },
     }));
     const idq = dq.match(/^draft_id: (draft-[0-9a-f]+)$/m)?.[1] ?? "";
     const codeq = dq.match(/^confirmation_code: ([0-9a-f]+)$/m)?.[1] ?? "";
@@ -155,6 +170,7 @@ async function main(): Promise<boolean> {
     const d3 = text(await call("project_perseus_supersede", {
       content: "QUARANTINE-EXCEPTION: waiver made permanent",
       key: "record-quarantine-002",
+      source: { kind: "instruction", ref: "operator waiver made permanent" },
       from_key: "record-quarantine-001",
       from_environment: "quarantine",
       environment: "project",
@@ -167,6 +183,7 @@ async function main(): Promise<boolean> {
     const d4 = text(await call("project_perseus_supersede", {
       content: "QUARANTINE-EXCEPTION: waiver made permanent",
       key: "record-quarantine-002",
+      source: { kind: "instruction", ref: "operator waiver made permanent" },
       from_key: "record-quarantine-001",
       from_environment: "quarantine",
       environment: "project",
@@ -184,6 +201,7 @@ async function main(): Promise<boolean> {
     // S11: key reuse refused (the CLI would update in place)
     const dup = text(await call("project_perseus_remember", {
       content: "duplicate key attempt", key: "record-argo-002",
+      source: { kind: "task", ref: "smoke/duplicate-key-attempt" },
     }));
     step("key-reuse-refused", dup.includes("DRAFT REFUSED") && dup.includes("never reused"),
       dup.split("\n")[0]);

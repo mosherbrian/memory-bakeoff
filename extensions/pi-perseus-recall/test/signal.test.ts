@@ -166,7 +166,7 @@ describe("signal channel wiring", () => {
       },
     });
     expect(problems).toEqual([]);
-    const draft = await tools.get("project_perseus_remember").execute("t", { content: "wiring check" }, undefined as any, undefined as any, undefined as any);
+    const draft = await tools.get("project_perseus_remember").execute("t", { content: "wiring check", source: { kind: "task", ref: "signal-wiring" } }, undefined as any, undefined as any, undefined as any);
     const notifierLine = draft.content[0].text.split("\n").find((l: string) => l.startsWith("notifier:"));
     expect(notifierLine).toContain("clawdbot-signal:false"); // refused fast, gate unaffected
     expect(notifierLine).toContain("in-session:true");
@@ -177,7 +177,7 @@ describe("signal channel wiring", () => {
       perseusRecall: { ...BASE_CONFIG, write: { notifiers: ["in-session", "clawdbot-signal"] } },
     });
     expect(problems.some((p) => p.includes("clawdbot-signal") && p.includes("dropped"))).toBe(true);
-    const draft = await tools.get("project_perseus_remember").execute("t", { content: "wiring check" }, undefined as any, undefined as any, undefined as any);
+    const draft = await tools.get("project_perseus_remember").execute("t", { content: "wiring check", source: { kind: "task", ref: "signal-wiring" } }, undefined as any, undefined as any, undefined as any);
     const notifierLine = draft.content[0].text.split("\n").find((l: string) => l.startsWith("notifier:"));
     expect(notifierLine).not.toContain("clawdbot-signal");
     expect(notifierLine).toContain("in-session:true");

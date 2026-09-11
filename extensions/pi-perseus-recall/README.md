@@ -40,6 +40,23 @@ record (parameter schema authoritative; Gen102 correction). The supersede
 receipt delivers the status flip verbatim: `status_updated="deprecated"` +
 `from_valid_to_unix_ms` — and the superseded record leaves hybrid recall.
 
+### Structured source provenance (proposal §1 — mandatory)
+
+Both draft tools REQUIRE a source block (§4: source "is part of the record
+at creation time" — new writes without it are refused, fail-closed):
+
+```
+source: { kind: "task" | "artifact" | "instruction",
+          ref: <non-empty string>,
+          timestamp?: <ISO-8601> }
+```
+
+It is stored in the record body as a structured `source` block (alongside
+the constant `source_kind` surface tag, kept for provider-lineage
+compatibility) and is recall-visible through `body_json`. Pre-existing
+bodies without the block (early scratch vaults) still recall fine — only
+NEW writes require it.
+
 ### §2 scope guard
 
 Supersession across **non-overlapping environments is rejected by default.**

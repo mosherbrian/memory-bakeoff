@@ -16,6 +16,7 @@
  */
 
 import { randomBytes } from "node:crypto";
+import type { SourceProvenance } from "./records.ts";
 
 export interface PendingOperation {
   kind: "remember" | "supersede";
@@ -24,6 +25,8 @@ export interface PendingOperation {
   content: string;
   environment: string;
   workspaceHash: string;
+  /** Validated structured provenance for the NEW record (proposal §1, mandatory). */
+  source: SourceProvenance;
   /** Present only on supersede drafts (the OLD record). */
   supersede?: {
     from_category: string;

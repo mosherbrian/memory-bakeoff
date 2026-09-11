@@ -31,6 +31,7 @@ function op(over: Partial<PendingOperation> = {}): PendingOperation {
     kind: "remember", category: "decision", key: "record-test-1",
     content: "staging deploys via helm", environment: "project",
     workspaceHash: "b".repeat(64),
+    source: { kind: "task", ref: "unit-test" },
     ...over,
   };
 }
@@ -71,6 +72,7 @@ describe("confirmation gate: no write without confirm", () => {
     expect(out.ok).toBe(true);
     expect(out.stage).toBe("executed");
     expect(ex.calls).toHaveLength(1);
+    expect(ex.calls[0].source).toEqual({ kind: "task", ref: "unit-test" }); // provenance rides to the executor
     expect((out.receipt as any).write_receipt.ok).toBe(true);
     const again = await gate.confirm(p.draft_id, p.confirmation_code, "operator");
     expect(again.ok).toBe(false); // one-time use
