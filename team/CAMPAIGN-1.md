@@ -1,11 +1,14 @@
-# CAMPAIGN-1 (DRAFT v1 — converged overnight 2026-09-12; DRAFTING ONLY, no execution begun)
+# CAMPAIGN-1 (DRAFT v2 — folded Verity's audit, CAMPAIGN-1-AUDIT.md; DRAFTING ONLY, no execution begun)
 
-**Status:** converged by Kiln per GiLMore's overnight directive. **Verity
-audits the success criteria next; Brian holds one veto in the morning.**
-Authors of record: Kiln (spine + workstream), Cairn (tiered-capture pushback,
-fused as the burden arm), with raw material from Assay, Aletheia (Alice),
-Corvid, Ledger. Standing limits unchanged; extension stays frozen at the
-060d842 lineage for the live arm.
+**Status:** v2 converged by Kiln per GiLMore's overnight pass. Changed
+sections are marked **(v2)** with a change-log at the bottom; everything
+else is verbatim v1. **Verity's audit: S1 KEEP (tighten), S2 KEEP
+(tighten), S3 TIGHTEN, S4 TIGHTEN (hard), S5 TIGHTEN, S6 KEEP (tighten) —
+none dropped.** Brian holds one veto in the morning. Authors of record:
+Kiln (spine + workstream), Cairn (tiered-capture pushback, fused as the
+burden arm), with raw material from Assay, Aletheia (Alice), Corvid,
+Ledger. Standing limits unchanged; extension stays frozen at the 060d842
+lineage for the live arm.
 
 ## One-line thesis
 
@@ -59,19 +62,142 @@ Brian's veto covers. If he rejects tiering, the campaign still runs with
 universal T1 (the burden numbers then measure the untiered baseline — also
 publishable).
 
-## Pre-registered success criteria (Verity to audit; all descriptive, small-n, no causal claims)
+## Pre-registered success criteria (v2 — tightened per CAMPAIGN-1-AUDIT.md; all descriptive, small-n, no causal claims)
 
-| # | Criterion | Instrument | Target |
-|---|---|---|---|
-| S1 | Supersession cycle closes on real work: ≥1 deliberate convention change → supersede drafted + confirmed → recall delivers current-only | delivered-level check (P1B instrument), never stream-level | ≥1 complete cycle |
-| S2 | Stale-action events (acting on a superseded record) | trial ledger | **0**; any occurrence reported prominently as failure |
-| S3 | Burden: human confirms/day vs the proposal's 1–3/day estimate, with T1 coverage at 100% | trial ledger + notify file | **≤1/day** under tiering (vs 1–3); clarity rating per prompt (finding-#1 format) |
-| S4 | Self-noticing: unprompted relevant retrievals in stored-record-relevant turns | session logs | ≥3/5 relevant turns (n stated honestly) |
-| S5 | Overhead: memory turn vs paired no-memory turn (wall + tokens) | pi session logs; pre-trial turns as baseline pairing | within **+25%**; beyond → flagged, not hidden |
-| S6 | Capture-at-rest integrity: no record lost or demoted | status checks per write | **0 demotions**; any `active→proposed` transition = immediate stop-and-report |
+### S1 — Supersession cycle closes on real work (v2; v1: "≥1 cycle, delivered-level check")
 
-Window: 10 confirmed T1 cycles OR 3 working days, whichever first; Brian
-stop-anytime (kill switch `PI_PERSEUS_RECALL=0` or a word).
+Target ≥1 complete cycle, unchanged. v2 tightenings:
+
+1. **"Deliberate convention change" is operationally defined:** a change to
+   a convention that *has a stored record* (a real supersession target
+   exists), arising in the course of real work, logged with before/after
+   text.
+2. **The delivered-level check is a programmatic receipt, not a judgment:**
+   per cycle, persist the delivered toolResult text and assert — new
+   record's key/content PRESENT, old record's key ABSENT (the smoke's
+   `recall-after-supersede` pattern), plus the supersede receipt's status
+   flip and `valid_to`. P1B `delivery.jsonl` discipline, applied per cycle.
+
+### S2 — Stale-action events = 0 (v2; v1: "trial ledger, target 0")
+
+Target 0 with prominent failure reporting, unchanged. v2 tightenings:
+
+1. **Named detection rule:** every artifact written *after* a supersession
+   is checked against the current record set (diff against the delivered
+   current-only state), post-hoc, by Cairn with Verity audit. "Trial ledger"
+   alone was a single-source self-report.
+2. **Necessary-not-sufficient caveat lives inside the criterion:** zero
+   stale actions over n turns is necessary-but-not-sufficient evidence of
+   suppression (the P1B branch-(i) lesson). n (turns AND post-supersede
+   opportunities) is reported next to the 0.
+
+### S3 — Burden ≤1 confirm/day under tiering (v2; v1: "≤1/day vs 1–3 estimate")
+
+v2 tightenings:
+
+1. **T0 misclassification rate reported beside the burden number, not filed
+   separately:** Verity post-hoc samples T0 captures for T1-eligibility; the
+   rate closes the classification circularity (the agent whose burden is
+   measured decides the tier).
+2. **Denominator defined:** working days with ≥1 capture-eligible event;
+   n days + n confirms reported. Three days of one worker is a very small n
+   — stated in the same breath.
+3. **"Estimate-vs-measured" labeling kept forever.** No control arm exists;
+   "tiering reduced burden by X%" is a causal claim the design cannot
+   support. The universal-T1 fallback is an untiered baseline measurement,
+   not a comparison.
+4. Clarity rating (finding-#1 format): report the **unclear count**, not
+   just the average.
+
+### S4 — Self-noticing → split (v2, hard; v1: "≥3/5 relevant turns, session logs")
+
+v1 conflated two claims: self-noticing (spontaneous retrieval — the F1 0/8
+weakness) and trigger efficacy (the new layer firing on change events).
+v2 splits them:
+
+- **(a) Trigger fire-rate:** fraction of adjudicated stored-record-relevant
+  turns where the trigger fired — the **≥3/5 target lives here**.
+- **(b) Application rate:** when fired (or recall otherwise available), did
+  the agent use the delivered content.
+- "Self-noticing" unqualified may only describe **trigger-OFF** observation,
+  reported separately against the F1 0/8 baseline.
+
+Tightenings: **mandatory false-fire count** (trigger activations on turns
+adjudicated non-relevant, reported beside the fire-rate — ≥3/5 with no
+precision requirement passes trivially by firing always); **relevance
+adjudication by Verity, blind to trigger state, under a rule written and
+frozen before the window starts**; **delivered-level counting** (only
+retrievals whose toolResult *delivered* the relevant record — inheriting the
+trial prereg's "recall deliveries" definition, not counting calls).
+
+### S5 — Overhead within +25% (v2; v1: "paired no-memory turn, flag beyond")
+
+v2 tightenings:
+
+1. **Pre-registered pairing rule:** same task family, same worker, both
+   turns completed, nearest-in-time; n pairs stated. ("Descriptive pairing
+   only" promoted from the trial prereg into the criterion.)
+2. **Symmetric skepticism:** a favorable direction (memory turns *faster*)
+   is flagged and pair-audited exactly like an unfavorable one.
+3. **Tokens primary** (wall on the local pi lane is noisy), both shown.
+
+### S6 — Capture-at-rest integrity, 0 demotions (v2; v1: "no record lost or demoted")
+
+v2 tightenings:
+
+1. **Scope to UNSANCTIONED transitions.** A successful supersession
+   legitimately flips the OLD record `active→deprecated` with `valid_to`
+   set — expected and receipted; S6 does not stop on a correct S1 cycle.
+2. **Instrument = the vault's own stored state via scan after every write,**
+   never the write receipt alone (the probe's decisive result: a receipt
+   said `ok:true, action:"updated"` while the record left the serveable
+   set). Receipts claim; state is.
+3. **CLI-write-only sub-check:** any native `remember` call in the live arm
+   is itself a stop event (guardrail 1).
+4. **"Lost" defined:** absent from the scan of its environment's workspace,
+   or status other than expected-at-that-step.
+
+### Scoreboard sub-count (adopted from Cairn; verdict: mandatory scoreboard note, not a criterion)
+
+**"TTL expiries with no operator acknowledgment observed"** — renamed to the
+observable (the causal story "operator-unavailable" is not observable).
+Tracked as a mandatory sub-count of the existing TTL-expiry metric, with two
+companion sub-counts: notifier receipts with `delivered:false`, and
+wrong-code draft destructions. Reported beside S1/S3 (it interprets S1 "why
+didn't the cycle close" and S3's latency dimension). **Pre-registered
+interpretation:** if expiries ≥ confirmed cycles, that is a *gate-friction
+finding* delivered to Brian as a campaign-2 design input (TTL / channel
+redesign) — not a campaign failure, and never a reason to quietly raise TTL
+or reach for auto-confirm mid-window.
+
+## Standing instrument rules (adopted from the audit; bind every criterion)
+
+1. **Receipts claim; state is.** Every criterion's instrument asserts
+   *observed state* (vault scan, delivered toolResult text), never an echoed
+   receipt alone. Applied in S1 and S6; named once, standing everywhere.
+2. **Delivered-level reaches S4, not just S1.** Every criterion that counts
+   retrievals counts *deliveries* — a retrieval that silently delivers
+   nothing is the P1 failure at miniature scale.
+3. **The vocabulary trap binds automation.** Any automated vault interaction
+   (trigger auto-drafts, window-end tooling, notify watchers) uses the
+   verified nouns (`memory.propose`/`memory.commit`/`memory.read`), explicit
+   `capability_constraints_json`, explicit `mode: "enforce"` — and asserts
+   post-action observed state, because the wrong noun silently denies while
+   echoing a success-shaped string. Without this rule, an automation that
+   did nothing is structurally scoreable as success.
+
+## Pre-window checklist (Verity; completed before the first evaluated cycle)
+
+1. Provenance receipt: frozen extension lineage hash (060d842 as drafted) +
+   binary sha asserted in the window-opening receipt; Kiln's mirror and the
+   live pi lane must show the same hashes. Drift here invalidates everything
+   silently.
+2. S4 relevance-adjudication rule written and frozen (Verity adjudicates
+   blind).
+3. S5 pairing rule written and frozen.
+4. Notify-file location + Signal channel config recorded; `delivered:false`
+   visible in the ledger.
+5. S6 scan-after-write wired into the cycle (one command, receipted).
 
 ## Hard guardrails from the probes (non-negotiable build constraints)
 
@@ -138,6 +264,7 @@ stop-anytime (kill switch `PI_PERSEUS_RECALL=0` or a word).
   finding #1 presentation format — commit 4fbd904; decision-memory build —
   3f9498f..e9e5621 + 060d842.
 - Corvid: Muse calibration — commit 7d42fdf.
+- Verity: criteria audit — team/CAMPAIGN-1-AUDIT.md (this v2's source).
 
 ## Open items for Brian's morning veto
 
@@ -147,3 +274,41 @@ stop-anytime (kill switch `PI_PERSEUS_RECALL=0` or a word).
 2. Confirm the window (10 T1 cycles / 3 days) and the ≤1/day burden target.
 3. (Optional, zero-cost) bless campaign-C (upstream capture repair) as the
    pre-approved campaign-2 should A/B show capture is the binding constraint.
+
+## Change log (v1 → v2, auditable)
+
+- S1 (v2): + operational definition of "deliberate convention change"; +
+  programmatic per-cycle delivered-level receipt (persisted toolResult text;
+  new PRESENT / old ABSENT / status flip / valid_to). [v1: eyeballed
+  delivered-level check]
+- S2 (v2): + named post-hoc detection rule (artifact diff vs current record
+  set; Cairn executes, Verity audits); + necessary-not-sufficient caveat
+  with n (turns + post-supersede opportunities) reported. [v1: "trial
+  ledger"]
+- S3 (v2): + T0 misclassification rate beside the burden number; +
+  denominator (working days with ≥1 capture-eligible event; n days + n
+  confirms); + "estimate-vs-measured" labeling permanent; + unclear count
+  reported. [v1: bare ≤1/day]
+- S4 (v2): split into trigger fire-rate (≥3/5) + application rate;
+  "self-noticing" reserved for trigger-OFF observation vs F1 baseline;
+  + mandatory false-fire count; + blind frozen relevance-adjudication rule
+  (Verity); + delivered-level counting. [v1: single conflated metric]
+- S5 (v2): + pre-registered pairing rule (task family/worker/completed/
+  nearest-in-time, n pairs); + symmetric skepticism on favorable direction;
+  tokens primary, wall shown. [v1: unruled pairing]
+- S6 (v2): scoped to UNSANCTIONED transitions (supersession flip expected +
+  receipted); + scan-after-write as the instrument (receipts claim, state
+  is); + CLI-write-only sub-check; + "lost" defined. [v1: blanket
+  "no demotions"]
+- NEW: standing instrument rules (receipts/state; delivered-level to S4;
+  vocabulary trap binds automation).
+- NEW: scoreboard sub-count "TTL expiries with no operator acknowledgment
+  observed" + `delivered:false` count + wrong-code destructions, with
+  pre-registered gate-friction interpretation (adopted from Cairn; Verity
+  verdict: scoreboard note, not a criterion).
+- NEW: pre-window checklist (5 items, verbatim from the audit).
+- Unchanged by directive: thesis wording, design sections, guardrails,
+  budgets, roles, raw material, open items. (Verity's cross-cutting wording
+  flags — thesis anchor phrasing, "correctable ≠ corrected" sampling note,
+  "decisive test" overstatement — were NOT folded; left for GiLMore's
+  ruling so v2's diff stays exactly the enumerated scope.)
