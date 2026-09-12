@@ -1,4 +1,11 @@
-# CAMPAIGN-1 (DRAFT v3 — wording pass per Verity's cross-cutting flags; DRAFTING ONLY, no execution begun)
+# CAMPAIGN-1 (APPROVED — WINDOW OPEN 2026-09-12; content = v4; Brian approved all three decisions)
+
+**Status:** APPROVED. Brian approved all three decisions (T0/T1 tiering
+amendment; window = 10 confirmed T1 cycles or 3 working days with the ≤1/day
+burden target; campaign-C pre-blessed as campaign-2 should capture prove to be
+the binding constraint) — and raised the turn guard to 300s, kept all workers,
+and capped metered lanes at $5. Execution now runs under the gate receipts in
+`team/WINDOW-OPENING.md`.
 
 **Status:** v2 converged by Kiln per GiLMore's overnight pass. Changed
 sections are marked **(v2)** with a change-log at the bottom; everything
@@ -34,11 +41,14 @@ supersede → recall thereafter delivers current-only → stale-action events
 circumstances change is the charter's "adapt when circumstances change,"
 made measurable with instruments the team already trusts.
 
-### Workstream — change-aware triggering (from Kiln B + the self-noticing data)
+### Workstream — change-aware triggering (from Kiln B + the self-noticing data) (v4 — F1 caveat attached)
 
 The measured weakness is not storage or suppression — it is that the agent
 does not LOOK (F1 0/8 spontaneous vs F2 8/8 nudged; trial finding: self-
-noticing weak). Build a change-aware trigger in the nudge layer: fire
+noticing weak). **Caveat (Stratum, RETRO-1, travels with the number wherever
+it is cited): in those 8 runs the tool could not have delivered anything even
+if called — the number measures "does not look," not "looks and is not
+served."** Build a change-aware trigger in the nudge layer: fire
 retrieval on (new task in a known project · contradiction with a stored
 decision · resumption after a gap). Mechanism-small, nudge-layer only, no
 perseus changes, no extension unfreeze. Metric: unprompted relevant
@@ -198,8 +208,14 @@ in v3 — see change log; drift found by Verity's diff-audit addendum.)*
    echoing a success-shaped string. Without this rule, an automation that
    did nothing is structurally scoreable as success.
 
-## Pre-window checklist (Verity; completed before the first evaluated cycle)
+## Pre-window checklist (Verity; completed before the first evaluated cycle) (v4 — item 0 added from RETRO-1, Stratum)
 
+0. **End-to-end delivery smoke of the instrument itself, through the real
+   path:** seed one record; run the real trigger/recall in the real runtime
+   from the real cwd; assert the *delivered toolResult text* contains it;
+   freeze the receipt into the window-opening record. Read side and write
+   side. (Standing rule 1 — "receipts claim; state is" — moved upstream to
+   the gate. Would have saved the entire R2 pilot.)
 1. Provenance receipt: frozen extension lineage hash (060d842 as drafted) +
    binary sha asserted in the window-opening receipt; Kiln's mirror and the
    live pi lane must show the same hashes. Drift here invalidates everything
@@ -289,6 +305,17 @@ in v3 — see change log; drift found by Verity's diff-audit addendum.)*
 
 ## Change log (v1 → v2, auditable)
 
+- v4 (micro-edit, GiLMore; two changes, nothing else): (1) workstream —
+  Stratum's F1 caveat attached to the 0/8 citation (in those 8 runs the tool
+  could not have delivered anything even if called; measures "does not look,"
+  not "looks and is not served"); the caveat travels with the number wherever
+  cited. (2) pre-window checklist — item 0 added (end-to-end delivery smoke
+  of the instrument through the real path; seed one record, real
+  trigger/recall from real cwd, assert delivered toolResult contains it,
+  receipt frozen in window-opening record), from RETRO-1, Stratum. Note: the
+  canonical home is now THIS file (root team/); the implementer-repo mirror
+  is a build artifact only and is no longer maintained.
+
 - S1 (v2): + operational definition of "deliberate convention change"; +
   programmatic per-cycle delivered-level receipt (persisted toolResult text;
   new PRESENT / old ABSENT / status flip / valid_to). [v1: eyeballed
@@ -341,3 +368,8 @@ in v3 — see change log; drift found by Verity's diff-audit addendum.)*
   3 working days, whichever first; Brian stop-anytime (kill switch
   `PI_PERSEUS_RECALL=0` or a word)." On this restore, Verity pre-commits:
   "v3+restore audited = audit-complete, Verity."
+- 2026-09-12 APPROVED / WINDOW OPEN: Brian approved all three decisions;
+  status flipped DRAFT → APPROVED (this header). Content remains v4 wording;
+  execution is governed by the gate receipts in team/WINDOW-OPENING.md
+  (all six pre-window items closed; provenance block + gate summary signed
+  by Kiln). The DRAFTING-ONLY restriction is lifted by this approval.

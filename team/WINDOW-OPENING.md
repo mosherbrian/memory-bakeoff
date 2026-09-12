@@ -157,3 +157,63 @@ and T0 artifact in `scripts/experiment_20260911_trial/`). All descriptive.
 
 **Window formally opens when Verity checks the S5 draft (item 2) and CAIRN's
 first T0 self-capture lands.** Until then, no evaluated cycles.
+
+## First T0 self-capture (Cairn)
+
+**What:** first `confirmed_by=agent` write on the worker-pi lane — the
+end-to-end proof the T0 flip is live (lane restarted; config read fresh at
+session start).
+
+**Record:** `decision/record-073e444c` — "Campaign-1 window opening: T0 tier
+is LIVE on the worker-pi lane … first T0 self-capture … S6 scan-after-write
+applies from here." Source: task (this OPS dispatch). Low-stakes, T0 class.
+
+**Flow receipts:**
+1. Draft: `draft-d45d98`, code `2f08caad`, key `record-073e444c`,
+   workspace `84117073c4ead03d…`.
+2. Confirm: `project_perseus_confirm` with `confirmed_by: "agent"` →
+   **accepted** (write receipt `id=cli-d685b3357843 ok=true`). Pre-flip this
+   exact call would have been refused with the 7a reason string — acceptance
+   is the behavioral proof the gate changed, not just the config byte.
+
+**Stored-state scan** (read-only sqlite over `trial.vault`, not the write
+receipt):
+- `entities` row for `record-073e444c`: `status='active'`, `archived=0`,
+  `source='cli-write'`, workspace `84117073c4ead03d` (matches draft),
+  `valid_to` NULL, no `superseded_by`.
+- All 5 records in the vault `status='active'`, `archived=0` — including the
+  four pre-existing records (fdc72c35, 736612fc, 2353b582,
+  window-canary-20260912). **S6: zero unsanctioned transitions, zero
+  demotions.**
+- Bodies are AES-256-GCM encrypted at rest (expected; `trial.vault.key`), so
+  the raw scan asserts existence + serveable status, not plaintext.
+
+**Delivery-level check** (standing instrument rule 2): `project_perseus_recall`
+for "T0 tier window opening" **delivered** `record-073e444c` with full
+plaintext assertion text, `status=active`. Served, not just stored.
+
+**Gate closed.** T0 is live, proven at config, behavioral, stored-state, and
+delivery level. Burden accounting starts here: this capture cost Brian 0
+confirms.
+
+---
+
+# PROVENANCE BLOCK + GATE SUMMARY — final assembly (Kiln, 2026-09-12)
+
+**Provenance hashes (frozen at window open):**
+
+| Artifact | Value |
+|---|---|
+| Extension lineage | code files (`index.ts vault.ts paths.ts records.ts guard.ts gate.ts notifier.ts`) byte-identical to **060d842** (per-file sha256 comparison, 7/7 SAME); sole post-060d842 delta = `README.md` test-count line (commit e25d618, doc-only) |
+| Extension tree hash (current) | `2c2670ee2a83dfbb22b3743a6de2019fc4b1004b901853359c9aae2cfd96f551` |
+| Perseus binary | sha256 `c8a222ec7077d713212c2414d440586f564338aaa153eeb13b08ebf14854a172` (2.23.2, 9c82920 — pinned study provenance) |
+| S4 relevance-adjudication rule | `team/S4-ADJUDICATION.md` sha256 `8856d1010cc0346c759fa494e6e1d907169db279842c5c2bda4ac384f2bcd51b` (frozen; Verity adjudicates blind) |
+| Repo state at issuance | HEAD `7987a55`, tree clean (implementer repo) |
+
+**Gate summary:** All six pre-window items are receipted — (0) delivered-level
+smoke through the real path PASS, (1) provenance hashes recorded, (2) S5
+pairing rule frozen by Verity, (3) notify config + delivered:false visibility
+recorded, (4) S6 scan-after-write wired with a clean first receipt, (5) T0
+flip applied and proven end-to-end by Cairn at config, behavioral,
+stored-state, and delivery level with 0 demotions. **Window OPEN
+2026-09-12. — Kiln** (worker-glm-2)
