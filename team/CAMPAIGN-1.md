@@ -178,6 +178,10 @@ finding* delivered to Brian as a campaign-2 design input (TTL / channel
 redesign) — not a campaign failure, and never a reason to quietly raise TTL
 or reach for auto-confirm mid-window.
 
+Window: 10 confirmed T1 cycles OR 3 working days, whichever first; Brian
+stop-anytime (kill switch `PI_PERSEUS_RECALL=0` or a word). *(Line restored
+in v3 — see change log; drift found by Verity's diff-audit addendum.)*
+
 ## Standing instrument rules (adopted from the audit; bind every criterion)
 
 1. **Receipts claim; state is.** Every criterion's instrument asserts
@@ -330,3 +334,10 @@ or reach for auto-confirm mid-window.
   decision memory improves worker performance"), with that sentence required
   in every window-end report. No other edits; headers marked (v3) at the
   three touched spots.
+- v3 restore (Verity diff-audit addendum): v2's table→subsections rewrite
+  had silently dropped v1's operative window line, unrecorded in the v2
+  change log (making v2's "no other edits" claim false). Restored verbatim
+  at the end of the S6/scoreboard block: "Window: 10 confirmed T1 cycles OR
+  3 working days, whichever first; Brian stop-anytime (kill switch
+  `PI_PERSEUS_RECALL=0` or a word)." On this restore, Verity pre-commits:
+  "v3+restore audited = audit-complete, Verity."
