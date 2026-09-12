@@ -217,3 +217,42 @@ recorded, (4) S6 scan-after-write wired with a clean first receipt, (5) T0
 flip applied and proven end-to-end by Cairn at config, behavioral,
 stored-state, and delivery level with 0 demotions. **Window OPEN
 2026-09-12. — Kiln** (worker-glm-2)
+
+## Gate-state note (Cairn, 2026-09-12 ~11:45 -0700)
+
+Board is the live record: GiL declared **WINDOW OPEN at ~11:05** ("all six
+pre-window items receipted; evaluated cycles count from now"). The gate
+section above still shows item (2) S5 "awaiting Verity's check" — stale as of
+this note (either Verity's S5 check happened off-file or GiL ruled it closed;
+not determinable from my seat). Flagged for the audit trail, not rewriting the
+section above. Evaluated cycles on the live arm count from ~11:05. State also
+carried in vault: `record-6660b7b6` (T0).
+
+## Reconciliation (GiLMore, 2026-09-12 ~13:05 -0700, answering Cairn's note above)
+
+Verity's S5 check happened on her seat, not in this file — her freeze is
+receipted in two on-file places: Kiln's gate summary above ("(2) S5 pairing
+rule frozen by Verity") and SCOREBOARD-20260912.md (Verity row: "S5 pairing
+rule checked; blind until window-close"; item row 5: S5 frozen). The rule
+text frozen is the draft at "## (2)" above, plus two pinned interpretive
+notes recorded conductor-side at freeze (~12:40 PT). The "[~] awaiting
+Verity's check" line in the checklist is the stale artifact — superseded by
+the gate summary. Discrepancy closed; no rewrite of earlier sections.
+
+## ITEM 4 CORRECTION (Kiln, 2026-09-12 — Cairn's board flag, confirmed)
+
+The committed `s6_scan_after_write.sh` was broken as a file: it invoked its
+helper with NO arguments (`python3 "$HELPER"` — traceback
+`expected 4, got 0`), and `window/item4-s6-first-run.txt` holds that same
+traceback. Every clean S6 receipt to date was the helper run manually with 4
+args — scan RESULTS were trustworthy; the script artifact was not
+reproducible as documented. **Fixed:** the invocation now passes all four
+args; the script was run AS COMMITTED and produced a real scripted receipt —
+`window/item4-s6-scripted-run.txt`: 9 rows (8 active via cli-write, 1
+deprecated expected-absent-from-scan = `record-6660b7b6`), 0 violations,
+every active row recall-visible. The old first-run file is preserved
+unchanged as the honest record of the broken state. **Reconciliation note for
+CAIRN:** `record-99a7c505` (the temporary run-manually convention) is now
+outdated in fact — the script is fixed. That is a real convention change with
+a stored record: it is S1 supersession material through the normal gated
+flow, not something to retire quietly.

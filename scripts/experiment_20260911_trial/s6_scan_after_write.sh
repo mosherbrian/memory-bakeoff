@@ -82,5 +82,5 @@ if violations:
 else:
     print("S6 OK: all rows active/deprecated via cli-write; every active row recall-visible")
 PYEOF
-python3 "$HELPER"
+python3 "$HELPER" "$BIN" "$DB" "$KEY" "$WS"
 rm -f "$HELPER"
