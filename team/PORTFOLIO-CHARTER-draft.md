@@ -21,6 +21,55 @@ frozen-commit verification (P1 satisfied by pinned-blob receipt; Kiln's
 supporting fetch receipt: `docs/PORTFOLIO-P1-DISCOVERY.md`). Two folds +
 one table-row update, nothing else touched.
 
+**Patch 3 (2026-09-12, POST-G0 BRIAN DIRECTIVE — amendment-of-record under
+G0 authority, relayed by GiLMore):** three folds, envelope arithmetic
+re-printed, decision log updated (all below, §Patch 3 detail).
+
+1. **BASELINES LOCKED.** Two explicit arms join the long-context null as
+   locked portfolio baselines: **pi-lcm** (the store-reader arm, rows 1–2 —
+   previously PENDING build, now a locked arm) and
+   **pi-lcm-with-long-multi-session-memory-no-memory-system** (the
+   multi-session-history null: pi-lcm's long multi-session store presented
+   as raw history, no memory-system machinery — the null built on the same
+   store the live arm uses). Both are local and metered-spend $0.
+2. **NEW PRE-REGISTERED PROGRAMMATIC SCORED DIMENSION — invocation rate.**
+   Per system, from run logs: was the memory system EVER invoked for capture
+   or retrieval during its assigned runs (capture-call count, retrieval-call
+   count). A system with zero invocations is a ZERO-INVOCATION RUN: reported
+   as its own outcome row, never imputed from other systems' behavior, and
+   excluded from Hit@k comparison only in the sense that its numbers are its
+   own zeros. LABEL CLASS: PROGRAMMATIC (deterministic count over run logs).
+   Rationale carried from the live arm: self-noticing is the measured
+   weakness — a system that is never called cannot help, and that must be a
+   number, not a footnote.
+3. **NEW GATE CRITERION (BAR B amendment).** No system is recommended unless
+   actual outcomes improve MATERIALLY over the no-memory baseline arms
+   (long-context null AND the two pi-lcm baseline arms): **Hit@3 alone does
+   not pass BAR B.** Operationalization proposed by the executor for
+   Verity's rule check: (i) penalized Hit@3 (stale-use penalty applied) must
+   exceed the BEST baseline arm's penalized Hit@3 by more than that
+   baseline's recorded run-to-run band; (ii) outcome measures (stale-use
+   penalty, Prohibited@k) must not regress vs that baseline. "Materially" is
+   defined by (i)+(ii) or by whatever v2 Verity freezes — a bare Hit@3
+   advantage is not adoption evidence.
+
+**Envelope arithmetic re-print (Patch 3 — run counts changed by +2 baseline
+arms).** G0 rule stands: total metered spend = Σ(repeats × per-run lane
+price) over the run matrix, worst case (full matrix × most expensive lane)
+≤ **$5 all-in**; touching $5 = stop + report. Re-print with the two new
+arms:
+
+- **pi-lcm reader arm and pi-lcm multi-session-history null arm are LOCAL
+  and metered-$0**: store reads are local sqlite; the null arm is local
+  history passthrough. Neither adds metered storage or retrieval cost.
+- Metered draw grows ONLY by their reader/eval passes on metered lanes:
+  +2 arms × tasks × repeats, drawn from the SAME ≤$5 pool (no top-ups).
+  Worst-case all-in allowance at the most expensive named lane
+  (deepseek-direct, $0.60/1M) = **≈8.3M tokens for the entire campaign**;
+  at muse pricing (~$0.002/task) the allowance is ~2,500 tasks. The P1 run
+  matrix must size task counts so the Σ lands inside the pool, and the
+  arithmetic line is re-printed with actual task counts at P2 entry.
+
 **Plain English first:** the program's own decision memo
 (`implementer/repo/DECISION_MEMO.md`) says the recommendation ("which memory
 system, on what evidence") cannot close until three defined questions are
@@ -86,7 +135,7 @@ P1, owned by Stratum.)
 
 | # | System | Class | License | Adapter cost | Where it stands today (receipt) |
 |---|---|---|---|---|---|
-| 1 | **pi-lcm** (store reader) | in-orbit | Brian's own (`projects/pi-lcm-bun`), private | none — read-only reader exists (`extensions/pi-project-recall`, 12/12 tests) | in daily use; R2-lineage measured the recall question, not conflict quality |
+| 1 | **pi-lcm** (store reader) | in-orbit — **LOCKED BASELINE ARM (Patch 3)** | Brian's own (`projects/pi-lcm-bun`), private | none — read-only reader exists (`extensions/pi-project-recall`, 12/12 tests) | in daily use; R2-lineage measured the recall question, not conflict quality |
 | 2 | **pi-lcm tool variants** (`lcm_grep`/tool-level vs raw store) | in-orbit | same | low | within-conversation only; A/B of reader paths is a config |
 | 3 | **Perseus vault** (decision memory + bake-off engine) | in-orbit | this program's own | none — memconflict adapter frozen (`627f812d`), Hit@3 0.434 dynamic | measured; best-in-portfolio so far, below 44% absolute |
 | 4 | **native capture** (pi native remember/admission) | in-orbit | pi's (`@earendil-works/pi-coding-agent`) ⚠ | low — probe scripts exist | measured INERT as an admission path (`team/PROBE-remember-admission-FINDINGS.md`, DO NOT MIGRATE); included only so the portfolio's "ours" column is complete; stays out unless campaign-C repairs it |
