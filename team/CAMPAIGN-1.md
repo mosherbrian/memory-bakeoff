@@ -1,4 +1,4 @@
-# CAMPAIGN-1 (DRAFT v2 — folded Verity's audit, CAMPAIGN-1-AUDIT.md; DRAFTING ONLY, no execution begun)
+# CAMPAIGN-1 (DRAFT v3 — wording pass per Verity's cross-cutting flags; DRAFTING ONLY, no execution begun)
 
 **Status:** v2 converged by Kiln per GiLMore's overnight pass. Changed
 sections are marked **(v2)** with a change-log at the bottom; everything
@@ -10,24 +10,29 @@ burden arm), with raw material from Assay, Aletheia (Alice), Corvid,
 Ledger. Standing limits unchanged; extension stays frozen at the 060d842
 lineage for the live arm.
 
-## One-line thesis
+## One-line thesis (v3 — anchor attached)
 
 An agent demonstrably adapts when its world changes — on real work, with the
 human paying roughly one confirmation a day and zero stale actions — by
 closing the supersession loop on the live trial and making retrieval
 triggering change-aware instead of human-dependent.
+**(demonstration = S1–S6, descriptive, small-n — no causal claims; this
+anchor travels with every external citation of the thesis.)**
 
 ## Design (fused: Kiln A-spine + B-workstream + Cairn's tiered-capture)
 
-### Spine — close the supersession loop on real work (from Kiln A + the frozen trial)
+### Spine — close the supersession loop on real work (from Kiln A + the frozen trial) (v3 — claim softened)
 
-The trial's pre-registration (docs/EXPERIMENT-20260911-trial.md) already
-contains the decisive test: a deliberate convention change on real work →
-worker drafts a supersede → recall thereafter delivers current-only →
-stale-action events = 0. The campaign runs the trial to that cycle. Memory
-that adapts when circumstances change is the charter's "adapt when
-circumstances change," made measurable with instruments the team already
-trusts.
+The trial's pre-registration (docs/EXPERIMENT-20260911-trial.md) contains the
+trial's own limit, restated here where the test lives: closing this cycle
+**cannot show that decision memory improves worker performance** — that
+sentence belongs in every window-end report, not buried two commits deep.
+What the cycle does demonstrate is narrower and still load-bearing: that the
+supersession loop closes on real work (a deliberate convention change →
+supersede → recall thereafter delivers current-only → stale-action events
+= 0). The campaign runs the trial to that cycle. Memory that adapts when
+circumstances change is the charter's "adapt when circumstances change,"
+made measurable with instruments the team already trusts.
 
 ### Workstream — change-aware triggering (from Kiln B + the self-noticing data)
 
@@ -52,7 +57,10 @@ variable:
   **config-only, no unfreeze**). Every T0 record is logged (notify file +
   session logs) and audited after the fact by Verity for proportionality;
   any T0 record is correctable by supersede, so the cost of a mistake is one
-  T1 confirm, not a corrupted store.
+  T1 confirm, not a corrupted store. **(v3) Correctable ≠ corrected:**
+  correction requires detection, and detection is post-hoc sampling — the
+  sample size and the misses are reported next to every "correctable"
+  claim, not assumed.
 - **T1 (human-confirmed, high-stakes):** decisions that bind future behavior
   (architecture, deployments, project conventions) — operator-confirmed as
   today, with the finding-#1 plain-language presentation format REQUIRED.
@@ -312,3 +320,13 @@ or reach for auto-confirm mid-window.
   flags — thesis anchor phrasing, "correctable ≠ corrected" sampling note,
   "decisive test" overstatement — were NOT folded; left for GiLMore's
   ruling so v2's diff stays exactly the enumerated scope.)
+- v3 (wording only, GiLMore-directed; the three parked cross-cutting flags
+  now folded): (1) thesis — anchor "(demonstration = S1–S6, descriptive,
+  small-n — no causal claims)" attached to the one-line thesis; every
+  external citation of the thesis carries it. (2) T0 arm — "correctable ≠
+  corrected" note added (correction requires detection; detection is
+  post-hoc sampling; sample size and misses reported). (3) spine —
+  "decisive test" softened to the prereg's own limit ("cannot show that
+  decision memory improves worker performance"), with that sentence required
+  in every window-end report. No other edits; headers marked (v3) at the
+  three touched spots.
