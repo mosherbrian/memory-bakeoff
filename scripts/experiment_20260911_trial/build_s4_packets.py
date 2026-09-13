@@ -38,6 +38,7 @@ MARKER = "[memory activity: redacted]"
 SENTINELS = ("[project_perseus_recall]", "[perseus-write]", "[recall-nudge]",
              "[change-trigger]", "project_perseus_")
 DRAFT_SECRET_SENTINELS = ("draft_id", "confirmation_code", "[perseus-write]")
+LEAK_CANARIES = SENTINELS + ("key=record-", "draft_id", "confirmation_code")
 
 
 def sha256(data: bytes) -> str:
@@ -96,6 +97,40 @@ def is_memory_traffic(entry: dict) -> bool:
 def user_entry_has_draft_secret(entry: dict) -> bool:
     text = entry_text(entry)
     return any(s in text for s in DRAFT_SECRET_SENTINELS)
+
+
+def entry_is_redacted(entry: dict) -> bool:
+    """Mirror of packet_leak_scan.is_redacted: marker set on content/toolName."""
+    msg = entry.get("message")
+    if isinstance(msg, dict) and (msg.get("content") == MARKER or msg.get("toolName") == MARKER):
+        return True
+    return entry.get("content") == MARKER or entry.get("marker") is True
+
+
+def packet_leaks(packet: dict) -> list[dict]:
+    """Scan the EMITTED packet's entries for unredacted memory substance.
+
+    The count-parity self-test shares its predicate with redaction, so a
+    classification miss is invisible to it. This scans the output instead:
+    non-user entries must be redacted and carry no sentinel/canary; user
+    turn-start entries are turn substance unless they carry a draft secret.
+    """
+    leaks = []
+    for i, e in enumerate(packet.get("entries", [])):
+        role = entry_role(e)
+        text = json.dumps(e, default=str)
+        if role == "user":
+            hits = [s for s in DRAFT_SECRET_SENTINELS if s in text]
+            if hits:
+                leaks.append({"entry": i, "role": role,
+                              "why": "user entry carries draft secret", "hits": hits})
+        elif not entry_is_redacted(e):
+            hits = [s for s in LEAK_CANARIES if s in text]
+            if hits:
+                leaks.append({"entry": i, "role": role,
+                              "why": "unredacted non-user entry carries substance",
+                              "hits": hits})
+    return leaks
 
 
 def redact_entry(entry: dict) -> dict:
@@ -218,6 +253,7 @@ def main() -> int:
     os.makedirs(args.out, exist_ok=True)
     manifest = []
     unsupported = 0
+    leak_findings: dict[str, list[dict]] = {}
     for i, turn in enumerate(turns, 1):
         turn_id = f"turn-{i:03d}"
         red_entries, markers = [], 0
@@ -246,6 +282,9 @@ def main() -> int:
         packet_path = os.path.join(args.out, f"{turn_id}.json")
         with open(packet_path, "wb") as fh:
             fh.write(data)
+        emitted = packet_leaks(json.loads(data))
+        if emitted:
+            leak_findings[turn_id] = emitted
         manifest.append({
             "turn_id": turn_id,
             "start": start,
@@ -262,15 +301,22 @@ def main() -> int:
             fh.write(json.dumps(m, default=str) + "\n")
 
     total_markers = sum(m["marker_count"] for m in manifest)
+    leak_total = sum(len(v) for v in leak_findings.values())
     print(f"turns: {len(turns)}  markers: {total_markers}  "
           f"raw memory-traffic entries: {raw_mem_count}  "
           f"EXCLUDED-unsupported-state: {unsupported}")
+    print(f"LEAK-SCAN (emitted-packet substance): "
+          f"{'PASS' if not leak_findings else 'FAIL'} — "
+          f"{len(manifest)} packet(s), {leak_total} finding(s)")
+    for tid, hits in leak_findings.items():
+        canaries = sorted({h for x in hits for h in x["hits"]})
+        print(f"  - {tid}: {len(hits)} unredacted entry/entries carrying {canaries}")
     if args.self_test:
         ok = total_markers == raw_mem_count
         print(f"SELF-TEST (B7 property): {'PASS' if ok else 'FAIL'} — "
               f"marker count {'==' if ok else '!='} raw memory-traffic count")
-        return 0 if ok else 1
-    return 0
+        return 0 if (ok and not leak_findings) else 1
+    return 1 if leak_findings else 0
 
 
 if __name__ == "__main__":
