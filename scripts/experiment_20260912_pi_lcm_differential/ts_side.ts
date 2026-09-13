@@ -7,13 +7,17 @@
  * masked — they are not retrieval semantics.
  */
 import { Database } from "bun:sqlite";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, writeFileSync, mkdirSync, unlinkSync } from "node:fs";
 import { createSchema, seedConversation } from "../../extensions/pi-project-recall/test/pilot_store.ts";
 import { queryMessages } from "../../extensions/pi-project-recall/index.ts";
 
 const QUERIES = ["ledger convention", "docker compose", "helm kite", "deploy", "the", "zzz-nothing"];
 
-const db = new Database(new URL("./receipts/differential.db", import.meta.url).pathname);
+// Idempotent by construction (Assay's QUEUE-row-27 finding: re-running on
+// the committed tree died on UNIQUE(session_id) because the store pre-existed).
+const dbPath = new URL("./receipts/differential.db", import.meta.url).pathname;
+if (existsSync(dbPath)) unlinkSync(dbPath);
+const db = new Database(dbPath);
 createSchema(db);
 const T = (h: number) => Date.parse(`2026-09-01T${12 + h}:00:00.000Z`);
 seedConversation(db, { id: "conv-a", session_id: "sess-a", cwd: "memory-bakeoff-differential",
