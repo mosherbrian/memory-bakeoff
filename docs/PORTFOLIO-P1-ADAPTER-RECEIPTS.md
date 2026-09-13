@@ -44,13 +44,43 @@ run. Statuses: RECEIPTED (green) / PENDING / DROPPED-BY-NAME.
 - bm25 is row 3's anchor (0.226 dynamic Hit@3, the BAR B floor). Baselines
   run through the same provider interface; no new Phase-1 work.
 
-## pi-lcm store reader (rows 1–2) — PENDING (build assigned: Kiln)
+## pi-lcm store reader (rows 1–2) — RECEIPTED 2026-09-12 (locked baseline arm, Patch 3)
 
-- Reader logic exists (`extensions/pi-project-recall`, 12/12 tests, read-only
-  FTS5 + LIKE paths over the pi-lcm sqlite store). Phase-1 work: wrap as a
-  provider conforming to `ingest/retrieve` (ingest = no-op/attach existing
-  store; retrieve = the same queries minus the conversation filter), plus
-  unit receipt. NOT STARTED this receipt.
+- **Providers in harness:** `pi_lcm_store_reader` (corpus mode — materializes
+  the prepared corpus into a fresh temporary store in the exact pi-lcm
+  schema, controlled core) and `pi_lcm_store_reader_attach` (read-only attach
+  of an existing store, `raw_product`) —
+  `src/memory_bakeoff/providers/pi_lcm_store_reader.py`.
+- **Ported surface:** `extensions/pi-project-recall` `queryMessages` /
+  `querySummaries` verbatim — FTS5 sanitize rule, FTS5 MATCH with the LIKE
+  fallback (including its faithful substring-only asymmetry), recency order
+  `m.timestamp DESC, m.seq DESC`, no relevance scores — minus the
+  current-conversation filter. `as_of` maps to the reader's `before` filter.
+  Tool-level relaxation deliberately NOT ported (charter row 2's A/B is
+  exactly tool-level vs raw store; recorded in `configuration()`).
+- **Canonical identity (corpus mode):** one conversation per distinct
+  `record.session_id`; mapping keyed by message rowid in adapter bookkeeping —
+  the retrieval decision itself is made only by the ported queries over
+  `content_text`. Attach mode returns `record_id=None` (real session text is
+  unmappable; provenance honest: exploratory_only) and is byte-unchanged on
+  the store file (sha256-checked in tests).
+- **Test run (this receipt):**
+  `PYTHONPATH=/home/bmosher/.local/lib/python3.14/site-packages pytest
+  tests/test_pi_lcm_store_reader_contract.py -q` at commit `2bed095` →
+  **12 passed** (canonical mapping, recency-not-relevance order, no imputed
+  scores, as_of visibility, LIKE-fallback parity, read-only attach,
+  fail-closed lifecycle, top-k ceiling, configuration honesty, sanitize
+  parity, registry).
+- **No-regression neighbors (same command line, same commit):**
+  `test_longcontext_null_contract.py + test_stale_use_penalty.py +
+  test_agentmemory_core.py + test_agentmemory_localization.py` → **28
+  passed**.
+- **Host note:** sqlite 3.50.2, FTS5 native (the LIKE fallback path is also
+  tested by disabling it).
+- **Remaining for P2:** compose the corpus-mode arm into the memconflict run
+  beside the long-context null and the multi-session-history null (runner
+  composition, next build turn); attach mode is the anchor arm against
+  Brian's real store and is not corpus-scoreable by construction.
 
 ## long-context null (row 18/row 4) — RECEIPTED 2026-09-12
 
