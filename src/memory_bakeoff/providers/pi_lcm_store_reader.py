@@ -33,11 +33,13 @@ import re
 import sqlite3
 import tempfile
 import time
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Sequence
 from urllib.parse import quote
 
+from memory_bakeoff.longcontext_null import ARM_VERSION, LongContextNull
 from memory_bakeoff.models import (
     MemoryRecord,
     ProviderCapabilities,
@@ -281,6 +283,70 @@ def query_summaries(db: sqlite3.Connection, query: str, limit: int) -> list[dict
     ]
 
 
+@dataclass
+class MaterializedStore:
+    """A fresh temporary pi-lcm-schema store built from corpus records.
+
+    Shared by both pi-lcm arms so the store the reader queries is, by
+    construction, the same store the history null presents as raw history.
+    """
+    temp: tempfile.TemporaryDirectory
+    path: Path
+    rowid_to_record: dict[int, str]
+    fts_active: bool
+    ordered_records: list[MemoryRecord] = field(default_factory=list)
+
+
+def _materialize_corpus(records: Sequence[MemoryRecord], allow_fts: bool = True) -> MaterializedStore:
+    temp = tempfile.TemporaryDirectory(prefix="memory-bakeoff-pilcm-")
+    path = Path(temp.name) / "lcm.db"
+    con = sqlite3.connect(path)
+    con.executescript(BASE_SCHEMA_SQL)
+    fts_active = False
+    if allow_fts and fts5_supported():
+        con.executescript(FTS_SCHEMA_SQL)
+        fts_active = True
+
+    sessions: dict[str, list[MemoryRecord]] = {}
+    for record in records:
+        sessions.setdefault(record.session_id, []).append(record)
+
+    rowid_to_record: dict[int, str] = {}
+    ordered_records: list[MemoryRecord] = []
+    cwd = "memory-bakeoff-materialized"
+    for session_id in sessions:
+        recs_sorted = sorted(sessions[session_id], key=lambda r: (r.timestamp, r.id))
+        conv_id = "conv-" + hashlib.sha256(session_id.encode("utf-8")).hexdigest()[:16]
+        stamps = [epoch_ms(r.timestamp) for r in recs_sorted]
+        con.execute(
+            "INSERT INTO conversations (id, session_id, session_file, cwd, created_at, updated_at)"
+            " VALUES (?, ?, NULL, ?, ?, ?)",
+            (conv_id, session_id, cwd, iso(min(stamps)), iso(max(stamps))),
+        )
+        for seq, record in enumerate(recs_sorted):
+            role = str(record.metadata.get("role", "user"))
+            cur = con.execute(
+                "INSERT INTO messages (id, conversation_id, entry_id, role, content_text,"
+                " content_json, tool_name, token_estimate, timestamp, seq)"
+                " VALUES (?, ?, NULL, ?, ?, ?, NULL, ?, ?, ?)",
+                (
+                    f"{conv_id}-m{seq}",
+                    conv_id,
+                    role,
+                    record.text,
+                    json.dumps({"role": role, "content": record.text}),
+                    math.ceil(len(record.text) / 3.5),
+                    epoch_ms(record.timestamp),
+                    seq,
+                ),
+            )
+            rowid_to_record[cur.lastrowid] = record.id
+            ordered_records.append(record)
+    con.commit()
+    con.close()
+    return MaterializedStore(temp=temp, path=path, rowid_to_record=rowid_to_record, fts_active=fts_active, ordered_records=ordered_records)
+
+
 class PiLcmStoreReaderProvider(MemoryProvider):
     """Corpus mode: materialize the corpus into a fresh pi-lcm-schema store
     and run the ported reader queries over it (no conversation filter)."""
@@ -397,54 +463,14 @@ class PiLcmStoreReaderProvider(MemoryProvider):
     def _ingest_corpus(self, records: Sequence[MemoryRecord]) -> None:
         self.close()
         self._rowid_to_record.clear()
-        self._temp = tempfile.TemporaryDirectory(prefix="memory-bakeoff-pilcm-")
-        path = Path(self._temp.name) / "lcm.db"
-        con = sqlite3.connect(path)
-        con.executescript(BASE_SCHEMA_SQL)
-        if self.allow_fts and fts5_supported():
-            con.executescript(FTS_SCHEMA_SQL)
-            self._fts_active = True
-        else:
-            self._fts_active = False
-
-        sessions: dict[str, list[MemoryRecord]] = {}
-        for record in records:
-            sessions.setdefault(record.session_id, []).append(record)
-
-        cwd = "memory-bakeoff-materialized"
-        for session_id, recs in sessions.items():
-            recs_sorted = sorted(recs, key=lambda r: (r.timestamp, r.id))
-            conv_id = "conv-" + hashlib.sha256(session_id.encode("utf-8")).hexdigest()[:16]
-            stamps = [epoch_ms(r.timestamp) for r in recs_sorted]
-            con.execute(
-                "INSERT INTO conversations (id, session_id, session_file, cwd, created_at, updated_at)"
-                " VALUES (?, ?, NULL, ?, ?, ?)",
-                (conv_id, session_id, cwd, iso(min(stamps)), iso(max(stamps))),
-            )
-            for seq, record in enumerate(recs_sorted):
-                role = str(record.metadata.get("role", "user"))
-                cur = con.execute(
-                    "INSERT INTO messages (id, conversation_id, entry_id, role, content_text,"
-                    " content_json, tool_name, token_estimate, timestamp, seq)"
-                    " VALUES (?, ?, NULL, ?, ?, ?, NULL, ?, ?, ?)",
-                    (
-                        f"{conv_id}-m{seq}",
-                        conv_id,
-                        role,
-                        record.text,
-                        json.dumps({"role": role, "content": record.text}),
-                        math.ceil(len(record.text) / 3.5),
-                        epoch_ms(record.timestamp),
-                        seq,
-                    ),
-                )
-                self._rowid_to_record[cur.lastrowid] = record.id
-        con.commit()
-        con.close()
+        mat = _materialize_corpus(records, allow_fts=self.allow_fts)
+        self._temp = mat.temp
+        self._rowid_to_record = mat.rowid_to_record
+        self._fts_active = mat.fts_active
         # Reopen strictly read-only so the retrieval path matches the
         # extension's driver-level readOnly guarantee.
-        self._db = _connect_read_only(path)
-        self._store_used = path
+        self._db = _connect_read_only(mat.path)
+        self._store_used = mat.path
         self.remember_records(records)
 
     # ── retrieve ───────────────────────────────────────────────────────────
@@ -536,3 +562,119 @@ class PiLcmStoreReaderAttachProvider(PiLcmStoreReaderProvider):
         env = os.environ.get("PI_LCM_STORE_PATH")
         path = Path(env).expanduser() if env else store_path_for_cwd(os.getcwd())
         super().__init__(store_path=path)
+
+
+class PiLcmHistoryNullProvider(MemoryProvider):
+    """pi-lcm long-multi-session-history null (charter Patch 3 locked baseline).
+
+    The SAME materialized store the store-reader arm queries, presented as
+    raw history with NO memory-system machinery: every record, in the store's
+    chronological order, unranked, for every question. Delegates to
+    :class:`LongContextNull` itself, so the null semantics are literally the
+    row-4 instrument's code — question never consulted, no scores imputed,
+    token cost recorded as the finding. No FTS index is built (the null never
+    queries the store); only the schema/materializer is shared with the
+    reader arm.
+    """
+
+    name = "pi_lcm_history_null"
+    raw_experiment_class = "baseline"
+    product_experiment_class = "baseline"
+    capabilities = ProviderCapabilities(
+        raw_ingest=True,
+        product_ingest=False,
+        service_required=False,
+        notes=(
+            "pi-lcm long multi-session-history null: the corpus materialized "
+            "into the same pi-lcm-schema store the store-reader arm uses, "
+            "presented as raw unranked history via LongContextNull. Not a "
+            "memory system; baseline arm the portfolio must beat."
+        ),
+    )
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._temp: tempfile.TemporaryDirectory | None = None
+        self._null: LongContextNull | None = None
+        self._store_path: Path | None = None
+
+    def probe(self) -> ProviderProbe:
+        held = self._null.inventory()["observations_held"] if self._null else 0
+        return ProviderProbe(
+            self.name, True,
+            f"raw-history null over the shared pi-lcm materialization ({held} observations held)",
+            self.capabilities,
+        )
+
+    def reset(self) -> None:
+        self.close()
+        self._records.clear()
+
+    def close(self) -> None:
+        self._null = None
+        if self._temp is not None:
+            self._temp.cleanup()
+            self._temp = None
+        self._store_path = None
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:
+            pass
+
+    def ingest(self, records: Sequence[MemoryRecord], mode: str = "raw") -> None:
+        if mode != "raw":
+            raise ProviderUnavailable("pi_lcm_history_null evaluates only the raw read path")
+        self.close()
+        mat = _materialize_corpus(records, allow_fts=False)
+        self._temp = mat.temp
+        self._store_path = mat.path
+        # Ingestion order = the store's chronological order (timestamp, then
+        # seq within session) — how a pi-lcm multi-session history replays.
+        self._null = LongContextNull([{"id": r.id, "text": r.text} for r in mat.ordered_records])
+        self.remember_records(records)
+
+    def retrieve(self, case: QueryCase, top_k: int = 5) -> RetrievalResult:
+        if self._null is None:
+            raise ProviderUnavailable("pi_lcm_history_null has no history attached; call ingest first")
+        start = time.perf_counter()
+        # The query is deliberately NOT passed: the null never consults it.
+        items, null_latency_ms = self._null.search("")
+        out = [
+            RetrievalItem(
+                record_id=item["native_id"] or None,
+                text=item["text"],
+                score=None,
+                metadata={"rank": item["rank"]},
+            )
+            for item in items
+        ]
+        for _ in out:
+            self._record_provenance("native")
+        inventory = self._null.inventory()
+        raw = {
+            "arm": inventory["arm"],
+            "mode": "pi_lcm_store_raw_history",
+            "question_consulted": False,
+            "store_path": str(self._store_path),
+            "observations_offered": inventory["observations_offered"],
+            "approx_tokens_offered": inventory["approx_tokens_offered"],
+            "null_internal_latency_ms": null_latency_ms,
+            "top_k_respected_by_scorer": "items are NOT truncated here - the full history is the arm; the scorer takes the first k of the passthrough",
+        }
+        return RetrievalResult(out, (time.perf_counter() - start) * 1000.0, raw)
+
+    def configuration(self) -> dict[str, Any]:
+        return {
+            "mode": "raw_history_null",
+            "delegates_to": f"memory_bakeoff.longcontext_null ({ARM_VERSION})",
+            "store_lineage": "shared _materialize_corpus with pi_lcm_store_reader (same schema, same record order)",
+            "fts5": "no index built - the null never queries the store",
+            "scores": "none - unranked passthrough in store chronological order",
+            "question_consulted": False,
+        }
+
+    def diagnostics(self) -> dict[str, Any]:
+        inventory = self._null.inventory() if self._null else {}
+        return {"null_inventory": inventory, "store_path": str(self._store_path) if self._store_path else None}

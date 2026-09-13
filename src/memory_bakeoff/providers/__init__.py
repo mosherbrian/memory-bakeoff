@@ -9,6 +9,7 @@ from memory_bakeoff.providers.claude_mem_core import (ClaudeMemFTS5CoreProvider,
 from memory_bakeoff.providers.external import Mem0Provider, HabitusProvider, MemBukkitControlledCoreProvider, MemBukkitProvider, AgentMemoryProvider, ClaudeMemProvider, HindsightProvider
 from memory_bakeoff.providers.perseus_vault import PerseusVaultProvider
 from memory_bakeoff.providers.pi_lcm_store_reader import (
+    PiLcmHistoryNullProvider,
     PiLcmStoreReaderAttachProvider,
     PiLcmStoreReaderProvider,
 )
@@ -35,4 +36,5 @@ PROVIDERS = {
     "perseus_vault": PerseusVaultProvider,
     "pi_lcm_store_reader": PiLcmStoreReaderProvider,
     "pi_lcm_store_reader_attach": PiLcmStoreReaderAttachProvider,
+    "pi_lcm_history_null": PiLcmHistoryNullProvider,
 }
