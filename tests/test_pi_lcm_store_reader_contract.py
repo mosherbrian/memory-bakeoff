@@ -21,6 +21,7 @@ from memory_bakeoff.models import MemoryRecord, QueryCase  # noqa: E402
 from memory_bakeoff.providers import PROVIDERS  # noqa: E402
 from memory_bakeoff.providers.base import ProviderUnavailable  # noqa: E402
 from memory_bakeoff.providers.pi_lcm_store_reader import (  # noqa: E402
+    PiLcmHistoryNullProvider,
     PiLcmStoreReaderAttachProvider,
     PiLcmStoreReaderProvider,
     sanitize_fts_query,
@@ -188,3 +189,37 @@ def test_registry_names_resolve():
     # attach construction is lazy: resolving a nonexistent default store must
     # not raise until probe/ingest
     PiLcmStoreReaderAttachProvider()
+
+
+def test_append_grows_the_store_incrementally():
+    """Chronology protocol (memconflict contract): sessions append; each
+    question may see sessions 0..i inclusive. The store is the SAME store,
+    grown — and appended units are retrievable with canonical mapping."""
+    p = PiLcmStoreReaderProvider()
+    p.ingest([_rec("obs-1", "staging deploys via helm on the kite cluster", 1, "sess-a")])
+    assert p.retrieve(_case("ledger convention")).items == []  # not ingested yet
+    p.append([_rec("obs-3", "the ledger convention lives in trial-ledger.py", 3, "sess-c")])
+    grown = p.retrieve(_case("ledger convention"))
+    assert [i.record_id for i in grown.items] == ["obs-3"]  # canonical mapping survives append
+    assert grown.raw["message_hits"] == 1
+    p.append([_rec("obs-2", "development still uses docker compose", 2, "sess-b")])
+    assert [i.record_id for i in p.retrieve(_case("docker compose")).items] == ["obs-2"]
+    p.close()
+    with pytest.raises(ProviderUnavailable):
+        p.retrieve(_case("docker"))  # closed is closed, appended or not
+
+
+def test_append_is_corpus_mode_only():
+    att = PiLcmStoreReaderProvider(store_path="x.db")
+    with pytest.raises(ProviderUnavailable, match="read-only"):
+        att.append([])
+
+
+def test_history_null_append_grows_the_passthrough():
+    null = PiLcmHistoryNullProvider()
+    null.ingest([_rec("old", "deploy the widget", 1, "s1")])
+    null.append([_rec("new", "deploy the gadget", 5, "s2")])
+    res = null.retrieve(_case("anything"), top_k=1)
+    assert [i.record_id for i in res.items] == ["old", "new"]  # chronological full history
+    assert res.raw["observations_offered"] == 2
+    null.close()

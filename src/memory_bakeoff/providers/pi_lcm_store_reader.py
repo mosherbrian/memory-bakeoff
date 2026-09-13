@@ -297,33 +297,37 @@ class MaterializedStore:
     ordered_records: list[MemoryRecord] = field(default_factory=list)
 
 
-def _materialize_corpus(records: Sequence[MemoryRecord], allow_fts: bool = True) -> MaterializedStore:
-    temp = tempfile.TemporaryDirectory(prefix="memory-bakeoff-pilcm-")
-    path = Path(temp.name) / "lcm.db"
-    con = sqlite3.connect(path)
-    con.executescript(BASE_SCHEMA_SQL)
-    fts_active = False
-    if allow_fts and fts5_supported():
-        con.executescript(FTS_SCHEMA_SQL)
-        fts_active = True
+def _insert_sessions(
+    con: sqlite3.Connection,
+    records: Sequence[MemoryRecord],
+    cwd: str,
+    rowid_to_record: dict[int, str],
+    ordered_out: list[MemoryRecord],
+) -> None:
+    """Insert records grouped by session (one conversation per session_id).
 
+    Shared by materialize and append: the store GROWS the way a real pi-lcm
+    store does, and the FTS sync triggers (when present) keep the index
+    current for appended messages.
+    """
     sessions: dict[str, list[MemoryRecord]] = {}
     for record in records:
         sessions.setdefault(record.session_id, []).append(record)
-
-    rowid_to_record: dict[int, str] = {}
-    ordered_records: list[MemoryRecord] = []
-    cwd = "memory-bakeoff-materialized"
     for session_id in sessions:
         recs_sorted = sorted(sessions[session_id], key=lambda r: (r.timestamp, r.id))
         conv_id = "conv-" + hashlib.sha256(session_id.encode("utf-8")).hexdigest()[:16]
         stamps = [epoch_ms(r.timestamp) for r in recs_sorted]
         con.execute(
             "INSERT INTO conversations (id, session_id, session_file, cwd, created_at, updated_at)"
-            " VALUES (?, ?, NULL, ?, ?, ?)",
+            " VALUES (?, ?, NULL, ?, ?, ?)"
+            " ON CONFLICT(id) DO NOTHING",
             (conv_id, session_id, cwd, iso(min(stamps)), iso(max(stamps))),
         )
-        for seq, record in enumerate(recs_sorted):
+        existing = con.execute(
+            "SELECT COUNT(*) FROM messages WHERE conversation_id = ?", (conv_id,)
+        ).fetchone()[0]
+        for seq_offset, record in enumerate(recs_sorted):
+            seq = existing + seq_offset
             role = str(record.metadata.get("role", "user"))
             cur = con.execute(
                 "INSERT INTO messages (id, conversation_id, entry_id, role, content_text,"
@@ -341,7 +345,22 @@ def _materialize_corpus(records: Sequence[MemoryRecord], allow_fts: bool = True)
                 ),
             )
             rowid_to_record[cur.lastrowid] = record.id
-            ordered_records.append(record)
+            ordered_out.append(record)
+
+
+def _materialize_corpus(records: Sequence[MemoryRecord], allow_fts: bool = True) -> MaterializedStore:
+    temp = tempfile.TemporaryDirectory(prefix="memory-bakeoff-pilcm-")
+    path = Path(temp.name) / "lcm.db"
+    con = sqlite3.connect(path)
+    con.executescript(BASE_SCHEMA_SQL)
+    fts_active = False
+    if allow_fts and fts5_supported():
+        con.executescript(FTS_SCHEMA_SQL)
+        fts_active = True
+
+    rowid_to_record: dict[int, str] = {}
+    ordered_records: list[MemoryRecord] = []
+    _insert_sessions(con, records, "memory-bakeoff-materialized", rowid_to_record, ordered_records)
     con.commit()
     con.close()
     return MaterializedStore(temp=temp, path=path, rowid_to_record=rowid_to_record, fts_active=fts_active, ordered_records=ordered_records)
@@ -473,6 +492,23 @@ class PiLcmStoreReaderProvider(MemoryProvider):
         self._store_used = mat.path
         self.remember_records(records)
 
+    def append(self, records: Sequence[MemoryRecord]) -> None:
+        """Grow the corpus store in place (chronology protocol: later
+        sessions append; the store the arm queries is the same store,
+        grown — pi-lcm's real store behavior). Corpus mode only."""
+        if self.attach:
+            raise ProviderUnavailable("append is a corpus-mode operation; the attach arm is read-only by construction")
+        if self._store_used is None:
+            return self.ingest(records)
+        con = sqlite3.connect(self._store_used)
+        try:
+            scratch: list[MemoryRecord] = []
+            _insert_sessions(con, records, "memory-bakeoff-materialized", self._rowid_to_record, scratch)
+        finally:
+            con.commit()
+            con.close()
+        self._records.update({r.id: r for r in records})
+
     # ── retrieve ───────────────────────────────────────────────────────────
 
     def retrieve(self, case: QueryCase, top_k: int = 5) -> RetrievalResult:
@@ -597,6 +633,7 @@ class PiLcmHistoryNullProvider(MemoryProvider):
         self._temp: tempfile.TemporaryDirectory | None = None
         self._null: LongContextNull | None = None
         self._store_path: Path | None = None
+        self._all_records: list[MemoryRecord] = []
 
     def probe(self) -> ProviderProbe:
         held = self._null.inventory()["observations_held"] if self._null else 0
@@ -630,10 +667,22 @@ class PiLcmHistoryNullProvider(MemoryProvider):
         mat = _materialize_corpus(records, allow_fts=False)
         self._temp = mat.temp
         self._store_path = mat.path
-        # Ingestion order = the store's chronological order (timestamp, then
-        # seq within session) — how a pi-lcm multi-session history replays.
-        self._null = LongContextNull([{"id": r.id, "text": r.text} for r in mat.ordered_records])
+        self._all_records = list(mat.ordered_records)
+        self._rebuild_null()
         self.remember_records(records)
+
+    def append(self, records: Sequence[MemoryRecord]) -> None:
+        """Grow the raw history in place (chronology protocol): the store's
+        chronological presentation is recomputed over the cumulative set."""
+        if self._null is None:
+            return self.ingest(records)
+        self._all_records.extend(records)
+        self._all_records.sort(key=lambda r: (r.timestamp, r.session_id, r.id))
+        self._rebuild_null()
+        self._records.update({r.id: r for r in records})
+
+    def _rebuild_null(self) -> None:
+        self._null = LongContextNull([{"id": r.id, "text": r.text} for r in self._all_records])
 
     def retrieve(self, case: QueryCase, top_k: int = 5) -> RetrievalResult:
         if self._null is None:

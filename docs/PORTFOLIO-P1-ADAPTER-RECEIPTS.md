@@ -90,12 +90,15 @@ run. Statuses: RECEIPTED (green) / PENDING / DROPPED-BY-NAME.
   As-committed run at HEAD: composition 6/6 + reader contract 12/12 = **18
   passed**; full sweep rings 1+2 = **471 passed** + the one pre-existing
   documented KNOWN_FAILURES-staleness alarm.
-- **Remaining for P2:** the dataset prerequisite is CLEARED (2026-09-13,
-  receipt `docs/PORTFOLIO-P1-discovery/MEMCONFLICT-MATERIALIZATION.md`) —
-  the run matrix can now compose arms by the declared names in
-  `portfolio.py` against the real benchmark dataset. Attach mode remains
-  the anchor arm against Brian's real store and is not corpus-scoreable
-  by construction.
+- **P2 ENTRY RUN landed 2026-09-13** (`results/p2_entry_20260913/`,
+  scripts/experiment_20260913_p2_entry/): the locked baseline arms ran the
+  full heldout-27 chronology protocol (3,351 questions / 3,189 measured /
+  162 unmeasured) behind the run-pin gate, $0, no LLM. Dynamic Hit@3:
+  tool-level reader **0.2227**, raw reader 0.0 (strict-AND, no relaxation),
+  both nulls 0.0 — and the two null arms (provider passthrough vs engine
+  seam) produced identical aggregates, an internal-consistency receipt.
+  Next for P2: the portfolio's external candidates enter through the same
+  runner.
 
 ## long-context null (row 18/row 4) — RECEIPTED 2026-09-12
 
