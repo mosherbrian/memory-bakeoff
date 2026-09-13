@@ -77,10 +77,25 @@ run. Statuses: RECEIPTED (green) / PENDING / DROPPED-BY-NAME.
   passed**.
 - **Host note:** sqlite 3.50.2, FTS5 native (the LIKE fallback path is also
   tested by disabling it).
-- **Remaining for P2:** compose the corpus-mode arm into the memconflict run
-  beside the long-context null and the multi-session-history null (runner
-  composition, next build turn); attach mode is the anchor arm against
-  Brian's real store and is not corpus-scoreable by construction.
+- **P2 composition receipt (this slice):** composed at `962f6c6` —
+  `src/memory_bakeoff/portfolio.py` declares the three locked baseline arms
+  in one place (`LOCKED_BASELINE_ARMS` = longcontext_null engine seam +
+  `pi_lcm_store_reader` + `pi_lcm_history_null` provider arms) and
+  `validate_composition()` raises on any drift (renamed arm, changed
+  experiment class, engine version), so a P2 run cannot silently compose a
+  different portfolio. Composition suite `tests/test_portfolio_composition.py`
+  **6/6**: declaration-vs-registry, both pi-lcm arms end-to-end through the
+  shared harness (`runner.run_provider` on the shared corpus, status ok +
+  publishable), history-null passthrough semantics, same-store proof.
+  As-committed run at HEAD: composition 6/6 + reader contract 12/12 = **18
+  passed**; full sweep rings 1+2 = **471 passed** + the one pre-existing
+  documented KNOWN_FAILURES-staleness alarm.
+- **Remaining for P2:** the memconflict benchmark execution itself — gated
+  on its stated prerequisite (materialize the pinned 182 MB
+  `external/MemConflict` at `ec51d5d`, dataset sha `8ef9ec…`), then the run
+  matrix composes arms by the declared names. Attach mode remains the
+  anchor arm against Brian's real store and is not corpus-scoreable by
+  construction.
 
 ## long-context null (row 18/row 4) — RECEIPTED 2026-09-12
 
@@ -89,8 +104,11 @@ run. Statuses: RECEIPTED (green) / PENDING / DROPPED-BY-NAME.
   imputed scores, limit-as-ceiling, snapshot no-ops, inventory honesty, token
   accounting). Suite `tests/test_longcontext_null_contract.py` +
   `tests/test_stale_use_penalty.py` = 15 passed in 0.07s on this host
-  (PYTHONPATH note in the commit message). Remaining: compose into the
-  memconflict run as an arm (runner composition, next build turn).
+  (PYTHONPATH note in the commit message). Composition: `portfolio.py`
+  declares its engine seam (`ENGINE_ARMS`, version-pinned
+  `longcontext-null-v1`); the new `pi_lcm_history_null` provider arm
+  delegates to `LongContextNull` itself, so the null semantics are literally
+  this instrument's code (`962f6c6`).
 
 ## letta / langmem / a_mem / memobase / memos (upstream harnesses) — PENDING
 
