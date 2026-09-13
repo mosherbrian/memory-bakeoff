@@ -91,3 +91,14 @@ admission scans, history, get_entity, recall outputs, admission-chain
 transcript (agent register → authority_set → admission_decide), direct
 sqlite dump, and the labeled supplementary dry-run. `probe.sh` reproduces
 the whole sequence deterministically against fresh scratch vaults.
+
+## Receipt determinism (appended 2026-09-12, Kiln hygiene pulse)
+
+`probe.sh` re-run at HEAD bb0b4b0 (2026-09-12): exit 0, and the regenerated
+`receipts/` differ from the committed ones in **volatile identifiers only** —
+`created_at_unix_ms`, `auth-*` session ids, `mem-*` note ids (time-seeded,
+not content hashes). Every non-volatile field is byte-identical: same note
+keys, `status='proposed'`, `links=[]`, buffer layer, two coexisting
+undifferentiated notes, same admission dead-end. The findings above
+reproduce exactly. Committed receipts stay the canonical evidence;
+classification receipt: `team/KILN-RD-RECEIPT-HYGIENE-20260912.md`.
