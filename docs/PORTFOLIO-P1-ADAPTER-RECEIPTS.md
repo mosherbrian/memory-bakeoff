@@ -90,12 +90,12 @@ run. Statuses: RECEIPTED (green) / PENDING / DROPPED-BY-NAME.
   As-committed run at HEAD: composition 6/6 + reader contract 12/12 = **18
   passed**; full sweep rings 1+2 = **471 passed** + the one pre-existing
   documented KNOWN_FAILURES-staleness alarm.
-- **Remaining for P2:** the memconflict benchmark execution itself — gated
-  on its stated prerequisite (materialize the pinned 182 MB
-  `external/MemConflict` at `ec51d5d`, dataset sha `8ef9ec…`), then the run
-  matrix composes arms by the declared names. Attach mode remains the
-  anchor arm against Brian's real store and is not corpus-scoreable by
-  construction.
+- **Remaining for P2:** the dataset prerequisite is CLEARED (2026-09-13,
+  receipt `docs/PORTFOLIO-P1-discovery/MEMCONFLICT-MATERIALIZATION.md`) —
+  the run matrix can now compose arms by the declared names in
+  `portfolio.py` against the real benchmark dataset. Attach mode remains
+  the anchor arm against Brian's real store and is not corpus-scoreable
+  by construction.
 
 ## long-context null (row 18/row 4) — RECEIPTED 2026-09-12
 
@@ -112,9 +112,15 @@ run. Statuses: RECEIPTED (green) / PENDING / DROPPED-BY-NAME.
 
 ## letta / langmem / a_mem / memobase / memos (upstream harnesses) — PENDING
 
-- Prerequisite: materialize `external/MemConflict` (182 MB, pinned
-  `ec51d5d`, dataset sha `8ef9ec…`) — not yet started. Provisioning is
-  "run the benchmark's own shipped harness", not adapter authoring.
+- Prerequisite CHANGED 2026-09-13: `external/MemConflict` is now
+  MATERIALIZED and triple-pin-verified (commit `ec51d5d…`, blob
+  `6dcbf9e5…`, sha256 `8ef9ec…` — receipt
+  `docs/PORTFOLIO-P1-discovery/MEMCONFLICT-MATERIALIZATION.md`); the
+  dataset-dependent contract suites are green (61/61) and the known-
+  failures baseline was pruned accordingly. What remains for these rows
+  is provisioning the benchmark's own shipped harnesses (182 MB dataset
+  landed; harness provisioning is "run the shipped harness", not adapter
+  authoring).
 
 ## native capture (pi native remember/admission) — RECEIPTED AS INERT (prior record)
 

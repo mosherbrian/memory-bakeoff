@@ -12,10 +12,10 @@ bespoke side door:
 - ``pi_lcm_history_null`` — provider interface (the SAME materialization
   presented as raw history via ``LongContextNull`` itself).
 
-The memconflict benchmark execution stays gated on its stated
-prerequisite (materialize the pinned 182 MB ``external/MemConflict``
-dataset at ``ec51d5d``, dataset sha ``8ef9ec…``). This module composes
-the arms; it does not run them.
+The memconflict benchmark dataset is materialized and triple-pin-verified
+(commit `ec51d5d…`, blob `6dcbf9e5…`, sha256 `8ef9ec…`; receipt
+`docs/PORTFOLIO-P1-discovery/MEMCONFLICT-MATERIALIZATION.md`, 2026-09-13).
+This module composes the arms; executing the run matrix is the P2 turn.
 """
 from __future__ import annotations
 
