@@ -176,3 +176,33 @@ def test_mask_quotes_keeps_unquoted_text_intact():
     # the quoted span is replaced by whitespace; patterns are
     # whitespace-insensitive so matching semantics are unchanged
     assert mask_quotes('use bun, not npm "and the rest says things"').strip() == "use bun, not npm"
+
+
+def test_closed_sessions_rule_and_record_ids(tmp_path):
+    import os
+    import time
+
+    projects = tmp_path / "projects"
+    closed_dir = projects / PROJECT
+    closed_dir.mkdir(parents=True)
+    closed = closed_dir / "closed.jsonl"
+    closed.write_text(json.dumps(_user("a quiet status note")) + "\n", encoding="utf-8")
+    fresh_dir = projects / f"{PROJECT}-live"
+    fresh_dir.mkdir(parents=True, exist_ok=True)
+    fresh = fresh_dir / "live.jsonl"
+    fresh.write_text(json.dumps(_user("a quiet status note")) + "\n", encoding="utf-8")
+    # make 'closed' look 2 hours old; 'fresh' stays now
+    old = time.time() - 2 * 3600
+    os.utime(closed, (old, old))
+
+    stats = scan(projects, f"{PROJECT}*", tmp_path / "out",
+                 exclude_mtime_within_minutes=60)
+    assert stats["files_scanned"] == 1  # only the closed session
+    assert stats["files_excluded_open"] == 1  # the live file, excluded
+    assert stats["excluded_open_names"] and "live.jsonl" in stats["excluded_open_names"][0]
+
+    # records carry stable ids
+    events = (tmp_path / "out" / "correction-events.jsonl").read_text().splitlines()
+    for line in events:
+        rid = json.loads(line)["record_id"]
+        assert rid.startswith("tm-") and len(rid) == 19

@@ -131,19 +131,35 @@ def iter_records(path: Path):
                 yield line_no, record
 
 
-def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
+def _event_id(rel: str, line_no: int, cls: str) -> str:
+    """Stable id for one mined record (corpus-private, deterministic)."""
+    return "tm-" + hashlib.sha256(f"{rel}:{line_no}:{cls}".encode()).hexdigest()[:16]
+
+
+def scan(projects_dir: Path, project_glob: str, out_dir: Path,
+         exclude_mtime_within_minutes: int = 0) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     events_path = out_dir / "correction-events.jsonl"
     facts_path = out_dir / "durable-facts.jsonl"
     repeat_index: dict[str, list[dict]] = {}
     user_turns = 0
     files_scanned = 0
+    files_excluded_open = 0
+    excluded_names: list[str] = []
     scan_facts: list[dict] = []
-
+    import time as _time
+    now = _time.time()
+    fresh_cutoff = now - exclude_mtime_within_minutes * 60
     with events_path.open("w", encoding="utf-8") as events_fh, facts_path.open("w", encoding="utf-8") as facts_fh:
         project_dirs = sorted(projects_dir.glob(project_glob))
         for project_dir in project_dirs:
             for path in sorted(project_dir.rglob("*.jsonl")):
+                # CLOSED-SESSIONS rule (Brian, scale-up 2026-09-13): skip any
+                # file still being written (modified within the cutoff).
+                if exclude_mtime_within_minutes and path.stat().st_mtime > fresh_cutoff:
+                    files_excluded_open += 1
+                    excluded_names.append(str(path.relative_to(projects_dir)))
+                    continue
                 files_scanned += 1
                 rel = str(path.relative_to(projects_dir))
                 # Subagent JSONLs' "user" records are the ORCHESTRATOR's briefs
@@ -171,7 +187,8 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
                     for cls, pattern in CORRECTION_PATTERNS:
                         if pattern.search(masked if cls != "negation" else masked[:40]):
                             events_fh.write(json.dumps(
-                                {"class": cls, "excerpt": text[:400], **where},
+                                {"record_id": _event_id(rel, line_no, cls),
+                                 "class": cls, "excerpt": text[:400], **where},
                                 sort_keys=True) + "\n")
                     # env-fact correction variant "it's X, not Y" is covered by
                     # env_fact_correction + actually; repeats handled after scan
@@ -188,7 +205,8 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
                         if cls not in seen_cls and pattern.search(text):
                             seen_cls.add(cls)
                             facts_fh.write(json.dumps(
-                                {"class": cls, "excerpt": text[:400], **where},
+                                {"record_id": _event_id(rel, line_no, "fact-" + cls),
+                                 "class": cls, "excerpt": text[:400], **where},
                                 sort_keys=True) + "\n")
                 scan_facts.append({"file": rel, "user_turns": n_user,
                                    "bytes": path.stat().st_size})
@@ -209,6 +227,9 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
     stats = {
         "project_glob": project_glob,
         "files_scanned": files_scanned,
+        "files_excluded_open": files_excluded_open,
+        "excluded_open_names": excluded_names,
+        "exclude_mtime_within_minutes": exclude_mtime_within_minutes,
         "user_text_turns": user_turns,
         "scan_by_file": scan_facts,
         "by_project": {},
@@ -239,8 +260,11 @@ def main() -> int:
     parser.add_argument("--projects-dir", type=Path, required=True)
     parser.add_argument("--project-glob", default="-var-home-bmosher-memory-bake-off*")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--exclude-mtime-within-minutes", type=int, default=0,
+                        help="closed-sessions rule: skip files modified within the last N minutes")
     args = parser.parse_args()
-    stats = scan(args.projects_dir, args.project_glob, args.out)
+    stats = scan(args.projects_dir, args.project_glob, args.out,
+                 exclude_mtime_within_minutes=args.exclude_mtime_within_minutes)
     print(json.dumps({k: v for k, v in stats.items()
                       if k not in ("scan_by_file", "outputs")}, indent=2, sort_keys=True))
     return 0
