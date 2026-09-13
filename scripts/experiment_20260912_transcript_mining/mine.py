@@ -35,6 +35,10 @@ NON_OPERATOR_PREFIXES = (
     "this session is being continued",
     # conductor/system event records
     "<task-notification>",
+    # a frequently-reused operator MACRO (condense-for-vault): its pasted
+    # payload tail fires several correction classes; scale-up precision
+    # pass found it in ~20% of the sampled events (2026-09-13)
+    "condense the tool payload below",
 )
 
 # Conductor seat-dispatch templates ("fsync — watch tick:", "RETRO-1 (…"):

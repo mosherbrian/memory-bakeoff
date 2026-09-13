@@ -66,6 +66,8 @@ def test_operator_text_extraction_rules(tmp_path):
     assert operator_texts(_user("<task-notification> <task-id>x</task-id>")) == ""
     assert operator_texts(_user("fsync — watch tick: post your utilization report")) == ""
     assert operator_texts(_user("RETRO-1 (Brian's ask; one turn): read the prompt file")) == ""
+    assert operator_texts(_user(
+        "Condense the tool payload below to under 12800 characters. It is going into an observation record.")) == ""
     blocky = {"type": "user", "message": {"role": "user", "content": [
         {"type": "text", "text": "real operator words"}]}}
     assert operator_texts(blocky) == "real operator words"
