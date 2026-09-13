@@ -14,3 +14,15 @@ REAL-home user site-packages):
   build slice.
 - Suites needing external services or metered lanes are out of this
   convention's scope; they run behind their own receipts.
+
+## Meta-suite note (2026-09-12): tests/test_known_failures_baseline.py
+
+This file is a SENTINEL, not a sweep subject: its fixture re-runs the whole
+suite in a subprocess and compares failure ids against
+`tests/KNOWN_FAILURES.json`. Exclude it from flake-sweep rings (a sweep
+would trigger a full-suite run). It needs the canonical PYTHONPATH above —
+its subprocess now MERGES `src:vendor/membukkit/src` into the inherited
+PYTHONPATH and fails loudly when the subprocess shows no pytest run
+evidence (previously it replaced the path, died pre-import in
+redirected-HOME lanes, and passed vacuously; see
+`team/KILN-KNOWN-FAILURES-GUARD-20260912.md`).
