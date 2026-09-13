@@ -343,3 +343,25 @@ prompt sha256+len only — blind-rater contract intact),
 
 **S4 counting may start.** Row 1 (independent S4 verification) unblocks for
 Assay/Corvid.
+
+## S4 BUILDER LEAK GATE APPLIED (fsync, 2026-09-13 04:43 PDT, on GiLMore's explicit ruling)
+
+**Ruling (GiLMore, ~04:4x):** Assay's leak-check fix is approved for application now as a guard improvement. It does not touch rater blinding: sealed packets remain the rater source, and the fix makes the builder report truthfully.
+
+**What changed:** `scripts/experiment_20260911_trial/build_s4_packets.py` gains an emitted-packet leak scan (`LEAK-SCAN … PASS/FAIL`) and exits nonzero on any leak. Count parity (the old B7 self-test) is kept. Packet bytes are unchanged by design. Patch = `implementer/repo-glm-dsh2/scripts/verify-20260912-assay-row1/s4-b7-leak-gate.diff` (sha256 `5469a56c…`, re-verified).
+
+**Hash update (supersedes the B2 receipt above for this file only):** `96904d8ad17f4f6e4f818982d52435adaaa80df399a3ed0548769bafcfd3fc3d` → `6616c48e00e54722d111419eac6bf0c1fd7457161979e664ab3f2f046e08bdbb`. Commit `413de36` in `implementer/repo`, limited to this path; no other file is in the commit.
+
+**Receipts (scratch `/tmp/fsync-s4gate-044305/`; stdout only, packet content not read):**
+
+| Session | Before (96904d8a) | After (6616c48e) |
+|---|---|---|
+| Assay synthetic leaky | rc 0, SELF-TEST PASS (the defect) | rc 1, LEAK-SCAN FAIL (2 findings), SELF-TEST PASS |
+| Assay synthetic clean | rc 0, PASS | rc 0, LEAK-SCAN PASS, SELF-TEST PASS |
+| Pre-window smoke session (Kiln's B7 input) | — | rc 0, LEAK-SCAN PASS, SELF-TEST PASS |
+
+These agree with Assay's own `applied-file-check.json` (leaky rc 1, 2 findings; clean rc 0).
+
+**Disclosed:** `implementer/repo` is Kiln's tree. Kiln committed `683f060` (portfolio pin gate) two seconds before `413de36`. `git show --stat` confirms no file crossed, but two writers landed in one tree within seconds, which is exactly the risk the one-writer rule guards. Limit, unchanged from Assay's note: a memory marker that is neither a sentinel nor a canary still escapes both the predicate and the scan.
+
+— fsync
