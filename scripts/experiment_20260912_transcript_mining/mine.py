@@ -87,6 +87,26 @@ REPEAT_MIN_CHARS = 25
 
 QUOTED_SPAN = re.compile(r'"[^"]{2,}"|[“”][^“”]{2,}[“”]')
 
+# Pasted terminal/tool-output indicators: shell prompts, syslog lines,
+# box-drawing tables, seq listings. A turn dominated by these is a PASTE.
+OUTPUT_INDICATOR = re.compile(
+    r"^\s*\$ "
+    r"|^[\w.@-]+@[\w.-]+:[~\w/]*\$ "
+    r"|^\w{3} +\d{1,2} \d{2}:\d{2}:\d{2} "  # syslog: Aug 21 13:34:02
+    r"|^\s*[┌┬├└│┊╷╎╿┊╵╹┝┞╘╛] "
+    r"|^\s*seq +\d+"
+    r"|\w+\[\d+\]: "
+    r"|^\s*\d+ \d{2}-\d{2} \d{2}:\d{2}")
+
+
+def pasted_output_ratio(text: str) -> float:
+    """Fraction of non-empty lines that look like terminal/tool output."""
+    lines = [ln for ln in text.splitlines() if ln.strip()]
+    if len(lines) < 3:
+        return 0.0  # short turns: not enough signal, never flagged
+    hits = sum(1 for ln in lines if OUTPUT_INDICATOR.search(ln))
+    return hits / len(lines)
+
 
 def mask_quotes(text: str) -> str:
     """Blank out quoted spans (operator quoting a model is not an operator
@@ -188,11 +208,13 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
                     # correction events run on quote-masked text: the
                     # operator QUOTING a model is not the operator correcting
                     masked = mask_quotes(text)
+                    paste = pasted_output_ratio(text) >= 0.5
                     for cls, pattern in CORRECTION_PATTERNS:
                         if pattern.search(masked if cls != "negation" else masked[:40]):
                             events_fh.write(json.dumps(
                                 {"record_id": _event_id(rel, line_no, cls),
-                                 "class": cls, "excerpt": text[:400], **where},
+                                 "class": cls, "excerpt": text[:400],
+                                 "pasted_output": paste, **where},
                                 sort_keys=True) + "\n")
                     # env-fact correction variant "it's X, not Y" is covered by
                     # env_fact_correction + actually; repeats handled after scan

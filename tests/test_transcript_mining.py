@@ -208,3 +208,25 @@ def test_closed_sessions_rule_and_record_ids(tmp_path):
     for line in events:
         rid = json.loads(line)["record_id"]
         assert rid.startswith("tm-") and len(rid) == 19
+
+
+def test_pasted_output_flagged_but_not_dropped(tmp_path):
+    """A genuine correction sentence followed by a big terminal paste is
+    LABELED pasted_output=True — labeled, never dropped (the correction
+    sentence must survive for consumers)."""
+    from scripts.experiment_20260912_transcript_mining.mine import pasted_output_ratio
+
+    paste = ("That's wrong — it doesn't seem to be running.\n"
+             "bmosher@cds-ai-a5410:~$ systemctl --user is-active llama-swap\n"
+             "active\n"
+             "bmosher@cds-ai-a5410:~$ journalctl --user -u llama-swap -n 50\n"
+             "Jul 28 12:21:01 cds-ai-a5410 llama-swap[9757]: started\n"
+             "Jul 28 12:21:02 cds-ai-a5410 llama-swap[9757]: ready\n")
+    assert pasted_output_ratio(paste) >= 0.5
+    assert pasted_output_ratio("No, use the raw tool instead.") == 0.0  # short + no indicators
+
+    _write_session(tmp_path, "a.jsonl", [_user(paste)])
+    stats = scan(tmp_path / "projects", f"{PROJECT}*", tmp_path / "out")
+    events = (tmp_path / "out" / "correction-events.jsonl").read_text().splitlines()
+    flagged = [json.loads(e) for e in events if json.loads(e).get("pasted_output")]
+    assert flagged and all(e["pasted_output"] for e in flagged)
