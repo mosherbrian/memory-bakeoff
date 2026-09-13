@@ -204,12 +204,16 @@ def cmd_close(a):
     ndrop = 0
     for i, f in enumerate(picked):
         ndrop += _strip_arm(raw / f"{i:03d}-{f.name}", stripped / f"{i:03d}-{f.name}")
-    for pat, why in ((("notifications.jsonl",), "pi notifications log"), (("traces",), "pi traces")):
+    for pat, why, label in ((("notifications.jsonl",), "pi notifications log", "notifications.jsonl"),
+                            (("traces/**/*",), "pi traces", "traces")):
         found = [p for p in agent_dir().rglob(pat[0]) if p.is_file() and within(p)]
         for f in found[:50]:
-            d = raw / f"agent-{f.name}"; shutil.copy2(f, d)
+            d = raw / f"agent-{f.name}"
+            if d.exists():  # multiple trace files can share a basename; never overwrite evidence
+                d = raw / f"agent-{len(manifest):03d}-{f.name}"
+            shutil.copy2(f, d)
             manifest.append({"file": d.name, "sha256": sha256_file(d), "why": why})
-        if not found: missing.append(f"{pat[0]}: none found under {agent_dir()} in window (recorded, not fabricated)")
+        if not found: missing.append(f"{label}: none found under {agent_dir()} in window (recorded, not fabricated)")
     lcm = agent_dir() / "lcm"; stores = []
     if lcm.is_dir():
         for f in sorted(lcm.glob("*.db")):

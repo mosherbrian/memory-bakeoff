@@ -1,0 +1,15 @@
+branch: reset/practical-pi-20260907
+HEAD: a44b321 team_sync: single-source the record (RETRO-S1 one-change built) - script
+
+== check_invalidated_pointers.py . ==
+    invalidated_dirs=8  refs=11  uncued=1  dangling=0
+    [UNCUED] RESULTS.md:85 -> results/hindsight_gen4_core_r1
+rc=1
+
+== check_results_value_pointers.py . ==
+    unbacked RESULTS.md rows: 2
+    RESULTS.md:81 stated=[0.542, 0.583, 32.9] links: membukkit_stress_lsa=[(0.458, 0.375)], membukkit_core=[(0.333, 0.25)]
+    RESULTS.md:82 stated=[0.75, 0.875] links: membukkit_hybrid_1.0=[(0.5, 0.417)], membukkit_stress=[(0.083, 0.083)]
+
+== git apply --check fix-results-pointer-defects.diff ==
+APPLIES CLEANLY (fix NOT yet applied to this tree)
