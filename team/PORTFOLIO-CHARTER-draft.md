@@ -21,6 +21,11 @@ frozen-commit verification (P1 satisfied by pinned-blob receipt; Kiln's
 supporting fetch receipt: `docs/PORTFOLIO-P1-DISCOVERY.md`). Two folds +
 one table-row update, nothing else touched.
 
+**Patch 4 (2026-09-12, price ruling from Brian relayed by GiLMore —
+amendment-of-record under G0 authority):** official lane prices recorded and
+the P2 worst-case arithmetic line printed in binding form — see §Patch 4.
+Two folds, nothing else touched.
+
 **Patch 3 (2026-09-12, POST-G0 BRIAN DIRECTIVE — amendment-of-record under
 G0 authority, relayed by GiLMore):** three folds, envelope arithmetic
 re-printed, decision log updated (all below, §Patch 3 detail).
@@ -373,3 +378,64 @@ Verbatim: "Cool! Here are some other things I want... Go, Zep parked."
 - Zep: PARKED per Brian.
 - Verity criteria pass: filed (flags 1-5 patched pre-freeze, see Stratum's patch turn).
 - Phase 1 (build) starts now. P4 gate form due at close.
+
+---
+
+## Patch 4 — OFFICIAL PRICE TABLE + P2 WORST-CASE ARITHMETIC LINE (Brian price ruling, 2026-09-12 ~18:5x, relayed by GiLMore)
+
+**Ruling (verbatim from the relay):** official prices = the measured table in
+POLICY — deepseek-direct $0.15/$0.60 per 1M (off-peak), muse $0.10/$0.20 per
+1M, InferX $0, local GPU $0. The worst-case arithmetic line (repeats ×
+per-run lane price, summed) prints at P2 entry and **must be ≤$5**.
+
+**Provenance:** deepseek-direct's rates match the measured POLICY table
+(`~/.local/share/agent-deck/conductor/POLICY.md:190` — "$0.15/M in,
+$0.003/M cached, $0.60/M out", measured 2026-09-11 with the live keys).
+muse/InferX/local recorded from the ruling. Off-peak noted as given; a
+peak-price receipt is owed before any peak-hour run, per the charter's
+"verify with a price receipt before first spend" rule — now satisfied for
+off-peak.
+
+**Official price table (binding for all envelope arithmetic):**
+
+| Lane | $/M input | $/M cached read | $/M output |
+|---|---|---|---|
+| deepseek-direct (off-peak) | 0.15 | 0.003 | **0.60** |
+| muse | 0.10 | — | 0.20 |
+| InferX | 0 | 0 | 0 |
+| local GPU (pi) | 0 | 0 | 0 |
+
+**The P2-entry arithmetic line (binding form):**
+
+> **0.15·T_in + 0.60·T_out ≤ 5.00** (dollars, off-peak),
+
+where T_in / T_out = total millions of input / output tokens summed over
+the full run matrix — every system × task × repeat — on the **most
+expensive metered lane** (deepseek-direct). Cached reads price at $0.003/M
+and are excluded from the worst case. Equivalent flat bound: **≤ 8.33M
+output-equivalent tokens all-in** (matches Patch 3's ≈8.3M under the new
+split pricing).
+
+Worked task-level form for the P2-entry re-print (fill actual counts):
+
+> Σ_over matrix ( repeats × N_tasks × (0.15·t_in + 0.60·t_out) / 1000 ) ≤ 5.00,
+
+with t_in / t_out in thousands of tokens per task as measured by the
+lane-meter (which now counts cache-correct tokens for every reader family —
+builder, RD-THREADS 18:4x; prices remain the missing half until this
+ruling, now supplied).
+
+**Task-budget translation (from Patch 3, unchanged by this patch):** at
+muse's ≈$0.002/task the allowance stays ~2,500 tasks; on deepseek-direct the
+8.33M-token allowance is the binding one. The re-print at P2 entry uses
+actual task counts from the run matrix, and the standing rule is unchanged:
+**all-in-or-not, no top-ups, touching $5 = stop + report.**
+
+**Cross-references:** this patch supplies the prices the anchor map named as
+the envelope hole (`team/ANCHOR-MAP-RD-20260912.md`); the Corner 1 (BAR A
+budget parity) and Corner 2 (capture-burden column) pre-registrations from
+`team/DESIGN-CORNERS-1.md` remain PROPOSED (Verity rule-check pending) and
+should ride the same P2-entry turn as this line's first re-print.
+
+— Stratum, charter maintenance. Patch 4 filed under the ruling's authority;
+nothing else in the charter moved.

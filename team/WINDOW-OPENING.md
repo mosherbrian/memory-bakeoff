@@ -256,3 +256,90 @@ CAIRN:** `record-99a7c505` (the temporary run-manually convention) is now
 outdated in fact — the script is fixed. That is a real convention change with
 a stored record: it is S1 supersession material through the normal gated
 flow, not something to retire quietly.
+
+## S5 notes reconciliation (GiLMore, 2026-09-12 ~18:3x)
+
+The "two pinned interpretive notes recorded conductor-side" (see
+reconciliation above) were recovered verbatim from Verity's seat history and
+are NOW ON FILE at `team/S5-INTERPRETIVE-NOTES.md`, together with a conductor
+pin resolving the one term neither note covered: `tokens` = `sum` (total
+per-call work), chosen as the arm-unfavorable metric before further data
+accumulates. Binding for the window-close run.
+
+## WORKSTREAM B BUILD — change-aware trigger + S4 packet tooling (Kiln, 2026-09-12)
+
+- **Trigger built:** `extensions/pi-change-trigger/` (v0.1.0) — fires on
+  fresh-session / resumption-gap (≥ gapMinutes) / topic-token match with
+  stored decisions (topics from the plaintext notify ledger; documented v1
+  limit: operator CLI seeds are not in the topic source). Injects ONE visible
+  message; no tools; read-only; never blocks the turn; kill switch
+  `PI_CHANGE_TRIGGER=0`. S4 feed conformance: EVERY evaluation logged
+  (fired or not) with prompt sha256 + length + reasons + matched tokens —
+  **prompt text is never logged** (blind-rater contract B1/B2). Tests 15/15.
+- **Config artifact for CAIRN:**
+  `scripts/experiment_20260911_trial/trigger-config-apply.md` — packages
+  entry + `changeTrigger` block + verify command + end-to-end trigger smoke
+  instructions. S4 counting starts only after CAIRN applies and the trigger's
+  own delivery smoke passes (item-0 discipline, same gate as the T0 flip).
+- **B2 redaction script committed:**
+  `scripts/experiment_20260911_trial/build_s4_packets.py` sha256
+  `96904d8ad17f4f6e4f818982d52435adaaa80df399a3ed0548769bafcfd3fc3d`
+  (recorded here per checklist item B2). Self-test on the pre-window smoke
+  session: B7 property PASS — marker count == raw memory-traffic count,
+  operator prompt kept verbatim, tool call + toolResult redacted; a turn with
+  no pre-turn scan receipt correctly labels EXCLUDED-unsupported-state (A2).
+  Queue row 1 (Assay/Corvid verification of S4 counting) is now unblocked.
+
+## Change-trigger apply + smoke (Cairn, 2026-09-12 ~13:55 -0700)
+
+**What:** workstream B change-aware trigger applied to the worker-pi lane per
+Kiln's artifact `scripts/experiment_20260911_trial/trigger-config-apply.md`
+(two-key change: `packages` += `extensions/pi-change-trigger`, new
+`changeTrigger` block: enabled, gapMinutes=30, topicsFile=notifications.jsonl,
+fireLog=change-trigger-firelog.jsonl). Config-only; frozen decision-memory
+extension and nudge companion untouched. Same discipline as the T0 flip.
+
+**Before scan:** `settings.json` sha256 `b4fdbef20b2f9427695fa44429a2325765094d002b8bb08ffbb5b3183fa5aae3`
+(= T0 after-scan hash — no drift since 10:18), mtime 2026-09-12 10:18:37,
+1 package, no `changeTrigger` key.
+
+**After scan (stored state):** sha256 `d702687d4e156f41ae1f4e4725bbc486899f3cdf26be2f8e1add0801c432b999`,
+mtime 2026-09-12 13:54:39, JSON parses, 2 packages, `changeTrigger` exactly
+per artifact, all other keys unchanged (`perseusRecall` byte-identical,
+`allowAgentConfirmed` still true).
+
+**Effective-when:** extension reads config at session start — live from the
+next worker-pi process. Smoke ran a fresh process (RPC mode, real lane:
+`PI_CODING_AGENT_DIR=/home/bmosher/acp-pi/.pi-agent`, model
+`night/qwen3.8-27b-code`, cwd `/var/home/bmosher/acp-pi`).
+
+**Registration (stderr, verbatim):** `pi-change-trigger: registered
+(gapMinutes=30, topicsFile=/home/bmosher/acp-pi/notifications.jsonl,
+fireLog=/home/bmosher/acp-pi/change-trigger-firelog.jsonl;
+PI_CHANGE_TRIGGER=0 kills)` — matches the artifact's expected line.
+
+**Smoke (seed-free, per artifact) — PASS, all three assertions:**
+1. Prompt 1 `What does the trial ledger convention say?` → fire log turn 1:
+   `fired:true, reasons:[fresh,topic], matched_tokens:[ledger,convention]`;
+   session log carries the injected `[change-trigger]` message (custom_message
+   entry between prompt 1 and its answer, "this turn mentions: ledger,
+   convention").
+2. Fire log line with `fired:true` exists (turn 1, above).
+3. Prompt 2 `Reply with the single word: ok` (no topic tokens; verified
+   against the notify-ledger topic set before the run) → fire log turn 2:
+   `fired:false, reasons:[], gap_minutes:0.324`; NO `[change-trigger]` message
+   after prompt 2.
+
+**Method note:** assertion 3 requires a second prompt in the SAME process
+(`fresh` fires on every process's first prompt; gap is process-local —
+documented v1 limit), so the smoke used `pi --mode rpc` (one process, two
+prompts) rather than two `-p` invocations.
+
+**Receipts (frozen):** `window/itemB7-trigger-smoke-stderr.txt` (registration
++ FIRING line), `window/itemB7-trigger-smoke-firelog.txt` (both evaluations,
+prompt sha256+len only — blind-rater contract intact),
+`window/itemB7-trigger-smoke-session-excerpt.txt` (entry placement),
+`window/itemB7-trigger-smoke-events.json` (full event stream).
+
+**S4 counting may start.** Row 1 (independent S4 verification) unblocks for
+Assay/Corvid.
