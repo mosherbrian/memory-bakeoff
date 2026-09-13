@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.experiment_20260912_transcript_mining.mine import (  # noqa: E402
     CORRECTION_PATTERNS,
     FACT_PATTERNS,
+    mask_quotes,
     normalize_for_repeat,
     operator_texts,
     scan,
@@ -136,3 +137,25 @@ def test_pattern_tables_are_named_per_dispatch():
     assert {"wrong", "negation", "i_said", "env_fact_correction", "actually"} <= {
         name for name, _ in CORRECTION_PATTERNS}
     assert {"convention", "env_fact"} <= {name for name, _ in FACT_PATTERNS}
+
+
+def test_quoted_model_speech_does_not_fire_corrections(tmp_path):
+    """The pilot's main residual false positive: the operator QUOTING a
+    model ("it said, \\"...use bun, not npm...\\"") is not a correction."""
+    _write_session(tmp_path, "a.jsonl", [
+        _user('I\'m chatting with a design chat and it said, "Exactly. '
+              'Use bun, not npm, always." That is the whole update.'),
+        _user("Use bun, not npm for real this time."),  # unquoted: fires
+    ])
+    stats = _scan(tmp_path)
+    events = [json.loads(e) for e in
+              (tmp_path / "out" / "correction-events.jsonl").read_text().splitlines()]
+    env_facts = [e for e in events if e["class"] == "env_fact_correction"]
+    assert len(env_facts) == 1  # only the unquoted turn
+    assert "for real this time" in env_facts[0]["excerpt"]
+
+
+def test_mask_quotes_keeps_unquoted_text_intact():
+    # the quoted span is replaced by whitespace; patterns are
+    # whitespace-insensitive so matching semantics are unchanged
+    assert mask_quotes('use bun, not npm "and the rest says things"').strip() == "use bun, not npm"

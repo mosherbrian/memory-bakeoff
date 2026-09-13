@@ -81,6 +81,14 @@ FACT_PATTERNS: list[tuple[str, re.Pattern]] = [
 
 REPEAT_MIN_CHARS = 25
 
+QUOTED_SPAN = re.compile(r'"[^"]{2,}"|[“”][^“”]{2,}[“”]')
+
+
+def mask_quotes(text: str) -> str:
+    """Blank out quoted spans (operator quoting a model is not an operator
+    correction — the pilot's main residual false-positive class)."""
+    return QUOTED_SPAN.sub(" ", text)
+
 
 def normalize_for_repeat(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9\s]", "", text.lower())).strip()
@@ -157,10 +165,11 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
                         "timestamp": record.get("timestamp"),
                         "session": record.get("sessionId"),
                     }
-                    # correction events
-                    lowered = text.lower()
+                    # correction events run on quote-masked text: the
+                    # operator QUOTING a model is not the operator correcting
+                    masked = mask_quotes(text)
                     for cls, pattern in CORRECTION_PATTERNS:
-                        if pattern.search(text if cls != "negation" else text[:40]):
+                        if pattern.search(masked if cls != "negation" else masked[:40]):
                             events_fh.write(json.dumps(
                                 {"class": cls, "excerpt": text[:400], **where},
                                 sort_keys=True) + "\n")
