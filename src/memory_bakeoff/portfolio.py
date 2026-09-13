@@ -19,6 +19,8 @@ This module composes the arms; executing the run matrix is the P2 turn.
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 from memory_bakeoff.longcontext_null import ARM_VERSION as LONGCONTEXT_NULL_VERSION
 
 PROVIDER_ARMS: dict[str, str] = {
@@ -70,3 +72,60 @@ def validate_composition() -> dict:
         "engine_arms": dict(ENGINE_ARMS),
         "locked_baseline_arms": list(LOCKED_BASELINE_ARMS),
     }
+
+
+def assert_run_pins(dataset_path=None) -> dict:
+    """Re-assert contract + dataset + adapter pins before a run writes.
+
+    Harness spec item 3 (charter): "every run re-asserts contract +
+    dataset + adapter pins before writing." This is that gate. Returns
+    the pin receipt dict; raises RuntimeError on any drift.
+
+    - dataset: sha256 of the prepared MemConflict jsonl equals the frozen
+      contract constant.
+    - upstream checkout: HEAD equals the pinned commit when the checkout
+      carries history (the dataset sha is the load-bearing pin otherwise).
+    - adapter arms: every declared provider arm probes available.
+    """
+    import subprocess
+
+    from memory_bakeoff import memconflict
+    from memory_bakeoff.providers import PROVIDERS
+
+    pins: dict[str, object] = {}
+    problems: list[str] = []
+
+    path = Path(dataset_path) if dataset_path else memconflict.DATASET
+    if not path.is_file():
+        problems.append(f"dataset missing: {path}")
+    else:
+        digest = memconflict.dataset_sha256(path)
+        pins["dataset_sha256"] = digest
+        if digest != memconflict.DATASET_SHA256:
+            problems.append(f"dataset sha256 {digest} != pinned {memconflict.DATASET_SHA256}")
+        checkout = getattr(memconflict, "CHECKOUT", None)
+        git_dir = checkout / ".git" if checkout else None
+        if git_dir and git_dir.exists():
+            head = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=checkout,
+                capture_output=True, text=True, timeout=30,
+            )
+            head = head.stdout.strip()
+            pins["upstream_commit"] = head
+            if head != memconflict.UPSTREAM_COMMIT:
+                problems.append(f"upstream checkout HEAD {head} != pinned {memconflict.UPSTREAM_COMMIT}")
+        else:
+            pins["upstream_commit"] = "unverifiable (checkout has no history; dataset sha is the binding pin)"
+
+    for name in PROVIDER_ARMS:
+        provider = PROVIDERS[name]()
+        probe = provider.probe()
+        pins[f"probe:{name}"] = probe.reason
+        if not probe.available:
+            problems.append(f"{name}: probe unavailable - {probe.reason}")
+
+    if problems:
+        raise RuntimeError("run-pin drift: " + "; ".join(problems))
+    pins["contract_version"] = memconflict.CONTRACT_VERSION
+    pins["composition"] = validate_composition()
+    return pins

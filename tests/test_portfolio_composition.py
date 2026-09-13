@@ -12,12 +12,15 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from memory_bakeoff.models import MemoryRecord, QueryCase  # noqa: E402
 from memory_bakeoff.portfolio import (  # noqa: E402
     ENGINE_ARMS,
     LOCKED_BASELINE_ARMS,
+    assert_run_pins,
     validate_composition,
 )
 from memory_bakeoff.providers import PROVIDERS  # noqa: E402
@@ -51,6 +54,25 @@ def test_composition_declaration_matches_the_live_registry():
     assert state["engine_arms"]["longcontext_null"] == "longcontext-null-v1"
     for name in state["provider_arms"]:
         assert name in PROVIDERS
+
+
+def test_run_pin_gate_passes_on_the_materialized_dataset():
+    from memory_bakeoff import memconflict
+
+    if not memconflict.DATASET.is_file():
+        pytest.skip("dataset not materialized on this host")
+    pins = assert_run_pins()  # raises on any drift
+    assert pins["dataset_sha256"] == memconflict.DATASET_SHA256
+    assert pins["contract_version"] == memconflict.CONTRACT_VERSION
+    assert pins["upstream_commit"] == memconflict.UPSTREAM_COMMIT
+    assert "probe:pi_lcm_store_reader" in pins and "probe:pi_lcm_history_null" in pins
+
+
+def test_run_pin_gate_rejects_a_tampered_dataset(tmp_path):
+    tampered = tmp_path / "Step4_4.jsonl"
+    tampered.write_text("not the pinned dataset\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="run-pin drift"):
+        assert_run_pins(dataset_path=tampered)
 
 
 def test_store_reader_runs_end_to_end_through_the_shared_harness():
