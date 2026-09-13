@@ -133,6 +133,23 @@ def test_normalize_for_repeat_is_punctuation_agnostic():
             normalize_for_repeat("always run it please"))
 
 
+def test_by_project_breakdown_counts_files_and_turns_per_project(tmp_path):
+    d1 = tmp_path / "projects" / f"{PROJECT}"
+    d1.mkdir(parents=True, exist_ok=True)
+    (d1 / "a.jsonl").write_text(json.dumps(_user("one neutral turn")) + "\n", encoding="utf-8")
+    d2 = tmp_path / "projects" / f"{PROJECT}-drafter"
+    d2.mkdir(parents=True, exist_ok=True)
+    (d2 / "b.jsonl").write_text(
+        json.dumps(_user("turn one")) + "\n" + json.dumps(_user("turn two")) + "\n",
+        encoding="utf-8")
+    stats = _scan(tmp_path)
+    assert stats["by_project"] == {
+        PROJECT: {"files": 1, "user_turns": 1},
+        f"{PROJECT}-drafter": {"files": 1, "user_turns": 2},
+    }
+    assert "one neutral turn" not in json.dumps(stats)  # counts only
+
+
 def test_pattern_tables_are_named_per_dispatch():
     assert {"wrong", "negation", "i_said", "env_fact_correction", "actually"} <= {
         name for name, _ in CORRECTION_PATTERNS}

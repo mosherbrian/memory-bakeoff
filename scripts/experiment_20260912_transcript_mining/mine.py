@@ -211,6 +211,7 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
         "files_scanned": files_scanned,
         "user_text_turns": user_turns,
         "scan_by_file": scan_facts,
+        "by_project": {},
         "correction_classes": Counter(
             json.loads(line)["class"] for line in events_path.read_text().splitlines()),
         "fact_classes": Counter(
@@ -218,6 +219,15 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path) -> dict:
         "repeated_instruction_groups": repeats,
         "outputs": {"correction_events": str(events_path), "durable_facts": str(facts_path)},
     }
+    # per-project breakdown (scaling upgrade 2): first path component is
+    # the project dir; counts only, never content
+    per_project: dict[str, dict[str, int]] = {}
+    for row in scan_facts:
+        project = Path(row["file"]).parts[0]
+        agg = per_project.setdefault(project, {"files": 0, "user_turns": 0})
+        agg["files"] += 1
+        agg["user_turns"] += row["user_turns"]
+    stats["by_project"] = per_project
     stats["correction_classes"] = dict(stats["correction_classes"])
     stats["fact_classes"] = dict(stats["fact_classes"])
     (out_dir / "stats.json").write_text(json.dumps(stats, indent=2, sort_keys=True), encoding="utf-8")
