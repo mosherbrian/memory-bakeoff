@@ -269,6 +269,15 @@ export default function (pi: any) {
       server = new VaultServer(conn);
       await server.start();
       console.error(`pi-perseus-recall: vault server ${server.version} on ${paths.db}`);
+    } else if (server.isSuspect()) {
+      // Watchdog (2026-09-13 incident): a long-lived serve can deadlock on
+      // scan RPCs while recall stays healthy. A FRESH serve answers
+      // instantly, so on a timeout-suspected serve we respawn instead of
+      // re-using it. The operation that hit the timeout already failed
+      // once; the NEXT call gets a fresh serve.
+      console.error("pi-perseus-recall: vault rpc timeout suspected - respawning serve");
+      await server.restart();
+      console.error(`pi-perseus-recall: vault server respawned (${server.version})`);
     }
     return server;
   };

@@ -33,6 +33,11 @@ export class VaultServer {
   private proc: ChildProcess | null = null;
   private nextId = 1;
   private starting: Promise<void> | null = null;
+  /** Set when an RPC times out: the serve is suspected deadlocked
+      (2026-09-13 trial incident: scan RPCs deadlocked on long-lived
+      serves; a FRESH serve answers instantly). Watchdog: the next
+      getServer() respawns instead of re-using a dead serve. */
+  private suspect = false;
 
   constructor(private cfg: VaultConnectionConfig) {}
 
@@ -54,7 +59,7 @@ export class VaultServer {
     const id = this.nextId++;
     const line = JSON.stringify({ jsonrpc: "2.0", id, method, params }) + "\n";
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error("vault rpc timeout")), 30_000);
+      const timer = setTimeout(() => { this.suspect = true; reject(new Error("vault rpc timeout")); }, 30_000);
       const onData = (chunk: Buffer) => {
         // newline-delimited framing; only resolve on OUR id
         for (const l of chunk.toString().split("\n")) {
@@ -64,6 +69,7 @@ export class VaultServer {
             if (resp.id !== id) continue;
             this.proc!.stdout!.off("data", onData);
             clearTimeout(timer);
+            this.suspect = false;
             if (resp.error) reject(new Error(`vault rpc error: ${JSON.stringify(resp.error)}`));
             else resolve(resp.result);
             return;
@@ -73,6 +79,20 @@ export class VaultServer {
       this.proc.stdout.on("data", onData);
       this.proc.stdin.write(line, (err) => { if (err) { clearTimeout(timer); reject(err); } });
     });
+  }
+
+  isSuspect(): boolean {
+    return this.suspect;
+  }
+
+  /** Kill the suspected-dead serve and start a fresh one. Safe to call
+      repeatedly; concurrent callers share the restart promise. */
+  restart(): Promise<void> {
+    try { this.proc?.kill("SIGTERM"); } catch { /* already gone */ }
+    this.proc = null;
+    this.starting = null;
+    this.suspect = false;
+    return this.start();
   }
 
   /** Start + initialize once; concurrent callers share the promise. */
