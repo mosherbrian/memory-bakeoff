@@ -47,7 +47,10 @@ class LongContextNull:
         """
         self._obs = list(observations)
         self._limit = limit
-        self.tokens_offered = sum(len(str(o.get("text", "")).split()) for o in self._obs)
+        # The offered window is what the reader actually sees. `limit=0` is an
+        # empty window, not "no limit" (`self._obs[-0:]` would return everything).
+        self._offered = self._obs if limit is None else ([] if limit <= 0 else self._obs[-limit:])
+        self.tokens_offered = sum(len(str(o.get("text", "")).split()) for o in self._offered)
 
     def open_read_snapshot(self) -> None:
         """No state to snapshot. Present so the harness can treat this like an engine."""
@@ -62,7 +65,7 @@ class LongContextNull:
         other arm was not what produced their score.
         """
         started = time.perf_counter()
-        window = self._obs if self._limit is None else self._obs[-self._limit:]
+        window = self._offered
         items = [
             {"rank": rank,
              "native_id": str(o.get("id", "")),
@@ -76,7 +79,7 @@ class LongContextNull:
     def inventory(self) -> dict[str, Any]:
         return {"arm": ARM_VERSION,
                 "observations_held": len(self._obs),
-                "observations_offered": len(self._obs) if self._limit is None else min(self._limit, len(self._obs)),
+                "observations_offered": len(self._offered),
                 "approx_tokens_offered": self.tokens_offered,
                 "retrieval_performed": False,
                 "supersession_expressible": False,

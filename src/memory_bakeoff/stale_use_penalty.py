@@ -45,8 +45,10 @@ class StaleUseScore:
 
     @property
     def tolerated(self) -> bool:
-        """Stale was there and did no harm. Worth counting; not worth penalising."""
-        return self.stale_present_in_context and not self.penalised
+        """The current answer was given (stale may or may not be present). A
+        'neither' answer with stale present is *confused*, not tolerated, and is
+        counted separately via its disposition."""
+        return self.disposition is StaleDisposition.CURRENT_ANSWERED
 
 
 def score_stale_use(*, answer_id: str | None, current_id: str,
@@ -100,6 +102,7 @@ def aggregate(scores: list[StaleUseScore]) -> dict[str, float | int]:
         "neither": sum(1 for s in scores if s.disposition is StaleDisposition.NEITHER),
         "stale_present": present,
         "tolerated": sum(1 for s in scores if s.tolerated),
-        "stale_use_rate": (used + used_no_retrieval) / n,
+        "stale_use_rate": used / n,                       # supersession layer only
+        "stale_use_without_retrieval_rate": used_no_retrieval / n,  # provenance layer
         "stale_presence_rate": present / n,
     }
