@@ -331,3 +331,13 @@ def test_digest_reclasses_scheduled_templates(tmp_path):
     assert main(["--facts", str(facts), "--out", str(out)]) == 0
     digest = out.read_text(encoding="utf-8")
     assert "SCHEDULED TASK (template, not per-event corrections)" in digest
+
+
+def test_scan_writes_stats_json(tmp_path):
+    _write_session(tmp_path, "a.jsonl", [_user("a quiet status note")])
+    out = tmp_path / "out"
+    scan(tmp_path / "projects", f"{PROJECT}*", out)
+    import json as _json
+    stats = _json.loads((out / "stats.json").read_text(encoding="utf-8"))
+    assert stats["user_text_turns"] == 1
+    assert stats["files_scanned"] == 1

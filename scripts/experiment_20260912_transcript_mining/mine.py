@@ -319,6 +319,7 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
         agg["files"] += 1
         agg["user_turns"] += row["user_turns"]
     stats["by_project"] = per_project
+    (out_dir / "stats.json").write_text(json.dumps(stats, indent=2, sort_keys=True), encoding="utf-8")
     return stats
 
 
