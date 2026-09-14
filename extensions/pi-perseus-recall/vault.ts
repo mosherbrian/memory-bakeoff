@@ -21,6 +21,7 @@
 
 import { spawn, type ChildProcess } from "node:child_process";
 import { existsSync } from "node:fs";
+import { StringDecoder } from "node:string_decoder";
 
 export interface VaultConnectionConfig {
   bin: string;
@@ -59,25 +60,67 @@ export class VaultServer {
     const id = this.nextId++;
     const line = JSON.stringify({ jsonrpc: "2.0", id, method, params }) + "\n";
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => { this.suspect = true; reject(new Error("vault rpc timeout")); }, 30_000);
-      const onData = (chunk: Buffer) => {
-        // newline-delimited framing; only resolve on OUR id
-        for (const l of chunk.toString().split("\n")) {
+      // Newline-delimited framing; only resolve on OUR id.
+      //   * carry the incomplete tail ACROSS data events (a >64 KiB reply
+      //     arrives in several chunks; splitting each independently drops
+      //     every line that straddles a boundary);
+      //   * decode with StringDecoder so a multibyte UTF-8 char split at a
+      //     chunk boundary is reassembled, not silently corrupted;
+      //   * flush a final line that has no trailing newline on stdout end;
+      //   * teardown on EVERY settle path (response, timeout, stdin error)
+      //     so a timed-out call cannot leak listeners onto the shared stdout.
+      let buf = "";
+      const decoder = new StringDecoder("utf8");
+      let onData: (chunk: Buffer) => void;
+      let onEnd: () => void;
+      let settled = false;
+      let timer: any;
+      const teardown = () => {
+        this.proc!.stdout!.off("data", onData);
+        this.proc!.stdout!.off("end", onEnd);
+        clearTimeout(timer);
+      };
+      const finish = (resp: any) => {
+        if (settled) return;
+        settled = true;
+        teardown();
+        this.suspect = false;
+        if (resp.error) reject(new Error(`vault rpc error: ${JSON.stringify(resp.error)}`));
+        else resolve(resp.result);
+      };
+      const fail = (err: Error) => {
+        if (settled) return;
+        settled = true;
+        teardown();
+        reject(err);
+      };
+      timer = setTimeout(() => {
+        this.suspect = true;
+        fail(new Error("vault rpc timeout"));
+      }, 30_000);
+      const consume = (text: string, flush: boolean) => {
+        buf += text;
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+        if (flush && buf.trim()) {
+          lines.push(buf);
+          buf = "";
+        }
+        for (const l of lines) {
           if (!l.trim()) continue;
           try {
             const resp = JSON.parse(l);
             if (resp.id !== id) continue;
-            this.proc!.stdout!.off("data", onData);
-            clearTimeout(timer);
-            this.suspect = false;
-            if (resp.error) reject(new Error(`vault rpc error: ${JSON.stringify(resp.error)}`));
-            else resolve(resp.result);
+            finish(resp);
             return;
           } catch { /* partial or non-JSON line */ }
         }
       };
+      onData = (chunk: Buffer) => { consume(decoder.write(chunk), false); };
+      onEnd = () => { consume(decoder.end(), true); };
       this.proc.stdout.on("data", onData);
-      this.proc.stdin.write(line, (err) => { if (err) { clearTimeout(timer); reject(err); } });
+      this.proc.stdout.on("end", onEnd);
+      this.proc.stdin.write(line, (err) => { if (err) fail(err); });
     });
   }
 
