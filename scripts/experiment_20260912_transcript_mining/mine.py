@@ -67,21 +67,33 @@ CORRECTION_PATTERNS: list[tuple[str, re.Pattern]] = [
 
 FACT_PATTERNS: list[tuple[str, re.Pattern]] = [
     ("convention", re.compile(
-        r"\b(?:always|never)\s+\w+"
+        r"^\s*(?:always|never)\b"
         r"|\bconvention(?:s)?\s*(?:is|are|:)\b"
         r"|\bfrom now on\b|\bgoing forward\b"
         r"|\bwe (?:decided|agreed|settled|chose)\b"
-        r"|\bremember (?:that|to)\b"
-        r"|\binstead of\b|\bprefer\b|\bplease\s+always\b|\bdon'?t ever\b", re.I)),
+        r"|\bremember to\b", re.I)),
     ("env_fact", re.compile(
         r"(?<!\w)/(?:home|var|etc|opt|mnt|usr)/[\w./@:-]+"
         r"|\b[A-Z][A-Z0-9_]{2,}=\S"
+        r"|\b(?:localhost|\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?"
+        r"|\b[\w.-]+\.(?:lcl|local|internal)(?::\d+)?\b"
         r"|\bport \d{2,5}\b"
-        r"|\bhttps?://[\w.-]+"
-        r"|\b(?:runs?|running) on\b"
-        r"|\bv?\d+\.\d+(?:\.\d+)?\s*(?:on|server|version)"
+        r"|\b(?:runs?|running) on\b.{0,40}\b(?:port|server|host|gpu|box)\b"
         r"|\bpinned (?:at|to|commit)\b", re.I)),
 ]
+
+# Personal-life signals (conservative, precision-exclusion): turns matching
+# this are EXCLUDED from both corpora (correction events AND durable facts)
+# and only counted — Brian's private context must not persist in any mined
+# artifact. Over-exclusion (recall loss) is accepted by design.
+PERSONAL_RE = re.compile(
+    r"\b(?:redfin|zillow|realtor|mls|housing market|home listing|home listings|"
+    r"house hunt\w*|mortgage|escrow)\b"
+    r"|\bschool (?:district|board|year)\b|\bjob board\b"
+    r"|\b(?:wife|husband|spouse|partner|my (?:kids|children|son|daughter))\b"
+    r"|\b(?:facebook|nextdoor|craigslist|instagram)\b"
+    r"|\b(?:grocer(?:y|ies)|food truck|dinner|laundry|errands)\b"
+    r"|\b(?:my (?:house|apartment|home)|our house|new house)\b", re.I)
 
 REPEAT_MIN_CHARS = 25
 
@@ -167,6 +179,7 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
     facts_path = out_dir / "durable-facts.jsonl"
     repeat_index: dict[str, list[dict]] = {}
     user_turns = 0
+    personal_turns = 0
     files_scanned = 0
     files_excluded_open = 0
     excluded_names: list[str] = []
@@ -197,6 +210,11 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
                         continue
                     n_user += 1
                     if is_subagent:
+                        continue
+                    if PERSONAL_RE.search(text):
+                        # privacy filter: personal-life turns are counted and
+                        # NEVER persisted (no excerpt in any output file).
+                        personal_turns += 1
                         continue
                     user_turns += 1
                     where = {
@@ -257,6 +275,7 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
         "excluded_open_names": excluded_names,
         "exclude_mtime_within_minutes": exclude_mtime_within_minutes,
         "user_text_turns": user_turns,
+        "personal_turns_excluded": personal_turns,
         "scan_by_file": scan_facts,
         "by_project": {},
         "correction_classes": Counter(

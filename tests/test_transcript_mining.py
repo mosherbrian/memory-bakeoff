@@ -230,3 +230,19 @@ def test_pasted_output_flagged_but_not_dropped(tmp_path):
     events = (tmp_path / "out" / "correction-events.jsonl").read_text().splitlines()
     flagged = [json.loads(e) for e in events if json.loads(e).get("pasted_output")]
     assert flagged and all(e["pasted_output"] for e in flagged)
+
+
+def test_personal_context_turns_are_excluded_and_only_counted(tmp_path):
+    _write_session(tmp_path, "a.jsonl", [
+        _user("Check Redfin for new home listings in the 97365 ZIP area."),
+        _user("Always run the linter before pushing."),  # genuine convention
+        _user("The store lives at /home/bmosher/.pi/agent/lcm."),  # genuine env fact
+    ])
+    stats = _scan(tmp_path)
+    assert stats["personal_turns_excluded"] == 1
+    assert stats["fact_classes"].get("convention") == 1
+    assert stats["fact_classes"].get("env_fact") == 1
+    blob = (tmp_path / "out" / "durable-facts.jsonl").read_text()
+    assert "Redfin" not in blob and "97365" not in blob  # personal excerpt never persisted
+    events = (tmp_path / "out" / "correction-events.jsonl").read_text()
+    assert "Redfin" not in events
