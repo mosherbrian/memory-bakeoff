@@ -26,7 +26,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--facts", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     rows = [json.loads(l) for l in args.facts.read_text(encoding="utf-8").splitlines() if l.strip()]
     groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
