@@ -282,3 +282,26 @@ def test_digest_handles_empty_input(tmp_path):
     out = tmp_path / "digest.md"
     assert main(["--facts", str(facts), "--out", str(out)]) == 0
     assert "candidates: 0" in out.read_text(encoding="utf-8")
+
+
+def test_digest_tolerates_repeated_instruction_shape(tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts.experiment_20260912_transcript_mining.digest import main
+
+    facts = tmp_path / "correction-events.jsonl"
+    rows = [
+        {"record_id": "tm-9", "class": "repeated_instruction", "occurrences": 2,
+         "excerpt": "always run the focused contract suite before committing",
+         "spots": [{"file": "a.jsonl", "line": 5, "session": "s1"},
+                   {"file": "b.jsonl", "line": 9, "session": "s2"}]},
+        {"record_id": "tm-10", "class": "negation", "excerpt": "No, keep the old vault path.",
+         "file": "c.jsonl", "line": 3, "session": "s3", "timestamp": "t"},
+    ]
+    facts.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    out = tmp_path / "corrections-digest.md"
+    assert main(["--facts", str(facts), "--out", str(out)]) == 0
+    digest = out.read_text(encoding="utf-8")
+    assert "candidates: 2 | unique (normalized): 2" in digest
+    assert "seen 2x in 2 session(s)" in digest  # spots expanded as occurrences
+    assert "a.jsonl:5" in digest  # source pointers from spots retained

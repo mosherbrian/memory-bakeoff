@@ -31,7 +31,13 @@ def main(argv: list[str] | None = None) -> int:
     rows = [json.loads(l) for l in args.facts.read_text(encoding="utf-8").splitlines() if l.strip()]
     groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for r in rows:
-        groups[(r["class"], norm(r["excerpt"])[:120])].append(r)
+        # repeated-instruction groups carry their occurrences in `spots`
+        # (one per source turn) rather than top-level file/line
+        members = [{"class": r["class"], "file": s["file"], "line": s["line"],
+                    "session": s.get("session"), "excerpt": r["excerpt"]}
+                   for s in r.get("spots", [])] if "spots" in r else [r]
+        for member in members:
+            groups[(r["class"], norm(r["excerpt"])[:120])].append(member)
 
     def strength(group):
         sources = {x["file"] for x in group}
