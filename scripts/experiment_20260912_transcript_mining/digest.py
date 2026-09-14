@@ -22,7 +22,7 @@ def norm(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9\s]", "", text.lower())).strip()
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--facts", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)

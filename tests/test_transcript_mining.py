@@ -246,3 +246,39 @@ def test_personal_context_turns_are_excluded_and_only_counted(tmp_path):
     assert "Redfin" not in blob and "97365" not in blob  # personal excerpt never persisted
     events = (tmp_path / "out" / "correction-events.jsonl").read_text()
     assert "Redfin" not in events
+
+
+def test_digest_dedupes_groups_and_ranks_by_strength(tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts.experiment_20260912_transcript_mining.digest import main
+
+    facts = tmp_path / "durable-facts.jsonl"
+    rows = [
+        {"record_id": "tm-1", "class": "env_fact", "excerpt": "The store lives at /srv/mem/db.",
+         "file": "a.jsonl", "line": 1, "session": "s1", "timestamp": "t"},
+        {"record_id": "tm-2", "class": "env_fact", "excerpt": "the store lives at /srv/mem/db",
+         "file": "b.jsonl", "line": 2, "session": "s2", "timestamp": "t"},
+        {"record_id": "tm-3", "class": "convention", "excerpt": "Always run the linter first.",
+         "file": "a.jsonl", "line": 3, "session": "s2", "timestamp": "t"},
+    ]
+    facts.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    out = tmp_path / "digest.md"
+    rc = main(["--facts", str(facts), "--out", str(out)])
+    assert rc == 0
+    digest = out.read_text(encoding="utf-8")
+    assert "candidates: 3 | unique (normalized): 2" in digest  # dedupe by normalized text
+    assert digest.index("env_fact") < digest.index("convention")  # 2 sessions rank above 1
+    assert "a.jsonl:1" in digest and "b.jsonl:2" in digest  # source pointers retained
+
+
+def test_digest_handles_empty_input(tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts.experiment_20260912_transcript_mining.digest import main
+
+    facts = tmp_path / "durable-facts.jsonl"
+    facts.write_text("", encoding="utf-8")
+    out = tmp_path / "digest.md"
+    assert main(["--facts", str(facts), "--out", str(out)]) == 0
+    assert "candidates: 0" in out.read_text(encoding="utf-8")
