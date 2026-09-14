@@ -305,3 +305,27 @@ def test_digest_tolerates_repeated_instruction_shape(tmp_path):
     assert "candidates: 2 | unique (normalized): 2" in digest
     assert "seen 2x in 2 session(s)" in digest  # spots expanded as occurrences
     assert "a.jsonl:5" in digest  # source pointers from spots retained
+
+
+def test_digest_reclasses_scheduled_templates(tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts.experiment_20260912_transcript_mining.digest import main
+
+    facts = tmp_path / "correction-events.jsonl"
+    rows = []
+    for day in range(1, 9):  # 8 consecutive days, same time-of-day
+        rows.append({"record_id": f"tm-{day}", "class": "env_fact_correction",
+                     "excerpt": "Check whether the upstream patch has been merged.",
+                     "file": f"d{day}.jsonl", "line": 3,
+                     "session": f"s{day}",
+                     "timestamp": f"2026-09-{day:02d}T17:00:00Z"})
+    rows.append({"record_id": "tm-x", "class": "negation",
+                 "excerpt": "No, keep the old vault path.",
+                 "file": "d9.jsonl", "line": 1, "session": "s9",
+                 "timestamp": "2026-09-13T10:00:00Z"})
+    facts.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    out = tmp_path / "corrections-digest.md"
+    assert main(["--facts", str(facts), "--out", str(out)]) == 0
+    digest = out.read_text(encoding="utf-8")
+    assert "SCHEDULED TASK (template, not per-event corrections)" in digest

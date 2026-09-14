@@ -14,7 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 
@@ -44,14 +44,34 @@ def main(argv: list[str] | None = None) -> int:
         sessions = {x.get("session") for x in group}
         return (len(sessions), len(sources), len(group))
 
+    def is_scheduled(group) -> bool:
+        """Identical text at the same time-of-day across many distinct dates
+        is a SCHEDULED TASK (cron/scheduler prompt), not a per-event
+        correction — found via the clawdbot 17:00 daily check (2026-09-13)."""
+        if len(group) < 5:
+            return False
+        times = [str(x.get("timestamp", ""))[11:16] for x in group if x.get("timestamp")]
+        dates = {str(x.get("timestamp", ""))[:10] for x in group if x.get("timestamp")}
+        if len(dates) < 5 or len(times) < 5:
+            return False
+        common, count = Counter(times).most_common(1)[0]
+        return count / len(times) >= 0.6
+
+    for group in groups.values():
+        if is_scheduled(group):
+            for x in group:
+                x["class"] = "scheduled_prompt"
+            group[0]["scheduled_task"] = True
+
     ranked = sorted(groups.values(), key=strength, reverse=True)
-    lines = ["# Durable-fact candidates — curation digest", "",
+    lines = ["# Curation digest", "",
              f"- candidates: {len(rows)} | unique (normalized): {len(ranked)}",
              "- sorted by strength: distinct sessions, then distinct files, then repeats", ""]
     for n, group in enumerate(ranked, 1):
         rep = group[0]
         sessions = sorted({x.get("session", "?")[:8] for x in group})
-        lines.append(f"## {n}. [{rep['class']}] seen {len(group)}x in {len(sessions)} session(s)")
+        label = "SCHEDULED TASK (template, not per-event corrections)" if rep.get("scheduled_task") else rep["class"]
+        lines.append(f"## {n}. [{label}] seen {len(group)}x in {len(sessions)} session(s)")
         lines.append(f"- text: {rep['excerpt'][:300]}")
         src = "; ".join(f"{x['file']}:{x['line']}" for x in group[:3])
         lines.append(f"- sources: {src}")
