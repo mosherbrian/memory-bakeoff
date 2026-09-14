@@ -177,88 +177,112 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
     out_dir.mkdir(parents=True, exist_ok=True)
     events_path = out_dir / "correction-events.jsonl"
     facts_path = out_dir / "durable-facts.jsonl"
-    repeat_index: dict[str, list[dict]] = {}
-    user_turns = 0
-    personal_turns = 0
-    files_scanned = 0
-    files_excluded_open = 0
-    excluded_names: list[str] = []
-    scan_facts: list[dict] = []
     import time as _time
     now = _time.time()
     fresh_cutoff = now - exclude_mtime_within_minutes * 60
-    with events_path.open("w", encoding="utf-8") as events_fh, facts_path.open("w", encoding="utf-8") as facts_fh:
-        project_dirs = sorted(projects_dir.glob(project_glob))
-        for project_dir in project_dirs:
-            for path in sorted(project_dir.rglob("*.jsonl")):
-                # CLOSED-SESSIONS rule (Brian, scale-up 2026-09-13): skip any
-                # file still being written (modified within the cutoff).
-                if exclude_mtime_within_minutes and path.stat().st_mtime > fresh_cutoff:
-                    files_excluded_open += 1
-                    excluded_names.append(str(path.relative_to(projects_dir)))
+
+    # --- pass 1: extract operator turns (privacy + voice filters) ---------
+    files_scanned = 0
+    files_excluded_open = 0
+    excluded_names: list[str] = []
+    personal_turns = 0
+    turns: list[dict] = []
+    scan_facts: list[dict] = []
+    project_dirs = sorted(projects_dir.glob(project_glob))
+    for project_dir in project_dirs:
+        for path in sorted(project_dir.rglob("*.jsonl")):
+            # CLOSED-SESSIONS rule (Brian, scale-up 2026-09-13): skip any
+            # file still being written (modified within the cutoff).
+            if exclude_mtime_within_minutes and path.stat().st_mtime > fresh_cutoff:
+                files_excluded_open += 1
+                excluded_names.append(str(path.relative_to(projects_dir)))
+                continue
+            files_scanned += 1
+            rel = str(path.relative_to(projects_dir))
+            # Subagent JSONLs' "user" records are the ORCHESTRATOR's briefs
+            # (model-authored), not operator speech — excluded from voice
+            # detection, still counted for corpus shape.
+            is_subagent = "/subagents/" in rel
+            n_user = 0
+            for line_no, record in iter_records(path):
+                text = operator_texts(record)
+                if not text:
                     continue
-                files_scanned += 1
-                rel = str(path.relative_to(projects_dir))
-                # Subagent JSONLs' "user" records are the ORCHESTRATOR's briefs
-                # (model-authored), not operator speech — excluded from voice
-                # detection, still counted for corpus shape.
-                is_subagent = "/subagents/" in rel
-                n_user = 0
-                for line_no, record in iter_records(path):
-                    text = operator_texts(record)
-                    if not text:
-                        continue
-                    n_user += 1
-                    if is_subagent:
-                        continue
-                    if PERSONAL_RE.search(text):
-                        # privacy filter: personal-life turns are counted and
-                        # NEVER persisted (no excerpt in any output file).
-                        personal_turns += 1
-                        continue
-                    user_turns += 1
-                    where = {
-                        "file": rel,
-                        "line": line_no,
-                        "timestamp": record.get("timestamp"),
-                        "session": record.get("sessionId"),
-                    }
-                    # correction events run on quote-masked text: the
-                    # operator QUOTING a model is not the operator correcting
-                    masked = mask_quotes(text)
-                    paste = pasted_output_ratio(text) >= 0.5
-                    for cls, pattern in CORRECTION_PATTERNS:
-                        if pattern.search(masked if cls != "negation" else masked[:40]):
-                            events_fh.write(json.dumps(
-                                {"record_id": _event_id(rel, line_no, cls),
-                                 "class": cls, "excerpt": text[:400],
-                                 "pasted_output": paste, **where},
-                                sort_keys=True) + "\n")
-                    # env-fact correction variant "it's X, not Y" is covered by
-                    # env_fact_correction + actually; repeats handled after scan
-                    norm = normalize_for_repeat(text)
-                    if len(norm) >= REPEAT_MIN_CHARS:
-                        # 60-char normalized prefix: groups verbatim repeats
-                        # AND trailing-addition near-repeats; 25-char floor
-                        # keeps templated greetings out.
-                        key = norm[:60]
-                        repeat_index.setdefault(key, []).append({**where, "excerpt": text[:400]})
-                    # durable facts
-                    seen_cls: set[str] = set()
-                    for cls, pattern in FACT_PATTERNS:
-                        if cls not in seen_cls and pattern.search(text):
-                            seen_cls.add(cls)
-                            facts_fh.write(json.dumps(
-                                {"record_id": _event_id(rel, line_no, "fact-" + cls),
-                                 "class": cls, "excerpt": text[:400], **where},
-                                sort_keys=True) + "\n")
-                scan_facts.append({"file": rel, "user_turns": n_user,
-                                   "bytes": path.stat().st_size})
+                n_user += 1
+                if is_subagent:
+                    continue
+                if PERSONAL_RE.search(text):
+                    # privacy filter: personal-life turns are counted and
+                    # NEVER persisted (no excerpt in any output file).
+                    personal_turns += 1
+                    continue
+                turns.append({
+                    "text": text,
+                    "file": rel,
+                    "line": line_no,
+                    "timestamp": record.get("timestamp"),
+                    "session": record.get("sessionId"),
+                })
+            scan_facts.append({"file": rel, "user_turns": n_user,
+                               "bytes": path.stat().st_size})
+
+    # --- pass 2: dedupe session-continuation copies -----------------------
+    # A continued/compacted session file COPIES prior turns, so the same
+    # operator turn appears in several files. Counts must count TURNS,
+    # not file copies: dedupe by (timestamp, normalized text), keeping the
+    # first occurrence in deterministic file order.
+    seen_keys: set[str] = set()
+    deduped: list[dict] = []
+    for turn in sorted(turns, key=lambda t: (t["file"], t["line"])):
+        key = f"{turn.get('timestamp')}|{normalize_for_repeat(turn['text'])[:120]}"
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        deduped.append(turn)
+    duplicates_removed = len(turns) - len(deduped)
+    user_turns = len(deduped)
+
+    # --- pass 3: detection (corrections, facts, repeats) ------------------
+    repeat_index: dict[str, list[dict]] = {}
+    events_out: list[dict] = []
+    facts_out: list[dict] = []
+    for turn in deduped:
+        text = turn["text"]
+        where = {"file": turn["file"], "line": turn["line"],
+                 "timestamp": turn["timestamp"], "session": turn["session"]}
+        # correction events run on quote-masked text: the operator QUOTING
+        # a model is not the operator correcting
+        masked = mask_quotes(text)
+        paste = pasted_output_ratio(text) >= 0.5
+        for cls, pattern in CORRECTION_PATTERNS:
+            if pattern.search(masked if cls != "negation" else masked[:40]):
+                events_out.append({
+                    "record_id": _event_id(turn["file"], turn["line"], cls),
+                    "class": cls, "excerpt": text[:400],
+                    "pasted_output": paste, **where})
+        for cls, pattern in FACT_PATTERNS:
+            if pattern.search(text):
+                facts_out.append({
+                    "record_id": _event_id(turn["file"], turn["line"], "fact-" + cls),
+                    "class": cls, "excerpt": text[:400], **where})
+        norm = normalize_for_repeat(text)
+        if len(norm) >= REPEAT_MIN_CHARS:
+            # 60-char normalized prefix: groups verbatim repeats AND
+            # trailing-addition near-repeats; 25-char floor keeps
+            # templated greetings out.
+            repeat_index.setdefault(norm[:60], []).append({**where, "excerpt": text[:400]})
+
+    with events_path.open("w", encoding="utf-8") as events_fh:
+        for e in events_out:
+            events_fh.write(json.dumps(e, sort_keys=True) + "\n")
+    with facts_path.open("w", encoding="utf-8") as facts_fh:
+        for f in facts_out:
+            facts_fh.write(json.dumps(f, sort_keys=True) + "\n")
 
     # repeated instructions: normalized text seen in >=2 distinct turns
     repeats = 0
     with events_path.open("a", encoding="utf-8") as events_fh:
-        for digest, spots in repeat_index.items():
+        for _, spots in repeat_index.items():
             if len(spots) < 2:
                 continue
             repeats += 1
@@ -275,14 +299,15 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
         "excluded_open_names": excluded_names,
         "exclude_mtime_within_minutes": exclude_mtime_within_minutes,
         "user_text_turns": user_turns,
+        "turns_before_dedupe": len(turns),
+        "duplicates_removed": duplicates_removed,
         "personal_turns_excluded": personal_turns,
         "scan_by_file": scan_facts,
         "by_project": {},
         "correction_classes": Counter(
-            json.loads(line)["class"] for line in events_path.read_text().splitlines()),
-        "fact_classes": Counter(
-            json.loads(line)["class"] for line in facts_path.read_text().splitlines()),
+            e["class"] for e in events_out if e["class"] != "repeated_instruction"),
         "repeated_instruction_groups": repeats,
+        "fact_classes": Counter(f["class"] for f in facts_out),
         "outputs": {"correction_events": str(events_path), "durable_facts": str(facts_path)},
     }
     # per-project breakdown (scaling upgrade 2): first path component is
@@ -294,9 +319,6 @@ def scan(projects_dir: Path, project_glob: str, out_dir: Path,
         agg["files"] += 1
         agg["user_turns"] += row["user_turns"]
     stats["by_project"] = per_project
-    stats["correction_classes"] = dict(stats["correction_classes"])
-    stats["fact_classes"] = dict(stats["fact_classes"])
-    (out_dir / "stats.json").write_text(json.dumps(stats, indent=2, sort_keys=True), encoding="utf-8")
     return stats
 
 

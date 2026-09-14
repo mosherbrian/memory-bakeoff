@@ -91,7 +91,9 @@ def test_each_correction_class_fires_on_true_positives(tmp_path):
     found = _event_classes(tmp_path / "out")
     for cls in cases:
         assert cls in found, f"{cls} did not fire"
-    assert stats["user_text_turns"] == len(cases) * 2
+    # 5 unique correction turns + 1 deduped neutral sentence (identical
+    # neutral fixtures across dirs = continuation-copy shape)
+    assert stats["user_text_turns"] == len(cases) + 1
 
 
 def test_neutral_turns_do_not_fire(tmp_path):
