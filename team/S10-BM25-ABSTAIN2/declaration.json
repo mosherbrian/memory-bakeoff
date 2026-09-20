@@ -1,0 +1,18 @@
+{
+ "declared_at": "2026-09-19T00:44:07.393371+00:00",
+ "mechanism": "score-margin",
+ "margin": "zscore-top-vs-case-scores",
+ "threshold": 1.0,
+ "threshold_grid": [
+  0.5,
+  1.0,
+  1.5
+ ],
+ "corpus_sha256": "5a8668f73383ea1acc4806a31df9240cc0eb9186a7be69385a8f23e8be2024be",
+ "manifest_sha256": "d2d189128088f6b938e3c53e583026525446bf27ee6c098bc4526a099ab49561",
+ "rule": {
+  "works_if_abstain_correct_at_least": 1,
+  "and_retrievals_lost_at_most": 0
+ },
+ "preregistration": "the margin is the top score's clearance over the case store's score distribution: z = (max - mean) / pstdev, 0 when all equal. With four-record stores the z range tops at sqrt(3) = 1.732 (one record dominating three equal lows), so the primary threshold 1.0 \u2014 the top score one population-SD clear of the store mean \u2014 is fixed before any run, with 0.5 and 1.5 declared as sensitivity data, never a menu. The rule demands BOTH sides: at least one irrelevant query rejected AND no useful retrieval lost; the refuted token-filter row (S7-BM25-PREFILTER) rejected nothing and lost a retrieval, so a second mechanism must do better on both sides or it is honestly refuted too. The mechanism arm scores the same tokens the control scores \u2014 no query or document token is touched \u2014 so the only question is whether the shape of the score distribution separates the no-subject cases from the real ones"
+}

@@ -1,0 +1,91 @@
+--- a/src/memory_bakeoff/longcontext_null.py
++++ b/src/memory_bakeoff/longcontext_null.py
+@@ -47,7 +47,10 @@
+         """
+         self._obs = list(observations)
+         self._limit = limit
+-        self.tokens_offered = sum(len(str(o.get("text", "")).split()) for o in self._obs)
++        # The offered window is what the reader actually sees. `limit=0` is an
++        # empty window, not "no limit" (`self._obs[-0:]` would return everything).
++        self._offered = self._obs if limit is None else ([] if limit <= 0 else self._obs[-limit:])
++        self.tokens_offered = sum(len(str(o.get("text", "")).split()) for o in self._offered)
+ 
+     def open_read_snapshot(self) -> None:
+         """No state to snapshot. Present so the harness can treat this like an engine."""
+@@ -62,7 +65,7 @@
+         other arm was not what produced their score.
+         """
+         started = time.perf_counter()
+-        window = self._obs if self._limit is None else self._obs[-self._limit:]
++        window = self._offered
+         items = [
+             {"rank": rank,
+              "native_id": str(o.get("id", "")),
+@@ -76,7 +79,7 @@
+     def inventory(self) -> dict[str, Any]:
+         return {"arm": ARM_VERSION,
+                 "observations_held": len(self._obs),
+-                "observations_offered": len(self._obs) if self._limit is None else min(self._limit, len(self._obs)),
++                "observations_offered": len(self._offered),
+                 "approx_tokens_offered": self.tokens_offered,
+                 "retrieval_performed": False,
+                 "supersession_expressible": False,
+--- a/src/memory_bakeoff/stale_use_penalty.py
++++ b/src/memory_bakeoff/stale_use_penalty.py
+@@ -45,8 +45,10 @@
+ 
+     @property
+     def tolerated(self) -> bool:
+-        """Stale was there and did no harm. Worth counting; not worth penalising."""
+-        return self.stale_present_in_context and not self.penalised
++        """The current answer was given (stale may or may not be present). A
++        'neither' answer with stale present is *confused*, not tolerated, and is
++        counted separately via its disposition."""
++        return self.disposition is StaleDisposition.CURRENT_ANSWERED
+ 
+ 
+ def score_stale_use(*, answer_id: str | None, current_id: str,
+@@ -100,6 +102,7 @@
+         "neither": sum(1 for s in scores if s.disposition is StaleDisposition.NEITHER),
+         "stale_present": present,
+         "tolerated": sum(1 for s in scores if s.tolerated),
+-        "stale_use_rate": (used + used_no_retrieval) / n,
++        "stale_use_rate": used / n,                       # supersession layer only
++        "stale_use_without_retrieval_rate": used_no_retrieval / n,  # provenance layer
+         "stale_presence_rate": present / n,
+     }
+--- /dev/null
++++ b/tests/test_instrument_edge_cases.py
+@@ -0,0 +1,32 @@
++"""Regression tests for the four pre-exposure findings (Alice, 2026-09-13)."""
++from memory_bakeoff.longcontext_null import LongContextNull
++from memory_bakeoff.stale_use_penalty import StaleDisposition, aggregate, score_stale_use
++
++
++def test_null_limit_zero_offers_nothing():
++    arm = LongContextNull([{"id": "a", "text": "x"}], limit=0)
++    items, _ = arm.search("q")
++    assert items == []
++    assert arm.inventory()["observations_offered"] == 0
++    assert arm.inventory()["approx_tokens_offered"] == 0
++
++
++def test_null_token_accounting_respects_limit():
++    obs = [{"id": str(i), "text": "w " * 10} for i in range(5)]
++    arm = LongContextNull(obs, limit=2)
++    assert arm.inventory()["observations_offered"] == 2
++    assert arm.inventory()["approx_tokens_offered"] == 20
++
++
++def test_neither_with_stale_present_is_not_tolerated():
++    r = score_stale_use(answer_id="rec-other", current_id="rec-cur",
++                        stale_ids={"rec-stale"}, returned_ids={"rec-cur", "rec-stale"})
++    assert r.disposition is StaleDisposition.NEITHER
++    assert r.tolerated is False
++
++
++def test_stale_use_rate_excludes_without_retrieval():
++    a = aggregate([score_stale_use(answer_id="rec-stale", current_id="rec-cur",
++                                   stale_ids={"rec-stale"}, returned_ids={"rec-cur"})])
++    assert a["stale_use_rate"] == 0.0
++    assert a["stale_use_without_retrieval_rate"] == 1.0

@@ -1,0 +1,86 @@
+# REPO-CANONICAL — canonical copies for shared policy/index files (coverage-map U5)
+#
+# Declared by Corvid, 2026-09-13, after Alice's ALICE-U5-CANONICAL-DRIFT-AUDIT.md.
+# Checker: implementer/repo-glm-dsh3/scripts/check_cross_copy_drift.py
+# Rule: a line `shared: <relpath>` means the file is expected to be identical
+# across the checked-out trees; a `known-drift:` line records a divergence that
+# is already owned, so a NEW drift stands out.
+#
+# The `tree:` lines are the compared set (parsed since guard 16 rev 3), and the
+# checker discovers every `implementer/repo*` checkout: one on disk but not
+# declared here is an `undeclared tree:` finding (U8), so a new fork cannot go
+# uncompared; a declared tree that is gone is `declared tree missing:`.
+#
+# Canonical tree: implementer/repo (the reset tree, reset/practical-pi-20260907).
+
+tree: implementer/repo-glm-dsh3  (work/glm-dsh3)
+tree: implementer/repo           (reset/practical-pi-20260907)  [canonical]
+tree: implementer/repo-glm-dsh2  (work/glm-dsh2)
+
+shared: AGENTS.md
+shared: tests/KNOWN_FAILURES.json
+shared: RESULTS.md
+shared: README.md
+shared: DECISION_MEMO.md
+shared: STATUS_AND_FINDINGS.md
+
+# Known, owned divergences (census 2026-09-13; hashes re-derived by Corvid):
+known-drift: tests/KNOWN_FAILURES.json  canonical 1164fbc8 (pruned 1621/10/3/0 + _pruned); forks 7da171eb (1557/26/3/5)  owner: Kiln/GiLMore
+known-drift: RESULTS.md                 repo-glm-dsh2 ec3452cd still carries the row-12 pointer defects; canonical/dsh3 abe0832f  owner: repo-glm-dsh2/Assay
+
+# AGENTS.md is byte-identical in all three (84432d4d) but its hard-coded totals
+# now match only the forks' KNOWN_FAILURES.json, so the AGENTS guard reports
+# 3 findings on canonical vs 1 on the forks. Owner fix (A: update canonical
+# AGENTS.md to the pruned totals and propagate; B: drop hard-coded numbers and
+# point at the JSON) is with Kiln/GiLMore.
+
+# --- Fork-lag visibility (Corvid 2026-09-14; CORVID-CROSSTREE-FILE-CENSUS.md) ---
+# The forks lag canonical on the P2 chain (canonical-only build files) and on the
+# instrument fixes; declaring them turns the fork delta into a standing advisory
+# instead of "2 known drifts". The instrument entries clear as the validated src
+# sync lands.
+canonical-only: src/memory_bakeoff/portfolio.py
+canonical-only: src/memory_bakeoff/providers/pi_lcm_store_reader.py
+shared: src/memory_bakeoff/longcontext_null.py
+shared: src/memory_bakeoff/stale_use_penalty.py
+shared: src/memory_bakeoff/providers/__init__.py
+shared: tests/test_known_failures_baseline.py
+
+# --- extensions (Corvid 2026-09-15; CORVID-EXTENSIONS-CROSSTREE-CENSUS.md) ---
+# pi-change-trigger and the perseus watchdog test exist only in canonical, so
+# they are declared canonical-only (expected absence, not drift). The perseus
+# extension itself is declared shared so the pre-A2 drift in both forks is
+# visible until synced; syncing extensions/ to the forks remains an owner call.
+canonical-only: extensions/pi-change-trigger/index.ts
+canonical-only: extensions/pi-change-trigger/package.json
+canonical-only: extensions/pi-change-trigger/README.md
+canonical-only: extensions/pi-change-trigger/test/trigger.test.ts
+canonical-only: extensions/pi-perseus-recall/test/watchdog.test.ts
+shared: extensions/pi-perseus-recall/index.ts
+shared: extensions/pi-perseus-recall/vault.ts
+
+# --- evidence-integrity checker suite (Corvid 2026-09-15, QUEUE S3-7) ---
+# Committed to canonical in commit be2bfa9; declared shared so a forked
+# guard is caught. Forks that lack the suite will show missing-in-tree
+# until they sync it (intended visibility; not drift).
+shared: scripts/check_agents_known_failures_consistency.py
+shared: scripts/check_card_register_consistency.py
+shared: scripts/check_checker_exit_contracts.py
+shared: scripts/check_cross_copy_drift.py
+shared: scripts/check_experiment_class_schema.py
+shared: scripts/check_frozen_id_provenance.py
+shared: scripts/check_gen38_anchor.py
+shared: scripts/check_identifier_lifecycle.py
+shared: scripts/check_invalidated_pointers.py
+shared: scripts/check_invocation_corpus_reachability.py
+shared: scripts/check_ledger_counts.py
+shared: scripts/check_longmemeval_qualifiers.py
+shared: scripts/check_map_hashes.py
+shared: scripts/check_membukkit_parity.py
+shared: scripts/check_orphan_evidence.py
+shared: scripts/check_protected_findings.py
+shared: scripts/check_query_fork.py
+shared: scripts/check_rd_thread_labels.py
+shared: scripts/check_record_text_identity.py
+shared: scripts/check_required_metrics.py
+shared: scripts/check_results_value_pointers.py

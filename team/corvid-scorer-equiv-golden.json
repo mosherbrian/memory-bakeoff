@@ -1,0 +1,64 @@
+{
+ "fixture": "LongContextNull obs=[o1:'alpha beta',o2:'gamma delta'], query='q'",
+ "canonical": {
+  "0": {
+   "ids": [],
+   "tokens_offered": 0
+  },
+  "1": {
+   "ids": [
+    "o2"
+   ],
+   "tokens_offered": 2
+  },
+  "None": {
+   "ids": [
+    "o1",
+    "o2"
+   ],
+   "tokens_offered": 4
+  }
+ },
+ "dsh3": {
+  "0": {
+   "ids": [
+    "o1",
+    "o2"
+   ],
+   "tokens_offered": 4
+  },
+  "1": {
+   "ids": [
+    "o2"
+   ],
+   "tokens_offered": 4
+  },
+  "None": {
+   "ids": [
+    "o1",
+    "o2"
+   ],
+   "tokens_offered": 4
+  }
+ },
+ "verdict": "canonical == dsh2 on all three limits; dsh3 DIVERGES on limit=0 (ids + tokens) and limit=1 (tokens 2 vs 4)",
+ "dsh2": {
+  "0": {
+   "ids": [],
+   "tokens_offered": 0
+  },
+  "1": {
+   "ids": [
+    "o2"
+   ],
+   "tokens_offered": 2
+  },
+  "None": {
+   "ids": [
+    "o1",
+    "o2"
+   ],
+   "tokens_offered": 4
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "declared_at": "2026-09-17T21:06:44.042209+00:00",
+ "distractor_shape": "agentmemory-class: deliberately distinct facts sharing the fact-type template but scoped to different repos/services (a delta redis migration vs a fjord redis migration, archive vs search canary commands) \u2014 the near-neighbor pressure shape research/AGENTMEMORY_FINDINGS.md documents at 418/450 false supersessions (Jaccard 0.75-0.9); per-trial jaccard is recorded in trials.jsonl",
+ "trials_sha256": "eead0b0e8c89821017b67188245f9d285c58a9d18483a07776b78392ee0cc630",
+ "thin_layer": {
+  "path": "thin_layer.py",
+  "sha256": "c99b2ac781e5340a63a26d505251f8e8b35e71aa73af97f9bce726e05f09fd27"
+ },
+ "rule": {
+  "layer_helps_if_rate_drop_at_least": 0.5,
+  "layer_max_missed_update_rate": 0.1,
+  "note": "m 0.50: a state layer earns existence only by at least halving the native false-supersession rate; u 0.10: while missing at most 1 of 12 real updates; both fixed before the run"
+ },
+ "protocol": "supersession for pi-lcm-native is retrieval displacement: the store has no write-time consolidation, so per trial a fresh pinned store holds original+newer and the original's own query is re-issued; superseded = the newer write is the top hit. never-supersede/always-supersede are the controls; thin-layer is the pinned layer's own decide(). Sanity before declaration: each original alone answers its own query as top-1.",
+ "prior_measurement": {
+  "pi_lcm": "no false-supersession measurement of pi-lcm exists \u2014 none exists; stated per the standing re-measurement rule",
+  "agentmemory": "418 of 450 stress distractors (92.9%) falsely superseded under the /remember Jaccard write path \u2014 the protected comparison point, from research/AGENTMEMORY_FINDINGS.md"
+ },
+ "expectation": "pre-registered before the run: pi-lcm's exact-AND gate matches distractors only through bounded relaxation, so the native false-supersession rate is expected LOW; if it is, the rate drop cannot clear m and the verdict is layer-does-not-help \u2014 pi-lcm does not have agentmemory's disease and a state layer adds nothing. If native false-supersession is HIGH, the trivial layer is expected to drop it to ~0 while missing 0 updates (decide() is key equality) and the verdict is layer-helps. Either number decides Gate F."
+}

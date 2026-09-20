@@ -1,0 +1,66 @@
+{
+ "finding": "on the upstream frozen worlds (seeds 1 and 2, 120 sampled probes, scores re-derived under the declared judging rules) the lexical baseline scores retrieval 0.53 (lexical phrasing 1.00, but paraphrase/oblique/crossed phrasings pull it down \u2014 the upstream phrasings are doing real work), rationale 0.12, abstention 0.00: the second instrument reproduces the shape our own instrument measured \u2014 lookup recall without any ability to decline (the engine has no declined concept and fires whenever any token matches). The external lane is live: a home-team score on someone else's frozen corpus, the caveat quoted below travelling beside every number",
+ "lane": "external",
+ "feeds": "roadmap R-PE \u2014 external lanes as separate evidence classes; the one S6-2 KnowledgeDrift choice not exercised until now",
+ "card": "team/EXTERNAL-KNOWLEDGEDRIFT-20260916.md",
+ "caveat": "The benchmark's author has a system in its own ranking, and it wins.",
+ "prior": "no run of our engines on these frozen worlds exists \u2014 none exists; scores are re-derived here, none imported",
+ "per_family": {
+  "bm25": {
+   "Retrieval": {
+    "passed": 21,
+    "items": 40,
+    "pass_rate": 0.525
+   },
+   "Abstention": {
+    "passed": 0,
+    "items": 40,
+    "pass_rate": 0.0
+   },
+   "Rationale": {
+    "passed": 5,
+    "items": 40,
+    "pass_rate": 0.125
+   }
+  }
+ },
+ "families_not_run": {
+  "Currency": "needs supersession history and a current-head notion our flat baseline engine does not implement (history capability is absent); measuring it here would mean building the very write-path behavior row S7-3 just measured and the roadmap's Phase-G ban gates",
+  "Contradiction": "needs the suspects capability (nominating disagreements for a person); the engine has none, so every case would score 0 by construction, which is a capability absence, not a selectivity measurement",
+  "Drift": "needs stale-sibling detection (suspects capability); same capability absence as Contradiction",
+  "Deletion": "needs release traces and tombstones; a flat baseline store just deletes (trace: false upstream), so the family would measure the delete primitive, not memory behavior",
+  "Temporal": "needs a recall window applied natively by the store (temporal capability); the engine has no capture-time filter, so the family would be unmeasured, not failed",
+  "Authority": "the optional ninth family; needs endorsement rungs stored as first-class note attributes, which the engine lacks"
+ },
+ "sampling_and_judging": {
+  "sampling": "per seed (1 and 2, the 500-fact frozen worlds): deterministic stride sample of 20 probes per family from the probe file order, retrieval restricted to expect=gold (path-bound probes excluded), each sampled probe answered at its own position in the ops stream",
+  "judging": {
+   "Retrieval": "probe expect gold: the gold note key must appear among the hits (top k per the recall op, k=10)",
+   "Abstention": "probe expect control: correct behaviour is to decline \u2014 zero hits. The engine has no declined concept, so zero hits is the only honest decline it can produce",
+   "Rationale": "probe expect linked: the gold (the reasoning note linked to the anchor decision) must appear among the hits (top k=10)"
+  }
+ },
+ "expectation_registered_before_run": "pre-registered before the run: the lexical baseline is expected to sit high on Retrieval (its home turf \u2014 the card's own shape), near-floor on Abstention (it has no declined concept: on a several-hundred-note store some token always matches, so it fires on questions about nothing), and middling on Rationale; if so, the second instrument independently reproduces the shape our own S6-2 instrument measured, on a corpus we did not build",
+ "retrieval_by_phrasing": {
+  "lexical": {
+   "passed": 10,
+   "items": 10,
+   "pass_rate": 1.0
+  },
+  "paraphrase": {
+   "passed": 10,
+   "items": 10,
+   "pass_rate": 1.0
+  },
+  "oblique": {
+   "passed": 1,
+   "items": 10,
+   "pass_rate": 0.1
+  },
+  "crossed": {
+   "passed": 0,
+   "items": 10,
+   "pass_rate": 0.0
+  }
+ }
+}

@@ -1,0 +1,42 @@
+# Identifier lifecycle index — superseded / withdrawn identifiers.
+#
+# Consumed by scripts/check_identifier_lifecycle.py (coverage-map gap U4 /
+# Muse batch 3 item 3.4: a doc cites a superseded or withdrawn identifier as if
+# it were current). This file is the declared source of truth; the guard never
+# guesses a lifecycle from prose.
+#
+# Directives (one per line; blank lines and lines starting with # are ignored):
+#   superseded: <id> -> <replacement>[, <replacement>...]
+#   withdrawn:  <id>
+#   log:        <basename>   append-only operation record; citations in it are
+#                            historical by construction and are not findings
+#   skip:       <basename>   guard infrastructure / mechanism docs (examples)
+#
+# NOTE: `log:` and `skip:` match a basename in any scanned root, not a full path;
+# and only `*.md` files are scanned, so a `.txt` index needs no `skip:` row.
+# Source of truth for each row is named inline.
+#
+# The guard flags a citation of a superseded/withdrawn id when no supersession
+# cue ("superseded", "withdrawn", "split", ...) appears on the same line or
+# within 3 lines. Add a row here only when an authoritative document (named
+# below) actually records the lifecycle move.
+
+superseded: L-HS-02 -> L-HS-02a, L-HS-02b
+#   source: team/CLAIMS-LEDGER.md row L-HS-02 ("SUPERSEDED — see \"L-HS split\":
+#           L-HS-02a `vendor-only` (94.6 number), L-HS-02b `not established`
+#           (superlative)"), resolved 2026-09-12 22:50.
+
+log: BOARD.md
+log: RD-THREADS.md
+log: SCOREBOARD-20260912.md
+log: COLLECTION-LOG.md
+
+skip: CORVID-IDENTIFIER-LIFECYCLE-GUARD.md
+skip: ALICE-IDENTIFIER-LIFECYCLE-SECONDCHECK.md
+skip: ALICE-LIFECYCLE-SPLIT-CUE-SECONDCHECK.md
+skip: ASSAY-LIFECYCLE-SPLIT-CUE.md
+skip: ALICE-LIFECYCLE-REV3-CHECK.md
+skip: ASSAY-LIFECYCLE-REV2-SECONDCHECK.md
+skip: ASSAY-LIFECYCLE-REV4-SECONDCHECK.md
+skip: CORVID-P2-EVIDENCE-GATE-CARD.md
+skip: ALICE-MUSE6-SECONDCHECK.md

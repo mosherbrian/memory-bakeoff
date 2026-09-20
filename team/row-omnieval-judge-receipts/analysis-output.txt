@@ -1,0 +1,16 @@
+OmniMemEval LongMemEval judge prompt (generic):
+    Your task is to label an answer to a question as 'CORRECT' or 'WRONG'. You will be given the following data:
+    which you will score as CORRECT/WRONG.
+    The gold answer will usually be a concise and short answer that includes the referenced topic, for example:
+    The generated answer might be much longer, but you should be generous with your grading - as long as it touches on the same topic as the gold answer, 
+    For time related questions, the gold answer will be a specific date, month, year, etc. The generated answer might be much longer or use relative time 
+    First, provide a short (one sentence) explanation of your reasoning, then finish with CORRECT or WRONG.
+    Do NOT include both CORRECT and WRONG in your response, or it will break the evaluation script.
+    Just return the label CORRECT or WRONG in a json format with the key as "label".
+
+Official LongMemEval judge prompts are TASK-SPECIFIC; key stricter clauses:
+    template = "I will give you a question, a correct answer, and a response from a model. Please answer yes if the response contains the correct answer. Otherwise, answer no
+    template = "I will give you a question, a correct answer, and a response from a model. Please answer yes if the response contains the correct answer. Otherwise, answer no
+
+Official label extraction: 'yes' in eval_response.lower()
+OmniMemEval label extraction: JSON label, raise on failure; label.lower()=='correct'

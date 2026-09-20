@@ -1,0 +1,89 @@
+{
+ "hashes": {
+  "diff": {
+   "sha256": "9db3c09bef6395c00b9c6477c5f9172cb14a18ea2f59ec46eb47e2b5e4764795",
+   "matches_note": true
+  },
+  "patched": {
+   "sha256": "037b5d431a884bd50412ba0857caf7f32c06d19c5532836d2cfbba7ade375990",
+   "matches_note": true
+  },
+  "power": {
+   "sha256": "71ccde3ae632470cc8b042ed0bf868dab4aaec33382075ac7ff164cc787054c2",
+   "matches_note": true
+  },
+  "sealed": {
+   "sha256": "768adba6bd7644dff6bb97ee46b7a31fc8a1dd8d4a33e8eb40b8cc7d59763bab",
+   "matches_note": true
+  }
+ },
+ "apply_check": {
+  "rc": 0
+ },
+ "self_test": {
+  "canonical": {
+   "rc": 0,
+   "pass": true
+  },
+  "patched": {
+   "rc": 0,
+   "pass": true
+  }
+ },
+ "census": {
+  "canonical": {
+   "citations": 25,
+   "uncued": 0
+  },
+  "patched": {
+   "citations": 25,
+   "uncued": 0
+  }
+ },
+ "fixtures": {
+  "bench_split_separate_line": {
+   "canonical": {
+    "cued": true,
+    "detected_as_defect": false
+   },
+   "patched": {
+    "cued": false,
+    "detected_as_defect": true
+   }
+  },
+  "bench_split_SAME_line": {
+   "canonical": {
+    "cued": true,
+    "detected_as_defect": false
+   },
+   "patched": {
+    "cued": true,
+    "detected_as_defect": false
+   }
+  },
+  "genuine_split_collocated": {
+   "canonical": {
+    "cued": true,
+    "detected_as_defect": false
+   },
+   "patched": {
+    "cued": true,
+    "detected_as_defect": false
+   }
+  },
+  "genuine_split_separate_no_subject": {
+   "canonical": {
+    "cued": true,
+    "detected_as_defect": false
+   },
+   "patched": {
+    "cued": false,
+    "detected_as_defect": true
+   }
+  }
+ },
+ "findings": [
+  "residual false negative: a benchmark 'split' on the citation line (same line as the tracked id) is still cued by the patched rule",
+  "new false positive: a genuine split cue on a separate line with no subject word is now uncued"
+ ]
+}

@@ -1,0 +1,36 @@
+{
+ "declared_at": "2026-09-17T21:19:33.389819+00:00",
+ "items_sha256": "99d2d46939d663dc21eeebebcf17336e3cbed1398b785e491188f0d77ae32777",
+ "worlds": {
+  "upstream_repo": "github.com/techtheist/KnowledgeDrift (MIT)",
+  "commit": "edff308ea6ab331dbb24e0ab5ac29717d88b29f0",
+  "license": "MIT",
+  "dir": "upstream/KnowledgeDrift/worlds/v2",
+  "files": {
+   "knowledgedrift-500-seed1-v2.json": "dc5af10ea430edef861b3fd3bd7d11c954554a83ce64f0ebc8bfa070d3d9b402",
+   "knowledgedrift-500-seed2-v2.json": "2976556287cddb4361893648f2423397adbdeb007507f39d416e7c1b5762afbd"
+  }
+ },
+ "engines": {
+  "bm25": {
+   "experiment_class": "baseline",
+   "note": "the pinned in-tree BM25 baseline (repo be2bfa9), flat store, no capabilities beyond ranked lexical recall; replayed per the upstream protocol (flat column of docs/protocol.md)"
+  }
+ },
+ "families_not_run": {
+  "Currency": "needs supersession history and a current-head notion our flat baseline engine does not implement (history capability is absent); measuring it here would mean building the very write-path behavior row S7-3 just measured and the roadmap's Phase-G ban gates",
+  "Contradiction": "needs the suspects capability (nominating disagreements for a person); the engine has none, so every case would score 0 by construction, which is a capability absence, not a selectivity measurement",
+  "Drift": "needs stale-sibling detection (suspects capability); same capability absence as Contradiction",
+  "Deletion": "needs release traces and tombstones; a flat baseline store just deletes (trace: false upstream), so the family would measure the delete primitive, not memory behavior",
+  "Temporal": "needs a recall window applied natively by the store (temporal capability); the engine has no capture-time filter, so the family would be unmeasured, not failed",
+  "Authority": "the optional ninth family; needs endorsement rungs stored as first-class note attributes, which the engine lacks"
+ },
+ "sampling": "per seed (1 and 2, the 500-fact frozen worlds): deterministic stride sample of 20 probes per family from the probe file order, retrieval restricted to expect=gold (path-bound probes excluded), each sampled probe answered at its own position in the ops stream",
+ "judging": {
+  "Retrieval": "probe expect gold: the gold note key must appear among the hits (top k per the recall op, k=10)",
+  "Abstention": "probe expect control: correct behaviour is to decline \u2014 zero hits. The engine has no declined concept, so zero hits is the only honest decline it can produce",
+  "Rationale": "probe expect linked: the gold (the reasoning note linked to the anchor decision) must appear among the hits (top k=10)"
+ },
+ "prior_measurement": "no run of our engines on these worlds exists \u2014 none exists; the card recorded the candidate with structure adopted and scores unimported",
+ "expectation": "pre-registered before the run: the lexical baseline is expected to sit high on Retrieval (its home turf \u2014 the card's own shape), near-floor on Abstention (it has no declined concept: on a several-hundred-note store some token always matches, so it fires on questions about nothing), and middling on Rationale; if so, the second instrument independently reproduces the shape our own S6-2 instrument measured, on a corpus we did not build"
+}

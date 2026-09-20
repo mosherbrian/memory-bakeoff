@@ -1,0 +1,40 @@
+--- a/conductor/glm/fleet-poller.sh
++++ b/conductor/glm/fleet-poller.sh
+@@ -1105,6 +1105,9 @@
+   CHAIN=${POLLER_CHAIN:-$DIR/chain}
+   CHAIN_MAX=3; CHAIN_WINDOW=3600
+   mkdir -p "$CHAIN" 2>/dev/null
++  # Stamp ledger (QUEUE D-7, 2026-09-17): the machine-clock record of every
++  # ->done close. POLLER_STAMP_LEDGER overrides (tests).
++  STAMP_LEDGER=${POLLER_STAMP_LEDGER:-$DIR/stamp-ledger.tsv}
+   CHAINLIVE=""
+   while IFS=$(printf '\037') read -r CTASK CSTATUS CNR CLINE; do
+     [ -z "$CTASK" ] && continue
+@@ -1167,6 +1170,27 @@
+       ART=$(echo "$CSTATUS" | sed -n 's/.*[Dd][Oo][Nn][Ee]: *\([^|]*\).*/\1/p' | head -1 | awk '{print $1}' | cut -c1-80)
+       OWNER=$(echo "$CSTATUS" | sed -n 's/.*[Cc][Ll][Aa][Ii][Mm][Ee][Dd]: *\([A-Za-z][A-Za-z0-9_-]*\).*/\1/p' | head -1)
+       VID=$(seat_id_for "$VNAME"); OID=$(seat_id_for "$OWNER")
++      # MACHINE STAMP LEDGER (QUEUE D-7, 2026-09-17): every ->done transition
++      # the poller OBSERVES is recorded with THIS clock, not the seat's.
++      # Measured 2026-09-17 (row D-7): seat-typed stamps ran 2-40 min ahead of
++      # the artifacts they stamp, error not constant (so not a timezone) —
++      # the seat estimates a finish time from context instead of reading a
++      # clock. The poller has a clock and no motive, so this ledger is the
++      # timestamp of record for closes: machine UTC instant, how the row
++      # closed (prose-done vs evidence-close), the seat's typed stamp if it
++      # typed one, and the skew between them. Appended, never rewritten; the
++      # board's prose stamps stay the seats' to write or not.
++      STAMP_SRC=prose-done
++      [ "$CPROSE" != done ] && STAMP_SRC=evidence-close
++      TYPED=$(echo "$CSTATUS" | sed -n 's/.*[Dd][Oo][Nn][Ee][^0-9:]*:[^0-9]*\([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}[ T][0-9]\{2\}:[0-9]\{2\}\).*/\1/p' | head -1)
++      SKEW=""
++      if [ -n "$TYPED" ]; then
++        TTYPED=$(date -u -d "$TYPED" +%s 2>/dev/null)
++        [ -n "$TTYPED" ] && SKEW="$(( ( $(date -u +%s) - TTYPED ) / 60 ))min"
++      fi
++      printf '%s\trow %s\t%s\ttyped %s\tskew %s\towner %s\n' \
++        "$(date -u +%FT%TZ)" "${CNR:-?}" "$STAMP_SRC" "${TYPED:--}" \
++        "${SKEW:--}" "${OWNER:--}" >> "$STAMP_LEDGER" 2>/dev/null || true
+       # NO was:/now: QUOTING. The old form pasted 120 characters of the previous
+       # cell and 120 of the current one. Three separate failures came from it:
+       # both halves truncate at the same length so the change usually fell past

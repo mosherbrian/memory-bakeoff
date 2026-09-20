@@ -1,0 +1,29 @@
+{
+ "results": {
+  "current_split_times_out": true,
+  "fixed_split_resolves": true,
+  "fixed_utf8_split_roundtrips": false,
+  "fixed_no_trailing_newline_resolves": false,
+  "fixed_foreign_then_ours": true,
+  "fixed_newline_boundary": true
+ },
+ "cases": {
+  "utf8_split": {
+   "status": "resolved",
+   "expected_len": 70007,
+   "got_len": 70008,
+   "equal": false,
+   "boundary_byte": 46
+  },
+  "no_trailing_newline": {
+   "status": "rejected",
+   "error": "vault rpc timeout"
+  }
+ },
+ "problems": [
+  "fixed corrupts a UTF-8 char split across chunks",
+  "fixed cannot resolve a final line without a trailing newline",
+  "case failed: fixed_utf8_split_roundtrips",
+  "case failed: fixed_no_trailing_newline_resolves"
+ ]
+}

@@ -1,0 +1,788 @@
+#!/usr/bin/env python3
+"""Phase 5: close a sprint, open the next one. The last unwired step.
+
+WHY. Brian, 2026-09-17: "Rather than start the sprint in some ad hoc way, we
+should wire up the missing pieces that are still needed for our loop to be
+self-sustaining." The status page had been reporting phase 5 as NOT WIRED -
+nothing dispatched planning when a sprint closed, so the loop stopped in the
+same place every time and a human restarted it.
+
+IT IS SELECTION, NOT AUTHORING, and that is what makes it cheap. corvid keeps
+`team/BACKLOG-NEXT.md` inside the sprint (QUEUE row D-8) with candidates already
+carrying an artifact path, a runnable check, the goal they advance and the prior
+measurement they re-measure. Astra's job is the judgement the list cannot hold:
+how much fits, and which candidates are actually unblocked - candidate 1 waits on
+a decision of Brian's, candidate 8 cannot start before 2026-09-20. A naive "take
+the top three" would admit blocked work.
+
+  sprint-next              report whether it would act, and why
+  sprint-next --plan       ask Astra to select; writes SPRINT-NEXT-PROPOSAL.md
+  sprint-next --open       admit the selection to the board as rows
+  sprint-next --run        both, in order, if the preconditions hold
+  sprint-next --dry-run    with --open: print the rows, write nothing
+
+ADMISSION IS LINTED, because this is the one tool that writes the board
+unattended. A candidate is refused by name unless it declares an artifact path,
+a check that is a runnable command, a check with NO PIPE in it (rowcheck splits
+cells on the pipe and a piped check exits 127, which silently reads as "no
+gate" - that hid six broken gates on 2026-09-17), and a verifier that is not its
+owner. Every admitted candidate gets TWO rows: the work, and its gate owned by
+plumb-fable - so the gate exists before the build starts, which is the only way
+"written without seeing the artifact" is structural rather than promised.
+"""
+import argparse
+import calendar
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+HOME = Path.home()
+TEAM = Path(os.environ.get("SN_TEAM", HOME / "memory-bake-off/team"))
+QUEUE = Path(os.environ.get("SN_QUEUE", TEAM / "QUEUE.md"))
+BACKLOG = TEAM / "BACKLOG-NEXT.md"
+PROPOSAL = TEAM / "SPRINT-NEXT-PROPOSAL.md"
+DIR = Path(os.environ.get("SN_DIR",
+                          HOME / ".local/share/agent-deck/conductor/glm"))
+ASTRA = HOME / ".config/agent-deck/astra"
+LOG = DIR / "sprint-next.log"
+
+OWNER = "kiln-flash"
+VERIFIER = "corvid-dsh"
+GATE_SEAT = "plumb-fable"
+MAX_OPENS_PER_DAY = 3          # a bug must not be able to spam the board
+BACKLOG_MAX_AGE_H = 24
+
+
+def log(msg):
+    line = f"{time.strftime('%FT%TZ', time.gmtime())} {msg}"
+    try:
+        DIR.mkdir(parents=True, exist_ok=True)
+        with open(LOG, "a") as fh:
+            fh.write(line + "\n")
+    except OSError:
+        pass
+    return line
+
+
+def sprint_state():
+    try:
+        return (DIR / "sprint-close").read_text().strip()
+    except OSError:
+        return ""
+
+
+def rows():
+    out = []
+    ID = re.compile(r"[0-9]+|[A-Za-z]{1,3}[0-9]*-?[0-9]+[A-Za-z]?")
+    try:
+        text = QUEUE.read_text()
+    except OSError:
+        return out
+    for line in text.split("\n"):
+        if not line.startswith("|") or "|---" in line:
+            continue
+        c = line.split("|")
+        if len(c) < 9:
+            continue
+        rid = c[1].strip()
+        if not rid or rid == "#" or not ID.fullmatch(rid):
+            continue
+        task, status = c[2].strip(), "|".join(c[7:])
+        out.append(dict(id=rid, task=task, status=status,
+                        standing=re.search(r"\bSTANDING\b", task + " " + status),
+                        done=bool(re.search(r"done:|\bclosed\b", status, re.I))))
+    return out
+
+
+def current_sprint():
+    try:
+        ns = re.findall(r"^## SPRINT (\d+) GOAL", QUEUE.read_text(), re.M)
+    except OSError:
+        return 0
+    return max((int(n) for n in ns), default=0)
+
+
+def candidates():
+    """Parse the ranked table corvid maintains. Rank -> fields."""
+    out = {}
+    try:
+        text = BACKLOG.read_text()
+    except OSError:
+        return out
+    for line in text.split("\n"):
+        if not line.startswith("|") or "|---" in line:
+            continue
+        c = [x.strip() for x in line.split("|")]
+        if len(c) < 8 or not c[1].isdigit():
+            continue
+        out[int(c[1])] = dict(rank=int(c[1]), what=c[2], artifact=c[3],
+                              check=c[4], advances=c[5], prior=c[6])
+    return out
+
+
+def already_admitted(cand):
+    """Is this candidate's artifact already on the board under any sprint?
+
+    WHY. 2026-09-17: sprint 8 was planned from a BACKLOG-NEXT.md that sprint 7
+    had already been chosen from. Ranks 3, 2, 4 and 5 were selected TWICE, so
+    S8-1..S8-4 were admitted pointing at `team/S7-*` - sprint 7's own finished
+    artifacts - and the gates passed immediately on last sprint's work. The
+    board read 8 of 11 done within minutes of opening, and it had done nothing.
+    cairn caught it and amended the rows; nothing in this tool did.
+
+    A FRESHNESS CHECK WOULD NOT HAVE CAUGHT IT. The backlog's mtime was 16:02
+    and sprint 7 opened at 13:12, so it WAS refreshed after sprint 7 - the
+    refresh just did not remove what sprint 7 had taken. The list has no notion
+    of "already admitted", so the only reliable test is the board itself: if a
+    candidate's declared artifact path is already in a QUEUE row, that work has
+    been admitted once and must not be admitted again.
+    """
+    art = (cand.get("artifact") or "").strip().strip("`")
+    if not art or "/" not in art:
+        return None
+    try:
+        text = QUEUE.read_text()
+    except OSError:
+        return None
+    for line in text.split("\n"):
+        if not line.startswith("|") or art not in line:
+            continue
+        rid = line.split("|")[1].strip()
+        if rid and rid != "#":
+            return rid
+    # THE PATH CAN BE RE-POINTED AT ADMISSION, so the path test alone is not
+    # sufficient - three candidates admitted under changed paths read as still
+    # available. Every row this tool admits records its source rank, so that
+    # citation catches them.
+    rank = cand.get("rank")
+    if rank:
+        m = re.search(r"\| *([A-Za-z0-9-]+) *\|[^\n]*BACKLOG-NEXT rank %s\b"
+                      % rank, text)
+        if m:
+            return m.group(1)
+    return None
+
+
+def lint(cand):
+    """Findings that would make this candidate unsafe to admit."""
+    f = []
+    if not cand["artifact"] or "/" not in cand["artifact"]:
+        f.append("no artifact path declared")
+    chk = cand["check"]
+    if not chk:
+        f.append("no check declared")
+    else:
+        if "|" in chk:
+            f.append("the check contains a pipe, which truncates it and exits "
+                     "127 - that reads as 'no gate at all'")
+        if not re.match(r"(python3?|test|bash|sh|\S+\.py)\b", chk):
+            f.append(f"the check is not a runnable command: {chk[:60]!r}")
+    if not cand["advances"]:
+        f.append("does not say what it advances")
+    if not cand["prior"]:
+        f.append("does not cite a prior measurement, nor say none exists")
+    if len(cand["what"]) < 40:
+        f.append("the description is too short to admit as work")
+    return f
+
+
+BRIEF = """You are selecting the next sprint for a small autonomous research
+fleet. You are NOT writing the candidates - they are already written, ranked in
+a strict total order, and each already carries an artifact path, a runnable
+check, the goal it advances and the prior measurement it re-measures.
+
+Your job is the judgement the list cannot hold: HOW MUCH FITS, and WHICH
+CANDIDATES ARE ACTUALLY UNBLOCKED. Read the dependency sentence in each
+candidate. Some wait on a decision of Brian's; some cannot start before a date.
+Admitting blocked work is the failure mode here - it produces a sprint that
+cannot finish and a loop that stops.
+
+CONSTRAINTS, all real:
+- Sizing target: about TWO HOURS of one implementer's work. Yesterday a
+  three-row sprint finished in 41 minutes, so aim higher than three trivial
+  rows and lower than a day.
+- Today is %(today)s. The free GLM window ends 2026-09-20; after that work costs
+  budget. Do not admit anything that requires metered spend inside the free
+  window if it can wait.
+- One implementer (kiln-flash) works at a time, WIP 1. A second worker
+  (corvid-dsh) confirms, and cannot confirm its own work.
+- If a candidate's dependency is unmet, SAY SO and skip it. Skipping is correct.
+
+ANSWER IN EXACTLY THIS FORM, and nothing before it:
+
+SELECT: <comma-separated rank numbers, in the order they should be worked>
+SPRINT-GOAL: <one sentence, plain English, what this sprint is judged on>
+WHY: <two to five sentences: why these, in this order, and what you skipped and
+because of which dependency>
+OUTLINE:
+<then the agreed plan, in markdown, written TO BE DECIDED FROM ONE READ by the
+project's owner. He is technical but does not know the team's vocabulary and has
+said he cannot understand most of what the team writes. Follow this shape
+exactly - it is the shape of team/SPRINT-4-OUTLINE.md, which he asked for by
+description:
+
+## 1. THEME
+One sentence. What this sprint is for, in the order the work happens.
+
+## 2. GOALS
+One block per selected candidate, in working order:
+
+**Goal N - As Brian, I can <the thing he can do or know once this is done>.**
+
+Then two to four sentences of plain English: what is wrong or unknown now, what
+this does about it, and what it deliberately does NOT do. Name systems and
+numbers concretely. Then a line:
+
+Done when: <the observable condition, in plain words>.
+
+Rules for the goal text: no internal vocabulary - work is not a "row", an
+automatic check is not a "gate", a second worker confirming is not a "verdict",
+a worker is not a "seat". Put any tracker ids in parentheses at the END of a
+sentence as bookkeeping, like "(tracker rows S9-1, S9-2)", and never lead with
+them.
+
+## 3. WHO
+One or two sentences: who builds, who checks, and the rule that no one checks
+their own work.
+
+## 4. NOT DOING
+A short list of what was considered and left out, each with the reason in one
+clause - a dependency that is unmet, a decision that is Brian's, a date that has
+not arrived.>
+
+THE RANKED CANDIDATES:
+%(backlog)s
+
+THE SPRINT THAT JUST CLOSED, for context on what is already known:
+%(demo)s
+"""
+
+
+def plan(dry=False):
+    cands = candidates()
+    if not cands:
+        return None, "BACKLOG-NEXT.md has no parseable ranked candidates"
+    demo = ""
+    ds = sorted(TEAM.glob("SPRINT-*-DEMO.md"),
+                key=lambda p: p.stat().st_mtime, reverse=True)
+    if ds:
+        demo = ds[0].read_text()[:6000]
+    brief = BRIEF % dict(today=time.strftime("%Y-%m-%d"),
+                         backlog=BACKLOG.read_text(), demo=demo)
+    if dry:
+        return brief, ""
+    if not ASTRA.exists():
+        return None, f"no planner at {ASTRA}"
+    try:
+        p = subprocess.run([str(ASTRA)], input=brief, text=True,
+                           capture_output=True, timeout=1800,
+                           env=dict(os.environ, ASTRA_EFFORT="high"))
+    except Exception as exc:                            # noqa: BLE001
+        return None, f"the planner failed: {exc}"
+    if p.returncode != 0:
+        return None, f"the planner exited {p.returncode}: {p.stderr[-200:]}"
+    out = (p.stdout or "").strip()
+    if "SELECT:" not in out:
+        return None, ("the planner did not answer in the required form (no "
+                      "SELECT: line); nothing admitted")
+    PROPOSAL.write_text(out + "\n")
+    return out, ""
+
+
+def write_outline(n, text):
+    """Split the OUTLINE section out of the plan and file it as the sprint's
+    agreed-work document - the one a human reads, next to the one the machine
+    reads."""
+    m = re.search(r"^OUTLINE:\s*$(.*)", text, re.S | re.M)
+    if not m or len(m.group(1).strip()) < 200:
+        return None, ("the planner returned no OUTLINE section, so there is no "
+                      "readable plan for this sprint - the proposal is all there is")
+    body = m.group(1).strip()
+    out = TEAM / f"SPRINT-{n}-OUTLINE.md"
+    head = (f"# SPRINT {n} OUTLINE - the agreed work, {time.strftime('%F')}\n\n"
+            f"Written to be decided from one read. Selected by the planner from "
+            f"the candidates in `BACKLOG-NEXT.md`; the machine-readable decision "
+            f"is in `SPRINT-{n}-PROPOSAL.md`. Tracker ids in parentheses are "
+            f"bookkeeping for the fleet - every sentence stands without them.\n\n")
+    out.write_text(head + body + "\n")
+    return out, ""
+
+
+OWED = Path(os.path.expanduser(
+    "~/.local/share/agent-deck/conductor/glm")) / "backlog-owed"
+
+
+def owed(why):
+    """Record that the backlog needs restocking.
+
+    The poller delivers and RETRIES this until `sprint-next --dry-run` can
+    actually admit something - the same discharge rule the demo commission
+    uses, an artifact existing rather than anybody saying it is done. Written
+    once per reason: re-writing it every ten minutes would reset the retry
+    and the commission would never be delivered, which is exactly how the
+    demo went unwritten for a whole sprint.
+    """
+    try:
+        OWED.parent.mkdir(parents=True, exist_ok=True)
+        prev = OWED.read_text() if OWED.exists() else ""
+        if why and why[:200] in prev:
+            return
+        # THE CLOCK SURVIVES A REWORDED REASON. The reason is free text from
+        # the planner, so it differs run to run - "every pick was already on
+        # the board" at 19:27, "no candidate is startable..." at 19:37. Keying
+        # the stored timestamp to the reason therefore reset the obligation's
+        # age every ten minutes, and owed_stalled() could never fire: a clock
+        # that cannot run out, written to bound a stall. An obligation is one
+        # obligation until it is DISCHARGED, which is the file being removed.
+        first = prev.split("\n", 1)[0].strip()
+        if not re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", first):
+            first = time.strftime('%FT%H:%M:%SZ', time.gmtime())
+        OWED.write_text(f"{first}\n{why[:600]}\n")
+        print(f"  BACKLOG OWED: recorded at {OWED} - the poller will ask the "
+              f"seat that ranks it to prune what is finished and add what is "
+              f"startable")
+    except OSError as exc:
+        print(f"  WARNING: could not record the backlog obligation: {exc}")
+
+
+OWED_PATIENCE = 45 * 60      # seconds an unrestocked backlog may stand
+
+
+def owed_stalled():
+    """True when the recorded obligation has stood past OWED_PATIENCE.
+
+    An obligation the machine is actively working is a WAIT, not a failure -
+    recording it arms the poller's restock commission, which wakes the seat
+    that ranks the list. An obligation nobody discharges IS a failure, and the
+    2026-09-18 09:32 incident is what it looks like: the loop stopped, two
+    seats idle for over an hour, and nothing said so. So the exit code is a
+    clock, not a verdict on this one run. owed() keeps the FIRST timestamp for
+    a reason, so this measures the obligation's age and not the retry's.
+    """
+    try:
+        first = OWED.read_text().splitlines()[0].strip()
+        age = time.time() - calendar.timegm(
+            time.strptime(first, "%Y-%m-%dT%H:%M:%SZ"))
+    except (OSError, ValueError, IndexError):
+        return True        # cannot age it -> do not swallow it
+    return age > OWED_PATIENCE
+
+
+PHASE5 = Path(os.path.expanduser(
+    "~/.local/share/agent-deck/conductor/glm")) / "phase5-state"
+
+
+BACKLOG_STATE = Path(os.path.expanduser(
+    "~/.local/share/agent-deck/conductor/glm")) / "backlog-state"
+
+
+def backlog_state(startable, refused, why=""):
+    """Record how much of the backlog is actually STARTABLE, for the board.
+
+    Phase 3's count was the board's own parser, and it disagreed with this
+    tool: on 2026-09-18 the board said "4 candidate(s) not yet admitted" while
+    this tool refused every one, and later said "EVERY candidate is already on
+    the board" twenty minutes after two rows had been admitted from the list.
+    Two answers to one question, neither owned by the thing that decides.
+    """
+    try:
+        BACKLOG_STATE.parent.mkdir(parents=True, exist_ok=True)
+        BACKLOG_STATE.write_text(
+            f"{time.strftime('%FT%H:%M:%SZ', time.gmtime())}\n"
+            f"{startable}\n{refused}\n{why[:400]}\n")
+    except OSError:
+        pass
+
+
+def phase5(state, detail):
+    """Record what phase 5 just decided, for the board to READ.
+
+    WHY THIS FILE EXISTS, and it is the whole reason the board kept lying.
+    sprint-status re-derived phase 5 for itself: it grepped the POLLER's source
+    for `wake ... astra` and called the phase NOT WIRED when it found none. But
+    phase 5 is dispatched by sprint-next.timer, not by a poller wake, so that
+    test could never say "wired" however well the phase worked - and on
+    2026-09-18 it printed NOT WIRED twenty minutes after this tool had planned
+    and opened sprint 9 on its own. Same class as the stale sprint-close file
+    and the private "unconsumed" parser: three board lies, all of them the
+    board computing an answer it should have been told.
+
+    So the rule is: the tool that DECIDES writes what it decided, and the board
+    only reads. A stale file here is visibly stale because it carries its own
+    timestamp; a re-derived answer is confidently wrong and carries nothing.
+    """
+    try:
+        PHASE5.parent.mkdir(parents=True, exist_ok=True)
+        PHASE5.write_text(f"{time.strftime('%FT%H:%M:%SZ', time.gmtime())}\n"
+                          f"{state}\n{detail[:500]}\n")
+    except OSError:
+        pass
+
+
+def parse_proposal():
+    try:
+        text = PROPOSAL.read_text()
+    except OSError:
+        return None, None, "no proposal on disk"
+    m = re.search(r"^SELECT: *(.+)$", text, re.M)
+    g = re.search(r"^SPRINT-GOAL: *(.+)$", text, re.M)
+    if not m:
+        return None, None, "the proposal has no SELECT: line"
+    picks = [int(x) for x in re.findall(r"\d+", m.group(1))]
+    return picks, (g.group(1).strip() if g else ""), ""
+
+
+def admit(picks, goal, dry=False):
+    cands = candidates()
+    n = current_sprint() + 1
+    chosen, refused = [], []
+    for r in picks:
+        c = cands.get(r)
+        if not c:
+            refused.append((r, ["rank %d is not in the backlog" % r]))
+            continue
+        f = lint(c)
+        dup = already_admitted(c)
+        if dup:
+            f = (f or []) + [
+                f"its artifact is already on the board as row {dup} - this "
+                f"candidate has been admitted before, and re-admitting it makes "
+                f"the gates pass on the EARLIER sprint's work"]
+        (refused if f else chosen).append((r, f) if f else c)
+    if not chosen:
+        return "", refused, f"nothing admissible: {len(refused)} refused"
+
+    def work_check(c):
+        """The gate run against the artifact: the same command WITHOUT
+        --selftest, which is the gate proving itself, not checking anything."""
+        return re.sub(r"\s*--selftest\b", "", c["check"]).strip()
+
+    lines = [f"\n## SPRINT {n} GOAL — {goal or 'see SPRINT-NEXT-PROPOSAL.md'}\n",
+             f"Opened {time.strftime('%F %H:%M %Z')} by `sprint-next`, from the",
+             f"candidates corvid ranked in `BACKLOG-NEXT.md` and the selection in",
+             f"`SPRINT-NEXT-PROPOSAL.md`. Each work row is paired with a gate row",
+             f"owned by {GATE_SEAT}, so the check exists before the build starts.\n",
+             "| # | Task | Eligible seats | Trigger | Artifact required | Cost cap | Status |",
+             "|---|------|----------------|---------|-------------------|----------|--------|"]
+    for i, c in enumerate(chosen, 1):
+        rid = f"S{n}-{i}"
+        lines.append(
+            f"| {rid} | {c['what']} ADVANCES: {c['advances']} PRIOR MEASUREMENT: "
+            f"{c['prior']} | {OWNER} | pulse | `{c['artifact']}` "
+            f"(check: {work_check(c)}) | $0.00 | open (admitted {time.strftime('%F')} "
+            f"by sprint-next from BACKLOG-NEXT rank {c['rank']}) — "
+            f"verifier: {VERIFIER} — GATE IS NOT YOURS: it is row {rid}G |")
+        lines.append(
+            f"| {rid}G | Write the check for row {rid}, FROM ROW {rid}'s TEXT "
+            f"ALONE and before reading any artifact it describes: a check fitted "
+            f"to a finished artifact passes by construction. Require every file "
+            f"the row declares, and check the row's SUBSTANCE rather than "
+            f"counting files. `--selftest` is mandatory and must prove the check "
+            f"CAN fail: reject a deliberately non-conforming fixture, accept a "
+            f"minimal conforming one, exit 0 only if both hold. Exit contract per "
+            f"`team/tools/check_checker_exit_contracts.py`. | {GATE_SEAT} | pulse "
+            f"| `{c['artifact']}/check.py` (check: {c['check']}) | Max plan "
+            f"(bursty) | open (admitted with {rid}) — verifier: {VERIFIER} |")
+    block = "\n".join(lines) + "\n"
+    if dry:
+        return block, refused, ""
+
+    text = QUEUE.read_text()
+    anchor = re.search(r"^## SPRINT \d+ GOAL", text, re.M)
+    at = anchor.start() if anchor else len(text)
+    shutil.copy2(QUEUE, str(QUEUE) + f".bak-sprintnext-{time.strftime('%H%M%S')}")
+    tmp = str(QUEUE) + ".tmp"
+    Path(tmp).write_text(text[:at] + block + "\n" + text[at:])
+    os.replace(tmp, QUEUE)
+    # The loop treats the sprint as open again. STAMP THE OPEN TIME HERE: the
+    # poller only stamps on a closed->open transition it observes, and it does
+    # not observe one when this tool writes "open" while the poller is between
+    # sweeps or restarting. Sprint 7 opened with no stamp, so the status page
+    # judged the backlog's freshness against nothing and reported last sprint's
+    # backlog as this sprint's work. The thing that opens the sprint is the
+    # right thing to record when it opened.
+    (DIR / "sprint-close").write_text("open")
+    (DIR / "sprint-opened").write_text(str(int(time.time())))
+    # ARCHIVE THE CONSUMED PROPOSAL. --plan refuses while one exists, so leaving
+    # it here would open this sprint and then never plan another - the loop
+    # would stop being self-sustaining at exactly the step this tool was built
+    # to wire. Renamed rather than deleted: it is the record of why these rows
+    # and not the others.
+    try:
+        op, oerr = write_outline(n, PROPOSAL.read_text())
+        log(f"OUTLINE {op.name}" if op else f"NO OUTLINE: {oerr}")
+    except OSError as exc:
+        log(f"WARNING: could not write the outline: {exc}")
+    try:
+        PROPOSAL.rename(TEAM / f"SPRINT-{n}-PROPOSAL.md")
+    except OSError as exc:
+        log(f"WARNING: could not archive the proposal: {exc}")
+    return block, refused, ""
+
+
+def preconditions():
+    why = []
+    st = sprint_state()
+    if st != "closed":
+        why.append(f"the current sprint is not closed (state: {st or 'unknown'})")
+    open_build = [r["id"] for r in rows() if not r["standing"] and not r["done"]]
+    if open_build:
+        why.append("work is still unfinished: " + ", ".join(open_build[:6]))
+    if not BACKLOG.exists():
+        why.append("BACKLOG-NEXT.md does not exist")
+    else:
+        age = (time.time() - BACKLOG.stat().st_mtime) / 3600
+        if age > BACKLOG_MAX_AGE_H:
+            why.append(f"BACKLOG-NEXT.md is {age:.0f}h old, over "
+                       f"{BACKLOG_MAX_AGE_H}h - refine it before planning on it")
+    today = time.strftime("%F")
+    opened = 0
+    try:
+        opened = sum(1 for l in LOG.read_text().split("\n")
+                     if "SPRINT OPENED" in l and today.replace("-", "-") in l)
+    except OSError:
+        pass
+    if opened >= MAX_OPENS_PER_DAY:
+        why.append(f"{opened} sprints already opened today, cap is "
+                   f"{MAX_OPENS_PER_DAY}")
+    return why
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--plan", action="store_true")
+    ap.add_argument("--open", action="store_true")
+    ap.add_argument("--run", action="store_true")
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="store_true",
+                    help="ignore the preconditions (for a deliberate run)")
+    a = ap.parse_args()
+
+    why = preconditions()
+    print(f"  sprint state     {sprint_state() or 'unknown'}")
+    print(f"  current sprint   {current_sprint()}")
+    print(f"  candidates       {len(candidates())} ranked in BACKLOG-NEXT.md")
+    print(f"  proposal         {'present' if PROPOSAL.exists() else 'none'}")
+    if why:
+        print("  would NOT act:")
+        for w in why:
+            print(f"    - {w}")
+    else:
+        print("  ready to plan and open the next sprint")
+    # A DRY RUN THAT SKIPS THE DECISION IS A CHECK THAT CANNOT FAIL. Until
+    # 2026-09-18 `--dry-run` alone returned here, before admit() was ever
+    # called, and printed "ready to plan and open the next sprint" while the
+    # real run was refusing every candidate. So it reported a healthy loop for
+    # over an hour while the loop was stopped. A dry run now walks the SAME
+    # path the real run takes and only withholds the writes.
+    if a.dry_run:
+        a.run = True
+    if not (a.plan or a.open or a.run):
+        return 0
+    if why and not a.force:
+        # WAITING IS NOT FAILING. Every ten minutes this timer fires; for most
+        # of a sprint the honest answer is "the current sprint is not closed",
+        # which is the loop working. Exiting 1 for that made systemd mark the
+        # unit failed, and after the OnFailure wiring went in on 2026-09-18 it
+        # then paged Claude about a healthy loop - at 18:14, nine minutes after
+        # this same tool had opened sprint 9.
+        #
+        # So a precondition that is simply not yet met exits 0 and says so.
+        # Exit 1 is reserved for a real failure: a planner that would not
+        # answer, or a proposal that cannot be parsed.
+        benign = all(("is not closed" in w) or ("work is still unfinished" in w)
+                     for w in why)
+        if benign:
+            print("  waiting, not failing: " + "; ".join(why)[:200])
+            return 0
+        return 1
+
+    if a.plan or a.run:
+        # A DECLINE EXPIRES WHEN THE LIST IT ANSWERED CHANGES. The decline
+        # branch below says "the loop resumes by itself when a blocker clears,
+        # because that is a change to the backlog, not to this file" - and that
+        # was an assertion, not a mechanism. The decline is cached in the
+        # proposal, and the guard on the next line refuses to ask the planner
+        # again while it exists, so the answer outlived its question.
+        #
+        # Measured 2026-09-18: the planner declined at 12:37 on a five-candidate
+        # list; corvid restocked it to six startable candidates at 12:41,
+        # answering the loop's own restock commission; and at 12:43 the tool
+        # still reported "a proposal already exists; not asking the planner
+        # again". The restock worked, the loop could not see it, and the sprint
+        # would have stayed unplanned for ever.
+        #
+        # Only a DECLINE expires this way. A proposal that picked something is
+        # left alone - its picks are still admissible or admit() refuses them,
+        # and re-asking would spend a planner call to be told the same thing.
+        if PROPOSAL.exists() and not a.force and not a.dry_run:
+            try:
+                stale = BACKLOG.stat().st_mtime > PROPOSAL.stat().st_mtime
+            except OSError:
+                stale = False
+            if stale and not parse_proposal()[0]:
+                dead = TEAM / (f"SPRINT-NEXT-PROPOSAL.dead-"
+                               f"{time.strftime('%Y%m%d-%H%M%S')}.md")
+                try:
+                    PROPOSAL.rename(dead)
+                    print("  " + log(
+                        f"DECLINE EXPIRED: the backlog was revised after the "
+                        f"planner declined, so that answer is about a list "
+                        f"that no longer exists. Moved to {dead.name}; asking "
+                        f"the planner again."))
+                except OSError as exc:
+                    print(f"  WARNING: could not retire the stale decline: {exc}")
+        if PROPOSAL.exists() and not a.force:
+            print("  a proposal already exists; not asking the planner again")
+        else:
+            out, err = plan(dry=a.dry_run)
+            if err:
+                print("  " + log(f"PLAN FAILED: {err}"))
+                return 1
+            if a.dry_run:
+                print(out[:1500])
+                return 0
+            phase5("active", f"a proposal is written ({len(out.split())} "
+                             f"words) and waiting to be admitted")
+            print("  " + log(f"PLANNED: {PROPOSAL.name} written, "
+                             f"{len(out.split())} words"))
+    if a.open or a.run:
+        picks, goal, err = parse_proposal()
+        if err:
+            print("  " + log(f"OPEN FAILED: {err}"))
+            return 1
+        # "SELECT: none" IS AN ANSWER, NOT A FAILURE. Measured 2026-09-18:
+        # Astra assessed all 11 candidates and selected none - six are already
+        # finished and five are blocked on things no seat can move (Brian's
+        # campaign scope, 39.3 GB of storage against 15 GB free, and two that
+        # cannot start before 2026-09-21). That is the planner working
+        # correctly: the fleet is sized to a real sprint, not to filling two
+        # hours by repeating finished experiments.
+        #
+        # Treating it as a failure is what kept the loop retrying every ten
+        # minutes with nothing to change, and an exit 1 now also fires the
+        # unit-failed handler, which would page Claude about a considered
+        # decision. So it exits 0 and says so, and the reason is left on disk
+        # for the board to show. The loop resumes by itself when a blocker
+        # clears, because that is a change to the backlog, not to this file.
+        if not picks:
+            why = ""
+            try:
+                m = re.search(r"^WHY: *(.+)$", PROPOSAL.read_text(), re.M)
+                why = (m.group(1).strip() if m else "")[:400]
+            except OSError:
+                pass
+            print("  " + log(f"PLANNER DECLINED: no candidate is startable. "
+                             f"{why}"))
+            phase5("declined", f"the planner read the whole list and selected "
+                               f"none - {why}")
+            backlog_state(0, 0, f"the planner selected none: {why}")
+            # PHASE 3 IS NAMED "REFINE NEXT BACKLOG" AND ONLY COUNTED IT.
+            # 2026-09-18: six of eleven candidates were already finished and
+            # the other five blocked, so the planner correctly declined - and
+            # nothing asked anyone to restock the list. The loop ran out of
+            # work and stopped. Nothing prunes a finished candidate, and
+            # nothing notices when a blocker clears: rank 1's
+            # "post-2026-09-20 budget rule" was satisfied by go-budget the
+            # same morning and the list had no way to learn it.
+            #
+            # So the obligation is RECORDED here, in the same place and shape
+            # as the sprint-demo commission the poller already retries until
+            # its document exists. This tool does not edit BACKLOG-NEXT.md:
+            # the seat that ranks it owns it, and a list the loop rewrites
+            # behind that seat is a list nobody trusts.
+            owed(why)
+            return 0
+        block, refused, err2 = admit(picks, goal, dry=a.dry_run)
+        for r, f in refused:
+            print(f"  REFUSED rank {r}: {'; '.join(f)}")
+        if err2:
+            print("  " + log(f"OPEN FAILED: {err2}"))
+            # A DEAD PROPOSAL MUST NOT BLOCK RE-PLANNING. Measured 2026-09-18:
+            # the 09:32 proposal named ranks 7, 10 and 11, every one already on
+            # the board, so admit() refused all three. --plan then refuses to
+            # run "because a proposal already exists", so the planner was never
+            # asked again and the timer failed every ten minutes for over an
+            # hour with two seats idle. The loop stopped and looked like it was
+            # running.
+            #
+            # If EVERY pick was refused the proposal cannot ever open a sprint,
+            # so it is retired here - not deleted, moved aside with the reason -
+            # and the next run reaches the planner. A proposal that merely lost
+            # SOME picks is left alone: it can still open a smaller sprint.
+            if refused and len(refused) == len(picks) and not a.dry_run:
+                try:
+                    dead = TEAM / (f"SPRINT-NEXT-PROPOSAL.dead-"
+                                   f"{time.strftime('%Y%m%d-%H%M%S')}.md")
+                    PROPOSAL.rename(dead)
+                    print("  " + log(
+                        f"PROPOSAL RETIRED: every pick was already on the board, "
+                        f"so it could never open a sprint. Moved to {dead.name}; "
+                        f"the next run will ask the planner again."))
+                except OSError as exc:
+                    print("  " + log(f"WARNING: could not retire the dead "
+                                     f"proposal: {exc}"))
+                owed("every pick was already on the board")
+                backlog_state(0, len(refused),
+                              "every pick was already on the board")
+                # WAITING IS NOT FAILING, part two. The benign-precondition
+                # rule landed this morning but stopped short of here, and this
+                # branch is the MORE recovered one: it retires the dead
+                # proposal so the planner is asked afresh AND records the
+                # restock obligation, leaving the loop two ways forward. The
+                # poller delivered that commission 4 s after this exit on
+                # 2026-09-18 19:27, so rc=1 paged about a condition the machine
+                # was already handling. It stays rc=1 once the obligation has
+                # stood past OWED_PATIENCE with nobody discharging it - that is
+                # the real stall, and it is the one worth waking someone for.
+                if owed_stalled():
+                    print("  the backlog obligation has stood unattended past "
+                          "its window - this is a stall, not a wait")
+                    return 1
+                print("  waiting, not failing: the restock obligation is "
+                      "recorded and the poller delivers it to the seat that "
+                      "ranks the list")
+                return 0
+            return 1
+        if a.dry_run:
+            print(block)
+            return 0
+        nrows = block.count("\n| S")
+        # TELL THE BOARD IT IS RUNNING. The poller writes "closed" to
+        # $DIR/sprint-close at a close and nothing rewrote it at an OPEN, so
+        # after sprint 9 opened at 11:04 the board still read "closed",
+        # "3 min of working time", and - because its phase-5 branch is chosen
+        # by that same field - "PLAN THE NEXT SPRINT: NOT WIRED". Three wrong
+        # things on Brian's one readable surface from one stale file, while the
+        # loop underneath had worked perfectly. The state is known HERE, so it
+        # is written here.
+        try:
+            (Path(os.path.expanduser(
+                "~/.local/share/agent-deck/conductor/glm")) /
+                "sprint-close").write_text("open")
+        except OSError as exc:
+            print(f"  WARNING: could not record the open state: {exc}")
+        # AND DISCHARGE THE RESTOCK OBLIGATION. A sprint opening IS the proof
+        # the backlog was restocked - better evidence than anything the poller
+        # can probe, and my first discharge test could never fire once a sprint
+        # was open because it asked whether the NEXT one could be planned.
+        try:
+            OWED.unlink(missing_ok=True)
+        except OSError:
+            pass
+        backlog_state(nrows, len(refused),
+                      f"sprint {current_sprint()} opened from the list")
+        phase5("done", f"sprint {current_sprint()} was planned and opened by "
+                       f"sprint-next.timer: {nrows} rows admitted, "
+                       f"{len(refused)} refused. Runs again at the next close.")
+        print("  " + log(f"SPRINT OPENED {current_sprint()}: {nrows} rows "
+                         f"admitted, {len(refused)} refused, goal: {goal[:80]}"))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

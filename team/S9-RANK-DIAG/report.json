@@ -1,0 +1,43 @@
+{
+ "k": 5,
+ "ndcg_definition": "binary-gain-log2",
+ "prior": "metrics.py (implementer/repo/src/memory_bakeoff/metrics.py) computes reciprocal rank and MRR; reported at k=5 in team/RESEARCH-Q1.2-ISOLATION-RESULT.md (metrics at k=5, MRR among the five recorded metrics) and named in team/COLDREAD-20260912-scoreboard.md (R@20/MRR). nDCG is absent from metrics.py and from both reports; this artifact extends the family under the declared binary-gain-log2 definition. The rank-move prior: team/CORVID-S8-7-VERIFY.md recorded claude_mem's sel-005 top-two swap under S8-DOOR pressure with presence and bytes unchanged (order-blind set-F1 from team/S6-SELECTIVITY could not see it); those rankings re-captured here reproduce the swap. mrr and presence are imported from metrics.score_case, not re-derived; report.json is diag.py's own output on rankings.jsonl at k=5.",
+ "per_adapter": {
+  "bm25": {
+   "normal": {
+    "mrr": 1.0,
+    "ndcg": 1.0,
+    "presence": 1.0
+   },
+   "pressure": {
+    "mrr": 1.0,
+    "ndcg": 1.0,
+    "presence": 1.0
+   }
+  },
+  "claude_mem_chroma_lsa_no_recency": {
+   "normal": {
+    "mrr": 0.8,
+    "ndcg": 0.852371901428583,
+    "presence": 1.0
+   },
+   "pressure": {
+    "mrr": 0.9,
+    "ndcg": 0.9261859507142916,
+    "presence": 1.0
+   }
+  },
+  "pi_lcm_toollevel": {
+   "normal": {
+    "mrr": 0.2,
+    "ndcg": 0.2,
+    "presence": 0.2
+   },
+   "pressure": {
+    "mrr": 0.2,
+    "ndcg": 0.2,
+    "presence": 0.2
+   }
+  }
+ }
+}

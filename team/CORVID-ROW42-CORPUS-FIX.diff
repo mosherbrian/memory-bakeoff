@@ -1,0 +1,71 @@
+--- a/corpus.jsonl
++++ b/corpus.jsonl
+@@ -6,7 +6,7 @@
+ {"scenario_id": "S06", "family": "negation", "split": "open", "records": [{"id": "R-NEG2", "summary": "plain rm forbidden on archives", "content": "never rm archives/; use archive-rotate instead", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "What meetings are on tomorrow?"}, {"turn": 2, "type": "moment_offtopic", "text": "Free up disk by deleting the old bundle store."}, {"turn": 3, "type": "filler_stale_only", "text": "Re-read the superseded note about deploy-legacy.sh and confirm it is deprecated."}]}
+ {"scenario_id": "S07", "family": "actually", "split": "open", "records": [{"id": "R-ACT1", "summary": "corrected retry count", "content": "retry limit is 5, not the 3 stated earlier", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "Summarize yesterday's deploy notes."}, {"turn": 2, "type": "moment_topic", "text": "Set the retry policy to the value we settled on."}, {"turn": 3, "type": "filler_anachronism", "text": "Draft the post-migration runbook before the migration exists."}]}
+ {"scenario_id": "S08", "family": "actually", "split": "heldout", "records": [{"id": "R-ACT2", "summary": "corrected region", "content": "primary region is eu-west, superseding the earlier us-east note", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "Show the repo status summary."}, {"turn": 2, "type": "moment_offtopic", "text": "Start the trial deployment in the home territory."}, {"turn": 3, "type": "filler_plain", "text": "What meetings are on tomorrow?"}]}
+-{"scenario_id": "S09", "family": "repeated_instruction", "split": "open", "records": [{"id": "R-REP1", "summary": "signoff required", "content": "every rollout needs a signoff line from on-call", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "List open tickets assigned to me."}, {"turn": 2, "type": "moment_topic", "text": "Ship the queue worker rollout."}, {"turn": 3, "type": "filler_near_miss", "text": "Check the staging database port."}]}
++{"scenario_id": "S09", "family": "repeated_instruction", "split": "open", "records": [{"id": "R-REP1", "summary": "signoff required", "content": "every rollout needs a signoff line from on-call", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "List open tickets assigned to me."}, {"turn": 2, "type": "moment_topic", "text": "What is required before the queue worker rollout ships?"}, {"turn": 3, "type": "filler_near_miss", "text": "Check the staging database port."}]}
+ {"scenario_id": "S10", "family": "repeated_instruction", "split": "open", "records": [{"id": "R-REP2", "summary": "changelog entry required", "content": "every schema change ships with a CHANGELOG line", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "What meetings are on tomorrow?"}, {"turn": 2, "type": "moment_offtopic", "text": "Release the database reshuffle."}, {"turn": 3, "type": "filler_stale_only", "text": "Re-read the superseded note about deploy-legacy.sh and confirm it is deprecated."}]}
+ {"scenario_id": "S11", "family": "wrong", "split": "open", "records": [{"id": "R-WRG1", "summary": "restart procedure", "content": "restart via svc-restart web; never kill -9 the pid", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "Summarize yesterday's deploy notes."}, {"turn": 2, "type": "moment_topic", "text": "The web worker is wedged; restart it."}, {"turn": 3, "type": "filler_anachronism", "text": "Draft the post-migration runbook before the migration exists."}]}
+ {"scenario_id": "S12", "family": "wrong", "split": "heldout", "records": [{"id": "R-WRG2", "summary": "snapshot before migrate", "content": "snapshot the volume before running any migration", "status": "active"}], "turns": [{"turn": 1, "type": "filler_plain", "text": "Show the repo status summary."}, {"turn": 2, "type": "moment_offtopic", "text": "Execute the storage transfer."}, {"turn": 3, "type": "filler_plain", "text": "What meetings are on tomorrow?"}]}
+--- a/selftest.py
++++ b/selftest.py
+@@ -2,7 +2,7 @@
+ """Corpus v1 self-test — re-verifies team/invocation-corpus-v1/ deterministically.
+ Usage: python3 selftest.py  (rc 0 = all green; $0, stdlib only, no network)
+ Checks: hashes match files; 12 scenarios x (1 moment + 2 fillers); 2/family;
+-9 open / 3 heldout; topic/offtopic split == mechanical token overlap;
++9 open / 3 heldout; topic/offtopic split == binding trigger reachability;
+ leak gate (no action string in wrong place); no adjacent moments.
+ """
+ import json, hashlib, re, sys
+@@ -28,17 +28,23 @@
+ check("2 scenarios per family x6", set(fam.values()) == {2}, dict(fam))
+ split = Counter(s["split"] for s in corpus)
+ check("9 open / 3 heldout", split.get("open") == 9 and split.get("heldout") == 3, dict(split))
+-STOP = {"the","a","an","at","its","by","is","it","now","with","to","and","or","for","of",
+-        "in","on","as","we","our","this","that","are","was","from","write","set","run","use",
+-        "using","point","re","refresh","apply","ship","launch","roll","out","clear","restart",
+-        "push","new","start","release","free","execute"}
+-def toks(s): return {w for w in re.findall(r"[a-z0-9]+", s.lower()) if w not in STOP and len(w) > 2}
++# Binding trigger predicate, mirroring extensions/pi-change-trigger/index.ts:96-112:
++# tokens len >= 4, trigger STOPWORDS, topic set = record SUMMARIES only.
++STOP = {"this","that","with","from","into","have","been","will","shall",
++        "they","them","their","there","then","than","when","what","which",
++        "where","were","been","also","only","over","under","about","after",
++        "before","while","being","does","done","each","such","some","more",
++        "most","other","same","very","upon","said","create","created",
++        "decision","environment","project","trial","record","tool","call",
++        "confirm","confirmed","draft","pending","campaign1","campaign-1",
++        "window","opening","exists","never","still","uses","using","used"}
++def toks(s): return {w for w in re.findall(r"[a-z0-9][a-z0-9-]{3,}", s.lower()) if w not in STOP}
+ topic_bad, leak = [], []
+ for m in manifest:
+     s = next(x for x in corpus if x["scenario_id"] == m["scenario_id"])
+     rec = next(r for r in s["records"] if r["id"] == m["record_set"][0])
+     prompt = next(t["text"] for t in s["turns"] if t["type"].startswith("moment"))
+-    shared = toks(prompt) & toks(rec["summary"] + " " + rec["content"])
++    shared = toks(prompt) & toks(rec["summary"])
+     if (len(shared) >= 1) != m["topic_reachable"]: topic_bad.append(m["scenario_id"])
+     for t in s["turns"]:
+         low = t["text"].lower()
+@@ -47,7 +53,7 @@
+         else:
+             leak += [(s["scenario_id"], x) for x in m["correct_action_set"] + m["wrong_action_set"]
+                      if len(x) > 4 and x.lower() in low]
+-check("topic split == mechanical overlap", not topic_bad, str(topic_bad))
++check("topic split == binding trigger reachability", not topic_bad, str(topic_bad))
+ check("leak gate 0 violations", not leak, str(leak))
+ print("SELFTEST: " + ("ALL GREEN" if not fails else f"{len(fails)} FAILING: {fails}"))
+ sys.exit(1 if fails else 0)
+--- a/hashes.json
++++ b/hashes.json
+@@ -1,5 +1,5 @@
+ {
+- "corpus_sha256": "17730261c81bc7464db0a7908d1fc815179440accd69e4ca4bd6fd27a7ee7167",
++ "corpus_sha256": "65ba859278827719f8ae532e5278edec429951d64bed878c41f618bc9a3adf6c",
+  "manifest_sha256": "48c380f2ba36757656197aed93812c355ee8e23dfb03c8948452c32bbb233777",
+  "violations": []
+ }
+\ No newline at end of file

@@ -1,0 +1,29 @@
+{
+ "declared_at": "2026-09-17T20:57:22.911162+00:00",
+ "corpus_sha256": "5a8668f73383ea1acc4806a31df9240cc0eb9186a7be69385a8f23e8be2024be",
+ "manifest_sha256": "d2d189128088f6b938e3c53e583026525446bf27ee6c098bc4526a099ab49561",
+ "bm25_variant": "prior",
+ "s7_1_verdict": "artifact-refuted",
+ "rule": {
+  "complementary_if_gain_at_least": 0.1,
+  "note": "margin 0.10 = one case's worth of mean set-F1 movement on the 10-case corpus; less than that is noise, not complementarity; fixed before the run"
+ },
+ "compose_semantics": "per case: retrieve nothing where pi_lcm_toollevel_sel retrieved nothing, else exactly the ids the bm25 arm retrieved; the gate reads 'pi-lcm fired' as 'retrieved at least one id', the only signal the prior schema holds",
+ "variant_justification": "S7-1's verdict is artifact-refuted (its prefilter fixed no abstention and regressed sel-003), so composing on the prefilter would compose on a refuted configuration; the unfiltered prior bm25 arm is the component, and pi-lcm's gate owns abstention \u2014 the S7-1 finding sharpens the division of labour: bm25 ranks, the gate decides whether to retrieve at all",
+ "prior_measurement": {
+  "source": "team/S6-SELECTIVITY/results.jsonl (arms bm25 and pi_lcm_toollevel_sel; sha256 5f3f14fc2f9b609b9153a8fbe8a3cba33aa8bcbc39689e561e6828af436196ab)",
+  "bm25_mean_setf1": 0.5,
+  "bm25_retrieve_correct": 5,
+  "bm25_abstain_correct": 0,
+  "pi_lcm_mean_setf1": 0.6,
+  "pi_lcm_retrieve_correct": 1,
+  "pi_lcm_abstain_correct": 5
+ },
+ "dependency": "team/S7-BM25-PREFILTER (row S7-1) results.jsonl sha256 bound at run time; verdict quoted from its verdict.json",
+ "arms_in_order": [
+  "bm25",
+  "pi_lcm_toollevel_sel",
+  "compose"
+ ],
+ "expectation": "pre-registered before the run: pi-lcm's gate opens on 1 of 5 retrieve cases and on no abstain case, so the compose inherits pi-lcm's correctness profile exactly (mean 0.600, retrieve_correct 1, abstain_correct 5); gain over the better single arm 0.000 < margin 0.10; verdict not-complementary \u2014 the construction discards bm25's retrieve-case coverage instead of combining it"
+}

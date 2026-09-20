@@ -1,0 +1,29 @@
+diff --git a/src/memory_bakeoff/providers/external.py b/src/memory_bakeoff/providers/external.py
+index 6187361..f1b822f 100644
+--- a/src/memory_bakeoff/providers/external.py
++++ b/src/memory_bakeoff/providers/external.py
+@@ -145,7 +145,9 @@ class Mem0Provider(MemoryProvider):
+ 
+ class HabitusProvider(MemoryProvider):
+     name="habitus"
+-    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,supports_as_of=False,supports_feedback=False,notes="Stock Habitus recall; stock record_outcome credits output-decision paths, not retrieval paths.")
++    raw_experiment_class="controlled_core"
++    product_experiment_class="controlled_core"
++    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=False,supports_as_of=False,supports_feedback=False,notes="Stock Habitus recall; stock record_outcome credits output-decision paths, not retrieval paths. No product-mode ingestion path exists (ingest ignores mode), so product mode is ineligible rather than run as raw.")
+     def __init__(self): super().__init__(); self.mind=None
+     @staticmethod
+     def _ensure_vendor_path():
+diff --git a/tests/test_preflight_hardening.py b/tests/test_preflight_hardening.py
+index ddc688b..8b9ce18 100644
+--- a/tests/test_preflight_hardening.py
++++ b/tests/test_preflight_hardening.py
+@@ -16,6 +16,9 @@ from memory_bakeoff.runner import run_provider, write_results
+ 
+ def test_experiment_classes_preserve_mode_distinctions():
+     assert PROVIDERS["bm25"]().experiment_class("raw") == "baseline"
++    assert PROVIDERS["habitus"]().experiment_class("raw") == "controlled_core"
++    assert PROVIDERS["habitus"]().experiment_class("product") == "controlled_core"
++    assert PROVIDERS["habitus"]().capabilities.product_ingest is False
+     assert PROVIDERS["membukkit_core_lsa"]().experiment_class("raw") == "controlled_core"
+     assert PROVIDERS["membukkit_core_lsa"]().experiment_class("product") == "controlled_core"
+     assert PROVIDERS["membukkit"]().experiment_class("raw") == "raw_product"

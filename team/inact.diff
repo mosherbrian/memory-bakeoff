@@ -1,0 +1,95 @@
+--- /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/poller-base.sh	2026-09-15 14:10:13.233085625 -0700
++++ /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/poller-patched.sh	2026-09-15 14:10:13.257906936 -0700
+@@ -417,6 +417,41 @@
+       { title=$1; id=$2; base=title; sub(/-(dsh|claude|flash|muse)$/, "", base)
+         if (index(title, nm) || index(nm, title) || index(nm, base)) { print id; exit } }'
+   }
++  # Artifact movement, per owner. The darkness test used to be the owner's
++  # transcript mtime, which ANY turn refreshes - including the one-line reply
++  # to the nudge itself. So a seat that answered "still working on it" looked
++  # alive for another 20 minutes without moving anything. This asks a
++  # different question: when did this owner last WRITE something that is not
++  # bookkeeping? Tool records carry kind="edit" and the paths they touched.
++  art_ts() { # history-file -> epoch of newest non-bookkeeping write, or 0
++    [ -z "$1" ] || [ ! -f "$1" ] && { echo 0; return; }
++    python3 - "$1" <<'ARTPY'
++import json, os, re, sys
++BOOK = re.compile(r"(task-log\.md|RD-THREADS\.md|QUEUE\.md|BOARD\.md|"
++                  r"LEARNINGS\.md|state\.json|poller\.flags|\.log$|"
++                  r"/inactivity/|/acp-history/|/acp-stream/)", re.I)
++edits, best = set(), 0.0
++try:
++    rows = [json.loads(l) for l in open(sys.argv[1], errors="ignore") if l.strip()]
++except Exception:
++    print(0); raise SystemExit
++for d in rows:
++    if not isinstance(d, dict) or d.get("role") != "tool":
++        continue
++    if d.get("kind") == "edit" or d.get("diffs"):
++        if d.get("id"):
++            edits.add(d["id"])
++for d in rows:
++    if not isinstance(d, dict) or d.get("role") != "tool":
++        continue
++    if d.get("id") not in edits:
++        continue
++    paths = [p for p in (d.get("paths") or []) if p and not BOOK.search(str(p))]
++    if paths and d.get("at"):
++        best = max(best, float(d["at"]))
++print(int(best))
++ARTPY
++  }
+   LIVEKEYS=""
+   while IFS=$(printf '\037') read -r TASK SEATS STATUS; do
+     [ -z "$TASK" ] && continue
+@@ -429,22 +464,31 @@
+       OWNER=$(echo "$STATUS" | sed -n 's/.*[Cc][Ll][Aa][Ii][Mm][Ee][Dd]: *\([A-Za-z][A-Za-z0-9_-]*\).*/\1/p' | head -1)
+       [ -z "$OWNER" ] && continue
+       OLD=$(cat "$ST" 2>/dev/null)
+-      if [ "$(echo "$OLD" | cut -d' ' -f1)" != "claimed" ] || [ "$(echo "$OLD" | cut -d' ' -f4)" != "$SM" ]; then
+-        echo "claimed $T $OWNER $SM 0" > "$ST"; continue
++      # Was: any status-text change ($SM) restarted the clock from now,
++      # so the dead-man switch could be held off by editing the row.
++      # Only a genuinely new claim (different owner) restarts it now.
++      if [ "$(echo "$OLD" | cut -d' ' -f1)" != "claimed" ] || [ "$(echo "$OLD" | cut -d' ' -f3)" != "$OWNER" ]; then
++        echo "claimed $T $OWNER $SM 0 0" > "$ST"; continue
+       fi
+       FIRST=$(echo "$OLD" | cut -d' ' -f2); FIRED=$(echo "$OLD" | cut -d' ' -f5)
++      # One reason per claim. Unlimited resets are how this switch
++      # never fired: 9 of 12 logged events were a reason reset.
++      REASONS=$(echo "$OLD" | cut -d' ' -f6); REASONS=${REASONS:-0}
+       # posted-reason reset: BOARD newer than the claim clock names the owner
+       # beside a justification word → restart the clock from the board edit.
+       BM=$(mt "$BOARD")
+-      if [ "$BM" -gt "$FIRST" ] && tail -60 "$BOARD" 2>/dev/null | grep -qiF "$OWNER" \
++      if [ "$REASONS" -lt 1 ] && [ "$BM" -gt "$FIRST" ] && tail -60 "$BOARD" 2>/dev/null | grep -qiF "$OWNER" \
+         && tail -60 "$BOARD" 2>/dev/null | grep -qiE "reason|because|blocked|waiting|justif|hold|pause"; then
+-        log "INACT $KEY ($OWNER): posted reason, clock reset"
+-        echo "claimed $BM $OWNER $SM 0" > "$ST"; continue
++        log "INACT $KEY ($OWNER): posted reason, clock reset (1 of 1 allowed this claim)"
++        echo "claimed $BM $OWNER $SM 0 1" > "$ST"; continue
+       fi
+       OID=$(seat_id_for "$OWNER")
+       OH=$(ls -t $HIST/${OID%%-*}-*.jsonl 2>/dev/null | head -1)
+       OHT=$(mt "$OH"); [ -z "$OH" ] && OHT=0
+-      if [ $(( T - FIRST )) -ge 1200 ] && [ $(( T - OHT )) -ge 1200 ] && [ "$FIRED" != "1" ]; then
++      # OAT, not OHT: last non-bookkeeping WRITE by this owner. OHT is
++      # any turn at all, which the reply to the nudge satisfies.
++      OAT=$(art_ts "$OH"); [ -z "$OAT" ] && OAT=0
++      if [ $(( T - FIRST )) -ge 1200 ] && [ $(( T - OAT )) -ge 1200 ] && [ "$FIRED" != "1" ]; then
+         [ -n "$OID" ] && wake "$OID" "[$OWNER] claimed-dark 20min: your QUEUE claim on '$(echo "$TASK" | cut -c1-70)' is idle 20+ min — post progress/a reason or release it. Ledger looped in. — fleet-poller"
+         if wake "$LEDGER" "[Ledger] 20min claimed-dark: $OWNER's claim on '$(echo "$TASK" | cut -c1-70)' idle 20+ min (status: $(echo "$STATUS" | cut -c1-80)). — fleet-poller"; then
+           echo "claimed $FIRST $OWNER $SM 1" > "$ST"
+@@ -471,7 +515,12 @@
+             echo "open $FIRST - $SM 1" > "$ST"
+           fi
+         else
++          # A log line nobody reads is how this stayed invisible:
++          # rows naming "worker-glm-2" (not a session title) were
++          # counted as nudged while no seat was ever woken. Tell the
++          # PO, once per row, so the row gets fixed or reassigned.
+           log "INACT $KEY: 10min unclaimed but no eligible seat resolves (seats: $(echo "$SEATS" | cut -c1-60))"
++          wake "$LEDGER" "[Ledger] unroutable QUEUE row: '$(echo "$TASK" | cut -c1-70)' has been unclaimed 10+ min and its eligible seats ($(echo "$SEATS" | cut -c1-60)) match no agent-deck session, so no nudge can ever reach anyone. Fix the seat name or reassign. — fleet-poller" || true
+           echo "open $FIRST - $SM 1" > "$ST"
+         fi
+       fi

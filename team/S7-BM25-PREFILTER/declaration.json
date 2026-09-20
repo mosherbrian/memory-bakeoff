@@ -1,0 +1,130 @@
+{
+ "declared_at": "2026-09-17T20:50:24.560881+00:00",
+ "stopwords": [
+  "about",
+  "after",
+  "also",
+  "been",
+  "before",
+  "being",
+  "call",
+  "campaign-1",
+  "campaign1",
+  "confirm",
+  "confirmed",
+  "create",
+  "created",
+  "decision",
+  "does",
+  "done",
+  "draft",
+  "each",
+  "environment",
+  "exists",
+  "from",
+  "have",
+  "into",
+  "more",
+  "most",
+  "never",
+  "only",
+  "opening",
+  "other",
+  "over",
+  "pending",
+  "project",
+  "record",
+  "said",
+  "same",
+  "shall",
+  "some",
+  "still",
+  "such",
+  "than",
+  "that",
+  "their",
+  "them",
+  "then",
+  "there",
+  "they",
+  "this",
+  "tool",
+  "trial",
+  "under",
+  "upon",
+  "used",
+  "uses",
+  "using",
+  "very",
+  "were",
+  "what",
+  "when",
+  "where",
+  "which",
+  "while",
+  "will",
+  "window",
+  "with"
+ ],
+ "source": "implementer/repo/extensions/pi-change-trigger/index.ts STOPWORDS @ sha256 ec6d87948a48b44b536e714abc05b78968657d5abf20154d7a6059014fbbdd01 (the same pin S4-12 recorded as trigger_pin), loaded per team/invocation-corpus-v3-standard/run_standard.py load_stopwords(); the only stopword filter the project's fire-log path has ever used, frozen for a different instrument before the S6-2 corpus existed \u2014 chosen for provenance, not fit; any other list would be a post-hoc choice and a different list is a new declared configuration, not a second try inside this row",
+ "addresses": "the recorded deviation is S6-SELECTIVITY/review.json deviation (1): bm25 fired on all five abstain cases because the in-tree tokenizer keeps function words and no stopword prefilter was declared or applied, while S4-12's fire-log bm25 usage did filter \u2014 this row declares and applies exactly that prefilter",
+ "corpus_sha256": "5a8668f73383ea1acc4806a31df9240cc0eb9186a7be69385a8f23e8be2024be",
+ "manifest_sha256": "d2d189128088f6b938e3c53e583026525446bf27ee6c098bc4526a099ab49561",
+ "rule": {
+  "artifact_if_abstain_at_least": 3,
+  "note": "N=3 because the tokenizer-artifact hypothesis concerns the three unwritten-subject abstain cases (sel-006, sel-007, sel-010); the two written-subject/no-note cases are declared by the prior design to possibly keep firing on the subject token, so artifact-confirmed means abstention recovered on at least those three; rerun.retrieve_correct is reported beside the verdict and rank 2 reads it",
+  "staging_rule_note": "the pre-registration also required retrieve_correct = 5 for confirmed; the gate's rule shape keys on abstentions alone, so that condition travels in the verdict finding instead"
+ },
+ "prefilter_application": "tokens in the set are dropped from BOTH the query and the ingested record text before BM25 scoring; sole delta from the pinned BM25Provider (repo be2bfa9, bm25.py sha256 259b15dcc7fc8397aa45884190d9b5afdbba2f8209426789218da892a124f9b), the copied-with-sole-delta pattern S4-12 used",
+ "baseline_pin": {
+  "repo_head": "be2bfa908a329ac5dc5f3b33ca812eb1921bcc78",
+  "bm25_py_sha256": "259b15dcc7fc8397aa45884190d9b5afdbba2f82094267889218da892a124f9b"
+ },
+ "index_ts_sha256": "ec6d87948a48b44b536e714abc05b78968657d5abf20154d7a6059014fbbdd01",
+ "prior_measurement": {
+  "source": "team/S6-SELECTIVITY/results.jsonl (arm bm25; sha256 5f3f14fc2f9b609b9153a8fbe8a3cba33aa8bcbc39689e561e6828af436196ab)",
+  "review_source": "team/S6-SELECTIVITY/review.json (sha256 7b6f738cfb4b1c99eb4fccfd3b4d0705507913ef320be0f4a008b61293509119)",
+  "bm25_mean_setf1": 0.5,
+  "bm25_abstain_correct": 0,
+  "bm25_per_case_retrieved": {
+   "sel-001": [
+    "sel-001-r2"
+   ],
+   "sel-002": [
+    "sel-002-r1"
+   ],
+   "sel-003": [
+    "sel-003-r2"
+   ],
+   "sel-004": [
+    "sel-004-r3"
+   ],
+   "sel-005": [
+    "sel-005-r2"
+   ],
+   "sel-006": [
+    "sel-006-r2"
+   ],
+   "sel-007": [
+    "sel-007-r3"
+   ],
+   "sel-008": [
+    "sel-008-r1"
+   ],
+   "sel-009": [
+    "sel-009-r1"
+   ],
+   "sel-010": [
+    "sel-010-r2"
+   ]
+  }
+ },
+ "arms_in_order": [
+  "return-nothing",
+  "return-everything",
+  "bm25-nofilter",
+  "bm25-prefilter",
+  "oracle"
+ ],
+ "expectation": "pre-registered before the run: abstain_correct 0 of 5 and retrieve_correct 5 of 5, verdict artifact-refuted \u2014 the set filters what/when/which/does but NOT is/the/for/how/many, and 'the' appears in most store records, so residual query tokens keep every abstain case above score zero; the mean set-F1 will not move from 0.500, which is why the rule keys on abstentions"
+}

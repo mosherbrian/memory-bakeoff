@@ -1,0 +1,56 @@
+{
+ "verdict": "rule-survives",
+ "finding": "the declared corpus-coverage rule (abstain when the fraction of query content tokens with document frequency >= 1 in the case store falls strictly below the threshold) meets the pre-registered two-sided bar on BOTH sets: at threshold 0.25 and at 0.5 it rejects irrelevant queries with zero useful retrievals lost on the declaration set AND on the sealed holdout. On the declaration set, threshold 0.5 separates perfectly: 5/5 irrelevant rejected, 0/5 useful lost - the first mechanism of three to reject anything without loss (the S7 stopword filter rejected 0/5 and lost 1; the S10 margin rule rejected 2/5 and lost 1). On the holdout the rule rejects 3/5 with zero loss, its honest limit: the generator's partially-supported irrelevant queries (one corpus token, one absent token, coverage exactly 0.5) survive every threshold that keeps all useful retrievals, because the useful queries' own morphology gaps (listen/listens, artifact/artifacts, body/bodies, runner/runners) cap useful coverage below 1.0 - raising the threshold to catch the supported-half distractors loses useful retrievals first (0.75 loses 3/5 on holdout, 2/5 on declaration). The grid is data, not a menu: no threshold is selected in report.json; the bar, fixed in design.md before any run, is met by exactly the thresholds {0.25, 0.5} on both sets. Boundary note: sel-003's coverage is exactly 0.5 and the declared comparison is strict less-than, so it retrieves at 0.5 by the rule as declared - the perfect separation does not depend on that boundary case flipping",
+ "prior": {
+  "s6_bm25_baseline": {
+   "source": "team/S6-SELECTIVITY/results.jsonl",
+   "sha256": "5f3f14fc2f9b609b9153a8fbe8a3cba33aa8bcbc39689e561e6828af436196ab",
+   "retrieve_correct": 5,
+   "abstain_correct": 0
+  },
+  "s7_stopword_filter": {
+   "source": "team/S7-BM25-PREFILTER/verdict.json",
+   "verdict": "artifact-refuted",
+   "abstain_correct": 0,
+   "retrievals_lost": 1
+  },
+  "s10_margin_rule": {
+   "source": "team/S10-BM25-ABSTAIN2/verdict.json",
+   "verdict": "mechanism-fails",
+   "abstain_correct": 2,
+   "retrievals_lost": 1,
+   "grid": "0.5 -> 0/0, 1.0 -> 2/1, 1.5 -> 5/2"
+  }
+ },
+ "rerun": {
+  "declaration_set": [
+   {"threshold": 0.0, "irrelevant_rejected": 0, "useful_lost": 0},
+   {"threshold": 0.25, "irrelevant_rejected": 3, "useful_lost": 0},
+   {"threshold": 0.5, "irrelevant_rejected": 5, "useful_lost": 0},
+   {"threshold": 0.75, "irrelevant_rejected": 5, "useful_lost": 2},
+   {"threshold": 1.0, "irrelevant_rejected": 5, "useful_lost": 5}
+  ],
+  "holdout_set": [
+   {"threshold": 0.0, "irrelevant_rejected": 0, "useful_lost": 0},
+   {"threshold": 0.25, "irrelevant_rejected": 3, "useful_lost": 0},
+   {"threshold": 0.5, "irrelevant_rejected": 3, "useful_lost": 0},
+   {"threshold": 0.75, "irrelevant_rejected": 5, "useful_lost": 3},
+   {"threshold": 1.0, "irrelevant_rejected": 5, "useful_lost": 3}
+  ]
+ },
+ "bar": "survival iff some preregistered threshold achieves >= 1 irrelevant rejected and 0 useful lost on the declaration set AND >= 1 irrelevant rejected and 0 useful lost on the holdout set (design.md, written before pin_generator)",
+ "bar_met_at": [0.25, 0.5],
+ "expectation_registered_before_run": "thresholds in (0.4, 0.5] should reject the zero-support and weakly-supported irrelevant queries (3-4 of 5) while keeping every useful retrieval; whether the rule survives depends on the sealed holdout's irrelevant-query support shape",
+ "expectation_met": "the bar was met and exceeded on the declaration set (5/5 rejected at 0.5, above the predicted 3-4) and met on the holdout (3/5 at 0.25 and 0.5); the prediction's failure mode - partially-supported irrelevant queries surviving safe thresholds - is exactly what caps the holdout at 3/5",
+ "provenance": {
+  "gate": "check.py sha256 522125d698bb44ebf28ffabae0176924595ccd7e7d2a3ac4bbafb24af83bd35d (VERIFIED PASS by corvid-dsh 16:21 PDT, team/CORVID-S12-2G-VERIFY.md), re-pinned unchanged at 16:27 before the build and re-verified after gate PASS",
+  "declaration_sha256": "06317c6fe3ec0df92bae953677ee56ba35556656ef5aba54c65b82b4d3b41b80",
+  "generator_pin": {"algorithm": "coverage-cases-v1", "seed": 20260919, "count": 10},
+  "holdout_cases_sha256": "b3da51ac3247e5960d8811060dba269ea2af6183dbc84694db868d1599c271a3",
+  "results_sha256": "d3f5dde89649bf9257e321463f83ca84457f49b7d1df2905b8e620ae6cb83942",
+  "report_sha256": "e01c5ce0dae6c78fec1c1e9361cae3dfd603dcd933625c920903ee08ad9e84e1",
+  "corpus_anchor": "declaration_cases.json converted from team/S6-SELECTIVITY/corpus.jsonl sha256 5a8668f73383ea1acc4806a31df9240cc0eb9186a7be69385a8f23e8be2024be (matches the pin in S10-BM25-ABSTAIN2/declaration.json); relevance labels assigned by reading, baseline top-1 equals every label 5/5 before any threshold",
+  "holdout_unread_at_declaration": "the declarer read only declaration_cases before the declare event; the holdout file was materialized mechanically from the pinned generator and only its sha256 crossed the declaration boundary",
+  "gate_result": "PASS rc 0 on first submission: 'S12-2 declaration, holdout, full grid, and both outcomes verified'; selftest rc 0 (3 conforming accepted, 57 corruptions rejected)"
+ }
+}

@@ -1,0 +1,20 @@
+# THIS REPO EXISTS SO THE CORPUS HAS A REMOTE WITHOUT MOVING.
+# 2026-09-20: memory-bake-off/team held 3,706 files of research output with no
+# remote at all, and every row on the board declares an ABSOLUTE path into it.
+# Moving the corpus into implementer/repo/team would have been structurally
+# tidier and would have broken ~983 declared paths at once. So the directory
+# stays where it is and gets its own checkout of the project repo instead.
+#
+# The branch is fleet/team-corpus and it is an ORPHAN: nothing from main is
+# ever checked out here, because a checkout would overwrite the live corpus.
+
+# The real checkout of this same repo, nested inside this directory.
+implementer/
+
+# Upstream datasets we fetched, not results we produced - 65 MB of the 127.
+team/S7-KD-WORLDS/upstream/
+team/builder-provenance-fetches/
+
+__pycache__/
+*.pyc
+*.log

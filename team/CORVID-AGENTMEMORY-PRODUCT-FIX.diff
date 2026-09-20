@@ -1,0 +1,21 @@
+--- a/src/memory_bakeoff/providers/external.py
++++ b/src/memory_bakeoff/providers/external.py
+@@ -440,7 +440,7 @@
+ 
+ class AgentMemoryProvider(MemoryProvider):
+     name="agentmemory"
+-    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,service_required=True,notes="Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop.")
++    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=False,service_required=True,notes="Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop.")
+     def __init__(self,base_url=None):
+         super().__init__(); self.base=(base_url or os.getenv("AGENTMEMORY_URL","http://127.0.0.1:3111")).rstrip("/"); self.project=os.getenv("AGENTMEMORY_PROJECT") or f"memory-bakeoff-{uuid.uuid4().hex[:8]}"; self.agent_id=os.getenv("AGENTMEMORY_AGENT_ID"); self._native_record_ids={}; self._ingest_trace=[]
+     def _headers(self):
+--- a/tests/test_preflight_hardening.py
++++ b/tests/test_preflight_hardening.py
+@@ -19,6 +19,7 @@
+     assert PROVIDERS["habitus"]().experiment_class("raw") == "controlled_core"
+     assert PROVIDERS["habitus"]().experiment_class("product") == "controlled_core"
+     assert PROVIDERS["habitus"]().capabilities.product_ingest is False
++    assert PROVIDERS["agentmemory"]().capabilities.product_ingest is False  # mode-blind service; CORVID-AGENTMEMORY-PRODUCT-FLAG.md
+     assert PROVIDERS["membukkit_core_lsa"]().experiment_class("raw") == "controlled_core"
+     assert PROVIDERS["membukkit_core_lsa"]().experiment_class("product") == "controlled_core"
+     assert PROVIDERS["membukkit"]().experiment_class("raw") == "raw_product"

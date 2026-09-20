@@ -1,0 +1,49 @@
+{
+ "arm": "claude_mem_chroma_lsa",
+ "corpus": "invocation-corpus-v3-standard/corpus.jsonl",
+ "corpus_sha256": "7395b7d5fc44c92a58599b74b193eabf727bbec5a81b8fac991ee66a15a369c0",
+ "derivation_surface": {
+  "exact_nonempty": 0,
+  "nonempty": 180,
+  "relaxed": 0,
+  "turns": 180
+ },
+ "engine_pin": "claude-mem @fa6a1e9ec12d23f98326a9b26e243acb0819e105 chroma search policy (top-100 semantic, DEFAULT 90-day recency) with shared-LSA vectors; iteration-1 pairing arm (core Hit@5 0.208 with window); adapter claude_mem_core.py sha256 53199f688574c9e5b037c9231d87e560b21a6103d956ddc22036ef523c8d594a",
+ "experiment_class": "controlled_core",
+ "failures": [],
+ "harness": "run_standard.py rev e84bd58e via run_crossengine.py reuse (run_scenario_topics copied with sole delta: topics source); sole S4-14 deltas: pi-lcm tool-level relaxation (declared adaptation: single-prior-session store -> exact-empty gate), claude-mem chroma policy arms",
+ "metrics": {
+  "FBMR_topic": {
+   "den": 30,
+   "num": 30
+  },
+  "FalseFire": {
+   "den": 60,
+   "num": 0
+  },
+  "FirePrecision": {
+   "den": 119,
+   "num": 30
+  },
+  "NearMissFire": {
+   "den": 24,
+   "num": 24
+  },
+  "fresh_rate": {
+   "den": 60,
+   "num": 60
+  },
+  "gap_rate": {
+   "den": 60,
+   "num": 0
+  }
+ },
+ "model": "night/qwen3.8-27b-code",
+ "n_scenarios": 60,
+ "n_turns": 180,
+ "record_timestamp": "2026-09-01T00:00:00+00:00",
+ "row": "S4-14",
+ "tag": "",
+ "top_k": 2,
+ "trigger_pin": "pi-change-trigger @db31ea3e0138083bfd136233131f575f0640e9b5 index.ts sha256 ec6d87948a48b44b536e714abc05b78968657d5abf20154d7a6059014fbbdd01"
+}

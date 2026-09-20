@@ -1,0 +1,16 @@
+Mem0 paper Table 1 J, as printed (columns in paper order): {'Single-Hop': 67.13, 'Multi-Hop': 51.15, 'Open-Domain': 72.93, 'Temporal': 55.51}
+
+Hypothesis A -- paper labels are CORRECT (col=type):
+  rank easiest->hardest: ['Open-Domain', 'Single-Hop', 'Temporal', 'Multi-Hop']
+
+Hypothesis B -- paper labels are PERMUTED like memobase (col Single-Hop=id1=multi-hop, Multi-Hop=id3=open-domain, Open-Domain=id4=single-hop, Temporal=id2=temporal):
+  single-hop (id4)       72.93
+  multi-hop (id1)        67.13
+  temporal (id2)         55.51
+  open-domain (id3)      51.15
+  rank easiest->hardest: ['single-hop (id4)', 'multi-hop (id1)', 'temporal (id2)', 'open-domain (id3)']
+
+Current Mem0 harness (authoritative map, gpt-5 judge): single-hop 92.27 > multi-hop 93.26 ~ temporal 92.83 >> open-domain 76.04
+=> open-domain is the HARDEST category in the current, correctly-mapped harness.
+   Hypothesis A makes open-domain the EASIEST in the 2025 paper (implausible).
+   Hypothesis B makes open-domain the HARDEST (consistent). Evidence favors B, not proof.

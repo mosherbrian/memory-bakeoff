@@ -1,0 +1,81 @@
+{
+  "schema": "perseus-vault-dead-end-records/v1",
+  "purpose": "Arm A prep for Aletheia's WILD experiment: the team's six paid-for dead ends as serveable guardrail records. 'Prose is not memory.'",
+  "status": "DRAFT — NOT WRITTEN TO ANY VAULT",
+  "authored_by": "Aletheia (Alice), worker-glm-dsh",
+  "authored_at": "2026-09-12",
+  "source_list": "team/RETRO-1-Aletheia.md section 5 (the six dead ends), refined by row-6 evidence",
+  "write_interface": "perseus-vault 2.23.2 (9c82920) CLI `write` (the verified activation path: status='active', source='cli-write')",
+  "defaults": {
+    "category": "dead-end",
+    "entity_type": "observation",
+    "importance": 0.9,
+    "always_on": true,
+    "visibility": "workspace",
+    "workspace_hash": "__REPLACE_AT_ARM_A_PREP__"
+  },
+  "records": [
+    {
+      "key": "native-capture-is-not-an-activation-path",
+      "tags": ["dead-end", "guardrail", "capture", "admission"],
+      "content": "VERIFIED DEAD END (2026-09-12): Perseus native capture is not an activation path. Captured entities land status='proposed', source='capture', requires_review=true, with hash-only provenance, and public readers see none of them: scan total 0, history total 0, get_entity 'Entity not found', and recall abstains (no_match) even with rows stored. Do not propose native capture as a way to get knowledge into recall. It also derives no replacement lineage — conversation 1 and conversation 2 land on different keys with links: [] and no status change on the earlier record, so two production statements coexist undifferentiated. The verified activation path is CLI `write`, which lands status='active', source='cli-write'. Evidence: implementer/repo-glm-dsh2/scripts/experiment_20260912_native_capture/FINDINGS.md (items 1 and 4).",
+      "do_not": "do not propose native capture (CLI `capture` or MCP perseus_vault_capture) as an activation or lineage-derivation path",
+      "working_alternative": "CLI `write` for activation; MCP perseus_vault_supersede for explicit replacement lineage",
+      "evidence_paths": [
+        "implementer/repo-glm-dsh2/scripts/experiment_20260912_native_capture/FINDINGS.md",
+        "implementer/dispatch/PROBE-20260912-native-capture.md"
+      ]
+    },
+    {
+      "key": "native-remember-demotes-active-records",
+      "tags": ["dead-end", "guardrail", "remember", "admission", "recall"],
+      "content": "VERIFIED DEAD END (2026-09-12, reproduced in two independent arms): writing a record through the native `remember` path with the same category+key as an ACTIVE record demotes it. Observed sequence: CLI `write` -> status='active', source='cli-write'; recall serves the record; native `remember` on the same category+key -> status active -> proposed, source='agent'; recall then abstains (no_match). The response reports action:'updated' with ok:true while silently dropping the record out of the serveable set. Reproduced with and without an admission envelope; identical demotion both times. Do not migrate confirmed records from CLI write to native remember. Keep CLI `write` as the activation path. Evidence: team/PROBE-remember-admission-FINDINGS.md (the decisive result, section 4) and receipts 04/10 plus scratch-repro-* arms.",
+      "do_not": "do not migrate confirmed/active records to the native `remember` path; it is a downgrade path as shipped",
+      "working_alternative": "keep CLI `write` as the activation path (verified status='active', source='cli-write', serveable)",
+      "evidence_paths": [
+        "team/PROBE-remember-admission-FINDINGS.md"
+      ]
+    },
+    {
+      "key": "maintain-does-not-promote-proposals",
+      "tags": ["dead-end", "guardrail", "maintain", "consolidate", "cohere"],
+      "content": "VERIFIED DEAD END (2026-09-12, frozen 060d842 lineage): the unattended hygiene paths do not promote capture proposals. On a frozen-lineage scratch vault, `maintain` reports promoted_entities: 0; MCP `cohere` reports promoted: 0 and cross_scope_promoted: 0; MCP `consolidate` reports entities_examined: 0 and observations_created: 0. Every entity row is byte-identical before and after, all proposals remain status='proposed', and no proposal is served by recall. A positive control (an ACTIVE CLI-written record) is served both before and after, so this is status withholding, not a dead index. Do not expect maintain/cohere/consolidate to activate proposals. Evidence: implementer/repo-glm-dsh2/scripts/repro-20260912-assay-row2/FINDINGS.md.",
+      "do_not": "do not propose a hygiene/consolidation pass (maintain, cohere, consolidate) as a way to promote proposed capture output",
+      "working_alternative": "promotion requires an explicit, valid admission path — not a hygiene pass",
+      "evidence_paths": [
+        "implementer/repo-glm-dsh2/scripts/repro-20260912-assay-row2/FINDINGS.md"
+      ]
+    },
+    {
+      "key": "admission-decide-cannot-admit-bare-proposals",
+      "tags": ["dead-end", "guardrail", "admission", "admission_decide"],
+      "content": "VERIFIED DEAD END, NARROWED (2026-09-12; row-6 refinement same day): the public admission tool cannot admit a candidate that carries no admission evidence. Approving a bare proposal (the default native-remember and capture output) fails with 'admission_decide candidate has no admission evidence'. That exact class is dead: capture's proposals never embed the evidence block, so admission_decide cannot rescue them. NARROWING (row 6 unit-test receipt, team/PROBE-row6-admission-unit-tests.md): the admitted path itself is NOT inert. When valid evidence is constructed — a journal admission_source event bound to the record digest, workspace, actor and transport-stamped requester, then remember(admission) with source_trust 'authoritative' and validated true — the public tools return admission.outcome 'admitted', disposition 'save', serveable true, stored status 'active'. So the rule is: evidence-free candidate = dead; bind valid evidence first. Do not describe the whole admission chain as unreachable. Evidence: team/PROBE-remember-admission-FINDINGS.md item 3 and receipt 04b; team/PROBE-row6-admission-unit-tests.md section 4 and receipts/11-public-admitted-path.json.",
+      "do_not": "do not expect perseus_vault_admission_decide to rescue a proposal that has no admission evidence; and do not claim the admitted path is unreachable",
+      "working_alternative": "bind a verified admission_source event to the record first, then write/approve; verified 2026-09-12 as outcome 'admitted' / status 'active' / serveable true",
+      "evidence_paths": [
+        "team/PROBE-remember-admission-FINDINGS.md",
+        "team/PROBE-row6-admission-unit-tests.md"
+      ]
+    },
+    {
+      "key": "memory-write-vocabulary-trap",
+      "tags": ["dead-end", "guardrail", "capability", "authority_set"],
+      "content": "VERIFIED TRAP (2026-09-12): the capability vocabulary is a footgun in three ways. (1) The real nouns are memory.propose, memory.commit, memory.read, memory.admission.review, memory.admission.source. A manifest naming memory.write.propose / memory.write.commit denies every write, and the error echoes the wrong noun back — 'agent probe-operator lacks required capability memory.propose (manifest allows: ...memory.write.propose, memory.write.commit)' — so a vocabulary mistake looks like a permissions problem. (2) perseus_vault_authority_set fails with a bare 'EOF while parsing a value at line 1 column 0' if capability_constraints_json is omitted, because it defaults to the empty string and is fed to serde_json::from_str; pass '{}'. (3) authority_set mode defaults to 'shadow', which silently does NOT satisfy admission requirements; pass mode 'enforce'. Evidence: team/PROBE-remember-admission-FINDINGS.md (sibling finding).",
+      "do_not": "do not name memory.write.propose or memory.write.commit in an authority manifest; do not omit capability_constraints_json; do not rely on the default mode",
+      "working_alternative": "allowed_capabilities use memory.propose/memory.commit/memory.read/memory.admission.*; pass capability_constraints_json '{}' and mode 'enforce'",
+      "evidence_paths": [
+        "team/PROBE-remember-admission-FINDINGS.md"
+      ]
+    },
+    {
+      "key": "answer-id-never-captured",
+      "tags": ["dead-end", "guardrail", "metrics", "row6", "capture"],
+      "content": "VERIFIED DEAD END (2026-09-12): the stale-use penalty metric cannot be applied to any frozen result because the field it consumes was never captured. score_stale_use requires answer_id: str | None. An exhaustive repo search finds answer_id in exactly two files — src/memory_bakeoff/stale_use_penalty.py and its own unit test — because the synthetic tests construct the input the real record never captured. The frozen comparison sets (agentmemory_compare_core5 / stress4505) carry only retrieval-level columns (retrieved_ids, relevant_ids, prohibited_ids); they record what was returned, not what the reader committed to. reader_detail.csv has free-text answers only and is 56 cases outside the core sets; rebuilding a text matcher would re-commit the logged Gen124 defect. The only ID-level reader data (Gen124, 17 items) is exploratorily unquotable as a system score. Do not budget row 6 as 'just apply the metric'. Evidence: team/PROBE-row6-data-gap.md.",
+      "do_not": "do not budget or describe row 6 as merely applying an existing metric; do not apply a text-matching substitute",
+      "working_alternative": "add a per-case answer_id (the memory id the reader's answer commits to) to the reader eval output, then re-run the reader over the comparison sets",
+      "evidence_paths": [
+        "team/PROBE-row6-data-gap.md"
+      ]
+    }
+  ]
+}

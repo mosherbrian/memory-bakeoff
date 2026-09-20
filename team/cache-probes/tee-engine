@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""Sit between acp-worker and opencode and log every line both ways.
+
+acp-worker spawns its adapter as `argv`, so passing this script in place of
+the engine makes it the man in the middle: it forwards stdin to the real
+engine and the engine's stdout back, appending both directions to a log with
+timestamps. Nothing is altered - the point is to see which side stops talking.
+"""
+import os
+import subprocess
+import sys
+import threading
+import time
+
+LOG = open(os.environ.get("TEE_LOG", "/tmp/tee-engine.log"), "a", buffering=1)
+T0 = time.time()
+
+
+def note(direction, line):
+    LOG.write(f"[{time.time()-T0:7.2f}s] {direction} {line.rstrip()[:400]}\n")
+
+
+real = subprocess.Popen(["muse-engine"] + sys.argv[1:], stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        text=True, bufsize=1)
+
+
+def pump_out():
+    for line in real.stdout:
+        note("ENGINE->WORKER", line)
+        sys.stdout.write(line)
+        sys.stdout.flush()
+    note("ENGINE->WORKER", "<stdout closed>")
+
+
+def pump_err():
+    for line in real.stderr:
+        note("ENGINE-STDERR ", line)
+
+
+threading.Thread(target=pump_out, daemon=True).start()
+threading.Thread(target=pump_err, daemon=True).start()
+
+try:
+    for line in sys.stdin:
+        note("WORKER->ENGINE", line)
+        real.stdin.write(line)
+        real.stdin.flush()
+except Exception as exc:
+    note("WORKER->ENGINE", f"<stdin error {exc}>")
+note("WORKER->ENGINE", "<stdin closed>")
+real.wait()

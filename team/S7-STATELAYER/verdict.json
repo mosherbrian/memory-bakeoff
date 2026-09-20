@@ -1,0 +1,53 @@
+{
+ "verdict": "layer-does-not-help",
+ "finding": "the rate drop (+0.000, rule needs 0.5) or the layer's missed updates (0.000, rule allows 0.1) fails the declared rule: native false supersession is 0/32 and the trivial layer does not change the picture enough to earn a state layer \u2014 Decision Gate F gets its number, and option B loses this justification",
+ "feeds": "roadmap R-PF, Decision Gate F \u2014 the one number the S6-3 map names as deciding Gate F",
+ "prior_pi_lcm": "no prior false-supersession measurement of pi-lcm exists \u2014 none exists; this row is the first measurement, per the standing re-measurement rule",
+ "comparison": {
+  "system": "agentmemory",
+  "false_superseded": 418,
+  "trials": 450,
+  "source": "implementer/repo/research/AGENTMEMORY_FINDINGS.md"
+ },
+ "arms": {
+  "pi-lcm-native": {
+   "false_superseded": 0,
+   "distractor_trials": 32,
+   "missed_updates": 0,
+   "update_trials": 12,
+   "false_supersession_rate": 0.0
+  },
+  "thin-layer": {
+   "false_superseded": 0,
+   "distractor_trials": 32,
+   "missed_updates": 0,
+   "update_trials": 12,
+   "false_supersession_rate": 0.0
+  }
+ },
+ "controls": {
+  "never-supersede": {
+   "false_superseded": 0,
+   "distractor_trials": 32,
+   "missed_updates": 12,
+   "update_trials": 12,
+   "false_supersession_rate": 0.0
+  },
+  "always-supersede": {
+   "false_superseded": 32,
+   "distractor_trials": 32,
+   "missed_updates": 0,
+   "update_trials": 12,
+   "false_supersession_rate": 1.0
+  }
+ },
+ "native_detail": {
+  "distractor_trials_displaced": [],
+  "update_trials_superseded": 12
+ },
+ "rule_worked_out": {
+  "rate_drop": 0.0,
+  "thin_missed_update_rate": 0.0
+ },
+ "expectation_registered_before_run": "pre-registered before the run: pi-lcm's exact-AND gate matches distractors only through bounded relaxation, so the native false-supersession rate is expected LOW; if it is, the rate drop cannot clear m and the verdict is layer-does-not-help \u2014 pi-lcm does not have agentmemory's disease and a state layer adds nothing. If native false-supersession is HIGH, the trivial layer is expected to drop it to ~0 while missing 0 updates (decide() is key equality) and the verdict is layer-helps. Either number decides Gate F."
+}

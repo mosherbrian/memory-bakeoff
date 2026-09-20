@@ -1,0 +1,38 @@
+{
+ "verdict": "mechanism-fails",
+ "finding": "at the declared threshold 1.0 the margin rule rejects 2 of the 5 irrelevant queries and loses 1 useful retrievals; both sides are reported because rejections alone hide what was lost. The grid is data: z-threshold 0.5 rejects 0, loses 0; z-threshold 1.0 rejects 2, loses 1; z-threshold 1.5 rejects 5, loses 2. The verdict is the declared rule's output (at least 1 rejection and at most 0 lost), not a judgement call",
+ "headline_threshold": 1.0,
+ "prior": {
+  "s6": {
+   "source": "team/S6-SELECTIVITY/results.jsonl",
+   "retrieve_correct": 5,
+   "abstain_correct": 0
+  },
+  "prefilter": {
+   "source": "team/S7-BM25-PREFILTER/verdict.json",
+   "retrieve_correct": 4,
+   "abstain_correct": 0
+  }
+ },
+ "rerun": {
+  "abstain_correct": 2,
+  "retrievals_lost": 1
+ },
+ "grid": [
+  {
+   "threshold": 0.5,
+   "abstain_correct": 0,
+   "retrievals_lost": 0
+  },
+  {
+   "threshold": 1.0,
+   "abstain_correct": 2,
+   "retrievals_lost": 1
+  },
+  {
+   "threshold": 1.5,
+   "abstain_correct": 5,
+   "retrievals_lost": 2
+  }
+ ]
+}

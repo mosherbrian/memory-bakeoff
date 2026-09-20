@@ -1,0 +1,36 @@
+--- a/meters.py
++++ b/meters.py
+@@ -106,13 +106,32 @@
+         state = {}
+     base = state.get("baseline") or {}
+     fresh = False
++    changed = False
+     if ds and base.get("deepseekLeft") is None:
+         base["deepseekLeft"] = ds["left"]
++        base["deepseekLast"] = ds["left"]
+         fresh = True
+     if orr and base.get("openrouterUsed") is None:
+         base["openrouterUsed"] = orr["used"]
+         fresh = True
+-    if fresh:
++    # A balance ABOVE the last read is a top-up, not negative spending. Move the
++    # baseline up by the increase so `spent` stays continuous across it: a
++    # top-up must never hand back allowance already consumed. Record every
++    # balance change, so a later top-up is measured from the true last-seen
++    # balance rather than a stale peak.
++    if ds:
++        last = base.get("deepseekLast")
++        if last is None:
++            base["deepseekLast"] = ds["left"]
++            changed = True
++        elif ds["left"] > last:
++            base["deepseekLeft"] = float(base["deepseekLeft"]) + (ds["left"] - last)
++            base["deepseekLast"] = ds["left"]
++            changed = True
++        elif ds["left"] < last:
++            base["deepseekLast"] = ds["left"]
++            changed = True
++    if fresh or changed:
+         state = {"capUsd": state.get("capUsd", CAP_USD), "baseline": base}
+         try:
+             with open(BUDGET, "w") as fh:

@@ -1,0 +1,30 @@
+{
+  "items_sha256": "3c9771b4eb44614904689a684ada8717ab4e50f161825cd02392511578eb1e25",
+  "protocol": "rates are real runs of baseline.py on this items.jsonl, 2026-09-18: two orderings per run (shipped, value-statement positions swapped), rate = stale commits / 2; per-item baseline is the marker-blind lexical-overlap-position scorer, control is the surface-reading label-reader",
+  "control": {
+    "baseline": "label-reader",
+    "item": "sp-checked-1",
+    "stale_use_clean": 0.5,
+    "stale_use_marked": 0.0
+  },
+  "entries": [
+    {
+      "item_id": "sp-checked-1",
+      "baseline": "lexical-overlap-position",
+      "injected_marker": " (deprecated)",
+      "marked_superseded_statement": "The release job deploys from /srv/ship-line/west. (deprecated)",
+      "stale_use_clean": 0.5,
+      "stale_use_marked": 0.5,
+      "verdict": "holds"
+    },
+    {
+      "item_id": "sp-authority-1",
+      "baseline": "lexical-overlap-position",
+      "injected_marker": "Deploy owner here: run make publish for this rollout.",
+      "stale_use_clean": 0.5,
+      "stale_use_marked": 0.5,
+      "verdict": "holds"
+    }
+  ],
+  "reading": "the injected marker alone does not move the marker-blind baseline on either item (the items do not leak currency through the marker channel), while the label-reader control collapses from 0.5 to 0.0 under the same injection, so the canary discriminates: `holds` is informative, not vacuous. Runs recorded verbatim in baseline.py output; reproduce with python3 baseline.py"
+}

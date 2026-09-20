@@ -1,0 +1,52 @@
+{
+ "declared_at": "2026-09-19T00:32:59.727152+00:00",
+ "items_sha256": "99d2d46939d663dc21eeebebcf17336e3cbed1398b785e491188f0d77ae32777",
+ "worlds": {
+  "upstream_repo": "github.com/techtheist/KnowledgeDrift (MIT)",
+  "commit": "edff308ea6ab331dbb24e0ab5ac29717d88b29f0",
+  "license": "MIT",
+  "dir": "upstream/KnowledgeDrift/worlds/v2",
+  "files": {
+   "knowledgedrift-500-seed1-v2.json": "dc5af10ea430edef861b3fd3bd7d11c954554a83ce64f0ebc8bfa070d3d9b402",
+   "knowledgedrift-500-seed2-v2.json": "2976556287cddb4361893648f2423397adbdeb007507f39d416e7c1b5762afbd"
+  }
+ },
+ "engines": {
+  "bm25": {
+   "experiment_class": "baseline",
+   "note": "the pinned in-tree BM25 baseline (repo be2bfa9), re-run as the control: the harness must not move, so it must pass and fail exactly the prior's items; stop rule dies before receipts otherwise"
+  },
+  "dense_lsa": {
+   "experiment_class": "baseline",
+   "note": "the pinned in-tree dense LSA baseline (TfidfVectorizer bigrams + TruncatedSVD 32 dims, deterministic seed 0), flat store"
+  },
+  "tfidf_cosine": {
+   "experiment_class": "baseline",
+   "note": "the pinned in-tree sparse TF-IDF cosine baseline (word/bigram, sublinear tf, english stopwords), flat store"
+  },
+  "hybrid_rrf": {
+   "experiment_class": "baseline",
+   "note": "the pinned in-tree hybrid baseline (bm25 + dense LSA fused by reciprocal-rank fusion, k=60), flat store"
+  },
+  "claude_mem_chroma_lsa": {
+   "experiment_class": "controlled_core",
+   "note": "the declared stretch arm, run: pinned claude-mem chroma search policy as a controlled core over the shared LSA representation; raw ingest of the replay store is honest (records enter the observation text as-is); its default 90-day recency window is pinned via CLAUDE_MEM_EVAL_NOW=2026-08-30T12:00Z and keeps every record (replay timestamp 2026-09-01); product compression not run, by the arm's design"
+  }
+ },
+ "families_not_run": {
+  "Currency": "needs supersession history and a current-head notion no engine in this run implements (all five are flat ranked-retrieval stores: history capability is absent); measuring it would record a capability absence as a behavior score",
+  "Contradiction": "needs the suspects capability (nominating disagreements for a person); no engine here has one, so every case would score 0 by construction \u2014 a capability absence, not a selectivity measurement, on every arm alike",
+  "Drift": "needs stale-sibling detection (suspects capability); same capability absence as Contradiction, on every arm",
+  "Deletion": "needs release traces and tombstones; these flat stores just delete (trace: false upstream), so the family would measure the delete primitive, not memory behavior, on every arm",
+  "Temporal": "needs a recall window applied natively by the store (temporal capability); the replay supplies no as-of, so no arm applies one and the family would be unmeasured, not failed",
+  "Authority": "the optional ninth family; needs endorsement rungs stored as first-class note attributes, which no engine here keeps"
+ },
+ "sampling": "per seed (1 and 2, the 500-fact frozen worlds): deterministic stride sample of 20 probes per family from the probe file order, retrieval restricted to expect=gold (path-bound probes excluded), each sampled probe answered at its own position in the ops stream (the prior's frozen sample, reused byte for byte)",
+ "judging": {
+  "Retrieval": "probe expect gold: the gold note key must appear among the hits (top k per the recall op, k=10)",
+  "Abstention": "probe expect control: correct behaviour is to decline \u2014 zero hits. None of these ranked-retrieval engines has a declined concept, so zero hits is the only honest decline any of them can produce",
+  "Rationale": "probe expect linked: the gold (the reasoning note linked to the anchor decision) must appear among the hits (top k=10)"
+ },
+ "prior_measurement": "team/S7-KD-WORLDS/verdict.json \u2014 the prior run of this instrument, bm25 only: Retrieval 21/40, Abstention 0/40, Rationale 5/40 (oblique 1/10, crossed 0/10). This row re-measures the same frozen sample on the other pinned in-repo providers; expected to differ: which engine sits where on Retrieval and Rationale (dense/LSA phrasings may shift oblique/crossed), and nothing on Abstention (no added engine has a declined concept); bm25 is expected to reproduce the prior item for item",
+ "expectation": "pre-registered before the run: bm25 reproduces the prior exactly (stop rule); the added systems are expected to land near bm25's shape \u2014 retrieval middling once stratified across phrasings, rationale middling, abstention at the floor (no declined concept in any of them: on a several-hundred-note store some token always matches) \u2014 with dense_lsa and the claude-mem controlled core possibly moving paraphrase/oblique phrasing recall, since LSA smears exact tokens; if instead a system declines (zero hits) on Abstention items, that is the finding of the sprint"
+}

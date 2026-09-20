@@ -1,0 +1,67 @@
+{
+ "bundle": "/var/home/bmosher/memory-bake-off/team/outcome-bundle-scale-20260915/events.jsonl",
+ "bundle_sha256": "88f875e7a7eb94663033d4a0dc684537486266ea3d51099ad945394f50095d10",
+ "calibration": {
+  "bucket_first": "2026-07-27T20",
+  "bucket_last": "2026-09-13T17",
+  "confidence_distribution": {
+   "0.0": 286
+  },
+  "distinct_buckets": 188,
+  "distinct_projects": 5,
+  "precision_beside_count_pilot": {
+   "actually": "~1.00",
+   "env_fact_correction": "~5/7 (quoted third-party speech = residual noise)",
+   "negation": "~1.00",
+   "source": "team/TRANSCRIPT-MINING-PILOT.md via SPEC \u00a73 M4",
+   "wrong/facts": "~0.85-0.90"
+  },
+  "quoted_speech_by_class": {
+   "env_fact_correction": 26,
+   "negation": 4,
+   "repeated_instruction": 7,
+   "wrong": 3
+  },
+  "quoted_speech_total": 40
+ },
+ "detector_version": [
+  "transcript-mining-pilot-v1"
+ ],
+ "excluded_class_counts": {
+  "i_said": 10
+ },
+ "extraction_run": [
+  "full-20260913"
+ ],
+ "gate_findings": [],
+ "gate_pass": true,
+ "generated_at_utc": "2026-09-18T22:53:37+00:00",
+ "harness_findings": [],
+ "high_conf_rule": "class in {negation, actually, wrong}; env_fact_correction only if NOT quoted_speech; repeated_instruction post-dedup per group",
+ "part": "(a) M4 replay/calibration",
+ "replay_counts": {
+  "high_conf_by_class": {
+   "actually": 21,
+   "env_fact_correction": 143,
+   "negation": 61,
+   "wrong": 9
+  },
+  "high_conf_total": 235,
+  "n_events": 286,
+  "n_unique_event_ids": 286,
+  "raw_by_class": {
+   "actually": 21,
+   "env_fact_correction": 169,
+   "negation": 61,
+   "repeated_instruction": 26,
+   "wrong": 9
+  },
+  "ri_events": 26,
+  "ri_group_sizes": [
+   26
+  ],
+  "ri_groups": 1
+ },
+ "row": "S4-13",
+ "selftest": "PASS (6 fixtures: exactly-once, RI dedup 3->1, band edges, duplicate catch, class attribution)"
+}

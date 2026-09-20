@@ -1,0 +1,15 @@
+supermemoryai/memorybench (self-run harness):
+   -j, --judge            Judge model (gpt-4o, sonnet-4, gemini-2.5-flash, etc.)
+   -m, --answering-model  Model for answer generation (default: gpt-4o)
+   bun run src/index.ts compare -p supermemory,mem0,zep -b locomo -s 5
+   | **Quality** | Answer accuracy — `(correct / total) * 100` from judge evaluations |
+   bun run src/index.ts compare -p supermemory,mem0,zep -b locomo -j gpt-4o
+
+Judge override capability:
+   Providers can override judge prompts. See [providers/README.md](../providers/README.md#custom-prompts).
+
+Leaderboard backed by DB route:
+   ['.from(schema.leaderboardEntries)', '.orderBy(desc(schema.leaderboardEntries.accuracy))']
+
+Cited source URL check:
+  https://supermemory.ai/research/longmembench/  -> redirects to https://supermemory.ai/#research (no 95.0 page)

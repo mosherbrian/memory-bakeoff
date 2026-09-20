@@ -1,0 +1,45 @@
+{
+ "verdict": "not-complementary",
+ "finding": "the gate-owning compose gains +0.000 mean set-F1 over the stronger single arm (margin 0.1): pi-lcm's gate opens on only 1 of 5 retrieve cases and the construction discards bm25's coverage on the other 4, so on this corpus the compose is exactly pi-lcm's correctness profile with bm25's abstention failures suppressed \u2014 evidence for Decision Gate F option B in the negative: this compose construction does not justify building a state layer; a union-style construction (gate opens OR bm25 confident) is a different, separately-declared configuration",
+ "feeds": "roadmap R-PF, Decision Gate F option B \u2014 the compose evidence the S6-3 map says the build decision stays gated behind",
+ "prior": {
+  "source": "team/S6-SELECTIVITY/results.jsonl (arms bm25, pi_lcm_toollevel_sel; sha256 5f3f14fc2f9b609b9153a8fbe8a3cba33aa8bcbc39689e561e6828af436196ab)",
+  "bm25": {
+   "mean_f1": 0.5,
+   "retrieve_correct": 5,
+   "abstain_correct": 0
+  },
+  "pi_lcm": {
+   "mean_f1": 0.6,
+   "retrieve_correct": 1,
+   "abstain_correct": 5
+  }
+ },
+ "rerun": {
+  "bm25": {
+   "mean_f1": 0.5,
+   "retrieve_correct": 5,
+   "abstain_correct": 0
+  },
+  "pi_lcm": {
+   "mean_f1": 0.6,
+   "retrieve_correct": 1,
+   "abstain_correct": 5
+  },
+  "compose": {
+   "mean_f1": 0.6,
+   "retrieve_correct": 1,
+   "abstain_correct": 5
+  }
+ },
+ "overlap": {
+  "both": 1,
+  "only_bm25": 4,
+  "only_pi_lcm": 5,
+  "neither": 0
+ },
+ "guard": "both components reproduced their reference retrievals per case on 10/10 cases (bm25 vs the prior bm25 arm; pi-lcm vs the prior pi_lcm_toollevel_sel arm), so the compose result is the composition's and not harness drift",
+ "s7_1_dependency": "quoted s7_1_verdict 'artifact-refuted' from team/S7-BM25-PREFILTER/verdict.json (results sha b1e6840456fc...); bm25_variant 'prior' follows from it",
+ "expectation_registered_before_run": "pre-registered before the run: pi-lcm's gate opens on 1 of 5 retrieve cases and on no abstain case, so the compose inherits pi-lcm's correctness profile exactly (mean 0.600, retrieve_correct 1, abstain_correct 5); gain over the better single arm 0.000 < margin 0.10; verdict not-complementary \u2014 the construction discards bm25's retrieve-case coverage instead of combining it",
+ "expectation_met": true
+}

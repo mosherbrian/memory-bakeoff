@@ -1,0 +1,8 @@
+{
+ "sweep_entrypoints": [
+  "implementer/sweep.sh"
+ ],
+ "prior": "team/INTEL/SYNTHESIS-2026-09-18.md is the first valid record of both gaps this row repairs: nothing required the guards to pass BEFORE an expensive run, and the exit-contract driver's covered set stopped at the sibling guards while the S* gate checkers were exercised ad hoc by whichever seat verified (repeated in team/CORVID-S8-5G-VERIFY.md, team/CORVID-S8-6G-VERIFY.md and team/CORVID-S8-7G-VERIFY.md). An earlier draft of the record named CORVID-S7-1G-VERIFY.md for the second gap; that file carries no such statement and the record was corrected to this one.",
+ "advances": "neither a frozen goal nor a roadmap item directly: this is evaluator-integrity repair underneath every measurement above it, said plainly per the row",
+ "wiring_note": "This project had no persistent sweep runner - each row landed its own harness - so the repair creates the wired path: implementer/sweep.sh invokes team/S9-EVAL-CANARY/canary.py FIRST and runs the expensive command only when all 27 guards pass. Future harness entry points (the next is S10-4's proof.py) wire the same canary call ahead of their first expensive step; the verifier's order check applies to this file's exec line: the canary fully precedes the command it wraps."
+}

@@ -1,0 +1,1559 @@
+=== SPRINT PLANNING COUNCIL BRIEF ===
+Convened 2026-09-16 22:39 PDT by Brian.
+
+You are one of three contributors. Each of you answers independently;
+you do NOT see each other's answers. Astra then decides the goals and
+Brian reviews them. Your job is to make the best case you can, and to
+say plainly what you would NOT do.
+
+--- THE MISSION
+# Mission: agentic memory breakthrough
+
+From Brian, 2026-09-12. Shared with the team for feedback; this file is its
+durable home so every worker can read it at every turn start.
+
+---
+
+"You have a shared mission: make a meaningful breakthrough in agentic memory—something that makes an agent demonstrably better at sustained, real work.
+
+You already have a body of experiments, failures, tools, and hard-won findings. Use it as your starting position. You have access to one another. Decide together what matters most, how to investigate it, and how to turn what you discover into something that works.
+
+The ambition is straightforward: an agent should benefit from its experience. It should carry useful understanding forward, adapt when circumstances change, and avoid making its human repeatedly reconstruct what it ought to know. Make a consequential part of that ambition real.
+
+The direction is yours to discover. You may find the decisive opportunity in an existing system, in how memory is captured or used, or in an assumption this project has carried too far. No particular architecture, product, or prior conclusion needs to win. Follow the evidence wherever it leads.
+
+You share responsibility for the outcome. You are authorized to communicate directly and organize your work within the existing resource and access limits. Leadership, specialization, and collaboration are yours to establish and revise. Brian should not have to supply your next move.
+
+Be ambitious in what you attempt and exacting about what you claim. A breakthrough must survive contact with real tasks and a credible comparison. More stored facts, a persuasive demonstration, or a better score alone is insufficient if the agent does not become more useful. Preserve the evidence—including results that challenge your preferred explanation.
+
+A negative result can be valuable. Recognize a dead end, carry forward what it taught you, and redirect the remaining effort. An honest limit is better than an invented success.
+
+Bring back a working advance that materially improves agent behavior, with evidence strong enough that another team can reproduce and build on it.
+
+You have accumulated substantial knowledge about where memory fails. Your challenge now is to turn that knowledge into capability."
+
+--- THE CHARTER (approved 2026-09-16, with caveats in its header)
+> ## APPROVED by Brian, 2026-09-16
+>
+> **Approved with a stated caveat: several portions are now outdated.** The
+> fleet was furloughed to three seats on 2026-09-15 (cairn conducting, kiln
+> doing, corvid reviewing; everyone else parked until the OpenCode Go weekly
+> window resets), the conductor moved from a metered GLM seat to a local $0
+> seat, and the Z.ai Lite contract limits the fleet to ONE request in flight.
+> Any part of this charter that assumes the wider roster, the old conductor, or
+> parallel worker execution should be read as superseded by that arrangement,
+> not as authority.
+>
+> **What the approval grants:** the charter's structure and its campaign, so the
+> fleet no longer waits on Brian to originate work. **What it does not grant:**
+> the roster or the concurrency the document was written against.
+>
+> **Required follow-up, not optional:** a reconciliation pass naming which
+> sections are stale and what replaces them. Until that lands, cite this
+> charter for its structure and its named systems, and check the live roster in
+> the QUEUE header before assuming anyone is available.
+>
+> The spend envelope stays as Brian set it elsewhere; this approval does not
+> raise it.
+
+# PORTFOLIO-CHARTER (DRAFT) — parallel evaluation of memory systems on one conflict benchmark
+
+**Status:** DRAFT, design only, no runs, no spend. Written 2026-09-12 by
+Stratum (worker-glm) on GiLMore's dispatch, answering Brian's challenge of
+tonight: *"why am I the only driver?"* On approval this becomes the fleet's
+second originated campaign (campaign-1 was Brian-challenged; this one is
+fleet-originated). **The one ask: Brian approves this charter and a spend
+envelope. Everything else runs without him.**
+**Patch 1 (2026-09-12, post-Verity criteria pass — she passed it, no
+re-open):** programmatic/judged label partition made explicit + dispute
+sample on judged labels feeding the primary; envelope arithmetic line;
+drop-by-name extended to instruments; recommendation bar and portfolio bar
+split into distinct criteria. Four folds, nothing else touched.
+
+**Patch 2 (2026-09-12, post-G0 pre-P2, per Corvid's survey + Brian's
+go-ahead relayed by GiLMore):** agentmemory upgraded to IN-PORTFOLIO
+(row 7), with its known false-supersession failure carried as a
+pre-registered PROGRAMMATIC scored dimension — see §"Scored dimension:
+false-supersession rate (agentmemory)". License row CLEARED per Corvid's
+frozen-commit verification (P1 satisfied by pinned-blob receipt; Kiln's
+supporting fetch receipt: `docs/PORTFOLIO-P1-DISCOVERY.md`). Two folds +
+one table-row update, nothing else touched.
+
+**Patch 4 (2026-09-12, price ruling from Brian relayed by GiLMore —
+amendment-of-record under G0 authority):** official lane prices recorded and
+the P2 worst-case arithmetic line printed in binding form — see §Patch 4.
+Two folds, nothing else touched.
+
+**Patch 3 (2026-09-12, POST-G0 BRIAN DIRECTIVE — amendment-of-record under
+G0 authority, relayed by GiLMore):** three folds, envelope arithmetic
+re-printed, decision log updated (all below, §Patch 3 detail).
+
+1. **BASELINES LOCKED.** Two explicit arms join the long-context null as
+   locked portfolio baselines: **pi-lcm** (the store-reader arm, rows 1–2 —
+   previously PENDING build, now a locked arm) and
+   **pi-lcm-with-long-multi-session-memory-no-memory-system** (the
+   multi-session-history null: pi-lcm's long multi-session store presented
+   as raw history, no memory-system machinery — the null built on the same
+   store the live arm uses). Both are local and metered-spend $0.
+2. **NEW PRE-REGISTERED PROGRAMMATIC SCORED DIMENSION — invocation rate.**
+   Per system, from run logs: was the memory system EVER invoked for capture
+   or retrieval during its assigned runs (capture-call count, retrieval-call
+   count). A system with zero invocations is a ZERO-INVOCATION RUN: reported
+   as its own outcome row, never imputed from other systems' behavior, and
+   excluded from Hit@k comparison only in the sense that its numbers are its
+   own zeros. LABEL CLASS: PROGRAMMATIC (deterministic count over run logs).
+   Rationale carried from the live arm: self-noticing is the measured
+   weakness — a system that is never called cannot help, and that must be a
+   number, not a footnote.
+3. **NEW GATE CRITERION (BAR B amendment).** No system is recommended unless
+   actual outcomes improve MATERIALLY over the no-memory baseline arms
+   (long-context null AND the two pi-lcm baseline arms): **Hit@3 alone does
+   not pass BAR B.** Operationalization proposed by the executor for
+   Verity's rule check: (i) penalized Hit@3 (stale-use penalty applied) must
+   exceed the BEST baseline arm's penalized Hit@3 by more than that
+   baseline's recorded run-to-run band; (ii) outcome measures (stale-use
+   penalty, Prohibited@k) must not regress vs that baseline. "Materially" is
+   defined by (i)+(ii) or by whatever v2 Verity freezes — a bare Hit@3
+   advantage is not adoption evidence.
+
+**Envelope arithmetic re-print (Patch 3 — run counts changed by +2 baseline
+arms).** G0 rule stands: total metered spend = Σ(repeats × per-run lane
+price) over the run matrix, worst case (full matrix × most expensive lane)
+≤ **$5 all-in**; touching $5 = stop + report. Re-print with the two new
+arms:
+
+- **pi-lcm reader arm and pi-lcm multi-session-history null arm are LOCAL
+  and metered-$0**: store reads are local sqlite; the null arm is local
+  history passthrough. Neither adds metered storage or retrieval cost.
+- Metered draw grows ONLY by their reader/eval passes on metered lanes:
+  +2 arms × tasks × repeats, drawn from the SAME ≤$5 pool (no top-ups).
+  Worst-case all-in allowance at the most expensive named lane
+  (deepseek-direct, $0.60/1M) = **≈8.3M tokens for the entire campaign**;
+  at muse pricing (~$0.002/task) the allowance is ~2,500 tasks. The P1 run
+  matrix must size task counts so the Σ lands inside the pool, and the
+  arithmetic line is re-printed with actual task counts at P2 entry.
+
+**Plain English first:** the program's own decision memo
+(`implementer/repo/DECISION_MEMO.md`) says the recommendation ("which memory
+system, on what evidence") cannot close until three defined questions are
+answered — and two of the three measuring instruments are already BUILT and
+never run. This charter proposes to run the portfolio: about a dozen memory
+systems (ours and open-source), the same frozen conflict benchmark, one
+harness, seeded runs, blind scoring, on lanes and models that cost Brian
+nothing new beyond a small pre-approved envelope. His total calendar cost:
+two decisions (approve this; adopt-or-refuse the result) plus a stop switch
+he already holds.
+
+## Origination duty (the explicit answer to the critique)
+
+Brian has been the only driver because asks arrived as prose, and prose
+needs a driver to become work. From this charter forward, the standing duty
+is: **the fleet originates, Brian gates.**
+
+1. Every retro round, any seat may propose one originated campaign; GiLMore
+   aggregates and lands at least one shaped proposal per cycle — question,
+   candidates, envelope, phase gates, stop switch, decision points — in the
+   campaign format this file establishes.
+2. Brian's role is defined by negation: he does not assign tasks, break
+   ties between seats, or attend execution. He approves envelopes, receives
+   gate reports, issues verdicts at named gates, and holds the stop switch.
+   A gate report longer than one page is a defect.
+3. Nothing in this duty authorizes unapproved spend or unapproved scope:
+   origination without a gate is exactly the "decisions dying in limitation
+   sections" failure in reverse. Shaped ask, gated execution.
+4. This charter is the duty's first exercise — proposed by the fleet, from
+   the record's own backlog, at Brian's challenge rather than his assignment.
+
+## Why this campaign, and why it is pre-justified
+
+DECISION_MEMO.md's rule: a generation that does not fill a row is
+unjustified. Three required rows are open, and this campaign is scoped to
+fill them and nothing else:
+
+- **Row 4** — does ANY memory system beat putting the history in the
+  context window? Instrument BUILT, never run:
+  `src/memory_bakeoff/longcontext_null.py`. Intake calls it highest-priority
+  and the cheapest item ("a configuration of the harness we already run").
+- **Row 5** — do the four unmeasured local engines change the picture?
+  Unmeasured: Habitus, agentmemory, Hindsight, MemBukkit (row 3 measured
+  Perseus, Mem0, bm25 only).
+- **Row 6** — what does each system DO with a stale record it returns,
+  scored as a penalty? Metric BUILT, never applied:
+  `src/memory_bakeoff/stale_use_penalty.py` (FAMA, arXiv:2606.27472).
+
+Anchoring numbers already frozen (row 3, Gen38, held-out 27-persona slice):
+Hit@3 on **dynamic** conflict — perseus 0.434, mem0 0.419, bm25 0.226.
+Both engines roughly double the lexical baseline and both sit below 44%
+absolute. The category is not flattering to itself; the portfolio asks
+whether anything in it is.
+
+## Candidates (in-orbit first; license and adapter cost stated honestly)
+
+Cost classes: **none** = measured already; **low** = config or store-reader
+work in the harness we run; **medium** = provision/verify a shipped harness;
+**high** = write a new adapter and operate a service. License marks: ✅ =
+stated in a receipt we hold; ⚠ = named from general knowledge, verify
+before adapter work; ❓ = unknown, verify. (License verification receipt is
+P1, owned by Stratum.)
+
+| # | System | Class | License | Adapter cost | Where it stands today (receipt) |
+|---|---|---|---|---|---|
+| 1 | **pi-lcm** (store reader) | in-orbit — **LOCKED BASELINE ARM (Patch 3)** | Brian's own (`projects/pi-lcm-bun`), private | none — read-only reader exists (`extensions/pi-project-recall`, 12/12 tests) | in daily use; R2-lineage measured the recall question, not conflict quality |
+| 2 | **pi-lcm tool variants** (`lcm_grep`/tool-level vs raw store) | in-orbit | same | low | within-conversation only; A/B of reader paths is a config |
+| 3 | **Perseus vault** (decision memory + bake-off engine) | in-orbit | this program's own | none — memconflict adapter frozen (`627f812d`), Hit@3 0.434 dynamic | measured; best-in-portfolio so far, below 44% absolute |
+| 4 | **native capture** (pi native remember/admission) | in-orbit | pi's (`@earendil-works/pi-coding-agent`) ⚠ | low — probe scripts exist | measured INERT as an admission path (`team/PROBE-remember-admission-FINDINGS.md`, DO NOT MIGRATE); included only so the portfolio's "ours" column is complete; stays out unless campaign-C repairs it |
+| 5 | **mem0** | external | Apache-2.0 ⚠ | none — adapter frozen (`920f496b`), Hit@3 0.419 | measured; unavailable in one pinned profile (row 2) — recheck at P1 |
+| 6 | **habitus** | external | upstream `munch2u-a11y/Habitus-AI`, pinned `f93b770e`; license NOT stated in `vendor/habitus/UPSTREAM.md` ❓ | none — vendored, blob-hash-verified | measured on core5 (row: Hit@5 0.875, Useful>harmful 0.923); unmeasured on memconflict |
+| 7 | **agentmemory** | external — **IN-PORTFOLIO (Patch 2)** | ✅ Apache-2.0 at pin (Corvid, frozen-commit receipt) | none — in harness | measured core5 + lifecycle; **known-bad carried as scored dimension:** falsely retired 418/450 distinct stress memories at write-time supersession, 92.9% (`STATUS_AND_FINDINGS.md`) |
+| 8 | **hindsight** | external | ❓ | none — in harness | measured; supersession mechanism present but 0/48 on row 2's lineage test |
+| 9 | **membukkit** | external | ❓ | none — in harness | measured core5 (Hit@5 0.958, MRR 0.525); row-5 candidate |
+| 10 | **claude_mem** | external | ❓ | none — in harness | measured (`results/claude_mem_compare_core/`) |
+| 11 | **bm25 / tfidf / dense_lsa / hybrid_rrf** | baselines | home-grown | none | frozen baselines; bm25 is row 3's anchor |
+| 12 | **letta (Letta/MemGPT)** | external | Apache-2.0 ⚠ | medium — benchmark SHIPS an upstream harness; provisioning, not writing | never run here; needs a server process |
+| 13 | **langmem** | external | MIT ⚠ (LangChain) | medium — upstream harness shipped | never run here |
+| 14 | **a_mem** | external | ❓ | medium — upstream harness shipped | never run here |
+| 15 | **memobase** | external | ❓ | medium — upstream harness shipped | never run here |
+| 16 | **memos (MemOS)** | external | ❓ | medium — upstream harness shipped | never run here |
+| 17 | **Zep** | external | community edition ⚠ | **high** — NOT in the benchmark's shipped harness list (a_mem, langmem, letta, memobase, memos, mem0); new adapter + server dependency | **stretch, parked by default.** Named by GiLMore; included for honesty, gated on G0 explicitly admitting it |
+| 18 | **long-context null** | arm | n/a | none — BUILT (`longcontext_null.py`), never run | row 4's instrument; the null the whole portfolio must beat |
+
+Prerequisites, stated: `external/MemConflict` is gitignored and absent — the
+182 MB pinned dataset must be materialized (disk only, free, pinned at
+upstream `ec51d5d`, dataset sha `8ef9ec…` already frozen in the Gen38
+contract). The six upstream harnesses come from the benchmark's own release
+— we provision, we do not write them.
+
+## Shared harness spec (one interface, seeded runs)
+
+1. **One adapter interface** — the existing bake-off provider interface
+   (the `--providers` list is already ten systems long). Every candidate,
+   in-orbit or external, enters through the same interface: ingest the
+   prepared conflict corpus, answer the same queries, emit raw results to
+   opaque ids. No system gets a bespoke metric path.
+2. **Benchmark of record:** `memconflict-benchmark-v1` (contract
+   `05212108…`, dataset `8ef9ec…` frozen at Gen38) — primary slice the
+   held-out 27 personas no adapter was tuned on. Secondary: the harness's
+   own longitudinal/conflict tasks for the engines the external benchmark
+   cannot load. Lanes never combined (intake rule).
+3. **Seeded runs:** pin seeds wherever the serving lane supports it; where
+   sampling is unseeded (qwen, recorded Gen44), alternate and repeat per
+   the R2 alternation rule and report band-widths, never single draws.
+   Persona/run identity discipline per the Gen36-38 frozen procedure; every
+   run re-asserts contract + dataset + adapter pins before writing.
+4. **Metrics (all pre-registered, none invented mid-run):** Hit@3 dynamic
+   conflict (row 3's basis, primary); the harness table columns (Hit@5,
+   MRR, All-relevant@5, Prohibited@5, Useful>harmful, Mean ctx chars);
+   **stale-use penalty** (row 6's BUILT metric, applied to every system's
+   delivered results); **long-context null** as the arm every system must
+   beat (row 4). Overhead columns (tokens, wall) reported, not scored.
+5. **Standing instrument rules carry over:** receipts claim, state is;
+   delivered-level counting; negative results are deliverables (a system
+   that scores zero is a row, not a footnote).
+
+## Budget envelope (free/metered lanes ONLY — zero GLM window draw)
+
+- **Eval-workload inference** (the model calls that exercise the systems):
+  `deepseek-direct` (Brian-named tonight, $0.15–0.60/1M — **verify with a
+  price receipt before first spend**), `muse` (already calibrated by Corvid,
+  ~$0.002/task, receipt `7d42fdf`), `InferX` (Brian-named tonight, free —
+  smoke receipt before reliance). **No GLM window draw for any evaluation
+  inference.**
+- **Envelope arithmetic, shown at G0 (Verity fold):** total metered spend =
+  Σ(repeats × per-run lane price) over the run matrix, computed and printed
+  as a line item before G0 — worst case with the full matrix and the most
+  expensive lane must still land ≤ **$5 total**. Sub-caps: ≤$1 per metered
+  task per dsh seat (existing cap discipline). **All-in-or-not:** Brian
+  approves the whole envelope once at G0; there are no mid-run top-ups —
+  touching $5 stops the campaign and reports.
+- **Proposed envelope for Brian to set at G0: ≤$5 total metered spend**
+  (matches the standing metered-lane cap). Runs inside it proceed without
+  him; touching it stops the campaign and reports.
+- **Seat labor:** free flash lanes (Kiln, Verity, Stratum) as today; dsh
+  lanes (Aletheia, Assay, Corvid) bounded tasks inside their existing $5
+  caps; Ledger/fsync (claude) as today; Cairn (local pi) free.
+- **Non-spend prerequisites:** 182 MB dataset materialization (disk); any
+  external-server processes (letta et al.) run locally, free.
+
+## Per-seat assignment map
+
+| Seat | Assignment | Lane/cost |
+|---|---|---|
+| **Kiln** | harness integration: adapter interface conformance, provisioning the six upstream harnesses, per-adapter unit receipts, run execution | flash, free |
+| **Verity** | adjudication ONLY (rule-writing + blind labels) — assigned no adapters, ever, for independence | flash, free |
+| **Aletheia (Alice)** | verify the two BUILT-but-never-run instruments (`longcontext_null.py`, `stale_use_penalty.py`) behave as claimed before first exposure — her standing seat, artifact-level | dsh, bounded, ≤$1 |
+| **Assay** | one external-claim reproduction from the upstream harnesses (identity discipline check), null results early | dsh, bounded, ≤$1 |
+| **Corvid** | muse-lane extension calibration + edge-case cache (refusals, timeouts, off-by-ones) for the run matrix | dsh, bounded, ≤$1 |
+| **Ledger** | synthesis spine: map every result to DECISION_MEMO rows 4–6; nothing enters the report unanchored | claude |
+| **Cairn** | optional, bounded: does benchmark conflict behavior match what the live loop actually suffers? (relevance sanity, not scoring) | local pi, free |
+| **fsync** | standing utilization watch (existing QUEUE row 8) | claude |
+| **Stratum** | this charter's maintenance; license-verification checklist (P1 receipt); cold-read of the report before it reaches Brian; caveat-travel duty on every cited number | flash, free |
+| **worker-codex** | reserve: cold-seat drill (QUEUE row 4) or one adapter port if a lane frees | outside |
+| **GiLMore** | aggregation, blind-map holder, Brian interface, gate reports (≤1 page) | conductor |
+
+## Pre-registered criteria + blind adjudication (Verity pattern)
+
+**Two bars, stated separately (Verity fold).** They answer different
+questions and neither implies the other:
+
+- **BAR A — portfolio bar (category verdict, row 4's question):** does ANY
+  memory system beat putting the history in the context window? The
+  portfolio passes BAR A iff ≥1 candidate clears BAR B *and* also beats the
+  long-context null on the same slice under the same penalties. If no
+  system clears both, the campaign's answer is "on this workload, memory
+  systems do not yet earn retrieval" and the recommendation becomes a
+  configuration (the null), not a product. This is a field-level finding —
+  it survives even if every product fails.
+- **BAR B — recommendation bar (per-system, G5 adoption):** a system is
+  recommendable iff, on the held-out 27-persona dynamic-conflict slice:
+  Hit@3 ≥ bm25's 0.226 **with the stale-use penalty applied**, AND its
+  overhead stays within the harness's reported band (overhead is reported,
+  not gated), AND it carries no unremediated license blocker at P1. A
+  system that beats bm25 only by co-returning poison fails the bar — that
+  is row 6's whole point. A system that clears BAR B but not the null
+  comparison is "best product, still loses to the null" — reported as such,
+  never rounded up to a win.
+
+**Label partition (Verity flag 1).** Every scored label is declared, before
+first run, as exactly one of:
+
+- **PROGRAMMATIC** — deterministic verifier output over delivered results
+  (Hit@k, MRR, Prohibited@k, stale-use penalty computed from results vs
+  ground truth, overhead totals). Sha-pinned code, no judgment, no judge;
+  these feed the bars directly.
+- **JUDGED** — labels requiring reading (e.g., attribution of an acting line
+  to a recalled line where the verifier cannot decide; UNDECIDABLE
+  resolution). Verity labels blind under the frozen rule (below). A judged
+  label is a citation with a name on it, never a bare number.
+
+**Scored dimension: false-supersession rate (agentmemory; Patch 2,
+pre-registered before P2).** LABEL CLASS: PROGRAMMATIC — deterministic
+verifier over stored state, no judge. Definition: after a system's ingest of
+the prepared corpus (including the 450-record deliberate-distinct stress
+slice), false-supersession rate = (records retired by that system's own
+write-time supersession without a genuine replacement in the corpus) ÷
+(records ingested). Measured from the system's own lifecycle/scan surface —
+the same observed-state instrument as S6 — never from a write receipt.
+Recorded prior from the Gen33-38 lineage: **418/450 = 92.9%** on
+agentmemory's stress slice (`STATUS_AND_FINDINGS.md`). Reporting duty: the
+rate is printed beside every agentmemory BAR B number, in the summary table
+as its own column for any system with write-time supersession, and in the
+P4 report's caveats. It does NOT gate BAR B arithmetic — the stale-use
+penalty already penalizes the retrieval-side consequence; this dimension
+makes the write-side cause visible beside it. Adoption weighting is Brian's
+P4 call, informed by the dimension.
+
+The partition table per metric ships with the adjudication rule; a metric
+that turns out to need judgment where this charter said programmatic is
+itself a P3 finding, reported — not silently reclassed.
+
+**Dispute sample (Verity flag 2).** Judged labels feed the primary only
+with a check attached: a second rater (Assay, or Corvid per the S4-B5
+reserve pin — named at rule-freeze, before any data) re-labels a
+pre-registered random sample (≥20% of judged items, drawn by committed
+seed). Pre-registered interpretation: disagreement ≤10% → judged-fed
+primary stands with the rate printed beside it; disagreement >10% → the
+judged component is declared unreliable for the bar, and the primary is
+reported PROGRAMMATIC-ONLY beside the disputed version — the bar is never
+carried by contested labels alone. If the programmatic-only and judged-fed
+versions of BAR B disagree about any system's pass/fail, that system's
+result is reported as contested, not averaged.
+
+1. **Blind scoring mechanics:** anything programmatic scores itself
+   (verifier columns, sha-pinned contracts — no judgment, no judge).
+   Anything JUDGED goes to Verity under a rule written and frozen BEFORE
+   first run — the R2H pattern just shipped
+   (`team/R2H-ADJUDICATION.md`): anonymized system identities, arm-strip
+   prep, labels frozen before the map joins, falsifiers inside the rule,
+   results in a worksheet never in the rule. The benchmark's
+   `upstream_llm_judge` is `requires_reader_authorization` — no LLM judge
+   runs without Brian's explicit yes, and the default design uses none.
+2. **Pre-named outcome branches (now against the two bars):** (a) BAR A
+   passes → rows 5/6 fill, memo can close, G5 verdict names the system(s);
+   (b) BAR A fails → the field-level finding lands as the result — the
+   long-context configuration becomes the default recommendation, which is
+   a publishable answer, not a failure; (c) penalties flip the BAR B
+   ranking → row 1's co-return problem is the deciding variable and
+   supersession mechanisms (row 2's incommensurability) become the
+   portfolio's real axis; (d) BAR B passes for some system but BAR A fails
+   → "best product still loses to the null" — adoption question answered
+   honestly in the negative at G5.
+
+## Phase gates
+
+| Gate | What | Brian? |
+|---|---|---|
+| **G0** | approve this charter + the ≤$5 envelope (+ explicitly admit or park Zep) | **YES — decision 1 of 2** |
+| **P1** | materialize dataset; provision upstream harnesses; license-verification receipt; lane smoke receipts (deepseek price, InferX free, muse balance); per-adapter unit tests; Alice's instrument verification (fail → drop-by-name per Method limits) | no |
+| **P2** | seeded runs inside envelope; contract pins re-asserted per run | no |
+| **P3** | programmatic scoring + blind labels under the frozen rule; labels frozen, then map joined | no |
+| **P4** | report (≤1 page gate form + anchored annex); DECISION_MEMO rows 4–6 filled; adopt/refuse/veto | **YES — decision 2 of 2** |
+| any | envelope touched → automatic stop + report. Brian stop-anytime, as always | standing |
+
+## What Brian must approve vs what runs without him
+
+**Approves (exhaustive):** G0 charter + envelope number + Zep in/out; any
+envelope increase; any use of his real project data (none is planned — the
+benchmark is third-party and pinned); any LLM-judge authorization (default
+design uses none); the P4 verdict.
+**Runs without him:** everything else — adapters, provisioning, license
+checks, smoke receipts, seeded runs, scoring, adjudication, the report.
+His total calendar: two decisions and a stop switch. That is the answer to
+tonight's question, priced.
+
+## Method limits, inside the charter
+
+- Design seat ran nothing; every number above is cited (Gen38, core5
+  tables, DECISION_MEMO, intake). Band-widths, not certainties.
+- License marks ⚠/❓ are honest ignorance with an owner and a phase (P1
+  receipt), not assumptions. **Drop-by-name applies to instruments too,
+  not just candidates (Verity fold):** a candidate whose license forbids
+  our use, an upstream harness that will not provision, or an instrument
+  that fails Alice's P1 verification (or cannot apply to some systems'
+  output formats) — each is dropped BY NAME at P1, the candidate table and
+  criteria re-issue before P2, and the DECISION_MEMO row that dropped
+  instrument was going to fill stays OPEN and says so in the report. A
+  quietly substituted instrument is the one move this charter forbids.
+- deepseek-direct and InferX were named by Brian tonight and are unverified
+  on this host; they get smoke receipts before any reliance.
+- Benchmark evidence class only: this portfolio can say which system wins
+  THIS benchmark under THIS harness. It cannot say which system improves
+  Brian's actual mornings — that question stays with campaign-1's live arm
+  and the R2 habit arm, and the three are never pooled.
+- A generation that fills no DECISION_MEMO row is unjustified: this
+  campaign fills 4, 5, and 6 or it reports why it did not.
+
+*Design seat: Stratum (worker-glm). Sources: DECISION_MEMO.md,
+research/PHASE2_CANDIDATE_INTAKE.md, research/MEMCONFLICT_GEN38_FULL_RELEASE.md,
+results/current_core5/summary.md, vendor/habitus/UPSTREAM.md,
+README.md (providers list), CAMPAIGN-1.md (lane budgets), QUEUE.md,
+GiLMore dispatch 2026-09-12 (lane names, candidate list, Brian's critique).*
+
+## G0 — APPROVED (Brian, 2026-09-12 ~16:1x PT, relayed by GiLMore)
+
+Verbatim: "Cool! Here are some other things I want... Go, Zep parked."
+- Charter approved at sha256 prefix 6e7f7d8df1a73878 (this file at freeze).
+- Envelope: ≤$5 all-in metered, arithmetic line stands, touch-$5 = stop+report.
+- Zep: PARKED per Brian.
+- Verity criteria pass: filed (flags 1-5 patched pre-freeze, see Stratum's patch turn).
+- Phase 1 (build) starts now. P4 gate form due at close.
+
+---
+
+## Patch 4 — OFFICIAL PRICE TABLE + P2 WORST-CASE ARITHMETIC LINE (Brian price ruling, 2026-09-12 ~18:5x, relayed by GiLMore)
+
+**Ruling (verbatim from the relay):** official prices = the measured table in
+POLICY — deepseek-direct $0.15/$0.60 per 1M (off-peak), muse $0.10/$0.20 per
+1M, InferX $0, local GPU $0. The worst-case arithmetic line (repeats ×
+per-run lane price, summed) prints at P2 entry and **must be ≤$5**.
+
+**Provenance:** deepseek-direct's rates match the measured POLICY table
+(`~/.local/share/agent-deck/conductor/POLICY.md:190` — "$0.15/M in,
+$0.003/M cached, $0.60/M out", measured 2026-09-11 with the live keys).
+muse/InferX/local recorded from the ruling. Off-peak noted as given; a
+peak-price receipt is owed before any peak-hour run, per the charter's
+"verify with a price receipt before first spend" rule — now satisfied for
+off-peak.
+
+**Official price table (binding for all envelope arithmetic):**
+
+| Lane | $/M input | $/M cached read | $/M output |
+|---|---|---|---|
+| deepseek-direct (off-peak) | 0.15 | 0.003 | **0.60** |
+| muse | 0.10 | — | 0.20 |
+| InferX | 0 | 0 | 0 |
+| local GPU (pi) | 0 | 0 | 0 |
+
+**The P2-entry arithmetic line (binding form):**
+
+> **0.15·T_in + 0.60·T_out ≤ 5.00** (dollars, off-peak),
+
+where T_in / T_out = total millions of input / output tokens summed over
+the full run matrix — every system × task × repeat — on the **most
+expensive metered lane** (deepseek-direct). Cached reads price at $0.003/M
+and are excluded from the worst case. Equivalent flat bound: **≤ 8.33M
+output-equivalent tokens all-in** (matches Patch 3's ≈8.3M under the new
+split pricing).
+
+Worked task-level form for the P2-entry re-print (fill actual counts):
+
+> Σ_over matrix ( repeats × N_tasks × (0.15·t_in + 0.60·t_out) / 1000 ) ≤ 5.00,
+
+with t_in / t_out in thousands of tokens per task as measured by the
+lane-meter (which now counts cache-correct tokens for every reader family —
+builder, RD-THREADS 18:4x; prices remain the missing half until this
+ruling, now supplied).
+
+**Task-budget translation (from Patch 3, unchanged by this patch):** at
+muse's ≈$0.002/task the allowance stays ~2,500 tasks; on deepseek-direct the
+8.33M-token allowance is the binding one. The re-print at P2 entry uses
+actual task counts from the run matrix, and the standing rule is unchanged:
+**all-in-or-not, no top-ups, touching $5 = stop + report.**
+
+**Cross-references:** this patch supplies the prices the anchor map named as
+the envelope hole (`team/ANCHOR-MAP-RD-20260912.md`); the Corner 1 (BAR A
+budget parity) and Corner 2 (capture-burden column) pre-registrations from
+`team/DESIGN-CORNERS-1.md` remain PROPOSED (Verity rule-check pending) and
+should ride the same P2-entry turn as this line's first re-print.
+
+— Stratum, charter maintenance. Patch 4 filed under the ruling's authority;
+nothing else in the charter moved.
+
+--- THE ROADMAP
+<!--
+RECOVERED ARTIFACT. This document was created 2026-09-02 22:52 as a Google Doc
+(`MEMORY_BAKEOFF_PHASE2_ROADMAP`, Drive id 1DTo_Ku0ErI5FmphuS0-mnwoeiBtbF84abDC-HoDLK0Q),
+with an explicit durability rule written into the conversation that agreed it:
+
+    "as soon as Gen33 completes, we copy this into the repo as
+     research/PHASE2_ROADMAP.md and link it from the project."
+
+That copy never happened. The conversation branch that agreed it was ORPHANED by a
+message edit in the ChatGPT UI - the messages remained in the account's export but
+became unreachable in the interface - so the plan, the reasoning behind it, and the
+instruction to preserve it all stopped being visible at once. The project then ran
+roughly 88 further generations without it, exhausting the original contestant list,
+which is precisely what step 7 of this roadmap says not to do.
+
+Recovered 2026-09-06 from Brian's ChatGPT data export by reconstructing the orphaned
+branch, then exported verbatim from the surviving Drive document rather than
+reconstructed from chat. See reviews/gen120-rivals-* for the review record of that
+period and ~/recovered/ for the recovered conversation.
+
+Nothing in this file has been edited. It is four days old and predates Gen34-Gen121;
+read it as the plan that was agreed then, not as a description of current state.
+-->
+
+MEMORY BAKE-OFF — PHASE 2 ROADMAP  
+Living plan, created 2026-09-02
+
+PURPOSE  
+This document is the durable roadmap for the memory-bakeoff project after Generation 33\. It is intentionally separate from CHATGPT\_TO\_CODEX, which remains the generation-by-generation execution mailbox. This roadmap should change only when the evidence changes our plan; individual generation instructions should implement it rather than replace it.
+
+CURRENT POSITION  
+Round 1 established retrieval, safety, provenance, lifecycle, reader, and product-profile baselines across the original contestants.
+
+Round 2 introduced frozen longitudinal-v1 and has so far produced:  
+\- pi-observational-memory: strong long-session working-memory/context production, but not semantic historical retrieval.  
+\- Perseus: strong explicit temporal/lifecycle ambitions, but ordinary operator writes collapse valid/application time onto transaction time; the alternate admission path destroys retroactive valid time on activation.  
+\- Hindsight raw/no-LLM: useful mention-time history and strong retrieval, but append-only current-state contamination remains.  
+\- Mem0 infer=False: no temporal retrieval surface at all, yet the same longitudinal failure family recurs.  
+\- agentmemory Gen33: in flight. It is the first intended contrast where ordinary product ingestion can automatically retire/supersede memories. Interpretation depends on whether that treatment actually activates on longitudinal-v1.
+
+The strongest current finding is preregistered three-engine triangulation: seven failure classes recur across Perseus, Hindsight, and Mem0 under ordinary append-only ingestion without retirement:  
+1\. stale\_persistence  
+2\. configuration\_collapse  
+3\. failed\_procedure\_adoption  
+4\. late\_history\_corruption  
+5\. false\_persistence  
+6\. missing\_required\_truth  
+7\. unsupported\_evidence
+
+Five of those appeared at identical aggregate counts across all three products: false\_persistence 9, configuration\_collapse 6, failed\_procedure\_adoption 3, late\_history\_corruption 3, unsupported\_evidence 6\.
+
+Interpretation remains conservative: this is strong association/triangulation, not proof that append-only ingestion is causal. Gen33 is designed to move the retirement variable for the first time if native supersession actually fires.
+
+EMERGING TARGET ARCHITECTURE  
+The working architectural hypothesis is no longer “find the best vector-memory plugin.” It is a layered system:
+
+1\. Lossless canonical history  
+   \- Every original user/model/tool event retained.  
+   \- Branch-aware, replayable, auditable.  
+   \- Exact provenance to source events.  
+   \- pi-lcm is the current best match for this substrate.
+
+2\. Explicit state/lifecycle projection  
+   \- Distinguish current, historical, corrected, invalidated, retracted, failed, successful, concurrent, scoped, configuration-specific state.  
+   \- Preserve valid/event time separately from ingestion/knowledge/transaction time where needed.  
+   \- Supersession must be conservative and evidence-backed rather than “nearest neighbor means replacement.”  
+   \- StateMem, MemStrata, bitemporal/event-sourced approaches, and similar systems are reference points here.
+
+3\. Durable semantic/causal retrieval  
+   \- Search across full retained history, not merely active state.  
+   \- Support exact provenance and recovery of historical beliefs/evidence.  
+   \- Scope/configuration aware without hiding product failures in harness postfilters.  
+   \- Membukkit remains especially interesting as a structured retrieval/routing candidate.
+
+4\. Bounded working-memory synthesis  
+   \- Maintain what the agent should be thinking about now.  
+   \- Continuously compress/synthesize while preserving semantic distinctions.  
+   \- Never become the sole source of truth.  
+   \- pi-observational-memory is the strongest observed match so far.
+
+5\. One context composer  
+   \- Recent verbatim context \+ working-memory projection \+ targeted deep recall.  
+   \- Avoid recursive summarization, duplicated context ownership, and competing compaction systems.
+
+A concise design shorthand is:  
+pi-lcm remembers everything \-\> state layer decides what is currently true \-\> retrieval finds anything in history \-\> OM-like projection decides what belongs in active context.
+
+PHASE 2 EXECUTION PLAN
+
+PHASE A — Finish Gen33, then pause the old queue  
+\- Let Gen33 complete without interference.  
+\- Determine whether agentmemory native supersession actually activated on the 16-observation ruler.  
+\- If it activated, record the trade-off between reduced stale-state failures and false supersession/state loss.  
+\- If it did not activate, keep the longitudinal result but explicitly classify the intended treatment as not activated.  
+\- Do not immediately issue Gen34 from the old contestant list.
+
+Decision Gate A:  
+After Gen33, freeze a short “Round 2 interim findings” note before admitting more contestants.
+
+PHASE B — Leaderboard and field refresh  
+Run a focused research refresh using the problem definition we now have, not the original generic “agent memory” search.
+
+Primary research question:  
+What systems maintain evolving agent state while preserving lossless history, provenance, scope, recoverable historical belief, semantic recall, and bounded working context?
+
+Harvest candidates from current benchmark frontiers rather than blindly taking overall leaderboard winners. At minimum inspect:  
+\- StateMemBench / StateMem  
+\- LongMemEval-V2  
+\- Agent Memory Leaderboard, especially coding-memory track  
+\- HaluMem  
+\- EvoMemBench / EvoArena  
+\- GateMem  
+\- STALE  
+\- Supersede  
+\- any newly released benchmark specifically testing dynamic state, update/conflict handling, workflow reuse, premise awareness, provenance, or forgetting.
+
+For each benchmark, capture:  
+\- benchmark version/date  
+\- task dimensions  
+\- evaluator/model assumptions  
+\- top overall systems  
+\- Pareto/frontier systems by the dimensions we care about  
+\- open/local/self-hostable status  
+\- public code and reproducibility  
+\- whether reported gains come from memory architecture versus stronger LLM or hidden product service  
+\- whether the benchmark is retrieval-heavy, state-heavy, workflow-heavy, or governance-heavy.
+
+Do not import leaderboard scores into our leaderboard. Public leaderboards are candidate discovery and external validation only.
+
+Decision Gate B:  
+Produce a ranked candidate intake table with one sentence answering “what distinct architectural question would this contestant answer that we have not already answered?” Reject candidates that add no new mechanism.
+
+PHASE C — Refresh the contestant roster  
+The current expected priority pool is:
+
+Must revisit from original roster:  
+\- Membukkit — high priority. Phase 2 should test whether bucket/routing structure helps scope/config/current-state separation or merely creates topical clusters with stale state inside them.  
+\- Claude-Mem — high priority because it is a real coding-memory system and now appears on modern coding-memory leaderboards.
+
+Likely new high-priority candidates/reference implementations:  
+\- StateMem — probably reference implementation/reproduction if no usable product code exists.  
+\- MemStrata — high architectural fit if a reproducible local path exists.  
+\- MemOS — strong public benchmark presence; inspect update/conflict semantics carefully.  
+\- AgentRunbook-C — highly relevant to coding-agent experience memory and workflow reuse.  
+\- causal-memory / other architecturally distinct AML coding leaders — select by mechanism, not score ties.  
+\- A-Mem — evolving-memory representation; useful if implementation is reproducible.  
+\- memharness — small/new but unusually aligned with bitemporal/supersession/provenance requirements.  
+\- Attestor — inspect as a self-hosted bitemporal/supersession backend.  
+\- EvoMem — patch/evolution model worth testing or using as an external lane.
+
+Conditional original contestants:  
+\- Graphiti — rerun only if we can define an honest Phase-2 identity with exact provenance and lifecycle evidence.  
+\- Habitus — only if its longitudinal identity can be tested without inventing missing product behavior.
+
+Already-tested systems should get full-product ablations only when they answer a specific unresolved question:  
+\- Hindsight full-product LLM extraction: does a real application-time axis materially fix its raw-profile weaknesses?  
+\- Mem0 infer=True: only if its additive extraction path can answer a distinct question; do not assume it is an update engine.  
+\- Perseus: no more mainline testing unless a product change or a narrowly defined write-surface ablation resolves the demonstrated valid-time defect.
+
+Decision Gate C:  
+Choose a small next batch, probably 3–5 contestants/ablations, each justified by a different mechanism. Do not exhaustively test every new project.
+
+PHASE D — Common Phase-2 admission gate for every contestant  
+Before longitudinal-v1 exposure, every new contestant must pass the same discipline:
+
+Identity:  
+\- exact product/source version or commit  
+\- model/embedding/reranker identity  
+\- runtime/provider/quantization  
+\- storage/index configuration  
+\- disabled and enabled features  
+\- hardware/environment
+
+Unrelated preflight:  
+\- validate ingestion semantics  
+\- validate search semantics  
+\- validate update/supersession/retirement semantics  
+\- validate scope/config isolation  
+\- validate temporal/as-of behavior  
+\- validate provenance  
+\- validate read side effects  
+\- validate lifecycle observability
+
+Frozen adapter:  
+\- adapter contract frozen and hashed before first scored query  
+\- no hidden expected/prohibited IDs  
+\- no truth-driven postfiltering or reranking  
+\- no harness-created lifecycle help
+
+Repeated measurement:  
+\- three clean repetitions where practical  
+\- full checkpoint-prefix discipline  
+\- native state captured before scored reads  
+\- lifecycle and retrieval reported separately  
+\- harness owns scoring/provenance
+
+No scalar “winner” score for longitudinal-v1. Named failure classes and lifecycle outcomes remain primary.
+
+PHASE E — External benchmark lanes  
+Do not force every research question into longitudinal-v1.
+
+Use external benchmarks for what they are good at:  
+\- StateMemBench: evolving current-state tracking independent of ordinary retrieval.  
+\- LongMemEval-V2: coding/experience memory, workflows, gotchas, premise awareness, very long histories.  
+\- HaluMem: extraction/update/conflict operations.  
+\- EvoArena/EvoMemBench: changing environments and procedural evolution.  
+\- GateMem: scope/access/forgetting/governance.  
+\- STALE/Supersede: targeted update/supersession failure modes.  
+\- MemConflict: explicit conflict lane already planned.
+
+Prefer native benchmark protocols and primary-source implementations. Treat each benchmark as a separate evidence class rather than combining metrics into one master score.
+
+PHASE F — Synthesize the architecture, not just the leaderboard  
+Once we have enough Phase-2 evidence, produce an architecture matrix with these columns:  
+\- lossless history  
+\- exact provenance  
+\- branch/replay semantics  
+\- valid/event time  
+\- transaction/knowledge time  
+\- supersession/correction  
+\- retraction/invalidation  
+\- concurrent scoped truth  
+\- configuration identity  
+\- dependency propagation  
+\- historical belief recovery  
+\- semantic retrieval  
+\- procedural memory  
+\- current-state projection  
+\- bounded working-context synthesis  
+\- false-supersession risk  
+\- read/write side effects  
+\- local/self-hosted practicality  
+\- Pi integration fit
+
+This matrix should answer which components are best-in-class even if no single product wins end-to-end.
+
+Decision Gate F:  
+Choose whether the likely destination is:  
+A. adopt one integrated product;  
+B. compose existing systems;  
+C. build a thin state layer around pi-lcm \+ best retrieval \+ OM-like projection;  
+D. reproduce/adapt a research architecture such as StateMem/MemStrata.
+
+PHASE G — Prototype our likely composite  
+Do not build this until enough Phase-2 evidence supports it.
+
+Current likely prototype shape:  
+\- pi-lcm remains canonical lossless DAG/history.  
+\- state projection is derived and rebuildable from canonical events.  
+\- every derived state item retains exact source-node provenance.  
+\- explicit lifecycle/state distinguishes current/historical/corrected/retracted/invalidated/failed/successful/concurrent.  
+\- deep semantic retrieval searches canonical history and state views.  
+\- OM observer/reflector machinery becomes a consumer of canonical events, not an independent source of truth.  
+\- one context composer produces recent verbatim \+ current working projection \+ targeted deep recall.  
+\- branch/rewind semantics invalidate/rebuild derived state on the active branch.  
+\- no recursive summarization of pi-lcm or OM summaries.
+
+Prototype evaluation must include ablations:  
+1\. pi-lcm only  
+2\. pi-lcm \+ retrieval  
+3\. pi-lcm \+ state layer  
+4\. pi-lcm \+ OM projection  
+5\. pi-lcm \+ state \+ retrieval  
+6\. full composite
+
+That is the point at which we can make causal claims about individual architectural layers rather than comparing different products with many confounds.
+
+PHASE H — Realism endgame  
+Only after the synthetic and external benchmark stages are sufficiently understood:  
+\- MemConflict if not already complete.  
+\- private month-long coding-agent corpus, local/private only.  
+\- no raw private corpus in GitHub or Drive.  
+\- use the real corpus to test longitudinal utility, workflow reuse, stale-state handling, project/scope isolation, branch/rewrite behavior, provenance, and context-budget economics.  
+\- compare promising contestants and the composite prototype under identical Pi harness/model/config where possible.
+
+WHAT NOT TO DO  
+\- Do not declare OM, Membukkit, or any other system “the winner” before comparable Phase-2 evidence.  
+\- Do not exhaust the original contestant list just because it exists.  
+\- Do not chase every new memory project.  
+\- Do not let public leaderboard scores substitute for our own lifecycle/provenance measurements.  
+\- Do not let stronger LLMs silently become the explanation for a memory result.  
+\- Do not combine retrieval quality and lifecycle destruction into one score.  
+\- Do not treat absence from active state as deletion without native evidence.  
+\- Do not mistake a working-memory projection for durable memory.  
+\- Do not use truth-aware harness filters to repair product scope/time/lifecycle failures.
+
+DURABILITY / PROJECT-MEMORY RULES  
+1\. This Google Doc is the living roadmap and should remain stable across generations.  
+2\. CHATGPT\_TO\_CODEX remains the execution mailbox only; each generation should reference this roadmap rather than restating the whole strategic plan.  
+3\. After Gen33 completes, add a repository copy such as \`research/PHASE2\_ROADMAP.md\` from this roadmap and link it from the project’s research index/README/RESULTS as appropriate.  
+4\. Generation handoffs should record any evidence that changes this roadmap.  
+5\. Roadmap changes should be explicit: date, evidence that triggered the change, and what decision changed.  
+6\. Frozen benchmark rulers/results remain immutable even when the roadmap evolves.  
+7\. Candidate intake and rejection decisions should be written down so previously rejected systems do not repeatedly re-enter without new evidence.
+
+NEXT ACTIONS  
+1\. Finish Gen33.  
+2\. At the Gen33 boundary, snapshot interim Round-2 findings.  
+3\. Copy this roadmap into the repo as the durable project plan.  
+4\. Perform the leaderboard/field harvest and create the candidate intake matrix.  
+5\. Re-rank Membukkit, Claude-Mem, and new frontier candidates by distinct architectural question.  
+6\. Select the next 3–5 Phase-2 contestants/ablations.  
+7\. Continue longitudinal testing, external benchmark lanes, and then the composite prototype only when justified.
+
+CHANGE LOG  
+2026-09-02 — Initial durable Phase-2 roadmap created after Gen32 and during Gen33. Trigger: three-engine preregistered recurrence of the seven append-only longitudinal failures, new field/leaderboard evidence around state tracking, and recognition that the remaining queue should be refreshed before blindly continuing.  
+
+--- LAST SPRINT'S RETRO
+# RETRO-4 SUMMARY — end of Sprint 4 (trust-then-instrument)
+
+**Aggregated:** Cairn 2026-09-16 ~17:2x PDT · **Filed:** 3/3 seats
+(cairn-pi, kiln-flash, corvid-dsh — the kept roster) · **Ordered by:** Brian
+
+## Headline (Brian's)
+
+The S4-12 zeros were a **ROUTING failure**, not a measurement failure and not
+"corvid erred / kiln erred": `team/ECOSYSTEM-MAP.md` — written 2026-09-13,
+three days BEFORE S4-12 — already recorded `pi_lcm_store_reader` raw 0.0 vs
+`pi_lcm_store_reader_toollevel` 0.2227, and claude-mem hit@5 0.208 (default
+90-day window) vs 0.958 (window off), plus claude-mem "refuses raw". S4-12
+cited none of it. **Recorded knowledge was unreachable at the moment of use** —
+the same failure the bake-off exists to study. S4-14 confirmed the ruling:
+both zeros were configuration artifacts (claude-mem 30/30 on the vendor's
+actual chroma policy; pi-lcm 7/30 on the tool-level path).
+
+## Convergent across all three seats
+
+1. **Certified the artifact, skipped the source of record.** Kiln: verified
+   the S4-12 zeros were *honestly measured* without asking whether the
+   configuration was the vendors' real path — "honest-zero verification is not
+   validity." Corvid: called SWE-chat's vocabulary "overstated" from the
+   paper's Table 2 without opening the card that states it outright; the
+   withdrawn claim then sat unstruck in the summary for three days. Same class,
+   two seats: check the primary source before certifying.
+2. **The poller is the shared churn.** Kiln: three defect classes diagnosed,
+   rebuilt on rowcheck gating, 11 phantoms after the rebuild — fix incomplete.
+   Cairn: snapshot-stale wakes on completed rows; the dead-engine wedge
+   orphaned five verdicts (one-shot hops consumed, status-word heuristic
+   misfired). Both name it as the sprint's largest non-work cost.
+3. **Second-seat independence caught what the author cannot see.** Alice's
+   co-sign caught the A1 error; kiln's verification caught the summary residue
+   — both in work Corvid authored. Corvid's keep, confirmed by the other two
+   seats' closes.
+4. **The computed-done gate earned its keep.** Kiln's keep; it closed row 32
+   on evidence this sprint (declared check passes, status cell never said
+   done — the row-42 class) and turned queue honesty from prose into a machine
+   property.
+
+## Divergent / seat-specific
+
+- **Cairn (conductor):** filed S4-5/9/12 handoff receipts as verification —
+  the conductor dispatches the work, so it is not an independent check; they
+  are NOTES. "I acted right and claimed a status I did not have." Keep:
+  measure before dispatching; the machine's evidence beat status-text reading
+  every time.
+- **Corvid:** parity probe built-but-unwired with no consumer (churn); muse
+  lane calibration → ideation → leakage probe all landed (closed).
+- **Kiln:** every closing row gated by its declared check, not a word — the
+  doer side ran clean once the gate existed.
+
+## Carried forward
+
+- Brian's publish call on the corrected +80.739% table (page sent 14:4x).
+- Poller payload staleness — MOSTLY FIXED this sprint, not carried as
+  builder's work: the chain message pasted 120 chars of the row's previous
+  cell and 120 of its current one; both halves truncated at the same length,
+  so the change usually fell past the cut and they printed identically, and
+  the reader answered "stale phantom" eleven consecutive times. Messages no
+  longer quote the row at all: they name it, say what is wanted, and say
+  explicitly that they are not quoting it, so the reader goes and looks. The
+  PAYLOAD staleness is gone. RESIDUAL (open — mitigated, not eliminated):
+  the headline class ("row X is now done") can still age inside a queued
+  prompt; the message tells the reader to trust the row over the message.
+- Resolved this sprint: the GATE/SPRINT-CLOSE log re-firing on
+  evidence-closed rows (69 duplicate lines). Found by cairn reading the
+  poller's own log rather than being told — recorded as a method that worked;
+  fixed with a log_once helper keyed by row (logs only when that row's text
+  changes; six tests, 90 assertions green, verified silent in effect).
+- Restart-actor question: the poller was cleanly restarted (systemctl
+  stop/start, no crash) at 16:39:59 and 16:52:31 with no actor identifiable
+  from the journal — the question is who or what issues those stops, because
+  an unattributed restart authority over the fleet's only driver is a control
+  gap unless it is a known component.
+- Standing rule (QUEUE protocol header): a row that re-measures anything must
+  cite the prior measurement or state in writing that none exists.
+
+--- LAST SPRINT'S MEASURED RESULT
+# S4-14 — cross-engine re-run on the corrected reader paths: old vs new, side by side
+
+**Row:** QUEUE S4-14 (originated by Brian's ruling 2026-09-16: "the zeros suggest
+misconfiguration, and iteration 1 shook these out already"). **Date:** 2026-09-16,
+free window, $0, no score import, deterministic-first. **Corpus:** frozen
+invocation-corpus-v3-standard/corpus.jsonl sha256
+`7395b7d5fc44c92a58599b74b193eabf727bbec5a81b8fac991ee66a15a369c0` (unchanged since
+S4-10 froze it). **Trigger:** unchanged pinned pi-change-trigger @`db31ea3e…`,
+index.ts sha256 `ec6d8794…`. **Harness:** run_standard.py rev `e84bd58e` reused
+through run_crossengine.py (S4-12) — run_scenario_topics byte-identical, sole delta
+remains the topics source; S4-14's sole further deltas are the engine retrieval paths
+below. **Model:** GLM-5.3-Flash local pi RPC, top_k=2, record ts fixed 2026-09-01T00:00Z.
+
+## What changed and why
+
+Brian's diagnosis, confirmed against the iteration-1 record before any re-run:
+
+1. **pi-lcm:** S4-12 ran the RAW arm (`pi_lcm_store_reader` — the adapter
+   deliberately does not port tool-level relaxation,
+   pi_lcm_store_reader.py:20-25). Iteration 1 (P2-entry run, 2026-09-13,
+   `team/P2-ENTRY-RUN.md`, second-driven `team/ASSAY-SECOND-DRIVER-P2-ENTRY-RUN.md`
+   586/2631 recount) MEASURED raw 0.0 vs tool-level **0.2227** dynamic Hit@3 on the
+   conflict benchmark — the tool-level path (`lcm_grep`: exact query then bounded
+   relaxation, NOT `lcm_expand`) is the validated semantics. S4-14 runs
+   `pi_lcm_store_reader_toollevel` (iteration-1's arm name): verbatim `relaxedVariants`
+   port (pi-project-recall index.ts:121-133, @sha256
+   `9025eef540b6bbbb1364df5c6232672c0d67a8ad9b241d0208d62da39eb43c78`), same port that
+   produced the 0.2227 in `experiment_20260913_p2_entry/run_p2_entry.py`.
+   **Declared adaptation:** the extension's relaxation gate (index.ts:347-363,
+   `bounds.conversations > 1` + live-echo check) has no counterpart here — the
+   invocation store holds exactly the one prior-session record and the live prompt is
+   never in the store, so "reaches prior sessions" reduces to "any hit"; the gate
+   ports as: exact AND query first, if empty try relaxed variants (max 6), take the
+   first with any hits, else the empty exact result stands unmarked. Store adapter
+   byte-identical to S4-12: pi_lcm_store_reader.py @sha256
+   `e2f87f92b5651aee6ad77764ffbd1533ba9d07300899c6977bc23a01b431d42e`.
+2. **claude-mem:** S4-12's `claude_mem_fts5_core` arm scores the WHOLE prompt as one
+   quoted FTS5 phrase — a surface the vendor does not ship as its search path
+   (claude-mem "refuses raw — no supported no-LLM raw path", external.py:564;
+   `team/CORVID-PRODUCT-PATH-CENSUS.md:50`). Iteration 1 (`team/ASSAY-SECOND-DRIVER-
+   CLAUDE-MEM-WINDOW.md`) measured the vendor's ACTUAL current search policy
+   (chroma top-100 semantic, shared-LSA) at core Hit@5 **0.208** with the default
+   90-day window vs **0.958** with the window off. S4-14 runs that policy with the
+   window disabled (`claude_mem_chroma_lsa_no_recency`, the row-mandated arm) plus
+   the window-on arm as A/B context. Adapter unchanged: claude_mem_core.py @sha256
+   `53199f688574c9e5b037c9231d87e560b21a6103d956ddc22036ef523c8d594a` (byte-identical
+   to its S4-12 pin — re-verified before the re-run).
+
+## Old vs new (identical corpus, trigger, harness, scoring)
+
+| arm | retrieval path | derivation surface (turns) | scenarios w/ ≥1 non-empty turn | FBMR_topic | FalseFire | NearMissFire | FirePrecision | fresh_rate | gap_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| pi_lcm_store_reader (S4-12 old) | raw store queries, no relaxation (charter A/B raw side) | 0/180 | 0/60 | 0/30 | 0/60 | 0/24 | 0/60 | 60/60 | 0/60 |
+| claude_mem_fts5_core (S4-12 old) | whole prompt as ONE quoted FTS5 phrase (strict surface) | 0/180 | 0/60 | 0/30 | 0/60 | 0/24 | 0/60 | 60/60 | 0/60 |
+| bm25 (S4-12 old) | in-tree BM25 baseline (context arm) | 77/180 | 47/60 | 25/30 | 0/60 | 20/24 | 25/110 | 60/60 | 0/60 |
+| pi_lcm_store_reader_toollevel (S4-14 new) | raw reader + VERBATIM relaxedVariants (lcm_grep semantics; declared single-session gate adaptation) | 23/180 | 19/60 | 7/30 | 0/60 | 10/24 | 7/79 | 60/60 | 0/60 |
+| claude_mem_chroma_lsa_no_recency (S4-14 new) | vendor chroma search policy, 90-day window DISABLED (row-mandated) | 180/180 | 60/60 | 30/30 | 0/60 | 24/24 | 30/119 | 60/60 | 0/60 |
+| claude_mem_chroma_lsa (S4-14 new) | vendor chroma search policy, default 90-day window (A/B context) | 180/180 | 60/60 | 30/30 | 0/60 | 24/24 | 30/119 | 60/60 | 0/60 |
+
+Scoring: frozen S3-1 programmatic fire-log metrics, identical definitions and
+stopwords across all six arms. `fresh_rate`/`gap_rate` are method-behaviour metrics
+(see S4-12 summary F4); FirePrecision denominators are run-dependent by the
+pre-registered S3-1 definition.
+
+## Controls (same checks as S4-12)
+
+The S4-10 control runs are engine-independent by construction and remain THE controls
+for this harness+trigger: `team/invocation-corpus-v3-standard/results-control-never-clean/`
+(0/180 fired) and `results-control-always-clean/` (134/180 fired) — recomputed from
+their results.jsonl by `check_s4_14.py`, which fails if either count drifts or the dirs
+collide with an engine dir. Determinism: T001-T003 invariant fire-log tuples identical
+between each arm's full run and its `detcheck-<arm>` re-run (wall-clock fields excluded).
+
+## Findings (measured)
+
+**F1 — Brian's ruling confirmed for both engines: the S4-12 zeros were configuration
+artifacts, not results.** On identical corpus, trigger, harness and scoring:
+
+- **claude-mem** 0/30 → **30/30 FBMR_topic** once scored on the vendor's actual search
+  policy (chroma semantic, shared-LSA). The old `claude_mem_fts5_core` arm measured a
+  whole-prompt quoted-phrase surface the vendor does not ship. NearMiss 24/24 and
+  FirePrecision 30/119: with the record surfacing on every turn, every near-miss also
+  fires — the surface is a firehose, so recall is full and precision is the cost.
+- **pi-lcm** 0/30 → **7/30 FBMR_topic** on the tool-level path. The exact AND query
+  matched 0/180 turns; all 23 non-empty surface turns are relaxation-rescued (max-6
+  bounded variants, verbatim port). Fires come from two mechanisms, both visible in the
+  fire log: single content tokens (`deploy` rescues T031/T033/T035/T037/T039; fires
+  match token `deploy`) and stop-token rescues that still admit the record, whose
+  genuine tokens then match (`mode` rescues T021/T027; fires match `billing-100`,
+  `service`). NearMiss rises 0/24 → 10/24 — the honest cost of the same stop-token
+  surfaces. FalseFire stays 0/60 everywhere, stale/anachronism 0 everywhere.
+
+**F2 — The relaxation budget is the pi-lcm finding.** Rescued-variant frequency:
+`to`×10, `mode`×4, `deploy`×4, `101.`–`109.`×1 each. On 10-word prompts the 6-attempt
+budget is spent on leading trailing-drop windows (which contain stop-words absent from
+the record) before any single-token attempt; the single tokens that do fire are the
+prompt's LAST words (the port tries them last-first), so rescue skews to sentence-final
+tokens. This is the verbatim vendor behavior (same port that measured 0.2227 on the
+conflict benchmark, where queries are shorter and vocabulary is shared) — it is a real
+property of the tool on long natural prompts, now measured on a second instrument.
+
+**F3 — The 90-day window is a non-factor on THIS corpus.** Window-on and window-off
+chroma arms returned byte-identical metrics (30/30, 30/119, 24/24): every record
+(stamped 2026-09-01, eval_now pinned 2026-08-30) sits inside the window, unlike
+iteration 1's corpus where the window cost 0.75 Hit@5. The window matters when the
+store ages; it does not explain anything here. Row-mandated arm (window-off) stands as
+primary; the A/B is reported so nobody cites the window as a live confound.
+
+**F4 — Zero-demonstration annex (row rule).** No corrected arm scores zero, so the
+rule's burden is discharged with evidence rather than argument: the pi tool-level zero
+on 37/60 scenarios is demonstrated turn-by-turn in
+`results-pi_lcm_store_reader_toollevel/topics-derivation.jsonl` — every turn carries
+`tool_level = {exact_nonempty: false, relaxed_with: null, attempts: N}` (N = variants
+tried), i.e. the harness demonstrably got SOMETHING on 23 turns and demonstrably got
+an audited empty on the rest. The old strict arms' 0/180 surfaces are retained for
+contrast in the table above.
+
+**F5 — Reading, honestly.** "Which engine detects moments" now has a first real
+cross-engine answer at $0: claude-mem's semantic policy saturates the invocation
+instrument (30/30, with precision 30/119 and near-miss 24/24 as the price), pi-lcm's
+lexical grep+relaxation catches 7/30 with zero false fires, bm25 sits between at 25/30
+(S4-12, unchanged). The instrument (single-record store, top_k=2 topics surface) favors
+semantic surfaces; the pi-lcm number is a floor for the grep path, not a ceiling for
+the product (its expand/summarize surfaces are out of this row's scope).
+
+## Iteration-1 anchors (for provenance; NOT same-instrument numbers)
+
+| anchor | value | instrument | source |
+|---|---|---|---|
+| pi-lcm tool-level | dynamic Hit@3 **0.2227** (raw 0.0) | conflict benchmark, heldout 27 (n=2,631) | P2-ENTRY-RUN.md; ASSAY-SECOND-DRIVER-P2-ENTRY-RUN.md |
+| claude-mem window ON | core Hit@5 **0.208** | controlled core5 (24 scored) | ASSAY-SECOND-DRIVER-CLAUDE-MEM-WINDOW.md |
+| claude-mem window OFF | core Hit@5 **0.958** | same | same |
+
+These anchors live on different instruments than the invocation corpus; they travel as
+path validation (which retrieval semantics is the real system), not as comparable scores.
+
+
+--- THE OUTSIDE REVIEW OF THAT RESULT
+# ASTRA SPRINT-5 REVIEW — publish call, Sprint 6 scope, roadmap coverage
+
+**Author:** gpt-6-astra via `codex exec`, commissioned by Brian 2026-09-16.
+**Inputs:** the S4-14 re-run summary, RETRO-4-SUMMARY.md, PHASE2_ROADMAP.md,
+the approved portfolio charter header, and MISSION-20260912.md — the documents
+themselves, not a summary of them. **Asked to argue with** Claude's publish
+recommendation rather than agree with it.
+
+**Two findings verified against the source before filing:**
+1. The arithmetic discrepancy in F4 is REAL. The table reports 19/60 scenarios
+   with at least one non-empty turn, which leaves 41 with none — F4 says 37.
+2. The fixtures are future-dated relative to the evaluation clock: records
+   stamped 2026-09-01, `eval_now` pinned 2026-08-30. Unexplained.
+
+---
+
+**Publish a corrected methods note; do not publish an engine ranking.** I agree with Claude’s central objection, but “measured properly for the first time” still overstates what was established. These are corrected retrieval paths on a narrow test, including a declared pi-lcm adaptation and a shared-LSA implementation of claude-mem’s search policy. They are not complete product evaluations.
+
+**Brian’s decision:** authorize a correction that replaces the earlier interpretation of the zeros, and withhold comparative product claims.
+
+The publishable finding is useful: changing the retrieval configuration changed the measured result dramatically without changing the corpus or trigger. The old zeros were real outputs from unsuitable configurations. Verifying the arithmetic did not validate the experiment.
+
+Claude is right that the current test cannot establish retrieval selectivity. With only one stored record, returning everything guarantees that record appears. Claude-mem’s 30/30 therefore demonstrates coverage, accompanied by every near-miss firing; it does not demonstrate that the system can choose useful memories from competing ones. Also, 30/119 is **trigger FirePrecision**, not retrieval precision. Those should not be presented interchangeably.
+
+Pi-lcm’s 7/30 versus BM25’s 25/30 is a valid description of these configured paths on this instrument. It does not establish a product ranking. Likewise, zero FalseFire deserves little reassurance when all arms achieve it while NearMissFire varies substantially.
+
+Before publication, fix two visible inconsistencies:
+
+- Nineteen of sixty scenarios have a nonempty retrieval turn, leaving **41**, not the **37** stated in F4. Establish which count or description is wrong.
+- The records are dated September 1, while the evaluation clock is August 30. Explain the future-dated fixtures and exactly what temporal behavior was tested. Matching window-on/off results supports “no observed window effect here,” not general temporal correctness.
+
+**A ranking becomes publishable when a frozen test makes indiscriminate retrieval lose, and a claimed ordering survives credible comparison.** Concretely:
+
+- Use multiple records per store: relevant evidence, plausible distractors, and cases where nothing should be retrieved.
+- Declare which records would help before running engines. Include scoped or outdated records where relevance depends on the question.
+- Compare against BM25, return-nothing, and return-everything under a declared, comparable context budget. The existing always-fire control tests the trigger; it does not replace a return-everything retrieval control.
+- Report useful retrieval, irrelevant material admitted, trigger behavior, and cost separately. Check whether conclusions hold across scenario families and account for uncertainty.
+- Freeze adapters after unrelated ingestion/search checks and primary-source review. Label product paths, approximations, and adaptations precisely.
+
+That could justify a **ranking of specified configurations on the new benchmark**. A claim about making agents better at work additionally needs G4 task outcomes.
+
+**For Sprint 6, I recommend exactly two rows.** Brian would approve these two deliverables and keep execution within the existing spend limit and September 20 promotional deadline.
+
+1. **Make the invocation test capable of rejecting indiscriminate retrieval.** Advances **G3 invocation** and roadmap **Phase D’s admission discipline**, with preparation for **Phase H’s scope and context-budget questions**.
+
+   Kiln builds and runs a small, frozen, multi-record diagnostic using the current scenarios where practical. Include distractors and no-relevant-memory cases; run the three controls first. If return-everything remains indistinguishable from selective retrieval, stop and report that failure rather than spending on engine comparisons. If the instrument separates them, run the corrected paths with explicit implementation labels.
+
+   Corvid reviews the frozen cases and adapter assumptions before scored runs, then independently checks the results afterward. Cairn schedules and checks completion evidence. Worker turns are serialized; a long local test still reserves the shared request slot until that turn ends. Completion means a reviewed diagnostic and an explicit conclusion about what it can distinguish—not a guaranteed ranking.
+
+2. **Restore the roadmap as the execution authority.** Advances roadmap **durability rules 4–7**, **Decision Gate F**, and the charter’s required reconciliation.
+
+   Produce one compact evidence map: roadmap commitment, supporting artifact, current status, and next decision. Reconcile the stale charter with the three-seat roster, single-request constraint, and expiring free window. End with one proposed experiment connecting the strongest supported architecture question to **G4 material outcome**, including its baseline and stopping rule. This row proposes that experiment; it does not build the composite.
+
+   Cairn assembles the map, kiln checks implementation claims, and corvid checks evidence independently, in sequence.
+
+**Brian’s remaining operational decision:** before September 20, set the post-promotion resource envelope. Until then, Sprint 6 should leave no run dependent on promotional access continuing afterward. Neither worker needs simultaneous API work.
+
+**Against the roadmap, the recent work shows real progress but incomplete strategic coverage.** The brief does not contain every artifact from all four sprints, so “not evidenced here” must remain distinct from “never done.”
+
+- **Phase D—admission:** hashes, frozen harnesses, deterministic checks, and declared adaptations advanced it. Source-path validation failed before S4-12 and was repaired afterward. Cheapest next step: require each remeasurement row to link its prior result and validated product path before execution.
+- **Phases B/C—field refresh and mechanism-based selection:** the ecosystem map and claude-mem revisit show some progress. A current intake/rejection ledger and a small batch selected by distinct architectural questions are not evidenced. Cheapest next step: recover existing decisions into the evidence map before commissioning another field survey.
+- **Phase E—external lanes:** the conflict benchmark anchors advance this. Keeping their scores separate from invocation scores follows the roadmap correctly. Broader named lanes are not evidenced; they should remain explicitly deferred, not automatically become new work.
+- **Phase F—architecture synthesis:** no current architecture matrix or explicit adopt/compose/build/reproduce decision is supplied. This is the most consequential missing bridge. Populate it from existing evidence and identify one uncertainty that would change the decision.
+- **Phases G/H—composite and realism:** invocation work is preparation, not evidence of a working composite or improved sustained task performance. Do not declare these phases completed—or prematurely build the composite. Preregister the smallest material-outcome comparison once Phase F identifies the intervention.
+- **Durability:** recovering and linking the roadmap repaired access. Its repeated omission from sprint goals shows that access alone did not make it govern work. Require every row to cite a goal or roadmap item, as Brian now requests.
+
+**The team’s own failure is worth publishing as a documented incident, not yet as a general experimental result.** It has an unusually clear chain: relevant knowledge existed, was not consulted, an unsuitable configuration was certified, and consulting that knowledge changed the result.
+
+The stronger research question is whether routing prior evidence into decisions prevents repeats without excessive reading or delay. One retrospective incident cannot prove that. **Brian’s decision:** allow a short case study alongside the correction; reserve any claim of a memory breakthrough for a prospective comparison that changes agent behavior.
+
+--- THE QUEUE HEADER: decisions, standing rules, current goal
+# team/QUEUE.md — pull-based task queue (RETRO-1 adopted, 2026-09-12)
+
+Claim protocol: edit this file to add `claimed: <yourname> <time>` to a row
+(first writer wins; GiLMore adjudicates collisions). On completion, write the
+required artifact, then mark the row `done: <artifact path>`. Never start a
+row whose cost cap you cannot respect.
+
+RE-MEASUREMENT RULE (Brian, 2026-09-16, standing, every sprint): a row that
+re-measures anything must cite the prior measurement, or state in writing that
+none exists. A re-run that does not say what it expects to differ from is not
+a measurement, it is a guess with a number attached.
+
+SELF-ORGANIZATION (Brian, 2026-09-12): an idle seat with no fitting row does
+NOT wait for GiLMore — it ORIGINATES one: write the row (type-tagged:
+build/verify/research/review/write/ops; user-story line Brian can read; cost
+cap), mark it `auto: <seat>`, and claim it in the same edit. Veto-after-start,
+not approval-before-start: GiLMore may kill a row mid-flight, but nobody asks
+permission to work. WIP limit: one row per seat. Every originated row names a
+second seat as verifier (pairing) — verification work is built-in load
+balancing, and no claim is self-certified.
+
+## THE BIGGER PICTURE — read before proposing anything (Brian, 2026-09-16)
+
+Four sprints of goal blocks cited the previous sprint's demo and nothing else.
+The project's own scoping existed the whole time and was never referenced, which
+is how a project drifts while each sprint looks sensible. These are the
+documents a proposal must place itself against:
+
+- **`MISSION-20260912.md`** — Brian's mission. Written to be read at every turn
+  start.
+- **`team/PORTFOLIO-CHARTER-draft.md`** — **APPROVED 2026-09-16** with a stated
+  caveat: several portions predate the three-seat furlough, the local conductor
+  and the one-request-in-flight contract. Approved for its structure and its
+  named systems, NOT for the roster or concurrency it assumes. A reconciliation
+  pass naming the stale sections is required follow-up.
+- **`team/PHASE2_ROADMAP.md`** — the roadmap, symlinked here from
+  `implementer/repo/research/` because it sat in a worktree where no seat looks.
+  Brian, 2026-09-16: "I am still quite invested in the phase2_roadmap and it
+  should not be overlooked again." Treat that as standing instruction.
+- **Frozen goals G1-G5** — conflict handling, supersession, invocation,
+  material outcome, continuity. Stated in `team/CANDIDATE-CARD-HANDBOOK.md`,
+  which is a poor home for them.
+
+Every proposed sprint goal names the frozen goal it advances, the roadmap item
+it advances, or says plainly that it advances neither and why it is still worth
+a sprint. Instrument repair is usually the honest answer in that last case.
+
+## BRIAN'S DECISIONS, 2026-09-16 evening — standing until he says otherwise
+
+**1. PUBLISH THE CORRECTION, NOT A RANKING.** Approved. What goes out is: "we
+reported zeros; the zeros came from the wrong retrieval settings; here are the
+right settings and the different numbers." No claim that one memory system beats
+another. Reasoning, from Astra's review (`team/ASTRA-SPRINT5-REVIEW.md`): with
+ONE record per store, returning everything guarantees a hit, so claude-mem's
+30/30 shows coverage, not selectivity. A ranking becomes publishable only after
+the instrument can make indiscriminate retrieval LOSE.
+
+**2. AFTER 2026-09-20, THE FLEET FITS INSIDE THE OPENCODE GO PLAN BUDGET.**
+Brian's call. The Z.ai free window lapses on the 20th and is not being replaced.
+Plan every row from here so nothing depends on promotional access continuing.
+
+  **CONFIRMED by Brian 2026-09-16:** the ONE-REQUEST-IN-FLIGHT contract is a
+  **Z.ai Lite** property, not an OpenCode Go one — Go is budget-limited, not
+  concurrency-capped. So the slot starvation that cost 435 seconds of corvid's
+  day lifts on its own after the 20th, and "do not schedule both workers on
+  API-heavy rows at once" stops being a constraint on that date. Until then it
+  holds, and it is contractual rather than a knob. After it, SPEND is the
+  binding limit instead — budget per row, not turns in flight. Do not carry the
+  serialisation assumption across the date out of habit.
+
+**3. Our own failure is an incident write-up, not a research result.** Knowledge
+existed, was not consulted, a wrong configuration was certified. Worth a short
+case study beside the correction. A memory-breakthrough claim waits for a
+prospective comparison that changes agent behaviour. One retrospective incident
+proves nothing.
+
+**The planner seat, anvil-oai, is in the window from 2026-09-17** — gpt-6-astra
+via codex-acp 1.12.0, started at 08:00 and stopped at 18:00 with the others.
+**DISPATCH TO IT FOR SPRINT PLANNING ONLY** (Brian, 2026-09-16). It is in
+poller-exclude, so the poller routes no rows, nudges or verdicts to it and it
+will never be auto-assigned as a verifier. It answers a deliberate wake and
+nothing else. It spends Brian's CODEX PLAN, not the free window, so an
+accidental dispatch costs real money where the other three seats do not. Use it
+for the demo's next-sprint proposal, adjudication between competing plans, and
+arguing with a recommendation — not for checking work.
+
+**Astra is also reachable from any seat that can run a shell command:**
+`printf 'question' | ~/.config/agent-deck/astra` — gpt-6-astra, one call, one
+answer. Give it documents rather than a summary, and ask it to ARGUE. It costs
+Brian's Codex plan budget, so use it for planning and adjudication, not routine
+checks. Its Sprint-5 review is `team/ASTRA-SPRINT5-REVIEW.md`.
+
+## SPRINT 6 ROWS UPGRADED BY THE COUNCIL (Brian approved, 2026-09-16 21:2x)
+
+The council's first run confirmed S6-1..S6-3 rather than replacing them - "the
+queue authorizes those rows; it does not establish that they are complete" - and
+then made each one stronger in the same way: **a `check.py` that recomputes the
+claims, instead of `test -f` that only proves a file exists.** The rows I wrote
+earlier could be closed by creating an empty file with the right name. These
+cannot.
+
+What each check must now do:
+- **S6-1** recompute every numeric claim from pinned results, verify the
+  scenario partition totals 60, and confirm the publication receipt names the
+  revision and destination. Also resolve the 19-nonempty vs 37-empty
+  contradiction (it should be 41) and explain the future-dated fixtures.
+- **S6-2** verify hashes, budgets and delivered-record accounting, and run the
+  controls FIRST: return-nothing, return-everything, BM25, plus a labelled
+  **oracle control** that returns the declared helpful records purely to prove
+  the scoring works. Specify truncation before runs so "everything" has a
+  reproducible meaning. Preserve a valid "cannot distinguish" conclusion
+  SEPARATELY from checker failure - an honestly demonstrated limitation is a
+  completed result, not a failed sprint.
+- **S6-3** check phase and gate coverage, resolve every cited artifact, and
+  validate the proposed G4 experiment's required fields. Corvid checks whether
+  citations actually SUPPORT the claims; file existence is not enough.
+
+**One correction to the council's own document.** It states the artifacts sit
+under `/var/home/bmosher/acp-codex/`. That is the codex lane's working
+directory, not the project - an artifact of the deciding seat inheriting its own
+caller's cwd, which is the exact failure the same document warns about two
+paragraphs earlier ("checks must work independently of the caller's HOME and
+working directory"). The real root is
+`/home/bmosher/memory-bake-off/team/`, and the checks above use absolute paths
+for that reason.
+
+Full decision and the three advisories: `team/COUNCIL-20260916-2103/`.
+
+## SPRINT 6 GOAL — publish the correction, then make the test honest
+
+**Goal: get the correction out, and leave the instrument able to fail a system
+that just returns everything.** Three rows, S6-1 to S6-3. Nothing else admitted.
+
+Placed on the map, as the ceremony now requires:
+- S6-1 advances **no frozen goal** — it is publication hygiene for a result
+  already measured, and it is worth a sprint because the wrong number is
+  currently the one on the record.
+- S6-2 advances **G3 invocation** and roadmap **Phase D** (admission discipline),
+  preparing **Phase H** (scope and context budget).
+- S6-3 advances roadmap **durability rules 4-7** and **Decision Gate F**, plus
+
+--- EXTERNAL FINDINGS, in full. These are new and small; read them.
+
+=== EXTERNAL-CORPORA-RECOMMENDATION.md
+# TEAM RECOMMENDATION — external corpora acquisition (our judgement, not the report's)
+
+**Author:** Corvid (`worker-glm-dsh3`), R&D + evidence-integrity
+**Co-sign:** Alice (`worker-glm-dsh`, verification/provenance) — **conditional,
+given 2026-09-13 18:25 UTC** (A1–A3 in §7 required before filing)
+**Date:** 2026-09-13 · **Cost:** $0, synthesis + already-fetched public sources
+**Governance framing (Brian via GiLMore):** the ChatGPT Deep Research report
+(`team/RESEARCH-EXTERNAL-CORPORA-20260913.md`) is **candidate-discovery input
+only**. Its rankings, verdicts and acquisition order are one outside opinion to
+weigh, **not a plan to adopt**. This document evaluates the sources against
+**our** frozen evaluation goals and states the team's own recommendation. Until
+Alice signs, this is a **draft**, not the team's filed position.
+**Evidence base:** `team/CORVID-EXTERNAL-CORPORA-VERIFY-TRIAGE.md` (this
+session's primary-source verification) + `team/ASSAY-EXTERNAL-CORPORA-SPOTCHECK.md`.
+
+## 1. Our frozen goals (the only axes this recommendation scores)
+
+| # | Goal | Where it is frozen | What a source must contain to ground it |
+|---|---|---|---|
+| **G1** | **Conflict handling** — what happens to the OLD truth when two records disagree | `ECOSYSTEM-MAP.md` E-7 / cross-cutting axis C; Gen38 `dynamic_conflict` anchor (`research/MEMCONFLICT_GEN38_FULL_RELEASE.md`); charter row 2 | genuinely conflicting records over the same subject, with the correct resolution externally observable |
+| **G2** | **Supersession** — newer instruction/state replaces older; stale must not win | AGENTS rule ("false merge/supersession must not be rewarded as better retrieval"); agentmemory 418/450 false-supersession finding; invocation `stale_use` + `anachronism_violation` | an explicit "old value → new value" transition in a real workflow, plus a later turn where acting on the old value is observably wrong |
+| **G3** | **Invocation** — the system notices, proactively, before the action | `team/DESIGN-INVOCATION-BENCHMARK.md` primary `FBMR_topic` (+ `CBMR`/`stale_use`/`anachronism`) | ordered turns with decision moments, a covering record, and an action deadline the harness can observe |
+| **G4** | **Material outcome** — did the work actually go better with memory | `team/SPEC-OUTCOME-PROTOCOL.md` M1–M4 (time, errors, redundant re-discovery, operator corrections) | matched tasks with a DONE condition and programmatic failure/correction signals |
+| **G5** | **Longitudinal continuity** — cross-session/compaction continuity, durable vs transient | `ECOSYSTEM-MAP.md` E-8; our own pi-lcm line; R2 pilot (`RESET_STATUS.md`); agentmemory/report "do-not-remember" targets | the same project/human across sessions, with a durable decision that must persist and transient state that must decay |
+
+**Scoring rule we add (the report does not):** a source may be cited **only for
+a goal it can ground**. Synthetic autonomous trajectories cannot ground human
+conflict handling, requirement change, or preference persistence; a prompt dump
+cannot ground invocation or outcome. No source gets credit for "coverage" it
+cannot evidence. **Labels carry provenance too (A2):** a goal grounded only by an
+LLM-annotated field must be re-derived from the raw text before it anchors a
+score, and the label's provenance is reported beside it.
+
+## 2. Source × goal evaluation (our matrix)
+
+Legend: **Y** = can ground the goal with the stated evidence; **p** = partial /
+needs curation; **–** = cannot ground; **?** = unverified.
+
+| Source (verified counts) | G1 conflict | G2 supersession | G3 invocation | G4 outcome | G5 continuity | Class | Notes / what it is FOR |
+|---|---|---|---|---|---|---|---|
+| **Internal transcript miner** (Brian's own sessions; correction events) | **Y** — operator corrections, "actually"/negation | **Y** — "I said…" reversals, repeated instruction, env-fact corrections | **Y** — the only source wired to the invocation benchmark's correction events | **Y** — matched tasks already under `SPEC-OUTCOME-PROTOCOL.md` | **Y** — one long project, durable decisions vs transient state | real human | **Tier 0.** Highest goal coverage and the only source with *our* ground truth; already in Sprint-2 goal 2, gated on Brian's pilot read. |
+| **SWE-chat** (5,851 sessions / 2,692,480 conversations / 14,459 commits / 205 repos; ODC-BY; file access `gated: "auto"`) | **Y** — `prompt_pushback` = correction / rejection / failure_report / pacing_complaint / **takeover** / **requirement_change** (card schema) | **Y** — `queue_op_subtype` delivered-vs-discarded, `is_continuation`, interruptions | **p** — decision moments exist but records must be reconstructed from file history | **Y** — commit diffs, code-survival, human-vs-agent attribution; `session_success` (LLM-annotated) | **Y** — `is_continuation`, file-history snapshots, 205 real projects | human transcripts + human commit attribution; **pushback/intent/persona/success labels are LLM-annotated, re-derivable from raw text** | **Tier 1 — the one external acquisition to make.** The only public source spanning all five goals; ground the LLM labels from raw text (A2). |
+| **Wisp** (MIT, n<1K, Claude Code JSONL) | – | p — a config decision vs obsolete process state | – | – | p — multi-hour sessions, one workstation | real human, tiny | **Tier 2 control.** Format/authenticity control (same JSONL as Brian's own); **not** a benchmark source. |
+| **Nebius SWE-rebench** (67,074 / avg 64.3 turns; CC-BY) | – | **Y** — stale early hypotheses must not persist; 64-turn state dependencies | – | **p** — resolved/unresolved + tests, but autonomous | – | synthetic agent | **Tier 2 negative control.** Use to prove the *harm* side (a system that keeps every observation is hurt); never for human conflict/supersession claims. |
+| **MindForge** (1,001; mean 181.6 turns / 177K tokens; synthetic; license/release **?**) | – | **Y** — evidence accumulation + hypothesis revision over hundreds of turns | – | p — buildable submission | – | synthetic agent | **Tier 3 stress.** Long-horizon hypothesis-revision torture test; only after release/license confirmed. |
+| **MEnvData-SWE-Trajectory** (3,872 / 10 languages; Apache-2.0) | – | p — state dependencies | – | p — task instances | – | synthetic agent | **Tier 3 stress.** Polyglot state-dependency control; sample only. |
+| **Open-SWE-Traces** (card 207,489; report's 511,668 **wrong**; CC-BY) | – | p | – | p | – | synthetic agent | **Tier 4 — do not acquire separately.** Family-overlaps Nebius (`SWE-rebench-V2`); the report's count is not the card's. |
+| **DevGPT** (17,913 prompts; no tool traces) | p — human dialogues | p | **–** — no tool traces, cannot ground invocation | **–** | – | real human, prompts only | **Tier 4.** Weak on every goal we score; not worth an acquisition slot. |
+| **Programming by Chat** (11,579 sessions; raw chats excluded) | **?** | **?** | – | – | **?** | real human, privacy-blocked | **Tier 4 / legal gate.** Do not auto-recollect; legal/privacy review first. |
+| SWE-Hero / SWE-smith 66k / SERA (scale) | – | p | – | p | – | synthetic agent | **Tier 4.** Add no new goal coverage; acquire only after the human anchor + dedupe design. |
+
+## 3. Where we diverge from the report (explicitly)
+
+1. **Volume is not a goal.** The report's acquisition order drifts toward the
+   large synthetic corpora; our goals are lifecycle *behaviours*, and a million
+   autonomous rollouts add no new ground truth for G1/G2/G5. We demote them to
+   controls.
+2. **The human anchor is the whole point, not a first step.** The report says
+   this in prose but plans "scale corpora last" only after five autonomous
+   datasets. We invert that: acquire **SWE-chat** (the one real-human
+   multi-goal source) or nothing external as an anchor.
+3. **We require goal-specific ground truth** (the scoring rule in §1). The
+   report's "EXCELLENT" ranks conflate scale with relevance to our eval.
+4. **We add the harm controls as first-class.** Supersession must be measured
+   with `stale_use` / `anachronism` and "do-not-remember" targets; sources that
+   cannot provide a stale/obsolete record cannot test G2.
+5. **We keep our own corpus first.** The internal transcript miner covers all
+   five goals with our ground truth and is under-weighted in the report because
+   it is not public.
+6. **We treat the report's numbers as claims to verify** — done, with a
+   self-correction: its Open-SWE-Traces count is wrong (v1.0 card **207,489**,
+   not 511,668), and its SWE-chat **annotation vocabulary was right** — my
+   first-pass paper-only check missed the card's `prompt_pushback` schema
+   (`takeover`, `requirement_change`), and Alice's co-sign review (A1) caught
+   the error.
+
+## 4. Our recommendation (sequence + rationale)
+
+- **Tier 0 — proceed (internal, no external acquisition):** the transcript
+  miner's correction-event corpus, per Sprint-2 goal 2, gated on Brian's pilot
+  read. Feeds G1–G5 and both new benchmarks.
+- **Tier 1 — the decision to ask Brian for:** **SWE-chat file access** — ODC-BY,
+  `gated: "auto"` (accept the terms with an **authenticated account**, not a
+  manual grant), repseudonymize, pin a snapshot (living dataset). This is the
+  only external acquisition that advances all five goals; ground its
+  LLM-annotated labels from raw text (A2). If access is refused, the external
+  anchor is **not** replaced by scale corpora; the team runs on Tier 0 +
+  controls and says so.
+- **Tier 2 — acquire now, $0/free, as controls only:** **Nebius SWE-rebench**
+  (stale-hypothesis harm control) and **Wisp** (format/authenticity control).
+  Both public; neither may be cited for human G1/G2/G5.
+- **Tier 3 — design-only until licensed:** **MindForge** (long-horizon
+  hypothesis-revision stress) and a sample of **MEnvData-SWE-Trajectory**
+  (polyglot state). Confirm MindForge release/license first; these produce
+  stress items, not scores.
+- **Tier 4 — do not acquire now:** Open-SWE-Traces (overlap + wrong count;
+  v1.0 card **207,489**, with v1.1/v1.2 and a 151k post-filter count also
+  published — pin the version if ever used), DevGPT (no tool traces),
+  Programming by Chat (legal), SWE-Hero/SWE-smith/SERA (no new coverage).
+  Revisit only if a goal gap appears that a family representative cannot fill.
+- **Dedupe rule:** acquire at most **one representative per dataset family**
+  (keyed on repo+issue/commit), plus the one human anchor. Never sum counts.
+- **Corpus-item rule:** keep the raw event stream; derive annotations
+  separately; **carry label provenance** (human vs LLM-annotated) on every
+  derived annotation; preserve supersession → superseded-by links and
+  `valid_from/to`; never precompute memory as facts only (the report's own good
+  design point — accepted).
+
+## 5. What we will NOT do (Phase-B discipline)
+
+No score import; no leaderboard/ranking of systems from these corpora; no
+winner declarations; no synthetic corpus cited for human lifecycle claims; no
+scale acquisition before the human anchor and a dedupe key; no recollection of
+privacy-blocked corpora without a legal review.
+
+## 6. Open decisions / blockers
+
+1. **Brian:** SWE-chat file access — `gated: "auto"`, so the ask is **"confirm
+   the team HF account can accept the gate and download"** plus the snapshot
+   pin (the gating decision); if yes, the repseudonymization plan is ours.
+2. **Brian:** transcript-miner pilot read (Tier 0 gate).
+3. **Owner (Corvid/Alice):** confirm MindForge official release + license.
+4. **Legal/privacy:** Programming by Chat before any use.
+5. **Co-sign:** Alice has co-signed (A1–A4 folded; see §7) — this is now the
+   team's filed position.
+
+## 7. Co-sign block
+
+- **Corvid:** recommend as above — goal-first, human anchor first, controls
+  explicit, no score import. `2026-09-13 18:20 UTC`.
+- **Alice:** **conditional co-sign** `2026-09-13 18:25 UTC` (A1–A3 required, A4
+  minor); detail in `team/ALICE-EXTERNAL-CORPORA-COSIGN.md`.
+
+## Rev 2 (2026-09-13) — Alice's A1–A4 folded; co-sign **unconditional**
+
+- **A1 (factual, corrected):** the card documents `prompt_pushback` =
+  correction / rejection / failure_report / pacing_complaint / **takeover** /
+  **requirement_change** / non_pushback, so the report's SWE-chat vocabulary was
+  right; the "overstated" clause is removed from this note and from
+  `CORVID-EXTERNAL-CORPORA-VERIFY-TRIAGE.md` (my paper-only check missed the
+  card schema).
+- **A2 (grounding):** SWE-chat's G1/G2 grounding is now stated as human
+  transcripts + human commit attribution with **LLM-annotated** pushback/queue
+  labels (re-derivable from raw text); the scoring rule and corpus-item rule
+  carry the label-provenance requirement.
+- **A3 (gating refined):** `gated: "auto"` on both `SALT-NLP/SWE-chat` and the
+  `cfahlgren1` mirror; data endpoint 401. Tier 1's blocker stands; the Brian ask
+  is reframed as "authenticated account accepts the gate + snapshot pin".
+- **A4 (version pin):** Open-SWE-Traces correction carries **v1.0 = 207,489**
+  (v1.1/v1.2 and the 151k post-filter count noted).
+
+— **Corvid** (`worker-glm-dsh3`). Alice co-sign folded; **filed as the team's
+position**. $0.
+
+=== EXTERNAL-KNOWLEDGEDRIFT-20260916.md
+# External benchmark: KnowledgeDrift v1 — candidate discovery, 2026-09-16
+
+**Found by Brian** on r/AIMemory, which he flagged as a resource worth watching.
+**Source post:** `reddit.com/r/AIMemory/comments/1wg074z/` (fetched via nanobrowser;
+Reddit refuses WebFetch). **Repo:** `github.com/techtheist/KnowledgeDrift`, **MIT**.
+
+**Status: CANDIDATE DISCOVERY ONLY. No score imported.** This card records what
+the benchmark claims and what it would be useful for. It does not adopt its
+numbers, for a reason stated at the bottom.
+
+## What it is
+
+Eight scored families, plus an optional ninth:
+
+| family | what it tests |
+|---|---|
+| Retrieval | finds facts by own words, paraphrase, oblique reference, file path |
+| **Abstention** | **correctly DECLINES on an unwritten subject, or a written subject with no note** |
+| Currency | current state after a re-decision, and the complete history |
+| Contradiction | flags disagreement between notes for human judgement |
+| Drift | detects stale siblings imported without supersession |
+| Deletion | purged notes stay gone; released notes return WITH a warning |
+| Rationale | retrieves the reasoning behind a decision |
+| Temporal | respects a ±5 day window in scoped queries |
+| Authority (optional) | endorsement hierarchy: retrieval < assistant < user < supervisor |
+
+**Scale:** 1,500 facts / 9,008 tasks at seed 1. Three-seed stability runs use
+500 facts at seeds 1–3. Worlds are frozen under `worlds/v2/` and regenerate
+from seed.
+
+**Scoring, out of 1,000:** family points = Σ(pass rate × 100) over the eight
+families (0–800); signal score = mean token relevance (0–100); token score =
+logarithmic efficiency, 200 tokens ideal and 3,000 penalised (0–100).
+
+## Why it matters to us, in order of importance
+
+**1. ABSTENTION IS THE GAP WE IDENTIFIED TONIGHT.** The council's S6-2 exists
+because our invocation instrument cannot fail a firehose: with one record per
+store, returning everything guarantees a hit, so claude-mem's 30/30 measures
+coverage rather than selectivity. KnowledgeDrift makes "should have retrieved
+nothing" a first-class scored family — a question about a subject never written,
+and a question about a written subject with no note. That is precisely the
+control we were about to build from scratch.
+
+**2. IT INDEPENDENTLY REPRODUCES OUR HEADLINE.** Its table has **TF-IDF at 580,
+vector RAG at 359, Mem0 at 348.** A lexical baseline beating the memory systems
+is the same shape as our own 2026-09-16 result (bm25 25/30 against claude-mem
+and pi-lcm at 0/30 raw, 30/30 and 7/30 corrected). Two instruments, built by
+different people, ranking a keyword baseline above memory products. That is
+worth far more than either result alone.
+
+**3. ITS FAMILIES MAP ONTO OUR FROZEN GOALS.** Contradiction → **G1** conflict
+handling. Currency, Drift, Temporal → **G2** supersession. Abstention → the
+selectivity property G3 invocation needs and our corpus lacks. Deletion and
+Rationale have no G-equivalent and may be gaps in our own goal set rather than
+extras in theirs.
+
+## The caveat, which is the whole reason this is a card and not an adoption
+
+**The benchmark's author has a system in its own ranking, and it wins.** The
+repo lists "reference Engram" at 718, the top score, and the Reddit post leads
+with "Engram Alpha: 80%". Under our own standing rule that is a **vendor-adjacent
+claim**, in the same class as Mem0's 92.5% self-reported LoCoMo figure against
+Memobase's independently measured 66.88% for the same system.
+
+**The numbers also disagree with themselves.** The post says Mem0 55% / score 47
+and Engram Alpha 80% / 459; the repo table says Mem0 348 and Engram 718. Same
+project, two different scales, no reconciliation offered. Cite neither until
+that is explained.
+
+So: **adopt the STRUCTURE, verify any SCORE ourselves.** The eight families and
+especially the abstention construction are a design contribution we can use
+immediately. The leaderboard is a claim to be re-derived on our own instrument,
+if we care about it at all.
+
+## What this changes tomorrow
+
+**S6-2 must cite this before building its corpus** — the standing rule is that a
+row which re-measures anything cites the prior measurement or states that none
+exists. One now exists, with frozen worlds under an MIT licence. The row should
+say explicitly whether it is:
+
+- **reusing** KnowledgeDrift's abstention construction (cheapest, and it is the
+  exact control we lack),
+- **running our engines against its frozen worlds** to get a second instrument
+  on the same systems, or
+- **building its own** anyway, with a stated reason why theirs does not fit.
+
+Any of the three is defensible. Not knowing it exists is not.
+
+**Also worth a look:** the post's discussion proposes adding **source authority**
+and **evidence provenance** as dimensions. That is our own week in miniature —
+recorded knowledge that was unreachable, and a verifier certifying arithmetic
+rather than validity.
+
+--- THE R&D REGISTER: an INDEX, not the contents.
+
+You are a SEAT WITH FILE ACCESS. Open what is relevant before answering
+and cite what you read. This index exists because pasting it all would
+not fit, and because pasting is not what went wrong: on 2026-09-13 the
+pi-lcm raw-vs-tool-level finding was written into ECOSYSTEM-MAP.md, and
+three days later S4-12 re-derived a wrong answer from it having cited
+nothing. The file was there. Nobody opened it. Do not repeat that.
+
+  team/ECOSYSTEM-MAP.md  (86 KB) - the register of prior
+  measurements. IF YOUR PROPOSAL RE-MEASURES ANYTHING, the prior number
+  is probably in here. Its section headings:
+    1:# ECOSYSTEM-MAP — the memory-systems problem space, structured for verification
+    20:## 1. Evidence tags (the only vocabulary this map uses for truth)
+    31:## 2. Taxonomy — approach families (the stable layer)
+    52:## 3. Solution clusters — the charter systems, slotted
+    88:## 4. Verified-vs-claimed landscape (the ledger fills this section)
+    121:## 5. Gaps and interesting novelties (skeleton; ledger may fill/refute)
+    144:## 6. Implications for our own line
+    162:## 7. Convergence contract with Corvid's claims ledger
+    180:## Change log
+    292:## §4 addendum — CLAIMED items, ledger pointers (discovery pass)
+    313:## §4 addendum 2 — CLASSIFICATION FOLD (ledger classification landed; row 17)
+    327:### The fold, per slot
+    339:### §4 CLAIMED list, re-issued (v2 — supersedes the skeleton list, per ledger)
+    349:### Portfolio-shape flags (the actual point of this fold)
+    390:## §4 addendum 2a — SECOND FOLD: rows 20/21 + builder provenance (17:5x)
+    419:## §4 addendum 2b — THIRD FOLD: collision register class moves (18:0x)
+    436:## §4 addendum 2c — FOURTH FOLD: S-07's anchor number gets a second driver (18:1x)
+    464:## §4 addendum 2d — FIFTH FOLD: the pins close; the loop closes (18:2x)
+    482:## §4 addendum 2g — EIGHTH FOLD: membukkit's recipe vs its missing run; a second null-side agreement (saved 19:18 per mtime)
+    497:## §4 addendum 2h — NINTH FOLD: the Mem0 supernode is complete; the freeze tool exists (19:3x)
+    510:## §4 addendum 2i — TENTH FOLD: the category collision is resolved against the dataset; the 0.955 saga ends (19:4x)
+    534:## §4 addendum 2j — ELEVENTH FOLD: the ≈$9 question is ruled; the prices are confirmed (19:5x)
+    553:## §4 addendum 2e — SIXTH FOLD: Habitus pointer amended (ambiguity, not badness) (18:3x)
+    584:## §4 addendum 2f — SEVENTH FOLD: memobase reproduces exactly; the supernode's first casualty (18:5x)
+    599:## Addendum index — cold-reader navigation (appended ~20:09, after ten addenda in one day)
+    727:## §4 addendum 2l — THIRTEENTH FOLD: "independently reproduced" resolved to co-authorship; habitus provenance corroborated (20:4x)
+    740:## §4 addendum 2m — FOURTEENTH FOLD: the anchor triple is second-driver-verified (21:1x)
+    805:## §4 addendum 2n — FIFTEENTH FOLD: hindsight's marketed numbers reproduce; 2l's divergence reframed (20:5x)
+    830:## §4 addendum 2o — SIXTEENTH FOLD: the independence finding double-confirmed; AMB's table receipted (21:0x)
+    861:## §4 addendum 2q — EIGHTEENTH FOLD: the MemOS merge passes second seat; Supermemory slotted (2026-09-13 00:4x)
+    875:## §4 addendum 2r — EIGHTEENTH FOLD, CATCH-UP (the 01:29→04:21 overnight session; 04:21)
+    891:## §4 addendum 2s — NINETEENTH FOLD: leakage closed end-to-end; the goal-5 harvest completes; the gate card is executable (2026-09-13 ~21:4x)
+
+  team/CANDIDATE-CARD-*.md - one per benchmark or system under study:
+    CANDIDATE-CARD-ACM.md  -  # Candidate card — ACM (Agentic Context Management for long-horizon tasks)
+    CANDIDATE-CARD-BELIEFSHIFT.md  -  # Candidate card — BeliefShift (longitudinal belief consistency and opinion drift)
+    CANDIDATE-CARD-CODECRACER.md  -  # Candidate card — CodeTracer / CodeTraceBench (traceable agent states, failure-onset loca
+    CANDIDATE-CARD-COMPACTION-CLIFF.md  -  # Candidate card — Compaction Cliff / Knowledge Triage (typed compaction safety)
+    CANDIDATE-CARD-CSTM-BENCH.md  -  # Candidate card — CSTM-Bench (cross-session threats, detection, serving-stability metric)
+    CANDIDATE-CARD-EVOMEMBENCH.md  -  # Candidate card — EvoMemBench (self-evolving agent memory)
+    CANDIDATE-CARD-HALUMEM.md  -  # Candidate card — HaluMem (operation-level memory hallucination)
+    CANDIDATE-CARD-HANDBOOK.md  -  # Candidate card — HANDBOOK.md (long-context agentic instruction following)
+    CANDIDATE-CARD-LONGMEMEVAL-V2.md  -  # Candidate card — LongMemEval-V2 (environment-experience memory for web agents)
+    CANDIDATE-CARD-MEMOPS.md  -  # Candidate card — MemOps (lifecycle memory operations)
+    CANDIDATE-CARD-MEMORYARENA.md  -  # Candidate card — MemoryArena (multi-session Memory–Agent–Environment gym)
+    CANDIDATE-CARD-MEMSEC-GATEMEM.md  -  # Candidate card — MemSecBench + GateMem (memory security & governance)
+    CANDIDATE-CARD-MEMTX.md  -  # Candidate card — MemTX (transactional belief commit for stateful agent memory)
+    CANDIDATE-CARD-PRECISIONMEMBENCH.md  -  # Candidate card — PrecisionMemBench (precision-aware retrieval benchmark)
+    CANDIDATE-CARD-STALE-SUPERSEDE.md  -  # Candidate card — STALE + Supersede (staleness / memory-update gap)
+    CANDIDATE-CARD-STATEMEMBENCH.md  -  # Candidate card — StateMemBench (state tracking over superseded values)
+    CANDIDATE-CARD-STREAMMEMBENCH.md  -  # Candidate card — StreamMemBench (streaming evidence→use→reuse)
+    CANDIDATE-CARD-SWE-TOGETHER.md  -  # Candidate card — SWE-Together (interactive multi-turn coding sessions with correction re
+
+  team/RD-THREADS.md (741 KB) - the standing R&D pool. Too large to
+  paste. It holds per-seat threads and the muse ideation batches. Grep it
+  for your subject before proposing new discovery work.

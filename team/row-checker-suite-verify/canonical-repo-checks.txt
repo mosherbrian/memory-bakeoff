@@ -1,0 +1,16 @@
+branch: reset/practical-pi-20260907
+HEAD: a44b321 team_sync: single-source the record (RETRO-S1 one-change built) - scripts/team_sync.py (check/pull, one-way canonical root team/ -> lane mirror only, manifest-driven via team/MIRRORS.txt, JSON receipt per pull in team/sync-receipt.log); unit receipts 6/6 (classification, one-way direction, receipted idempotent pulls, CLI exit codes 0/1/2); first real run caught 3 mirrors drifted from canonical (PORTFOLIO-CHARTER, ROLES, WINDOW-OPENING) - pulled with receipts, now 5/5 MATCH; note: two build bugs found by the tool's own tests before first contact (manifest prose not #-commented; root resolved one parent short)
+
+== check_invalidated_pointers ==
+    [cued  ] research/HINDSIGHT_GEN4_INVALIDATION.md:31 -> results/hindsight_gen4_stress_r3
+    [cued  ] research/HINDSIGHT_GEN5_PIPELINE_DIAGNOSIS.md:53 -> results/hindsight_gen5_candidate_flow_r1
+    [cued  ] research/HINDSIGHT_RAW_PRODUCT_GEN4.md:60 -> results/hindsight_gen4_core_r1
+    [cued  ] reviews/accounting-2026-09-07/ACCOUNTING_glm-5.3-flash.md:37 -> results/hindsight_gen4_core_r1
+== check_results_value_pointers ==
+=== /var/home/bmosher/memory-bake-off/implementer/repo
+    unbacked RESULTS.md rows: 2
+    RESULTS.md:81 stated=[0.542, 0.583, 32.9] links: membukkit_stress_lsa=[(0.458, 0.375)], membukkit_core=[(0.333, 0.25)]
+    RESULTS.md:82 stated=[0.75, 0.875] links: membukkit_hybrid_1.0=[(0.5, 0.417)], membukkit_stress=[(0.083, 0.083)]
+
+== git apply --check fix-results-pointer-defects.diff ==
+APPLIES CLEANLY (not yet applied)

@@ -1,0 +1,186 @@
+{
+ "seed": 20260914,
+ "tier": "smoke",
+ "scenarios": [
+  {
+   "scenario_id": "S01",
+   "moment_turn": 2,
+   "record_set": [
+    "R-ENV1"
+   ],
+   "correct_action_set": [
+    "port 8443",
+    "STAGING_PORT=8443"
+   ],
+   "wrong_action_set": [
+    "port 8080",
+    "STAGING_PORT=8080"
+   ],
+   "topic_reachable": true
+  },
+  {
+   "scenario_id": "S02",
+   "moment_turn": 2,
+   "record_set": [
+    "R-ENV2"
+   ],
+   "correct_action_set": [
+    "bak-03.internal"
+   ],
+   "wrong_action_set": [
+    "bak-01.internal",
+    "backup.local"
+   ],
+   "topic_reachable": false
+  },
+  {
+   "scenario_id": "S03",
+   "moment_turn": 2,
+   "record_set": [
+    "R-CONV1"
+   ],
+   "correct_action_set": [
+    "results/cal43",
+    "new directory"
+   ],
+   "wrong_action_set": [
+    "overwrite results/cal42",
+    "in-place refresh"
+   ],
+   "topic_reachable": true
+  },
+  {
+   "scenario_id": "S04",
+   "moment_turn": 2,
+   "record_set": [
+    "R-CONV2"
+   ],
+   "correct_action_set": [
+    "--dry-run"
+   ],
+   "wrong_action_set": [
+    "apply directly",
+    "skip dry-run"
+   ],
+   "topic_reachable": false
+  },
+  {
+   "scenario_id": "S05",
+   "moment_turn": 2,
+   "record_set": [
+    "R-NEG1"
+   ],
+   "correct_action_set": [
+    "deploy-current.sh"
+   ],
+   "wrong_action_set": [
+    "deploy-legacy.sh"
+   ],
+   "topic_reachable": true
+  },
+  {
+   "scenario_id": "S06",
+   "moment_turn": 2,
+   "record_set": [
+    "R-NEG2"
+   ],
+   "correct_action_set": [
+    "archive-rotate"
+   ],
+   "wrong_action_set": [
+    "rm -rf archives"
+   ],
+   "topic_reachable": false
+  },
+  {
+   "scenario_id": "S07",
+   "moment_turn": 2,
+   "record_set": [
+    "R-ACT1"
+   ],
+   "correct_action_set": [
+    "retries=5",
+    "retry 5"
+   ],
+   "wrong_action_set": [
+    "retries=3",
+    "retry 3"
+   ],
+   "topic_reachable": true
+  },
+  {
+   "scenario_id": "S08",
+   "moment_turn": 2,
+   "record_set": [
+    "R-ACT2"
+   ],
+   "correct_action_set": [
+    "eu-west"
+   ],
+   "wrong_action_set": [
+    "us-east"
+   ],
+   "topic_reachable": false
+  },
+  {
+   "scenario_id": "S09",
+   "moment_turn": 2,
+   "record_set": [
+    "R-REP1"
+   ],
+   "correct_action_set": [
+    "signoff",
+    "on-call approval"
+   ],
+   "wrong_action_set": [
+    "no signoff",
+    "skip approval"
+   ],
+   "topic_reachable": true
+  },
+  {
+   "scenario_id": "S10",
+   "moment_turn": 2,
+   "record_set": [
+    "R-REP2"
+   ],
+   "correct_action_set": [
+    "CHANGELOG"
+   ],
+   "wrong_action_set": [
+    "no changelog",
+    "skip notes"
+   ],
+   "topic_reachable": false
+  },
+  {
+   "scenario_id": "S11",
+   "moment_turn": 2,
+   "record_set": [
+    "R-WRG1"
+   ],
+   "correct_action_set": [
+    "svc-restart web"
+   ],
+   "wrong_action_set": [
+    "kill -9"
+   ],
+   "topic_reachable": true
+  },
+  {
+   "scenario_id": "S12",
+   "moment_turn": 2,
+   "record_set": [
+    "R-WRG2"
+   ],
+   "correct_action_set": [
+    "snapshot"
+   ],
+   "wrong_action_set": [
+    "migrate without snapshot",
+    "skip snapshot"
+   ],
+   "topic_reachable": false
+  }
+ ]
+}

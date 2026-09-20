@@ -1,0 +1,66 @@
+--- a/src/memory_bakeoff/providers/bm25.py
++++ b/src/memory_bakeoff/providers/bm25.py
+@@ -20,7 +20,7 @@
+     name = "bm25"
+     raw_experiment_class = "baseline"
+     product_experiment_class = "baseline"
+-    capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=True, supports_as_of=True, notes="Pure-Python BM25 baseline. Uses structured as-of cutoff when supplied; scope must be resolved from query text.")
++    capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=False, supports_as_of=True, notes="Pure-Python BM25 baseline. Uses structured as-of cutoff when supplied; scope must be resolved from query text.")
+ 
+     def __init__(self, k1: float = 1.5, b: float = 0.75):
+         super().__init__()
+--- a/src/memory_bakeoff/providers/dense.py
++++ b/src/memory_bakeoff/providers/dense.py
+@@ -15,7 +15,7 @@
+     name = "dense_lsa"
+     raw_experiment_class = "baseline"
+     product_experiment_class = "baseline"
+-    capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=True, supports_as_of=True, notes="Offline deterministic dense LSA baseline; not a pretrained sentence embedding model. Uses structured as-of cutoff when supplied; scope must be resolved from query text.")
++    capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=False, supports_as_of=True, notes="Offline deterministic dense LSA baseline; not a pretrained sentence embedding model. Uses structured as-of cutoff when supplied; scope must be resolved from query text.")
+ 
+     def __init__(self, dimensions: int = 32):
+         super().__init__(); self.dimensions=dimensions; self.docs=[]; self.vectorizer=None; self.svd=None; self.matrix=None
+--- a/src/memory_bakeoff/providers/tfidf.py
++++ b/src/memory_bakeoff/providers/tfidf.py
+@@ -24,7 +24,7 @@
+     product_experiment_class = "baseline"
+     capabilities = ProviderCapabilities(
+         raw_ingest=True,
+-        product_ingest=True,
++        product_ingest=False,
+         supports_as_of=True,
+         notes="Sparse word/bigram TF-IDF cosine baseline; deterministic and no pretrained model.",
+     )
+--- a/src/memory_bakeoff/providers/hybrid.py
++++ b/src/memory_bakeoff/providers/hybrid.py
+@@ -13,7 +13,7 @@
+     name = "hybrid_rrf"
+     raw_experiment_class = "baseline"
+     product_experiment_class = "baseline"
+-    capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=True, supports_as_of=True, notes="BM25 + dense LSA fused with reciprocal-rank fusion.")
++    capabilities = ProviderCapabilities(raw_ingest=True, product_ingest=False, supports_as_of=True, notes="BM25 + dense LSA fused with reciprocal-rank fusion.")
+ 
+     def __init__(self, rrf_k: int = 60):
+         super().__init__(); self.rrf_k=rrf_k; self.bm=BM25Provider(); self.dense=DenseLSAProvider()
+--- a/src/memory_bakeoff/providers/external.py
++++ b/src/memory_bakeoff/providers/external.py
+@@ -440,7 +440,7 @@
+ 
+ class AgentMemoryProvider(MemoryProvider):
+     name="agentmemory"
+-    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=True,service_required=True,notes="Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop.")
++    capabilities=ProviderCapabilities(raw_ingest=True,product_ingest=False,service_required=True,notes="Targets rohitg00/agentmemory REST API; its coding-agent-life eval uses /remember + /smart-search without an LLM in the retrieval loop.")
+     def __init__(self,base_url=None):
+         super().__init__(); self.base=(base_url or os.getenv("AGENTMEMORY_URL","http://127.0.0.1:3111")).rstrip("/"); self.project=os.getenv("AGENTMEMORY_PROJECT") or f"memory-bakeoff-{uuid.uuid4().hex[:8]}"; self.agent_id=os.getenv("AGENTMEMORY_AGENT_ID"); self._native_record_ids={}; self._ingest_trace=[]
+     def _headers(self):
+--- a/tests/test_preflight_hardening.py
++++ b/tests/test_preflight_hardening.py
+@@ -19,6 +19,8 @@
+     assert PROVIDERS["habitus"]().experiment_class("raw") == "controlled_core"
+     assert PROVIDERS["habitus"]().experiment_class("product") == "controlled_core"
+     assert PROVIDERS["habitus"]().capabilities.product_ingest is False
++    for _p in ("bm25", "dense_lsa", "tfidf_cosine", "hybrid_rrf", "agentmemory"):
++        assert PROVIDERS[_p]().capabilities.product_ingest is False, _p  # no product path; CORVID-PRODUCT-PATH-CENSUS.md
+     assert PROVIDERS["membukkit_core_lsa"]().experiment_class("raw") == "controlled_core"
+     assert PROVIDERS["membukkit_core_lsa"]().experiment_class("product") == "controlled_core"
+     assert PROVIDERS["membukkit"]().experiment_class("raw") == "raw_product"

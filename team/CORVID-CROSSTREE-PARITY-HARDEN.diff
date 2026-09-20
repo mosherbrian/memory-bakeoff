@@ -1,0 +1,53 @@
+diff --git a/scripts/probe_crosstree_parity.py b/scripts/probe_crosstree_parity.py
+index 7a6b0a4..f84e928 100644
+--- a/scripts/probe_crosstree_parity.py
++++ b/scripts/probe_crosstree_parity.py
+@@ -11,6 +11,7 @@ Exit 0 = identical; exit 1 = divergence listed (a finding, not a verdict).
+ Unwired: not in meta-guard/map; hardening is an owner/QUEUE decision.
+ """
+ import json
++import os
+ import subprocess
+ import sys
+ 
+@@ -39,7 +40,6 @@ def census(tree):
+ 
+ 
+ def golden(tree):
+-    import os
+     env = dict(os.environ)
+     env["PYTHONPATH"] = "src"
+     p = subprocess.run([sys.executable, "-c", FIXTURE],
+@@ -47,9 +47,23 @@ def golden(tree):
+     return p.stdout.strip()
+ 
+ 
++def preflight(trees):
++    if not trees:
++        print("missing prerequisite: no tree arguments")
++        return False
++    for t in trees:
++        if not os.path.isdir(t):
++            print(f"declared tree missing: {t}")
++            return False
++    return True
++
++
+ def self_test():
+     assert census_test_hook() == "hook-ok"
+     assert json.loads(json.dumps(GOLDEN, sort_keys=True)) == GOLDEN
++    assert preflight([]) is False
++    assert main([]) == 1
++    assert main(["/nonexistent/tree-for-self-test"]) == 1
+     print("self-test: PASS")
+     return 0
+ 
+@@ -59,6 +73,8 @@ def census_test_hook():
+ 
+ 
+ def main(trees):
++    if not preflight(trees):
++        return 1
+     findings = 0
+     cens = {t: census(t) for t in trees}
+     base = trees[0]

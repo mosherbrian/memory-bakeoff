@@ -1,0 +1,76 @@
+{
+ "finding": "At the declared 600-char door on the same 5 frozen items and adapters, rung 2's query-adjacent load (>= 20815 bytes/item against rung 1's declared 20000, chunks sharing each item's query vocabulary): bm25 presence 1.00 -> 1.00 -> 0.20, irrelevant bytes 0 -> 0 -> 480; pi_lcm_toollevel presence 0.20 -> 0.20 -> 0.00, irrelevant bytes 0 -> 0 -> 113; claude_mem_chroma_lsa_no_recency presence 1.00 -> 1.00 -> 0.60, irrelevant bytes 126 -> 126 -> 270 (each cell reads normal -> normal -> pressure: rung 1, rung 2 unloaded, rung 2 loaded). Reach: bm25: a piece of the load reached the door on 4 of 5 items; pi_lcm_toollevel: a piece of the load reached the door on 1 of 5 items; claude_mem_chroma_lsa_no_recency: a piece of the load reached the door on 2 of 5 items. The load competed for relevance by declaration; what that competition did to the door is what the rung-2 cells above show. The two numbers stay separate: evidence presence says was-it-handed, irrelevant delivered bytes says how much came with it.",
+ "prior": "rung 1: team/S8-DOOR/verdict.json and team/S8-DOOR/results.jsonl, VERIFIED PASS 2026-09-18; its cells are quoted verbatim in rung1 and re-measured here as rung2 under the harsher query-adjacent load declared in declaration.json",
+ "budget_chars": 600,
+ "per_adapter": {
+  "bm25": {
+   "rung1": {
+    "normal": {
+     "helpful_evidence_presence": 1.0,
+     "irrelevant_delivered_bytes": 0.0
+    },
+    "pressure": {
+     "helpful_evidence_presence": 1.0,
+     "irrelevant_delivered_bytes": 0.0
+    }
+   },
+   "rung2": {
+    "normal": {
+     "helpful_evidence_presence": 1.0,
+     "irrelevant_delivered_bytes": 0.0
+    },
+    "pressure": {
+     "helpful_evidence_presence": 0.2,
+     "irrelevant_delivered_bytes": 480.0
+    }
+   },
+   "load_reached_door": 4
+  },
+  "pi_lcm_toollevel": {
+   "rung1": {
+    "normal": {
+     "helpful_evidence_presence": 0.2,
+     "irrelevant_delivered_bytes": 0.0
+    },
+    "pressure": {
+     "helpful_evidence_presence": 0.2,
+     "irrelevant_delivered_bytes": 0.0
+    }
+   },
+   "rung2": {
+    "normal": {
+     "helpful_evidence_presence": 0.2,
+     "irrelevant_delivered_bytes": 0.0
+    },
+    "pressure": {
+     "helpful_evidence_presence": 0.0,
+     "irrelevant_delivered_bytes": 113.4
+    }
+   },
+   "load_reached_door": 1
+  },
+  "claude_mem_chroma_lsa_no_recency": {
+   "rung1": {
+    "normal": {
+     "helpful_evidence_presence": 1.0,
+     "irrelevant_delivered_bytes": 125.6
+    },
+    "pressure": {
+     "helpful_evidence_presence": 1.0,
+     "irrelevant_delivered_bytes": 115.2
+    }
+   },
+   "rung2": {
+    "normal": {
+     "helpful_evidence_presence": 1.0,
+     "irrelevant_delivered_bytes": 125.6
+    },
+    "pressure": {
+     "helpful_evidence_presence": 0.6,
+     "irrelevant_delivered_bytes": 270.2
+    }
+   },
+   "load_reached_door": 2
+  }
+ }
+}

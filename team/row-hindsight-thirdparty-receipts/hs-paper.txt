@@ -1,0 +1,113 @@
+Hindsight Technical Report
+
+H INDSIGHT IS 20/20: B UILDING AGENT M EMORY
+THAT R ETAINS , R ECALLS , AND R EFLECTS
+Chris Latimer♣ , Nicoló Boschi♣ , Andrew Neeser♢ , Chris Bartholomew♣ ,
+Gaurav Srivastava♡ , Xuan Wang♡ , Naren Ramakrishnan♡
+♣
+
+Vectorize.io, USA
+The Washington Post, USA
+♡
+Virginia Tech, USA
+
+arXiv:2512.12818v1 [cs.CL] 14 Dec 2025
+
+♢
+
+A BSTRACT
+Agent memory has been touted as a dimension of growth for LLM-based applications, enabling agents that can accumulate experience, adapt across sessions,
+and move beyond single-shot question answering. The current generation of agent
+memory systems treats memory as an external layer that extracts salient snippets
+from conversations, stores them in vector or graph-based stores, and retrieves top-k
+items into the prompt of an otherwise stateless model. While these systems improve
+personalization and context carry-over, they still blur the line between evidence and
+inference, struggle to organize information over long horizons, and offer limited
+support for agents that must explain their reasoning. We present H INDSIGHT, a
+memory architecture that treats agent memory as a structured, first-class substrate
+for reasoning by organizing it into four logical networks that distinguish world
+facts, agent experiences, synthesized entity summaries, and evolving beliefs. This
+framework supports three core operations—retain, recall, and reflect—that govern how information is added, accessed, and updated. Under this abstraction, a
+temporal, entity-aware memory layer incrementally turns conversational streams
+into a structured, queryable memory bank, while a reflection layer reasons over
+this bank to produce answers and to update information in a traceable way. On
+key long-horizon conversational memory benchmarks like LongMemEval and LoCoMo, Hindsight with an open-source 20B model lifts overall accuracy from 39%
+to 83.6% over a full-context baseline with the same backbone and outperforms
+full-context GPT-4o. Scaling the backbone further pushes Hindsight to 91.4%
+on LongMemEval and up to 89.61% on LoCoMo (vs. 75.78% for the strongest
+prior open system), consistently outperforming existing memory architectures on
+multi-session and open-domain questions.
+
+1
+
+I NTRODUCTION
+
+AI agents are increasingly expected to behave less like stateless question answering systems and more
+like long-term partners: they are expected to remember past interactions, build up and track knowledge
+about the world, and maintain stable perspectives over time Packer et al. (2023); Rasmussen et al.
+(2025). However, the current generation of agent memory systems today are still built around shortcontext retrieval-augmented generation (RAG) pipelines and generic large language models (LLMs).
+Such designs treat memory as an external layer that extracts salient snippets from conversations,
+stores them in vector or graph-based stores, and retrieves top-k items into the prompt of an otherwise
+stateless model Wu et al. (2024); Maharana et al. (2024).
+As a result, current approaches to modeling agent memory struggle with three recurring challenges.
+First, they are unable to preserve and granularly access long-term information across sessions Tavakoli
+et al. (2025); Ai et al. (2025). Second, AI agents are unable to epistemically distinguish what the agent
+has observed from what it believes. Finally, such agents are notorious for their inability to exhibit
+preference consistency, i.e., expressing a stable reasoning style and viewpoint across interactions
+rather than producing locally plausible but globally inconsistent responses Huang et al. (2025).
+1
+
+Hindsight Technical Report
+
+Recent work has begun to address these challenges through dedicated memory architectures for
+agents, e.g., see Zhang et al. (2025b); Wu et al. (2025). Systems like MemGPT Packer et al. (2023)
+introduce operating system-like memory management, while Zep Rasmussen et al. (2025) proposes
+temporal knowledge graphs as an internal data structure. Other approaches focus on continual
+learning Ai et al. (2025), reinforcement-based memory management Yan et al. (2025), or productionready memory systems Chhikara et al. (2025). While these systems improve personalization and
+context carry-over, they still blur the line between evidence and inference, can struggle to selectively
+organize information over long horizons, and offer limited support for agents that must explain why
+they answered a question a certain way.
+We present H INDSIGHT, a memory architecture for long-lived AI agents that addresses these challenges by unifying long-term factual recall with preference-conditioned reasoning. Each agent in
+H INDSIGHT is backed by a structured memory bank that accumulates everything the agent has seen,
+done, and decided over time, and a reasoning layer that uses this memory to answer questions, execute
+workflows, form opinions, and update beliefs in a consistent way. Conceptually, H INDSIGHT ties
+together two components: T EMPR (Temporal Entity Memory Priming Retrieval), which implements
+the retain and recall operations over long-term memory, and C ARA (Coherent Adaptive Reasoning
+Agents), which implements the reflect operation over that memory. T EMPR builds a temporal, entityaware memory graph and exposes an agent-optimized retrieval interface, while C ARA integrates
+configurable disposition behavioral parameters into the reasoning process and maintains an explicit
+opinion network that evolves over time.
+At the core of H INDSIGHT is a simple abstraction: a memory bank organized into four logical
+networks (world, experience, opinion, observation) and three core operations (retain, recall, and
+reflect, as mentioned earlier). The world and experience networks store objective facts about the
+external world and the agent’s own experiences. The opinion network stores subjective beliefs
+with confidence scores that can be updated as new evidence arrives. The observation network stores
+preference-neutral summaries of entities synthesized from underlying facts. T EMPR implements retain
+and recall by extracting narrative facts with temporal ranges, resolving entities and constructing graph
+links, and retrieving memories via multi-strategy search. C ARA implements reflect by combining
+retrieved memories with an agent profile (name, background, and disposition behavioral parameters)
+to generate preference-shaped responses and to form and reinforce opinions. As we will demonstrate
+empirically, this design provides several performance advantages over existing memory systems Xu
+et al. (2025); Liu et al. (2025); Wang et al. (2025).
+Our contributions are:
+1. A unified memory architecture for agents. H INDSIGHT’s organization of memory into
+separate networks with core operations helps separate evidence, synthesize summaries better,
+and supports evolving beliefs, while supporting epistemic clarity and traceability.
+2. Retain, recall and reflect layers specialized for agent memory. Our key operational
+primitives help turn conversational transcripts into a structured, queryable memory bank
+with ability to reason over this bank and update beliefs in a stable, auditable manner.
+3. Empirical evaluation on long-horizon conversational benchmarks. We evaluate H IND SIGHT on LongMemEval and LoCoMo: with an open-source 20B backbone it lifts overall
+accuracy from 39.0% to 83.6% over a full-context baseline on LongMemEval and from
+75.78% to 85.67% on LoCoMo, and with larger backbones reaches 91.4% and 89.61%
+respectively, matching or surpassing prior memory systems and frontier-backed full-context
+baselines.
+
+2
+
+R ELATED W ORK
+
+Recent work in agent memory spans context management systems that handle LLM window constraints, structured memory architectures built on temporal knowledge graphs, evaluation benchmarks
+that test these systems, and cognitive frameworks inspired by human memory. We group related work
+into two categories and discuss how H INDSIGHT differs.
+2
+
+

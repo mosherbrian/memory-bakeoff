@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Zep: A Temporal Knowledge Graph Architecture for Agent Memory</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preload" as="style" href="https://blog.getzep.com/assets/built/screen.css?v=lE9_RW6rlXhouhEA" />
+    <link rel="preload" as="script" href="https://blog.getzep.com/assets/built/casper.js?v=GBAXQedN-X0bMopt" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://blog.getzep.com/assets/fonts/NeueMontreal/PPNeueMontreal-Regular.woff2?v=QJ_e1jYSFM0hQ0hP" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://blog.getzep.com/assets/fonts/Reckless/RecklessStandardM-Regular.woff2?v=DBqViTEt84d4xlrX" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://blog.getzep.com/assets/fonts/Reckless/RecklessStandardS-Regular.woff2?v=NP8MHHtwnCMxRhHb" />
+
+    <link rel="stylesheet" type="text/css" href="https://blog.getzep.com/assets/built/screen.css?v=lE9_RW6rlXhouhEA" />
+
+    <meta name="description" content="We introduce Zep, a novel memory layer service for AI agents that outperforms the current state-of-the-art systems.">
+    <link rel="icon" href="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w256h256/format/png/2026/05/zep-logo-icon-daisy-bush-rgb.svg" type="image/png">
+    <link rel="canonical" href="https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory/">
+    <link rel="alternate" type="text/markdown" href="https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory.md">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Zep - Agent memory at enterprise scale">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Zep: A Temporal Knowledge Graph Architecture for Agent Memory">
+    <meta property="og:description" content="We introduce Zep, a novel memory layer service for AI agents that outperforms the current state-of-the-art systems.">
+    <meta property="og:url" content="https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory/">
+    <meta property="article:published_time" content="2025-01-22T04:28:40.000Z">
+    <meta property="article:modified_time" content="2025-02-11T04:39:15.000Z">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zep: A Temporal Knowledge Graph Architecture for Agent Memory">
+    <meta name="twitter:description" content="We introduce Zep, a novel memory layer service for AI agents that outperforms the current state-of-the-art systems.">
+    <meta name="twitter:url" content="https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory/">
+    <meta name="twitter:image" content="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w1200/2025/01/paper.png">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Preston Rasmussen">
+    <meta name="twitter:site" content="@zep_ai">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Zep - Agent memory at enterprise scale",
+        "url": "https://blog.getzep.com/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/2026/05/zep-logo-lockup-daisy-bush-rgb.svg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Preston Rasmussen",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/2025/01/1602823601679.jpeg",
+            "width": 400,
+            "height": 400
+        },
+        "url": "https://blog.getzep.com/author/preston/",
+        "sameAs": []
+    },
+    "contributor": [
+        {
+            "@type": "Person",
+            "name": "Daniel Chalef",
+            "image": {
+                "@type": "ImageObject",
+                "url": "https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/2023/07/daniel-portrait-gray.png"
+            },
+            "url": "https://blog.getzep.com/author/daniel/",
+            "sameAs": [
+                "https://x.com/danielchalef"
+            ]
+        }
+    ],
+    "headline": "Zep: A Temporal Knowledge Graph Architecture for Agent Memory",
+    "url": "https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory/",
+    "datePublished": "2025-01-22T04:28:40.000Z",
+    "dateModified": "2025-02-11T04:39:15.000Z",
+    "description": "💡Looking for a summary of the findings? Read the announcement.\n\n\nAbstract\n\nWe introduce Zep, a novel memory layer service for AI agents that outperforms the current state-of-the-art system, MemGPT, in the Deep Memory Retrieval (DMR) benchmark. Additionally, Zep excels in more comprehensive and challenging evaluations than DMR that better reflect real-world enterprise use cases. While existing retrieval-augmented generation (RAG) frameworks for large language model (LLM)-based agents are limited",
+    "mainEntityOfPage": "https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 6.64">
+    <link rel="alternate" type="application/rss+xml" title="Zep - Agent memory at enterprise scale" href="https://blog.getzep.com/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.71/umd/portal.min.js" data-i18n="true" data-ghost="https://blog.getzep.com/" data-key="92037f8b88cf36bf0fe3fa8f20" data-api="https://zep-memory-for-ai.ghost.io/ghost/api/content/" data-locale="en" crossorigin="anonymous" type="78281e8f4c55d6240389d1b5-text/javascript"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.8/umd/sodo-search.min.js" data-key="92037f8b88cf36bf0fe3fa8f20" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.8/umd/main.css" data-sodo-search="https://zep-memory-for-ai.ghost.io/" data-locale="en" crossorigin="anonymous" type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+    
+    <link href="https://blog.getzep.com/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=ShRHxgy4po8zN-Wf" type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=WwnU9jw5ancNC8Gc">
+    <script defer src="/public/member-attribution.min.js?v=AKG4hWena9j3yX3I" type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+    <script defer src="/public/ghost-stats.min.js?v=vFcCUf6ZQ0Hyhc8h" data-stringify-payload="false" data-datasource="analytics_events" data-storage="localStorage" data-host="https://blog.getzep.com/.ghost/analytics/api/v1/page_hit" tb_site_uuid="79c4903e-2432-4c0e-b8c8-c8988fef71ec" tb_post_uuid="7b7fe82c-06cd-470f-981b-04b1f86738e3" tb_post_type="post" tb_member_uuid="undefined" tb_member_status="undefined" tb_gift_link="" type="78281e8f4c55d6240389d1b5-text/javascript"></script><style>:root {--ghost-accent-color: #4f2d7f;}</style>
+    <script type="78281e8f4c55d6240389d1b5-text/javascript">
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_dFYKy1OKnu2iKIl1Vvm8F256hEuk7aBkkImriWLdnbQ',{api_host:'https://app.posthog.com'})
+</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.min.css">
+<style>
+    code[class*=language-] {
+  		white-space: pre-wrap;
+  		word-wrap: break-word;
+        font-size: 0.8em;
+    }
+</style>
+
+</head>
+<body class="post-template">
+<div class="viewport">
+
+    <div class="gh-banner">
+        <a class="gh-banner-link" href="https://www.getzep.com/careers" target="_blank" rel="noopener">
+            We're hiring! <span class="gh-banner-cta">Come build with us</span> &rarr;
+        </a>
+    </div>
+
+    <header id="gh-head" class="gh-head">
+        <div class="gh-head-inner">
+            <a class="gh-head-logo" href="https://www.getzep.com" aria-label="Zep home">
+                <img src="https://blog.getzep.com/assets/images/zep-logo-lockup.svg?v=alHSB1xYhI4kqfEX" alt="Zep - Agent memory at enterprise scale" />
+            </a>
+
+            <nav class="gh-nav" aria-label="Primary">
+                <ul class="gh-nav-list">
+                    <li class="gh-nav-item">
+                        <button type="button" class="gh-nav-link" aria-expanded="false">Product <svg class="gh-nav-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        <div class="gh-dropdown" role="menu">
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/product/agent-memory/">Agent Memory</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/platform/context-lake/">Context Lake</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/platform/context-graph-engine/">Context Graph Engine</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/platform/graphiti/">Graphiti</a>
+                        </div>
+                    </li>
+                    <li class="gh-nav-item">
+                        <a class="gh-nav-link" href="https://www.getzep.com/enterprise/">Enterprise</a>
+                    </li>
+                    <li class="gh-nav-item">
+                        <a class="gh-nav-link" href="https://www.getzep.com/pricing/">Pricing</a>
+                    </li>
+                    <li class="gh-nav-item">
+                        <button type="button" class="gh-nav-link" aria-expanded="false">Developers <svg class="gh-nav-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        <div class="gh-dropdown" role="menu">
+                            <a class="gh-dropdown-row" role="menuitem" href="https://help.getzep.com/" target="_blank" rel="noopener noreferrer">Documentation</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://help.getzep.com/sdk-reference" target="_blank" rel="noopener noreferrer">API Reference</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://blog.getzep.com">Blog</a>
+                        </div>
+                    </li>
+                    <li class="gh-nav-item">
+                        <button type="button" class="gh-nav-link" aria-expanded="false">Resources <svg class="gh-nav-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        <div class="gh-dropdown" role="menu">
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/research/">Research</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/research/sp-global-market-intelligence-zep-coverage/">S&amp;P Market Intelligence Report</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://trust.getzep.com" target="_blank" rel="noopener noreferrer">Trust Center</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/solutions/context-engineering/">Context Engineering</a>
+                        </div>
+                    </li>
+                    <li class="gh-nav-item">
+                        <button type="button" class="gh-nav-link" aria-expanded="false">Company <svg class="gh-nav-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        <div class="gh-dropdown" role="menu">
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/about/">About</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/careers/">Careers</a>
+                            <a class="gh-dropdown-row" role="menuitem" href="https://www.getzep.com/">Contact</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="gh-head-cta">
+                <button class="gh-search gh-icon-btn" type="button" aria-label="Search this site" data-ghost-search><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <a class="gh-head-login" href="https://app.getzep.com">Log in</a>
+                <a class="gh-stargazer" href="https://github.com/getzep/graphiti" target="_blank" rel="noopener noreferrer" aria-label="Star Graphiti on GitHub">
+                    <img src="https://www.getzep.com/api/stargazer" alt="GitHub stars" height="22" loading="lazy" />
+                </a>
+                <a class="gh-btn gh-btn-secondary" href="https://www.getzep.com/">Book a demo</a>
+                <a class="gh-btn gh-btn-primary" href="https://app.getzep.com/api/auth/register">Sign up</a>
+                <button class="gh-burger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="gh-mobile-menu"><span></span></button>
+            </div>
+        </div>
+
+        <div class="gh-mobile-menu" id="gh-mobile-menu">
+            <div class="gh-mobile-menu-inner">
+                <div class="gh-mobile-section">
+                    <span class="gh-mobile-heading">Product</span>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/product/agent-memory/">Agent Memory</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/platform/context-lake/">Context Lake</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/platform/context-graph-engine/">Context Graph Engine</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/platform/graphiti/">Graphiti</a>
+                </div>
+                <div class="gh-mobile-section">
+                    <a class="gh-mobile-link" href="https://www.getzep.com/enterprise/">Enterprise</a>
+                    <a class="gh-mobile-link" href="https://www.getzep.com/pricing/">Pricing</a>
+                </div>
+                <div class="gh-mobile-section">
+                    <span class="gh-mobile-heading">Developers</span>
+                    <a class="gh-mobile-sublink" href="https://help.getzep.com/" target="_blank" rel="noopener noreferrer">Documentation</a>
+                    <a class="gh-mobile-sublink" href="https://help.getzep.com/sdk-reference" target="_blank" rel="noopener noreferrer">API Reference</a>
+                    <a class="gh-mobile-sublink" href="https://blog.getzep.com">Blog</a>
+                </div>
+                <div class="gh-mobile-section">
+                    <span class="gh-mobile-heading">Resources</span>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/research/">Research</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/research/sp-global-market-intelligence-zep-coverage/">S&amp;P Market Intelligence Report</a>
+                    <a class="gh-mobile-sublink" href="https://trust.getzep.com" target="_blank" rel="noopener noreferrer">Trust Center</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/solutions/context-engineering/">Context Engineering</a>
+                </div>
+                <div class="gh-mobile-section">
+                    <span class="gh-mobile-heading">Company</span>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/about/">About</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/careers/">Careers</a>
+                    <a class="gh-mobile-sublink" href="https://www.getzep.com/">Contact</a>
+                </div>
+                <div class="gh-mobile-cta">
+                    <a class="gh-btn gh-btn-secondary" href="https://www.getzep.com/">Book a demo</a>
+                    <a class="gh-btn gh-btn-primary" href="https://app.getzep.com/api/auth/register">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="site-content">
+        
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Blog",
+            "item": "https://blog.getzep.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Zep: A Temporal Knowledge Graph Architecture for Agent Memory",
+            "item": "https://blog.getzep.com/zep-a-temporal-knowledge-graph-architecture-for-agent-memory/"
+        }
+    ]
+}
+</script>
+
+<main id="site-main" class="site-main">
+<article class="article post no-image ">
+
+    <header class="article-header gh-canvas">
+
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <p><a class="breadcrumb-home" href="https://blog.getzep.com">Blog</a> <span aria-hidden="true">/</span> <span class="breadcrumb-current">Zep: A Temporal Knowledge Graph Architecture for Agent Memory</span></p>
+        </nav>
+
+        <div class="article-tag post-card-tags">
+        </div>
+
+        <h1 class="article-title">Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h1>
+
+
+        <div class="article-byline">
+        <section class="article-byline-content">
+
+            <ul class="author-list instapaper_ignore">
+                <li class="author-list-item">
+                    <a href="/author/preston/" class="author-avatar" aria-label="Read more of Preston Rasmussen">
+                        <img class="author-profile-image" src="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w100/2025/01/1602823601679.jpeg" alt="Preston Rasmussen" />
+                    </a>
+                </li>
+                <li class="author-list-item">
+                    <a href="/author/daniel/" class="author-avatar" aria-label="Read more of Daniel Chalef">
+                        <img class="author-profile-image" src="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w100/2023/07/daniel-portrait-gray.png" alt="Daniel Chalef" />
+                    </a>
+                </li>
+            </ul>
+
+            <div class="article-byline-meta">
+                <h4 class="author-name"><a href="/author/preston/">Preston Rasmussen</a>, <a href="/author/daniel/">Daniel Chalef</a></h4>
+                <div class="byline-meta-content">
+                    <time class="byline-meta-date" datetime="2025-01-21">21 Jan 2025</time>
+                        <time class="byline-meta-updated" datetime="2025-02-10"><span class="bull">&bull;</span> Updated 10 Feb 2025</time>
+                        <span class="byline-reading-time"><span class="bull">&bull;</span> 1 min read</span>
+                </div>
+            </div>
+
+        </section>
+        </div>
+
+
+    </header>
+
+    <section class="gh-content gh-canvas">
+        <div class="kg-card kg-callout-card kg-callout-card-blue"><div class="kg-callout-emoji">💡</div><div class="kg-callout-text">Looking for a summary of the findings? <a href="https://blog.getzep.com/state-of-the-art-agent-memory/" rel="noreferrer">Read the announcement.</a></div></div><h2 id="abstract">Abstract</h2><p>We introduce Zep, a novel memory layer service for AI agents that outperforms the current state-of-the-art system, MemGPT, in the Deep Memory Retrieval (DMR) benchmark. Additionally, Zep excels in more comprehensive and challenging evaluations than DMR that better reflect real-world enterprise use cases. While existing retrieval-augmented generation (RAG) frameworks for large language model (LLM)-based agents are limited to static document retrieval, enterprise applications demand dynamic knowledge integration from diverse sources including ongoing conversations and business data. Zep addresses this fundamental limitation through its core component Graphiti—a temporally-aware knowledge graph engine that dynamically synthesizes both unstructured conversational data and structured business data while maintaining historical relationships. In the DMR benchmark, which the MemGPT team established as their primary evaluation metric, Zep demonstrates superior performance (94.8% vs 93.4%). Beyond DMR, Zep's capabilities are further validated through the more challenging LongMemEval benchmark, which better reflects enterprise use cases through complex temporal reasoning tasks. In this evaluation, Zep achieves substantial results with accuracy improvements of up to 18.5% while simultaneously reducing response latency by 90% compared to baseline implementations. These results are particularly pronounced in enterprise-critical tasks such as cross-session information synthesis and long-term context maintenance, demonstrating Zep's effectiveness for deployment in real-world applications.</p><p><a href="https://arxiv.org/abs/2501.13956?ref=blog.getzep.com" rel="noreferrer">Read the paper on arXiv</a></p>
+    </section>
+
+
+</article>
+</main>
+
+<div class="gh-canvas">
+    <section class="footer-cta outer">
+        <div class="inner">
+            <h2 class="footer-cta-title">Sign up for Zep&#x27;s Newsletter</h2>
+            <p class="footer-cta-subtitle">Writings on Zep, LLMs, and AI ecosystem tools.</p>
+            <form class="footer-form" data-members-form>
+                <input data-members-email type="email" required="true" placeholder="Email"/>
+                <button type="submit">Subscribe</button>
+            </form>
+            <br>
+            <small>No spam. Unsubscribe anytime.</small>
+        </div>
+    </section>
+</div>
+
+
+
+            <aside class="read-more-wrap outer">
+                <div class="read-more inner">
+                        
+<article class="post-card post featured">
+
+    <a class="post-card-image-link" href="/defending-agent-memory-poisoning/">
+
+        <img class="post-card-image"
+            srcset="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w300/2026/09/memory-poisoning-hero-A-1200x630@2x.png 300w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w600/2026/09/memory-poisoning-hero-A-1200x630@2x.png 600w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w1000/2026/09/memory-poisoning-hero-A-1200x630@2x.png 1000w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w2000/2026/09/memory-poisoning-hero-A-1200x630@2x.png 2000w"
+            sizes="(max-width: 1000px) 400px, 800px"
+            src="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w600/2026/09/memory-poisoning-hero-A-1200x630@2x.png"
+            alt="Defending Agent Memory Against Poisoning"
+            loading="lazy"
+        />
+
+
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/defending-agent-memory-poisoning/">
+            <header class="post-card-header">
+                <h2 class="post-card-title">
+                    Defending Agent Memory Against Poisoning
+                </h2>
+            </header>
+                <div class="post-card-excerpt">One poisoned message, web page, or document can shape every later session that reads the same memory. Persistent memory makes prompt injection durable. We explain how memory poisoning works and which controls contain it, in your application and in Zep.</div>
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="2026-09-02">Sep 02, 2026</time>
+                <span class="post-card-meta-length">13 min read</span>
+        </footer>
+
+    </div>
+
+</article>
+                        
+<article class="post-card post featured">
+
+    <a class="post-card-image-link" href="/why-we-built-a-graph-database-service-for-agent-memory/">
+
+        <img class="post-card-image"
+            srcset="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w300/2026/08/71b8d943-f865-49e2-9dca-11fd8fe18647.png 300w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w600/2026/08/71b8d943-f865-49e2-9dca-11fd8fe18647.png 600w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w1000/2026/08/71b8d943-f865-49e2-9dca-11fd8fe18647.png 1000w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w2000/2026/08/71b8d943-f865-49e2-9dca-11fd8fe18647.png 2000w"
+            sizes="(max-width: 1000px) 400px, 800px"
+            src="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w600/2026/08/71b8d943-f865-49e2-9dca-11fd8fe18647.png"
+            alt="Why we built a graph database service for agent memory"
+            loading="lazy"
+        />
+
+
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/why-we-built-a-graph-database-service-for-agent-memory/">
+            <header class="post-card-header">
+                <h2 class="post-card-title">
+                    Why we built a graph database service for agent memory
+                </h2>
+            </header>
+                <div class="post-card-excerpt">Konig, Zep&#39;s graph database service, is the data plane beneath our agent memory platform. This post covers why we built it, how it works, and what we learned along the way.</div>
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="2026-08-27">Aug 27, 2026</time>
+                <span class="post-card-meta-length">15 min read</span>
+        </footer>
+
+    </div>
+
+</article>
+                        
+<article class="post-card post featured">
+
+    <a class="post-card-image-link" href="/agent-memory-mcp/">
+
+        <img class="post-card-image"
+            srcset="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w300/2026/08/memory-mcp-ga-og.png 300w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w600/2026/08/memory-mcp-ga-og.png 600w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w1000/2026/08/memory-mcp-ga-og.png 1000w,
+                    https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w2000/2026/08/memory-mcp-ga-og.png 2000w"
+            sizes="(max-width: 1000px) 400px, 800px"
+            src="https://storage.ghost.io/c/79/c4/79c4903e-2432-4c0e-b8c8-c8988fef71ec/content/images/size/w600/2026/08/memory-mcp-ga-og.png"
+            alt="Memory for every agent your team uses"
+            loading="lazy"
+        />
+
+
+    </a>
+
+    <div class="post-card-content">
+
+        <a class="post-card-content-link" href="/agent-memory-mcp/">
+            <header class="post-card-header">
+                <h2 class="post-card-title">
+                    Memory for every agent your team uses
+                </h2>
+            </header>
+                <div class="post-card-excerpt">A knowledge worker&#39;s agents don&#39;t share what they know: Claude and ChatGPT often can&#39;t reach company context, and the agents you build never see what Claude and ChatGPT learn. The Memory MCP Server gives each user one agent memory across all of them, governed by policy.</div>
+        </a>
+
+        <footer class="post-card-meta">
+            <time class="post-card-meta-date" datetime="2026-08-19">Aug 19, 2026</time>
+                <span class="post-card-meta-length">4 min read</span>
+        </footer>
+
+    </div>
+
+</article>
+                </div>
+            </aside>
+
+
+
+    </div>
+
+    <footer class="site-footer">
+        <div class="site-footer-top">
+            <div class="site-footer-brand">
+                <a href="https://www.getzep.com" aria-label="Zep home">
+                    <img src="https://blog.getzep.com/assets/images/zep-logo-lockup.svg?v=alHSB1xYhI4kqfEX" alt="Zep - Agent memory at enterprise scale" />
+                </a>
+                <p class="site-footer-tagline">The Context Lake for AI agents.</p>
+                <div class="site-footer-social">
+                    <a href="https://x.com/zep_ai" target="_blank" rel="noopener noreferrer" aria-label="Follow on X"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://github.com/getzep" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                    <a href="https://www.linkedin.com/company/zep-ai/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                    <a href="https://www.youtube.com/@zepai_videos" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+                </div>
+            </div>
+
+            <div class="site-footer-cols">
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Product</h3>
+                    <ul>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/product/agent-memory/">Agent Memory</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/platform/context-lake/">Context Lake</a></li>
+                    </ul>
+                </div>
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Developers</h3>
+                    <ul>
+                        <li><a class="site-footer-link" href="https://help.getzep.com/" target="_blank" rel="noopener noreferrer">Documentation <svg class="gh-ext" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.5 2.5h6m0 0v6m0-6L3 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg></a></li>
+                        <li><a class="site-footer-link" href="https://help.getzep.com/sdk-reference" target="_blank" rel="noopener noreferrer">API Reference <svg class="gh-ext" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.5 2.5h6m0 0v6m0-6L3 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg></a></li>
+                        <li><a class="site-footer-link" href="https://blog.getzep.com">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Resources</h3>
+                    <ul>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/research/">Research</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/research/sp-global-market-intelligence-zep-coverage/">S&amp;P Global Market Intelligence coverage</a></li>
+                        <li><a class="site-footer-link" href="https://trust.getzep.com" target="_blank" rel="noopener noreferrer">Trust Center <svg class="gh-ext" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.5 2.5h6m0 0v6m0-6L3 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg></a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/solutions/context-engineering/">Context Engineering</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/mem0-alternative/">Mem0 alternative</a></li>
+                    </ul>
+                </div>
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Enterprise</h3>
+                    <ul>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/enterprise/">Overview</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/enterprise/#deployment">Deployment</a></li>
+                        <li><a class="site-footer-link" href="https://trust.getzep.com" target="_blank" rel="noopener noreferrer">Security &amp; compliance <svg class="gh-ext" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.5 2.5h6m0 0v6m0-6L3 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg></a></li>
+                    </ul>
+                </div>
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Company</h3>
+                    <ul>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/about/">About</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/careers/">Careers</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/pricing/">Pricing</a></li>
+                        <li><a class="site-footer-link" href="https://www.getzep.com/">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-footer-legal">
+            <div class="site-footer-legal-inner">
+                <p class="site-footer-copyright">&copy; 2026 Zep AI, Inc. All rights reserved.</p>
+                <ul>
+                    <li><a class="site-footer-link" href="https://www.getzep.com/legal/privacy/">Privacy policy</a></li>
+                    <li><a class="site-footer-link" href="https://www.getzep.com/legal/terms/">Terms of service</a></li>
+                    <li><a class="site-footer-link" href="https://www.getzep.com/legal/website-terms/">Website terms</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://blog.getzep.com/assets/built/casper.js?v=GBAXQedN-X0bMopt" defer type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" integrity="sha512-9khQRAUBYEJDCDVP2yw3LRUQvjJ0Pjx0EShmaQjcHa6AXiOv6qHQu9lCAIR8O+/D8FtaCoJ2c0Tf9Xo7hYH01Q==" crossorigin="anonymous" referrerpolicy="no-referrer" type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-SkmBfuA2hqjzEVpmnMt/LINrjop3GKWqsuLSSB3e7iBmYK7JuWw4ldmmxwD9mdm2IRTTi0OxSAfEGvgEi0i2Kw==" crossorigin="anonymous" referrerpolicy="no-referrer" type="78281e8f4c55d6240389d1b5-text/javascript"></script>
+
+<script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="78281e8f4c55d6240389d1b5-|49" defer></script></body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "artifact": "team/S6-SELECTIVITY (sprint-6 row S6-2)",
+  "author": "kiln-flash",
+  "reviewer": "Astra (gpt-6-astra) — the instrument is built to Astra's Sprint-6 specification ('make the test able to fail a system that just returns everything'), with the abstention construction credited to the KnowledgeDrift card Brian filed; queue verification by corvid-dsh pending",
+  "verdict": "built to the pre-declared design; controls separated (bm25 0.500 vs return-everything 0.200, gap 0.300 > declared margin 0.25, oracle perfect on every case); engine results are descriptive and pending independent verification",
+  "review_chain": [
+    {"date": "2026-09-16", "reviewer": "Astra (gpt-6-astra)",
+     "what": "Sprint-6 proposal: each store held one record, so returning everything guaranteed a hit and claude-mem's 30/30 measured coverage rather than skill; specified multi-record stores with distractors, abstention cases, declared-before-run helpful sets, and controls first",
+     "evidence": "team/QUEUE.md row S6-2 (origin text)"},
+    {"date": "2026-09-16", "reviewer": "Brian (card) / techtheist (upstream, vendor-adjacent)",
+     "what": "KnowledgeDrift v1 card: abstention as a first-class family; STRUCTURE adopted (unwritten subject; written subject with no note), no scores imported, its leaderboard treated as a vendor-adjacent claim",
+     "evidence": "team/EXTERNAL-KNOWLEDGEDRIFT-20260916.md"},
+    {"date": "2026-09-17", "reviewer": "kiln-flash (author's own integrity notes, not certification)",
+     "what": "honest deviations-and-observations for the verifier: (1) bm25 fired on ALL five abstain cases, including the three unwritten subjects, because the in-tree tokenizer keeps function words — 'abstains at zero overlap' holds only when overlap is truly zero, and no stopword prefilter was declared or applied (S4-12's fire-log bm25 usage did filter; the difference is declared here rather than tuned away post-run); (2) claude-mem's vendor policy returns top-3 unconditionally — 0.5 F1 on retrieve cases, 0.0 on abstain, mean 0.250, i.e. the firehose level plus 0.05, which quantifies Astra's coverage-not-skill reading of its 30/30; (3) pi-lcm abstains perfectly (exact-then-relaxed never matches an abstain store) but rescues only 1/5 retrieve cases, mean 0.600 — abstention and recall trade off in opposite directions per engine; (4) the return-nothing control scores 0.500 by the frozen metric (perfect abstention alone), so per-arm means are comparable only through the declared gap rule",
+     "evidence": "team/S6-SELECTIVITY/results.jsonl (60 rows, controls first, manifest sha bound)"},
+    {"date": "pending", "reviewer": "corvid-dsh",
+     "what": "named queue verifier for S6-2; gate S6-2G authored by plumb-fable from the row text alone, mtime 2026-09-17 07:36, before any artifact file existed",
+     "evidence": "team/QUEUE.md rows S6-2/S6-2G"}
+  ]
+}

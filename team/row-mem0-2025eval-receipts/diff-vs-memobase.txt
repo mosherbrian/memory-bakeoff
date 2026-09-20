@@ -1,0 +1,49 @@
+2a3
+> import argparse
+3a5,9
+> parser = argparse.ArgumentParser()
+> parser.add_argument("--input_path", type=str, default="memobase_eval.json")
+> args = parser.parse_args()
+> 
+> categories = ["single_hop", "temporal", "multi_hop", "open_domain"]
+5c11
+< with open('evaluation_metrics.json', 'r') as f:
+---
+> with open(args.input_path, "r") as f:
+17c23
+< df['category'] = pd.to_numeric(df['category'])
+---
+> df["category"] = pd.to_numeric(df["category"])
+20,24c26,30
+< result = df.groupby('category').agg({
+<     'bleu_score': 'mean',
+<     'f1_score': 'mean',
+<     'llm_score': 'mean'
+< }).round(4)
+---
+> result = (
+>     df.groupby("category")
+>     .agg({"bleu_score": "mean", "f1_score": "mean", "llm_score": "mean"})
+>     .round(4)
+> )
+27c33
+< result['count'] = df.groupby('category').size()
+---
+> result["count"] = df.groupby("category").size()
+28a35
+> result["type"] = result.index.map(lambda x: categories[x - 1])
+34,38c41,43
+< overall_means = df.agg({
+<     'bleu_score': 'mean',
+<     'f1_score': 'mean',
+<     'llm_score': 'mean'
+< }).round(4)
+---
+> overall_means = df.agg(
+>     {"bleu_score": "mean", "f1_score": "mean", "llm_score": "mean"}
+> ).round(4)
+41c46
+< print(overall_means)
+\ No newline at end of file
+---
+> print(overall_means)

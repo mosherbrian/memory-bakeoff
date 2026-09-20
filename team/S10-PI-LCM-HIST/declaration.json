@@ -1,0 +1,23 @@
+{
+ "declared_at": "2026-09-19T16:05:40.817851+00:00",
+ "distractor_shape": "agentmemory-class extended: deliberately distinct facts sharing the fact-type template, the shape research/AGENTMEMORY_FINDINGS.md documents at 418/450 false supersessions (92.9%) under the /remember Jaccard write path (Jaccard 0.75-0.9 near-neighbors); per-trial jaccard lists are recorded in trials.jsonl; three near-neighbor relations declared before the run: mailbox-rename (renamed mail target of the same service), ledger-amend (the service's companion ledger line: redis->postgres, canary->blue-green, synthetic->load-test, import->export), roster-drift (joint roster of two services)",
+ "trials_sha256": "52289107559502337f83de8b3cb7a2038155853d7373082b3bbb324504367b1d",
+ "generator": {
+  "path": "gen_trials.py",
+  "sha256": "b923caa26e138c520b5ac98d8e67cd37db14c907ddbc63be2c222bce46bedb4b"
+ },
+ "broader": {
+  "distractor_families": [
+   "mailbox-rename",
+   "ledger-amend",
+   "roster-drift"
+  ],
+  "stream_length_min": 4
+ },
+ "protocol": "supersession for pi-lcm-native is retrieval displacement generalized to streams: the store has no write-time consolidation, so per trial a fresh pinned store (pi_lcm_store_reader_toollevel, the S4-14/S6-2 pin) ingests the trial's whole 4-write stream in order, the original's own query is re-issued with every write present, and superseded = the top hit is any write other than the original. never-supersede/always-supersede are the controls and run first. Sanity before declaration: each original alone answers its own query as top-1. Ground truth: near-neighbor writes are different facts (renamed target, companion ledger line, joint roster), never successors of the original, so distractor displacement is false supersession; update streams are genuinely newer states of the same fact, so the original must be displaced.",
+ "expectation": "pre-registered before the run: the prior native arm scored 0/32 false supersessions on cross-scope near-neighbors (same whole-token scope match was the only pressure). The three new families pressure mechanisms the prior corpus never exercised: mailbox-rename and roster-drift embed the original's scope token as a SUBSTRING of the near-neighbor subject (delta-mailbox, delta-fjord), and whether the exact-AND gate matches substrings or whole tokens decides if they compete at all; ledger-amend shares scope and template but swaps the object token. Expected: false supersession stays LOW if the store matches whole tokens; a HIGH rate would be a genuine native failure on broader histories - exactly the evidence the state-layer answer page requires. Either number decides; this row measures, it does not defend the prior's null.",
+ "prior_measurement": {
+  "pi_lcm": "team/S7-STATELAYER/verdict.json (VERIFIED PASS S7-3G): native 0/32 false supersessions, 12/12 updates superseded - controlled corpus only, one distractor shape, streams of 2 writes; this row re-measures the native arm on the declared-broader corpus above and must report old-vs-new (standing re-measurement rule)",
+  "agentmemory": "418 of 450 stress distractors (92.9%) falsely superseded under the /remember Jaccard write path - the protected comparison point, from research/AGENTMEMORY_FINDINGS.md"
+ }
+}

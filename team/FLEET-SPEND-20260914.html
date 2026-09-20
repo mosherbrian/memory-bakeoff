@@ -1,0 +1,649 @@
+<title>Where the Fleet's Money Goes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper:   #f6f7f9;
+    --surface: #ffffff;
+    --sunk:    #eef0f4;
+    --ink:     #141a24;
+    --muted:   #5d6675;
+    --rule:    #dde1e8;
+    --rule-hi: #c3cad5;
+    --spend:   #b4541c;
+    --cached:  #14706b;
+    --alarm:   #96241f;
+    --display: Archivo, "Helvetica Neue", Arial, sans-serif;
+    --body:    "Source Serif 4", Georgia, "Times New Roman", serif;
+    --data:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:   #0f141b;
+      --surface: #161d27;
+      --sunk:    #1b232e;
+      --ink:     #e7ecf3;
+      --muted:   #9aa5b4;
+      --rule:    #28313d;
+      --rule-hi: #3a4653;
+      --spend:   #e28d52;
+      --cached:  #45b5aa;
+      --alarm:   #e4796a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:   #0f141b;
+    --surface: #161d27;
+    --sunk:    #1b232e;
+    --ink:     #e7ecf3;
+    --muted:   #9aa5b4;
+    --rule:    #28313d;
+    --rule-hi: #3a4653;
+    --spend:   #e28d52;
+    --cached:  #45b5aa;
+    --alarm:   #e4796a;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px 96px; }
+  .measure { max-width: 66ch; }
+
+  /* ---- masthead ---- */
+  header.mast { padding: 56px 0 28px; border-bottom: 2px solid var(--ink); }
+  .kicker {
+    font-family: var(--data); font-size: 11.5px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 18px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(34px, 5.2vw, 52px);
+    line-height: 1.04; letter-spacing: -.022em; margin: 18px 0 14px;
+    text-wrap: balance;
+  }
+  .standfirst { font-size: 19.5px; color: var(--muted); max-width: 62ch; margin: 0; }
+
+  /* ---- headline figures ---- */
+  .figures {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+    gap: 0; border-bottom: 1px solid var(--rule); margin: 0 0 44px;
+  }
+  .fig { padding: 24px 22px 22px 0; }
+  .fig + .fig { border-left: 1px solid var(--rule); padding-left: 22px; }
+  .fig dt {
+    font-family: var(--data); font-size: 11px; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 10px;
+  }
+  .fig dd {
+    margin: 0; font-family: var(--display); font-weight: 600;
+    font-size: 30px; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  }
+  .fig dd small { display: block; font-family: var(--body); font-weight: 400;
+    font-size: 14px; letter-spacing: 0; color: var(--muted); margin-top: 5px; }
+  .fig.is-alarm dd { color: var(--alarm); }
+  .fig.is-spend dd { color: var(--spend); }
+
+  /* ---- sections ---- */
+  section { margin: 0 0 52px; }
+  .eyebrow {
+    font-family: var(--data); font-size: 11px; font-weight: 600;
+    letter-spacing: .15em; text-transform: uppercase;
+    display: inline-block; padding: 3px 8px; margin-bottom: 14px;
+    border: 1px solid var(--rule-hi); color: var(--muted);
+  }
+  .eyebrow.measured { color: var(--cached); border-color: var(--cached); }
+  .eyebrow.inferred { color: var(--spend); border-color: var(--spend); }
+  .eyebrow.open     { color: var(--alarm); border-color: var(--alarm); }
+  h2 {
+    font-family: var(--display); font-weight: 600; font-size: 27px;
+    letter-spacing: -.016em; line-height: 1.18; margin: 0 0 14px; text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--display); font-weight: 600; font-size: 18px;
+    letter-spacing: -.01em; margin: 30px 0 8px;
+  }
+  p { margin: 0 0 15px; }
+  .measure p, .measure ul, .measure ol { max-width: 66ch; }
+  ul, ol { margin: 0 0 15px; padding-left: 22px; }
+  li { margin-bottom: 7px; }
+  strong { font-weight: 600; }
+  code, .num {
+    font-family: var(--data); font-size: .88em;
+    font-variant-numeric: tabular-nums;
+  }
+  code { background: var(--sunk); padding: 1px 5px; border-radius: 2px; }
+  a { color: var(--spend); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- tables ---- */
+  .tablewrap { overflow-x: auto; margin: 0 0 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  caption {
+    text-align: left; font-family: var(--data); font-size: 11px;
+    letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
+    padding-bottom: 9px;
+  }
+  th, td {
+    text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--rule);
+    vertical-align: baseline;
+  }
+  thead th {
+    font-family: var(--data); font-size: 11px; font-weight: 600;
+    letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--rule-hi);
+  }
+  td.n, th.n { text-align: right; font-family: var(--data);
+    font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tbody tr.hero td { font-weight: 600; }
+  tr.hero td.n { color: var(--spend); }
+  .dim { color: var(--muted); }
+  .good { color: var(--cached); }
+  .bad  { color: var(--alarm); }
+
+  /* ---- bar chart (CSS, scaled to the axis below it) ---- */
+  .chart { margin: 8px 0 10px; }
+  .row {
+    display: grid; grid-template-columns: 86px 1fr 92px 118px;
+    align-items: center; gap: 14px; padding: 5px 0;
+  }
+  .row + .row { border-top: 1px solid var(--rule); }
+  .row .lab { font-family: var(--data); font-size: 12.5px; color: var(--muted); }
+  .track { background: var(--sunk); height: 20px; position: relative; }
+  .bar { height: 100%; background: var(--spend); }
+  .bar.lo { background: var(--cached); }
+  .row .pct, .row .tok {
+    font-family: var(--data); font-size: 12.5px; text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .row .tok { color: var(--muted); }
+  .axis {
+    display: grid; grid-template-columns: 86px 1fr 92px 118px; gap: 14px;
+    font-family: var(--data); font-size: 10.5px; color: var(--muted);
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+  .axis .ticks { display: flex; justify-content: space-between;
+    border-top: 1px solid var(--rule-hi); padding-top: 5px; }
+  .chart-head { display: grid; grid-template-columns: 86px 1fr 92px 118px;
+    gap: 14px; font-family: var(--data); font-size: 10.5px; color: var(--muted);
+    letter-spacing: .1em; text-transform: uppercase; padding-bottom: 7px; }
+  .chart-head span:nth-child(3), .chart-head span:nth-child(4) { text-align: right; }
+
+  /* ---- callouts ---- */
+  .pull {
+    border-left: 3px solid var(--spend); padding: 4px 0 4px 20px;
+    margin: 24px 0; font-size: 19px; max-width: 60ch;
+  }
+  .quote {
+    background: var(--surface); border: 1px solid var(--rule);
+    padding: 20px 22px; margin: 20px 0; font-style: italic;
+  }
+  .quote p:last-child { margin-bottom: 0; }
+  .quote cite {
+    display: block; font-style: normal; font-family: var(--data);
+    font-size: 11px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+
+  /* ---- options ---- */
+  .options { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .opt { border-top: 1px solid var(--rule-hi); padding: 22px 0; }
+  .opt:last-child { border-bottom: 1px solid var(--rule-hi); }
+  .opt-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .opt-head h3 { margin: 0; }
+  .tag {
+    font-family: var(--data); font-size: 10.5px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase; padding: 3px 7px;
+  }
+  .tag.rec   { background: var(--cached); color: var(--paper); }
+  .tag.block { background: var(--alarm); color: var(--paper); }
+  .tag.hold  { background: var(--sunk); color: var(--muted); }
+  .opt dl { display: grid; grid-template-columns: 112px 1fr; gap: 4px 16px;
+    margin: 14px 0 0; max-width: 72ch; }
+  .opt dt { font-family: var(--data); font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+  .opt dd { margin: 0; }
+
+  footer {
+    border-top: 2px solid var(--ink); margin-top: 60px; padding-top: 20px;
+    font-size: 14px; color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    .row, .axis, .chart-head { grid-template-columns: 70px 1fr 64px; }
+    .row .tok, .chart-head span:nth-child(4), .axis span:nth-child(4) { display: none; }
+    .fig + .fig { border-left: 0; padding-left: 0; }
+  }
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">
+    <span>Fleet cost analysis</span>
+    <span>OpenCode Go</span>
+    <span>Rev 2 · 15 Sep 2026</span>
+    <span>corrected after team review</span>
+  </div>
+  <h1>Where the fleet's money goes</h1>
+  <p class="standfirst">Ten percent of calls are cache misses. They carry two thirds of the
+  spend — and the cache that protects the rest decays on one model and not the other.</p>
+</header>
+
+<dl class="figures">
+  <div class="fig is-spend">
+    <dt>Spend since 16:21</dt>
+    <dd>$5.90<small>recorded · 4.6 h · 2,970 calls</small></dd>
+  </div>
+  <div class="fig">
+    <dt>Muse burn rate</dt>
+    <dd>$0.97<small>per hour, against a $12 / 5&nbsp;hr bucket</small></dd>
+  </div>
+  <div class="fig is-alarm">
+    <dt>Weekly cap — projected</dt>
+    <dd>Tue 23:27<small>Muse $30, if run continuously</small></dd>
+  </div>
+  <div class="fig">
+    <dt>Reliability</dt>
+    <dd>99.9%<small>2,967 of 2,970 turns completed</small></dd>
+  </div>
+</dl>
+
+<section class="measure">
+  <span class="eyebrow open">Corrections to Rev 1</span>
+  <h2>Three claims were wrong</h2>
+  <p>All three were caught in team review, and all three are confirmed here by
+  independent re-measurement.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Rev 1 said</th><th>Rev 2 says</th><th>Caught by</th></tr></thead>
+      <tbody>
+        <tr><td>misses are <strong>94.6% of the bill</strong></td>
+            <td>misses are <strong>66.7% of dollars</strong>. 94.1% was the share of
+            <em>fresh-input dollars</em> — cache reads and output are 29% of spend
+            and sit with the hits</td><td class="dim">fsync</td></tr>
+        <tr><td>one gap curve; the bend at 5–6&nbsp;min unexplained</td>
+            <td>the curve is <strong>per model</strong>, and the bend was an
+            aggregation artefact</td><td class="dim">Corvid</td></tr>
+        <tr><td>the weekly $30 wall, stated flat</td>
+            <td>the wall is a <strong>projection</strong> — rate × time, with no budget
+            rows in the database. Ruled real by GiLMore, but a judgement, not a
+            measurement</td><td class="dim">Ledger</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim"><strong>A fourth caveat, self-reported.</strong> Reconstructing the bill
+  from per-token rates gives <span class="num">$8.18</span> against OpenCode's recorded
+  <span class="num">$5.90</span> — about 39% over, most likely the DeepSeek cache rate or
+  peak hours applying to part of the window. The ratios here are internally consistent;
+  absolute dollars should come from the recorded figure, not my arithmetic.</p>
+</section>
+
+<section class="measure">
+  <span class="eyebrow measured">Measured</span>
+  <h2>What we are actually billed</h2>
+  <p>Two of these numbers come from OpenCode's published table; the cache-read rate
+  is also confirmed against real billed rows in the local ledger, where a call of
+  <span class="num">8,490</span> fresh input tokens and <span class="num">11</span> output
+  tokens billed <span class="num">$0.00085</span> — matching $0.10/M exactly.</p>
+</section>
+
+<div class="tablewrap">
+  <table>
+    <caption>OpenCode Go — the models that matter for this workload</caption>
+    <thead>
+      <tr>
+        <th>Model</th><th class="n">Input /M</th><th class="n">Output /M</th>
+        <th class="n">Cache read /M</th><th class="n">Monthly</th><th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hero">
+        <td>Muse Spark 1.3 Contributor</td><td class="n">$0.10</td><td class="n">$0.20</td>
+        <td class="n">$0.002</td><td class="n">$60</td><td class="dim">current engine, 10 lanes</td>
+      </tr>
+      <tr>
+        <td>Muse Spark 1.2 Contributor</td><td class="n">$0.10</td><td class="n">$0.20</td>
+        <td class="n">$0.002</td><td class="n">$60</td><td class="dim">same price, separate budget</td>
+      </tr>
+      <tr>
+        <td>MiMo V2.5</td><td class="n">$0.14</td><td class="n">$0.28</td>
+        <td class="n">$0.0028</td><td class="n">$60</td><td class="dim">next cheapest on our mix</td>
+      </tr>
+      <tr>
+        <td>DeepSeek V4.1 Flash <span class="dim">off-peak</span></td>
+        <td class="n">$0.15</td><td class="n">$0.60</td>
+        <td class="n">$0.003</td><td class="n">$60</td><td class="dim">3 dsh seats · 4× promo ends 20 Sep</td>
+      </tr>
+      <tr>
+        <td>GLM-5.3-Flash</td><td class="n">$0.15</td><td class="n">$0.50</td>
+        <td class="n bad">$0.03</td><td class="n">$60</td><td class="dim">cache read 15× Muse — costly here</td>
+      </tr>
+      <tr>
+        <td>LongCat-2.0</td><td class="n">$0.30</td><td class="n">$1.20</td>
+        <td class="n">$0.006</td><td class="n">$60</td><td class="dim">—</td>
+      </tr>
+      <tr>
+        <td>Kimi K2.6</td><td class="n">$0.95</td><td class="n">$4.00</td>
+        <td class="n">$0.16</td><td class="n">$60</td><td class="dim">~4h of runway on our mix</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<section class="measure">
+  <p><strong>Limits are per model, not pooled.</strong> The published table carries a
+  different monthly figure per row — $60 for GLM-5.3-Flash, $15 for GLM-5.3 — which a
+  single shared pool could not. Within each model's limit: 5-hour bucket is 20%,
+  weekly 50%, monthly 100%.</p>
+  <p class="dim">Not established: whether a plan-wide ceiling <em>also</em> sits on top of
+  the per-model limits. Nothing in the docs mentions one. That is absence of evidence,
+  not evidence of absence.</p>
+</section>
+
+<section>
+  <span class="eyebrow measured">Measured</span>
+  <h2 class="measure">What the fleet used</h2>
+  <div class="measure">
+    <p>Since dispatch resumed at 16:21, from OpenCode's own message ledger. Note the
+    asymmetry between the two engine groups — it is the whole story of this document.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <caption>Usage since 16:21, 4.6 hours</caption>
+      <thead>
+        <tr>
+          <th>Engine</th><th class="n">Calls</th><th class="n">Fresh input</th>
+          <th class="n">Cache reads</th><th class="n">Output</th><th class="n">Billed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hero">
+          <td>muse-spark-1.3-contributor</td><td class="n">1,498</td>
+          <td class="n">40,479,165</td><td class="n">186,286,598</td>
+          <td class="n">269,185</td><td class="n">$4.47</td>
+        </tr>
+        <tr>
+          <td>deepseek-v4.1-flash</td><td class="n">1,165</td>
+          <td class="n good">853,457</td><td class="n">324,999,552</td>
+          <td class="n">545,345</td><td class="n">$1.43</td>
+        </tr>
+        <tr>
+          <td>glm-5.3-flash <span class="dim">probes only</span></td><td class="n">4</td>
+          <td class="n">36,417</td><td class="n">6,272</td><td class="n">—</td>
+          <td class="n">$0.01</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="measure">
+    <p>The DeepSeek seats did <strong>more calls on 2% of the fresh input</strong> and
+    produced three times the output per call. Their cache hit rate is 99.7%. Same
+    provider, same client, same harness — the difference is context size, not model.</p>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow measured">Measured</span>
+  <h2 class="measure">Two thirds of the bill is 333 calls</h2>
+  <div class="measure">
+    <p>Splitting every call by whether more than half its context billed as fresh:</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Call type</th><th class="n">Calls</th><th class="n">Share of calls</th>
+        <th class="n">Billed</th><th class="n">Share of bill</th></tr></thead>
+      <tbody>
+        <tr class="hero"><td>Cache miss <span class="dim">&gt;50% fresh</span></td>
+          <td class="n">333</td><td class="n">~10%</td>
+          <td class="n">$5.44</td><td class="n">66.7%</td></tr>
+        <tr><td>Cache hit</td><td class="n">3,107</td><td class="n">~90%</td>
+          <td class="n good">$0.34 fresh + $1.92 cache + $0.46 out</td>
+          <td class="n good">33.3%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="measure">
+    <p>Median context per call is <strong>210,153 tokens</strong>. A full miss therefore
+    re-bills roughly <span class="num">$0.021</span> of fresh input. Multiply by 293 and
+    you have the evening.</p>
+    <p>Misses concentrate in the long-lived Muse seats. The dsh seats, whose contexts are
+    small, took one or two between them.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <caption>Cache misses by lane</caption>
+      <thead><tr><th>Lane</th><th class="n">Misses</th><th class="n">Fresh tokens</th>
+        <th class="n">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>conductor-glm</td><td class="n">66</td><td class="n">13,354,921</td><td class="n">$1.34</td></tr>
+        <tr><td>kiln <span class="dim">implementer</span></td><td class="n">51</td><td class="n">10,523,698</td><td class="n">$1.05</td></tr>
+        <tr><td>ledger <span class="dim">proposal-drafter</span></td><td class="n">52</td><td class="n">7,791,208</td><td class="n">$0.78</td></tr>
+        <tr><td>verity <span class="dim">reviewer</span></td><td class="n">49</td><td class="n">5,611,318</td><td class="n">$0.56</td></tr>
+        <tr><td>builder <span class="dim">conductor-chat</span></td><td class="n">45</td><td class="n">2,652,712</td><td class="n">$0.27</td></tr>
+        <tr><td>fsync <span class="dim">memory-bake-off</span></td><td class="n">26</td><td class="n">5,313,506</td><td class="n">$0.53</td></tr>
+        <tr><td class="dim">the three dsh seats, combined</td><td class="n">3</td>
+          <td class="n good">40,465</td><td class="n good">$0.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow measured">Measured</span>
+  <h2 class="measure">Cache decay is per model, not fleet-wide</h2>
+  <div class="measure">
+    <p>Cache <strong>hit rate</strong> by how long the lane had been quiet before the
+    call. This replaces Rev 1's single blended curve, and it is the finding that
+    governs what to do.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <caption>Cache hit rate by idle gap, per model</caption>
+      <thead><tr><th>Model</th><th class="n">0–1m</th><th class="n">1–2m</th>
+        <th class="n">2–3m</th><th class="n">3–4m</th><th class="n">4–5m</th>
+        <th class="n">5–6m</th><th class="n">6–7m</th></tr></thead>
+      <tbody>
+        <tr class="hero"><td>muse-spark-1.3-contributor</td>
+          <td class="n good">96.3%</td><td class="n">66.5%</td><td class="n">56.0%</td>
+          <td class="n">33.0%</td><td class="n">25.0%</td><td class="n">18.6%</td>
+          <td class="n">41.9%</td></tr>
+        <tr><td>deepseek-v4.1-flash</td>
+          <td class="n good">99.4%</td><td class="n good">99.9%</td><td class="n good">100.0%</td>
+          <td class="n good">99.9%</td><td class="n dim">—</td><td class="n good">99.9%</td>
+          <td class="n good">99.9%</td></tr>
+        <tr><td class="dim">call counts, Muse</td><td class="n dim">1481</td>
+          <td class="n dim">132</td><td class="n dim">112</td><td class="n dim">32</td>
+          <td class="n dim">4</td><td class="n dim">172</td><td class="n dim">53</td></tr>
+        <tr><td class="dim">call counts, DeepSeek</td><td class="n dim">1288</td>
+          <td class="n dim">2</td><td class="n dim">1</td><td class="n dim">1</td>
+          <td class="n dim">0</td><td class="n dim">153</td><td class="n dim">6</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="measure">
+    <p class="pull">Muse's cache decays over minutes. DeepSeek's does not move. There is
+    no single fleet cadence — only the Muse seats need tightening.</p>
+    <p>The Spark pulse fires at five minutes of idleness, which for Muse lands at an
+    18.6% hit rate. Rev 1 reported one blended curve with an unexplained bend at 5–6
+    minutes; that bend was the artefact of averaging a collapsing curve with a flat one.
+    Corvid's diagnosis, confirmed here.</p>
+    <p class="dim">The 6–7 minute bounce to 41.9% rests on 53 calls and may be noise.
+    These figures agree with Corvid's direction; the tails differ slightly — they
+    measured 96.9%&nbsp;→&nbsp;14.8% — most likely different binning or window.</p>
+  </div>
+</section>
+
+<section class="measure">
+  <span class="eyebrow open">What we don't know</span>
+  <h2>What we still don't know</h2>
+  <p><strong>Why the two models differ.</strong> An outside extension documents the
+  gateway prefix-cache TTL at ~5 minutes, but neither of our models matches it — Muse
+  drops from 1–2 minutes, DeepSeek persists past 30. TTL is not the whole story.</p>
+  <p><strong>This sample is contaminated.</strong> Every lane was stopped and started
+  roughly a dozen times during the migration. A restart always begins a cold session, so
+  some share of the misses is self-inflicted rather than steady-state. A clean 24 hours
+  would settle it.</p>
+  <p><strong>Whether cache retention is settable.</strong> If
+  <code>prompt_cache_retention</code> or a stable per-session cache key lets the cache
+  survive the pulse, that beats pulsing faster — no extra calls, and no dependence on an
+  inferred TTL. Untested.</p>
+  <p><strong>Whether a plan-wide ceiling sits above the per-model limits.</strong>
+  Nothing in the docs mentions one. Absence of evidence, not evidence of absence.</p>
+</section>
+
+<section class="measure">
+  <span class="eyebrow inferred">The conductor's position</span>
+  <h2>Where we agree and disagree</h2>
+  <div class="quote">
+    <cite>conductor-glm</cite>
+    <p>“It would backfire — compaction raises the bill instead of cutting it. The pricing
+    is upside-down from what you'd expect: re-reading old context costs almost nothing,
+    while fresh input is nearly the whole bill. Compacting throws away the cheap cached
+    context and replaces it with freshly written summary that bills at full price.”</p>
+    <p>“The disruption is real too: each compaction sheds detail the lanes are working
+    from, so verification chains and half-done comparisons would come back thinner or
+    broken.”</p>
+  </div>
+  <p><strong>Right on the pricing.</strong> Cache reads are $0.002/M against $0.10/M
+  fresh — a 50× asymmetry, and it is the reason a 210k context is normally cheap.</p>
+  <p><strong>Right on the disruption</strong>, and this is the part no measurement settles.
+  The conductor knows which lanes are mid-verification. That objection stands on its own.</p>
+  <p><strong>The arithmetic does not support “raises the bill”.</strong> A compaction
+  costs about <span class="num">$0.003</span> once — the summary is ~2,000 tokens against
+  a 210,000-token context. It then reduces every later miss from
+  <span class="num">$0.021</span> to <span class="num">$0.002</span>. It repays itself
+  inside a single miss, and the seats are taking roughly fifty each in 4.6 hours.</p>
+  <p>One factual correction: the claim that this has “kept tonight's spend near zero”.
+  Tonight is <strong>$5.90</strong>.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Decision</span>
+  <div class="measure" style="margin-bottom:20px">
+    <p>Ledger synthesis of two seats plus the conductor, sized against
+    <strong>sustained full pace</strong> (~$1.28/h → ~$215/week). Apply 1+2+3 now, test 6
+    in parallel and prefer it if it holds, hold 4 in reserve. Re-size after 20 September,
+    when the free GLM window and the DeepSeek promo both end.</p>
+  </div>
+  <h2 class="measure">The team's decision</h2>
+  <div class="options">
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Tighten the Muse pulse to ≤60s</h3>
+        <span class="tag rec">Apply</span>
+      </div>
+      <dl>
+        <dt>Change</dt><dd>Spark pulse 5&nbsp;min → ≤60&nbsp;s for Muse seats only, in <code>fleet-poller.sh</code>. Time-boxed, revert ready.</dd>
+        <dt>Evidence</dt><dd>Muse holds a 96.3% hit rate under one minute and 18.6% at five. DeepSeek needs no change.</dd>
+        <dt>Sized</dt><dd>Drops Muse misses ~90%: $5.90 → ~$2.40 per 4.6&nbsp;h ($0.52/h, ~$87/week). Halves burn, keeps context. <strong>Insufficient alone</strong> — does not clear $30.</dd>
+        <dt>Risk</dt><dd>More calls, so more output tokens — though output is only $0.05 of the $5.90. More wake churn for seats with nothing to do. And it rests on an inferred TTL.</dd>
+        <dt>Note</dt><dd>This is the <em>opposite</em> of throttling. Slowing the fleet down would move every call into a higher-miss band and cost more.</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Compact the long sessions</h3>
+        <span class="tag block">Declined</span>
+      </div>
+      <dl>
+        <dt>Change</dt><dd>Periodic <code>/compact</code> on the six Muse seats. Works via prompt fallback; OpenCode has no <code>session/compact</code> method.</dd>
+        <dt>Economics</dt><dd>~$0.003 per compaction, then misses cost $0.002 instead of $0.021. Repays in under one miss.</dd>
+        <dt>Risk</dt><dd>Sheds working detail mid-task. Untested whether the prompt fallback actually truncates the session or merely prints a summary — that test was declined.</dd>
+        <dt>Position</dt><dd>Declined. The conductor's quality objection stands, and the savings are weaker at 66% than they looked at 95%.</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Spread across more model budgets</h3>
+        <span class="tag rec">Apply</span>
+      </div>
+      <dl>
+        <dt>Change</dt><dd>Background seats to <code>muse-spark-1.2-contributor</code> (identical pricing, own $60) and/or <code>mimo-v2.5</code>, nights and weekends.</dd>
+        <dt>Upside</dt><dd>Muse 1.3 alone gives 62 hours of runway on our mix. Adding 1.2 and MiMo takes it to roughly 168.</dd>
+        <dt>Risk</dt><dd>Buys headroom without fixing the waste. Muse 1.2 scores lower on quality (39.8 vs 48.2 on the AA index), so it suits background R&amp;D rather than conductors.</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Use the free GLM window for background seats</h3>
+        <span class="tag rec">Apply</span>
+      </div>
+      <dl>
+        <dt>Change</dt><dd>GLM-5.3-Flash on the Z.ai Lite free window, 08:00–18:00 daily to 20 Sep, <strong>one request in flight</strong>.</dd>
+        <dt>Scope</dt><dd>Background seats only — licence checks, release watches, grounding passes. Single queue, never the critical path.</dd>
+        <dt>Risk</dt><dd>Breaching the one-in-flight limit risks the account, so the strict gate is mandatory, not advisory.</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Test whether cache retention is settable</h3>
+        <span class="tag rec">Test first</span>
+      </div>
+      <dl>
+        <dt>Change</dt><dd>Probe <code>prompt_cache_retention</code> and a stable per-session cache key.</dd>
+        <dt>Why it wins</dt><dd>If the cache survives a five-minute gap, this beats tightening the pulse: no extra calls, no extra output, and no dependence on an inferred TTL.</dd>
+        <dt>Fallback</dt><dd>If it does not hold, fall back to option 1.</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Claude Max / Codex Plus reserve</h3>
+        <span class="tag hold">Hold</span>
+      </div>
+      <dl>
+        <dt>Scope</dt><dd>Overflow and strongest-model jobs only, used sparingly.</dd>
+        <dt>Note</dt><dd>Claude Max is resting until its Thursday weekly reset.</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head">
+        <h3>Change nothing</h3>
+        <span class="tag hold">The default</span>
+      </div>
+      <dl>
+        <dt>Consequence</dt><dd>Muse's rolling 5-hour bucket plateaus at $4.86 of $12 — that is sustainable indefinitely. The weekly $30 is the wall.</dd>
+        <dt>Timing</dt><dd>Weekly cap Tue 23:27; monthly Thu 06:18 — both assuming continuous running, which overstates it, since lanes idle.</dd>
+        <dt>Note</dt><dd>DeepSeek has 92 hours of headroom and is not the problem.</dd>
+      </dl>
+    </div>
+
+  </div>
+</section>
+
+<section class="measure">
+  <span class="eyebrow open">Also on the table</span>
+  <h2>Two things worth knowing</h2>
+  <p><strong>Both promotions end 20 September.</strong> Z.ai's free GLM-5.3-Flash window
+  (08:00–18:00 PDT, currently unused) and DeepSeek V4.1 Flash's 4× multiplier on Go,
+  which drops that budget from $60 back to $15. Z.ai Lite also permits only one request
+  in flight and breaches risk the account — free, but strictly serial, which suits
+  background seats and not anything a person is waiting on.</p>
+  <p><strong>Reads are already frugal.</strong> An earlier theory — that seats were
+  re-reading the 670&nbsp;KB <code>RD-THREADS.md</code> and the 1&nbsp;MB scoreboard every
+  turn — does not hold. File reads returned <strong>0.1&nbsp;MB in total</strong> across
+  the window; <code>RD-THREADS.md</code> was read 63 times for 1.6&nbsp;KB. Slicing reads
+  with <code>head</code>/<code>tail</code> would economise on the 5%, not the 95%.</p>
+</section>
+
+<footer>
+  <p><strong>Rev 2</strong> — corrected after team review (fsync, Corvid, Ledger
+  synthesis; the conductor's cool-pulse position declined on cost, its serialization
+  adopted). All figures measured from <code>~/.local/share/opencode/opencode.db</code> and
+  OpenCode's published rate table, for the window 16:21–20:59 PDT on 14 September 2026.
+  Fleet state: 13 lanes on OpenCode Go, dispatch live, 99.9% turn completion.
+  Commits <code>f8247ab</code> and <code>591b687</code>.</p>
+</footer>
+
+</div>

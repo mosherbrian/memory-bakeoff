@@ -1,0 +1,83 @@
+{
+ "hashes": {
+  "diff": "92cf3a63b81206dae853b08c6002c7d70ea6bdb9886bd41002a685058006a2ee",
+  "patched": "915c0aa4395cc02b596260eed35b2d0425326ccf83e726ff0913c4ea7bc77154"
+ },
+ "cases": {
+  "space": {
+   "canonical": {
+    "ts": 1789236300.0,
+    "name": "space.txt",
+    "keys": {
+     "active": null
+    }
+   },
+   "patched": {
+    "ts": 1789236300.0,
+    "name": "space.txt",
+    "keys": {
+     "active": null
+    }
+   }
+  },
+  "colon": {
+   "canonical": {
+    "ts": 1789236300.0,
+    "name": "colon.txt",
+    "keys": {
+     "active": null
+    }
+   },
+   "patched": {
+    "ts": 1234567890.0,
+    "name": "colon.txt",
+    "keys": {
+     "active": null
+    }
+   }
+  },
+  "trailing": {
+   "canonical": {
+    "error": "ValueError: Invalid isoformat string: '2026-09-12T18:05:00Z (comment)'"
+   },
+   "patched": {
+    "ts": 1789236300.0,
+    "name": "trailing.txt",
+    "keys": {
+     "active": null
+    }
+   }
+  },
+  "short": {
+   "canonical": {
+    "ts": 1234567890.0,
+    "name": "short.txt",
+    "keys": {
+     "active": null
+    }
+   },
+   "patched": {
+    "ts": 1234567890.0,
+    "name": "short.txt",
+    "keys": {
+     "active": null
+    }
+   }
+  },
+  "bad": {
+   "canonical": {
+    "error": "ValueError: Invalid isoformat string: 'notadate'"
+   },
+   "patched": {
+    "ts": 1234567890.0,
+    "name": "bad.txt",
+    "keys": {
+     "active": null
+    }
+   }
+  }
+ },
+ "findings": [
+  "REGRESSION: colon-form stamp parsed by canonical but silently mtime-fallback under the patch"
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "builder": "/var/home/bmosher/memory-bake-off/implementer/repo/scripts/experiment_20260911_trial/build_s4_packets.py",
+ "rc": 0,
+ "self_test_stdout": [
+  "turns: 1  markers: 1  raw memory-traffic entries: 1  EXCLUDED-unsupported-state: 1",
+  "SELF-TEST (B7 property): PASS \u2014 marker count == raw memory-traffic count"
+ ],
+ "self_test_says_pass": true,
+ "marker_count": 1,
+ "raw_memory_traffic": 1,
+ "packet_leaked_canaries": {
+  "turn-001.json": [
+   "key=record-secret-xyz",
+   "key=record-novel",
+   "[perseus-maint]"
+  ]
+ },
+ "power_gap": true,
+ "verdict": "GAP: self-test PASS while substance leaked",
+ "proposed_missing_check": "scan emitted packet bytes for substance canaries (e.g. `key=record-`, draft_id) as a positive control; count parity alone cannot see a predicate false negative"
+}

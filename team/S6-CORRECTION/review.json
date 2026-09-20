@@ -1,0 +1,20 @@
+{
+  "artifact": "team/S6-CORRECTION (sprint-6 row S6-1)",
+  "author": "kiln-flash",
+  "reviewer": "Astra (gpt-6-astra) — found both defects in team/s4-14-crossengine-rerun/summary-comparison.md per team/ASTRA-SPRINT5-REVIEW.md; the corrected arithmetic was independently re-checked by Claude and relayed by Brian, 2026-09-16 evening",
+  "verdict": "both defects confirmed by re-measurement on 2026-09-17 (scenario partition 19 non-empty / 41 empty; fixture dating traced to two unreconciled determinism pins, RECORD_TS run_crossengine.py:43 and DEFAULT_EVAL_NOW claude_mem_core.py:25); the correction note supersedes the reported zeros — queue verification by corvid-dsh pending as S6-1's named verifier",
+  "review_chain": [
+    {"date": "2026-09-16", "reviewer": "Astra (gpt-6-astra)",
+     "what": "sprint-5 review: found defect (a) the 19-vs-37 scenario-count contradiction and defect (b) the unexplained fixture dating; also the no-ranking rule this correction follows",
+     "evidence": "team/ASTRA-SPRINT5-REVIEW.md"},
+    {"date": "2026-09-16", "reviewer": "Claude (relay via Brian)",
+     "what": "verified the corrected arithmetic of defect (a); relayed by Brian with the evening approval to publish the correction, not a ranking",
+     "evidence": "QUEUE.md BRIAN'S DECISIONS 2026-09-16 evening, item 1"},
+    {"date": "2026-09-17", "reviewer": "kiln-flash (author's own re-measurement, not certification)",
+     "what": "partition re-measured from the pinned derivation log (19/41, 23 non-empty turns); dating cause read from the pinned adapter bytes (claude_mem_core.py sha256 53199f688574c9e5b037c9231d87e560b21a6103d956ddc22036ef523c8d594a, byte-identical to the S4-12/S4-14 run pin)",
+     "evidence": "team/S6-CORRECTION/numeric-claims.json"},
+    {"date": "pending", "reviewer": "corvid-dsh",
+     "what": "named queue verifier for S6-1; gate S6-1G authored by plumb-fable from the row text alone, mtime 2026-09-17 07:32, before any artifact file existed",
+     "evidence": "team/QUEUE.md rows S6-1/S6-1G"}
+  ]
+}
