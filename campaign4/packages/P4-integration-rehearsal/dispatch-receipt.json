@@ -3,10 +3,10 @@
   "package_id": "P4-integration-rehearsal",
   "phase": "IMPLEMENTATION",
   "owner": "kiln",
-  "start": "2026-09-21T20:38:48Z",
-  "deadline": "2026-09-21T21:23:48Z",
+  "start": "2026-09-21T20:57:44Z",
+  "deadline": "2026-09-21T21:42:44Z",
   "timer": "campaign4-p4-initial-deadline.timer",
-  "dispatch_receipt": "wake: kiln -> started",
+  "dispatch_receipt": "wake: kiln -> started (re-dispatch after infra failure)",
   "pins": {
     "contract_commit": "53c901bb82e8f0ba8de9220beb63c62115452130",
     "contract_sha256": "c0f31dd0c61b1598c87b30cfc9a6bfeffcbf5ce326c9f0a1ef5ef39309e04463",
@@ -22,7 +22,10 @@
     "worker_initial_min": 45,
     "worker_repair_min": 20,
     "verifier_per_pass_min": 20,
-    "p4_grants": "65/40"
+    "p4_grants": "worker83m56s/verifier40m; includes prospective extension1136s",
+    "director_extension_seconds": 1136,
+    "worker_total_granted_seconds": 5036,
+    "extension_ref": "infra-recovery-decision.json"
   },
   "constraints": [
     "fake adapters only",
@@ -37,5 +40,25 @@
       "deadline": "2026-09-21T21:23:48ZZ"
     },
     "reason": "Removed duplicate Z; matches TSV and armed timer; no deadline reset"
-  }
+  },
+  "infra_failure": {
+    "first_start": "2026-09-21T20:38:48Z",
+    "first_deadline": "2026-09-21T21:23:48Z",
+    "error": "upstream: reasoning encrypted_content was not issued to this caller (OpenCode lane, provider-side)",
+    "worker_output": "none",
+    "attempt_consumed": false,
+    "remedy": "kiln session stopped+restarted fresh; re-dispatched same action",
+    "evidence": "~/.config/agent-deck/acp-adapter-err/a79067ca-1790000758.err",
+    "attempt_consumed_interpretation": "Same initial attempt resumed; prior elapsed time and failure remain charged history. Repair unspent; no free budget reset."
+  },
+  "timestamp_corrections": [
+    {
+      "by": "tern",
+      "original": {
+        "start": "2026-09-21T20:57:44ZZ",
+        "deadline": "2026-09-21T21:42:44ZZ"
+      },
+      "reason": "Remove repeated Z suffix; no deadline change"
+    }
+  ]
 }
