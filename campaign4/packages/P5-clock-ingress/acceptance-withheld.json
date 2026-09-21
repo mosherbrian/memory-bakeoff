@@ -1,0 +1,36 @@
+{
+  "event_type": "terminal_boundary_decision",
+  "package_id": "P5-clock-ingress",
+  "state": "EXHAUSTED",
+  "decided_by": "tern",
+  "decision_ref": "P5-mixed-atomic-authority",
+  "source_commit": "88f2c18b68c1f71ace8911cec7b74a3df752d2e4",
+  "reason": "Repair-2 PASS retained; mixed hold+decide bypass commits forged actor/time without trusted receipt. All allocated attempts spent.",
+  "disposition": {
+    "kind": "successor_opened",
+    "successor_id": "P5-r2-atomic-authority",
+    "reason": "Strict atomic forms and complete trusted subevent validation",
+    "evidence_refs": [
+      "../P5-r2-atomic-authority/director-mixed-atomic-probe.py",
+      "../P5-r2-atomic-authority/admission-receipt.json"
+    ]
+  },
+  "successor_action": {
+    "action_id": "P5r2-admit-1",
+    "owner": "corvid",
+    "start": "2026-09-21T23:37:49.386144+00:00",
+    "deadline": "2026-09-21T23:47:49.386144+00:00",
+    "contract_commit": "7b5772e",
+    "contract_sha256": "e09c313c5c99d14c9812b1bbab678a1a8e65b37170d6319cbdab8ac83acba890",
+    "state": "DISPATCHED",
+    "dispatch_receipt": "wake: corvid -> started",
+    "timer": "campaign4-p5r2-admission-deadline.timer",
+    "package_id": "P5-r2-atomic-authority",
+    "phase": "ADMISSION"
+  },
+  "spent_attempt_ceilings_minutes": {
+    "worker": 65,
+    "verifier": 55
+  },
+  "recorded_at": "2026-09-21T23:38:33.337397+00:00"
+}
