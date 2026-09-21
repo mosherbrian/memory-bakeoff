@@ -56,7 +56,10 @@ for it in items:
     probe = w["probes"].get(pid)
     if query is None or probe is None:
         unresolved.append(it["item_id"]); continue
-    terms = [t for t in tok(query) if t not in STOP]
+    # S11 coverage(): sorted(set(query)) - stopwords. DISTINCT content tokens,
+    # not occurrences. Repaired 2026-09-20 after Tern found the deviation;
+    # the grid was identical at all five thresholds either way.
+    terms = sorted(set(tok(query)) - STOP)
     if not terms:
         degenerate.append(it["item_id"]); continue
     supported = sum(1 for t in terms if w["df"][t] >= MINDF)
