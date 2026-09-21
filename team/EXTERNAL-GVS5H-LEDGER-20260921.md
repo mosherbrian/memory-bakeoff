@@ -120,3 +120,33 @@ as evidence that the judgment lane is unnecessary.
 - **Next cheap step if pursued:** ask only whether the repair loop has a cap in
   the actual repository. That single fact decides whether their design has
   solved the edge that killed three of ours, or has not met it yet.
+
+---
+
+## Disposition — 2026-09-21
+
+**Considered and declined. Interesting, not adopted.** Tern's call, relayed by
+Brian.
+
+Consistent with her rulings on memoose and Munder Difflin: architectural
+reference, not an adoption candidate. Nothing here is a capability we lack —
+the convergence itself was the finding, and it corroborates the decidable half
+of the design we already have.
+
+Not implemented, and no package opened:
+
+- **Dual-hypothesis racing** needs two genuinely available approaches and a
+  mechanical finish line. Our stalls have been judgment calls with no race to
+  run.
+- **Three-line error handoff** is a saving on a cost we are not paying; our
+  repairs have been one-value corrections.
+- **Difficulty tagging** addresses contract weight, which r2 is handling
+  directly rather than by adding a classifier.
+
+**The one open question, left open on purpose:** whether their repair loop has
+a round cap in the actual repository. The published description has none, and
+that is the edge that consumed three of our campaigns. Worth one look if
+anyone is ever in there; not worth a package to find out.
+
+Declining a candidate for a stated reason is a use of it, not a failure to use
+it.
