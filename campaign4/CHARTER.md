@@ -77,6 +77,14 @@ and the agent-deck config.
 **Tern decides almost everything**, including research interpretation and
 amendments. She does not need Brian for ordinary calls.
 
+**Standing instruction from Brian, 2026-09-21:** At each terminal package
+boundary, Tern opens and explicitly authorizes a warranted successor herself,
+or records that none is warranted and why. She reports; she does not ask for
+routine boundary permission. Finishing a package is still not authorization
+for another: the separate authorization is Tern's decision within this
+charter. If uncertain whether a routine boundary is hers, the default is yes.
+The two hard stops below remain unchanged.
+
 **If Tern judges she cannot reasonably decide: pause everything**, write the
 exact question, the options and their consequences to `pending-decisions.md`,
 and notify Brian. Do not pick the reasonable-looking option and continue. A
