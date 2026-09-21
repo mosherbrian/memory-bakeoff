@@ -1,0 +1,20 @@
+{
+ "allocation_cap_s": 7200,
+ "authorized_durations": {
+  "decision": 86400,
+  "handoff": 1800,
+  "run": 3600,
+  "verify": 1800
+ },
+ "discontinuity_threshold_s": 60,
+ "future_skew_tolerance_s": 120,
+ "nested_deadline_cap_s": 86400,
+ "note": "SIMULATED rehearsal parameters. Justifications in interface.md. Not live policy.",
+ "repair": {
+  "D1": "actor bound at boundary from trusted adapter context; any claim actor (incl record_terminal/atomic subevents) -> E_FORGED_ATTRIBUTION; untrusted contexts -> E_UNTRUSTED_ACTOR",
+  "D2": "start needs explicit duration_s/grant_ref (no fallback); every nested verify/handoff/hold deadline checked vs cap or phase-bound covering grant; actual phase from ledger (phase_hint rejected); 2099-without-grant rejected, pinned distant deadlines accepted",
+  "D3": "epoch = boot-counter + secrets token (unique per lifetime); backward UTC at reopen -> E_AMBIGUOUS_RESTART until bounded reconcile_clock; cross-process mono never compared; deadlines never extended"
+ },
+ "repair2": "atomic disposition validated against post-verdict phase (pure-core simulation, read-only); both record_terminal and append(atomic=decide) stamp both subevents; invalid pairs rejected pre-write with no partial rows; standalone decide still gated",
+ "tolerance_justification": "120s bounds honest NTP offset (<1s typical) plus provisioning/delivery latency (seconds); the observed 32-minute future-dating exceeds it 16x. 60s wall-vs-monotonic divergence catches manual steps and large NTP corrections while tolerating drift and jitter."
+}
