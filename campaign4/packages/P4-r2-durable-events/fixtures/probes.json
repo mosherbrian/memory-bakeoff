@@ -1,0 +1,39 @@
+{
+ "current_deadlines": {
+  "handoff": "2026-09-21T14:30:00Z",
+  "verifier": "2026-09-21T14:00:00Z",
+  "worker": "2026-09-21T13:00:00Z"
+ },
+ "note": "SIMULATED rehearsal fixture. Probes stale_worker_deadline / early_current_deadline / duplicate_after_restart FAILED on pinned parent 945e3384 (all observed interrupted with stops=1 wakes=1) and are corrected here. Not real campaign history.",
+ "probes": [
+  {
+   "case": "stale_worker_deadline",
+   "corrected": "no-op-stale-action",
+   "parent": [
+    "interrupted",
+    false
+   ]
+  },
+  {
+   "case": "early_current_deadline",
+   "corrected": "no-op-early",
+   "parent": [
+    "interrupted",
+    false
+   ]
+  },
+  {
+   "case": "duplicate_after_restart",
+   "corrected": "already-handled (durable)",
+   "parent": [
+    "interrupted",
+    false
+   ]
+  }
+ ],
+ "question_id": "P4R2",
+ "repair": {
+  "D1": "per-effect durable intent before each call + separate delivery/ack reconcile; crash after interrupt/stop/stop-ack/wake/wake-ack tested with true reopen; delivered stop never repeats, pending wake completes",
+  "D2": "cancel_deadline durably invalidates the callback incl after reopen; bare loss reconstructs the valid ledger deadline; ledger deadline stays authoritative (overdue flight still INVALID)"
+ }
+}
