@@ -1,6 +1,7 @@
 # P2 — Freeze the contract, the transition table and the ownership map
 
-**Status:** DRAFT. Awaiting contract reader.
+**Status:** DRAFT, corrected after one bounded rejection. Awaiting corvid's
+confirmation of the repaired contract; execution also requires accepted P1 output.
 **Authorized by:** Brian, 2026-09-21, under `CHARTER.md`.
 **Work type:** judgment (a specification, read by a named reader).
 **Depends on:** P1 — the ownership map cannot be settled without knowing what
@@ -18,13 +19,23 @@ This is steps 2, 4 and most of 5 of Brian's five.
 
 ## Inputs
 
-- Tern's architecture, sections 2–5, as the source. **It is the specification;
-  this package freezes it, it does not redesign it.**
+- Repository-root `campaign4/ACCEPTED-ARCHITECTURE.md`, sections 2–5, as the
+  source; SHA256 `cf390ce0d79bf404c166c59ca0b2548a57e6f239b5e380d88aec569ad11c2b5c`,
+  commit `a4c143be903c26dea5cb82efcca015d0a671052d`.
+  **It is the specification; this package freezes it, it does not redesign it.**
+  `campaign4/ARCHITECTURE-PROVENANCE.md` records the exact extraction and the
+  later charter's precedence on today's scope. Sections 6–7 supply the liveness
+  obligation and walkthrough context; they do not authorize controller code.
 - `campaign4/CONTRACT-TEMPLATE.md` — a transcription of Tern's §3, provisional.
   **P2 replaces it.**
-- `../../LOOP-REQUIREMENTS-20260920.md` and Tern's three reviews in
-  `../../team/.director-*.md` for what was already settled and withdrawn.
-- P1's capability map.
+- Repository-root `LOOP-REQUIREMENTS-20260920.md` and the relevant historical
+  reviews `team/.director-decisions-review.md`, `team/.director-loop-review.md`
+  and `team/.director-loop-review-rev2.md` for what was settled and withdrawn.
+- P1's independently accepted `campaign4/packages/P1-inspect/capability-map.md`;
+  cairn must record its accepted version and hash before P2 starts.
+
+All repository-root paths above resolve from `/home/bmosher/memory-bake-off`,
+not from this package directory or an implementer checkout.
 
 ## Expected output
 
@@ -47,7 +58,8 @@ This is steps 2, 4 and most of 5 of Brian's five.
 
 ## Completion check
 
-**Corvid** confirms: the transition table has no state without an exit; the
+**Corvid** confirms: every nonterminal state has an exit, and terminal states
+have no outgoing execution transition; the
 amendment path exists and does not reset budgets; every role's "may not" is
 stated; and the walkthrough reaches a terminal state for all four examples
 without a step that is not in the table.
@@ -60,6 +72,16 @@ Worker **kiln** · Reader/verifier **corvid** · Duty owner **cairn** · Directo
 
 No controller code. One initial attempt plus one repair. If the contract cannot
 be kept compact, that is a finding to report, not a reason to expand it.
+
+At most 60 minutes for the initial worker attempt and 30 minutes for its sole
+repair; at most 30 minutes for each verifier pass, including post-repair
+verification. Cairn records start/deadline, owns stopping overdue work and
+recording BLOCKED, and wakes Tern with evidence. Deadline handling must be
+event-driven; this does not authorize cairn to poll. Expiry does not
+automatically spend a repair. The campaign's end-of-day boundary still applies.
+P1's output must be independently accepted before P2 execution starts.
+The two ownership questions are for Tern to decide within the accepted
+architecture; kiln must not redesign it.
 
 ## Permitted
 
