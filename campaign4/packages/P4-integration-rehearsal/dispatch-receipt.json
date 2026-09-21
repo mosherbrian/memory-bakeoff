@@ -1,0 +1,41 @@
+{
+  "action_id": "P4-initial-1",
+  "package_id": "P4-integration-rehearsal",
+  "phase": "IMPLEMENTATION",
+  "owner": "kiln",
+  "start": "2026-09-21T20:38:48Z",
+  "deadline": "2026-09-21T21:23:48Z",
+  "timer": "campaign4-p4-initial-deadline.timer",
+  "dispatch_receipt": "wake: kiln -> started",
+  "pins": {
+    "contract_commit": "53c901bb82e8f0ba8de9220beb63c62115452130",
+    "contract_sha256": "c0f31dd0c61b1598c87b30cfc9a6bfeffcbf5ce326c9f0a1ef5ef39309e04463",
+    "admission_review_sha256": "1fd8f6ca6e65ec9b35e24569060693869290a6011e60148fe0b93489e819b98c",
+    "admission_confirmation_commit": "a75290e970f445cbc992bfe4c36bd423d7b6b393",
+    "p3_acceptance_commit": "ebced90",
+    "p3_accepted_source_commit": "d27d5be7b4086556260974bca9aef2ec6f8b1db8",
+    "watch_reference_sha256": "1feaf9945dce002a236cb1287447537f2c5abf90fd33f9ebbcb1a403dcda9601",
+    "p2_frozen_commit": "5bfbb071e6efdb6f15de1c582295363a94cd08c7",
+    "p1_capability_map_commit": "dd15764258317c125adc2cd193a44c57ad5dd6b4"
+  },
+  "allocation": {
+    "worker_initial_min": 45,
+    "worker_repair_min": 20,
+    "verifier_per_pass_min": 20,
+    "p4_grants": "65/40"
+  },
+  "constraints": [
+    "fake adapters only",
+    "never execute inputs/campaign4-watch.observed.sh",
+    "no live effects/integration",
+    "no live ledger adoption"
+  ],
+  "timestamp_correction": {
+    "by": "tern",
+    "original": {
+      "start": "2026-09-21T20:38:48ZZ",
+      "deadline": "2026-09-21T21:23:48ZZ"
+    },
+    "reason": "Removed duplicate Z; matches TSV and armed timer; no deadline reset"
+  }
+}
