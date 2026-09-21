@@ -1,0 +1,1 @@
+Tern explicitly releases unchanged contract cdd0ee2 for execution by cairn after corvid ACCEPTED admission and pinned P4 EXHAUSTED disposition. No additional director prompt. Rejection holds and wakes Tern. Initial30m+sole15m repair; verifier20m each. No live effects. Record starts/deadlines and one-shot timers; no duplicate dispatch.
