@@ -33,3 +33,10 @@
 2026-09-21T22:27Z	P4-r2-durable-events	P4r2-initial-1	RETIRED	cairn	-	initial deadline unit fired after COMPLETED; no stop; repair timer governs
 2026-09-21T22:39Z	P4-r2-durable-events	P4r2-repair-1	BLOCKED	kiln	2026-09-21T22:38Z	sole repair expired, no completion wake, seat stopped
 2026-09-21T22:40:35Z	P4-r2-durable-events	P4r2-verify-2	CHECKING	corvid	2026-09-21T23:00:08Z	packages/P4-r2-durable-events/postrepair-verification-receipt.json
+2026-09-21T22:40Z	P4-r2-durable-events	P4r2-repair-1	RESOLVED	tern	-	repair-reconciliation.json 9ee28ce2: completion 22:29Z timely 16/16; wake fault mine; verify2 to 23:00:08Z
+2026-09-21T22:42Z	P4-r2-durable-events	P4r2-verify-2	FAIL	corvid	-	verification-r2-repair.md 4e6eb965 disk-matched; behaviour PASS 16/16, D1+D2 corrected; defect: driver.py b285bc7f 944 lines, dup defs inert
+2026-09-21T22:43Z	P4-r2-durable-events	P4r2-cleanup-1	DISPATCHED	kiln	2026-09-21T22:48Z	cleanup ext-1 driver.py only; receipt filed; ack started
+2026-09-21T22:49Z	P4-r2-durable-events	P4r2-cleanup-1	COMPLETED	kiln	2026-09-21T22:48Z	session-history completion pre-deadline; driver b285bc7f->8f7c61ce disk-matched; 36 pass; cleanup timer consumed
+2026-09-21T22:49Z	P4-r2-durable-events	P4r2-cleanupverify-1	DISPATCHED	corvid	2026-09-21T22:54Z	cleanup ext-1 <=5m; AST equivalence + 15-file identity + 36/59; ack pending
+2026-09-21T22:50Z	P4-r2-durable-events	P4r2-cleanupverify-1	PASS	corvid	-	verification-cleanup.md d20bbe03 disk-matched; AST equiv 84c35805; 15/15 identical; 36+59; verify timer retired pre-22:54Z
+2026-09-21T22:53:08Z	P4-r2-durable-events	P4r2-boundary-1	COMPLETE	tern	-	packages/P4-r2-durable-events/acceptance.json

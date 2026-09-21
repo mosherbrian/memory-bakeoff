@@ -1,0 +1,38 @@
+{
+  "event_type": "terminal_boundary_decision",
+  "package_id": "P4-r2-durable-events",
+  "state": "COMPLETE",
+  "decided_by": "tern",
+  "decision_ref": "P4-r2-acceptance",
+  "source_commit": "4c07bd83ec571bec9aa4022369f3ec7e9263051b",
+  "verification_sha256": "d20bbe038dc03e0a9318a6f1200feb6e71568aa30104c2ed4bd81582db4a23e4",
+  "reason": "Bounded simulated rehearsal accepted after D1/D2 repair and AST-equivalent duplicate-only cleanup; full final manifest pinned. Not live readiness certification.",
+  "disposition": {
+    "kind": "successor_opened",
+    "successor_id": "P5-clock-ingress",
+    "reason": "Required trusted clock ingress before live adoption",
+    "evidence_refs": [
+      "director-final-manifest.json",
+      "verification-cleanup.md",
+      "../P5-clock-ingress/admission-receipt.json"
+    ]
+  },
+  "successor_action": {
+    "action_id": "P5-admission-1",
+    "owner": "corvid",
+    "start": "2026-09-21T22:52:20.774476+00:00",
+    "deadline": "2026-09-21T23:07:20.774476+00:00",
+    "contract_commit": "ec3325463eff8677fab733d2413fd7bc8266fbe8",
+    "contract_sha256": "ca8a9e054025f5cd9b28b79addf8c970d5d3a4289d2e145fabc9dc43325da710",
+    "dispatch_receipt": "wake: corvid -> started",
+    "timer": "campaign4-p5-admission-deadline.timer",
+    "package_id": "P5-clock-ingress",
+    "phase": "ADMISSION"
+  },
+  "historical_P4_grants": {
+    "worker_seconds": 8036,
+    "verifier_seconds": 5100,
+    "note": "Attempt ceilings spent; actual usage distinct. All prior FAIL/withheld PASS and operational deviations retained."
+  },
+  "recorded_at": "2026-09-21T22:53:08.824644+00:00"
+}
