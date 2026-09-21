@@ -1,0 +1,53 @@
+{
+  "event_type": "terminal_boundary_decision",
+  "package_id": "P5-r2-atomic-authority",
+  "state": "COMPLETE",
+  "decision": "ACCEPTED",
+  "decided_by": "tern",
+  "recorded_at": "2026-09-21T23:48:33.304551+00:00",
+  "decision_ref": "P5r2-acceptance",
+  "source_commit": "80092f92c24fb58ad70478faf93e4f39eb184847",
+  "manifest_sha256": "db6b3d976bde0599279849184811d6f29d8040939e3f75eb20fb0ea90068267b",
+  "verification_sha256": "ff1f6d89db9ab570ac875b197f7ae24c5c936d7467387f88be1927e4bf84d015",
+  "evidence": [
+    "Full verifier-listed hashes matched",
+    "83 local tests rerun PASS",
+    "Director mixed-atomic probe REJECTED E_MIXED_ATOMIC with zero rows",
+    "Independent corvid 59 accepted-core regressions PASS"
+  ],
+  "limitations": [
+    "Simulated only; no live adoption",
+    "Internal fake.py/store APIs are not accepted public ingress",
+    "P6 measures host recovery and provides retirement evidence"
+  ],
+  "allocation": {
+    "historical_cumulative_grants_worker_min": 95,
+    "historical_cumulative_grants_verifier_min": 85,
+    "cancelled_unused_worker_min": 10,
+    "cancelled_unused_verifier_min": 15,
+    "spent_attempt_ceilings_worker_min": 85,
+    "spent_attempt_ceilings_verifier_min": 70
+  },
+  "disposition": {
+    "kind": "successor_opened",
+    "successor_id": "P6-live-recovery",
+    "reason": "Prove host recovery using accepted ingress, then support controlled cutover",
+    "evidence_refs": [
+      "../P6-live-recovery/package.md",
+      "../P6-live-recovery/admission-receipt.json"
+    ]
+  },
+  "successor_action": {
+    "action_id": "P6-admit-1",
+    "package_id": "P6-live-recovery",
+    "owner": "corvid",
+    "phase": "ADMISSION",
+    "start": "2026-09-21T23:47:53.292420+00:00",
+    "deadline": "2026-09-22T00:02:53.292420+00:00",
+    "contract_commit": "91f19cf",
+    "contract_sha256": "174377f112e460b6cba1132ac2337beff90a99f2cb0d777b4dbaeb9b9d20fde4",
+    "state": "DISPATCHED",
+    "timer": "campaign4-p6-admission-deadline.timer",
+    "dispatch_receipt": "wake: corvid -> started"
+  }
+}
