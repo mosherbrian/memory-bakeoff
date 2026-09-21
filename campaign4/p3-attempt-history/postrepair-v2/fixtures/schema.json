@@ -1,0 +1,96 @@
+{
+  "error_codes": [
+    "E_ABSENT_STATE",
+    "E_ALLOC_EXCEEDED",
+    "E_BAD_ALLOCATION",
+    "E_BAD_TRANSITION",
+    "E_CYCLE",
+    "E_DANGLING_SUCCESSOR",
+    "E_DEADLINE_EXPIRED",
+    "E_DUP_EVENT",
+    "E_INCOMPLETE_REST",
+    "E_LEDGER_INCOMPLETE",
+    "E_MALFORMED",
+    "E_MISSING_ARTIFACTS",
+    "E_MISSING_DISPOSITION",
+    "E_NO_ALLOCATION",
+    "E_NO_DEADLINE",
+    "E_OVERDUE_ACTION",
+    "E_OWNERSHIP",
+    "E_SELF_VERIFY",
+    "E_TERMINAL",
+    "E_UNAUTHORIZED",
+    "E_UNKNOWN_EVENT",
+    "E_VERSION"
+  ],
+  "runtime_json": {
+    "action": {
+      "bounded?": "bool",
+      "owner": "enum tern|corvid|kiln|cairn",
+      "package_id?": "string",
+      "trigger_id?": "string",
+      "type": "const owner-reconcile"
+    },
+    "allocations": {
+      "budget": "{attempts:int, repairs:int, verifier_s:int, passes:{verify:{max_s:int}, controller_recovery:{max_s:int}}}",
+      "hard_ceiling": "controller_recovery pass budget <= 600s always; no cumulative ceiling overrides it",
+      "new_allocation": "object {grant_s:positive int, granted_by:const tern} within per-pass ceiling; free-form rejected",
+      "recover": "duty-only incident pass from BLOCKED; records only",
+      "verifier_events": "require integer elapsed_s; spend beyond pass budget rejected"
+    },
+    "cli_apply_out": {
+      "code?": "string",
+      "detail?": "string",
+      "duplicate": "bool",
+      "ok": "bool",
+      "outcome": "string"
+    },
+    "cli_close_out": {
+      "disposition": "string",
+      "ok": "bool",
+      "verdict": "string"
+    },
+    "cli_snapshot_out": {
+      "ledger_revision": "int",
+      "ok": "bool",
+      "snapshot": "object"
+    },
+    "event": {
+      "actor": {
+        "role": "enum",
+        "seat": "string"
+      },
+      "at": "RFC3339 string",
+      "event_id": "string unique",
+      "question_id": "string",
+      "revision": "int",
+      "type": "string"
+    },
+    "liveness": "a successor link is satisfied only by an in-flight entry with dispatch_receipt==acknowledged AND a finite deadline; anything else is dangling/unrelated",
+    "projection_in_flight": {
+      "action_id": "string|null",
+      "deadline": "RFC3339|null",
+      "dispatch_receipt": "enum acknowledged|intended|none",
+      "owner": "string|null",
+      "package_id": "string",
+      "phase": "string"
+    },
+    "projection_terminal": {
+      "decided_by": "const tern",
+      "decision_ref": "string",
+      "disposition?": "object(kind enumerable)",
+      "held?": "bool, true only with open bounded director-decision task carried as DECISION in-flight",
+      "reason": "string",
+      "state": "enum"
+    },
+    "timestamps": "ISO-8601 UTC strings compared lexicographically; tests use a fake clock, never sleeps",
+    "verdict": {
+      "action?": "object",
+      "code?": "string",
+      "detail": "string",
+      "verdict": "enum ACTIVE|REST|INVALID|ACTION_DUE"
+    }
+  },
+  "schema_version": 1,
+  "verdict_codes_vs_transition_codes": "E_* verdict codes come from the validator; transition rejections use the same registry; INVALID is a validation fault, never a lifecycle terminal"
+}
