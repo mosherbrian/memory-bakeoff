@@ -138,15 +138,42 @@ the exhaustive transition tests up front.
 
 ---
 
-## Status against Brian's five steps
+## Brian's five, in his words
 
-| | | |
+Stated 2026-09-20. Quoted rather than paraphrased, because everything below is
+scored against them and a paraphrase drifts.
+
+> 1. We look at what the newest agent-deck has out of the box along with our
+>    conductor chat ui and the sprint board to the extent it makes sense
+>    (maybe/maybe not)
+> 2. We ask what would a minimal loop contain and write it down as a use
+>    case/requirement for each part of the loop.
+> 3. We write down use cases for what our observability needs are - sprint,
+>    research, potential future research areas, along with the big picture
+>    roadmap and where we are. The roadmap should also show how it leads to the
+>    overall project goal with discrete phases/steps.
+> 4. We define the critical roles, and escalation paths.
+> 5. We define storage, memory, and artifacts, and the rules about what goes
+>    where and how it's tracked, dispositioned, or disposed of and when.
+
+And the purpose the five serve, also his words:
+
+> I think with this, we could then do a real architecture and plan, or hand it
+> over to be done. This would have unit tests, and system tests, and gates
+> phases, and a real architecture rather than accretion of a pile of scripts
+> that change each time we hit a bug and build a new chunk that gets thrown on
+> the pile. **Each part of the system should not be added unless we justify its
+> existence first and know why we need it.**
+
+## Status against those five
+
+| # | state | where it stands |
 |---|---|---|
-| 1. what new agent-deck gives natively | **not done** | on 1.16.4; 1.16.10 unmeasured |
-| 2. minimal loop, requirement per part | **done** | rev 2, twice reviewed, run once end to end |
-| 3. observability + phased roadmap | **partly** | Tern's review answers "where we are"; the roadmap does not exist |
-| 4. roles and escalation paths | **partly** | author/reproducer/reader/overseer named; handoff and blocked-attempt ownership **not** — Tern's answer was "not yet" |
-| 5. storage, memory, artifacts, disposition | **not done** | untouched |
+| **1** agent-deck out of the box, + conductor chat UI + sprint board | **not done** | still on 1.16.4; 1.16.10 exists and is unmeasured. Nothing native has been diffed against our 82 live scripts |
+| **2** minimal loop, a use case per part | **done** | `LOOP-REQUIREMENTS-20260920.md` rev 2 — reviewed twice by Tern, amended, and run once end to end tonight |
+| **3** observability use cases + roadmap with phases | **partly** | Tern's index review answers "where we are" on the research. The phased roadmap to the project goal does not exist |
+| **4** critical roles and escalation paths | **partly** | author, reproducer, named reader and overseer are defined. Ownership of an ordinary handoff and of a blocked attempt is **not** — Tern's answer to that question was flatly "not yet" |
+| **5** storage, memory, artifacts — what goes where, tracked, dispositioned, disposed | **not done** | untouched. The receipt schema is the natural seed for it |
 
 Cheapest next, and they gate the rest: **1** is an afternoon; **4** is a page.
 **5** falls out of the receipt schema. **3** last — a roadmap written before the
