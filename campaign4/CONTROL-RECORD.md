@@ -29,3 +29,8 @@ accepted P3-r3 (59 tests) is d27d5be. P4 tests composition, external delivery
 reconciliation, deadlines and supervision with fake adapters. On P4 acceptance,
 Tern will decide a bounded live fixture/ledger adoption package. Do not backfill
 all old prose into SQLite or treat passing core tests as live integration proof.
+
+Clock rule: obtain UTC receipt time and calculate the authorized deadline in
+the same host-tool invocation that writes the receipt. Never type/model-generate
+a date literal or reuse an example timestamp. Keep delayed source occurrence
+time separate from receipt time. See CLOCK-AUTHORITY-DECISION-20260921.md.
