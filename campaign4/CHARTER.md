@@ -158,3 +158,29 @@ not part of campaign 4.
 
 Campaign 4 succeeds when useful research advances visibly with little
 supervision — not when a fleet platform is finished.
+
+## Conductor actions, 2026-09-21 15:20 PDT — two defects during the cairn lane change
+
+Recorded by Claude, acting inside cairn's lane while the fleet was stopped.
+
+**1. A completion wake was lost.** kiln finished P4-r2-durable-events at 15:11
+PDT and wrote `rehearsal-report.md`, `interface.md` and `fixtures/probes.json`
+(28 tests pass, 59 core pass, readiness NOT-ready with gaps named). Its wake to
+cairn was delivered while cairn's socket was down for the Muse switchover.
+`control-events.tsv` therefore carries DISPATCHED / ACCEPTED / RECEIPT and no
+COMPLETED row, and corvid was never dispatched to verify. Cairn was re-woken
+with the facts at 15:20.
+
+This is the same class as the day's other coordination defects: **a signal
+existed and nothing consumed it.** The switchover had no drain — no check that
+in-flight wakes had landed before the seat was stopped.
+
+**2. The deadline timer could not have caught it.** The backstop was armed as
+`systemd-run --on-calendar=22:38:22`, which systemd reads as **local** time. The
+deadline it was enforcing was `2026-09-21T22:38Z` — 15:38 PDT. So the safety net
+was set to fire **seven hours late**, and the one stall it existed to catch
+would have run unattended until 22:38 PDT. Re-armed relative (`--on-active`).
+
+**Rule, going forward:** arm deadlines with `systemd-run --on-active=<duration>`.
+Never an absolute wall-clock. A duration has no timezone to get wrong. This was
+never written down — cairn improvised the form — which is why it is written here.
