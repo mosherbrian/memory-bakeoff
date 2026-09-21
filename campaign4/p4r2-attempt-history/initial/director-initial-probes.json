@@ -1,0 +1,46 @@
+[
+  {
+    "case": "removed_current_timer",
+    "result": [
+      "interrupted",
+      false
+    ],
+    "stops": [
+      [
+        "w",
+        "deadline-expired"
+      ]
+    ],
+    "wakes": [
+      [
+        "tern",
+        "deadline-expired:q"
+      ]
+    ]
+  },
+  {
+    "case": "crash_after_stop_before_wake",
+    "stops_before_crash": [
+      [
+        "w",
+        "deadline-expired"
+      ]
+    ],
+    "result_after_reopen": [
+      "interrupted",
+      false
+    ],
+    "new_stops_after_reopen": [
+      [
+        "w",
+        "deadline-expired"
+      ]
+    ],
+    "wakes_after_reopen": [
+      [
+        "tern",
+        "deadline-expired:q"
+      ]
+    ]
+  }
+]
