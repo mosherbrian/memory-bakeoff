@@ -98,7 +98,32 @@
   "runner_sha256": "b3031d0dae433915de8533696f908d1986652f8e96d910475ce297b63976d402",
   "results_sha256": "59b0a3b2657a57b35979a66ab3dd65a748b063e3bf7fd24625144d589c1bd5fb"
  },
- "verified_by": null,
+ "verified_by": {
+  "seat": "corvid-dsh",
+  "at": 1789967142,
+  "checks_performed": [
+   "re-execution",
+   "independent_derivation",
+   "validity_review"
+  ],
+  "blind_first": "corvid wrote corvid-reproduction.json before opening results.json or verdict.json",
+  "outcome": "CONFIRMED - transfer fails. Agrees at 4 of 5 thresholds and on the conclusion.",
+  "binding_confirmed": "re-ran run_transfer.py b3031d0d, rewrote results.json 59b0a3b2 BYTE-IDENTICAL",
+  "divergence": {
+   "cell": "threshold 0.5, answerable probes declined",
+   "author": 10,
+   "reproducer": 13,
+   "cause": "pooled vs positional corpus. The author's runner pools every inscribe in the stream into one df table, so later records support earlier queries. corvid built the corpus at each probe's own position in the ops stream.",
+   "probes_that_cross": [
+    "s1-R403",
+    "s2-R1204",
+    "s2-R1603"
+   ],
+   "which_reading_is_registered": "THE REPRODUCER'S. PREREGISTRATION.md specifies each probe answered at its own position in the ops stream. The author's runner does not implement its own registration.",
+   "effect_on_conclusion": "none - at 0.5 there are 0 abstentions either way, so 10 and 13 both fail the 8/80 bar"
+  },
+  "report": "team/CORVID-S13-1-REPRODUCE.md"
+ },
  "at": 1789963193,
  "corrections": [
   {
@@ -128,6 +153,13 @@
    "kind": "attempt numbering wrong",
    "was": "'repair 1 of 2'",
    "now": "this is ATTEMPT 2 = repair 1 of 1, under the one-initial-plus-one-repair budget. The budget is now spent."
+  },
+  {
+   "at": 1789967142,
+   "by": "corvid-dsh (reproduction)",
+   "kind": "runner deviates from its own pre-registration",
+   "was": "corpus pooled across the whole ops stream",
+   "now": "NOT REPAIRED. The repair budget is spent (attempt 2 = repair 1 of 1). Under the loop's own rule this is an AMENDMENT or a new row, decided by a named person - not a retry. Recorded, not fixed."
   }
  ],
  "open_fidelity_issues": [
@@ -135,7 +167,7 @@
   "REGISTRATION ORDER NOT DEMONSTRATED: registration, runner and results entered git together in 99d8f6f. A hash proves content identity, not chronology. This row does not exercise the earlier-commit check the loop proposal relies on.",
   "'MATERIALLY ABOVE' the 0/40 floor was never given a number. It does not rescue this grid (every threshold with abstentions already breaches the loss limit) but would make a borderline positive ambiguous."
  ],
- "status": "negative result stands; runner now bound to results; repair budget SPENT; three fidelity issues open; verified_by still null",
+ "status": "VERIFIED by corvid-dsh. Transfer fails - confirmed independently. One divergence, diagnosed, does not move the conclusion. One open defect recorded and NOT repaired: budget spent.",
  "budget": {
   "initial_attempt": 1,
   "repairs_allowed": 1,
