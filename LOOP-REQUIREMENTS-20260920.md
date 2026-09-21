@@ -57,7 +57,8 @@ command returned a number.
 ### 2 → REGISTERED
 
 **Requirement.** Criteria, bar, and pinned inputs committed **as their own
-commit, before the runner or any result exists.** The evidence of order is
+commit, before any scored execution.** Existing code may be read and pinned
+first — registration precedes the *run*, not the existence of a runner. The evidence of order is
 **commit ancestry**, not a hash.
 
 *Why the change.* v1 said "the criteria existing before the result cannot be
@@ -95,7 +96,7 @@ different weight:
 |---|---|---|
 | re-execution | execution integrity | shared code keeps shared bugs |
 | independent derivation | the measurement, implemented twice | a shared invalid definition |
-| validity review | does this measure the intended thing | nothing — this is judgment |
+| validity review | does this measure the intended thing | it can miss defects; it establishes neither truth nor generalisation |
 
 **Equality settles only deterministic replay** with pinned code, inputs and
 environment, over meaningful fields. For stochastic runs — the local pilot,
@@ -139,6 +140,15 @@ This is the record that makes four of the requirements above enforceable
 instead of asserted. Append-only, beside the verdict, in the shape of the
 escalation ledger, which already works.
 
+Two linked events per attempt, not one line: a **start**, durably written
+*before* execution and carrying a declared deadline, and an **end**. One
+append-only line cannot both announce a start and later acquire an end time, and
+a crash before results would leave no record at all. The overseer must also read
+**registrations**, because a row that never started has no attempt receipt.
+
+Detection is not termination: the requirement must name **who** may mark an
+overdue run blocked.
+
 ```
 question_id        stable across renames - the budget follows this
 attempt            integer
@@ -159,9 +169,10 @@ human_touches      a person had to intervene
 
 **What it enforces, that nothing else can.**
 
-- **Binding.** A declared author and a null verification field are assertions
-  until something ties them to the real actor and the exact bytes. This ties
-  them.
+- **Binding, only if the actor field is not self-written.** A trusted launcher
+  must attach the real actor and run identity, and the reproducer's receipt must
+  reference the exact **result bytes** it checked. A self-declared actor is one
+  more assertion. Not yet demonstrated.
 - **Exhaustion reporting.** `why_ended` is the requirement above, stored.
 - **Liveness without a scheduler.** `started_at` with no `ended_at` past the
   wall-clock limit is how the overseer sees stopped work. It is the answer to
@@ -173,7 +184,8 @@ human_touches      a person had to intervene
 `attempt == 1 and outcome == settled`; rejection rate is a ratio over outcomes;
 the effort ratio is reproducer effort over author effort.
 
-**`human_touches` is the one field no machine can fill.** It will be
+**`human_touches` counts interventions, not attention**, and is a fallible
+proxy. It is the one field no machine can fill. It will be
 under-counted. An under-counted number that trends upward is still the only
 signal that would have answered "is this working" on 2026-09-20 without Brian
 asking eight times.
@@ -226,8 +238,10 @@ itself, and the binding between registration and reproduction all have to exist.
 
 ## What is claimed, and what is proven
 
-**Proven, 2026-09-20:** one row went from question to committed, pre-registered
-negative result in forty minutes with every timer stopped.
+**Proven, 2026-09-20:** one row went from question to a committed,
+**author-reported** negative result in forty minutes with every timer stopped.
+Registration-before-execution is **not** independently established for it, and
+measurement fidelity is not established.
 
 **Not proven:** reproduction, exhaustion, the ancestry check, the receipt, and
 the effort ratio. None has been exercised end to end.
