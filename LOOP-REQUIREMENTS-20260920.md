@@ -174,9 +174,39 @@ human_touches      a person had to intervene
   reference the exact **result bytes** it checked. A self-declared actor is one
   more assertion. Not yet demonstrated.
 - **Exhaustion reporting.** `why_ended` is the requirement above, stored.
-- **Liveness without a scheduler.** `started_at` with no `ended_at` past the
-  wall-clock limit is how the overseer sees stopped work. It is the answer to
-  the objection that removing the daemon makes Brian the liveness monitor.
+- **Liveness within a unit of work.** `started_at` with no `ended_at` past the
+  wall-clock limit is how the overseer sees an attempt that stalled.
+- **Liveness BETWEEN units — added 2026-09-21, and its absence was a real
+  defect.** The line above watches work that started and did not finish. It has
+  no concept of work that finished while nothing started, and that is what
+  happened: Tern took a package terminal, recorded a disposition, and stopped
+  without opening the successor she had authority to open. Nothing could
+  distinguish that from a campaign that had legitimately finished; the backstop
+  read "moving" and would have reported generic silence 45 minutes later.
+  Brian noticed first.
+
+  **This is M5 from the same day's failure taxonomy — "supervision covers
+  failure, not absence" — reproduced inside the design written to replace the
+  system that had it.** Three instances were catalogued on 2026-09-20 and a
+  fourth was built into the successor that night.
+
+  The fix is not an overlap rule. Requiring a package in flight before another
+  can close means the fleet can never legitimately stop, deletes the
+  anti-runaway property, and pressures a director to invent a successor rather
+  than conclude none is warranted — the pressure that produced 42 verification
+  documents against 6 closed rows in campaign 1.
+
+  Instead **closing must record a machine-readable disposition** from a small
+  enumerable set, so these are distinguishable without interpretation:
+
+  | state | |
+  |---|---|
+  | terminal, no disposition | **invalid** |
+  | terminal, `successor opened`, nothing in flight | **invalid** |
+  | terminal, `question answered` / `budget spent` / `blocked on X`, nothing in flight | **legitimate rest** |
+
+  The last row matters as much as the first two: a finished campaign that
+  alarms forever teaches everyone to ignore the alarm.
 - **An effort alarm with real units.** Measured runtime, cost and human
   attention, reported separately, **including failed attempts.**
 

@@ -306,6 +306,19 @@ documents in a separate cohort; frozen snapshots verified untouched.
 5. **Three survivors the loop does not fix:** web-UI ownership from
    `groupPath`, billing identity from adapter name, corpus-in-two-places.
 6. **Who watches the overseer.**
+6b. **Liveness BETWEEN units of work — found 2026-09-21.** The design watched
+    work that started and did not finish, never work that finished while
+    nothing started. Tern stopped at a package boundary she had authority to
+    cross; nothing could tell that from a campaign that had finished. This is
+    M5 ("supervision covers failure, not absence") reproduced in the design
+    written to replace the system that had it. **Fixed where it is fixed:**
+    `campaign4-watch` detects the state fault (six branches tested, both
+    legitimate rest states included); `campaign4/CHARTER.md` carries the
+    standing boundary instruction so it survives a session reset; r2's package
+    requires the director to dispose or open a successor without a prompt.
+    **Still open:** nothing yet writes the machine-readable declaration the
+    watcher reads, so it falls through to a 45-minute silence check. r2 owns
+    the schema.
 7. **Receipt persistence and actor binding** — a self-written actor field is an
    assertion; binding needs a trusted launcher.
 8. **Timeout enforcement, and who may mark an attempt blocked.**
