@@ -19,7 +19,7 @@ unattended. Finishing it does **not** authorize starting another package.
 | Contract reader | **corvid** | `acp-go-deepseek` — DeepSeek via OpenCode Go |
 | Worker | **kiln** | `acp-go` — Muse Spark 1.3 contributor via OpenCode Go |
 | Independent verifier | **corvid** | same seat, different role |
-| Controller (until the software is dogfoodable) | **cairn** | `acp-go-controller` — GLM-5.3-Flash on OpenCode Go *(was `acp-pi-worker`, local Qwen3.8-27B, until 2026-09-21 14:5x)* |
+| Controller (until the software is dogfoodable) | **cairn** | `acp-go-controller` — Muse Spark 1.3 Contributor on OpenCode Go *(was `acp-pi-worker` local Qwen3.8-27B until 14:5x, then GLM-5.3-Flash for ~20 min — a pricing error, corrected)* |
 | Duty owner | **cairn**, escalating to **tern** | |
 | Sponsor | **Brian** | decisions requiring his authority only |
 
@@ -101,10 +101,28 @@ identical one-line COMPLETED row with the same output hashes.
 
 Three consequences the charter must carry:
 
-- **cairn is no longer free.** It was $0 on local hardware; it is now about
-  **1.5 cents a day** at its measured volume ($0.15/M in, $0.50/M out). It sits
-  on a **third model line**, so it cannot draw down kiln's muse-spark or
-  corvid's deepseek allowance.
+- **cairn is no longer free**, but barely: $0.10/M in, $0.20/M out and
+  **$0.002/M cache read** — the cheapest of every Go candidate on all three
+  axes. It shares kiln's muse-spark line, which is fine: the controller forms
+  no opinion that could correlate with the worker's, muse sits at ~13% of its
+  line on an inflated local figure (the provider says one cent today), and it
+  carries the largest request allowance on Go.
+
+- **CORRECTION, same day.** The first version of this lane used GLM-5.3-Flash,
+  chosen on output price with the claim that output cost was "noise". That was
+  wrong on the axis that matters. A controller re-reads campaign state every
+  turn, so **cache read dominates** — 43k cached tokens per request. GLM's
+  cache read is **$0.03/M against $0.002–0.003 for every alternative**, and the
+  provider dashboard showed the result: GLM $0.18 for twenty minutes of work
+  against DeepSeek's $0.08 and Muse's $0.01 for the whole day, with **59% of
+  GLM's bill being cache read**. Brian caught it from the dashboard.
+
+- **Local spend tooling is not trustworthy right now.** `go-budget` and
+  `fleet-spend-stop` disagree with the provider by 3.8× in total and by
+  1.25×–32× per model. They verify their price model against OpenCode's own
+  recorded cost field and never against the bill. **Treat the provider console
+  as ground truth until they are reconciled.** The "corvid at 324% of its $15
+  sub-cap" alarm raised earlier today came from that tooling and is withdrawn.
 - **The shared GPU is released.** cairn was the only seat on llama-swap, the
   same box the corpus labelling uses - that run went from 65 to 671 seconds per
   document while cairn was active. The research no longer competes with the
