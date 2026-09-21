@@ -22,3 +22,14 @@
 2026-09-21T22:44Z	P4-integration-rehearsal	P4-version-reconcile	CANON	tern	-	version-reconciliation.json sha256 134126c9
 2026-09-21T22:09Z	P4-integration-rehearsal	P4-verify-2	PASS	corvid	-	verification-v2.md sha256 cfecb2cb 14/14 manifest; archived-initial reproducer FAIL vs repaired no-op; timer retired 22:09Z predeadline
 2026-09-21T22:07:32Z	P4-integration-rehearsal	P4-boundary-1	EXHAUSTED	tern	-	packages/P4-integration-rehearsal/acceptance-withheld.json
+2026-09-21T22:08Z	P4-r2-durable-events	P4r2-initial-1	DISPATCHED	kiln	2026-09-21T22:38Z	contract cdd0ee2 sha ad6df34a; conditional release satisfied (admission-review 126b31c0, withheld c7582225); wake started; outputs src/tests/fixtures/README/interface/report
+2026-09-21T22:10Z	P4-r2-durable-events	P4r2-admission-1	ACCEPTED	corvid	-	acceptance 126b31c0 in 15m window; dispatch released per conditional clause; admission timer stopped 22:10Z
+2026-09-21T22:52Z	P4-r2-durable-events	P4r2-initial-1	RECEIPT	cairn	-	dispatch-receipt.json sha256 e55a8eaa (write finalized 15:10 local; no dup)
+2026-09-21T22:52Z	P4-r2-durable-events	P4r2-initial-1	COMPLETED	kiln	2026-09-21T22:38Z	report 59068369 interface 387b4a0b probes e2577b40 src777d2551 tests58c8bffb fixtures8dfab617 28 pass +59 core NOT-ready-live
+2026-09-21T22:52Z	P4-r2-durable-events	P4r2-verify-1	DISPATCHED	corvid	-	20m verify of bound hashes; no auto-retire verify-timer naming conflict verified; ack started
+2026-09-21T22:20Z	P4-r2-durable-events	P4r2-stamps	CORRECT	cairn	-	22:52Z stamps on RECEIPT/COMPLETED/DISPATCHED rows were 32m future; true stamp 22:20Z (read from date -u); verify window read from timer elapse
+2026-09-21T22:21Z	P4-r2-durable-events	P4r2-verify-1	PASS	corvid	-	verification-r2.md sha256 e2e617f5 disk-matched; probes1-3 no-op/already-handled; 28+59; NOT-ready live; no repair
+2026-09-21T22:23Z	P4-r2-durable-events	P4r2-repair-1	DISPATCHED	kiln	2026-09-21T22:38Z	receipt filed; archive 15f pre-repair; ack started
+2026-09-21T22:27Z	P4-r2-durable-events	P4r2-initial-1	RETIRED	cairn	-	initial deadline unit fired after COMPLETED; no stop; repair timer governs
+2026-09-21T22:39Z	P4-r2-durable-events	P4r2-repair-1	BLOCKED	kiln	2026-09-21T22:38Z	sole repair expired, no completion wake, seat stopped
+2026-09-21T22:40:35Z	P4-r2-durable-events	P4r2-verify-2	CHECKING	corvid	2026-09-21T23:00:08Z	packages/P4-r2-durable-events/postrepair-verification-receipt.json
