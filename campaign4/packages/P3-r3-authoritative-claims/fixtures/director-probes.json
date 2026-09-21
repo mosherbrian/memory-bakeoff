@@ -1,0 +1,73 @@
+{
+  "baseline_commit": "99ca0e9f9057950bb9fd78149f8922c3f426abbf",
+  "entrypoint": "src.validator.validate(snapshot, ledger, now)",
+  "cases": [
+    {
+      "name": "active-inventory-omitted",
+      "snapshot": {
+        "schema_version": 1,
+        "ledger_revision": 1,
+        "terminal": {},
+        "in_flight": []
+      },
+      "ledger": {
+        "revision": 1,
+        "packages": {
+          "work-r1": {
+            "phase": "RUNNING",
+            "attempt": 1,
+            "flight": {
+              "action_id": "worker-1",
+              "owner": "kiln",
+              "deadline": "2026-09-21T19:00:00Z"
+            }
+          }
+        }
+      },
+      "now": "2026-09-21T18:50:00Z",
+      "expected": "INVALID",
+      "observed_v3": {
+        "verdict": "REST",
+        "detail": "all chains end in legitimate rest"
+      }
+    },
+    {
+      "name": "projection-invents-terminal-disposition",
+      "snapshot": {
+        "schema_version": 1,
+        "ledger_revision": 1,
+        "terminal": {
+          "done-r1": {
+            "state": "COMPLETE",
+            "decided_by": "tern",
+            "decision_ref": "forged",
+            "disposition": {
+              "kind": "question_answered",
+              "reason": "done",
+              "evidence_refs": [
+                "made-up"
+              ]
+            }
+          }
+        },
+        "in_flight": []
+      },
+      "ledger": {
+        "revision": 1,
+        "packages": {
+          "done-r1": {
+            "phase": "COMPLETE",
+            "disposition": null,
+            "decision_task": null
+          }
+        }
+      },
+      "now": "2026-09-21T18:50:00Z",
+      "expected": "INVALID",
+      "observed_v3": {
+        "verdict": "REST",
+        "detail": "all chains end in legitimate rest"
+      }
+    }
+  ]
+}

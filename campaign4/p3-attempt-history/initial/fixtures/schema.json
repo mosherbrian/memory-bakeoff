@@ -1,0 +1,65 @@
+{
+  "error_codes": [
+    "E_UNKNOWN_EVENT",
+    "E_UNAUTHORIZED",
+    "E_BAD_TRANSITION",
+    "E_TERMINAL",
+    "E_NO_ALLOCATION",
+    "E_NO_DEADLINE",
+    "E_MISSING_ARTIFACTS",
+    "E_SELF_VERIFY",
+    "E_DEADLINE_EXPIRED",
+    "E_DUP_EVENT",
+    "E_MISSING_DISPOSITION",
+    "E_ABSENT_STATE",
+    "E_MALFORMED",
+    "E_VERSION",
+    "E_LEDGER_INCOMPLETE",
+    "E_DANGLING_SUCCESSOR",
+    "E_CYCLE",
+    "E_OVERDUE_ACTION",
+    "E_OWNERSHIP",
+    "E_INCOMPLETE_REST"
+  ],
+  "runtime_json": {
+    "action": {
+      "bounded?": "bool",
+      "owner": "enum tern|corvid|kiln|cairn",
+      "package_id?": "string",
+      "trigger_id?": "string",
+      "type": "const owner-reconcile"
+    },
+    "cli_apply_out": {
+      "code?": "string",
+      "detail?": "string",
+      "duplicate": "bool",
+      "ok": "bool",
+      "outcome": "string"
+    },
+    "cli_snapshot_out": {
+      "ledger_revision": "int",
+      "ok": "bool",
+      "snapshot": "object"
+    },
+    "event": {
+      "actor": {
+        "role": "enum",
+        "seat": "string"
+      },
+      "at": "RFC3339 string",
+      "event_id": "string unique",
+      "question_id": "string",
+      "revision": "int",
+      "type": "string"
+    },
+    "timestamps": "ISO-8601 UTC strings compared lexicographically; tests use a fake clock, never sleeps",
+    "verdict": {
+      "action?": "object",
+      "code?": "string",
+      "detail": "string",
+      "verdict": "enum ACTIVE|REST|INVALID|ACTION_DUE"
+    }
+  },
+  "schema_version": 1,
+  "verdict_codes_vs_transition_codes": "E_* verdict codes come from the validator; transition rejections use the same registry; INVALID is a validation fault, never a lifecycle terminal"
+}
