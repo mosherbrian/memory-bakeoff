@@ -98,5 +98,27 @@
   "runner_sha256": "98929790a19676fe67b3e5bda562bf3fcc4ac3d5ddd2849ee468dafa17f36d3b"
  },
  "verified_by": null,
- "at": 1789963193
+ "at": 1789963193,
+ "corrections": [
+  {
+   "at": 1789965886,
+   "by": "tern (review, not reproduction)",
+   "kind": "metric misnamed",
+   "was": "'useful retrievals lost' - claimed answers destroyed",
+   "now": "'answerable probes rejected'. The runner never ran BM25 and never joined against successful baseline retrievals, so it does NOT establish that those probes would have been answered. The conservative count stands under the accurate name; the destroyed-answers claim is withdrawn."
+  },
+  {
+   "at": 1789965886,
+   "by": "tern",
+   "kind": "rule implementation deviated from the frozen rule",
+   "was": "content terms as a LIST, counting repetitions",
+   "now": "sorted(set(query)) - stopwords, matching S11 coverage(). REPAIR ATTEMPT 1 of 2. Result: IDENTICAL at all five thresholds. attempt 1 preserved at results-attempt1-repeated-tokens.json."
+  }
+ ],
+ "open_fidelity_issues": [
+  "CORPUS SEMANTICS: this run pools every inscribe record across the stream, including records later retired, and does not ingest supersede replacements. S10-KD-CROSS's baseline replays updates and removals and queries the live store at each recall. Pooling also lets later inscriptions affect earlier queries. The direction of the mismatch is NOT established as one-directional. Unresolved; it is the strongest remaining objection to the result.",
+  "REGISTRATION ORDER NOT DEMONSTRATED: registration, runner and results entered git together in 99d8f6f. A hash proves content identity, not chronology. This row does not exercise the earlier-commit check the loop proposal relies on.",
+  "'MATERIALLY ABOVE' the 0/40 floor was never given a number. It does not rescue this grid (every threshold with abstentions already breaches the loss limit) but would make a borderline positive ambiguous."
+ ],
+ "status": "negative result stands; two corrections applied, three fidelity issues open, verified_by still null"
 }
