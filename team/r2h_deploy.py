@@ -57,14 +57,49 @@ def store_for_cwd(cwd: str) -> Path:
     return agent_dir() / "lcm" / (hashlib.sha256(cwd.encode()).hexdigest()[:16] + ".db")
 def log(s, ev): s["log"].append({"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"), "event": ev}); save_state(s)
 
+def _resolve_pi(pi_cmd: str):
+    """Resolve --pi-cmd to an executable path.
+
+    REV-4 fix (Windows/Git-Bash): the old guard `os.sep not in pi_cmd`
+    missed forward-slash paths on Windows, where os.sep is "\\" but Git
+    Bash passes `~/...` / `C:/...`. An explicit path was then fed to
+    shutil.which(), which returns None for extensionless files with a
+    dirname on Windows — hence "pi binary: not found" for a file that
+    exists. Any slash (either kind) now means explicit path, with
+    ~ expansion and an exists-before-which fallback.
+    """
+    expanded = os.path.expanduser(pi_cmd)
+    if "/" in expanded or "\\" in expanded:
+        if os.path.exists(expanded):
+            return expanded
+        return shutil.which(expanded) or expanded
+    return shutil.which(expanded)
+
+def _run_pi_version(pi: str):
+    """Run `<pi> --version`, tolerating Windows script wrappers.
+
+    Extensionless bash scripts cannot be exec'd by CreateProcess
+    (WinError 193) and .cmd/.bat need a shell. Fall back to shell=True
+    with a quoted command string before giving up.
+    """
+    try:
+        return subprocess.run([pi, "--version"], capture_output=True, text=True, timeout=30)
+    except OSError:
+        return subprocess.run(f'"{pi}" --version', capture_output=True, text=True,
+                              timeout=30, shell=True)
+
 def cmd_check(a):
     s = state(); rows, ok = [], True
     def row(name, good, detail): nonlocal ok; rows.append((name, good, detail)); ok = ok and good
-    pi = shutil.which("pi")
-    if pi:
-        v = subprocess.run(["pi", "--version"], capture_output=True, text=True, timeout=30)
-        row("pi binary", True, f"{pi} ({(v.stdout or v.stderr).strip()[:60]})")
-    else: row("pi binary", False, "not on PATH")
+    pi_cmd = getattr(a, "pi_cmd", "pi")
+    pi = _resolve_pi(pi_cmd)
+    if pi and os.path.exists(pi):
+        try:
+            v = _run_pi_version(pi)
+            row("pi binary", True, f"{pi} ({(v.stdout or v.stderr).strip()[:60]})")
+        except Exception as e:
+            row("pi binary", False, f"{pi}: probe failed ({type(e).__name__}: {e})".strip()[:120])
+    else: row("pi binary", False, f"{pi_cmd}: not found" + (f" (resolved {pi})" if pi else ""))
     ad = agent_dir(); row("pi agent dir", ad.is_dir(), str(ad))
     st = ad / "settings.json"
     if st.exists():
@@ -79,7 +114,16 @@ def cmd_check(a):
     my_store = store_for_cwd(os.getcwd())
     row("store for cwd", my_store.exists(), f"{my_store}" + (f" ({my_store.stat().st_size} bytes)" if my_store.exists() else " — no prior conversations here yet"))
     row("PI_PROJECT_RECALL", os.environ.get("PI_PROJECT_RECALL") != "0", "unset/unless 0 = tool active (required)")
-    row("PI_RECALL_NUDGE", os.environ.get("PI_RECALL_NUDGE") is None, "unset = nudge active (flip manages this)")
+    af = arm_file()
+    persisted = af.read_text().strip() if af.exists() else None
+    env = os.environ.get("PI_RECALL_NUDGE")
+    env_says = "OFF" if env == "0" else ("ON" if env is None else f"?({env})")
+    row("arm file", persisted in ("ON", "OFF"),
+        f"{af}: {persisted or 'MISSING - run flip, or flip --show to re-apply today'}")
+    row("this shell matches the arm file", persisted is None or env_says == persisted,
+        f"file={persisted or '-'} shell={env_says}"
+        + ("" if persisted is None or env_says == persisted
+           else "   <-- MISMATCH: this shell would record the WRONG arm"))
     for name, good, detail in rows: print(f"  {'PASS' if good else 'FAIL'}  {name}: {detail}")
     print(f"\ncheck: {'ALL PASS' if ok else 'FAILURES PRESENT — fix before day 0 smoke'}")
     log(s, f"check {'pass' if ok else 'fail'}")
@@ -118,11 +162,31 @@ def cmd_smoke(a):
     if not store.exists(): print(f"WARN  no pi-lcm store for {cwd} — recall would have nothing prior to deliver; run the smoke in a real project with history.")
     pre = sha256_file(store) if store.exists() else None
     print(f"store sha256 (pre):  {pre or 'n/a'}")
-    cmd = a.pi_cmd.split() + (["--continue"] if a.resume == "continue" else []) + \
+    import shlex as _shlex
+    parts = _shlex.split(a.pi_cmd, posix=(os.name != "nt"))
+    resolved = _resolve_pi(parts[0]) if parts else None
+    if not resolved or not os.path.exists(resolved):
+        print(f"FAIL  pi binary: {a.pi_cmd}: not found" +
+              (f" (resolved {resolved})" if resolved else "") +
+              " — fix --pi-cmd before the smoke can run.")
+        log(s, "smoke fail (bad pi-cmd)"); return 1
+    cmd = [resolved] + parts[1:] + (["--continue"] if a.resume == "continue" else []) + \
           (["--session", a.session] if a.session else []) + ["-p", a.prompt]
     print("running:", " ".join(cmd), f"(timeout {SMOKE_TIMEOUT}s)")
     t0 = time.time()
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=SMOKE_TIMEOUT)
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=SMOKE_TIMEOUT)
+    except OSError:
+        # Windows script wrapper (e.g. .cmd shim): retry through the shell.
+        try:
+            r = subprocess.run(" ".join(f'"{c}"' if " " in c else c for c in cmd),
+                               capture_output=True, text=True, timeout=SMOKE_TIMEOUT, shell=True)
+        except Exception as e:
+            print(f"FAIL  pi launch: {type(e).__name__}: {e}")
+            log(s, "smoke fail (pi launch)"); return 1
+    except Exception as e:
+        print(f"FAIL  pi launch: {type(e).__name__}: {e}")
+        log(s, "smoke fail (pi launch)"); return 1
     dur = time.time() - t0
     out = r.stdout or ""; err = r.stderr or ""
     post = sha256_file(store) if store.exists() else None
@@ -157,15 +221,57 @@ def cmd_smoke(a):
     log(s, f"smoke {verdict}"); s["day0_ts"] = rec["ts"]; save_state(s)
     return 0 if hard else 1
 
+def arm_file() -> Path:
+    return state_dir() / "arm"
+
+
+def write_arm(arm: str) -> None:
+    """Persist the day's arm so EVERY shell agrees, not just the one that
+    flipped.
+
+    REV-5, 2026-09-21. Brian's machine rebooted between the day-1 flip and any
+    work, and the arm was gone: it lived only in the environment of the shell
+    that ran flip. A reboot, a second terminal or a forgotten flip silently
+    turned an OFF day into an ON day, because the extension reads an ABSENT
+    PI_RECALL_NUDGE as "nudge active" - absence treated as a value.
+
+    The file is the source of truth now and it survives everything. One line
+    in ~/.bashrc applies it to every shell, so no shell can disagree and
+    nothing has to be remembered. The eval line is still printed, unchanged.
+    """
+    f = arm_file()
+    f.parent.mkdir(parents=True, exist_ok=True)
+    tmp = f.with_suffix(".tmp")
+    tmp.write_text(arm + "\n")   # ON | OFF
+    tmp.replace(f)                # atomic: no reader sees a partial arm
+
+
 def cmd_flip(a):
     s = state()
+    # --show re-applies the CURRENT day WITHOUT consuming another one.
+    # Recovering from a reboot used to cost a day and hand you the wrong arm,
+    # because every flip advanced the counter.
+    if getattr(a, "show", False):
+        day = s["days_flipped"]
+        if day < 1:
+            print("# no day flipped yet - run flip (without --show) to start day 1",
+                  file=sys.stderr)
+            return 1
+        arm = SCHEDULE[day]
+        write_arm(arm)
+        print("unset PI_RECALL_NUDGE" if arm == "ON" else "export PI_RECALL_NUDGE=0")
+        print(f"# R2H day {day}/{N_DAYS}: {arm} - re-shown, day NOT advanced. "
+              f"Arm persisted to {arm_file()}.", file=sys.stderr)
+        return 0
     day = s["days_flipped"] + 1
     if day > N_DAYS:
-        print(f"# schedule complete ({N_DAYS}/{N_DAYS} days). Run: python3 {Path(__file__).name} close", file=sys.stderr)
+        print(f"# schedule complete ({N_DAYS}/{N_DAYS} days). Run: python {Path(__file__).name} close", file=sys.stderr)
         return 0
     arm = SCHEDULE[day]
+    write_arm(arm)
     print("unset PI_RECALL_NUDGE" if arm == "ON" else "export PI_RECALL_NUDGE=0")
-    print(f"# R2H day {day}/{N_DAYS}: {arm} — this shell only. Work normally.", file=sys.stderr)
+    print(f"# R2H day {day}/{N_DAYS}: {arm} - day advanced. "
+          f"Arm persisted to {arm_file()}.", file=sys.stderr)
     s["days_flipped"] = day; log(s, f"flip day{day} {arm}")
     return 0
 
@@ -245,11 +351,16 @@ def cmd_close(a):
 def main():
     p = argparse.ArgumentParser(description="R2 explicit-prompt habit arm — work-machine deploy")
     sub = p.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("check"); sub.add_parser("install-check")
+    ck = sub.add_parser("check"); ck.add_argument("--pi-cmd", default="pi")
+    sub.add_parser("install-check")
     sm = sub.add_parser("smoke")
     sm.add_argument("--prompt", default=DEFAULT_PROMPT); sm.add_argument("--resume", choices=["continue", "none"], default="continue")
     sm.add_argument("--session"); sm.add_argument("--pi-cmd", default="pi")
-    sub.add_parser("flip"); sub.add_parser("status"); sub.add_parser("close")
+    pf = sub.add_parser("flip")
+    pf.add_argument("--show", action="store_true",
+                    help="re-apply the CURRENT day's arm without advancing "
+                         "(after a reboot, or in a new shell)")
+    sub.add_parser("status"); sub.add_parser("close")
     a = p.parse_args()
     {"check": cmd_check, "install-check": cmd_install_check, "smoke": cmd_smoke,
      "flip": cmd_flip, "status": cmd_status, "close": cmd_close}[a.cmd](a)
