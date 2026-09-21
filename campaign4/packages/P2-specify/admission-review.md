@@ -130,3 +130,78 @@ extensions match accepted §3. The walkthrough's four cases match architecture
 - "There is no bespoke schema or gate-authoring exercise for each package." —
   accepted architecture §3.
 - "Detection alone is not enforcement." — accepted architecture §6.
+
+---
+
+# P2-specify — repair-confirmation pass (second bounded disposition)
+
+- **Reviewer:** corvid (contract reader; independent of author and worker)
+- **Date:** 2026-09-21, canonical root `/home/bmosher/memory-bake-off`
+- **Contract reviewed:** `packages/P2-specify/package.md`,
+  sha256 `30f98fd59e9d4026edfff4a01f81ad1e56c7414d6effb90a51faf32933fed9ec`,
+  committed at `a53a7f5` (blob `74203f06c49f7bffae392d4c459eac6f68c0dfda`)
+- **Pinned source reviewed:** `campaign4/ACCEPTED-ARCHITECTURE.md`,
+  sha256 `cf390ce0d79bf404c166c59ca0b2548a57e6f239b5e380d88aec569ad11c2b5c`,
+  introduced at commit `a4c143be903c26dea5cb82efcca015d0a671052d`
+  (blob `65cd47641da6512ed6a86e46c770d5f61ae28c3b`)
+- **Scope:** the four cited defects and any new defect the repair introduces.
+
+## Disposition
+
+**CONFIRMED.** All four P2 defects are repaired; no new defect was introduced.
+The repaired contract is admissible, subject to the release conditions below.
+
+## Verification of each cited defect
+
+1. **Resolvable, version-pinned source — fixed.** package.md:22–28 cites
+   repository-root `campaign4/ACCEPTED-ARCHITECTURE.md` with sha256
+   `cf390ce0…` and commit `a4c143b…`, and points at
+   `ARCHITECTURE-PROVENANCE.md`. Independently verified: the repository file is
+   **byte-identical** to the UTF-8 `text` of JSONL line 234 in
+   `/home/bmosher/.config/agent-deck/acp-history/51c152b6-1789855999.jsonl`
+   (both 10,504 bytes; exact string equality; sha256 `cf390ce0…`). Commit
+   `a4c143b` introduces the file with blob `65cd4764…`, equal to the
+   working-tree blob. The provenance file correctly names line 234 and states
+   explicitly that line 230 is *not* the source.
+
+2. **Root-document references — fixed.** package.md:31–33 now names
+   repository-root `LOOP-REQUIREMENTS-20260920.md` and
+   `team/.director-decisions-review.md`, `team/.director-loop-review.md`,
+   `team/.director-loop-review-rev2.md`; package.md:37–38 states they resolve
+   from `/home/bmosher/memory-bake-off`, not the package directory or an
+   implementer checkout. All four targets exist.
+
+3. **Completion-check contradiction — fixed.** package.md:61–62 now reads
+   "every nonterminal state has an exit, and terminal states have no outgoing
+   execution transition", which matches accepted architecture §4 (seven
+   nonterminal states; `COMPLETE / EXHAUSTED / TERMINATED / SUPERSEDED` terminal
+   for the revision; `SUPERSEDED` entered only by the amendment path).
+
+4. **Wall-clock bounds and overdue disposition — fixed.** package.md:76–84 adds
+   60 min initial / 30 min repair / 30 min per verifier pass "including
+   post-repair verification", the cairn-owned start/deadline + BLOCKED handling,
+   event-driven (no polling), "Expiry does not automatically spend a repair",
+   the end-of-day boundary, and P1-accepted-before-P2-start. This matches
+   accepted architecture §4 and LOOP-REQUIREMENTS-20260920.md §5 boundary 1.
+
+## New-defect check
+
+- package.md:34 requires P1's independently accepted
+  `campaign4/packages/P1-inspect/capability-map.md` and that cairn record its
+  accepted version and hash before P2 starts. That file does not exist yet,
+  which is expected: P1 has not run. It is a dependency gate, not a defect.
+- package.md:27–28 states §6–7 supply the liveness obligation and walkthrough
+  context without authorizing controller code; consistent with accepted
+  architecture §6–7 and the no-controller-code limit (package.md:73).
+- `ARCHITECTURE-PROVENANCE.md` correctly limits the pin: the later CHARTER and
+  DIRECTOR-BRIEF govern today's scope; the pin does not authorize research or
+  expand permissions. This closes the charter-precedence concern.
+- No other change was observed between the rejected revision (`8206d5dd…`) and
+  the repaired revision (`30f98fd5…`) beyond the four corrections.
+
+## Release conditions (unchanged)
+
+P2 execution remains held until all three hold: (a) this confirmation, (b)
+P1's output independently accepted and its version/hash recorded, and (c)
+Tern's explicit release. The reviewer did not edit the contract. The accepted
+revision is `packages/P2-specify/package.md` sha256 `30f98fd5…`.
