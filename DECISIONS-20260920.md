@@ -65,8 +65,10 @@ $21.65/day for three lines of code, 58% of it on polling.
 
 ## Naming, which I had wrong
 
-The corpus knows **campaign-1** and **campaign-2** only. There is no campaign-3
-document in 827 files. What we have been calling campaign 3 is **iteration 3**
+The corpus knows **campaign-1** and **campaign-2** only. No campaign-3 document
+appears **in the selected 827-file index** — which is a search scope, not proof
+the term was never used elsewhere. "Campaign 4" is therefore a new initiative
+and profile name; it should not be read as implying an established campaign 3. What we have been calling campaign 3 is **iteration 3**
 of the loop. Two counters have been running. The 42-documents-to-6-closes
 figure is a fleet measurement of **2026-09-15**, campaign-1 era — not campaign 2
 as I said.
@@ -217,11 +219,18 @@ And the purpose the five serve, also his words:
 
 | # | state | where it stands |
 |---|---|---|
-| **1** agent-deck out of the box, + conductor chat UI + sprint board | **not done** | still on 1.16.4; 1.16.10 exists and is unmeasured. Nothing native has been diffed against our 82 live scripts |
-| **2** minimal loop, a use case per part | **done** | `LOOP-REQUIREMENTS-20260920.md` rev 2 — reviewed twice by Tern, amended, and run once end to end tonight |
-| **3** observability use cases + roadmap with phases | **partly** | Tern's index review answers "where we are" on the research. The phased roadmap to the project goal does not exist |
-| **4** critical roles and escalation paths | **partly** | author, reproducer, named reader and overseer are defined. Ownership of an ordinary handoff and of a blocked attempt is **not** — Tern's answer to that question was flatly "not yet" |
-| **5** storage, memory, artifacts — what goes where, tracked, dispositioned, disposed | **not done** | untouched. The receipt schema is the natural seed for it |
+| **1** agent-deck out of the box, + conductor chat UI + sprint board | **not done** | the `-p/--profile` flag is confirmed to exist; the feature comparison and the isolation boundaries are not. "An afternoon" is an estimate |
+| **2** minimal loop, a use case per part | **drafted and reviewed; closure pending** | requirements exist and improved across two reviews. Owners and enforcement details are unresolved. **No receipt-backed, ancestry-checked loop has run end to end** — S13 is a manual exemplar, not that demonstration |
+| **3** observability use cases + roadmap with phases | **partial synthesis; use cases and roadmap incomplete** | Tern's review gives findings and direction, not the requested use cases or a maintained phased roadmap |
+| **4** critical roles and escalation paths | **partial** | roles have names. Ordinary handoff, timeout, exhaustion and supervisor-liveness ownership still need **decisions** — and a page recording them is not the same as completion |
+| **5** storage, memory, artifacts — what goes where, tracked, dispositioned, disposed | **partial inputs; policy incomplete** | "untouched" was too absolute: existing repositories, the freezes and the proposed receipt are inputs. Access, canonical location, retention, deletion, migration and recovery do **not** fall out of a receipt schema |
+
+**Do not defer all of step 3 until after the pilot.** A conditional roadmap can
+be drawn now — local feasibility → real harness and compaction testing →
+representative work — with failure branches, stop branches and authorization
+boundaries. The pilot updates it. Brian asked for visibility into direction
+*before* an architecture and plan; deferring that repeats the problem this
+record exists to solve.
 
 Cheapest next, and they gate the rest: **1** is an afternoon; **4** is a page.
 **5** falls out of the receipt schema. **3** last — a roadmap written before the
@@ -280,6 +289,14 @@ documents in a separate cohort; frozen snapshots verified untouched.
 
    It is also the third time today I relayed a claim I had not checked. Tern
    caught it; I did not.
+
+   A second error inside corvid's report: it says threshold 1.0 "declines
+   everything", contradicted by its own grid — 24/40 and 51/80, not all probes.
+   And at 0.75 and 1.0 the 20/80 and 51/80 counts are **answerable probes
+   rejected**, never demonstrated destroyed answers. Corvid also showed it used
+   inscriptions *before* each probe, which closes future-record leakage but is
+   **not** full live-store replay with `supersede` replacements and removal of
+   released or purged records. That distinction stays open.
 2. **Handoff ownership is unnamed** (Tern, question 3: "not yet").
 3. **The prior-only label control** has not run.
 4. **S13-2 (the mechanism audit)** — Tern's advice was to **narrow** it: reuse
