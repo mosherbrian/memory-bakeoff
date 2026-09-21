@@ -1,0 +1,102 @@
+{
+ "row": "S13-1",
+ "question": "Does the S11 corpus-coverage abstention rule transfer, unchanged, to the frozen external KnowledgeDrift sample?",
+ "answer": "NO. No threshold in the declared grid meets the pre-registered bar.",
+ "declared_at": "7e0484db97959b78d178c90285383dab637a188a84adb8484e773bf86e6251bf",
+ "preregistration": "PREREGISTRATION.md",
+ "prereg_bar": "correct abstentions materially above the 0/40 floor while losing <= 8 of 80 useful retrievals",
+ "result_against_bar": "failed at every threshold",
+ "by_threshold": [
+  {
+   "threshold": 0.0,
+   "correct_abstentions": 0,
+   "useful_lost": 0,
+   "useful_lost_by_family": {
+    "Retrieval": 0,
+    "Rationale": 0
+   },
+   "abstentions_by_seed": {
+    "seed1": 0,
+    "seed2": 0
+   }
+  },
+  {
+   "threshold": 0.25,
+   "correct_abstentions": 0,
+   "useful_lost": 1,
+   "useful_lost_by_family": {
+    "Retrieval": 1,
+    "Rationale": 0
+   },
+   "abstentions_by_seed": {
+    "seed1": 0,
+    "seed2": 0
+   }
+  },
+  {
+   "threshold": 0.5,
+   "correct_abstentions": 0,
+   "useful_lost": 10,
+   "useful_lost_by_family": {
+    "Retrieval": 10,
+    "Rationale": 0
+   },
+   "abstentions_by_seed": {
+    "seed1": 0,
+    "seed2": 0
+   }
+  },
+  {
+   "threshold": 0.75,
+   "correct_abstentions": 6,
+   "useful_lost": 20,
+   "useful_lost_by_family": {
+    "Retrieval": 20,
+    "Rationale": 0
+   },
+   "abstentions_by_seed": {
+    "seed1": 3,
+    "seed2": 3
+   }
+  },
+  {
+   "threshold": 1.0,
+   "correct_abstentions": 24,
+   "useful_lost": 51,
+   "useful_lost_by_family": {
+    "Retrieval": 30,
+    "Rationale": 21
+   },
+   "abstentions_by_seed": {
+    "seed1": 12,
+    "seed2": 12
+   }
+  }
+ ],
+ "headline": {
+  "at_threshold_0.5": "0/40 correct abstentions, 10/80 useful retrievals lost - strictly worse than not applying the rule",
+  "at_threshold_0.75": "6/40 abstentions bought with 20/80 useful lost (25%)",
+  "at_threshold_1.0": "24/40 abstentions bought with 51/80 useful lost (64%)",
+  "five_prior_implementations": "0/40 abstentions (S10-KD-CROSS)"
+ },
+ "mechanism": "KnowledgeDrift builds unanswerable questions by recombining vocabulary the corpus already contains. 'ashen estuary ingest job retry budget' scores supported_fraction 6/6: every term occurs in some record, no record holds the combination. A per-term coverage test cannot see a novel combination of covered terms. The only queries it does reject are ones whose ordinary words ('decide','about') happen to be absent.",
+ "what_this_says_about_the_prior_result": "S11-ABSTAIN3's 5/5 was measured on cases this project wrote, whose irrelevant queries were irrelevant IN VOCABULARY. The external benchmark's distractors are not. The prior result stands as reported for its own cases and does not generalise.",
+ "scope": "120 frozen probes (40 Abstention, 40 Retrieval, 40 Rationale) across two sha-pinned worlds. No parameter tuned. No threshold selected after results. Sample not re-drawn; 0 unresolved, 0 degenerate.",
+ "limits": [
+  "Abstention correctness is 'declined or not', not 'declined for the right reason'.",
+  "40 probes per family across two seeds; no confidence interval claimed.",
+  "The benchmark author has a competing system in its own published ranking.",
+  "This measures one rule on one external sample. It says nothing about whether memory improves real work."
+ ],
+ "inputs": {
+  "rule": "team/S11-ABSTAIN3/declaration.json",
+  "items": "team/S10-KD-CROSS/items.jsonl",
+  "worlds": {
+   "seed1": "dc5af10ea430edef861b3fd3bd7d11c954554a83ce64f0ebc8bfa070d3d9b402",
+   "seed2": "2976556287cddb4361893648f2423397adbdeb007507f39d416e7c1b5762afbd"
+  },
+  "runner_sha256": "98929790a19676fe67b3e5bda562bf3fcc4ac3d5ddd2849ee468dafa17f36d3b"
+ },
+ "verified_by": null,
+ "at": 1789963193
+}
