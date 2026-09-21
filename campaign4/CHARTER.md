@@ -19,7 +19,7 @@ unattended. Finishing it does **not** authorize starting another package.
 | Contract reader | **corvid** | `acp-go-deepseek` — DeepSeek via OpenCode Go |
 | Worker | **kiln** | `acp-go` — Muse Spark 1.3 contributor via OpenCode Go |
 | Independent verifier | **corvid** | same seat, different role |
-| Controller (until the software is dogfoodable) | **cairn** | `acp-pi-worker` — local Qwen3.8-27B |
+| Controller (until the software is dogfoodable) | **cairn** | `acp-go-controller` — GLM-5.3-Flash on OpenCode Go *(was `acp-pi-worker`, local Qwen3.8-27B, until 2026-09-21 14:5x)* |
 | Duty owner | **cairn**, escalating to **tern** | |
 | Sponsor | **Brian** | decisions requiring his authority only |
 
@@ -89,6 +89,35 @@ The two hard stops below remain unchanged.
 exact question, the options and their consequences to `pending-decisions.md`,
 and notify Brian. Do not pick the reasonable-looking option and continue. A
 paused campaign is a correct outcome; a guessed decision is not.
+
+## Controller lane change, 2026-09-21
+
+**cairn moved off local inference.** Measured cause: a command it was waiting
+on ran in **0.49 seconds** while the pane showed **2m51s** waiting for cairn -
+the latency was a local 27B composing prose about a half-second command, not
+the work. The same three actions that had churned for nine minutes and were
+heading for a stall completed in about a minute on the new lane, producing an
+identical one-line COMPLETED row with the same output hashes.
+
+Three consequences the charter must carry:
+
+- **cairn is no longer free.** It was $0 on local hardware; it is now about
+  **1.5 cents a day** at its measured volume ($0.15/M in, $0.50/M out). It sits
+  on a **third model line**, so it cannot draw down kiln's muse-spark or
+  corvid's deepseek allowance.
+- **The shared GPU is released.** cairn was the only seat on llama-swap, the
+  same box the corpus labelling uses - that run went from 65 to 671 seconds per
+  document while cairn was active. The research no longer competes with the
+  controller for hardware.
+- **Not a `-free` variant, deliberately.** The controller holds every deadline,
+  dispatch and handoff, and free-tier exhaustion arrives as a stream error
+  below the ACP layer, presenting as a hang. That cost 81 minutes across 13
+  lanes on 2026-09-14. Free capacity gets tested on a worker, never here.
+
+Changed by Claude under Brian's standing authorization for campaign4 seat
+configuration. **The `ownership.md` documents in P2-specify and the P2-r2
+packages still name `acp-pi-worker`. They are hash-pinned inputs to P3 and P4
+and were NOT edited** - correcting them is an amendment and Tern's call.
 
 ## Controller constraint
 
