@@ -1,6 +1,7 @@
 # P1 — Inspect what agent-deck already gives us
 
-**Status:** DRAFT. Awaiting contract reader.
+**Status:** ADMITTED. Corvid accepted the bounded correction; Tern releases this
+corrected contract for P1 execution. See `admission-review.md`.
 **Authorized by:** Brian, 2026-09-21, under `CHARTER.md`.
 **Work type:** judgment (an inventory, read by a named reader).
 
@@ -52,6 +53,13 @@ Worker **kiln** · Reader/verifier **corvid** · Duty owner **cairn** · Directo
 
 Read-only against the system. No upgrade is performed under this package — the
 recommendation is the deliverable. One initial attempt plus one repair.
+
+At most 45 minutes for the initial worker attempt and 30 minutes for its sole
+repair; at most 20 minutes for each verifier pass, including post-repair
+verification. Cairn records start/deadline, owns stopping overdue work and
+recording BLOCKED, and wakes Tern with evidence. Deadline handling must be
+event-driven; this does not authorize cairn to poll. Expiry does not
+automatically spend a repair. The campaign's end-of-day boundary still applies.
 
 ## Permitted
 
