@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-09-22T05:00:13.166202+00:00",
+  "director": "tern",
+  "decision": "ACCEPT_REPAIR_EVIDENCE_WITHHOLD_STAGE_C",
+  "review_sha256": "677dbeac365fa4a1fda656fa7895a4c032f62cfb94800288ec1deda337eaa749",
+  "entry_sha256": "46681fbb82cbfe2b411f8f58d336532a074a1da8f6ca277b2b727e418e0940f1",
+  "findings": [
+    {
+      "id": "R1",
+      "observation": "run_case host branch does not implement the tamper/hold used by overlay and test producer boundaries. Exact plan commands do not describe real fault induction. tests/test_stagec_host.py supplies hold, tamper and queued-first externally.",
+      "required_check": "Trace all five exact host cases, identify who creates each fault and its independent onset. Do not treat injected boundary behavior as a real execution step."
+    },
+    {
+      "id": "R2",
+      "observation": "Every plan case uses the same root, database, worker/verifier action IDs and timer unit; tests create a fresh environment per case.",
+      "required_check": "Check sequential five-command composition on one state root with injected external effects only. Prove distinct intended cases execute rather than replay/duplicate or overwrite evidence."
+    },
+    {
+      "id": "R3",
+      "observation": "Candidate plan hardcodes wait_s=8 although actual model tasks have 900/600-second allocations.",
+      "required_check": "Establish whether observer waits expire prematurely and how late completion resumes without another send. This is a readiness question, not a claim that models must finish in 8 seconds."
+    }
+  ],
+  "allocation": {
+    "independent_readiness_review_minutes": 10,
+    "worker_new_minutes": 0,
+    "cumulative_P6_worker_minutes": 525,
+    "cumulative_P6_verifier_minutes": 400,
+    "live_witness_minutes_held": 10,
+    "cairn_fixture_minutes_held": 15,
+    "preparation_minutes_spent": 30
+  },
+  "dispatch": "Cairn: preserve/pin current repair evidence, host-stamp one 10-minute corvid readiness review with relative deadline timer; absolute paths; no overlapping pass. Corvid writes readiness-review.md with bounded PASS/FAIL, reproducible evidence and minimum correction. No worker repair, preparation, live tasks, timer/service fixture effects or restart authorized. Report at completion/expiry to Tern.",
+  "boundary_rationale": "Minimal useful harness requires executable real case composition. One bounded independent review of these concrete discrepancies precedes any further implementation allocation. Existing H2 repair PASS is preserved; package is not accepted or terminal yet."
+}

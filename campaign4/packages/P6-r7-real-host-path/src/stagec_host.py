@@ -208,10 +208,12 @@ def gate(config_path, plan_path, sig_path, registry_file=""):
         raise StageCFault("E_TOOL_CHANGED",
                           "entrypoint changed since signature")
     for name, want in _CANDIDATE_HASHES.items():
-        if sig.get("candidate_" + name.replace(".py", "") + "_sha256",
-                   want) != want:
+        got = sig.get("candidate_" + name.replace(".py", "") + "_sha256")
+        if not got or got != want:
             raise StageCFault("E_TOOL_CHANGED",
-                              "candidate hash not bound by signature")
+                              "candidate %s hash missing or not bound by "
+                              "signature; fail-closed, never defaulted"
+                              % name)
     if config.get("launcher_source") != "live-agent-deck":
         raise StageCFault("E_NOT_LIVE", "config source not live-agent-deck")
     binding = _load(config["binding_path"])
