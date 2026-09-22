@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-09-22T04:34:38.329182+00:00",
+  "director": "tern",
+  "decision": "WITHHOLD_STAGE_C",
+  "verdict_sha256": "eb6fa89765bae640d07ebfe9065cdea349ab0daa8ed3fdf516f593368db4c224",
+  "entry_sha256": "211f495be11eaa44e1a3c3f9fc497b365aa7ab24bef099374d178bc9caf95a6a",
+  "plan_sha256": "a866091f298363480defccf4edcfaff4da6a5411c69c7714336b6c1e6b755576",
+  "pure_probe": "KeyError: 'wake_shim'",
+  "findings": [
+    "No-overlay live dirs omit wake_shim/systemd_shim/systemctl_shim required by _candidate_plan; fails before dispatch.",
+    "run_case unconditionally starts _drive_producers, writes substitute empty streams, expects shim trace/messages and synthetic onset sidecars. Real runtime producer remains bypassed.",
+    "gate compares config with static manifest only, explicitly permits expired sockets and never re-witnesses current registry/socket before send.",
+    "timecheck joins witness by action only, not execution, and missing ack is allowed unless literally False; uncertainty only presence-checked, not applied."
+  ],
+  "prior_pass": "Preserved for repaired entrypoint/injected cases, not live acceptance.",
+  "resource_decision": "Archive binding evidence and stop only owned p3 IDs now; do not renew lease or relaunch."
+}

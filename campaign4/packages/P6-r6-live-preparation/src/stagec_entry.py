@@ -625,9 +625,7 @@ def main(argv=None):
     for name in ("derive-config", "gate"):
         p = sub.add_parser(name)
         p.add_argument("--plan", required=True)
-        p.add_argument("--binding" if name == "derive-config"
-                       else "--config",
-                       required=True, dest="src")
+        p.add_argument("--binding", "--config", required=True, dest="src")
         p.add_argument("--signatures", required=True)
         p.add_argument("--out", required=name == "derive-config")
     r = sub.add_parser("run-case")
@@ -686,3 +684,12 @@ def main(argv=None):
                           "witness_archived":
                           report["witness_archived"]}, sort_keys=True))
         return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except StageCFault as e:
+        print(json.dumps({"error": e.code, "detail": e.detail,
+                          "owner": "cairn"}, sort_keys=True))
+        raise SystemExit(3)
