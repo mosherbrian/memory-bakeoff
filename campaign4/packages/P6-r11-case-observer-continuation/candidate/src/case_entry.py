@@ -576,9 +576,9 @@ def _r3_hash_check():
                              "r3harness", "R3_REVISION.json"))
     base = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "r3harness")
-    parent = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                          "..", "..", "P6-r5-launch-binding", "src")
-    parent = os.path.normpath(parent)
+    parent = ("/home/bmosher/memory-bake-off/campaign4/packages/"
+              "P6-r5-launch-binding/src")
+    parent = os.path.normpath(parent)  # layout adaptation only
     for name, rec in rev.get("files", {}).items():
         with open(os.path.join(base, name), "rb") as fh:
             got = hashlib.sha256(fh.read()).hexdigest()
@@ -1236,6 +1236,11 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                     raise StageCFault("E_CASE_FAIL",
                                       "failed-verification reattach did not "
                                       "commit under valid grant: %s" % (out_r,))
+        if out.get("decision") == "COMPLETE" or \
+                manifest.get("disposition") == "COMPLETE":
+            _stop_deliverer()
+            raise StageCFault("E_CASE_FAIL",
+                              "failed check must never close COMPLETE")
     elif case == "queued-ambiguous-restart":
         if out.get("decision") not in ("transition-committed",
                                        "terminal-rest"):
