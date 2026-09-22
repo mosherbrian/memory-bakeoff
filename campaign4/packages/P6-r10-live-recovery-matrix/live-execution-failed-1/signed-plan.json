@@ -1,0 +1,112 @@
+{
+  "actions_note": "per-case worker/verifier actions and timer units below; executions derive per case via production plan hash (fixture_id includes case)",
+  "cases": {
+    "failed-verification": {
+      "timer_unit": "p6-stagec-h3.timer",
+      "verifier_action": "p6c-h3v",
+      "worker_action": "p6c-h3w"
+    },
+    "lost-completion": {
+      "expectation": "first bounded wait expires owned-failure no-end; reattach recovers the late completion to commit with no second send",
+      "timer_unit": "p6-stagec-h2.timer",
+      "verifier_action": "p6c-h2v",
+      "worker_action": "p6c-h2w"
+    },
+    "positive-handoff": {
+      "timer_unit": "p6-stagec-h1.timer",
+      "verifier_action": "p6c-h1v",
+      "worker_action": "p6c-h1w"
+    },
+    "queued-ambiguous-restart": {
+      "timer_unit": "p6-stagec-h4.timer",
+      "verifier_action": "p6c-h4v",
+      "worker_action": "p6c-h4w"
+    },
+    "quiet-rest": {
+      "timer_unit": "p6-stagec-h5.timer",
+      "verifier_action": "p6c-h5v",
+      "worker_action": "p6c-h5w"
+    }
+  },
+  "fault_controls": {
+    "failed-verification": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/failed-verification.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case failed-verification --run-root SUITE_ROOT --control corrupt-after-worker --actor cairn",
+      "control": "corrupt-after-worker"
+    },
+    "lost-completion": {
+      "actor": "cairn",
+      "applied_by": "worker seat acts late (external timing step, --delay-s past the bounded wait); run-case observes owned-failure no-end, then applies bounded R3 reattach recovery consuming the late end exactly once with zero resends; applied receipt faults/lost-completion.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case lost-completion --run-root SUITE_ROOT --control delay-worker-completion --actor cairn",
+      "control": "delay-worker-completion"
+    },
+    "positive-handoff": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/positive-handoff.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case positive-handoff --run-root SUITE_ROOT --control none-declared --actor cairn",
+      "control": "none-declared"
+    },
+    "queued-ambiguous-restart": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/queued-ambiguous-restart.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case queued-ambiguous-restart --run-root SUITE_ROOT --control transport-queued-first --actor cairn",
+      "control": "transport-queued-first"
+    },
+    "quiet-rest": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/quiet-rest.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case quiet-rest --run-root SUITE_ROOT --control none-declared --actor cairn",
+      "control": "none-declared"
+    }
+  },
+  "forbidden": [
+    "modifying/restarting/reusing accepted bindings or expired incarnations",
+    "case-specific runtime files, stream truncation, suffix-inferred identity",
+    "cross-case authority or rewritten earlier evidence",
+    "standalone signature check plus hand-written wake sequence",
+    "production without delivery record (E_UNDELIVERED fail-closed)",
+    "copying candidate detection time into an independent-source label",
+    "fixture launches/restarts/service/timer mutations under this grant"
+  ],
+  "host_commands": {
+    "deposit_wake": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/fixture-wake-deposit",
+    "systemctl": "/usr/bin/systemctl",
+    "systemd_run": "/usr/bin/systemd-run",
+    "wake": "/home/bmosher/.config/agent-deck/wake"
+  },
+  "host_commands_note": "All host_commands values are literal executable paths; descriptive text lives in this note and in seat_operation, never in the path fields. Read-only inventoried 2026-09-22.",
+  "onset_protocol": "producer sidecar (seat append time, host clock, uncertainty 1s) else operator marker via fault_onset.py mark (injection time, provenance, explicit uncertainty); limitations in fault_onset.py; missing/unbounded onset INCOMPLETE",
+  "pending_stage_c_only": [
+    "fresh idle preparation + independent binding witness (all prior incarnations expired/historical)",
+    "fresh Tern signatures (purpose stagec-task) with code hashes",
+    "real model seats; live socket re-witness at execution"
+  ],
+  "phases": {},
+  "plan_id": "P6R10-live-failed-1",
+  "seat_operation": "REAL model seats perform worker/verifier work: the candidate transport wakes seats via the signed deposit path; the tool deliver loop (fixture_control, executed inside run-case) moves texts to seats per the armed intervention with applied receipts. No emulator appears in this live procedure. Injected runs substitute named external seat-emulator commands (test section below); substitution never counts as live evidence.",
+  "status": "PROPOSED ONLY - Tern signature (purpose stagec-task) over this file + execution config + entrypoint/R3-harness hashes required before any send",
+  "substitutions": {
+    "binding_manifest": "Absolute path to the Tern-accepted live binding manifest, supplied explicitly at preparation via derive-config --binding. Historical manifests (including any ACCEPTED token or path appearing in older plans) are evidence only and confer no permission; they can never satisfy a live signature.",
+    "signatures": "Absolute path to the Tern-authored signatures file (purpose stagec-task) covering this substituted plan hash.",
+    "suite_root": "Absolute path to the suite root created at execution."
+  },
+  "timing_bounds": {
+    "detect_s": 30.0,
+    "recover_s": 60.0,
+    "suspicion_detect_s": 180.0,
+    "suspicion_recover_s": 60.0,
+    "suspicion_total_s": 240.0,
+    "total_s": 90.0
+  },
+  "parent_plan_sha256": "1263fdf79cdfe2fdcd59116cd5c5acd69489091972a83a730eca8101e43a1fce",
+  "bounds": {
+    "duration_s": 180,
+    "verify_window_s": 180,
+    "escalation_window_s": 300
+  },
+  "live_stop_utc": "2026-09-22T17:17:00Z",
+  "authorized_live_cases": [
+    "failed-verification"
+  ]
+}

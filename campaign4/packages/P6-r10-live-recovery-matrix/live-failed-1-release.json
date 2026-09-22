@@ -1,0 +1,78 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T17:09:32.522584+00:00",
+  "authorization": "ONE_LIVE_FAILED_VERIFICATION_ONLY",
+  "action_id": "P6r10-live-failed-1",
+  "owner": "cairn",
+  "binding_sha256": "dca68487e2f588a46a332c139daf1cab00daa61b4dcb9689ac94f57febc7838d",
+  "binding_review_sha256": "c18e1ce76662ac17b4d0c4854ac3aea1917b21aac9108b60be3b32c0ee4d3905",
+  "plan_sha256": "f71e598b34ed43cf8c29bd71df6e62d1021d37953cd5584a566402fcd0270420",
+  "config_sha256": "02146996b3f40ea35acf6f3b41e7114c66d8396a50bd1eb3be917ac4cdb54eea",
+  "signatures_sha256": "91be794b9656386b1ce2c072dc715a01fc0e88ca5bc6b86f20b696b39ac6fb13",
+  "working_root": "/tmp/p6r10-live-failed-1",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "start_not_after": "2026-09-22T17:11:00Z",
+  "stop_by": "2026-09-22T17:17:00Z",
+  "allocation": "Consume first previously allocated r10 live operation<=10m, narrowed by absolute stop; corvid first actual review<=10m. No new grant or reset. Candidate885/640 unchanged.",
+  "commands_argv": [
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/case_entry.py",
+      "gate",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r10-live-recovery-matrix/live-execution-failed-1/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r10-live-recovery-matrix/live-execution-failed-1/signed-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r10-live-recovery-matrix/live-execution-failed-1/signatures.json"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/case_entry.py",
+      "fault",
+      "arm",
+      "--case",
+      "failed-verification",
+      "--run-root",
+      "/tmp/p6r10-live-failed-1",
+      "--control",
+      "corrupt-after-worker",
+      "--actor",
+      "cairn"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/case_entry.py",
+      "run-case",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r10-live-recovery-matrix/live-execution-failed-1/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r10-live-recovery-matrix/live-execution-failed-1/signed-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r10-live-recovery-matrix/live-execution-failed-1/signatures.json",
+      "--case",
+      "failed-verification",
+      "--suite-root",
+      "/tmp/p6r10-live-failed-1",
+      "--out",
+      "/tmp/p6r10-live-failed-1/failed-verification/receipt.json"
+    ]
+  ],
+  "effects": [
+    "Only signed worker ac50c556-1790096454 and verifier 679662d2-1790096454; at most one dispatch per declared action, no manual sends.",
+    "Only p6c-h3w/p6c-h3v and owned p6-stagec-h3.timer/service, this private root. Corrupt private artifact AFTER worker handoff commit via accepted control; preserve before/after hashes and applied receipt.",
+    "Automatic campaign4-p6r10-failed-prep1-cleanup.timer stays armed ~17:18Z; exact IDs only, archive first, no cancel/reset."
+  ],
+  "conditions": [
+    "Before effects rehash every composition-manifest entry (29/29), full signatures and binding; live gate must pass. No emulator/synthetic runtime or test transport substitute.",
+    "One run only, start by17:11Z. Before run arm relative watchdog bounded by17:17Z; subprocess timeout min(360s, remaining outer bound). Actual grants180s worker/verifier,300s escalation; observation slice is not work deadline. No retry/reattempt or improvisation.",
+    "Record host timestamps, exact argv, stdout/stderr AND actual return code in receipt JSON immediately when process returns. If killed/missing say so, never reconstruct rc0.",
+    "Expected success is rejection of actual tampered artifact: independent verifier reason/hash evidence, never COMPLETE, timecheck accept-open. Harness rc0 alone insufficient. Missing applied effect or causal onset => INCOMPLETE.",
+    "Archive full database/outbox/deliveries/runtime/claims/artifacts/onsets/witness/receipts before cleanup. At stop terminate only owned runner/children and retire only h3 timer/service. Verify actual exact-ID automatic cleanup, archive result in live-preparation-failed-1/. Main/shared seats/wrappers untouched.",
+    "After bound evidence dispatch corvid allocated10m immediately with timer, no stopping at COMPLETED row. Read-only case checklist and real effect/timing/no-dup/cleanup review to live-review-failed-1.md; return Tern.",
+    "No other case, preparation, source change, research/shadow/adoption/retirement. Failed-verification is one witness, not four-case acceptance."
+  ],
+  "authority": "Brian explicit durable LIVE-AUTHORITY-20260922.md; Tern exact case release under admitted r10 and amendment1."
+}
