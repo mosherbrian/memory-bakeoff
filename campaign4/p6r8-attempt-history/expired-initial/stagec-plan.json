@@ -1,0 +1,107 @@
+{
+ "actions_note": "per-case worker/verifier actions and timer units below; executions derive per case via production plan hash (fixture_id includes case)",
+ "cases": {
+  "failed-verification": {
+   "timer_unit": "p6-stagec-h3.timer",
+   "verifier_action": "p6c-h3v",
+   "worker_action": "p6c-h3w"
+  },
+  "lost-completion": {
+   "timer_unit": "p6-stagec-h2.timer",
+   "verifier_action": "p6c-h2v",
+   "worker_action": "p6c-h2w"
+  },
+  "positive-handoff": {
+   "timer_unit": "p6-stagec-h1.timer",
+   "verifier_action": "p6c-h1v",
+   "worker_action": "p6c-h1w"
+  },
+  "queued-ambiguous-restart": {
+   "timer_unit": "p6-stagec-h4.timer",
+   "verifier_action": "p6c-h4v",
+   "worker_action": "p6c-h4w"
+  },
+  "quiet-rest": {
+   "timer_unit": "p6-stagec-h5.timer",
+   "verifier_action": "p6c-h5v",
+   "worker_action": "p6c-h5w"
+  }
+ },
+ "fault_controls": {
+  "failed-verification": {
+   "actor": "cairn",
+   "commands": "fault arm --case failed-verification --run-root SUITE_ROOT --control corrupt-after-worker --actor cairn",
+   "control": "corrupt-after-worker"
+  },
+  "lost-completion": {
+   "actor": "cairn",
+   "commands": "fault arm --case lost-completion --run-root SUITE_ROOT --control hold-verifier-texts --actor cairn",
+   "control": "hold-verifier-texts"
+  },
+  "positive-handoff": {
+   "actor": "cairn",
+   "commands": "fault arm --case positive-handoff --run-root SUITE_ROOT --control none-declared --actor cairn",
+   "control": "none-declared"
+  },
+  "queued-ambiguous-restart": {
+   "actor": "cairn",
+   "commands": "fault arm --case queued-ambiguous-restart --run-root SUITE_ROOT --control transport-queued-first --actor cairn",
+   "control": "transport-queued-first"
+  },
+  "quiet-rest": {
+   "actor": "cairn",
+   "commands": "fault arm --case quiet-rest --run-root SUITE_ROOT --control none-declared --actor cairn",
+   "control": "none-declared"
+  }
+ },
+ "forbidden": [
+  "modifying/restarting/reusing accepted bindings or expired incarnations",
+  "case-specific runtime files, stream truncation, suffix-inferred identity",
+  "cross-case authority or rewritten earlier evidence",
+  "standalone signature check plus hand-written wake sequence",
+  "fixture launches/restarts/service/timer mutations under this grant",
+  "copying candidate detection time into an independent-source label"
+ ],
+ "host_commands": {
+  "note": "read-only inventoried 2026-09-22; missing/unexecutable fails owned E_HOST_PATH",
+  "systemctl": "/usr/bin/systemctl",
+  "systemd_run": "/usr/bin/systemd-run",
+  "wake": "/home/bmosher/.config/agent-deck/wake"
+ },
+ "onset_protocol": "producer sidecar (seat append time, host clock, uncertainty 1s) else operator marker via fault_onset.py mark (injection time, provenance, explicit uncertainty); limitations in fault_onset.py; missing/unbounded onset INCOMPLETE",
+ "pending_stage_c_only": [
+  "fresh idle preparation + independent binding witness (all prior incarnations expired/historical)",
+  "fresh Tern signatures (purpose stagec-task) with code hashes",
+  "real model seats; live socket re-witness at execution"
+ ],
+ "phases": {
+  "10_run_failed-verification": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py run-case --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json --signatures ${SUITE_ROOT:-/tmp/p6r8suite}/signatures.json --case failed-verification --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --out ${SUITE_ROOT:-/tmp/p6r8suite}/failed-verification/receipt.json",
+  "11_fault_queued-ambiguous-restart": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case queued-ambiguous-restart --run-root ${SUITE_ROOT:-/tmp/p6r8suite} --control transport-queued-first --actor cairn",
+  "12_seats_queued-ambiguous-restart": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/seat_emulator.py worker+verifier emulators (exact argv in operator brief; external step, concurrent with run-case)",
+  "13_run_queued-ambiguous-restart": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py run-case --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json --signatures ${SUITE_ROOT:-/tmp/p6r8suite}/signatures.json --case queued-ambiguous-restart --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --out ${SUITE_ROOT:-/tmp/p6r8suite}/queued-ambiguous-restart/receipt.json",
+  "14_fault_quiet-rest": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case quiet-rest --run-root ${SUITE_ROOT:-/tmp/p6r8suite} --control none-declared --actor cairn",
+  "15_seats_quiet-rest": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/seat_emulator.py worker+verifier emulators (exact argv in operator brief; external step, concurrent with run-case)",
+  "16_run_quiet-rest": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py run-case --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json --signatures ${SUITE_ROOT:-/tmp/p6r8suite}/signatures.json --case quiet-rest --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --out ${SUITE_ROOT:-/tmp/p6r8suite}/quiet-rest/receipt.json",
+  "17_aggregate": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py verify-suite --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json",
+  "18_rollback": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py rollback --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --archive-dir ${SUITE_ROOT:-/tmp/p6r8suite}/archive",
+  "1_derive": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py derive-config --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json --binding ACCEPTED_BINDING --signatures ${SUITE_ROOT:-/tmp/p6r8suite}/signatures.json --out ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json",
+  "2_fault_positive-handoff": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case positive-handoff --run-root ${SUITE_ROOT:-/tmp/p6r8suite} --control none-declared --actor cairn",
+  "3_seats_positive-handoff": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/seat_emulator.py worker+verifier emulators (exact argv in operator brief; external step, concurrent with run-case)",
+  "4_run_positive-handoff": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py run-case --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json --signatures ${SUITE_ROOT:-/tmp/p6r8suite}/signatures.json --case positive-handoff --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --out ${SUITE_ROOT:-/tmp/p6r8suite}/positive-handoff/receipt.json",
+  "5_fault_lost-completion": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case lost-completion --run-root ${SUITE_ROOT:-/tmp/p6r8suite} --control hold-verifier-texts --actor cairn",
+  "6_seats_lost-completion": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/seat_emulator.py worker+verifier emulators (exact argv in operator brief; external step, concurrent with run-case)",
+  "7_run_lost-completion": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py run-case --config ${SUITE_ROOT:-/tmp/p6r8suite}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json --signatures ${SUITE_ROOT:-/tmp/p6r8suite}/signatures.json --case lost-completion --suite-root ${SUITE_ROOT:-/tmp/p6r8suite} --out ${SUITE_ROOT:-/tmp/p6r8suite}/lost-completion/receipt.json",
+  "8_fault_failed-verification": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py fault arm --case failed-verification --run-root ${SUITE_ROOT:-/tmp/p6r8suite} --control corrupt-after-worker --actor cairn",
+  "9_seats_failed-verification": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/seat_emulator.py worker+verifier emulators (exact argv in operator brief; external step, concurrent with run-case)"
+ },
+ "plan_id": "P6R8-host-exact-1",
+ "status": "PROPOSED ONLY - Tern signature (purpose stagec-task) over this file + execution config + entrypoint/R3-harness hashes required before any send",
+ "timing_bounds": {
+  "detect_s": 30.0,
+  "recover_s": 60.0,
+  "suspicion_detect_s": 180.0,
+  "suspicion_recover_s": 60.0,
+  "suspicion_total_s": 240.0,
+  "total_s": 90.0
+ }
+}
