@@ -1128,16 +1128,21 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                               "queued run did not commit: %s" % (out,))
         kv = _kv()
         states_all = _sends_from_kv(kv)[1]
-        # Induced transport states live in the executing consumer's applied
-        # delivery receipts (live wake argv/env + rc/receipt mapping), not
-        # in candidate kv (deposit wrapper only deposits). Require real
-        # queued + ambiguous delivery receipts, labeled induced.
+        # Induced transport states live in the durable transport
+        # receipts (kv msg: records written by the candidate transport's
+        # deposit-time wake invocation: rc3+wake: => queued,
+        # garbage-no-receipt => ambiguous), labeled induced via the armed
+        # intervention. The executing consumer's applied delivery receipts
+        # record inbox handoff, not transport classification, so they must
+        # not be the sole source for transport-state kinds.
         applied_kinds = {a.get("receipt_state") for a in applied}
-        if "queued" not in applied_kinds:
+        transport_kinds = set(applied_kinds) | \
+            {s.get("state") for s in states_all.values()}
+        if "queued" not in transport_kinds:
             raise StageCFault("E_CASE_FAIL",
                               "no queued transport receipt observed; "
                               "induced fault missing, case INCOMPLETE")
-        if "ambiguous" not in applied_kinds:
+        if "ambiguous" not in transport_kinds:
             raise StageCFault("E_CASE_FAIL",
                               "no ambiguous transport receipt observed; "
                               "induced fault missing, case INCOMPLETE")
@@ -1150,6 +1155,10 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                                "seat": a.get("seat"),
                                "induced": a.get("induced")}
             for i, a in enumerate(applied)}
+        extra["transport_states"]["durable-receipts"] = {
+            k: {"state": s.get("state"), "action": s.get("action"),
+                "execution": s.get("execution")}
+            for k, s in states_all.items()}
         n_msg = _msg_count_kv(kv)
         rc2, out2 = _rerun_cli()
         if (out2.get("decision") if isinstance(out2, dict) else None) != \
