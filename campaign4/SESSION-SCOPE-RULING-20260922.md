@@ -104,3 +104,11 @@ not a sufficient adoption gate. After scoping, recompute against the new baselin
 and measure total billed cost including misses and compactor overhead, alongside
 evidence fidelity. Product cache-preservation claims remain unverified. It is
 entirely acceptable for the compactor question never to become a work package.
+
+## Director scope addendum
+
+[DIRECTOR-SCOPE-RULING-20260922.md](DIRECTOR-SCOPE-RULING-20260922.md)
+extends this policy to Tern: campaign-wide decision memory via durable records,
+bounded conversational carry and a tested handoff at a safe boundary.
+[DIRECTOR-CURRENT.md](DIRECTOR-CURRENT.md) is the initial draft packet, not a
+completed session transfer. Active P6-r8 and its grants remain unchanged.
