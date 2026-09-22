@@ -1,0 +1,68 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T16:58:25.289649+00:00",
+  "authorization": "PREPARATION_ONLY_FAILED_VERIFICATION",
+  "action_id": "P6r10-failed-prepare-1",
+  "owner": "cairn",
+  "allocation_seconds": 600,
+  "cumulative_preparation_minutes": 90,
+  "plan_sha256": "1263fdf79cdfe2fdcd59116cd5c5acd69489091972a83a730eca8101e43a1fce",
+  "preparation_tool_sha256": "462596ee721f651924ad03d24f6480b466b04a402768012a6736cbc44ce6ddd3",
+  "cleanup_tool_sha256": "57bb7e4e4d4cc938ae41c4532f0a98311e15d05e2cbed1246e10793a156cd8fa",
+  "source_candidate_commit": "f1d7c86f0b38fb653734beb9d906dae44a10a41a",
+  "working_root": "/tmp/p6r10-failed-prep1-20260922T165825Z",
+  "manifest_path": "/tmp/p6r10-failed-prep1-20260922T165825Z/launch-manifest.json",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "commands_argv": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/p6r10-failed-prep1-20260922T165825Z"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py",
+      "--profile",
+      "campaign4",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/stagec-plan.json",
+      "--manifest-out",
+      "/tmp/p6r10-failed-prep1-20260922T165825Z/launch-manifest.json",
+      "--workdir-base",
+      "/tmp/p6r10-failed-prep1-20260922T165825Z/workdirs",
+      "--worker-name",
+      "p6-fixture-worker-r10f1",
+      "--verifier-name",
+      "p6-fixture-verifier-r10f1",
+      "--idle-timeout",
+      "25m"
+    ]
+  ],
+  "conditions": [
+    "Before launch require director-cleanup-timer-1.json in P6-r10 recording ACTIVE cleanup for THIS root. Rehash exact parent stagec-plan and prep/cleanup tools. No collision with r10f1. No timer proof, no launch.",
+    "Exactly ONE prepare command invocation within5m of signed_at. Host start/deadline, relative10m prep timer. Preserve rc/stdout/stderr/partial/raw records. Socket race is not a reason to relaunch. Never reuse old IDs.",
+    "Archive raw evidence to P6-r10/live-preparation-failed-1/. On raw completion immediately wake Tern to AUTHOR canonical binding; cairn does not write execution-binding summaries. No task sent. After director binding, corvid remaining allocated5m checks current registry/socket/runtime/derive and ordering amendment.",
+    "Automatic cleanup after20m archives then stops/removes only exact IDs in THIS full/partial manifest. Confirm actual result; no cancel/reset without signed replacement. Main/historical seats untouched.",
+    "No tasks/live run, source edits, simulation, manual delivery, other-case preparation or shared service changes beyond this exact preparation+cleanup. Live signature follows fresh bound identities."
+  ],
+  "allocations": "Consume first authorized r10 prep10m and binding5m; no new grant. Remaining case allocations undispatched.",
+  "stage_c_signature": false,
+  "deviation_record": {
+    "basis": "amendment-1-case-order.md; missing controls not executed"
+  },
+  "cleanup_unit": "campaign4-p6r10-failed-prep1-cleanup",
+  "cleanup_argv": [
+    "/usr/bin/timeout",
+    "180",
+    "/bin/bash",
+    "-c",
+    "if [ -f \"$1\" ]; then m=\"$1\"; else m=\"$1.partial\"; fi; exec python3 \"$2\" --manifest \"$m\" --archive-dir \"$3\" --profile campaign4",
+    "p6-cleanup",
+    "/tmp/p6r10-failed-prep1-20260922T165825Z/launch-manifest.json",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/cleanup_live.py",
+    "/tmp/p6r10-failed-prep1-20260922T165825Z/automatic-cleanup-archive"
+  ],
+  "sponsor_approval": "Brian explicit durable authority LIVE-AUTHORITY-20260922.md; no new sponsor approval needed"
+}
