@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-09-22T13:49:58.697664+00:00",
+  "action": "P6r9-prepare-3",
+  "root": "/tmp/p6r9-prep3-20260922T134950Z",
+  "unit": "campaign4-p6r9-prep3-cleanup.timer",
+  "release_sha256": "fca3aa71bd3012dfdbf73ed575646dab606034f75a3aa095955bf084980f53a5",
+  "arm_argv": [
+    "systemd-run",
+    "--user",
+    "--unit=campaign4-p6r9-prep3-cleanup",
+    "--on-active=20m",
+    "--timer-property=AccuracySec=1s",
+    "--setenv=AGENTDECK_PROFILE=campaign4",
+    "/usr/bin/timeout",
+    "180",
+    "/bin/bash",
+    "-c",
+    "if [ -f \"$1\" ]; then m=\"$1\"; else m=\"$1.partial\"; fi; exec python3 \"$2\" --manifest \"$m\" --archive-dir \"$3\" --profile campaign4",
+    "p6-cleanup",
+    "/tmp/p6r9-prep3-20260922T134950Z/launch-manifest.json",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/cleanup_live.py",
+    "/tmp/p6r9-prep3-20260922T134950Z/automatic-cleanup-archive"
+  ],
+  "arm_stderr": "Running timer as unit: campaign4-p6r9-prep3-cleanup.timer\nWill run service as unit: campaign4-p6r9-prep3-cleanup.service\n",
+  "verification": "ActiveState=active\nTimersMonotonic={ OnActiveUSec=20min ; next_elapse=3d 7h 21min 48.054812s }\nNextElapseUSecMonotonic=3d 7h 21min 48.054812s\n",
+  "status": "ARMED_AND_ACTIVE_BEFORE_LAUNCH"
+}
