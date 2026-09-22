@@ -1,0 +1,77 @@
+{
+ "binding_path": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-preparation-3/execution-binding-corrected.json",
+ "candidate_src": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r5-launch-binding/src",
+ "cases": {
+  "failed-verification": {
+   "timer_unit": "p6-stagec-h3.timer",
+   "verifier_action": "p6c-h3v",
+   "worker_action": "p6c-h3w"
+  },
+  "lost-completion": {
+   "expectation": "first bounded wait expires owned-failure no-end; reattach recovers the late completion to commit with no second send",
+   "timer_unit": "p6-stagec-h2.timer",
+   "verifier_action": "p6c-h2v",
+   "worker_action": "p6c-h2w"
+  },
+  "positive-handoff": {
+   "timer_unit": "p6-stagec-h1.timer",
+   "verifier_action": "p6c-h1v",
+   "worker_action": "p6c-h1w"
+  },
+  "queued-ambiguous-restart": {
+   "timer_unit": "p6-stagec-h4.timer",
+   "verifier_action": "p6c-h4v",
+   "worker_action": "p6c-h4w"
+  },
+  "quiet-rest": {
+   "timer_unit": "p6-stagec-h5.timer",
+   "verifier_action": "p6c-h5v",
+   "worker_action": "p6c-h5w"
+  }
+ },
+ "launcher_source": "live-agent-deck",
+ "parent_binding_sha256": "661e80940aa3f5745d388d4f76d5368541094b678f9227b190a0ff048946f213",
+ "profile": "campaign4",
+ "resign_required": [
+  "any config/plan/tool byte change",
+  "any binding ID/socket/stream change",
+  "socket expiry re-witness at execution"
+ ],
+ "stagec_plan_sha256": "e872d648811d68d771ded5a48049daf5203b7af831499fe38650a669e6f3aa1d",
+ "timing_bounds": {
+  "detect_s": 30.0,
+  "recover_s": 60.0,
+  "suspicion_detect_s": 180.0,
+  "suspicion_recover_s": 60.0,
+  "suspicion_total_s": 240.0,
+  "total_s": 90.0
+ },
+ "verifier": {
+  "incarnation": {
+   "ino": 23672474,
+   "mtime": 1790085058.8803623
+  },
+  "launch_command": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+  "producer_root": "/home/bmosher/.config/agent-deck/acp-stream",
+  "role_lane": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+  "session_id": "b1c91738-1790085057",
+  "socket": "/home/bmosher/.config/agent-deck/acp-sock/b1c91738-1790085057.sock",
+  "stream_path": "/home/bmosher/.config/agent-deck/acp-stream/b1c91738-1790085057.jsonl",
+  "title": "p6-fixture-verifier-r9p3",
+  "workdir": "/tmp/p6r9-prep3-20260922T134950Z/workdirs/p6-fixture-verifier-r9p3"
+ },
+ "worker": {
+  "incarnation": {
+   "ino": 23672472,
+   "mtime": 1790085058.8673623
+  },
+  "launch_command": "/home/bmosher/.config/agent-deck/acp-go",
+  "producer_root": "/home/bmosher/.config/agent-deck/acp-stream",
+  "role_lane": "/home/bmosher/.config/agent-deck/acp-go",
+  "session_id": "2382c1d3-1790085057",
+  "socket": "/home/bmosher/.config/agent-deck/acp-sock/2382c1d3-1790085057.sock",
+  "stream_path": "/home/bmosher/.config/agent-deck/acp-stream/2382c1d3-1790085057.jsonl",
+  "title": "p6-fixture-worker-r9p3",
+  "workdir": "/tmp/p6r9-prep3-20260922T134950Z/workdirs/p6-fixture-worker-r9p3"
+ }
+}
