@@ -25,10 +25,13 @@ VLANE = "/home/bmosher/.config/agent-deck/acp-go-deepseek"
 CASES = ["positive-handoff", "lost-completion", "failed-verification",
          "queued-ambiguous-restart", "quiet-rest"]
 CONTROLS = {"positive-handoff": "none-declared",
-            "lost-completion": "hold-verifier-texts",
+            "lost-completion": "delay-worker-completion",
             "failed-verification": "corrupt-after-worker",
             "queued-ambiguous-restart": "transport-queued-first",
             "quiet-rest": "none-declared"}
+# Worker production delay (s) per case for the external timing step;
+# lost exceeds the bounded worker wait (8s) so the first run misses it.
+DELAYS = {"lost-completion": {"worker": 11.0}}
 
 
 def sha(p):
@@ -154,7 +157,14 @@ def make_suite():
                "candidate_harness_sha256":
                "cd84e8dd4db623586d960233ffc8f674c0cbfb801b4fffb5bfa9fb6289109142",
                "r3_harness_sha256": sha(os.path.join(
-                   SRC, "r3harness", "harness.py"))}, open(sig, "w"))
+                   SRC, "r3harness", "harness.py")),
+               "fixture_control_sha256": sha(os.path.join(
+                   SRC, "fixture_control.py")),
+               "deposit_sha256": sha(os.path.join(
+                   SRC, "fixture-wake-deposit")),
+               "seat_emulator_sha256": sha(SEAT),
+               "fault_onset_sha256": sha(os.path.join(
+                   SRC, "fault_onset.py"))}, open(sig, "w"))
     return {"tmp": tmp, "plan": planp, "binding": bindp, "cfg": cfg,
             "sig": sig, "reg": regp, "wsid": wsid, "vsid": vsid, "wt": wt,
             "vt": vt, "socks": socks}
@@ -168,36 +178,49 @@ def suite():
         s.close()
 
 
-def emulators(env, case, hold=()):
+def emulators(env, case, hold=(), delays=None):
     """External seat steps (plan-named): emulators poll ONLY their inbox;
-    texts reach the inbox exclusively through the tool's deliver loop."""
+    texts reach the inbox exclusively through the tool's deliver loop.
+    delays maps seat -> startup delay seconds (external timing control)."""
+    delays = delays or {}
     procs = []
     for seat, role, sid in ((env["wt"], "worker", env["wsid"]),
                             (env["vt"], "verifier", env["vsid"])):
         if seat in hold:
             continue
         croot = os.path.join(env["tmp"], case)
+        cmd = [sys.executable, SEAT, "--seat", seat, "--role", role,
+               "--text-dir", os.path.join(croot, "inbox"), "--stream-file",
+               os.path.join(env["tmp"], "sim", "stream", sid + ".jsonl"),
+               "--onset-dir", os.path.join(croot, "onsets"), "--art-dir",
+               os.path.join(croot, "art"), "--intervention",
+               os.path.join(env["tmp"], "faults", case + ".json"),
+               "--timeout-s", "60"]
+        if delays.get(seat):
+            cmd += ["--delay-s", str(delays[seat])]
         procs.append(subprocess.Popen(
-            [sys.executable, SEAT, "--seat", seat, "--role", role,
-             "--text-dir", os.path.join(croot, "inbox"), "--stream-file",
-             os.path.join(env["tmp"], "sim", "stream", sid + ".jsonl"),
-             "--onset-dir", os.path.join(croot, "onsets"), "--art-dir",
-             os.path.join(croot, "art"), "--intervention",
-             os.path.join(env["tmp"], "faults", case + ".json"),
-             "--timeout-s", "60"],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
     return procs
 
 
-def run_case_cli(env, case, hold=()):
-    procs = emulators(env, case, hold=hold)
+def case_delays(env, case):
+    out = {}
+    for seat, delay in DELAYS.get(case, {}).items():
+        out[{"worker": env["wt"], "verifier": env["vt"]}[seat]] = delay
+    return out
+
+
+def run_case_cli(env, case, hold=(), delays=None):
+    procs = emulators(env, case, hold=hold,
+                      delays=delays if delays is not None
+                      else case_delays(env, case))
     try:
         return cli("run-case", "--config", env["cfg"], "--plan",
                    env["plan"], "--signatures", env["sig"], "--case",
                    case, "--suite-root", env["tmp"], "--simulated",
                    "--registry-file", env["reg"],
                    "--out", os.path.join(env["tmp"], case, "receipt.json"),
-                   env_extra={"FAULT_CASE": case})
+                   env_extra={"FAULT_CASE": case, "FAULT_ROOT": os.path.join(env["tmp"], "faults")})
     finally:
         for p in procs:
             try:
@@ -217,13 +240,13 @@ def test_r1_missing_intervention_is_incomplete(suite):
 
 def test_r1_causal_violation_fails(suite):
     r = cli("fault", "arm", "--case", "lost-completion", "--run-root",
-            suite["tmp"], "--control", "hold-verifier-texts",
+            suite["tmp"], "--control", "delay-worker-completion",
             "--actor", "cairn")
     assert r.returncode == 0, r.stdout
     rec = json.load(open(suite["tmp"] + "/faults/lost-completion.json"))
     rec["armed_at"] = "2099-01-01T00:00:00Z"
     json.dump(rec, open(suite["tmp"] + "/faults/lost-completion.json", "w"))
-    procs = emulators(suite, "lost-completion", hold={suite["vt"]})
+    procs = emulators(suite, "lost-completion", delays=case_delays(suite, "lost-completion"))
     try:
         r = cli("run-case", "--config", suite["cfg"], "--plan",
                 suite["plan"], "--signatures", suite["sig"], "--case",
@@ -231,7 +254,7 @@ def test_r1_causal_violation_fails(suite):
                 "--simulated", "--registry-file", suite["reg"], "--out",
                 os.path.join(suite["tmp"], "lost-completion",
                              "receipt.json"),
-                env_extra={"FAULT_CASE": "lost-completion"})
+                env_extra={"FAULT_CASE": "lost-completion", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
     finally:
         for p in procs:
             try:
@@ -246,16 +269,15 @@ def test_r2_five_command_sequence_one_suite_root(suite):
         r = cli("fault", "arm", "--case", case, "--run-root", suite["tmp"],
                 "--control", CONTROLS[case], "--actor", "cairn")
         assert r.returncode == 0, (case, r.stdout)
-    hold = {"lost-completion": {suite["vt"]}}
     for case in CASES:
-        procs = emulators(suite, case, hold=hold.get(case, ()))
+        procs = emulators(suite, case, delays=case_delays(suite, case))
         try:
             r = cli("run-case", "--config", suite["cfg"], "--plan",
                     suite["plan"], "--signatures", suite["sig"], "--case",
                     case, "--suite-root", suite["tmp"], "--simulated",
                     "--registry-file", suite["reg"], "--out",
                     os.path.join(suite["tmp"], case, "receipt.json"),
-                    env_extra={"FAULT_CASE": case})
+                    env_extra={"FAULT_CASE": case, "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
         finally:
             for p in procs:
                 try:
@@ -292,7 +314,7 @@ def test_r2_five_command_sequence_one_suite_root(suite):
                 "--simulated", "--registry-file", suite["reg"], "--out",
                 os.path.join(suite["tmp"], "positive-handoff",
                              "receipt.json"),
-                env_extra={"FAULT_CASE": "positive-handoff"})
+                env_extra={"FAULT_CASE": "positive-handoff", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
     finally:
         for p in procs:
             try:
@@ -379,38 +401,36 @@ def test_r2_cross_contamination_rejected(tmp_path):
 
 
 def test_r1f_forged_production_without_delivery_rejected(suite):
-    # R1-F: a pre-planted verifier end (+onset, no claim) in a
-    # hold-verifier run. The candidate alone adopts and recovers owned;
-    # the composition layer must reject E_UNDELIVERED since no delivery
-    # record exists for that production. No verifier emulator runs.
+    # R1-F: hold-verifier-texts armed on a positive run, with a
+    # pre-planted verifier end (+onset, no claim). The candidate alone
+    # adopts it; the early provenance gate must reject E_UNDELIVERED
+    # because no delivery record exists for that production. This also
+    # proves the hold actually withholds (a delivered text would pass
+    # the gate and fail later instead).
     import time as _t
-    r = cli("fault", "arm", "--case", "lost-completion", "--run-root",
+    r = cli("fault", "arm", "--case", "positive-handoff", "--run-root",
             suite["tmp"], "--control", "hold-verifier-texts",
             "--actor", "cairn")
     assert r.returncode == 0, r.stdout
-    procs = emulators(suite, "lost-completion", hold={suite["vt"]})
-    planted = {"stream": os.path.join(suite["tmp"], "sim", "stream",
-                                      suite["vsid"] + ".jsonl"),
-               "onset": None}
     os.makedirs(os.path.join(suite["tmp"], "sim", "stream"), exist_ok=True)
-    os.makedirs(os.path.join(suite["tmp"], "lost-completion", "onsets"),
+    os.makedirs(os.path.join(suite["tmp"], "positive-handoff", "onsets"),
                 exist_ok=True)
-    planted["onset"] = os.path.join(
-        suite["tmp"], "lost-completion", "onsets", "z9-forged-1.json")
+    with open(os.path.join(suite["tmp"], "sim", "stream",
+                           suite["vsid"] + ".jsonl"), "w") as fh:
+        fh.write('{\"t\":\"end\",\"item\":\"z9-forged-1\"}\n')
+    json.dump({"onset_at": _t.strftime("%Y-%m-%dT%H:%M:%SZ", _t.gmtime()),
+               "provenance": "forged-fixture", "uncertainty_s": 1},
+              open(os.path.join(suite["tmp"], "positive-handoff", "onsets",
+                                "z9-forged-1.json"), "w"))
+    procs = emulators(suite, "positive-handoff")
     try:
-        with open(planted["stream"], "w") as fh:
-            fh.write('{"t":"end","item":"z9-forged-1"}\n')
-        json.dump({"onset_at": time.strftime("%Y-%m-%dT%H:%M:%SZ",
-                                             time.gmtime()),
-                   "provenance": "forged-fixture", "uncertainty_s": 1},
-                  open(planted["onset"], "w"))
         r = cli("run-case", "--config", suite["cfg"], "--plan",
                 suite["plan"], "--signatures", suite["sig"], "--case",
-                "lost-completion", "--suite-root", suite["tmp"],
+                "positive-handoff", "--suite-root", suite["tmp"],
                 "--simulated", "--registry-file", suite["reg"], "--out",
-                os.path.join(suite["tmp"], "lost-completion",
+                os.path.join(suite["tmp"], "positive-handoff",
                              "receipt.json"),
-                env_extra={"FAULT_CASE": "lost-completion"})
+                env_extra={"FAULT_CASE": "positive-handoff", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
     finally:
         for p in procs:
             try:
@@ -418,7 +438,6 @@ def test_r1f_forged_production_without_delivery_rejected(suite):
             except subprocess.TimeoutExpired:
                 p.kill()
     assert r.returncode == 3 and "E_UNDELIVERED" in r.stdout, r.stdout
-
 
 def test_r1f_disabled_induction_fails_incomplete(suite):
     # R1-F: armed transport fault but a deposit wrapper that never
@@ -448,7 +467,7 @@ def test_r1f_disabled_induction_fails_incomplete(suite):
                 "--simulated", "--registry-file", suite["reg"], "--out",
                 os.path.join(suite["tmp"], "queued-ambiguous-restart",
                              "receipt.json"),
-                env_extra={"FAULT_CASE": "queued-ambiguous-restart"})
+                env_extra={"FAULT_CASE": "queued-ambiguous-restart", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
     finally:
         for p in procs:
             try:

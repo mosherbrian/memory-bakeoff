@@ -115,7 +115,14 @@ def main(argv=None):
     ap.add_argument("--art-dir", required=True)
     ap.add_argument("--intervention", default="")
     ap.add_argument("--timeout-s", type=float, default=60.0)
+    ap.add_argument("--delay-s", type=float, default=0.0,
+                    help="one-shot startup delay before polling (external "
+                         "timing control for late-completion scenarios; "
+                         "the tool applies recovery, this only times seat "
+                         "action)")
     args = ap.parse_args(argv)
+    if args.delay_s > 0:
+        time.sleep(args.delay_s)
     emulate(args.seat, args.role, args.text_dir, args.stream_file,
             args.onset_dir, args.art_dir, args.intervention,
             args.timeout_s)

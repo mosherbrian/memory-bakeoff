@@ -209,6 +209,18 @@ def gate(config_path, plan_path, sig_path, registry_file=""):
         if hashlib.sha256(fh.read()).hexdigest() != r3want:
             raise StageCFault("E_TOOL_CHANGED",
                               "R3 working copy changed since signature")
+    # D4/HC4.3 transitive execution surface: every invoked module and
+    # wrapper beyond entry/candidate/R3 must be hash-bound too.
+    _here = os.path.dirname(os.path.abspath(__file__))
+    for rel, key in (("fixture_control.py", "fixture_control_sha256"),
+                     ("fixture-wake-deposit", "deposit_sha256"),
+                     ("seat_emulator.py", "seat_emulator_sha256"),
+                     ("fault_onset.py", "fault_onset_sha256")):
+        with open(os.path.join(_here, rel), "rb") as fh:
+            got = hashlib.sha256(fh.read()).hexdigest()
+        if not sig.get(key) or sig.get(key) != got:
+            raise StageCFault("E_TOOL_CHANGED",
+                              "%s missing or drifted since signature" % rel)
     if config.get("launcher_source") != "live-agent-deck":
         raise StageCFault("E_NOT_LIVE", "config source not live-agent-deck")
     binding = _load(config["binding_path"])
@@ -688,7 +700,8 @@ def _annotate_witness(witness_path, action, execution, case, ack):
 
 # --- fault protocol (R1) -----------------------------------------------------------
 FAULT_CONTROLS = ("none-declared", "hold-verifier-texts",
-                  "corrupt-after-worker", "transport-queued-first")
+                  "corrupt-after-worker", "transport-queued-first",
+                  "delay-worker-completion")
 FAULT_CASES = ("lost-completion", "failed-verification",
                "queued-ambiguous-restart")
 
@@ -861,10 +874,10 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
         raise StageCFault("E_NO_INTERVENTION",
                           "fault case %s has no armed intervention; "
                           "INCOMPLETE, never passing" % case)
-    if intervention is not None and case not in FAULT_CASES \
-            and intervention.get("control") != "none-declared":
-        raise StageCFault("E_CASE_FAIL",
-                          "fault interference in clean case %s" % case)
+    # NOTE: no interference guard here by design — a faulted clean case
+    # (e.g. hold armed on positive-handoff) must RUN and fail on its
+    # outcome assertions and provenance gate, producing evidence, not
+    # be rejected up front. Adversarial tests rely on this.
     cdirs = {"root": croot,
              "claims": os.path.join(croot, "claims"),
              "art": os.path.join(croot, "art"),
@@ -937,11 +950,12 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                  "--allowlist-seat", wtitle, "--allowlist-seat", vtitle,
                  "--db", db_path, "--manifest", manifest_path, "--claims",
                  cdirs["claims"], "--qid", "P6C"]
-    # R1 executing consumer: the deliver loop runs HERE on the real host
-    # path in every branch, reading the armed intervention file and
-    # applying it to the isolated fixture (hold/delay delivery; tamper
-    # post-commit). Seat actors (real seats live, emulators injected)
-    # see ONLY delivered texts.
+    # R1/D3 executing consumer: notification-primary deliver loop, run
+    # HERE on the real host path in every branch. Attaches the existing
+    # DirNotifier BEFORE the initial drain, drains, then waits on
+    # notifications with bounded timeouts — no bespoke polling loop.
+    # Reopen reconciliation runs first: prior intents reconcile from the
+    # append-only journal without blind resends.
     import threading as _th
     import fixture_control as _fc
     applied = []
@@ -949,13 +963,27 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
     deliver_error = []
     stop_delivery = _th.Event()
     live_wake = None if simulated else pdirs.get("live_wake")
+    bindings = {wtitle: {"role": "worker",
+                         "action": manifest["action_id"],
+                         "execution": manifest["execution_id"]},
+                vtitle: {"role": "verifier",
+                         "action": manifest["verify_action_id"],
+                         "execution": manifest["verify_execution_id"]}}
 
     def _deliver_loop():
+        try:
+            _fc.reconcile_journal(cdirs["outbox"], cdirs["inbox"], croot)
+        except _fc.ControlFault as e:
+            deliver_error.append({"code": e.code, "detail": e.detail})
+            return
         while not stop_delivery.is_set():
             try:
+                if not _fc.wait_for_deposits(cdirs["outbox"], croot, 5.0):
+                    continue
                 recs = _fc.deliver_pending(
                     cdirs["outbox"], cdirs["inbox"], intervention,
-                    live_wake=live_wake)
+                    bindings, croot, live_wake=live_wake,
+                    run_cwd=croot)
                 applied.extend(recs)
             except _fc.ControlFault as e:
                 deliver_error.append({"code": e.code,
@@ -979,27 +1007,66 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                                               "detail": e.detail})
                         return
                     tampered["done"] = True
-            stop_delivery.wait(0.5)
 
     deliverer = _th.Thread(target=_deliver_loop, daemon=True)
     deliverer.start()
     try:
         rc, out = _cli([sys.executable, r3] + live_args + ["run-fixture"],
                        child_extra)
-    finally:
+    except Exception:
         stop_delivery.set()
         deliverer.join(timeout=30)
+        raise
     if deliver_error:
         raise StageCFault(deliver_error[0]["code"],
                           deliver_error[0]["detail"])
     if rc not in (0, 3) or not isinstance(out, dict):
+        _stop_deliverer()
         raise StageCFault("E_CANDIDATE",
                           "run-fixture usage failure: %s" % (out,))
+    def _provenance_gate():
+        # Fail-closed provenance: every resolved end must trace to a
+        # delivery record for its (seat, execution). Pre-planted ends
+        # the candidate alone would adopt are rejected here, never
+        # certified. Runs before any case-specific assertions.
+        import fixture_control as _fcx
+        found = {}
+        for sid, path in ((wsid, _wstream(stream_dir, wkey)),
+                          (vsid, _wstream(stream_dir, vkey))):
+            try:
+                found[sid] = _resolve_item(path, cdirs["onsets"])
+            except StageCFault:
+                found[sid] = None
+        for (seat, execution, sid) in (
+                (wtitle, manifest["execution_id"], wsid),
+                (vtitle, manifest["verify_execution_id"], vsid)):
+            if found[sid] is not None and not _fcx.check_delivered(
+                    applied, seat, execution):
+                raise StageCFault("E_UNDELIVERED",
+                                  "produced end for %s has no delivery "
+                                  "record; forged or out-of-band "
+                                  "production rejected" % (seat,))
+        return found
+
+    items = _provenance_gate()
     extra = {}
 
     def _rerun_cli():
         return _cli([sys.executable, r3] + live_args + ["run-fixture"],
                     child_extra)
+
+    def _reattach_cli():
+        # R3 reattach: consume late completion under the same
+        # action/execution with zero new sends (tool-applied recovery).
+        return _cli([sys.executable, r3] + live_args + ["reattach"],
+                    child_extra)
+
+    def _stop_deliverer():
+        stop_delivery.set()
+        deliverer.join(timeout=30)
+        if deliver_error:
+            raise StageCFault(deliver_error[0]["code"],
+                              deliver_error[0]["detail"])
 
     def _kv():
         return _kv_rows(db_path)
@@ -1007,13 +1074,48 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
     if case == "positive-handoff":
         if out.get("decision") not in ("transition-committed",
                                        "terminal-rest"):
+            _stop_deliverer()
             raise StageCFault("E_CASE_FAIL",
                               "positive case did not commit: %s" % (out,))
     elif case == "lost-completion":
-        if out.get("decision") != "owned-recovery":
+        # Real lost worker-completion signal: the first bounded wait
+        # expires with no end (owned-failure, never false success);
+        # the tool then applies bounded reattach recovery, which must
+        # consume the late end exactly once with zero worker resends.
+        if out.get("decision") != "owned-failure" or \
+                out.get("reason") != "no-end":
+            _stop_deliverer()
             raise StageCFault("E_CASE_FAIL",
-                              "lost completion must recover owned: %s"
+                              "lost case must first miss the bound end: %s"
                               % (out,))
+        n_msg = _msg_count_kv(_kv())
+        oids = sorted(k for k in _kv() if k.startswith("outbox-sent:"))
+        rc_r, out_r = _reattach_cli()
+        if (out_r.get("decision") if isinstance(out_r, dict) else None) \
+                not in ("transition-committed", "terminal-rest"):
+            _stop_deliverer()
+            raise StageCFault("E_CASE_FAIL",
+                              "reattach did not recover the late end: %s"
+                              % (out_r,))
+        kv_r = _kv()
+        if _msg_count_kv(kv_r) != n_msg + 1:
+            _stop_deliverer()
+            raise StageCFault("E_SENDS",
+                              "reattach resent worker traffic")
+        for oid in oids:
+            if kv_r.get(oid) != _kv().get(oid):
+                _stop_deliverer()
+                raise StageCFault("E_SENDS",
+                                  "reattach mutated prior send identity")
+        wclaim = os.path.join(cdirs["claims"],
+                              manifest["execution_id"] + ".json")
+        if not os.path.exists(wclaim):
+            _stop_deliverer()
+            raise StageCFault("E_CASE_FAIL",
+                              "worker evidence not retained")
+        extra["first_run"] = out
+        extra["reattached"] = True
+        out = dict(out_r, worker=out_r.get("worker", out))
     elif case == "failed-verification":
         if out.get("decision") == "COMPLETE" or \
                 manifest.get("disposition") == "COMPLETE":
@@ -1026,16 +1128,28 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                               "queued run did not commit: %s" % (out,))
         kv = _kv()
         states_all = _sends_from_kv(kv)[1]
-        kinds = {s.get("state") for s in states_all.values()}
-        if "queued" not in kinds:
+        # Induced transport states live in the executing consumer's applied
+        # delivery receipts (live wake argv/env + rc/receipt mapping), not
+        # in candidate kv (deposit wrapper only deposits). Require real
+        # queued + ambiguous delivery receipts, labeled induced.
+        applied_kinds = {a.get("receipt_state") for a in applied}
+        if "queued" not in applied_kinds:
             raise StageCFault("E_CASE_FAIL",
                               "no queued transport receipt observed; "
                               "induced fault missing, case INCOMPLETE")
-        if "ambiguous" not in kinds:
+        if "ambiguous" not in applied_kinds:
             raise StageCFault("E_CASE_FAIL",
                               "no ambiguous transport receipt observed; "
                               "induced fault missing, case INCOMPLETE")
-        extra["transport_states"] = states_all
+        if not intervention.get("induced"):
+            raise StageCFault("E_CASE_FAIL",
+                              "queued/ambiguous receipts not labeled "
+                              "induced; case INCOMPLETE")
+        extra["transport_states"] = {
+            "applied-%d" % i: {"state": a.get("receipt_state"),
+                               "seat": a.get("seat"),
+                               "induced": a.get("induced")}
+            for i, a in enumerate(applied)}
         n_msg = _msg_count_kv(kv)
         rc2, out2 = _rerun_cli()
         if (out2.get("decision") if isinstance(out2, dict) else None) != \
@@ -1078,7 +1192,9 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                    worker_outbox=out.get("worker_outbox"),
                    verifier_outbox=out.get("verifier_outbox"))
     else:
+        _stop_deliverer()
         raise StageCFault("E_CASE", "unknown case %r" % case)
+    _stop_deliverer()
     kv = _kv()
     sends_all, states_all = _sends_from_kv(kv)
     sends = {"worker": sends_all.get(wtitle, 0),
@@ -1168,7 +1284,8 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                               manifest["execution_id"],
                               manifest["verify_action_id"]:
                               manifest["verify_execution_id"]},
-               "settled_actions": _settled_actions(out, manifest)}
+                "settled_actions": _settled_actions(out, manifest),
+                "transport_states": extra.get("transport_states", {})}
     with open(out_path, "w") as fh:
         json.dump(receipt, fh, sort_keys=True, indent=1)
     if case in FAULT_CASES:
@@ -1176,12 +1293,12 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                                           det_by_action, wa)
         with open(out_path, "w") as fh:
             json.dump(receipt, fh, sort_keys=True, indent=1)
-    expect = manifest["verify_action_id"] if case in (
-        "failed-verification", "lost-completion") else None
+    expect = manifest["verify_action_id"] if case == \
+        "failed-verification" else None
     verdict = timecheck(config_path, lat_path, wit_path,
                         receipt_path=out_path, expect_open=expect)
-    if case in ("positive-handoff", "queued-ambiguous-restart",
-                "quiet-rest"):
+    if case in ("positive-handoff", "lost-completion",
+                "queued-ambiguous-restart", "quiet-rest"):
         if verdict.get("verdict") != "accept":
             raise StageCFault(
                 "E_TIMECHECK",
@@ -1317,8 +1434,8 @@ def verify_suite(suite_root, config_path):
                                                    seen_actions[action],
                                                    case))
                 seen_actions[action] = case
-        expect = receipt.get("verify_action") if case in (
-            "failed-verification", "lost-completion") else None
+        expect = receipt.get("verify_action") if case == \
+            "failed-verification" else None
         rc, verdict = _cli(
             [sys.executable, os.path.abspath(__file__), "timecheck",
              "--config", config_path, "--latency", lat_path, "--witness",
