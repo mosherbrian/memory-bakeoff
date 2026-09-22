@@ -1,0 +1,55 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T10:57:05.716684+00:00",
+  "authorization": "PREPARATION_ONLY",
+  "action_id": "P6r9-prepare-1",
+  "owner": "cairn",
+  "allocation_seconds": 600,
+  "cumulative_preparation_minutes": 50,
+  "plan_sha256": "1263fdf79cdfe2fdcd59116cd5c5acd69489091972a83a730eca8101e43a1fce",
+  "preparation_tool_sha256": "462596ee721f651924ad03d24f6480b466b04a402768012a6736cbc44ce6ddd3",
+  "cleanup_tool_sha256": "57bb7e4e4d4cc938ae41c4532f0a98311e15d05e2cbed1246e10793a156cd8fa",
+  "source_candidate_commit": "1bbe75595401a92db847183fe2ebc946dfc1140a",
+  "working_root": "/tmp/p6r9-prep-20260922T105705Z",
+  "manifest_path": "/tmp/p6r9-prep-20260922T105705Z/launch-manifest.json",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "commands_argv": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/p6r9-prep-20260922T105705Z"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py",
+      "--profile",
+      "campaign4",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/stagec-plan.json",
+      "--manifest-out",
+      "/tmp/p6r9-prep-20260922T105705Z/launch-manifest.json",
+      "--workdir-base",
+      "/tmp/p6r9-prep-20260922T105705Z/workdirs",
+      "--worker-name",
+      "p6-fixture-worker-r9p1",
+      "--verifier-name",
+      "p6-fixture-verifier-r9p1",
+      "--idle-timeout",
+      "25m"
+    ]
+  ],
+  "conditions": [
+    "Before effect verify hashes, no name collision and current registry/main-four IDs. Exactly one invocation; no -message or quiet flag. Record host start/deadline/relative timer first.",
+    "Capture raw stdout/stderr/exit, raw role records, partial journal and current registry even if tool fails. Socket race: reconcile existing returned IDs, never launch again. Preserve rc3, no retroactive success.",
+    "Produce execution-ready binding in live-preparation-1/execution-binding.json, not merely a presence summary. Top-level launcher_source live-agent-deck/profile/plan_sha256; per-role session_id,title,role_lane,launch_command,workdir,producer_root,stream_path,socket PATH STRING,incarnation ino/mtime,raw launch record hashes. Compare real registry, launch stdout and S_ISSOCK. No guessed roles/streams/suffix identities. Use accepted runtime session-to-stream mapping; no stream creation.",
+    "Archive all evidence into this package live-preparation-1/. Immutable originals; any reconciled manifest separately named with provenance.",
+    "Cairn owns cleanup no later than25m after start, relative timer. Archive then stop only exact two created IDs if no subsequent signature supersedes. Historical stopped fixtures and main seats untouched. No automatic renewal or restart.",
+    "Authorize NEW <=10m corvid binding/schema witness after manifest ready. Independently inspect actual registry/socket/raw facts and run derive-config only with purpose derive-only and exact hashes, no run-case. Record receipt/deadline/timer and execution-binding-review.md. This includes schema reconciliation; do not accept a summary file the executable cannot read.",
+    "No tasks, wake to fixtures, candidate loop, candidate service/timer effects, research/shadow/adoption/retirement. Previous live release expired; gate tests must not send.",
+    "Return binding/plan hashes to Tern. This is not a signed live task plan: inherited stagec-plan phase paths may still name r8; director must materialize and sign exact r9 commands/config before any live step."
+  ],
+  "allocations": "NEW cairn prep10m (cumulative50m), NEW corvid binding10m. Candidate ceilings810/555 unchanged. Prior witness/fixture grants spent; no live fixture task grant here.",
+  "stage_c_signature": false
+}
