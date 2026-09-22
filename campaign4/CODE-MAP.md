@@ -8,10 +8,10 @@ Further live releases are held for the [ten-finding review disposition](CODE-REV
 | Start here | What it is | Accepted version / limit |
 |---|---|---|
 | [P5-r2 core](packages/P5-r2-atomic-authority/src/) | Lifecycle, validator, SQLite store, driver, trusted ingress, supervisor/status; stdlib-only baseline | `80092f92c24fb58ad70478faf93e4f39eb184847`; [acceptance](packages/P5-r2-atomic-authority/acceptance.json). Internal fake/store helpers are not public ingress. |
-| [P6-r9 case entry](packages/P6-r9-observer-lifetime/src/case_entry.py) | Current accepted candidate's case CLI | Source `f1d7c86f0b38fb653734beb9d906dae44a10a41a`; 34-test gate and one real positive handoff accepted. Fault/rest limitations below. |
+| [P6-r9 case entry](packages/P6-r9-observer-lifetime/src/case_entry.py) | Previous accepted candidate's case CLI | Source `f1d7c86f0b38fb653734beb9d906dae44a10a41a`; 34-test gate and one real positive handoff accepted. Fault/rest limitations below. |
 | [P6-r9 runtime](packages/P6-r9-observer-lifetime/src/r3harness/) | Actual local harness, host adapter, observer and copied core used by those cases | Same source pin; [composition manifest](packages/P6-r9-observer-lifetime/composition-manifest.json) binds the executable files. Do not replace this directory with P5-r2 by assumption. |
 | [P6-r9 fixture support](packages/P6-r9-observer-lifetime/src/) | Fault controls, delivery wrapper, source-time tools; `seat_emulator.py` is test-only | Same manifest. Presence of test helpers is not permission to substitute them into live evidence. |
-| [P6-r11](packages/P6-r11-case-observer-continuation/package.md) | Active bounded observer-continuation correction | Candidate work only; does not supersede accepted source until independently verified and explicitly accepted. |
+| [P6-r11 candidate source](packages/P6-r11-case-observer-continuation/candidate/src/) | Latest accepted candidate: failed/quiet continuation, authenticated rejection, routing-error propagation | Source `924d21ab0884946393d614c015c9b70fc669f260`; [acceptance](packages/P6-r11-case-observer-continuation/acceptance.json), 42-test gate. Injected only; supersedes R9 for candidate development, not its historical live witness. |
 
 The executable surface is not yet standalone. `case_entry.py` directly references
 [P6-r5 source](packages/P6-r5-launch-binding/src/) and
@@ -24,9 +24,7 @@ command is provided here: expired fixture signatures must never be reused.
 Evidence to read: [candidate acceptance](packages/P6-r9-observer-lifetime/candidate-acceptance-repair-3.json),
 [positive live acceptance](packages/P6-r9-observer-lifetime/live-positive-acceptance.json),
 and [R10 incomplete matrix](packages/P6-r10-live-recovery-matrix/terminal-disposition.json).
-Positive handoff worked. Failed-verification and quiet-rest still truncate normal
-slow turns; lost-completion and queued/ambiguous controls are missing. P6-r11
-addresses only the first pair. No four-case recovery, shadow or adoption PASS.
+Positive handoff worked live on R9. R11 fixes failed/quiet continuation and authenticated rejection in injected tests; no R11 live witness yet. Lost-completion and queued/ambiguous controls remain missing. [R12](packages/P6-r12-reviewed-regressions/package.md) reproduces the ten code-review findings while live releases stay held. No four-case recovery, shadow or adoption PASS.
 
 Other package directories are work/provenance records, not alternative recommended
 installations. Historical bytes can still be dependencies of a later accepted
