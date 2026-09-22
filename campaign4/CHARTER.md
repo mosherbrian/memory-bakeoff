@@ -216,3 +216,14 @@ would have run unattended until 22:38 PDT. Re-armed relative (`--on-active`).
 **Rule, going forward:** arm deadlines with `systemd-run --on-active=<duration>`.
 Never an absolute wall-clock. A duration has no timezone to get wrong. This was
 never written down — cairn improvised the form — which is why it is written here.
+
+## Brian: durable authority overriding earlier live holds, 2026-09-22
+
+Brian explicitly authorizes Tern to override earlier live/preparation/Stage C
+holds and wants those holds removed as barriers to proceeding. No additional
+Brian approval is required for live boundaries within campaign4. See
+[LIVE-AUTHORITY-20260922.md](LIVE-AUTHORITY-20260922.md) for the verbatim
+instruction and its application. Earlier records remain historical, not a veto
+on a new director release. Tern remains responsible for bounded execution,
+identity/integrity checks, independent evidence and cleanup. The two charter
+hard stops and campaign scope are unchanged.
