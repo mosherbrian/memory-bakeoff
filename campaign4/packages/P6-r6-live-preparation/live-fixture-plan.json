@@ -1,0 +1,52 @@
+{
+ "candidate": "pinned P6-r5 at dad988277b5b7e633735d8eaae2d6134b84fa5a0, invoked unchanged; this plan never relabels its simulated evidence as live",
+ "forbidden": [
+  "live steps before Tern plan+manifest signature",
+  "fixture-injected/dry-run manifest at gate",
+  "adopting existing sessions on collision",
+  "touching main four seats or shared wrappers",
+  "production campaign ledger writes",
+  "script retirement",
+  "real Signal/all-seat pause test",
+  "research runs",
+  "inferring identity from filename/title alone",
+  "regular-file fake sockets"
+ ],
+ "live_cases_15m": [
+  {
+   "budget_m": 4,
+   "case": "normal handoff positive",
+   "mandatory": true
+  },
+  {
+   "budget_m": 3,
+   "case": "lost completion recovery",
+   "mandatory": true
+  },
+  {
+   "budget_m": 3,
+   "case": "failure recovery (failed check cannot close)",
+   "mandatory": true
+  },
+  {
+   "budget_m": 3,
+   "case": "queued/ambiguous transport + restart reconcile",
+   "mandatory": true
+  },
+  {
+   "budget_m": 2,
+   "case": "quiet rest (no spurious sends)",
+   "mandatory": true
+  }
+ ],
+ "phases": {
+  "1_prepare_idle": "cairn executes (only under separately signed <=10m preparation release): AGENTDECK_PROFILE=campaign4 python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-fixture-plan.json --manifest ${P6R_ROOT:-/tmp/p6r6}/launch-manifest.json. Creates exactly two NEW idle p6-fixture-* sessions (worker acp-go lane /home/bmosher/.config/agent-deck/acp-go, verifier acp-go-deepseek lane /home/bmosher/.config/agent-deck/acp-go-deepseek), isolated workdirs under /tmp/p6live, no -message, idle-timeout 25m. Captures real IDs/sockets/streams into ${P6R_ROOT:-/tmp/p6r6}/launch-manifest.json with launcher_source live-agent-deck.",
+  "2_bind": "sha256sum ${P6R_ROOT:-/tmp/p6r6}/launch-manifest.json; sha256sum /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-fixture-plan.json; Tern records both hashes in ${P6R_ROOT:-/tmp/p6r6}/signatures.json with signer tern (out-of-band signature step, no tool forges it).",
+  "3_gate": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prewake_gate.py --manifest ${P6R_ROOT:-/tmp/p6r6}/launch-manifest.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-fixture-plan.json --signatures ${P6R_ROOT:-/tmp/p6r6}/signatures.json. Must print gate PASS (rc0); any E_NOT_LIVE/E_NO_SIGNATURE/E_PLAN_CHANGED/E_BINDING_CHANGED/E_STALE rejects before task wake.",
+  "4_fixture": "bounded real worker/verifier fixture through the pinned candidate using ONLY recorded bindings (transport + observer read session/stream/socket from the signed manifest; exact wake texts per candidate task_texts). Positive path: one worker + one verifier send. Independent witness observes: python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/witness_timing.py observe --stream MANIFEST_STREAM --item ITEM --onset-file ONSET.json --action ACT --execution EX --out ${P6R_ROOT:-/tmp/p6r6}/witness-rows.jsonl.",
+  "5_check_rollback": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/witness_timing.py check --rows ${P6R_ROOT:-/tmp/p6r6}/witness-rows.jsonl (bounds 30/60/90, extended 180/240 reported); candidate assertions on durable outcomes; then python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/cleanup_live.py --manifest ${P6R_ROOT:-/tmp/p6r6}/launch-manifest.json --archive-dir ${P6R_ROOT:-/tmp/p6r6}/archive --witness-rows ${P6R_ROOT:-/tmp/p6r6}/witness-rows.jsonl (archive verified before stop/remove of owned IDs only)."
+ },
+ "plan_id": "P6R6-live-fixture-1",
+ "status": "PROPOSED ONLY - Tern signature required before any live step",
+ "timing_protocol": "controlled onset per case from (a) producer onset sidecar or (b) operator fault-marker file with host timestamp + provenance + uncertainty; witness records observation bound; missing onset stays INCOMPLETE; 30s detection / 60s recovery / 90s total gated, 180s/240s extended reported; model execution time never detection latency"
+}
