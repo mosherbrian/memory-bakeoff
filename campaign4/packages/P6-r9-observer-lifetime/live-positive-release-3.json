@@ -1,0 +1,80 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T16:31:27.254547+00:00",
+  "authorization": "ONE_LIVE_POSITIVE_HANDOFF_ONLY",
+  "action_id": "P6r9-live-positive-3",
+  "owner": "cairn",
+  "binding_sha256": "7cacfbcb61ef961cf51e2f18611975970204723303809acc659b199a26519394",
+  "plan_sha256": "9249a819ec5d9a3936f147816654af8433e185cbaec7e419d88e1d08142a162d",
+  "signatures_sha256": "680b54aa7e7e4f200bd4110818395728262e58461a684e33d5bbbfa8c7109213",
+  "config_sha256": "3ca1e7553eb6bfbb623fe9bbe9cbd52e7a8508c3e8fa6f7f88ff2282462e3138",
+  "working_root": "/tmp/p6r9-live-positive-3",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "start_not_after": "2026-09-22T16:33:00Z",
+  "stop_by": "2026-09-22T16:36:45Z",
+  "allocation": "NEW cairn live execution <=6m and absolute16:36:45Z stop; NEW corvid actual review <=10m after bound evidence. Previous executed live grants remain spent. Candidate885/640 unchanged.",
+  "commands_argv": [
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/case_entry.py",
+      "gate",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-execution-3/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-execution-3/signed-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-execution-3/signatures.json"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/case_entry.py",
+      "fault",
+      "arm",
+      "--case",
+      "positive-handoff",
+      "--run-root",
+      "/tmp/p6r9-live-positive-3",
+      "--control",
+      "none-declared",
+      "--actor",
+      "cairn"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/case_entry.py",
+      "run-case",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-execution-3/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-execution-3/signed-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/live-execution-3/signatures.json",
+      "--case",
+      "positive-handoff",
+      "--suite-root",
+      "/tmp/p6r9-live-positive-3",
+      "--out",
+      "/tmp/p6r9-live-positive-3/positive-handoff/receipt.json"
+    ]
+  ],
+  "effects": [
+    "Only fresh workerba5a1ae8-1790093908 and verifier203af130-1790093909 through the signed candidate; at most one dispatch per declared action. No manual sends.",
+    "Only p6c-h1w/p6c-h1v, this disposable root and owned p6-stagec-h1.timer/service. No other live cases.",
+    "Automatic campaign4-p6r9-prep4-cleanup.timer stays armed for~16:38Z. Do not cancel/reset. Archive first; exact two prepared IDs only."
+  ],
+  "conditions": [
+    "Verify full signatures/source/config/plan/binding hashes and current gate before effects; no simulated mode, test registry, emulator, synthetic runtime or hand-edited claim.",
+    "Materialized plan narrows actual grants to180s worker/verify and300s escalation plus absolute16:36:45Z stop. Wait_s8 is an observation slice, not a task deadline. This is prospective allocation, not a reset.",
+    "Host-stamp start/deadline and relative run watchdog before single run; command timeout min(360s, remaining until stop_by). No start after16:33Z; no retry after failed or ambiguous run.",
+    "Archive stdout/stderr/exit, raw runtime, claim/artifact, database/receipts and actual timestamps on completion/failure. Missing source timing remains INCOMPLETE, never guessed.",
+    "At stop_by stop owned runner/children and retire only positive timer/service; archive exact evidence before automatic fixture cleanup. Main seats and shared wrappers untouched. Check automatic cleanup actually succeeded; failure returns owned duty to cairn.",
+    "After evidence bound, dispatch corvid <=10m once for actual identity/delivery/handoff/claim/verdict/no-dup/timing/cleanup review. Do not stop at COMPLETED row. Missing/failed handoff is FAIL; missing timing evidence limits acceptance.",
+    "No production ledger, credentials, research/shadow/adoption/retirement. A positive handoff is one live witness, not full suite/campaign acceptance. Return Tern for next disposition.",
+    "Before effects rehash composition-manifest and every declared file including host_adapter and R3_REVISION; require manifest161afac5 and corrected candidate f1d7c86. Gate alone does not check every transitive hash. No manual transport."
+  ],
+  "authority": "Brian explicitly approved proceeding and durably overriding earlier live holds; LIVE-AUTHORITY-20260922.md. This exact Tern signature releases only this run.",
+  "candidate_acceptance": "0252499",
+  "binding_review_sha256": "f88170bbe7d06ccdbcc586dc1940052f7b94abe106dfd01686d9331f40d933e2"
+}
