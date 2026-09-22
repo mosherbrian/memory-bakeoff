@@ -1,0 +1,43 @@
+{
+ "cleanup": [
+  "cancel p6-fixture timers (candidate effect); verify no timers remain armed",
+  "remove fixture ledger file /tmp/p6-fixture-ledger.db",
+  "remove fixture seat message files under /tmp/p6-fixture-msgs/",
+  "reconcile action/execution IDs against fixture ledger; confirm no campaign IDs touched",
+  "report hashes of all fixture artifacts to Tern"
+ ],
+ "commands": [
+  "PYTHONPATH=<candidate>/src python3 -c \"from host_adapter import HostWakeTransport; t=HostWakeTransport('/home/bmosher/.config/agent-deck/wake', ('p6-fixture-worker',), True); print(t.send('p6-fixture-worker','dispatch p6-fixture-recovery-1'))\"",
+  "PYTHONPATH=<candidate>/src python3 -c \"from host_adapter import HostTimerService; import subprocess; print(subprocess.list2cmdline(HostTimerService().command_for('p6-fixture-recovery-1.timer',60,'probe')))\"",
+  "PYTHONPATH=<candidate>/src python3 -c \"from host_adapter import ACPOutcomeObserver; print(ACPOutcomeObserver('/home/bmosher/.config/agent-deck/acp-history/<session>.jsonl').observe('<session>','<execution>'))\"",
+  "cleanup: cancel p6-fixture timers; rm /tmp/p6-fixture-ledger.db; rm -rf /tmp/p6-fixture-msgs/; reconcile IDs; report hashes"
+ ],
+ "fixture_id": "p6-fixture-recovery-1",
+ "ledger": {
+  "attempt": "a1",
+  "grant": "fixture grant pinned by Tern release (Stage C gate)",
+  "path": "/tmp/p6-fixture-ledger.db (disposable; never the campaign ledger)"
+ },
+ "note": "PROPOSED ONLY. Commands are exact argv against the bound candidate (verified in test_d1_exact_commands_bind_fixture_plan). No live fixture run in Stage A/repair: Stage C needs candidate PASS + Tern-signed exact plan hash first.",
+ "package_id": "P6F",
+ "seats": {
+  "existing_campaign_seats": [
+   "tern",
+   "corvid",
+   "kiln",
+   "cairn"
+  ],
+  "fixture_seats": [
+   "p6-fixture-worker",
+   "p6-fixture-verifier"
+  ],
+  "seat_rule": "existing four campaign seats are never stopped or repurposed; fixture seats stay in campaign4 profile with unique p6-fixture names"
+ },
+ "transport_wiring": "HostWakeTransport(wake_path=<inventory sha fd31cb61 wake>, allowlist_seats=fixture_seats, enabled=True-only-under-signed-Stage-C-release, timeout_s=30)",
+ "units": {
+  "note": "no units installed/modified in Stage A; candidate fixture uses one-shot relative timers only",
+  "proposed": [
+   "p6-fixture-recovery-1.timer (one-shot, relative, fixture-owned)"
+  ]
+ }
+}
