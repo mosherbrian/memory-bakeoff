@@ -38,17 +38,22 @@ def test_launch_argv_parser_safe_single_equal_token_no_message():
     assert "--idle-timeout=25m" in cmd  # one token, never split by passes
     assert "-idle-timeout" not in cmd and " 25m" not in " " + " ".join(cmd)
     assert "-m" not in cmd and "-message" not in cmd  # idle: no task
-    assert "-json" in cmd and "-q" in cmd
+    assert "-json" in cmd and "-q" not in cmd and "--quiet" not in cmd, \
+        cmd  # repair-2: -q suppresses SUCCESS JSON (quiet checked first)
     assert cmd[cmd.index("-cmd") + 1] == LANE  # lane adjacent to -cmd
 
 
-def test_launch_without_returned_id_refuses_title_fallback():
+def test_launch_without_returned_id_is_ambiguous_effect(tmp_path):
     def runner(cmd, **kw):
         return FakeProc(0, json.dumps({"title": "p6-fixture-worker"}))
+    raw = str(tmp_path / "raw.json")
     with pytest.raises(PrepFault) as e:
         pl.launch_idle("/tmp", "p6-fixture-worker", LANE, "campaign4",
-                       "25m", "/tmp/p6r6-r1-wd", runner=runner)
-    assert e.value.code == "E_LAUNCH_NO_ID"
+                       "25m", "/tmp/p6r6-r1-wd", runner=runner,
+                       raw_path=raw)
+    assert e.value.code == "E_LAUNCH_AMBIGUOUS"  # never zero-created
+    rec = json.load(open(raw))  # raw persisted pre-validation
+    assert rec["rc"] == 0 and rec["argv"][-2] == "--idle-timeout=25m"
 
 
 # --- real installed binary, parser-only, zero effects ---------------------------
@@ -61,7 +66,7 @@ def _seats():
 
 def test_installed_parser_old_argv_misbinds_new_argv_safe():
     before = _seats()
-    assert len(before) == 4  # main seats only
+    before_ids = sorted(s["id"] for s in before)  # registry pinned: no adds
     old = ["agent-deck", "launch", "/tmp", "-t", "probe-old",
            "-cmd", LANE, "-idle-timeout", "25m", "-json", "-q"]
     r = subprocess.run(old, capture_output=True, text=True, timeout=60,
@@ -77,8 +82,7 @@ def test_installed_parser_old_argv_misbinds_new_argv_safe():
     body = json.loads(r.stdout)  # -json honored => flags bound correctly
     assert body["code"] == "NOT_FOUND" and "probe-nodir" in body["error"]
     after = _seats()
-    assert len(after) == 4 and \
-        sorted(s["id"] for s in after) == sorted(s["id"] for s in before)
+    assert sorted(s["id"] for s in after) == before_ids  # zero creations
 
 
 # --- partial creation recorded, never retried ------------------------------------
@@ -111,4 +115,5 @@ def test_partial_journal_records_completed_side_without_retry(tmp_path,
     assert partial["pending_role"] == "verifier"
     assert partial["worker"]["session_id"] == "w1"
     assert "--idle-timeout=25m" in partial["worker"]["preparation_argv"]
+    assert "-q" not in partial["worker"]["preparation_argv"]
     assert partial["launch_error"]["code"] == "E_LAUNCH"

@@ -98,34 +98,71 @@ def check_record(record, name, lane, profile):
     return True
 
 
+def _persist_raw(raw_path, record):
+    if not raw_path:
+        return ""
+    with open(raw_path, "w") as fh:
+        json.dump(record, fh, sort_keys=True, indent=1)
+    return raw_path
+
+
 def launch_idle(path, name, lane, profile, idle_timeout, workdir,
-                runner=None):
-    """Repair-1: idle-timeout binds parser-safe as ONE --flag=value token.
-    The installed CLI's reorder pass has no separate-value entry for
-    idle-timeout, so `-idle-timeout 25m` demotes `25m` to positional and
-    binds the following flag (`-json`) as the value. The `=` form is never
-    split by either normalization pass (verified parser-only against the
-    installed binary). No -message: idle by construction."""
+                runner=None, raw_path=""):
+    """Repair-2 correction (repair-1 argv kept parser-safe):
+    `-q` is REMOVED. Inspected CLIOutput semantics (cli_utils.go): Success
+    checks quietMode BEFORE jsonMode, so `-json -q` yields rc0 with EMPTY
+    stdout on success (session created, identity lost); Error renders JSON
+    regardless of quiet, which is why the old error-only probe misled.
+    Corrected argv keeps `-json` without `-q`.
+
+    Raw stdout/stderr/rc plus prelaunch intent are persisted BEFORE any
+    validation discards the response. rc0 with empty/malformed/missing-id
+    output, timeouts, and transport errors are ambiguous EFFECT
+    (E_LAUNCH_AMBIGUOUS: creation unknown, reconcile, never blind-retry),
+    never zero-created. No -message: idle by construction."""
     os.makedirs(workdir, exist_ok=True)
     env = dict(os.environ, AGENTDECK_PROFILE=profile)
     cmd = ["agent-deck", "launch", path, "-t", name, "-cmd", lane,
-           "--idle-timeout=%s" % idle_timeout, "-json", "-q"]
+           "--idle-timeout=%s" % idle_timeout, "-json"]
+    intent = {"role": name, "lane": lane, "workdir": workdir,
+              "profile": profile, "argv": cmd}
     run = runner or subprocess.run
-    proc = run(cmd, capture_output=True, text=True, timeout=180,
-               env=env, cwd=workdir)
+    try:
+        proc = run(cmd, capture_output=True, text=True, timeout=180,
+                   env=env, cwd=workdir)
+    except subprocess.TimeoutExpired as e:
+        raw = dict(intent, rc="timeout", stdout=getattr(e, "stdout", ""),
+                   stderr=getattr(e, "stderr", ""))
+        rp = _persist_raw(raw_path, raw)
+        raise PrepFault("E_LAUNCH_AMBIGUOUS",
+                        "launch %r timed out; EFFECT unknown, raw at %r; "
+                        "reconcile registry, do not retry blind" % (name,
+                                                                    rp))
+    except (OSError, subprocess.SubprocessError) as e:
+        raw = dict(intent, rc="transport-error", stdout="",
+                   stderr=str(e)[:200])
+        rp = _persist_raw(raw_path, raw)
+        raise PrepFault("E_LAUNCH_AMBIGUOUS",
+                        "launch %r transport error; EFFECT unknown, raw at "
+                        "%r; reconcile registry, do not retry blind"
+                        % (name, rp))
+    raw = dict(intent, rc=proc.returncode, stdout=proc.stdout or "",
+               stderr=proc.stderr or "")
+    rp = _persist_raw(raw_path, raw)
     if proc.returncode != 0:
         raise PrepFault("E_LAUNCH",
-                        "launch %r failed: %s" % (name, (proc.stderr or
-                                                         proc.stdout or "")
-                                                  [:300]))
+                        "launch %r failed (rc %d, raw at %r): %s"
+                        % (name, proc.returncode, rp,
+                           (proc.stderr or proc.stdout or "")[:300]))
     try:
-        out = json.loads(proc.stdout or "{}")
+        out = json.loads(proc.stdout or "")
     except ValueError:
-        raise PrepFault("E_LAUNCH", "launch output malformed for " + name)
+        out = None
     if not isinstance(out, dict) or not out.get("id"):
-        raise PrepFault("E_LAUNCH_NO_ID",
-                        "launch %r returned no session id; refusing "
-                        "title-only fallback here" % name)
+        raise PrepFault("E_LAUNCH_AMBIGUOUS",
+                        "launch %r rc0 but no session id (raw at %r); "
+                        "EFFECT unknown — session may exist; reconcile "
+                        "registry, do not retry blind" % (name, rp))
     return out
 
 
@@ -218,67 +255,85 @@ def main(argv=None):
         pass
     launched = {}
     sides = {}
+    raw_records = {}
     pending = None
     launch_error = None
+
+    def _argv(wdir, name, lane):
+        return ["agent-deck", "launch", wdir, "-t", name, "-cmd", lane,
+                "--idle-timeout=%s" % args.idle_timeout, "-json"]
+
     for role, name, lane in (("worker", args.worker_name, args.worker_lane),
                              ("verifier", args.verifier_name,
                               args.verifier_lane)):
         wdir = os.path.join(args.workdir_base, name)
+        raw_path = args.manifest_out + ".raw.%s.json" % role
         try:
             out = launch_idle(wdir, name, lane, args.profile,
-                              args.idle_timeout, wdir)
+                              args.idle_timeout, wdir, raw_path=raw_path)
         except PrepFault as e:
             pending, launch_error = role, e
+            raw_records[role] = raw_path
             break
         launched[role] = (name, lane, wdir, out)
         sides[role] = {"session_id": out["id"], "title": name,
                        "identity_source": "launch-response-id",
-                       "preparation_argv": ["agent-deck", "launch", wdir,
-                                            "-t", name, "-cmd", lane,
-                                            "--idle-timeout=%s"
-                                            % args.idle_timeout,
-                                            "-json", "-q"],
-                       "idle_timeout": args.idle_timeout}
+                       "preparation_argv": _argv(wdir, name, lane),
+                       "idle_timeout": args.idle_timeout,
+                       "raw_record": raw_path}
+        raw_records[role] = raw_path
         with open(journal_path, "w") as fh:
             json.dump({"launcher_source": live_source,
                        "journal": "partial-launch-record",
                        "completed": sides, "pending": None}, fh,
                       sort_keys=True, indent=1)
-    if pending is not None:
+
+    def _write_partial(failed_role, err):
         partial = {"plan_sha256": (hashlib.sha256(
             open(args.plan, "rb").read()).hexdigest() if args.plan
             else "unsigned-plan"),
             "launcher_source": live_source, "profile": args.profile,
             "journal": "partial-launch-record",
-            "pending_role": pending,
-            "launch_error": {"code": launch_error.code,
-                             "detail": launch_error.detail}}
+            "pending_role": failed_role,
+            "launch_error": {"code": err.code, "detail": err.detail},
+            "raw_records": raw_records}
         for role, side in sides.items():
             partial[role] = side
         with open(journal_path, "w") as fh:
             json.dump(partial, fh, sort_keys=True, indent=1)
         print(json.dumps({"error": "E_LAUNCH_PARTIAL",
-                          "detail": "%s launch failed after %d completed; "
-                                    "partial record at %s; reconcile with "
-                                    "cleanup, do not retry completed sides"
-                                    % (pending, len(sides), journal_path),
+                          "detail": "%s failed after %d sides completed; "
+                                    "partial ownership retained at %s; "
+                                    "reconcile with cleanup, do not retry "
+                                    "completed sides"
+                                    % (failed_role, len(sides),
+                                       journal_path),
                           "owner": "cairn",
                           "partial_manifest": journal_path}, sort_keys=True))
         return 3
+
+    if pending is not None:
+        return _write_partial(pending, launch_error)
     sessions2, _ = list_sessions(args.profile)
     by_id = {s.get("id"): s for s in sessions2 if isinstance(s, dict)}
     full = {}
-    for role, name, lane, wdir, out in (("worker",) + launched["worker"],
-                                        ("verifier",) + launched["verifier"]):
-        sid = out["id"]  # launch_idle guarantees exact returned identity
-        rec = by_id.get(sid)
-        if rec is None:
-            raise PrepFault("E_BIND",
-                            "launched session %r not in launcher list" % name)
-        check_record(rec, name, lane, args.profile)
-        ident = check_socket_real(os.path.join(LIVE_SOCK_DIR, sid
-                                               + ".sock"))
-        stream = os.path.join(LIVE_STREAM_ROOT, sid + ".jsonl")
+    binding_role = None
+    try:
+        for role, name, lane, wdir, out in (("worker",) + launched["worker"],
+                                            ("verifier",) +
+                                            launched["verifier"]):
+            binding_role = role
+            sid = out["id"]  # exact returned identity only, never title
+            rec = by_id.get(sid)
+            if rec is None:
+                raise PrepFault("E_BIND", "returned id %r for %r not in "
+                                         "launcher list; EFFECT ambiguous, "
+                                         "ownership retained"
+                                % (sid, name))
+            check_record(rec, name, lane, args.profile)
+            ident = check_socket_real(os.path.join(LIVE_SOCK_DIR, sid
+                                                   + ".sock"))
+            stream = os.path.join(LIVE_STREAM_ROOT, sid + ".jsonl")
         full[role] = {"session_id": sid, "title": name,
                       "profile": args.profile, "role_lane": lane,
                       "launch_command": rec.get("command"),
@@ -286,11 +341,15 @@ def main(argv=None):
                       "identity_source": "launch-response-id",
                       "preparation_argv": sides[role]["preparation_argv"],
                       "idle_timeout": args.idle_timeout,
+                      "raw_record": sides[role]["raw_record"],
                       "producer_root": LIVE_STREAM_ROOT,
                       "stream_path": stream,
                       "stream_exists": os.path.exists(stream),
                       "socket": os.path.join(LIVE_SOCK_DIR, sid + ".sock"),
                       "incarnation": ident}
+    except PrepFault as e:
+        # Post-create binding failure: completed launches stay owned.
+        return _write_partial("bind-%s" % (binding_role or "unknown"), e)
     plan_sha = (hashlib.sha256(open(args.plan, "rb").read()).hexdigest()
                 if args.plan else "unsigned-plan")
     man = build_manifest(plan_sha, args.profile, full["worker"],

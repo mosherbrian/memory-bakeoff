@@ -1,4 +1,25 @@
-# P6r6-repair-1 note (kiln, tool repair, no live seats)
+# P6r6-repair notes (kiln; tool repairs, no live seats under repair grants)
+
+## Repair-2 correction: SUCCESS JSON vs quiet suppression (supersedes argv)
+
+Preparation2 proved the repair-1 argv still lost a real creation: `-json -q`
+renders SUCCESS as empty rc0 (`CLIOutput.Success` checks quietMode BEFORE
+jsonMode; `Error` renders JSON regardless — hence the misleading error-only
+probe). Corrected PREPARATION argv (exact, per seat):
+
+```
+agent-deck launch WDIR -t NAME -cmd LANE --idle-timeout=25m -json
+```
+
+`-q`/`--quiet` removed; `--idle-timeout=` kept parser-safe; no `-message`.
+Raw stdout/stderr/rc + prelaunch intent persist per side BEFORE validation
+(`manifest-out.raw.ROLE.json`). rc0 empty/malformed/missing-id, timeouts and
+transport errors are `E_LAUNCH_AMBIGUOUS` EFFECT (reconcile, never blind
+retry, never zero-created). Returned id correlated strictly against
+registry/profile/lane/path; post-create binding failures retain completed
+sides in the partial manifest (`pending_role` = `bind-ROLE`).
+
+## Repair-1 root cause (retained history)
 
 ## Root cause (installed parser source, read — no binary/source edits)
 
