@@ -555,6 +555,20 @@ def _cli(cmd, env_extra=None, timeout=240):
                                  "stderr": proc.stderr}
 
 
+def _raise_for_harness_error(out, where):
+    """Propagate a structured harness authority/routing failure BEFORE any
+    timing or case-acceptance gate. A harness CLI error result carries
+    {"error": CODE, "detail": ...} with NO "decision" key; surfacing its
+    actual code/reason preserves the cause the controller needs instead of
+    masking it as missing timing evidence. Results WITH a "decision" key
+    (verified-rejection, transition-committed, terminal-rest, owned
+    outcomes) are legitimate harness results and pass through untouched."""
+    if isinstance(out, dict) and "decision" not in out and out.get("error"):
+        code = out.get("error") or "E_HARNESS"
+        detail = out.get("detail") or "harness CLI failure"
+        raise StageCFault(code, "%s: %s" % (where, detail))
+
+
 def _r3harness_cli():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "r3harness", "harness.py")
@@ -1101,14 +1115,26 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
     extra = {}
 
     def _rerun_cli():
-        return _cli([sys.executable, r3] + live_args + ["run-fixture"],
-                    child_extra)
+        rc, res = _cli([sys.executable, r3] + live_args + ["run-fixture"],
+                       child_extra)
+        try:
+            _raise_for_harness_error(res, "rerun run-fixture")
+        except StageCFault:
+            _stop_deliverer()
+            raise
+        return rc, res
 
     def _reattach_cli():
         # R3 reattach: consume late completion under the same
         # action/execution with zero new sends (tool-applied recovery).
-        return _cli([sys.executable, r3] + live_args + ["reattach"],
-                    child_extra)
+        rc, res = _cli([sys.executable, r3] + live_args + ["reattach"],
+                       child_extra)
+        try:
+            _raise_for_harness_error(res, "reattach")
+        except StageCFault:
+            _stop_deliverer()
+            raise
+        return rc, res
 
     def _stop_deliverer():
         stop_delivery.set()
@@ -1116,6 +1142,14 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
         if deliver_error:
             raise StageCFault(deliver_error[0]["code"],
                               deliver_error[0]["detail"])
+
+    # Routing/authority errors from the harness surface here, before
+    # provenance/timing/case gates can mask them as missing evidence.
+    try:
+        _raise_for_harness_error(out, "run-fixture")
+    except StageCFault:
+        _stop_deliverer()
+        raise
 
     def _kv():
         return _kv_rows(db_path)
