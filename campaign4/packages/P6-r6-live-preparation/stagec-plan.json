@@ -1,0 +1,47 @@
+{
+ "actions": {
+  "verifier": "p6c-v1",
+  "worker": "p6c-w1"
+ },
+ "binding_manifest": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-preparation-3/launch-manifest-reconciled.json (accepted, NEVER modified; parent hash recorded in execution config)",
+ "forbidden": [
+  "modifying the accepted binding manifest",
+  "old simulated p6h IDs or renamed placeholder streams",
+  "operator-guessed ITEM (items resolve from observed end+onset records)",
+  "manually fabricated end/claim files",
+  "standalone signature check plus hand-written wake sequence",
+  "fixture wakes/launches/restarts/service/timer mutations under this grant",
+  "production campaign ledger writes"
+ ],
+ "live_run_dirs": {
+  "art": "/tmp/p6stagec/art",
+  "bin": "/tmp/p6stagec/bin",
+  "claims": "/tmp/p6stagec/claims",
+  "db": "/tmp/p6stagec/fixture.db",
+  "latency": "/tmp/p6stagec/latency.jsonl",
+  "msgs": "/tmp/p6stagec/msgs",
+  "onsets": "/tmp/p6stagec/onsets",
+  "root": "/tmp/p6stagec",
+  "stream": "/tmp/p6stagec/stream",
+  "trace": "/tmp/p6stagec/trace.log",
+  "witness": "/tmp/p6stagec/witness-rows.jsonl"
+ },
+ "pending_stage_c_only": [
+  "real runtime execution of phases 3-6 against live seats (injected overlay runs are NOT live evidence)",
+  "fresh Tern signatures over THIS plan hash + derived execution config hash",
+  "socket liveness re-witness at execution (expired sockets retained as evidence, never silently replaced)"
+ ],
+ "phases": {
+  "1_derive": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py derive-config --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/stagec-plan.json --binding /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-preparation-3/launch-manifest-reconciled.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --out ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json",
+  "2_gate": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py gate --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json",
+  "3_positive": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case positive-handoff --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-positive.json",
+  "4_failed_verification": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case failed-verification --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-failed.json",
+  "5_restart_quiet": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case restart-quiet --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-restart.json",
+  "6_timecheck": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py timecheck --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --latency ${STAGEC_ROOT:-/tmp/p6stagec}/latency.jsonl --witness ${STAGEC_ROOT:-/tmp/p6stagec}/witness-rows.jsonl --out ${STAGEC_ROOT:-/tmp/p6stagec}/verdict.json",
+  "7_rollback": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/stagec_entry.py rollback --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --archive-dir ${STAGEC_ROOT:-/tmp/p6stagec}/archive"
+ },
+ "plan_id": "P6C-stagec-exact-1",
+ "signatures": "Tern-authored signatures file {signer: tern, plan_sha256, binding_sha256} for derive, then {signer: tern, plan_sha256, config_sha256} for gate/run (exact paths resolved at execution; hashes bound, never placeholders)",
+ "status": "PROPOSED ONLY - Tern signature over this file + execution config required before any send",
+ "timer_unit": "p6-stagec-handoff-1.timer"
+}
