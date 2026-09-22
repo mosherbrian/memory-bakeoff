@@ -218,6 +218,120 @@ def recompute_artifacts(claim, base_dir):
     return verified
 
 
+def _committed_worker_hashes(driver, launch):
+    """Locate the committed worker handoff intent bound to this verify-run.
+
+    Matches handoff-intent:* whose verify_action/verify_execution equal this
+    launch's action/execution. Returns (intent_key, hashes) or (None, {})."""
+    kv = driver.kv
+    try:
+        keys = [k for k in kv.keys() if k.startswith("handoff-intent:")]
+    except Exception:
+        try:
+            keys = [k for k, _v in kv.items() if k.startswith(
+                "handoff-intent:")]
+        except Exception:
+            return None, {}
+    for key in sorted(keys):
+        try:
+            intent = json.loads(kv.get(key) or "{}")
+        except ValueError:
+            continue
+        if intent.get("verify_action") == launch.get("action") and \
+                intent.get("verify_execution") == launch.get("execution"):
+            h = intent.get("hashes")
+            if isinstance(h, dict) and h:
+                return key, h
+    return None, {}
+
+
+def _actual_hashes(claim, base_dir):
+    """Independently recompute on-disk bytes; returns {name: hex}."""
+    import hashlib as _hl
+    out = {}
+    for name, spec in (claim.get("artifacts") or {}).items():
+        if not isinstance(spec, dict) or "path" not in spec:
+            raise ValueError("E_CLAIM_INCOMPLETE: artifact %s needs "
+                             "path+sha256" % name)
+        full = os.path.join(base_dir, spec["path"])
+        try:
+            with open(full, "rb") as fh:
+                out[name] = _hl.sha256(fh.read()).hexdigest()
+        except OSError:
+            raise ValueError("E_ARTIFACT_MISSING: %s unreadable" % name)
+    return out
+
+
+def _authenticated_rejection(adapter, launch, claim, code):
+    """Genuine verifier rejection: outcome failed + declared expected hash
+    equals the committed worker hash + actual bytes differ. Persists
+    expected/observed hashes, reason, claim identity durably and
+    idempotently. Returns the rejection record or None."""
+    from host_adapter import OwnedFault
+    if launch.get("contract_step") != "verify-run":
+        return None
+    if not isinstance(claim, dict) or claim.get("outcome") != "failed":
+        return None
+    if code not in ("E_ARTIFACT_MISMATCH", "E_ARTIFACT_MISSING"):
+        return None
+    # Routing/authority checks BEFORE trusting outcome: claim must bind to
+    # this launch (raises on forged route/mismatch).
+    try:
+        validate_claim(claim, launch)
+    except ValueError:
+        return None
+    driver, kv = adapter.driver, adapter.driver.kv
+    _ikey, whashes = _committed_worker_hashes(driver, launch)
+    if not whashes:
+        return None
+    declared = claim.get("artifacts") or {}
+    if not isinstance(declared, dict) or not declared:
+        return None
+    # Declared expected must equal committed worker references (never trust
+    # a forged claim's invented expected hash).
+    for name, wdigest in whashes.items():
+        spec = declared.get(name)
+        if not isinstance(spec, dict) or spec.get("sha256") != wdigest:
+            return None
+    try:
+        actual = _actual_hashes(
+            claim, launch.get("artifact_base_dir") or "")
+    except ValueError:
+        return None
+    mismatch = any(actual.get(n) != w for n, w in whashes.items()
+                   if n in actual)
+    if not mismatch:
+        return None
+    done_key = "handoff-done:%s:%s" % (launch["action"],
+                                       launch["execution"])
+    rej_key = "verified-rejection:%s:%s" % (launch["action"],
+                                            launch["execution"])
+    existing = kv.get(rej_key)
+    if existing:
+        try:
+            return json.loads(existing)
+        except ValueError:
+            pass
+    rec = {"decision": "verified-rejection",
+           "action": launch.get("action"),
+           "execution": launch.get("execution"),
+           "expected": {n: w for n, w in whashes.items()},
+           "observed": {n: actual.get(n) for n in whashes},
+           "reason": claim.get("check_detail") or claim.get("reason") or
+           "hash mismatch: verifier rejected tampered artifact",
+           "claim_execution": claim.get("execution"),
+           "durable": True}
+    try:
+        driver._kv_put_many([
+            (rej_key, json.dumps(rec, sort_keys=True)),
+            (done_key, json.dumps({"verified_rejection": True,
+                                   "rejection": rej_key}, sort_keys=True))])
+    except Exception:
+        raise OwnedFault("E_NO_SUCCESSOR",
+                         "cannot persist verified rejection")
+    return rec
+
+
 def run_handoff(adapter, qid, turn, claims_dir, launch, verify_spec=None):
     """Validate (turn authority, claim file, artifacts, budget), declare
     transition + intent atomically, commit the ledger step, outbox the
@@ -276,6 +390,14 @@ def run_handoff(adapter, qid, turn, claims_dir, launch, verify_spec=None):
         code = str(e).split(":")[0]
         if code in ("E_FORGED_ROUTE", "E_CLAIM_MISMATCH"):
             raise OwnedFault(code, str(e))
+        try:
+            with open(claim_path_for(claims_dir, launch["execution"])) as fh:
+                _claim = json.load(fh)
+        except (OSError, ValueError):
+            _claim = None
+        rej = _authenticated_rejection(adapter, launch, _claim, code)
+        if rej is not None:
+            return rej
         return _recover(adapter, launch, code)
     outcome = claim.get("outcome")
     if outcome in ("failed", "cancelled"):

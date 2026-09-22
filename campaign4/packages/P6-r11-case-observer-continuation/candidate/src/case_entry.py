@@ -1225,12 +1225,18 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                 rc_r, out_r = _reattach_cli()
                 if (out_r.get("decision")
                         if isinstance(out_r, dict) else None) in (
-                            "transition-committed", "terminal-rest"):
+                            "transition-committed", "terminal-rest",
+                            "verified-rejection"):
                     if _msg_count_kv(_kv()) != n_msg + 1:
                         _stop_deliverer()
                         raise StageCFault("E_SENDS",
                                           "reattach resent worker traffic")
                     out = dict(out_r, worker=out_r.get("worker", out))
+                    if out.get("decision") == "verified-rejection":
+                        extra["verified_rejection"] = {
+                            "expected": out.get("expected"),
+                            "observed": out.get("observed"),
+                            "reason": out.get("reason")}
                 else:
                     _stop_deliverer()
                     raise StageCFault("E_CASE_FAIL",
@@ -1360,6 +1366,22 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
         if not (sends["worker"] == 1 and sends["verifier"] == 1):
             raise StageCFault("E_SENDS",
                               "positive case needs 1+1 sends: %s" % (sends,))
+    if case == "failed-verification":
+        if not (sends["worker"] == 1 and sends["verifier"] == 1):
+            raise StageCFault("E_SENDS",
+                              "failed-verification needs 1+1 sends: %s"
+                              % (sends,))
+        if out.get("decision") == "verified-rejection":
+            vr = extra.get("verified_rejection") or {}
+            exp = vr.get("expected") or out.get("expected")
+            obs = vr.get("observed") or out.get("observed")
+            if exp:
+                extra["verified_rejection"] = {
+                    "expected": exp, "observed": obs,
+                    "reason": vr.get("reason") or out.get("reason")}
+            if not exp or not obs:
+                raise StageCFault("E_CASE_FAIL",
+                                  "verified rejection lacks hashes")
     items = {}
     for sid, path in ((wsid, _wstream(stream_dir, wkey)),
                       (vsid, _wstream(stream_dir, vkey))):
