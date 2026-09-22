@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-09-22T16:17:48.909675+00:00",
+  "state": "active",
+  "unit": "campaign4-p6r9-prep4-cleanup",
+  "root": "/tmp/p6r9-prep4-20260922T161741Z",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=campaign4-p6r9-prep4-cleanup",
+    "--on-active=20m",
+    "--timer-property=AccuracySec=1s",
+    "--setenv=AGENTDECK_PROFILE=campaign4",
+    "/usr/bin/timeout",
+    "180",
+    "/bin/bash",
+    "-c",
+    "if [ -f \"$1\" ]; then m=\"$1\"; else m=\"$1.partial\"; fi; exec python3 \"$2\" --manifest \"$m\" --archive-dir \"$3\" --profile campaign4",
+    "p6-cleanup",
+    "/tmp/p6r9-prep4-20260922T161741Z/launch-manifest.json",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/cleanup_live.py",
+    "/tmp/p6r9-prep4-20260922T161741Z/automatic-cleanup-archive"
+  ],
+  "receipt": "Running timer as unit: campaign4-p6r9-prep4-cleanup.timer\nWill run service as unit: campaign4-p6r9-prep4-cleanup.service\n"
+}
