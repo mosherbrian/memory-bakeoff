@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-09-22T03:35:40.695912+00:00",
+  "director": "tern",
+  "decision": "WITHHOLD_STAGE_C",
+  "verdict_sha256": "a1efdb3c43d32849f6fa80896ceecf0863294c746bfdbe6b1f45d2e2969d4872",
+  "plan_sha256": "7679823ef7feb45fb1913748431053baf42487001c4de0e9c8f3a45d180f2426",
+  "probe": {
+    "empty_root_preparation": {
+      "evidence": {
+        "observed_streams": [],
+        "producer_root": "/tmp/p6r5-director-ogi1_n07",
+        "session": "invented-session",
+        "stream_key": "invented-main",
+        "verifier_stream_key": "invented-verifier",
+        "worker_stream_key": "invented-worker"
+      },
+      "rc": 0
+    },
+    "unknown_source_latency": {
+      "failure_outcomes": [],
+      "failures": 0,
+      "samples": 1,
+      "success": 1,
+      "verdict": "gates-hold"
+    }
+  },
+  "findings": {
+    "L2": "prepare_evidence copies caller identifiers despite zero observed streams; plan hardcodes p6h identities without any command launching/binding that runtime. Shims supply the missing producer.",
+    "L4": "check_latency compares dispatch_at to detected_at, including normal work duration, and returns gates-hold without independent source/onset evidence. Unknown source label alone does not justify campaign acceptance."
+  },
+  "prior_pass": "Preserved for injected e2e observations; not live acceptance."
+}
