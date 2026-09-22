@@ -1,5 +1,7 @@
 # Campaign 4
 
+**Looking for the harness code?** Start with [CODE-MAP.md](CODE-MAP.md).
+
 **Read `CHARTER.md` first.** It records what Brian authorized, to whom, and
 where it stops.
 
