@@ -3,8 +3,13 @@
 **Authorized by Brian, 2026-09-21.** This file records what was granted, to
 whom, and where it stops. It is the authority every work package points at.
 
-**Goal (Tern's, adopted):** find a small, reversible memory aid that improves
-Brian's work in Claude Code and Pi across compaction and restarts.
+**Primary goal (Tern's, adopted):** find a small, reversible memory aid that
+improves Brian's work in Claude Code and Pi across compaction and restarts.
+
+**Recognized secondary deliverable (Brian, evening amendment 2026-09-21):** a
+reliable, effective multi-agent harness reusable in future projects. This is a
+successful outcome in its own right even if the memory question proves unsolvable.
+Research remains the priority; the harness must not consume the research it serves.
 
 **Today's scope is the machinery only.** No memory bake-off research runs today.
 
@@ -156,8 +161,30 @@ not part of campaign 4.
 
 ## Success
 
-Campaign 4 succeeds when useful research advances visibly with little
-supervision — not when a fleet platform is finished.
+Brian's evening amendment, relayed 2026-09-21, supersedes the former exclusion
+of a finished harness as a successful outcome. Useful research with little
+supervision remains the primary goal. A finished, reliable, portable harness
+also counts as a win independently of the memory bake-off's result.
+
+Reuse and minimal dependencies are explicit design constraints. Keep the
+portable core independent of agent-deck, ACP, tmux, model providers and host
+service managers; those dependencies belong in replaceable host adapters.
+The existing Python core's stdlib-only dependency boundary is binding: only
+Python standard-library imports and core-owned modules, with no new third-party
+runtime dependency absent an explicit director amendment and recorded rationale.
+A convenience library is not an automatic exception. Reuse accepted components
+before adding mechanisms; portability does not authorize speculative ports.
+
+At the next package boundary, Tern must assess the next machinery step against
+research priority and the smallest useful reliable harness. Unit-test success
+alone is not reliability. Bounded live recovery and evidence-referenced shadow
+validation remain acceptance work, now also toward the recognized deliverable.
+Today's reported 18 machinery packages / 0 research rows is a reason to control
+scope, not a verified effectiveness measure or a reason to declare success.
+
+This amendment does not interrupt current allocations, release research/shadow
+runs, approve new dependencies, or bypass live signatures. Existing execution
+scope, budget authority and the two hard stops remain in force.
 
 ## Conductor actions, 2026-09-21 15:20 PDT — two defects during the cairn lane change
 
