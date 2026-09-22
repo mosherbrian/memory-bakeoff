@@ -47,3 +47,13 @@ stdlib-only; no dependency/clock-policy change.
 - manifest.json: removed impossible self-entry; `new_lifecycle` now
   ea61a75c… (amendment-1 bytes); consolidated redundant `amended_lifecycle`
   key; all file entries recomputed from disk in acyclic order.
+
+## Completion-3 (descriptor + origin checks; production Python frozen)
+
+- R3_REVISION.json: refreshed all copy_sha256 from disk (parent hashes
+  retained); corrected false identical=true on ingress/store/lifecycle
+  (copy != parent after R13 fixes). Only those three flags changed.
+- test_r13_record_integrity.py / test_r13_identity_independence.py: origin
+  assertions now canonical resolved-file equality (plus .pyc collapse);
+  added alias/parent/lookalike negative-control test per file. No
+  behavioral assertion changed.

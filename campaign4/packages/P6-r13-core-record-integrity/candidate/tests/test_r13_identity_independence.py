@@ -33,14 +33,55 @@ def sha(p):
         return hashlib.sha256(fh.read()).hexdigest()
 
 
+def _origin_path(mod, name):
+    """Canonical resolved path of an imported module (collapses a
+    __pycache__ .pyc to its source file; never name/suffix matching)."""
+    actual = os.path.realpath(mod.__file__)
+    if actual.endswith(".pyc"):
+        stem = os.path.basename(actual).split(".")[0] + ".py"
+        actual = os.path.realpath(os.path.join(
+            os.path.dirname(os.path.dirname(actual)), stem))
+    return actual
+
+
+def _origin_ok(mod, name):
+    return _origin_path(mod, name) == \
+        os.path.realpath(os.path.join(NEWC, name))
+
+
 def test_module_bytes_are_new_core():
     import driver as DRV
     import ingress as ING
-    for mod in (DRV, LC, STOREMOD, ING):
-        assert mod.__file__.startswith(NEWC), mod.__file__
+    for mod, name in ((DRV, "driver.py"), (LC, "lifecycle.py"),
+                      (STOREMOD, "store.py"), (ING, "ingress.py")):
+        assert _origin_ok(mod, name), (mod.__file__, NEWC)
     print("lifecycle=%s ingress=%s store=%s"
           % (sha(LC.__file__)[:12], sha(ING.__file__)[:12],
              sha(STOREMOD.__file__)[:12]))
+
+
+def test_module_origin_aliases_pass_parent_and_lookalike_fail():
+    import driver as DRV
+    expected = os.path.realpath(os.path.join(NEWC, "lifecycle.py"))
+    # Both filesystem aliases of this candidate resolve equal.
+    alias = NEWC.replace("/home/", "/var/home/", 1) \
+        if NEWC.startswith("/home/") \
+        else NEWC.replace("/var/home/", "/home/", 1)
+    assert os.path.realpath(os.path.join(alias, "lifecycle.py")) \
+        == expected
+    assert _origin_path(LC, "lifecycle.py") == expected
+    assert _origin_path(DRV, "driver.py") == \
+        os.path.realpath(os.path.join(NEWC, "driver.py"))
+    # Historical parent module is a different file.
+    parent = os.path.realpath(
+        "/home/bmosher/memory-bake-off/campaign4/packages/"
+        "P6-r11-case-observer-continuation/candidate/src/r3harness/"
+        "lifecycle.py")
+    assert parent != expected
+    # Sibling prefix-lookalike passes startswith but fails equality.
+    lookalike = os.path.normpath(NEWC + "-lookalike/lifecycle.py")
+    assert lookalike.startswith(NEWC)
+    assert os.path.realpath(lookalike) != expected
 
 
 def mk():
