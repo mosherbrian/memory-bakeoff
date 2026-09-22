@@ -29,3 +29,8 @@ per-event narrative ledger. Tool receipt + remote commit verification is evidenc
 include the published frontier in boundary reports instead of a recursively committed
 'push succeeded' file. Future authorized conductor-chat work uses the same cadence
 on its actual agreed branch; no blanket push of unrelated repositories/branches.
+
+Control-ledger preservation: at each director publication boundary also capture a
+new immutable byte/hash checkpoint per LEDGER-PRESERVATION-20260922.md. Publishing
+other files is not preservation of an uncommitted shared ledger. Leave the live TSV
+untouched; compare prior snapshot prefixes and report any divergence.
