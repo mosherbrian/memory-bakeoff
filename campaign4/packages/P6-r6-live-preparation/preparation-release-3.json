@@ -1,0 +1,65 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T04:14:23.536768+00:00",
+  "authorization": "PREPARATION_ONLY",
+  "source_commit": "2487668aab67408adfd83d29e1b3084bfa9ff460",
+  "plan_sha256": "1a536965f0db4cf092a08777dfb25518262b5d4f38c5c9f8f863e181bbefb072",
+  "preparation_tool_sha256": "462596ee721f651924ad03d24f6480b466b04a402768012a6736cbc44ce6ddd3",
+  "phase": "1_prepare_idle only",
+  "owner": "cairn",
+  "allocation_seconds": 600,
+  "action_id": "P6r6-prepare-3",
+  "working_root": "/tmp/p6r6-prep3-20260922T041423Z",
+  "manifest_path": "/tmp/p6r6-prep3-20260922T041423Z/launch-manifest.json",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "commands_argv": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/p6r6-prep3-20260922T041423Z"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py",
+      "--profile",
+      "campaign4",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-fixture-plan.json",
+      "--manifest-out",
+      "/tmp/p6r6-prep3-20260922T041423Z/launch-manifest.json",
+      "--workdir-base",
+      "/tmp/p6r6-prep3-20260922T041423Z/workdirs",
+      "--worker-name",
+      "p6-fixture-worker-p3",
+      "--verifier-name",
+      "p6-fixture-verifier-p3",
+      "--idle-timeout",
+      "25m"
+    ]
+  ],
+  "conditions": [
+    "Before effect: verify pinned tool/plan hashes, no p6-fixture-worker-p3/verifier collision, capture live campaign4 list and main-four ids. No fallback adoption or retry launch after ambiguous result.",
+    "Cairn host-stamps start/absolute deadline in preparation-3-receipt.json and arms relative timer before running command once. Pin stdout/stderr/exit status and post-launch registry even on failure.",
+    "No -message, wake, fixture turn, real timer callback, candidate loop, shadow or Stage C. No shared wrapper/main-seat changes.",
+    "Record actual returned ids and check both sockets, profile/lanes/isolated dirs. Use returned launch ids, reject title-only ambiguity. Manifest and full hashes copied into package live-preparation-3/; no credentials.",
+    "If command partially fails: reconcile newly created exact ids against pre/post registry and launch receipts; never blindly retry or leave unowned resources. Record owned idle sessions even if manifest missing.",
+    "At deadline or preparation failure, archive evidence then stop ONLY provably new owned fixture sessions by exact id. Authorized command: agent-deck session stop <recorded-new-id>, campaign4 environment. Do not remove registry or rely on unreviewed remove argv. If ambiguous ownership, hold and return Tern immediately.",
+    "On success corvid read-only binding check <=5m charged against existing held15m witness allocation; record actual grant consumption, no new grant. Then return Tern with plan/manifest hashes and evidence. No task sends while waiting.",
+    "25m idle auto-stop is fallback only. Cairn owns a relative cleanup deadline <=25m from preparation start to archive and stop these exact idle fixture ids if no further signed release arrives.",
+    "Preserve old preparation evidence. New action/attempt receipt and explicit relationship to failed prepare-2. Do not overwrite the old receipt.",
+    "On launch timeout or malformed reply inspect pre/post registry and partial journal before any cleanup; no second invocation. Copy partial journal even if final manifest absent.",
+    "New tool emits --idle-timeout=25m internally, verified against installed parser. No initial task message. Returned ID must bind to both actual launcher record and socket before PASS.",
+    "Stopped fixture0e734b30-1790050074 remains untouched, neither restarted nor removed. New names explicitly authorized in this release override phase1 example names only; plan hash otherwise unchanged.",
+    "Capture raw.<role>.json and partial journal BEFORE calling any cleanup. Zero completed acknowledged launches does not mean zero effects. Confirm actual registry delta against baseline (expected five entries including stopped predecessor).",
+    "Invocation must have -json without -q/--quiet. No task message. Manifest must bind new names/ids from this exact release; do not substitute old plan example names at subsequent gates.",
+    "If both runtimes launch but immediate socket is absent, no second launch: reconcile existing processes within this 10m bound and report incomplete; never fabricate a socket."
+  ],
+  "stage_c_signature": false,
+  "next_director_task": "After actual binding receipt, decide narrow correction allocation for executable Stage C invocation and full recovery/total gate; current plan remains unsigned for tasks.",
+  "candidate_review_sha256": "06147322c0abf1dbc7c0f63a81425b066f66dcee593341dfb4b055e30f543674",
+  "cleanup_tool_sha256": "57bb7e4e4d4cc938ae41c4532f0a98311e15d05e2cbed1246e10793a156cd8fa",
+  "allocation": "NEW prospective cairn preparation600s; cumulative preparation ceilings30m. Prior two attempts remain spent failures. Worker/verifier415/315 unchanged. Existing live witness15/fixture15 held.",
+  "supersedes_release": "91ab2ed preparation-release-2.json exhausted; new attempt, not a reset."
+}
