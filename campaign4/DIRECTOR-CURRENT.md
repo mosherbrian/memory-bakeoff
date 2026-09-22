@@ -1,3 +1,8 @@
+# INACTIVE DRAFT — not a director scoping or reset instruction
+
+Brian withdrew the director-scoping proposal. This draft is historical only;
+it does not limit director memory or authorize a session handoff.
+
 # Director handoff packet — draft, not a live session transfer
 
 As of 2026-09-22T05:22:30.297417+00:00. Revalidate on use.

@@ -112,3 +112,10 @@ extends this policy to Tern: campaign-wide decision memory via durable records,
 bounded conversational carry and a tested handoff at a safe boundary.
 [DIRECTOR-CURRENT.md](DIRECTOR-CURRENT.md) is the initial draft packet, not a
 completed session transfer. Active P6-r8 and its grants remain unchanged.
+
+## Superseding instruction from Brian
+
+The director scope addendum above is WITHDRAWN. Brian explicitly directs no
+change to Tern’s cross-package context; its cost is accepted. No director reset
+or scope reduction is authorized. Worker/verifier/controller policy is unaffected.
+P6-r8 proceeds under its existing contract and allocation.

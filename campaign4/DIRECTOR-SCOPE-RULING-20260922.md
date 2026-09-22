@@ -1,3 +1,11 @@
+# WITHDRAWN — Brian: no director context change
+
+Brian explicitly rejected director scoping after this ruling was recorded.
+Cross-package conversational memory remains the director’s job; the reported
+input volume is accepted cost and information only. No director session reset,
+scoping implementation or handoff test is authorized by the text below.
+Preserved as superseded history, not current policy. P6-r8 continues unchanged.
+
 # Director context: campaign memory in records, bounded conversational carry
 
 Tern decision, 2026-09-22. Extends SESSION-SCOPE-RULING-20260922.md to the
