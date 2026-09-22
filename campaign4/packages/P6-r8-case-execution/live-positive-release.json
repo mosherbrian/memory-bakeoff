@@ -1,0 +1,77 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T09:10:43.328945+00:00",
+  "authorization": "ONE_LIVE_POSITIVE_HANDOFF_ONLY",
+  "action_id": "P6r8-live-positive-1",
+  "owner": "cairn",
+  "signatures_sha256": "7a2b6d1f678750f6acac1200a30d0205afbdb8d0dd4729234d2e7ec47f396e56",
+  "configuration_sha256": "04c2bc0e79bf3f4235bb4124cce163c070f4adeb0e9fe1f791c1bbb6e913a9cc",
+  "binding_sha256": "8496c10aeb5aacd79a6173425f7fcfbd387ceea3bc539136f0af16e7c339f254",
+  "plan_sha256": "1263fdf79cdfe2fdcd59116cd5c5acd69489091972a83a730eca8101e43a1fce",
+  "working_root": "/tmp/p6r8-live-positive-1",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "start_not_after": "2026-09-22T09:14:00Z",
+  "stop_by": "2026-09-22T09:22:00Z",
+  "cleanup_by": "2026-09-22T09:23:00Z",
+  "allocation": "Use existing held15m cairn fixture grant, bounded by stop_by (no renewal). Existing binding witness15m now spent; authorize NEW <=10m corvid independent live-result review after evidence capture, separate from candidate745/505 ceilings.",
+  "commands_argv": [
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py",
+      "gate",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/live-execution-1/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/live-execution-1/signatures.json"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py",
+      "fault",
+      "arm",
+      "--case",
+      "positive-handoff",
+      "--run-root",
+      "/tmp/p6r8-live-positive-1",
+      "--control",
+      "none-declared",
+      "--actor",
+      "cairn"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/src/case_entry.py",
+      "run-case",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/live-execution-1/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/live-execution-1/signatures.json",
+      "--case",
+      "positive-handoff",
+      "--suite-root",
+      "/tmp/p6r8-live-positive-1",
+      "--out",
+      "/tmp/p6r8-live-positive-1/positive-handoff/receipt.json"
+    ]
+  ],
+  "permitted_effects": [
+    "Only worker6c0b6725-1790067489 and verifiered54bf3d-1790067490 actual model task notifications through the signed candidate path, at most one per declared action. No manual substitute sends.",
+    "Only disposable suite root and candidate-owned positive timer p6-stagec-h1.timer/service and declared p6c-h1w/p6c-h1v actions. No other cases, shared wrapper/production state, research, shadow or script retirement.",
+    "Read actual ACP/runtime and claim/artifact evidence. Do not create/truncate runtime streams or synthesize ends/onsets. Missing timing evidence remains INCOMPLETE."
+  ],
+  "conditions": [
+    "Before effects check exact signatures/code/plan/config/binding hashes and current live gate. No --simulated, registry-file injection, emulator or fake host command. No retry after failed or ambiguous run.",
+    "Cairn host-records start/deadline and relative outer watchdog BEFORE one run; maximum runtime min(480 seconds, seconds until stop_by). No start after start_not_after. Preserve stdout/stderr/exit and all evidence even on failure.",
+    "At stop_by stop only owned run subprocesses/descendants, archive evidence, reconcile candidate timer and outbox, then stop exact two fixture session IDs by cleanup_by. No renewal of09:23Z cleanup. Main seats untouched.",
+    "Cleanup may cancel only this positive case owned timer/service; record systemctl evidence. Attempt candidate rollback only if applicable to populated positive case; full-suite rollback may fail on absent other cases, never invent receipts to satisfy it. On such failure preserve it and perform exact authorized owned cleanup manually with evidence.",
+    "This is one live integration witness, not whole-suite or campaign acceptance. If worker/task schema/observer fails, record bounded actual failure and stop; do not fix artifacts or improvise under this release.",
+    "After archival, corvid <=10m independent review of actual dispatch receipts, runtime identity, claim/artifact hashes, worker->verifier causal sequence, no duplicates, time evidence and cleanup. PASS/FAIL/INCOMPLETE must distinguish missing timing vs successful handoff. Return Tern; no automatic additional live case."
+  ],
+  "boundary_rationale": "Candidate and fresh binding passed; smallest real positive path now yields useful host evidence. Remaining four fault cases stay held; no adoption claim."
+}
