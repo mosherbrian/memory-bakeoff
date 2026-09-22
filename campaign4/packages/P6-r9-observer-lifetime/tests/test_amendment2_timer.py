@@ -76,26 +76,46 @@ def test_duplicate_create_rejects_and_reuse_no_second_call():
                   capture_output=True, text=True, timeout=30).returncode == 1
 
 
-def test_callback_argv_has_db_and_exact_parser_two_dbs(tmp_path):
+def _kv_keys(db):
     import sqlite3
-    g, p, store = _kv()
+    con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
+    try:
+        rows = dict(con.execute("select key, value from driver_kv")
+                    .fetchall())
+    finally:
+        con.close()
+    # Volatile reopen counters (boot/epoch) change on every Driver open
+    # and are not callback effects; exclude them from comparisons.
+    return {k: v for k, v in rows.items()
+            if k not in ("ingress-epoch", "ingress-boot")}
 
-    class FakeAdapter:
-        pass
+
+def _run_cb(cb):
+    return subprocess.run(
+        [sys.executable, cb[1]] + cb[2:],
+        capture_output=True, text=True, timeout=30,
+        cwd=os.path.join(os.path.dirname(HERE), "src", "r3harness"))
+
+
+def test_callback_argv_has_db_and_exact_parser_two_dbs(tmp_path):
+    import time
+    g, p, store = _kv()
 
     # build a minimal adapter stand-in with real Driver db path
     sys.path.insert(0, SRC)
-    from driver import Driver
+    from driver import Driver as _D
+    from ingress import HostClock as _HC
     db1 = str(tmp_path / "a.db")
     db2 = str(tmp_path / "b.db")
-    d1 = Driver(db1)
+    # db1: action already DUE on the real clock (1s grant, then lapse)
+    d1 = _D(db1, _HC())
     d1.admit_authorize("P6F")
-    d1.start_dispatch("P6F", "p6c-h1w", duration_s=900)
-    d1.close() if hasattr(d1, "close") else None
-    d2 = Driver(db2)
+    d1.start_dispatch("P6F", "p6c-h1w", duration_s=1)
+    time.sleep(2.0)
+    # db2: same action, grant still valid (early callback must no-op)
+    d2 = _D(db2, _HC())
     d2.admit_authorize("P6F")
     d2.start_dispatch("P6F", "p6c-h1w", duration_s=900)
-    d2.close() if hasattr(d2, "close") else None
 
     runner = RejectingRunner()
     svc = HostTimerService(g, p, enabled=True,
@@ -107,8 +127,6 @@ def test_callback_argv_has_db_and_exact_parser_two_dbs(tmp_path):
 
     a = A()
     # fresh driver bound to db1 so store.path == db1
-    from driver import Driver as _D
-    from ingress import HostClock as _HC
     drv = _D(db1, _HC())
     a.driver = drv
     a.timers = svc
@@ -119,7 +137,6 @@ def test_callback_argv_has_db_and_exact_parser_two_dbs(tmp_path):
 
     a.trusted_now = Clock().utc_now
     manifest = {"action_id": "p6c-h1w"}
-    import datetime as dt
     dl = "2026-09-22T15:00:00Z"
     svc_out = _arm_host_timer(a, manifest, dl, "p6-stagec-h1.timer")
     assert svc_out[0] in ("armed-host", "armed-host-reused")
@@ -127,17 +144,33 @@ def test_callback_argv_has_db_and_exact_parser_two_dbs(tmp_path):
     cb = rec["callback"]
     assert "--db" in cb and db1 in cb
     assert "--action" in cb or "p6c-h1w" in " ".join(cb)
-    # exact argv parser runs against db1 only; db2 untouched
-    before2 = os.path.getsize(db2)
-    r = subprocess.run([sys.executable, cb[1]] + cb[2:],
-                       capture_output=True, text=True, timeout=30,
-                       cwd=os.path.join(os.path.dirname(HERE), "src",
-                                        "r3harness"))
+    # Exact argv parser against the DUE db: the intended action must
+    # actually transition (interrupt), not merely exit rc-tolerant.
+    before2 = _kv_keys(db2)
+    r = _run_cb(cb)
     assert r.returncode in (0, 3), r.stderr[-500:] + r.stdout[-500:]
-    assert os.path.getsize(db2) == before2
-    # twice-fired causes no duplicate effects: run again, expect dup/no-op
-    r2 = subprocess.run([sys.executable, cb[1]] + cb[2:],
-                        capture_output=True, text=True, timeout=30,
-                        cwd=os.path.join(os.path.dirname(HERE), "src",
-                                         "r3harness"))
+    out = json.loads(r.stdout)
+    assert out["decision"] in ("interrupted", "recovered"), out
+    assert out.get("dedup") is False
+    after1 = _kv_keys(db1)
+    assert after1.get("handled:deadline:P6F:p6c-h1w") == "handled-acked"
+    # foreign/default DB is byte-identical in state: no fallback writes.
+    assert _kv_keys(db2) == before2
+    # Twice-fired: no duplicate effects, durable already-handled.
+    r2 = _run_cb(cb)
     assert r2.returncode in (0, 3)
+    out2 = json.loads(r2.stdout)
+    assert out2["decision"] == "already-handled" and out2.get("dedup") is True
+    assert _kv_keys(db1) == after1
+    assert _kv_keys(db2) == before2
+    # Stale action id and early db2 callback: no premature effects.
+    stale = list(cb)
+    stale[stale.index("--action") + 1] = "p6c-nope"
+    r3 = _run_cb(stale)
+    assert json.loads(r3.stdout)["decision"] == "no-op-not-armed"
+    assert _kv_keys(db1) == after1
+    cb_early = list(cb)
+    cb_early[cb_early.index("--db") + 1] = db2
+    r4 = _run_cb(cb_early)
+    assert json.loads(r4.stdout)["decision"] == "no-op-early"
+    assert _kv_keys(db2) == before2

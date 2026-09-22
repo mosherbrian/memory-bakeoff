@@ -288,7 +288,7 @@ class HostTimerService(FakeTimerService):
         self._guard(canon)
         # Reconcile against persisted/host facts, never kv presence alone.
         # Same identity + same grant deadline: reuse, never recreate.
-        existing_raw = self._kv_get("timer-arm:" + canon)
+        existing_raw = self._kv_get("timer-arm:" + canon) or None
         if existing_raw is not None:
             try:
                 existing = json.loads(existing_raw)
@@ -342,6 +342,10 @@ class HostTimerService(FakeTimerService):
         self.runner_calls.append(("query", cmd))
         proc = self._runner(cmd, capture_output=True, text=True,
                             timeout=30)
+        if proc.returncode != 0:
+            raise OwnedFault("E_TIMER_QUERY",
+                             "host timer query failed: %s" %
+                             ((proc.stderr or "")[:200] or "no status"))
         props = {}
         for line in (proc.stdout or "").splitlines():
             if "=" in line:

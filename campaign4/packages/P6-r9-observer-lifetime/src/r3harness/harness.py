@@ -630,27 +630,50 @@ def run_fixture(adapter, manifest, claims_dir, qid="P6F", resume=False):
     # persisted timer-arm record proves the backstop already exists).
     adapter.arm_from_ledger("deadline:" + manifest["action_id"],
                             verify_deadline)
-    _canon_key = "timer-arm:" + _canonical_timer_base(unit)
-    _existing = adapter.driver.kv.get(_canon_key)
+    _canon = _canonical_timer_base(unit)
+    _canon_key = "timer-arm:" + _canon
+    _existing = adapter.driver.kv.get(_canon_key) or None
+    _need_arm = _existing is None
     if _existing is not None:
-        # Reopen reconciles actual facts: conflicting persisted
-        # deadline/unit for this canonical identity is an owned failure,
-        # never a hijack or silent extension.
+        # Reopen reconciles ACTUAL host facts, never kv presence alone:
+        # conflicting persisted deadline/unit for this canonical identity
+        # is an owned failure, never a hijack or silent extension.
         try:
             _rec = json.loads(_existing)
         except ValueError:
             _rec = {}
-        if _rec.get("deadline") != verify_deadline:
+        if _rec.get("deadline") != verify_deadline or \
+                _rec.get("unit", _canonical_unit(unit)) != \
+                _canonical_unit(unit):
             return {"decision": "owned-failure",
                     "reason": "E_TIMER_CONFLICT-timer-backstop",
                     "latency_samples": 0}
         if hasattr(adapter.timers, "query_host"):
             try:
-                adapter.timers.query_host(
-                    _canonical_timer_base(unit))
-            except OwnedFault:
-                pass
-    if _existing is None:
+                _props = adapter.timers.query_host(_canon)
+            except OwnedFault as e:
+                # A failed query is never swallowed: owned failure.
+                return {"decision": "owned-failure",
+                        "reason": e.code + "-timer-backstop",
+                        "latency_samples": 0}
+            _state = (_props or {}).get("ActiveState")
+            if _state == "active":
+                _need_arm = False  # matching host timer exists: reuse
+            elif _state in ("inactive", "failed", "dead"):
+                # Host lost the timer: reconstruct ONLY the remaining
+                # original grant (never a fresh interval); overdue work
+                # gets bounded disposition via E_EXPIRED below.
+                adapter.driver._kv_put(_canon_key, "")
+                _need_arm = True
+            elif _props:
+                # Host answered but state is unknown: owned failure,
+                # never blind reuse or blind recreate.
+                return {"decision": "owned-failure",
+                        "reason": "E_TIMER_UNKNOWN-timer-backstop",
+                        "latency_samples": 0}
+            else:
+                _need_arm = False  # uninformative host: legacy kv reuse
+    if _need_arm:
         try:
             _arm_host_timer(adapter, manifest, verify_deadline, unit)
         except OwnedFault as e:
