@@ -1,0 +1,69 @@
+{
+ "allowlist": {
+  "seats": [
+   "p6-fixture-worker",
+   "p6-fixture-verifier"
+  ],
+  "timer_units": [
+   "p6-fixture-handoff-1.timer"
+  ],
+  "wake_path": "/home/bmosher/.config/agent-deck/wake"
+ },
+ "assertions": [
+  "PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src python3 -c \"import json,sqlite3; db=sqlite3.connect('/tmp/p6h/fixture.db'); n=db.execute('select count(*) from events').fetchone()[0]; assert n>=6, n; print('events:',n)\"",
+  "PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src python3 -c \"import json; m=json.load(open('/tmp/p6h/manifest.json')); assert m['plan_sha256']==open('/tmp/p6h/plan.sha256').read().strip(); print('bound:',m['execution_id'])\"",
+  "cat /tmp/p6h/latency.jsonl",
+  "PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src python3 -c \"import json; rows=[json.loads(l) for l in open('/tmp/p6h/latency.jsonl')]; assert rows, 'no samples'; assert all(set(r)>= {'action','dispatch_at','detected_at'} for r in rows); print('samples:',len(rows))\""
+ ],
+ "bounds": {
+  "artifact_base_dir": "/tmp/p6h/artifacts",
+  "attempt": "a1",
+  "authorization_ref": "tern-signed Stage-C release (gate)",
+  "claims_dir": "/tmp/p6h/claims",
+  "deadline_hint_utc": "2026-09-22T01:00:00Z",
+  "duration_s": 900,
+  "recover_by_utc": "2026-09-22T01:00:00Z",
+  "stream_dir": "/tmp/p6h/stream"
+ },
+ "candidate": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src",
+ "cleanup": [
+  "systemctl --user stop p6-fixture-handoff-1.timer && systemctl --user reset-failed p6-fixture-handoff-1.timer && systemctl --user show p6-fixture-handoff-1.timer --property=ActiveState | grep -q inactive",
+  "rm -f /tmp/p6h/fixture.db && test ! -e /tmp/p6h/fixture.db",
+  "rm -rf /tmp/p6h/claims /tmp/p6h/msgs /tmp/p6h/stream /tmp/p6h/artifacts && test ! -e /tmp/p6h/claims",
+  "python3 -c \"import json; open('/tmp/p6h/rollback-report.json','w').write(json.dumps({'timers':'none-armed-verified','ids':'reconciled','owner':'restored-one'}))\" && cat /tmp/p6h/rollback-report.json"
+ ],
+ "fixture_id": "p6-fixture-handoff-1",
+ "latency_capture": "run-fixture appends {action, dispatch_at, detected_at, committed_at} to /tmp/p6h/latency.jsonl per observed end; gates 30s explicit / 180s suspicion / 60s recovery; missing-claim and quiet-rest negatives included; all failures and false positives retained in /tmp/p6h/manifest.json",
+ "ledger": "/tmp/p6h/fixture.db (disposable; never the campaign ledger)",
+ "note": "PROPOSED ONLY. Stage A must NOT execute this plan or enable live effects. Execution requires candidate PASS plus Tern's explicit signed release of this exact file's hash (Stage C gate); the harness verifies --plan-hash against this file before enabling anything. No angle-bracket placeholders: runtime IDs come from /tmp/p6h/manifest.json written by setup; no invented IDs/times; cleanup verifies each step (&& / test) before reporting success.",
+ "package_id": "P6H",
+ "run": [
+  "EXEC=$(python3 -c \"import json;print(json.load(open('/tmp/p6h/manifest.json'))['execution_id']\")",
+  "python3 -c \"import json,hashlib; m=json.load(open('/tmp/p6h/manifest.json')); h=hashlib.sha256(open('/tmp/p6h/artifacts/out.bin','rb').read()).hexdigest(); open('/tmp/p6h/claims/%s.json' % m['execution_id'],'w').write(json.dumps({'package':m.get('package_id','P6H'),'attempt':'a1','action':m['action_id'],'execution':m['execution_id'],'contract_step':'worker-run','outcome':'completed','artifacts':{'out':{'path':'out.bin','sha256':h}}}, sort_keys=True))\"",
+  "SKEY=$(python3 -c \"import json;print(json.load(open('/tmp/p6h/manifest.json'))['stream_key']\")",
+  "AID=$(python3 -c \"import json;print(json.load(open('/tmp/p6h/manifest.json'))['action_id']\")",
+  "EXEC=$(python3 -c \"import json;print(json.load(open('/tmp/p6h/manifest.json'))['execution_id']\")",
+  "PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src/harness.py --db /tmp/p6h/fixture.db --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/fixture-plan.json --plan-hash $(cat /tmp/p6h/plan.sha256) --allowlist-seat p6-fixture-worker --allowlist-seat p6-fixture-verifier --manifest /tmp/p6h/manifest.json --claims /tmp/p6h/claims --verify-deadline 2026-09-22T01:00:00Z --qid P6H --live run-fixture"
+ ],
+ "seats": {
+  "existing_campaign_seats": [
+   "tern",
+   "corvid",
+   "kiln",
+   "cairn"
+  ],
+  "fixture_seats": [
+   "p6-fixture-worker",
+   "p6-fixture-verifier"
+  ],
+  "seat_rule": "existing four campaign seats are never stopped or repurposed; fixture seats stay in campaign4 profile with unique p6-fixture names"
+ },
+ "setup": [
+  "mkdir -p /tmp/p6h/claims /tmp/p6h/msgs /tmp/p6h/stream /tmp/p6h/artifacts",
+  "printf 'fixture-artifact-bytes' > /tmp/p6h/artifacts/out.bin && sha256sum /tmp/p6h/artifacts/out.bin",
+  "PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/src/harness.py --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/fixture-plan.json --manifest /tmp/p6h/manifest.json setup",
+  "sha256sum /tmp/p6h/manifest.json",
+  "sha256sum /home/bmosher/memory-bake-off/campaign4/packages/P6-r21-event-handoff/fixture-plan.json | cut -d' ' -f1 > /tmp/p6h/plan.sha256 && cat /tmp/p6h/plan.sha256"
+ ],
+ "turn_trigger": "runtime sidecar end event for the bound item observed in the manifest stream_dir (fixture stream in Stage C proposal; the end item is observed, never invented); claim read from the manifest claims path for the manifest execution_id; missing claim holds for owned recovery"
+}

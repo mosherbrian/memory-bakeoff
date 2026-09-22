@@ -1,0 +1,52 @@
+{
+ "entries": [
+  {
+   "caller": "openwork.timer (every 2m model poll)",
+   "current_owner": "legacy poller",
+   "disable_command": "PROPOSED (Stage C+ only, Tern-gated): systemctl --user stop openwork.timer",
+   "evidence_required": "P6 live fixture PASS: measured detection<=30s, recovery/escalation<=60s on host interfaces",
+   "proposed_owner": "p6 host adapter (event-driven, bounded non-model observation)",
+   "restore_command": "systemctl --user start openwork.timer",
+   "subject": "openwork",
+   "subject_sha256": "02940149ded313b010b671bd1940408de09a1d586ca411187322cf43d3e86af5"
+  },
+  {
+   "caller": "campaign4-watch.timer (periodic Tungsten run)",
+   "current_owner": "legacy watcher",
+   "disable_command": "PROPOSED (Stage C+ only, Tern-gated): systemctl --user stop campaign4-watch.timer",
+   "evidence_required": "candidate PASS + live fixture PASS with quiet-rest negatives",
+   "proposed_owner": "p6 host adapter supervision",
+   "restore_command": "systemctl --user start campaign4-watch.timer",
+   "subject": "campaign4-watch",
+   "subject_sha256": "6c00cc3ecf4358d88062ede0ae819b64acbefa7c6e0f80bdc3e66e2e4a3aa759"
+  },
+  {
+   "caller": "manual timer policy (systemd-run one-shots, e.g. campaign4-p4-initial-deadline)",
+   "current_owner": "cairn (manual)",
+   "disable_command": "none proposed; manual policy continues until cutover package",
+   "evidence_required": "n/a (no change in P6)",
+   "proposed_owner": "unchanged",
+   "subject": "manual timers"
+  },
+  {
+   "caller": "manual ledger writers (director rows)",
+   "current_owner": "tern",
+   "disable_command": "none proposed; no retrospective migration",
+   "evidence_required": "n/a (no change in P6)",
+   "proposed_owner": "unchanged",
+   "subject": "manual ledger writes"
+  }
+ ],
+ "kept_as_primitives": {
+  "campaign4-pause": {
+   "note": "emergency actuator; never a retirement subject in P6",
+   "sha256": "6638568b00d8c44ddc41d6f90579977afc99382702c19a0aeb386666264892f1"
+  },
+  "lane_wrappers": "unchanged (reused, never modified)",
+  "wake": {
+   "note": "in-scope transport; global behaviour unmodified",
+   "sha256": "fd31cb611cd5c0aa4003d83871d1924eb47e12d98eb07cac4b2cbc8986a71d19"
+  }
+ },
+ "note": "PROPOSED matrix only (amendment Stage A). Openwork stays live during construction and shadow; P6 acceptance alone retires nothing; cutover is a separate authorized decision. Nothing disabled/restored here."
+}

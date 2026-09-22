@@ -1,0 +1,16 @@
+{
+  "verdict": "WITHHELD",
+  "candidate_verdict_sha256": "7dce5739ce8f370bed0dee6a9ae2b7a247db4474096ac900018a1ff5d4a2b5a5",
+  "present_plan_sha256": "d01f6ce980cf087cb6f400b6cff7726cf6b4cf2a48873ab42c623e37604f1afa",
+  "plan_reconciliation": "Present plan already uses run-fixture; no claim of who changed it or authorization. Recheck required.",
+  "findings": [
+    "CLI live Driver defaults FakeClock; HostAdapter independently defaults FakeClock",
+    "run_fixture calls fake driver.start_dispatch, never worker transport.send",
+    "setup derives session/stream key from plan hash, not observed runtime session",
+    "single watcher.poll over isolated /tmp stream; no subscription/producer",
+    "no-end-observed exits0; no positive recovery proven",
+    "plan claims latency.jsonl but harness has no writer",
+    "fixed 2026-09-22T01:00Z deadlines; cleanup asserts reconciled without identity check"
+  ],
+  "live_release": false
+}
