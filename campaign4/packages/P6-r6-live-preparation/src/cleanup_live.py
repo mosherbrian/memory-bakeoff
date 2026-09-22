@@ -29,10 +29,12 @@ def owned_ids(manifest_path):
     for role in ("worker", "verifier"):
         sid = (man.get(role) or {}).get("session_id")
         if not sid:
-            raise PrepFault("E_MANIFEST", "missing session id for " + role)
+            continue  # partial manifest: reconcile present sides only
         if sid in MAIN_SEATS:
             raise PrepFault("E_MAIN_SEAT", "refusing main seat " + sid)
         ids.append(sid)
+    if not ids:
+        raise PrepFault("E_MANIFEST", "no owned session ids recorded")
     return man, ids
 
 

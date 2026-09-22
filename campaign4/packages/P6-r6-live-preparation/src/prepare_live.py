@@ -98,22 +98,35 @@ def check_record(record, name, lane, profile):
     return True
 
 
-def launch_idle(path, name, lane, profile, idle_timeout, workdir):
+def launch_idle(path, name, lane, profile, idle_timeout, workdir,
+                runner=None):
+    """Repair-1: idle-timeout binds parser-safe as ONE --flag=value token.
+    The installed CLI's reorder pass has no separate-value entry for
+    idle-timeout, so `-idle-timeout 25m` demotes `25m` to positional and
+    binds the following flag (`-json`) as the value. The `=` form is never
+    split by either normalization pass (verified parser-only against the
+    installed binary). No -message: idle by construction."""
     os.makedirs(workdir, exist_ok=True)
     env = dict(os.environ, AGENTDECK_PROFILE=profile)
     cmd = ["agent-deck", "launch", path, "-t", name, "-cmd", lane,
-           "-idle-timeout", idle_timeout, "-json", "-q"]
-    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=180,
-                          env=env, cwd=workdir)
+           "--idle-timeout=%s" % idle_timeout, "-json", "-q"]
+    run = runner or subprocess.run
+    proc = run(cmd, capture_output=True, text=True, timeout=180,
+               env=env, cwd=workdir)
     if proc.returncode != 0:
         raise PrepFault("E_LAUNCH",
                         "launch %r failed: %s" % (name, (proc.stderr or
                                                          proc.stdout or "")
                                                   [:300]))
     try:
-        return json.loads(proc.stdout or "{}")
+        out = json.loads(proc.stdout or "{}")
     except ValueError:
         raise PrepFault("E_LAUNCH", "launch output malformed for " + name)
+    if not isinstance(out, dict) or not out.get("id"):
+        raise PrepFault("E_LAUNCH_NO_ID",
+                        "launch %r returned no session id; refusing "
+                        "title-only fallback here" % name)
+    return out
 
 
 def build_manifest(plan_sha, profile, worker, verifier, source):
@@ -194,26 +207,70 @@ def main(argv=None):
         return 0
     # Live path: separate signed preparation release required; the tool
     # records that expectation in the manifest flow but cannot grant it.
-    launched = {}
+    # Partial creation is journaled per completed launch: if the second
+    # launch fails, the first is recorded in a partial manifest (same schema
+    # shape, pending role noted) reconcilable by cleanup WITHOUT retrying
+    # the first launch.
+    journal_path = args.manifest_out + ".partial"
     try:
-        for role, name, lane in (("worker", args.worker_name,
-                                  args.worker_lane),
-                                 ("verifier", args.verifier_name,
-                                  args.verifier_lane)):
-            wdir = os.path.join(args.workdir_base, name)
+        os.remove(journal_path)
+    except OSError:
+        pass
+    launched = {}
+    sides = {}
+    pending = None
+    launch_error = None
+    for role, name, lane in (("worker", args.worker_name, args.worker_lane),
+                             ("verifier", args.verifier_name,
+                              args.verifier_lane)):
+        wdir = os.path.join(args.workdir_base, name)
+        try:
             out = launch_idle(wdir, name, lane, args.profile,
                               args.idle_timeout, wdir)
-            launched[role] = (name, lane, wdir, out)
-    except PrepFault:
-        raise
+        except PrepFault as e:
+            pending, launch_error = role, e
+            break
+        launched[role] = (name, lane, wdir, out)
+        sides[role] = {"session_id": out["id"], "title": name,
+                       "identity_source": "launch-response-id",
+                       "preparation_argv": ["agent-deck", "launch", wdir,
+                                            "-t", name, "-cmd", lane,
+                                            "--idle-timeout=%s"
+                                            % args.idle_timeout,
+                                            "-json", "-q"],
+                       "idle_timeout": args.idle_timeout}
+        with open(journal_path, "w") as fh:
+            json.dump({"launcher_source": live_source,
+                       "journal": "partial-launch-record",
+                       "completed": sides, "pending": None}, fh,
+                      sort_keys=True, indent=1)
+    if pending is not None:
+        partial = {"plan_sha256": (hashlib.sha256(
+            open(args.plan, "rb").read()).hexdigest() if args.plan
+            else "unsigned-plan"),
+            "launcher_source": live_source, "profile": args.profile,
+            "journal": "partial-launch-record",
+            "pending_role": pending,
+            "launch_error": {"code": launch_error.code,
+                             "detail": launch_error.detail}}
+        for role, side in sides.items():
+            partial[role] = side
+        with open(journal_path, "w") as fh:
+            json.dump(partial, fh, sort_keys=True, indent=1)
+        print(json.dumps({"error": "E_LAUNCH_PARTIAL",
+                          "detail": "%s launch failed after %d completed; "
+                                    "partial record at %s; reconcile with "
+                                    "cleanup, do not retry completed sides"
+                                    % (pending, len(sides), journal_path),
+                          "owner": "cairn",
+                          "partial_manifest": journal_path}, sort_keys=True))
+        return 3
     sessions2, _ = list_sessions(args.profile)
     by_id = {s.get("id"): s for s in sessions2 if isinstance(s, dict)}
-    by_title = {s.get("title"): s for s in sessions2 if isinstance(s, dict)}
-    sides = {}
+    full = {}
     for role, name, lane, wdir, out in (("worker",) + launched["worker"],
                                         ("verifier",) + launched["verifier"]):
-        sid = (out.get("id") if isinstance(out, dict) else None) or \
-            (by_title.get(name) or {}).get("id")
+        sid = out["id"]  # launch_idle guarantees exact returned identity
         rec = by_id.get(sid)
         if rec is None:
             raise PrepFault("E_BIND",
@@ -222,25 +279,32 @@ def main(argv=None):
         ident = check_socket_real(os.path.join(LIVE_SOCK_DIR, sid
                                                + ".sock"))
         stream = os.path.join(LIVE_STREAM_ROOT, sid + ".jsonl")
-        sides[role] = {"session_id": sid, "title": name,
-                       "profile": args.profile, "role_lane": lane,
-                       "launch_command": rec.get("command"),
-                       "workdir": wdir,
-                       "producer_root": LIVE_STREAM_ROOT,
-                       "stream_path": stream,
-                       "stream_exists": os.path.exists(stream),
-                       "socket": os.path.join(LIVE_SOCK_DIR, sid + ".sock"),
-                       "incarnation": ident}
+        full[role] = {"session_id": sid, "title": name,
+                      "profile": args.profile, "role_lane": lane,
+                      "launch_command": rec.get("command"),
+                      "workdir": wdir,
+                      "identity_source": "launch-response-id",
+                      "preparation_argv": sides[role]["preparation_argv"],
+                      "idle_timeout": args.idle_timeout,
+                      "producer_root": LIVE_STREAM_ROOT,
+                      "stream_path": stream,
+                      "stream_exists": os.path.exists(stream),
+                      "socket": os.path.join(LIVE_SOCK_DIR, sid + ".sock"),
+                      "incarnation": ident}
     plan_sha = (hashlib.sha256(open(args.plan, "rb").read()).hexdigest()
                 if args.plan else "unsigned-plan")
-    man = build_manifest(plan_sha, args.profile, sides["worker"],
-                         sides["verifier"], live_source)
+    man = build_manifest(plan_sha, args.profile, full["worker"],
+                         full["verifier"], live_source)
     with open(args.manifest_out, "w") as fh:
         json.dump(man, fh, sort_keys=True, indent=1)
+    try:
+        os.remove(journal_path)  # full manifest supersedes the journal
+    except OSError:
+        pass
     print(json.dumps({"manifest": args.manifest_out,
                       "launcher_source": live_source,
-                      "worker": sides["worker"]["session_id"],
-                      "verifier": sides["verifier"]["session_id"]},
+                      "worker": full["worker"]["session_id"],
+                      "verifier": full["verifier"]["session_id"]},
                      sort_keys=True))
     return 0
 
