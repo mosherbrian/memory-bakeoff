@@ -1,0 +1,89 @@
+{
+ "allowlist": {
+  "seats": [
+   "p6-fixture-worker",
+   "p6-fixture-verifier"
+  ],
+  "timer_units": [
+   "p6-fixture-handoff-1.timer"
+  ],
+  "wake_path": "/home/bmosher/.config/agent-deck/wake"
+ },
+ "assertions": [
+  "R=${P6H_ROOT:-/tmp/p6h}; PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src python3 -c \"import json,sqlite3; db=sqlite3.connect('$R/fixture.db'); n=db.execute('select count(*) from events').fetchone()[0]; assert n>=6, n; print('events:',n)\"",
+  "R=${P6H_ROOT:-/tmp/p6h}; PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src/harness.py --manifest $R/manifest.json check-latency",
+  "R=${P6H_ROOT:-/tmp/p6h}; PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src python3 -c \"import json; m=json.load(open('$R/manifest.json')); assert m['plan_sha256']==open('$R/plan.sha256').read().strip(); print('bound:',m['execution_id'])\"",
+  "R=${P6H_ROOT:-/tmp/p6h}; test -f $R/rollback-report.json && echo ROLLBACK-OK"
+ ],
+ "authorized_dispositions": [
+  {
+   "decision_ref": "t-dir",
+   "evidence_refs": [
+    "sha256:fx"
+   ],
+   "kind": "question_answered",
+   "reason": "fixture verified"
+  }
+ ],
+ "bounds": {
+  "artifact_base_dir": "/tmp/p6h/artifacts",
+  "claims_dir": "/tmp/p6h/claims",
+  "duration_s": 900,
+  "escalation_window_s": 120,
+  "latency_path": "/tmp/p6h/latency.jsonl",
+  "poll_interval_s": 1.0,
+  "stream_dir": "/tmp/p6h/stream",
+  "verify_window_s": 600,
+  "wait_s": 30
+ },
+ "candidate": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src",
+ "cleanup": [
+  "systemctl --user stop p6-fixture-handoff-1.timer && systemctl --user reset-failed p6-fixture-handoff-1.timer && systemctl --user show p6-fixture-handoff-1.timer --property=ActiveState | grep -q inactive",
+  "R=${P6H_ROOT:-/tmp/p6h}; mkdir -p $R/archive && PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src/harness.py --db $R/fixture.db --manifest $R/manifest.json rollback --archive-dir $R/archive && ls $R/archive/fixture.db $R/archive/rollback-report.json",
+  "R=${P6H_ROOT:-/tmp/p6h}; rm -f $R/fixture.db && test ! -e $R/fixture.db",
+  "R=${P6H_ROOT:-/tmp/p6h}; rm -rf $R/claims $R/msgs $R/stream $R/artifacts && test ! -e $R/claims",
+  "R=${P6H_ROOT:-/tmp/p6h}; cat $R/archive/rollback-report.json"
+ ],
+ "fixture_id": "p6-fixture-handoff-1",
+ "latency_capture": "run-fixture appends {action, dispatch_at, detected_at, committed_at, outcome, source_at, source_uncertainty_s} per observed action to the manifest latency_path; gates 30s explicit / 180s suspicion / 60s recovery (totals 90s/240s) enforced by harness check-latency (positive sample required, failures retained, missing timestamps fail); missing-claim and quiet-rest negatives included; all failures and false positives retained in manifest",
+ "launcher_evidence_cmd": [
+  "cat",
+  "/tmp/p6h/launcher-evidence.json"
+ ],
+ "ledger": "/tmp/p6h/fixture.db (disposable; never the campaign ledger)",
+ "note": "PROPOSED ONLY. Stage A must NOT execute this plan or enable live effects. Execution requires candidate PASS plus Tern's explicit signed release of this exact file's hash (Stage C gate); the CLI verifies --plan-hash against this file and binds seats/units/wake_path from its allowlist before enabling anything. Session/stream bindings resolve from the launcher evidence file written by the signed release (never guessed, never plan-hash-derived); runtime items bind at observation. Cleanup runs the candidate rollback command (identity reconciliation from checks) and verifies each step before reporting.",
+ "package_id": "P6H",
+ "routes": {
+  "p6h-v1": "p6-fixture-verifier",
+  "p6h-w1": "p6-fixture-worker"
+ },
+ "run": [
+  "R=${P6H_ROOT:-/tmp/p6h}; PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src/harness.py --db $R/fixture.db --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/fixture-plan.json --plan-hash $(cat $R/plan.sha256) --allowlist-seat p6-fixture-worker --allowlist-seat p6-fixture-verifier --manifest $R/manifest.json --claims $R/claims --qid P6H --live run-fixture"
+ ],
+ "seats": {
+  "existing_campaign_seats": [
+   "tern",
+   "corvid",
+   "kiln",
+   "cairn"
+  ],
+  "fixture_seats": [
+   "p6-fixture-worker",
+   "p6-fixture-verifier"
+  ],
+  "seat_rule": "existing four campaign seats are never stopped or repurposed; fixture seats stay in campaign4 profile with unique p6-fixture names"
+ },
+ "setup": [
+  "R=${P6H_ROOT:-/tmp/p6h}; mkdir -p $R/claims $R/msgs $R/stream $R/artifacts",
+  "R=${P6H_ROOT:-/tmp/p6h}; PYTHONPATH=/home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/src/harness.py --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/fixture-plan.json --manifest $R/manifest.json --evidence-cmd \"cat $R/launcher-evidence.json\" setup",
+  "R=${P6H_ROOT:-/tmp/p6h}; sha256sum $R/manifest.json",
+  "R=${P6H_ROOT:-/tmp/p6h}; sha256sum /home/bmosher/memory-bake-off/campaign4/packages/P6-r3-cli-recovery/fixture-plan.json | cut -d' ' -f1 > $R/plan.sha256 && cat $R/plan.sha256"
+ ],
+ "task_texts": {
+  "verifier": "P6H fixture verify {action}: read claim {claims}, verify artifacts, publish your step claim; no other task accepted",
+  "worker": "P6H fixture work {action}: complete the step, write route-free claim to {claims} with artifact paths+hashes; no routing decisions"
+ },
+ "turn_trigger": "runtime sidecar end event for the bound item observed in the manifest stream_dir; claim read from the manifest claims path for the manifest execution_id; missing claim holds for owned recovery (never invents success)",
+ "verify_action": "p6h-v1",
+ "worker_action": "p6h-w1"
+}
