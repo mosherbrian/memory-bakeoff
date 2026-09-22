@@ -175,6 +175,11 @@ runtime dependency absent an explicit director amendment and recorded rationale.
 A convenience library is not an automatic exception. Reuse accepted components
 before adding mechanisms; portability does not authorize speculative ports.
 
+Implementation decision: Python is the intended deliverable implementation,
+subject to the remaining acceptance gates; no Go rewrite is scheduled. See
+[the language decision](IMPLEMENTATION-LANGUAGE-DECISION-20260922.md), which
+resolves the architecture's conditional Go sentence without rewriting frozen inputs.
+
 At the next package boundary, Tern must assess the next machinery step against
 research priority and the smallest useful reliable harness. Unit-test success
 alone is not reliability. Bounded live recovery and evidence-referenced shadow
