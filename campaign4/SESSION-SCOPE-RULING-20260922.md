@@ -79,3 +79,28 @@ PASS. Runtime integration must expose/reset-boundary/compaction signals where
 available and document limits; do not claim undetectable provider compaction
 can always be caught. Evidence coverage is checked independently of transcript
 length. A fresh session never resets a spent allocation or resolves a conflict.
+
+## Order of work and supplied cost model
+
+Operator addendum: a rate-card replay of1,616 observed calls estimates baseline
+$2.4881, current+recent scope$0.8500 and current-only$0.6160; reported modeled
+prefix-rewrite cases are $11.95 each call, $3.08 each fifth, $1.33 each twentieth,
+$0.90 each hundredth. These are counterfactual estimates, not measured deployment
+savings or a new independent audit. Retain this distinction in reports.
+
+Ruling: scope first; measure actual fresh-session cost, correctness, evidence
+coverage and latency; consider compression only if a residual problem justifies
+it. No compactor evaluation/package/dependency now. Scoping adds no compression
+service, but is not literally free/cache-neutral: changing a prefix or starting
+a fresh session can incur cache misses and requires tested launch continuity.
+Closed dependencies needed for evidence must remain explicitly retrievable.
+
+The listed cases bracket break-even between one rewrite per5 and per20 calls;
+they do not prove every rate more frequent than1-in20 loses money. Under a simple
+linear mixture of the supplied $0.85/$11.95 endpoints, break-even would be about
+one in6.8 calls. That interpolation assumes unchanged workload and miss cost,
+not a universal provider law. One-in20 may be a conservative screening threshold,
+not a sufficient adoption gate. After scoping, recompute against the new baseline
+and measure total billed cost including misses and compactor overhead, alongside
+evidence fidelity. Product cache-preservation claims remain unverified. It is
+entirely acceptable for the compactor question never to become a work package.
