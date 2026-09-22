@@ -3,6 +3,8 @@
 Director-maintained map, 2026-09-22. Acceptance is scoped evidence, not deployment.
 There is no adopted production harness yet. Package number alone never selects code.
 
+Further live releases are held for the [ten-finding review disposition](CODE-REVIEW-DISPOSITION-20260922.md): durable-record and host-timing concerns require regression proof and correction. Prior acceptance is scoped, not a clean bill of health.
+
 | Start here | What it is | Accepted version / limit |
 |---|---|---|
 | [P5-r2 core](packages/P5-r2-atomic-authority/src/) | Lifecycle, validator, SQLite store, driver, trusted ingress, supervisor/status; stdlib-only baseline | `80092f92c24fb58ad70478faf93e4f39eb184847`; [acceptance](packages/P5-r2-atomic-authority/acceptance.json). Internal fake/store helpers are not public ingress. |
