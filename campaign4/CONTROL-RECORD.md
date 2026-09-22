@@ -34,3 +34,9 @@ Clock rule: obtain UTC receipt time and calculate the authorized deadline in
 the same host-tool invocation that writes the receipt. Never type/model-generate
 a date literal or reuse an example timestamp. Keep delayed source occurrence
 time separate from receipt time. See CLOCK-AUTHORITY-DECISION-20260921.md.
+
+Current identity/message policy: ACTION-IDENTITY-RULING-20260921.md fixes column3
+as stable action_id (event IDs distinct). CONTEXT-AND-DUTY-RULING-20260922.md
+requires new rows <=200 chars and wakes <=300 chars with path+12-char display
+hash; full pins/bodies in files and full-hash verification by software. Forward
+only; no rewriting old evidence. These addenda supersede conflicting text above.
