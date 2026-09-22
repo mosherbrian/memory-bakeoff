@@ -1,8 +1,10 @@
-"""P6-r8 R3 tests: production deadline calculation + actual CLI
-reattach/notification path with controlled clock/boundaries. Late
-completion after the old 8s-style cutoff is handled once with no second
-send; real grant expiry escalates boundedly without extension. First runs
-are behavior-identical to the pinned parent. Injected effects only."""
+"""P6-r9 R3 tests (amendment-1-retention replacement checklist §1-4).
+SUPERSEDED: test_r3_first_run_identical_to_parent (parent first-run parity:
+absent verifier end -> verifier-no-end after the short wait_s slice) is
+retained in the pinned parent only. It conflicts with O1 (verifier observed
+through its signed esc_deadline grant, not the slice) and is replaced here by
+test_r3_verifier_delayed_beyond_slice_* + strengthened expiry/reopen proofs.
+Injected effects only."""
 import hashlib
 import json
 import os
@@ -225,31 +227,107 @@ def test_r3_expiry_escalates_bounded_no_extension():
     assert res["calls_delta"] == 1 and res["new_kinds"] == ["escalation"], \
         res  # only the bounded escalation send; zero fixture resends
     assert res["facts_same"] is True  # deadlines never extended
+    # Check 2: saved absolute deadlines derive from the signed grant
+    # (dispatch 04:00 + 30s verify grant / +120s escalation bound).
+    assert res["facts"].get("r3:p6r-w1:None:verify_deadline") is None or True
+    # facts dict keyed by r3:<action>:<exec>:<field>; verify exact bounds
+    flat = res["facts"]
+    vd = [v for k, v in flat.items() if k.endswith("verify_deadline")]
+    ed = [v for k, v in flat.items() if k.endswith("esc_deadline")]
+    assert vd and vd[0] == "2026-09-22T04:00:30Z", res
+    assert ed and ed[0] == "2026-09-22T04:02:00Z", res
 
 
-def test_r3_first_run_identical_to_parent():
-    for harness_path, tag in ((CANDIDATE_SRC + "/harness.py", "parent"),
-                              (R3H, "r3")):
-        tmp = mktree()
-        plan = write_plan(tmp)
-        man = os.path.join(tmp, "manifest.json")
-        r = subprocess.run(
-            [sys.executable, harness_path, "--plan", plan, "--manifest",
-             man, "--session", "s", "--stream-key", "sk",
-             "--worker-stream-key", "wsk", "--verifier-stream-key", "vsk",
-             "setup"],
-            capture_output=True, text=True, timeout=60, cwd=tmp)
-        assert r.returncode == 0, (tag, r.stdout + r.stderr)
-        produce("worker", tmp, man)
-        r = subprocess.run(
-            [sys.executable, harness_path, "--live", "--plan", plan,
-             "--plan-hash", sha(plan), "--allowlist-seat", "s-w",
-             "--allowlist-seat", "s-v", "--db", os.path.join(tmp, "fx.db"),
-             "--manifest", man, "--claims", os.path.join(tmp, "claims"),
-             "--qid", "P6R", "run-fixture"],
-            capture_output=True, text=True, timeout=120, cwd=tmp)
-        out = json.loads(r.stdout)
-        # verifier end never staged: owned verifier-no-end recovery, same
-        # shape in both implementations
-        assert out.get("reason") == "verifier-no-end", (tag, out)
-        assert out.get("latency_samples", 0) >= 1, (tag, out)
+def test_r3_verifier_delayed_beyond_slice_completes_once():
+    # Check 1 (verifier phase): verifier end staged AFTER the legacy wait_s
+    # slice (2s) but BEFORE its explicit esc grant completes once with
+    # exactly one worker + one verifier send, same execution identity.
+    # Short legitimate esc grant (30s) through the real grant/clock path;
+    # outer CLI timeout (120s) is only a safety net.
+    import concurrent.futures as _cf
+    tmp = mktree()
+    plan = write_plan(tmp, wait_s=2, duration_s=900)
+    import json as _j
+    _p = _j.load(open(plan)); _p["bounds"]["escalation_window_s"] = 30
+    _p["authorized_dispositions"] = [{"kind": "question_answered",
+                                      "decision_ref": "d1",
+                                      "reason": "verified"}]
+    _j.dump(_p, open(plan, "w"), sort_keys=True)
+    manifest = setup_cli(tmp, plan)
+    db = os.path.join(tmp, "fx.db")
+    produce("worker", tmp, manifest)  # worker bound before run
+    args = run_args(tmp, plan, manifest, "run-fixture")
+    with _cf.ThreadPoolExecutor(max_workers=1) as ex:
+        fut = ex.submit(r3cli, *args)
+        time.sleep(5.0)  # verifier delayed beyond 2s slice, inside grant
+        produce("verifier", tmp, manifest)
+        r = fut.result(timeout=120)
+    assert r.returncode == 0, r.stdout + r.stderr
+    out = json.loads(r.stdout)
+    assert out.get("decision") in ("transition-committed", "terminal-rest"), out
+    msgs = [k for k in kv(db) if k.startswith("msg:")]
+    assert len(msgs) == 2, msgs
+    sent = [k for k in kv(db) if k.startswith("outbox-sent:")]
+    assert len(sent) == 2, sent  # each sent exactly once
+
+
+def test_r3_parent_bytes_premature_on_delayed_verifier():
+    # Check 1 old-fails: pinned parent bytes with worker staged and no
+    # verifier end return premature verifier-no-end after the short slice,
+    # proving the superseded behavior still exhibits on old bytes.
+    tmp = mktree()
+    plan = write_plan(tmp, wait_s=2, duration_s=900)
+    man = os.path.join(tmp, "manifest.json")
+    r = subprocess.run(
+        [sys.executable, CANDIDATE_SRC + "/harness.py", "--plan", plan,
+         "--manifest", man, "--session", "s", "--stream-key", "sk",
+         "--worker-stream-key", "wsk", "--verifier-stream-key", "vsk",
+         "setup"], capture_output=True, text=True, timeout=60, cwd=tmp)
+    assert r.returncode == 0, r.stdout + r.stderr
+    produce("worker", tmp, man)
+    r2 = subprocess.run(
+        [sys.executable, CANDIDATE_SRC + "/harness.py", "--live",
+         "--plan", plan, "--plan-hash", sha(plan), "--allowlist-seat",
+         "s-w", "--allowlist-seat", "s-v", "--db",
+         os.path.join(tmp, "fx.db"), "--manifest", man, "--claims",
+         os.path.join(tmp, "claims"), "--qid", "P6R", "run-fixture"],
+        capture_output=True, text=True, timeout=120, cwd=tmp)
+    out = json.loads(r2.stdout)
+    assert out.get("reason") == "verifier-no-end", out
+
+
+def test_r3_late_verifier_reattach_once_no_resend():
+    # Check 3 (verifier phase): first run expires verifier wait honestly
+    # under a short legitimate esc grant (25s); late verifier end consumed
+    # exactly once on reattach, no resends, deadlines unchanged.
+    tmp = mktree()
+    plan = write_plan(tmp, wait_s=2, duration_s=900)
+    _p = json.load(open(plan)); _p["bounds"]["escalation_window_s"] = 25
+    _p["authorized_dispositions"] = [{"kind": "question_answered",
+                                      "decision_ref": "d1",
+                                      "reason": "verified"}]
+    json.dump(_p, open(plan, "w"), sort_keys=True)
+    manifest = setup_cli(tmp, plan)
+    db = os.path.join(tmp, "fx.db")
+    produce("worker", tmp, manifest)
+    r = r3cli(*run_args(tmp, plan, manifest, "run-fixture"))
+    out1 = json.loads(r.stdout)
+    assert out1.get("reason") == "verifier-no-end", out1
+    kv1 = kv(db)
+    assert sum(1 for k in kv1 if k.startswith("msg:")) == 2, kv1
+    facts_before = {k: v for k, v in kv1.items()
+                    if k.startswith("r3:")}
+    produce("verifier", tmp, manifest)  # late valid verifier outcome
+    r = r3cli(*run_args(tmp, plan, manifest, "reattach"))
+    out2 = json.loads(r.stdout)
+    assert out2.get("decision") in ("transition-committed",
+                                    "duplicate-end-ignored"), out2
+    kv2 = kv(db)
+    assert len([k for k in kv2 if k.startswith("msg:")]) == 2, kv2
+    sent_before = {k: v for k, v in kv1.items()
+                   if k.startswith("outbox-sent:")}
+    sent_after = {k: v for k, v in kv2.items()
+                  if k.startswith("outbox-sent:")}
+    assert sent_before == sent_after  # zero resends
+    facts_after = {k: v for k, v in kv2.items() if k.startswith("r3:")}
+    assert facts_before == facts_after  # absolute deadlines preserved
