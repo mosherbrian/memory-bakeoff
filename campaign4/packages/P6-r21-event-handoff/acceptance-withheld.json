@@ -1,0 +1,41 @@
+{
+  "event_type": "terminal_boundary_decision",
+  "package_id": "P6-r21-event-handoff",
+  "state": "EXHAUSTED",
+  "decided_by": "tern",
+  "recorded_at": "2026-09-22T00:53:30.344391+00:00",
+  "decision_ref": "P6r21-cli-withheld",
+  "source_commit": "f809fcddb68f5e28cf9d98537abb8694e32befcc",
+  "reason": "Spent candidate grants; plan typo already changed but exact CLI still fake launch/time, unconnected event source and missing measured results. See director-readiness-findings.json.",
+  "disposition": {
+    "kind": "successor_opened",
+    "successor_id": "P6-r3-cli-recovery",
+    "reason": "Fix exact CLI composition against pinned preimplementation cases",
+    "evidence_refs": [
+      "director-readiness-findings.json",
+      "../P6-r3-cli-recovery/admission-receipt.json"
+    ]
+  },
+  "successor_action": {
+    "action_id": "P6r3-admit-1",
+    "package_id": "P6-r3-cli-recovery",
+    "phase": "ADMISSION",
+    "owner": "corvid",
+    "start": "2026-09-22T00:53:01.938651+00:00",
+    "deadline": "2026-09-22T01:08:01.938651+00:00",
+    "contract_commit": "a35eace",
+    "contract_sha256": "467c3f4d77a5c6816e8641137670b1921ddd6cf2c12ac6655d3a29492b1639ad",
+    "state": "DISPATCHED",
+    "timer": "campaign4-p6r3-admission-deadline.timer",
+    "instruction": "Independent admission plus cli-acceptance-cases.md before worker. No live effect.",
+    "dispatch_receipt": "started"
+  },
+  "spent_attempt_ceilings": {
+    "worker_min": 40,
+    "candidate_verifier_min": 40
+  },
+  "reassigned_unspent_held": {
+    "live_witness_min": 15,
+    "cairn_fixture_min": 15
+  }
+}
