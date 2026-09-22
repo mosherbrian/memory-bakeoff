@@ -97,3 +97,32 @@ Do not repeat today's lost-wake lane-change failure by resetting active seats.
 No new worker grant or live adoption is created by this policy ruling. At the
 next package boundary Tern owns incorporating these requirements and allocating
 any necessary work; Brian is not the scheduler.
+
+## Corrected cost exposure and deployment inference
+
+Operator correction, received 2026-09-22 UTC: cairn's reported $0.3830/316 calls
+covers only 14:53–17:36 local (2.71 hours), not a full working day. Reported
+components: GLM before15:13 $0.2403/100 calls; Muse after15:13 $0.1427/216 calls,
+about $0.060/hour. A ten-hour day at that observed Muse rate projects about
+$0.60; it is a projection, not measured daily spend. The original18% describes
+that table's heterogeneous observed exposures, not comparable daily cost rates.
+These remain operator-supplied measurements, not a new independent audit here.
+Corvid's reported $0.98/765k context remains the largest observed line in that
+sample; full-day rankings require comparable exposure and workload.
+
+Local cairn's lack of provider charges did not mean zero operational cost:
+reported2m51s narration for a0.49s command and shared corpus slowdown65->671s/doc
+are retained evidence. Shorter exception context makes local inference worth
+re-evaluating; it does NOT establish that latency/contention disappear. Model
+throughput, output length, concurrent GPU load, startup and failure recovery also
+matter. No local-lane switch is authorized by this correction.
+
+Before changing deployment, compare the same bounded incident packets and
+correctness rubric on current Muse and a local candidate, including warm/cold
+starts, representative GPU contention, tail response latency, failure rate and
+actual cost. Include occupied GPU time and impact on concurrent work; no research
+run is implied. Candidate must meet the recovery gate and preserve independent
+health supervision. Any trial needs an explicit bounded package allocation and
+a safe session handoff; current lane and active repair stay unchanged. This is
+a future deployment choice under Tern authority, not a reason to reopen the
+current event-handoff implementation or assume short context proves local safety.
