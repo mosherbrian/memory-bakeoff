@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-09-22T13:59:02.077126+00:00",
+  "director": "tern",
+  "decision": "ACTUAL_FAIL_PRESERVED_NO_RETRY",
+  "observed_kv": {
+    "msg:msg-p6c-h1w-1": "{\"action\": \"p6c-h1w\", \"execution\": \"ex-b17505a8cea0\", \"kind\": \"dispatch\", \"rc\": 0, \"receipt\": \"wake: p6-fixture-worker-r9p3 -> deposited-to-fixture-outbox\", \"seat\": \"p6-fixture-worker-r9p3\", \"state\": \"sent\"}",
+    "outbox-sent:ob-c46bf4a18e50a5db": "msg-p6c-h1w-1",
+    "timer-arm:p6-stagec-h1.timer": "{\"callback\": [\"python3\", \"/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/src/r3harness/harness.py\", \"timer-callback\", \"--timer\", \"deadline:p6c-h1w\"], \"deadline\": \"2026-09-22T14:00:29Z\", \"unit\": \"p6-stagec-h1.timer.timer\"}"
+  },
+  "finding": "Reattach guard reads timer-arm:deadline:p6c-h1w but create_host stores timer-arm:p6-stagec-h1.timer. Stored unit field p6-stagec-h1.timer.timer. Systemd showed actual p6-stagec-h1.timer active after failure. Suspected duplicate-create refusal; independent review must confirm rather than invent missing stderr.",
+  "cleanup": "Director stopped only p6-stagec-h1.timer/service. Automatic campaign4-p6r9-prep3-cleanup.timer unchanged.",
+  "next": "Cairn archive full live state/runtime/raw receipts and invoke already allocated10m corvid live review once, including timer identity and callback CLI context. No retry/task sends. Return verdict before repair dispatch.",
+  "stop_result": "systemctl stop timer/service exit5: service not loaded. Timer stop requested; separate show confirms both inactive/not-found. Original error preserved here, not claimed rc0."
+}
