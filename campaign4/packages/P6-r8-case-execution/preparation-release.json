@@ -1,0 +1,56 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T08:57:19.521821+00:00",
+  "authorization": "PREPARATION_ONLY",
+  "action_id": "P6r8-prepare-1",
+  "owner": "cairn",
+  "allocation_seconds": 600,
+  "cumulative_preparation_minutes": 40,
+  "plan_sha256": "1263fdf79cdfe2fdcd59116cd5c5acd69489091972a83a730eca8101e43a1fce",
+  "preparation_tool_sha256": "462596ee721f651924ad03d24f6480b466b04a402768012a6736cbc44ce6ddd3",
+  "cleanup_tool_sha256": "57bb7e4e4d4cc938ae41c4532f0a98311e15d05e2cbed1246e10793a156cd8fa",
+  "working_root": "/tmp/p6r8-prep-20260922T085719Z",
+  "manifest_path": "/tmp/p6r8-prep-20260922T085719Z/launch-manifest.json",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "commands_argv": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/p6r8-prep-20260922T085719Z"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py",
+      "--profile",
+      "campaign4",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r8-case-execution/stagec-plan.json",
+      "--manifest-out",
+      "/tmp/p6r8-prep-20260922T085719Z/launch-manifest.json",
+      "--workdir-base",
+      "/tmp/p6r8-prep-20260922T085719Z/workdirs",
+      "--worker-name",
+      "p6-fixture-worker-r8p1",
+      "--verifier-name",
+      "p6-fixture-verifier-r8p1",
+      "--idle-timeout",
+      "25m"
+    ]
+  ],
+  "conditions": [
+    "Verify this signed release and exact tool/plan/cleanup hashes; record current registry/main-four IDs and name collision check before effect. New names only; never reuse/restart old fixture IDs.",
+    "Record host start/absolute 10m deadline and relative timer before exactly one preparation invocation. No -message and no quiet flag. Preserve raw stdout/stderr/exit, raw role records, partial journal and post-registry even on failure.",
+    "On socket race or ambiguous launch, reconcile existing returned IDs within this bound; never relaunch. Real S_ISSOCK, registry profile/role lane/workdir and launch identity required. No fabricated evidence, regular-file sockets or inferred suffix IDs.",
+    "Archive output into package live-preparation-1/. Return original tool status unchanged; a later reconciled manifest is separately named and retains original failure. Zero reported complete launches is not proof of zero created sessions.",
+    "Cairn owns relative cleanup deadline <=25m from start, stopping only exact newly created fixture IDs after evidence archive unless a subsequent signed release explicitly supersedes cleanup. No main-seat changes; no stop/remove/restart of historical fixtures.",
+    "Corvid independent binding check <=5m charged to existing held10m witness (5m remains after use). Verify raw returned IDs, actual registry lanes/workdirs/profile, real socket incarnation, plan hash and no initial task. Record host deadline/timer and binding-review.md. No new worker/verifier candidate allocation.",
+    "No fixture wake/task/model turn, actual candidate loop/systemd callback, research, shadow or retirement. Only idle creation and exact-ID cleanup authorized.",
+    "After binding PASS return Tern for derived config and exact live signature. Template ACCEPTED_BINDING in proposed live plan is not an executable/signed permission. Fixture15m remains HELD."
+  ],
+  "stage_c_signature": false,
+  "source_tool_commit": "2487668aab67408adfd83d29e1b3084bfa9ff460",
+  "source_candidate_commit": "355118e",
+  "rationale": "Candidate is independently verified; actual host binding is now the smallest next evidence step. Brian authorized continuing convergent work. Prior preparation30m spent, this10m prospective not reset."
+}
