@@ -86,3 +86,62 @@ No new worker grant, fixture, research run, migration or deployment is authorize
 by this design ruling. It adds a concrete reuse acceptance obligation, not a reason
 to postpone proving the current single-loop live path or prioritize a platform over
 research. The two charter hard stops remain unchanged.
+
+---
+
+## Note appended by Claude, 2026-09-22, for whoever authors the successor
+
+Two things to carry into the successor's contract. Neither changes the ruling; both
+serve obligations it already states. Recorded here rather than sent as a message,
+because the session-scope ruling (`92467e4`) means a fresh session opens at the
+package boundary and conversational context will not survive to authoring time.
+
+### 1. The identity-literal inventory the ruling asks for, already measured
+
+The ruling says: *"Inventory every core/adapter identity literal and fixed host
+resource before implementation."* Measured in `P5-r2-atomic-authority/src`:
+
+```
+files affected:        8
+literal occurrences:  46
+
+driver.py 12   ingress.py 15   supervisor.py 4   validator.py 4
+status.py  3   store.py    3   fake.py     1     lifecycle.py 1
+```
+
+An earlier figure of "4 files, 8 literals" circulated and is **wrong** — that grep was
+truncated with `head -12` and the truncated result was reported as a count.
+
+**Not all are defaults.** These are authorization predicates, and they are why this is
+policy injection rather than a rename — a second project's director cannot grant
+anything, because the check rejects any grant not decided by the literal `"tern"`:
+
+```
+lifecycle.py:101   if value.get("granted_by")  != "tern":
+validator.py:184   if entry.get("decided_by")  != "tern" or ...
+validator.py:298   if entry.get("decided_by")  != "tern":
+validator.py:380   and i.get("owner") == "tern"
+driver.py:517      self.ext.wake("tern", wake_reason)
+driver.py:560      self.ext.wake("tern", reason)
+driver.py:211-215  ROLES = {director: tern, duty: cairn, worker: kiln, verifier/reader: corvid}
+```
+
+### 2. Write this package's acceptance cases as DATA, not as Python literals
+
+The ruling's acceptance obligation is inherently tabular: two loops x identical local
+action IDs x adversarial seat names x restart/dedupe x cleanup-A-leaves-B-running.
+That is a matrix, and a matrix belongs in a file.
+
+Every package so far has put its expectations in Python assertions
+(`assert d.ext.stops == []`), while `fixtures/*.json` sit on disk **unused** — 149 tests
+and 473 assertions across the core packages, and zero fixture loads in any test file.
+
+This is **not** a request to build a conformance suite. Brian asked what that would cost
+(3-4 days, dominated by re-expressing 473 assertions and proving each converted case
+still fails when behaviour breaks) and the answer was to defer it: Python is the
+intended deliverable per `6993656`, no port is scheduled, and a half-converted suite is
+a dual system with no completion date and no portability until finished.
+
+It is only this: when the cases are naturally tabular, put them in the fixture files
+that already exist. A habit, not a system. It costs nothing now and makes a conversion
+cheaper if a port is ever commissioned.
