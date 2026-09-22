@@ -1,0 +1,44 @@
+{
+  "event_type": "terminal_boundary_decision",
+  "package_id": "P6-r3-cli-recovery",
+  "state": "EXHAUSTED",
+  "decided_by": "tern",
+  "recorded_at": "2026-09-22T01:48:09.561293+00:00",
+  "decision_ref": "P6r3-recovery-fail",
+  "source_commit": "4b02d0aa14d711b3d5673892ce760deb601f3ce5",
+  "reason": "Initial+expired repair+prospective recovery spent; recovery FAIL: real timer absent, primary polling, delivered outbox remains unresolved. All three blocking.",
+  "disposition": {
+    "kind": "successor_opened",
+    "successor_id": "P6-r4-notify-timer-drain",
+    "reason": "Focused notification/timer/outbox completion",
+    "evidence_refs": [
+      "candidate-review-recovery.md",
+      "../P6-r4-notify-timer-drain/admission-receipt.json"
+    ]
+  },
+  "successor_action": {
+    "action_id": "P6r4-admit-1",
+    "package_id": "P6-r4-notify-timer-drain",
+    "owner": "corvid",
+    "phase": "ADMISSION",
+    "start": "2026-09-22T01:47:35.878081+00:00",
+    "deadline": "2026-09-22T02:02:35.878081+00:00",
+    "contract_commit": "214e73c",
+    "contract_sha256": "c5725d291c4362bfda2e0c76ee883ad3e666b0b475bf4785a81062332606a03a",
+    "state": "DISPATCHED",
+    "timer": "campaign4-p6r4-admission-deadline.timer",
+    "dispatch_receipt": "started"
+  },
+  "spent_r3_grants": {
+    "worker_min": 60,
+    "candidate_verifier_min": 40
+  },
+  "historical_P6_grants_before_successor": {
+    "worker_min": 205,
+    "verifier_min": 175
+  },
+  "reassigned_unspent_held": {
+    "live_witness_min": 15,
+    "cairn_fixture_min": 15
+  }
+}
