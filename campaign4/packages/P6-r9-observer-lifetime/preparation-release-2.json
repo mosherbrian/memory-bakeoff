@@ -1,0 +1,72 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-22T12:27:48.371619+00:00",
+  "authorization": "PREPARATION_ONLY",
+  "action_id": "P6r9-prepare-2",
+  "owner": "cairn",
+  "allocation_seconds": 600,
+  "cumulative_preparation_minutes": 60,
+  "plan_sha256": "1263fdf79cdfe2fdcd59116cd5c5acd69489091972a83a730eca8101e43a1fce",
+  "preparation_tool_sha256": "462596ee721f651924ad03d24f6480b466b04a402768012a6736cbc44ce6ddd3",
+  "cleanup_tool_sha256": "57bb7e4e4d4cc938ae41c4532f0a98311e15d05e2cbed1246e10793a156cd8fa",
+  "source_candidate_commit": "1bbe75595401a92db847183fe2ebc946dfc1140a",
+  "working_root": "/tmp/p6r9-prep2-20260922T122748Z",
+  "manifest_path": "/tmp/p6r9-prep2-20260922T122748Z/launch-manifest.json",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "commands_argv": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/p6r9-prep2-20260922T122748Z"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py",
+      "--profile",
+      "campaign4",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r9-observer-lifetime/stagec-plan.json",
+      "--manifest-out",
+      "/tmp/p6r9-prep2-20260922T122748Z/launch-manifest.json",
+      "--workdir-base",
+      "/tmp/p6r9-prep2-20260922T122748Z/workdirs",
+      "--worker-name",
+      "p6-fixture-worker-r9p2",
+      "--verifier-name",
+      "p6-fixture-verifier-r9p2",
+      "--idle-timeout",
+      "25m"
+    ]
+  ],
+  "conditions": [
+    "Before launch, require director-cleanup-timer.json recording ACTIVE verified timer for THIS root. No timer proof, no launch. Confirm exact plan/tool hashes and no r9p2 collision; preserve main-four registry.",
+    "Exactly one invocation, host start/deadline, relative10m prep timer. Preserve raw records/partial/error, no relaunch on socket race. Reconcile actual IDs to real sockets/registry and full execution schema as original release. Old r9p1 IDs stopped; do not revive.",
+    "Upon ready binding, immediately dispatch corvid under existing UNCONSUMED10m witness grant. Record acknowledgement/deadline/timer; do not stop at a PREPARED row. Corvid derives config only, no tasks. Return result Tern.",
+    "Director pre-armed cleanup runs verified existing cleanup tool against THIS full or partial launch manifest after20m; archives exact registry/manifest then stops/removes only recorded p6-fixture IDs. No main or historical IDs. Do not cancel cleanup until actual cleanup verified or a signed replacement exists. Cairn verifies result and promptly handles owned failure.",
+    "If launch has not started within5m of signed_at, do not launch; report expired permission. No deadline extension or timer reset. No task/fixture wakes, candidate loop/service mutation except approved preparation cleanup, research/shadow/adoption/retirement.",
+    "Archive full preparation evidence and cleanup receipt to live-preparation-2/. Old late cleanup remains a deviation; this is new allocation, not retry on old clock."
+  ],
+  "allocations": "NEW prep10m cumulative60m; existing r9 binding10m was never dispatched and remains available, not granted twice. Candidate810/555 unchanged; no task grant.",
+  "stage_c_signature": false,
+  "deviation_record": {
+    "prior_action": "P6r9-prepare-1",
+    "cleanup_due": "2026-09-22T11:22Z",
+    "reported_cleanup": "2026-09-22T12:25Z",
+    "finding": "63m late; no cleanup timer. Ledger has no binding dispatch after PREPARED. Accepted candidate unchanged; live attempt never started. Original evidence retained.",
+    "director_accountability": "Prior response deferred to authorized check without confirming dispatch; next release requires timer proof and explicit witnessed handoff."
+  },
+  "cleanup_unit": "campaign4-p6r9-prep2-cleanup",
+  "cleanup_argv": [
+    "/usr/bin/timeout",
+    "180",
+    "/bin/bash",
+    "-c",
+    "if [ -f \"$1\" ]; then m=\"$1\"; else m=\"$1.partial\"; fi; exec python3 \"$2\" --manifest \"$m\" --archive-dir \"$3\" --profile campaign4",
+    "p6-cleanup",
+    "/tmp/p6r9-prep2-20260922T122748Z/launch-manifest.json",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/cleanup_live.py",
+    "/tmp/p6r9-prep2-20260922T122748Z/automatic-cleanup-archive"
+  ]
+}
