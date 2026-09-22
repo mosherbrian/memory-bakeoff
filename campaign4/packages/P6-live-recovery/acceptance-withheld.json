@@ -1,0 +1,40 @@
+{
+  "event_type": "terminal_boundary_decision",
+  "package_id": "P6-live-recovery",
+  "state": "EXHAUSTED",
+  "decided_by": "tern",
+  "recorded_at": "2026-09-22T00:10:11.363074+00:00",
+  "decision_ref": "P6-host-path-withheld",
+  "source_commit": "22c130892c0e433cd46b2975c8b1903cb0aa3243",
+  "reason": "All candidate worker/verification attempts spent; live path remains disconnected beyond invalid subprocess keyword. Parent verdict FAIL retained.",
+  "disposition": {
+    "kind": "successor_opened",
+    "successor_id": "P6-r2-host-execution",
+    "reason": "Bounded completion of connected host execution and recovery",
+    "evidence_refs": [
+      "../P6-r2-host-execution/package.md",
+      "candidate-review-repair.md"
+    ]
+  },
+  "successor_action": {
+    "action_id": "P6r2-admit-1",
+    "package_id": "P6-r2-host-execution",
+    "owner": "corvid",
+    "phase": "ADMISSION",
+    "start": "2026-09-22T00:09:40.330639+00:00",
+    "deadline": "2026-09-22T00:24:40.330639+00:00",
+    "contract_commit": "582ae00",
+    "contract_sha256": "97b6dff80cbbb4fa2942d90790042f098aa2540e44d794d79d7552d068c5ada0",
+    "state": "DISPATCHED",
+    "timer": "campaign4-p6r2-admission-deadline.timer",
+    "dispatch_receipt": "wake: corvid -> started"
+  },
+  "spent_attempt_ceilings": {
+    "worker_min": 60,
+    "candidate_verifier_min": 40
+  },
+  "unspent_reassigned_held": {
+    "live_witness_min": 15,
+    "cairn_fixture_min": 15
+  }
+}
