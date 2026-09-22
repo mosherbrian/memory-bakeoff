@@ -1,0 +1,92 @@
+{
+ "added_symbols": [
+  "_send_once",
+  "_r3_keep_first",
+  "_r3_resume_facts",
+  "run_fixture(resume=...)",
+  "CLI reattach",
+  "_observe_until",
+  "_wait_bound_end(until_utc=...)"
+ ],
+ "behavior_contract": "first runs byte-identical code path to parent (no outbox-sent record exists); resume reuses intents/deadlines/timer-arm, never extends grants, never resends R4: first-run worker wait keeps the 8s slice (abnormal-delay drill can still miss); resume waits the remainder of the ORIGINAL signed grant; verifier waits the escalation grant; optional signed live_stop_utc caps all waits. No grant extension, no resend, no fresh identity.",
+ "files": {
+  "__init__.py": {
+   "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "identical": true,
+   "parent_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "driver.py": {
+   "copy_sha256": "39c52dd2bc1906fd90ac6dee4535eda5e02252450d35d33a11aec9417885f36e",
+   "identical": true,
+   "parent_sha256": "39c52dd2bc1906fd90ac6dee4535eda5e02252450d35d33a11aec9417885f36e"
+  },
+  "fake.py": {
+   "copy_sha256": "fe7d4ef74e7862bc91ad1bdeccbea930fefa539a496bff53eb81f4a756b6e0da",
+   "identical": true,
+   "parent_sha256": "fe7d4ef74e7862bc91ad1bdeccbea930fefa539a496bff53eb81f4a756b6e0da"
+  },
+  "fixture_worker.py": {
+   "copy_sha256": "8ebb4e6593225efcde4d13f58e1c65bfabd107a2cf25443b110623f0f9860ebe",
+   "identical": true,
+   "parent_sha256": "8ebb4e6593225efcde4d13f58e1c65bfabd107a2cf25443b110623f0f9860ebe"
+  },
+  "harness.py": {
+   "copy_sha256": "d7b4e517f9f846779a7da2edb57642c7c16c9050b027d2ea403a91fe532e7ea2",
+   "identical": false,
+   "parent_sha256": "cd84e8dd4db623586d960233ffc8f674c0cbfb801b4fffb5bfa9fb6289109142"
+  },
+  "host_adapter.py": {
+   "copy_sha256": "231f45f0c1b62ce21799b7148bd240e04e148b7d93a6b4a079086f7359d58eea",
+   "identical": false,
+   "parent_sha256": "68741f8e9043da87cfb5f0e0fc4ff5af784eda10d94a26693806874d116b2e62"
+  },
+  "ingress.py": {
+   "copy_sha256": "4d12429f1edd5d0f421db9321cba38a824f6ad80b30e67a510a294d1e921ff6b",
+   "identical": true,
+   "parent_sha256": "4d12429f1edd5d0f421db9321cba38a824f6ad80b30e67a510a294d1e921ff6b"
+  },
+  "lifecycle.py": {
+   "copy_sha256": "7ebaf466dd47e760b401fa0b1d8c2c2d8a1fd26549b0b91a0bfdbb47f498c03f",
+   "identical": true,
+   "parent_sha256": "7ebaf466dd47e760b401fa0b1d8c2c2d8a1fd26549b0b91a0bfdbb47f498c03f"
+  },
+  "notify.py": {
+   "copy_sha256": "35805761083ec5ee100041654983d9539954131c49333f7b12e2e0c44bdbae4c",
+   "identical": true,
+   "parent_sha256": "35805761083ec5ee100041654983d9539954131c49333f7b12e2e0c44bdbae4c"
+  },
+  "prepare_evidence.py": {
+   "copy_sha256": "921a702354d7fe9c9606bd5c3322c0e770cde24938ec5a0bc3f59b553fb91bfb",
+   "identical": true,
+   "parent_sha256": "921a702354d7fe9c9606bd5c3322c0e770cde24938ec5a0bc3f59b553fb91bfb"
+  },
+  "status.py": {
+   "copy_sha256": "c894ae41408250361f4bc2c3b3093818052780fdae7389343931e26c51fe23b2",
+   "identical": true,
+   "parent_sha256": "c894ae41408250361f4bc2c3b3093818052780fdae7389343931e26c51fe23b2"
+  },
+  "store.py": {
+   "copy_sha256": "dafaeb333acc255a5c59de782e6f8be4c71a77322ac59247d232138639178242",
+   "identical": true,
+   "parent_sha256": "dafaeb333acc255a5c59de782e6f8be4c71a77322ac59247d232138639178242"
+  },
+  "supervisor.py": {
+   "copy_sha256": "a71b10db5a0b3cd91369f7e9f5e76cdf3fd947c86c53c56162aee72c3fdd4526",
+   "identical": true,
+   "parent_sha256": "a71b10db5a0b3cd91369f7e9f5e76cdf3fd947c86c53c56162aee72c3fdd4526"
+  },
+  "turn_handoff.py": {
+   "copy_sha256": "ecbec3109defb58345e04917ae6f4d447f6da867d8ae8dd33968ca29889dc6ff",
+   "identical": true,
+   "parent_sha256": "ecbec3109defb58345e04917ae6f4d447f6da867d8ae8dd33968ca29889dc6ff"
+  },
+  "validator.py": {
+   "copy_sha256": "dcecfc1d95a75c30a9ecca9a80df6418f930e03d4525fc2b5f38ab31997666c5",
+   "identical": true,
+   "parent_sha256": "dcecfc1d95a75c30a9ecca9a80df6418f930e03d4525fc2b5f38ab31997666c5"
+  }
+ },
+ "parent": "P6-r5 dad98827 harness cd84e8dd",
+ "revision": "R4 observer-lifetime (r9): grant-derived observation waits",
+ "r9_diff_rationale": "observer failed at 8s while worker completed at 18-20s under a valid 900s grant. Waits now derive from signed grants (verify_deadline/esc_deadline persisted at dispatch) instead of the wait_s slice alone."
+}
