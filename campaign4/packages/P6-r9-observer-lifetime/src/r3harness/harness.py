@@ -306,6 +306,16 @@ def _wait_end(watcher, adapter, stream_key, cursors, seen_add, seen_has,
     return ([], cursors, notes, labels)
 
 
+def _canonical_timer_base(timer_id):
+    if timer_id.endswith(".timer"):
+        return timer_id[:-len(".timer")]
+    return timer_id
+
+
+def _canonical_unit(timer_id):
+    return _canonical_timer_base(timer_id) + ".timer"
+
+
 def _arm_host_timer(adapter, manifest, deadline_utc, unit):
     """Invoke the configured host timer creation on the mapped unit. An
     in-memory-only timers object is never accepted as a real backstop:
@@ -322,10 +332,15 @@ def _arm_host_timer(adapter, manifest, deadline_utc, unit):
     if remaining <= 0:
         raise OwnedFault("E_EXPIRED",
                          "no remaining authorized duration")
+    try:
+        db_path = adapter.driver.store.path
+    except AttributeError:
+        db_path = "/tmp/p6h/harness.db"
+    canon = _canonical_timer_base(unit)
     cb = ["python3", os.path.join(os.path.dirname(os.path.abspath(
-        __file__)), "harness.py"), "timer-callback", "--timer",
-        "deadline:" + manifest["action_id"]]
-    return timers.create_host(unit, deadline_utc, remaining, cb)
+        __file__)), "harness.py"), "--db", db_path, "timer-callback",
+        "--timer", canon, "--action", manifest["action_id"]]
+    return timers.create_host(canon, deadline_utc, remaining, cb)
 
 
 def _build_notifier(adapter, manifest):
@@ -615,8 +630,27 @@ def run_fixture(adapter, manifest, claims_dir, qid="P6F", resume=False):
     # persisted timer-arm record proves the backstop already exists).
     adapter.arm_from_ledger("deadline:" + manifest["action_id"],
                             verify_deadline)
-    if adapter.driver.kv.get("timer-arm:deadline:" +
-                             manifest["action_id"]) is None:
+    _canon_key = "timer-arm:" + _canonical_timer_base(unit)
+    _existing = adapter.driver.kv.get(_canon_key)
+    if _existing is not None:
+        # Reopen reconciles actual facts: conflicting persisted
+        # deadline/unit for this canonical identity is an owned failure,
+        # never a hijack or silent extension.
+        try:
+            _rec = json.loads(_existing)
+        except ValueError:
+            _rec = {}
+        if _rec.get("deadline") != verify_deadline:
+            return {"decision": "owned-failure",
+                    "reason": "E_TIMER_CONFLICT-timer-backstop",
+                    "latency_samples": 0}
+        if hasattr(adapter.timers, "query_host"):
+            try:
+                adapter.timers.query_host(
+                    _canonical_timer_base(unit))
+            except OwnedFault:
+                pass
+    if _existing is None:
         try:
             _arm_host_timer(adapter, manifest, verify_deadline, unit)
         except OwnedFault as e:
@@ -920,7 +954,10 @@ def main(argv=None):
     ap.add_argument("--verifier-stream-key", default="")
     ap.add_argument("--evidence-cmd", default="")
     sub = ap.add_subparsers(dest="cmd")
-    sub.add_parser("timer-callback").add_argument("--timer", required=True)
+    _tcb = sub.add_parser("timer-callback")
+    _tcb.add_argument("--timer", required=True)
+    _tcb.add_argument("--action", default=None)
+    _tcb.add_argument("--qid-cb", default="P6F")
     sub.add_parser("setup")
     sub.add_parser("run-fixture")
     # R3: reattach consumes late completion under the same action/execution
@@ -991,7 +1028,9 @@ def main(argv=None):
         print(json.dumps(out, sort_keys=True))
         return _exit_for(out)
     if args.cmd == "timer-callback":
-        print(json.dumps(timer_callback(args.db, args.timer)))
+        print(json.dumps(timer_callback(
+            args.db, args.timer, qid=args.qid_cb,
+            action_id=args.action)))
         return 0
     if args.cmd == "check-latency":
         manifest = json.load(open(args.manifest))

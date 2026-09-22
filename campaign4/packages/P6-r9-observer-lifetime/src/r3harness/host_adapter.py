@@ -57,6 +57,24 @@ class OwnedFault(Exception):
         self.owner = owner
 
 
+def _strip_timer_suffix(timer_id):
+    """Normalize a unit/timer identity exactly once: one trailing .timer
+    removed, never more-or-less. No role/id inference from contents."""
+    if timer_id.endswith(".timer"):
+        return timer_id[:-len(".timer")]
+    return timer_id
+
+
+def canonical_timer_id(timer_id):
+    """Canonical logical timer identity: base name without unit suffix."""
+    return _strip_timer_suffix(timer_id)
+
+
+def canonical_unit(timer_id):
+    """Canonical host unit name: base + exactly one .timer."""
+    return _strip_timer_suffix(timer_id) + ".timer"
+
+
 def _default_runner(cmd, **kwargs):
     return subprocess.run(cmd, **kwargs)
 
@@ -243,16 +261,22 @@ class HostTimerService(FakeTimerService):
         self.runner_calls = []
 
     def unit_for(self, timer_id):
-        return "%s.timer" % timer_id
+        return canonical_unit(timer_id)
 
     def command_for(self, timer_id, delay_s, callback_argv=None):
         cb = callback_argv if callback_argv is not None \
             else self.callback_argv
-        return [self.systemd_run, "--user", "--unit=%s" % timer_id,
+        return [self.systemd_run, "--user",
+                "--unit=%s" % canonical_unit(timer_id),
                 "--on-active=%ds" % int(delay_s)] + list(cb)
 
     def _guard(self, timer_id):
-        if not self.enabled or timer_id not in self.allowlist:
+        canon = canonical_timer_id(timer_id)
+        allowed = set(self.allowlist) | \
+            {canonical_timer_id(a) for a in self.allowlist} | \
+            {canonical_unit(a) for a in self.allowlist}
+        if not self.enabled or (timer_id not in allowed and
+                                canon not in allowed):
             raise OwnedFault("E_DISABLED",
                              "live timer outside enabled fixture allowlist")
 
@@ -260,8 +284,28 @@ class HostTimerService(FakeTimerService):
                     callback_argv=None):
         """Create a real one-shot with the executable candidate callback;
         the armed record (deadline + unit) persists in kv either way."""
-        self._guard(timer_id)
-        cmd = self.command_for(timer_id, delay_s, callback_argv)
+        canon = canonical_timer_id(timer_id)
+        self._guard(canon)
+        # Reconcile against persisted/host facts, never kv presence alone.
+        # Same identity + same grant deadline: reuse, never recreate.
+        existing_raw = self._kv_get("timer-arm:" + canon)
+        if existing_raw is not None:
+            try:
+                existing = json.loads(existing_raw)
+            except ValueError:
+                existing = {}
+            if existing.get("deadline") == deadline_utc and \
+                    existing.get("unit") == canonical_unit(canon):
+                self.timers[canon] = {"deadline": deadline_utc,
+                                      "state": "armed-host"}
+                # Mirror legacy key for readers during transition.
+                return ("armed-host-reused", True)
+            raise OwnedFault("E_TIMER_CONFLICT",
+                             "conflicting timer identity/deadline; "
+                             "refusing to hijack or extend")
+        # Duplicate systemd unit must be refused by the host, surfaced as
+        # owned failure (never silently replaced).
+        cmd = self.command_for(canon, delay_s, callback_argv)
         self.runner_calls.append(("create", cmd))
         proc = self._runner(cmd, capture_output=True, text=True,
                             timeout=30)
@@ -269,19 +313,20 @@ class HostTimerService(FakeTimerService):
             raise OwnedFault("E_TIMER_CREATE",
                              "host timer refused: %s" %
                              (proc.stderr or "")[:200])
-        self._kv_put("timer-arm:" + timer_id, json.dumps(
-            {"deadline": deadline_utc, "unit": self.unit_for(timer_id),
+        self._kv_put("timer-arm:" + canon, json.dumps(
+            {"deadline": deadline_utc, "unit": canonical_unit(canon),
              "callback": cmd[-len(callback_argv or self.callback_argv):]
              if (callback_argv or self.callback_argv) else []},
             sort_keys=True))
-        self.timers[timer_id] = {"deadline": deadline_utc,
+        self.timers[canon] = {"deadline": deadline_utc,
                                  "state": "armed-host"}
         return ("armed-host", False)
 
     def cancel_host(self, timer_id):
         """Cancel by the SAME unit identity; durable cancellation."""
-        self._guard(timer_id)
-        unit = self.unit_for(timer_id)
+        canon = canonical_timer_id(timer_id)
+        self._guard(canon)
+        unit = canonical_unit(canon)
         for verb in ("stop", "reset-failed"):
             cmd = [self.systemctl, "--user", verb, unit]
             self.runner_calls.append(("cancel", cmd))
@@ -290,8 +335,9 @@ class HostTimerService(FakeTimerService):
 
     def query_host(self, timer_id):
         """Read-only status by the same unit identity."""
-        self._guard(timer_id)
-        cmd = [self.systemctl, "--user", "show", self.unit_for(timer_id),
+        canon = canonical_timer_id(timer_id)
+        self._guard(canon)
+        cmd = [self.systemctl, "--user", "show", canonical_unit(canon),
                "--property=ActiveState,SubState"]
         self.runner_calls.append(("query", cmd))
         proc = self._runner(cmd, capture_output=True, text=True,
