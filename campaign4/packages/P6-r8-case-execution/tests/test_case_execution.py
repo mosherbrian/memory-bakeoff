@@ -45,13 +45,24 @@ def cli(*args, env_extra=None):
 
 
 def write_test_bin(tmp):
+    """Test deposit executable (labeled induced-fault hook, simulated
+    branch only): deposits every dispatch into $FIXTURE_OUTBOX like the
+    package wrapper, and honors the armed intervention for induced
+    transport states (queued-first worker rc3, ambiguous-once verifier
+    rc0+garbage). The tool's deliver loop independently verifies these
+    receipts; the tool never invents them."""
     binp = os.path.join(tmp, "sim", "bin")
     os.makedirs(binp, exist_ok=True)
-    with open(os.path.join(binp, "wake"), "w") as fh:
+    with open(os.path.join(binp, "wake-deposit"), "w") as fh:
         fh.write("#!/bin/bash\n"
-                 "echo \"CALL wake $1\" >> \"$TRACE\"\n"
-                 "n=$(ls \"$MSGDIR\" 2>/dev/null | wc -l)\n"
-                 "printf '%s' \"$2\" > \"$MSGDIR/to-$1-$n.txt\"\n"
+                 "out=\"$FIXTURE_OUTBOX\"\n"
+                 "n=$(ls \"$out\" 2>/dev/null | wc -l)\n"
+                 "python3 - \"$1\" \"$2\" \"$out/send-$(printf %03d $n).json\" <<'PYEOF'\n"
+                 "import json,sys,time\n"
+                 "json.dump({\"seat\":sys.argv[1],\"text\":sys.argv[2],\n"
+                 "  \"received_at\":time.strftime(\"%Y-%m-%dT%H:%M:%SZ\",\n"
+                 "  time.gmtime())}, open(sys.argv[3],\"w\"), sort_keys=True)\n"
+                 "PYEOF\n"
                  "if [ \"$2\" = \"probe-ambiguous\" ]; then\n"
                  "  echo \"garbage-no-receipt\"; exit 0\n"
                  "fi\n"
@@ -62,19 +73,19 @@ def write_test_bin(tmp):
                  "print(d.get('control',''))\" 2>/dev/null)\n"
                  "case \"$ctl\" in\n"
                  "*transport-queued-first*)\n"
-                 "  if [ ! -f \"$MSGDIR/seen-$1\" ]; then touch \"$MSGDIR/seen-$1\";\n"
+                 "  if [ ! -f \"$out/seen-$1\" ]; then touch \"$out/seen-$1\";\n"
                  "    if printf '%s' \"$2\" | grep -q verifier; then\n"
                  "      echo \"garbage-no-receipt\"; exit 0\n"
                  "    fi\n"
                  "    echo \"wake: $1 -> queued\"; exit 3\n"
                  "  fi;;\n"
                  "esac\n"
-                 "echo \"wake: $1 -> started\"; exit 0\n")
+                 "echo \"wake: $1 -> deposited-to-fixture-outbox\"; exit 0\n")
     open(os.path.join(binp, "systemd-run"), "w").write("#!/bin/bash\nexit 0\n")
     open(os.path.join(binp, "systemctl"), "w").write(
         "#!/bin/bash\necho \"ActiveState=inactive\"\n"
         "echo \"SubState=dead\"\nexit 0\n")
-    for fn in ("wake", "systemd-run", "systemctl"):
+    for fn in ("wake-deposit", "systemd-run", "systemctl"):
         os.chmod(os.path.join(binp, fn), 0o755)
     open(os.path.join(tmp, "sim", "trace.log"), "w").close()
 
@@ -158,6 +169,8 @@ def suite():
 
 
 def emulators(env, case, hold=()):
+    """External seat steps (plan-named): emulators poll ONLY their inbox;
+    texts reach the inbox exclusively through the tool's deliver loop."""
     procs = []
     for seat, role, sid in ((env["wt"], "worker", env["wsid"]),
                             (env["vt"], "verifier", env["vsid"])):
@@ -166,7 +179,7 @@ def emulators(env, case, hold=()):
         croot = os.path.join(env["tmp"], case)
         procs.append(subprocess.Popen(
             [sys.executable, SEAT, "--seat", seat, "--role", role,
-             "--text-dir", os.path.join(croot, "msgs"), "--stream-file",
+             "--text-dir", os.path.join(croot, "inbox"), "--stream-file",
              os.path.join(env["tmp"], "sim", "stream", sid + ".jsonl"),
              "--onset-dir", os.path.join(croot, "onsets"), "--art-dir",
              os.path.join(croot, "art"), "--intervention",
@@ -352,10 +365,95 @@ def test_r2_cross_contamination_rejected(tmp_path):
         ev = {n: _hl.sha256(open(os.path.join(d, n), "rb").read())
               .hexdigest() for n in ("latency.jsonl", "witness-rows.jsonl",
                                      "manifest.json")}
+        ap = os.path.join(d, "applied.json")
+        json.dump({"case": case, "actions": [acts[case]],
+                   "executions": ["ex-%s" % case]}, open(ap, "w"))
         json.dump({"case": case, "timecheck": {"verdict": "accept"},
                    "executions": {acts[case]: "ex-%s" % case},
                    "settled_actions": [acts[case]],
+                   "applied_receipt": ap,
                    "evidence_sha256": ev},
                   open(os.path.join(d, "receipt.json"), "w"))
     r = cli("verify-suite", "--suite-root", root, "--config", cfgp)
     assert r.returncode == 3 and "E_CONTAMINATION" in r.stdout, r.stdout
+
+
+def test_r1f_forged_production_without_delivery_rejected(suite):
+    # R1-F: a pre-planted verifier end (+onset, no claim) in a
+    # hold-verifier run. The candidate alone adopts and recovers owned;
+    # the composition layer must reject E_UNDELIVERED since no delivery
+    # record exists for that production. No verifier emulator runs.
+    import time as _t
+    r = cli("fault", "arm", "--case", "lost-completion", "--run-root",
+            suite["tmp"], "--control", "hold-verifier-texts",
+            "--actor", "cairn")
+    assert r.returncode == 0, r.stdout
+    procs = emulators(suite, "lost-completion", hold={suite["vt"]})
+    planted = {"stream": os.path.join(suite["tmp"], "sim", "stream",
+                                      suite["vsid"] + ".jsonl"),
+               "onset": None}
+    os.makedirs(os.path.join(suite["tmp"], "sim", "stream"), exist_ok=True)
+    os.makedirs(os.path.join(suite["tmp"], "lost-completion", "onsets"),
+                exist_ok=True)
+    planted["onset"] = os.path.join(
+        suite["tmp"], "lost-completion", "onsets", "z9-forged-1.json")
+    try:
+        with open(planted["stream"], "w") as fh:
+            fh.write('{"t":"end","item":"z9-forged-1"}\n')
+        json.dump({"onset_at": time.strftime("%Y-%m-%dT%H:%M:%SZ",
+                                             time.gmtime()),
+                   "provenance": "forged-fixture", "uncertainty_s": 1},
+                  open(planted["onset"], "w"))
+        r = cli("run-case", "--config", suite["cfg"], "--plan",
+                suite["plan"], "--signatures", suite["sig"], "--case",
+                "lost-completion", "--suite-root", suite["tmp"],
+                "--simulated", "--registry-file", suite["reg"], "--out",
+                os.path.join(suite["tmp"], "lost-completion",
+                             "receipt.json"),
+                env_extra={"FAULT_CASE": "lost-completion"})
+    finally:
+        for p in procs:
+            try:
+                p.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                p.kill()
+    assert r.returncode == 3 and "E_UNDELIVERED" in r.stdout, r.stdout
+
+
+def test_r1f_disabled_induction_fails_incomplete(suite):
+    # R1-F: armed transport fault but a deposit wrapper that never
+    # induces (always started). The case must go INCOMPLETE on missing
+    # induced evidence, never pass on the declaration alone.
+    plain = os.path.join(suite["tmp"], "sim", "bin", "wake-deposit")
+    with open(plain, "w") as fh:
+        fh.write("#!/bin/bash\n"
+                 "n=$(ls \"$FIXTURE_OUTBOX\" 2>/dev/null | wc -l)\n"
+                 "python3 - \"$1\" \"$2\" \"$FIXTURE_OUTBOX/send-$(printf %03d $n).json\" <<'PYEOF'\n"
+                 "import json,sys,time\n"
+                 "json.dump({\"seat\":sys.argv[1],\"text\":sys.argv[2],\n"
+                 " \"received_at\":time.strftime(\"%Y-%m-%dT%H:%M:%SZ\",\n"
+                 " time.gmtime())}, open(sys.argv[3],\"w\"))\n"
+                 "PYEOF\n"
+                 "echo \"wake: $1 -> started\"; exit 0\n")
+    os.chmod(plain, 0o755)
+    r = cli("fault", "arm", "--case", "queued-ambiguous-restart",
+            "--run-root", suite["tmp"], "--control",
+            "transport-queued-first", "--actor", "cairn")
+    assert r.returncode == 0, r.stdout
+    procs = emulators(suite, "queued-ambiguous-restart")
+    try:
+        r = cli("run-case", "--config", suite["cfg"], "--plan",
+                suite["plan"], "--signatures", suite["sig"], "--case",
+                "queued-ambiguous-restart", "--suite-root", suite["tmp"],
+                "--simulated", "--registry-file", suite["reg"], "--out",
+                os.path.join(suite["tmp"], "queued-ambiguous-restart",
+                             "receipt.json"),
+                env_extra={"FAULT_CASE": "queued-ambiguous-restart"})
+    finally:
+        for p in procs:
+            try:
+                p.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                p.kill()
+    assert r.returncode == 3 and "INCOMPLETE" in r.stdout, r.stdout
+    assert '"verdict": "accept"' not in r.stdout, r.stdout

@@ -1,19 +1,14 @@
 """P6-r8 injected-seat stand-in (explicit external step, NEVER a hidden
-substitute). Real model seats perform worker/verifier work live; under the
-injected grant this emulator plays the seat role, and ONLY the seat role:
-it reads a dispatched wake text file plus the files that text names, honors
-the armed intervention record for its case, and runs the PINNED candidate
-producer code (hash-checked) to write the claim and append the end record
-with a producer onset sidecar. It never invents streams, onsets, acks or
-verification outcomes. Controls:
+substitute, NEVER an instruction in the live procedure). Real model seats
+perform worker/verifier work live; under the injected grant this emulator
+plays the seat role, and ONLY the seat role: it reads a dispatched wake
+text delivered to its inbox plus the files that text names, and runs the
+PINNED candidate producer code (hash-checked) to write the claim and
+append the end record with a producer onset sidecar.
 
-- hold-<role>: exit produced-nothing with a held record (lost-completion).
-- corrupt-after-worker: tamper the artifact dir immediately before a
-  verifier production (verifier dispatch implies worker commit, so the
-  tamper provably lands post-commit with no race); the independent
-  candidate check then fails honestly.
-- (transport queueing is honored by the signed wake executable reading the
-  armed intervention file; this emulator never fabricates acks.)
+Fault application lives in the tool (fixture_control, executed by
+run_case), NOT here: this emulator never holds, tampers, or fabricates.
+It produces exactly once per dispatched text and exits.
 """
 from __future__ import annotations
 
@@ -60,21 +55,29 @@ def _pinned_worker_hash():
         return hashlib.sha256(fh.read()).hexdigest()
 
 
+def _unwrap_deposit(text_file):
+    """Deposit envelopes ({seat, text, received_at} written by the fixture
+    wake-deposit wrapper) carry the dispatched text one layer deep. Unwrap
+    exactly that layer to a sibling file so the pinned producer receives
+    byte-exactly the dispatched payload — nothing more. Plain text files
+    pass through untouched."""
+    try:
+        raw = open(text_file).read()
+        env = json.loads(raw)
+    except (OSError, ValueError):
+        return text_file
+    if not isinstance(env, dict) or "received_at" not in env or \
+            not isinstance(env.get("text"), str):
+        return text_file
+    inner = text_file + ".dispatched"
+    with open(inner, "w") as fh:
+        fh.write(env.get("text") or "")
+    return inner
+
+
 def emulate(seat, role, text_dir, stream_file, onset_dir, art_dir,
             intervention_path="", timeout_s=60.0, poll_s=0.2):
     fw = _producer()
-    control = ""
-    if intervention_path and os.path.exists(intervention_path):
-        try:
-            control = (json.load(open(intervention_path)).get("control")
-                       or "")
-        except ValueError:
-            control = ""
-    if control == "hold-" + role:
-        held = {"seat": seat, "role": role, "held": True,
-                "control": control}
-        print(json.dumps(held, sort_keys=True))
-        return held
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         try:
@@ -84,14 +87,7 @@ def emulate(seat, role, text_dir, stream_file, onset_dir, art_dir,
             files = []
         if files:
             text_file = os.path.join(text_dir, files[-1])
-            if control == "corrupt-after-worker" and role == "verifier":
-                # Verifier dispatch implies worker commit (candidate
-                # enforces the order), so this tamper provably lands
-                # post-commit with no race; the independent check fails.
-                import glob as _g
-                for art in _g.glob(os.path.join(art_dir, "*")):
-                    with open(art, "wb") as fh:
-                        fh.write(b"tampered-by-fixture-fault")
+            text_file = _unwrap_deposit(text_file)
             rc = fw.main(["--role", role, "--text-file", text_file,
                           "--stream-file", stream_file, "--onset-dir",
                           onset_dir])

@@ -869,7 +869,9 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
              "claims": os.path.join(croot, "claims"),
              "art": os.path.join(croot, "art"),
              "onsets": os.path.join(croot, "onsets"),
-             "msgs": os.path.join(croot, "msgs")}
+             "msgs": os.path.join(croot, "msgs"),
+             "outbox": os.path.join(croot, "outbox"),
+             "inbox": os.path.join(croot, "inbox")}
     for d in cdirs.values():
         os.makedirs(d, exist_ok=True)
     if simulated:
@@ -881,16 +883,18 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
         child_extra = {"PATH": sim["bin"] + ":" + os.environ.get("PATH",
                                                                  ""),
                        "TRACE": sim["trace"], "MSGDIR": cdirs["msgs"],
-                       "FAULT_ROOT": faults_dir}
+                       "FAULT_ROOT": faults_dir,
+                       "FIXTURE_OUTBOX": cdirs["outbox"]}
         # Pass-through only: an externally-set FAULT_CASE lets test
         # executables honor the armed intervention; the tool never sets
-        # it, and live commands ignore it.
+        # it, reads the intervention file itself, and live ignores it.
         if os.environ.get("FAULT_CASE"):
             child_extra["FAULT_CASE"] = os.environ["FAULT_CASE"]
         stream_dir, wkey, vkey = _signed_stream_binding(config, True, sim)
     else:
         sim = None
-        child_extra = {"MSGDIR": cdirs["msgs"], "FAULT_ROOT": faults_dir}
+        child_extra = {"MSGDIR": cdirs["msgs"], "FAULT_ROOT": faults_dir,
+                       "FIXTURE_OUTBOX": cdirs["outbox"]}
         stream_dir, wkey, vkey = _signed_stream_binding(config, False, {})
         root = os.path.dirname(config["worker"].get("stream_path") or "")
         if not root or not os.path.isdir(root):
@@ -933,8 +937,61 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                  "--allowlist-seat", wtitle, "--allowlist-seat", vtitle,
                  "--db", db_path, "--manifest", manifest_path, "--claims",
                  cdirs["claims"], "--qid", "P6C"]
-    rc, out = _cli([sys.executable, r3] + live_args + ["run-fixture"],
-                   child_extra)
+    # R1 executing consumer: the deliver loop runs HERE on the real host
+    # path in every branch, reading the armed intervention file and
+    # applying it to the isolated fixture (hold/delay delivery; tamper
+    # post-commit). Seat actors (real seats live, emulators injected)
+    # see ONLY delivered texts.
+    import threading as _th
+    import fixture_control as _fc
+    applied = []
+    tampered = {}
+    deliver_error = []
+    stop_delivery = _th.Event()
+    live_wake = None if simulated else pdirs.get("live_wake")
+
+    def _deliver_loop():
+        while not stop_delivery.is_set():
+            try:
+                recs = _fc.deliver_pending(
+                    cdirs["outbox"], cdirs["inbox"], intervention,
+                    live_wake=live_wake)
+                applied.extend(recs)
+            except _fc.ControlFault as e:
+                deliver_error.append({"code": e.code,
+                                      "detail": e.detail})
+                return
+            if intervention is not None and \
+                    intervention.get("control") == "corrupt-after-worker" \
+                    and not tampered.get("done"):
+                wclaim = os.path.join(cdirs["claims"],
+                                      manifest["execution_id"] + ".json")
+                try:
+                    claim = json.load(open(wclaim))
+                except (OSError, ValueError):
+                    claim = {}
+                if claim.get("outcome") == "completed":
+                    try:
+                        tampered["rec"] = _fc.apply_artifact_control(
+                            cdirs["art"], intervention)
+                    except _fc.ControlFault as e:
+                        deliver_error.append({"code": e.code,
+                                              "detail": e.detail})
+                        return
+                    tampered["done"] = True
+            stop_delivery.wait(0.5)
+
+    deliverer = _th.Thread(target=_deliver_loop, daemon=True)
+    deliverer.start()
+    try:
+        rc, out = _cli([sys.executable, r3] + live_args + ["run-fixture"],
+                       child_extra)
+    finally:
+        stop_delivery.set()
+        deliverer.join(timeout=30)
+    if deliver_error:
+        raise StageCFault(deliver_error[0]["code"],
+                          deliver_error[0]["detail"])
     if rc not in (0, 3) or not isinstance(out, dict):
         raise StageCFault("E_CANDIDATE",
                           "run-fixture usage failure: %s" % (out,))
@@ -957,11 +1014,6 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
             raise StageCFault("E_CASE_FAIL",
                               "lost completion must recover owned: %s"
                               % (out,))
-        wclaim = os.path.join(cdirs["claims"],
-                              manifest["execution_id"] + ".json")
-        if not os.path.exists(wclaim):
-            raise StageCFault("E_CASE_FAIL",
-                              "worker evidence not retained")
     elif case == "failed-verification":
         if out.get("decision") == "COMPLETE" or \
                 manifest.get("disposition") == "COMPLETE":
@@ -1042,6 +1094,33 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
             items[sid] = _resolve_item(path, cdirs["onsets"])
         except StageCFault:
             items[sid] = None
+    # R1-E fail-closed, before any evidence specifics: every resolved end
+    # must trace to a delivery record for its (seat, execution).
+    # Production without delivery — including pre-planted ends a
+    # candidate alone would accept — is rejected here, never certified.
+    import fixture_control as _fc2
+    for (seat, execution, sid) in (
+            (wtitle, manifest["execution_id"], wsid),
+            (vtitle, manifest["verify_execution_id"], vsid)):
+        if items[sid] is not None and not _fc2.check_delivered(
+                applied, seat, execution):
+            raise StageCFault("E_UNDELIVERED",
+                              "produced end for %s has no delivery record; "
+                              "forged or out-of-band production rejected"
+                              % (seat,))
+    if case == "lost-completion":
+        wclaim = os.path.join(cdirs["claims"],
+                              manifest["execution_id"] + ".json")
+        if not os.path.exists(wclaim):
+            raise StageCFault("E_CASE_FAIL",
+                              "worker evidence not retained")
+    applied_path = os.path.join(faults_dir, case + ".applied.json")
+    _fc2.write_applied(
+        applied_path, case, [manifest["action_id"],
+                             manifest["verify_action_id"]],
+        [manifest["execution_id"], manifest["verify_execution_id"]],
+        intervention, applied, tampered.get("rec"),
+        {k: v.get("state") for k, v in states_all.items()})
     wit_cli = _witness_cli()
     lat_path = os.path.join(croot, "latency.jsonl")
     wit_path = os.path.join(croot, "witness-rows.jsonl")
@@ -1081,6 +1160,7 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                "candidate_gate": cand_err or "pass",
                "intervention": intervention,
                "induced": bool(intervention and intervention.get("induced")),
+               "applied_receipt": applied_path,
                "overlay": False, "simulated": bool(simulated),
                "verify_action": manifest["verify_action_id"],
                "committed_actions": _committed_actions(_kv(), manifest),
@@ -1206,6 +1286,18 @@ def verify_suite(suite_root, config_path):
         if receipt.get("case") != case:
             raise StageCFault("E_SUITE",
                               "receipt/case mismatch for %s" % case)
+        # R1-E: applied receipt must exist and match this case's
+        # actions/executions; a missing or mismatched application
+        # record fails the suite even if everything else passed.
+        applied = _load(receipt.get("applied_receipt") or "")
+        if applied.get("case") != case or \
+                sorted(applied.get("actions", [])) != sorted(
+                    receipt.get("executions", {}).keys()) or \
+                sorted(applied.get("executions", [])) != sorted(
+                    receipt.get("executions", {}).values()):
+            raise StageCFault("E_SUITE",
+                              "applied receipt missing/mismatched for %s"
+                              % case)
         for name, want in (receipt.get("evidence_sha256") or {}).items():
             if _sha(os.path.join(croot, name)) != want:
                 raise StageCFault("E_SUITE",
@@ -1245,11 +1337,17 @@ def verify_suite(suite_root, config_path):
 
 
 def _plan_dirs(plan, cdirs, sim=None):
-    """Plan-doc inputs for _candidate_plan: signed host commands on the
-    host branch (missing/unexecutable fails owned E_HOST_PATH, never
-    KeyError), signed test executables on the simulated branch."""
+    """Plan-doc inputs for _candidate_plan. The candidate's wake command is
+    ALWAYS the fixture wake-deposit wrapper (signed path): transport sends
+    deposit; seat notification happens exclusively in the deliver loop.
+    Missing/unexecutable paths fail owned E_HOST_PATH, never KeyError."""
+    import shutil as _sh
     if sim is not None:
-        return {"wake_shim": os.path.join(sim["bin"], "wake"),
+        deposit = os.path.join(sim["bin"], "wake-deposit")
+        if not (os.path.isfile(deposit) and os.access(deposit, os.X_OK)):
+            raise StageCFault("E_HOST_PATH",
+                              "test deposit wrapper missing: " + deposit)
+        return {"wake_shim": deposit,
                 "systemd_shim": os.path.join(sim["bin"], "systemd-run"),
                 "systemctl_shim": os.path.join(sim["bin"], "systemctl"),
                 "onsets": cdirs["onsets"], "art": cdirs["art"],
@@ -1259,15 +1357,20 @@ def _plan_dirs(plan, cdirs, sim=None):
     except KeyError as e:
         raise StageCFault("E_HOST_PATH",
                           "signed plan lacks host command %s" % (e,))
-    for label in ("wake", "systemd_run", "systemctl"):
-        if not (os.path.isfile(cmds[label]) and os.access(cmds[label],
-                                                           os.X_OK)):
+    deposit = cmds.get("deposit_wake") or os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "fixture-wake-deposit")
+    for label, path in (("deposit_wake", deposit),
+                        ("wake", cmds.get("wake", "")),
+                        ("systemd_run", cmds.get("systemd_run", "")),
+                        ("systemctl", cmds.get("systemctl", ""))):
+        if not (path and os.path.isfile(path) and os.access(path, os.X_OK)):
             raise StageCFault("E_HOST_PATH",
                               "host command %s not executable: %s"
-                              % (label, cmds[label]))
-    return {"wake_shim": cmds["wake"],
+                              % (label, path))
+    return {"wake_shim": deposit,
             "systemd_shim": cmds["systemd_run"],
             "systemctl_shim": cmds["systemctl"],
+            "live_wake": cmds["wake"],
             "onsets": cdirs["onsets"], "art": cdirs["art"],
             "latency": os.path.join(cdirs["root"], "latency.jsonl")}
 
