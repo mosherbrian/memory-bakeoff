@@ -1,0 +1,327 @@
+.......FFF..FF....F....FFF..F........F......F............                [100%]
+=================================== FAILURES ===================================
+__________________ test_r1_missing_intervention_is_incomplete __________________
+
+suite = {'binding': '/tmp/p6r8-itqdv54y/binding.json', 'cfg': '/tmp/p6r8-itqdv54y/execution-config.json', 'plan': '/tmp/p6r8-itqdv54y/plan.json', 'reg': '/tmp/p6r8-itqdv54y/registry.json', ...}
+
+    def test_r1_missing_intervention_is_incomplete(suite):
+        r = cli("run-case", "--config", suite["cfg"], "--plan", suite["plan"],
+                "--signatures", suite["sig"], "--case", "lost-completion",
+                "--suite-root", suite["tmp"], "--simulated", "--registry-file",
+                suite["reg"], "--out",
+                os.path.join(suite["tmp"], "lost-completion", "receipt.json"))
+>       assert r.returncode == 3 and "E_NO_INTERVENTION" in r.stdout, r.stdout
+E       AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E         
+E       assert (3 == 3 and 'E_NO_INTERVENTION' in '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n')
+E        +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+E        +  and   '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n' = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').stdout
+
+../P6-r9-observer-lifetime/tests/test_case_execution.py:238: AssertionError
+________________________ test_r1_causal_violation_fails ________________________
+
+suite = {'binding': '/tmp/p6r8-cqsi964g/binding.json', 'cfg': '/tmp/p6r8-cqsi964g/execution-config.json', 'plan': '/tmp/p6r8-cqsi964g/plan.json', 'reg': '/tmp/p6r8-cqsi964g/registry.json', ...}
+
+    def test_r1_causal_violation_fails(suite):
+        r = cli("fault", "arm", "--case", "lost-completion", "--run-root",
+                suite["tmp"], "--control", "delay-worker-completion",
+                "--actor", "cairn")
+        assert r.returncode == 0, r.stdout
+        rec = json.load(open(suite["tmp"] + "/faults/lost-completion.json"))
+        rec["armed_at"] = "2099-01-01T00:00:00Z"
+        json.dump(rec, open(suite["tmp"] + "/faults/lost-completion.json", "w"))
+        procs = emulators(suite, "lost-completion", delays=case_delays(suite, "lost-completion"))
+        try:
+            r = cli("run-case", "--config", suite["cfg"], "--plan",
+                    suite["plan"], "--signatures", suite["sig"], "--case",
+                    "lost-completion", "--suite-root", suite["tmp"],
+                    "--simulated", "--registry-file", suite["reg"], "--out",
+                    os.path.join(suite["tmp"], "lost-completion",
+                                 "receipt.json"),
+                    env_extra={"FAULT_CASE": "lost-completion", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
+        finally:
+            for p in procs:
+                try:
+                    p.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    p.kill()
+>       assert r.returncode == 3 and "E_CAUSAL" in r.stdout, r.stdout
+E       AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E         
+E       assert (3 == 3 and 'E_CAUSAL' in '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n')
+E        +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+E        +  and   '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n' = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').stdout
+
+../P6-r9-observer-lifetime/tests/test_case_execution.py:264: AssertionError
+_________________ test_r2_five_command_sequence_one_suite_root _________________
+
+suite = {'binding': '/tmp/p6r8-6qr9v3cp/binding.json', 'cfg': '/tmp/p6r8-6qr9v3cp/execution-config.json', 'plan': '/tmp/p6r8-6qr9v3cp/plan.json', 'reg': '/tmp/p6r8-6qr9v3cp/registry.json', ...}
+
+    def test_r2_five_command_sequence_one_suite_root(suite):
+        for case in CASES:
+            r = cli("fault", "arm", "--case", case, "--run-root", suite["tmp"],
+                    "--control", CONTROLS[case], "--actor", "cairn")
+            assert r.returncode == 0, (case, r.stdout)
+        for case in CASES:
+            procs = emulators(suite, case, delays=case_delays(suite, case))
+            try:
+                r = cli("run-case", "--config", suite["cfg"], "--plan",
+                        suite["plan"], "--signatures", suite["sig"], "--case",
+                        case, "--suite-root", suite["tmp"], "--simulated",
+                        "--registry-file", suite["reg"], "--out",
+                        os.path.join(suite["tmp"], case, "receipt.json"),
+                        env_extra={"FAULT_CASE": case, "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
+            finally:
+                for p in procs:
+                    try:
+                        p.wait(timeout=30)
+                    except subprocess.TimeoutExpired:
+                        p.kill()
+>           assert r.returncode == 0, (case, r.stdout)
+E           AssertionError: ('positive-handoff', '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E             ')
+E           assert 3 == 0
+E            +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+
+../P6-r9-observer-lifetime/tests/test_case_execution.py:287: AssertionError
+_____________ test_r1f_forged_production_without_delivery_rejected _____________
+
+suite = {'binding': '/tmp/p6r8-pbepuqm1/binding.json', 'cfg': '/tmp/p6r8-pbepuqm1/execution-config.json', 'plan': '/tmp/p6r8-pbepuqm1/plan.json', 'reg': '/tmp/p6r8-pbepuqm1/registry.json', ...}
+
+    def test_r1f_forged_production_without_delivery_rejected(suite):
+        # R1-F: hold-verifier-texts armed on a positive run, with a
+        # pre-planted verifier end (+onset, no claim). The candidate alone
+        # adopts it; the early provenance gate must reject E_UNDELIVERED
+        # because no delivery record exists for that production. This also
+        # proves the hold actually withholds (a delivered text would pass
+        # the gate and fail later instead).
+        import time as _t
+        r = cli("fault", "arm", "--case", "positive-handoff", "--run-root",
+                suite["tmp"], "--control", "hold-verifier-texts",
+                "--actor", "cairn")
+        assert r.returncode == 0, r.stdout
+        os.makedirs(os.path.join(suite["tmp"], "sim", "stream"), exist_ok=True)
+        os.makedirs(os.path.join(suite["tmp"], "positive-handoff", "onsets"),
+                    exist_ok=True)
+        with open(os.path.join(suite["tmp"], "sim", "stream",
+                               suite["vsid"] + ".jsonl"), "w") as fh:
+            fh.write('{\"t\":\"end\",\"item\":\"z9-forged-1\"}\n')
+        json.dump({"onset_at": _t.strftime("%Y-%m-%dT%H:%M:%SZ", _t.gmtime()),
+                   "provenance": "forged-fixture", "uncertainty_s": 1},
+                  open(os.path.join(suite["tmp"], "positive-handoff", "onsets",
+                                    "z9-forged-1.json"), "w"))
+        procs = emulators(suite, "positive-handoff")
+        try:
+            r = cli("run-case", "--config", suite["cfg"], "--plan",
+                    suite["plan"], "--signatures", suite["sig"], "--case",
+                    "positive-handoff", "--suite-root", suite["tmp"],
+                    "--simulated", "--registry-file", suite["reg"], "--out",
+                    os.path.join(suite["tmp"], "positive-handoff",
+                                 "receipt.json"),
+                    env_extra={"FAULT_CASE": "positive-handoff", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
+        finally:
+            for p in procs:
+                try:
+                    p.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    p.kill()
+>       assert r.returncode == 3 and "E_UNDELIVERED" in r.stdout, r.stdout
+E       AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E         
+E       assert (3 == 3 and 'E_UNDELIVERED' in '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n')
+E        +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+E        +  and   '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n' = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').stdout
+
+../P6-r9-observer-lifetime/tests/test_case_execution.py:440: AssertionError
+_________________ test_r1f_disabled_induction_fails_incomplete _________________
+
+suite = {'binding': '/tmp/p6r8-7m22kvnp/binding.json', 'cfg': '/tmp/p6r8-7m22kvnp/execution-config.json', 'plan': '/tmp/p6r8-7m22kvnp/plan.json', 'reg': '/tmp/p6r8-7m22kvnp/registry.json', ...}
+
+    def test_r1f_disabled_induction_fails_incomplete(suite):
+        # R1-F: armed transport fault but a deposit wrapper that never
+        # induces (always started). The case must go INCOMPLETE on missing
+        # induced evidence, never pass on the declaration alone.
+        plain = os.path.join(suite["tmp"], "sim", "bin", "wake-deposit")
+        with open(plain, "w") as fh:
+            fh.write("#!/bin/bash\n"
+                     "n=$(ls \"$FIXTURE_OUTBOX\" 2>/dev/null | wc -l)\n"
+                     "python3 - \"$1\" \"$2\" \"$FIXTURE_OUTBOX/send-$(printf %03d $n).json\" <<'PYEOF'\n"
+                     "import json,sys,time\n"
+                     "json.dump({\"seat\":sys.argv[1],\"text\":sys.argv[2],\n"
+                     " \"received_at\":time.strftime(\"%Y-%m-%dT%H:%M:%SZ\",\n"
+                     " time.gmtime())}, open(sys.argv[3],\"w\"))\n"
+                     "PYEOF\n"
+                     "echo \"wake: $1 -> started\"; exit 0\n")
+        os.chmod(plain, 0o755)
+        r = cli("fault", "arm", "--case", "queued-ambiguous-restart",
+                "--run-root", suite["tmp"], "--control",
+                "transport-queued-first", "--actor", "cairn")
+        assert r.returncode == 0, r.stdout
+        procs = emulators(suite, "queued-ambiguous-restart")
+        try:
+            r = cli("run-case", "--config", suite["cfg"], "--plan",
+                    suite["plan"], "--signatures", suite["sig"], "--case",
+                    "queued-ambiguous-restart", "--suite-root", suite["tmp"],
+                    "--simulated", "--registry-file", suite["reg"], "--out",
+                    os.path.join(suite["tmp"], "queued-ambiguous-restart",
+                                 "receipt.json"),
+                    env_extra={"FAULT_CASE": "queued-ambiguous-restart", "FAULT_ROOT": os.path.join(suite["tmp"], "faults")})
+        finally:
+            for p in procs:
+                try:
+                    p.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    p.kill()
+>       assert r.returncode == 3 and "INCOMPLETE" in r.stdout, r.stdout
+E       AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E         
+E       assert (3 == 3 and 'INCOMPLETE' in '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n')
+E        +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+E        +  and   '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n' = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').stdout
+
+../P6-r9-observer-lifetime/tests/test_case_execution.py:477: AssertionError
+__________________________ test_d4_full_host_sequence __________________________
+
+hsuite = {'binding': '/tmp/p6r8h-wchag1it/binding.json', 'cfg': '/tmp/p6r8h-wchag1it/execution-config.json', 'plan': '/tmp/p6r8h-wchag1it/plan.json', 'reg': '/tmp/p6r8h-wchag1it/registry.json', ...}
+
+    def test_d4_full_host_sequence(hsuite):
+        for case in CASES:
+            r = cli("fault", "arm", "--case", case, "--run-root",
+                    hsuite["tmp"], "--control", CONTROLS[case],
+                    "--actor", "cairn")
+            assert r.returncode == 0, (case, r.stdout)
+        delays = {"lost-completion": {hsuite["wt"]: 11.0}}
+        results = {}
+        for case in CASES:
+            r = run_host_case(hsuite, case,
+                              delays=delays.get(case, {}))
+>           assert r.returncode == 0, (case, r.stdout)
+E           AssertionError: ('positive-handoff', '{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E             ')
+E           assert 3 == 0
+E            +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+
+../P6-r9-observer-lifetime/tests/test_host_composition.py:248: AssertionError
+_______________________ test_delayed_worker_commits_new ________________________
+
+    def test_delayed_worker_commits_new():
+        env = make_suite(R9SCRIPT, R9SEAT, R9DEPOSIT, R9PLAN, R9)
+        try:
+            arm(env, "positive-handoff")
+            r = run_case(env, "positive-handoff",
+                         delays={env["wt"]: 18.0})
+>           assert r.returncode == 0, r.stdout
+E           AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E             
+E           assert 3 == 0
+E            +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+
+../P6-r9-observer-lifetime/tests/test_observer_lifetime.py:219: AssertionError
+_____________________ test_delayed_verifier_observed_once ______________________
+
+    def test_delayed_verifier_observed_once():
+        env = make_suite(R9SCRIPT, R9SEAT, R9DEPOSIT, R9PLAN, R9)
+        try:
+            arm(env, "positive-handoff")
+            r = run_case(env, "positive-handoff",
+                         delays={env["vt"]: 15.0})
+>           assert r.returncode == 0, r.stdout
+E           AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E             
+E           assert 3 == 0
+E            +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+
+../P6-r9-observer-lifetime/tests/test_observer_lifetime.py:237: AssertionError
+________________________ test_near_boundary_small_grant ________________________
+
+    def test_near_boundary_small_grant():
+        env = make_suite(R9SCRIPT, R9SEAT, R9DEPOSIT, R9PLAN, R9,
+                         bounds={"duration_s": 40, "escalation_window_s": 60})
+        try:
+            arm(env, "positive-handoff")
+            r = run_case(env, "positive-handoff",
+                         delays={env["wt"]: 25.0})
+>           assert r.returncode == 0, r.stdout
+E           AssertionError: {"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}
+E             
+E           assert 3 == 0
+E            +  where 3 = CompletedProcess(args=['/usr/bin/python3', '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-in...e=3, stdout='{"detail": "R3 working copy lifecycle.py drifted", "error": "E_R3_DRIFT", "owner": "cairn"}\n', stderr='').returncode
+
+../P6-r9-observer-lifetime/tests/test_observer_lifetime.py:252: AssertionError
+___________________ test_reopen_worker_phase_same_execution ____________________
+
+    def test_reopen_worker_phase_same_execution():
+        # Reopen DURING the worker wait: a second reattach CLI while the
+        # late end is still in flight. Same execution, zero resends: the
+        # first observer to bind the end commits, the other dedups.
+        import threading
+        env = make_suite(R9SCRIPT, R9SEAT, R9DEPOSIT, R9PLAN, R9)
+        try:
+            arm(env, "positive-handoff")
+            procs = emulators(env, "positive-handoff",
+                              delays={env["wt"]: 18.0})
+            out = {}
+            t = threading.Thread(
+                target=lambda: out.update(
+                    {"r": cli(R9SCRIPT, R9, "run-case", "--config", env["cfg"],
+                              "--plan", env["plan"], "--signatures", env["sig"],
+                              "--case", "positive-handoff", "--suite-root",
+                              env["tmp"], "--registry-file", env["reg"],
+                              "--out", os.path.join(env["tmp"],
+                                                    "positive-handoff",
+                                                    "receipt.json"))}))
+            t.start()
+            croot = os.path.join(env["tmp"], "positive-handoff")
+            cplan = os.path.join(croot, "candidate-plan.json")
+            for _ in range(40):
+                if os.path.exists(cplan):
+                    break
+                time.sleep(0.5)
+>           assert os.path.exists(cplan), "first run never dispatched"
+E           AssertionError: first run never dispatched
+E           assert False
+E            +  where False = <function exists at 0x7fcff2f61dd0>('/tmp/p6r9-jmxi12k6/positive-handoff/candidate-plan.json')
+E            +    where <function exists at 0x7fcff2f61dd0> = <module 'posixpath' (frozen)>.exists
+E            +      where <module 'posixpath' (frozen)> = os.path
+
+../P6-r9-observer-lifetime/tests/test_observer_lifetime.py:313: AssertionError
+________________________ test_module_bytes_are_new_core ________________________
+
+    def test_module_bytes_are_new_core():
+        import driver as DRV
+        import ingress as ING
+        for mod in (DRV, LC, STOREMOD, ING):
+>           assert mod.__file__.startswith(NEWC), mod.__file__
+E           AssertionError: /var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py
+E           assert False
+E            +  where False = <built-in method startswith of str object at 0x7fcff120e6f0>('/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness')
+E            +    where <built-in method startswith of str object at 0x7fcff120e6f0> = '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py'.startswith
+E            +      where '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py' = <module 'driver' from '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py'>.__file__
+
+candidate/tests/test_r13_identity_independence.py:40: AssertionError
+________________________ test_module_bytes_are_new_core ________________________
+
+    def test_module_bytes_are_new_core():
+        import driver as DRV
+>       assert DRV.__file__.startswith(NEWC), DRV.__file__
+E       AssertionError: /var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py
+E       assert False
+E        +  where False = <built-in method startswith of str object at 0x7fcff120e6f0>('/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness')
+E        +    where <built-in method startswith of str object at 0x7fcff120e6f0> = '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py'.startswith
+E        +      where '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py' = <module 'driver' from '/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r13-core-record-integrity/candidate/src/r3harness/driver.py'>.__file__
+
+candidate/tests/test_r13_record_integrity.py:35: AssertionError
+=========================== short test summary info ============================
+FAILED candidate/tests/test_case_execution.py::test_r1_missing_intervention_is_incomplete
+FAILED candidate/tests/test_case_execution.py::test_r1_causal_violation_fails
+FAILED candidate/tests/test_case_execution.py::test_r2_five_command_sequence_one_suite_root
+FAILED candidate/tests/test_case_execution.py::test_r1f_forged_production_without_delivery_rejected
+FAILED candidate/tests/test_case_execution.py::test_r1f_disabled_induction_fails_incomplete
+FAILED candidate/tests/test_host_composition.py::test_d4_full_host_sequence
+FAILED candidate/tests/test_observer_lifetime.py::test_delayed_worker_commits_new
+FAILED candidate/tests/test_observer_lifetime.py::test_delayed_verifier_observed_once
+FAILED candidate/tests/test_observer_lifetime.py::test_near_boundary_small_grant
+FAILED candidate/tests/test_observer_lifetime.py::test_reopen_worker_phase_same_execution
+FAILED candidate/tests/test_r13_identity_independence.py::test_module_bytes_are_new_core
+FAILED candidate/tests/test_r13_record_integrity.py::test_module_bytes_are_new_core
+12 failed, 45 passed in 1407.41s (0:23:27)

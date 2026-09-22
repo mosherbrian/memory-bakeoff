@@ -39,3 +39,11 @@ stdlib-only; no dependency/clock-policy change.
 - Removes the dead `state.get("worker_seat")` comparison no transition set.
 - store.py / ingress.py unchanged by this amendment (ingress already binds
   actors from trusted context and rejects claim actors).
+
+## Metadata completion-2 (no production/test/plan change)
+
+- composition-manifest.json: refreshed stale `lifecycle.py` (5a41d291… →
+  ea61a75c…) and `changes.md` entries to disk bytes.
+- manifest.json: removed impossible self-entry; `new_lifecycle` now
+  ea61a75c… (amendment-1 bytes); consolidated redundant `amended_lifecycle`
+  key; all file entries recomputed from disk in acyclic order.
