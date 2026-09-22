@@ -96,3 +96,25 @@ cannot be wrong" — and all three fail silently, not with an error.
 Also noticed, not a correctness finding: `harness.py` adds
 `_canonical_timer_base` / `_canonical_unit`, which copy `canonical_timer_id`
 / `canonical_unit` in `host_adapter.py`.
+
+## Addendum, 21:20Z — finding 11, found while porting the core to Go
+
+11. **The self-verify guard never fires; the worker seat can verify its own
+    publish.** `P5-r2/src/lifecycle.py:244` and `:255` reject a verdict when
+    `event.actor.seat == state.get("worker_seat")`. Nothing in the source ever
+    records `worker_seat`: START stores the seat as `flight.owner`, and the
+    only place `worker_seat` is set is by hand in
+    `P3-r3/tests/test_lifecycle.py:87`. The same code is copied into
+    P6-r9 and P6-r11 `r3harness/lifecycle.py`.
+
+    Reproduced on P5-r2 (`80092f92`) through the trusted ingress, the accepted
+    external route: kiln publishes as worker; `ingress.append(verify_pass,
+    atomic={"hold": ...}, actor={"seat": "kiln", "role": "verifier"})` returns
+    `('complete', 'decision-pending')`, and the package is COMPLETE with the
+    ledger rows `a1-pub kiln/worker` and `self-v kiln/verifier`. The ingress
+    accepts any trusted seat in any trusted role, so nothing else stops it.
+    Through `Driver.verify` the verifier is always mapped to corvid, which is
+    why no test caught it.
+
+    This is the author-is-not-the-verifier rule, at the one boundary that is
+    supposed to enforce it. Same class as findings 2, 5 and 6: silent.
