@@ -599,6 +599,41 @@ def _kv_rows(db_path):
     return dict(rows)
 
 
+def _maybe_apply_corrupt_tamper(cdirs, manifest, db_path, intervention,
+                                claim):
+    """Post-commit fault gate (corrupt-after-worker): apply the armed
+    artifact tamper only after the worker handoff durably committed.
+    Returns the tamper record, or None when the fault must wait (claim
+    observed but commit absent) or does not apply. Never tampers on
+    claim observation alone: see _commit_present."""
+    import fixture_control as _fc
+    if (intervention or {}).get("control") != "corrupt-after-worker":
+        return None
+    if (claim or {}).get("outcome") != "completed":
+        return None
+    if not _commit_present(db_path, manifest["action_id"],
+                           manifest["execution_id"]):
+        return None
+    return _fc.apply_artifact_control(cdirs["art"], intervention)
+
+
+def _commit_present(db_path, action, execution):
+    """True iff the durable ledger records handoff-done for
+    (action, execution). The commit record is written only after claim
+    validation + artifact recompute + ledger drive, so its presence
+    proves the handoff already consumed the pre-fault artifacts. A
+    post-commit fault (e.g. corrupt-after-worker) must wait for this,
+    never for mere claim-file observation: the producer publishes
+    artifact -> claim -> end sequentially, and a claim-observed tamper
+    can land between publication and the handoff's recompute, failing
+    the worker handoff it was meant to follow."""
+    try:
+        kv = _kv_rows(db_path)
+    except Exception:
+        return False
+    return bool(kv.get("handoff-done:%s:%s" % (action, execution)))
+
+
 def _sends_from_kv(kv):
     """Transport-level send evidence from durable msg records (never a
     shim trace): per-seat counts plus per-message states."""
@@ -1000,13 +1035,15 @@ def run_case(config_path, plan_path, sig_path, case, suite_root, out_path,
                     claim = {}
                 if claim.get("outcome") == "completed":
                     try:
-                        tampered["rec"] = _fc.apply_artifact_control(
-                            cdirs["art"], intervention)
+                        rec = _maybe_apply_corrupt_tamper(
+                            cdirs, manifest, db_path, intervention, claim)
                     except _fc.ControlFault as e:
                         deliver_error.append({"code": e.code,
                                               "detail": e.detail})
                         return
-                    tampered["done"] = True
+                    if rec is not None:
+                        tampered["rec"] = rec
+                        tampered["done"] = True
 
     deliverer = _th.Thread(target=_deliver_loop, daemon=True)
     deliverer.start()
