@@ -1,0 +1,67 @@
+{
+ "actions": {
+  "verifier": "p6c-v1",
+  "worker": "p6c-w1"
+ },
+ "binding_manifest": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/live-preparation-3/launch-manifest-reconciled.json (accepted historical evidence; NEVER modified, never restarted; fresh preparation + re-witness required at execution)",
+ "cases": [
+  "positive-handoff",
+  "lost-completion",
+  "failed-verification",
+  "queued-ambiguous-restart",
+  "quiet-rest"
+ ],
+ "forbidden": [
+  "modifying/restarting/reusing the accepted binding or its expired incarnations",
+  "old simulated p6h IDs, renamed placeholder streams, operator-guessed items, fabricated ends/claims",
+  "standalone signature check plus hand-written wake sequence",
+  "fixture launches/restarts/service/timer mutations under this grant",
+  "production campaign ledger writes",
+  "copying candidate detection time into an independent-source label"
+ ],
+ "host_commands": {
+  "note": "read-only inventoried 2026-09-22; missing/unexecutable fails owned E_HOST_PATH, never KeyError",
+  "systemctl": "/usr/bin/systemctl",
+  "systemd_run": "/usr/bin/systemd-run",
+  "wake": "/home/bmosher/.config/agent-deck/wake"
+ },
+ "live_run_dirs": {
+  "art": "/tmp/p6stagec/art",
+  "claims": "/tmp/p6stagec/claims",
+  "db": "/tmp/p6stagec/fixture.db",
+  "latency": "/tmp/p6stagec/latency.jsonl",
+  "msgs": "/tmp/p6stagec/msgs",
+  "onsets": "/tmp/p6stagec/onsets",
+  "root": "/tmp/p6stagec",
+  "witness": "/tmp/p6stagec/witness-rows.jsonl"
+ },
+ "onset_protocol": "per case: producer-recorded sidecar (seat append time, host clock, uncertainty 1s) else operator fault marker via fault_onset.py mark (injection time, provenance, explicit uncertainty covering human/transport delay); limitations documented in fault_onset.py; missing/unbounded onset is INCOMPLETE",
+ "pending_stage_c_only": [
+  "fresh idle preparation + independent binding witness (prep3 incarnations expired; never reuse)",
+  "fresh Tern signatures (purpose stagec-task) over THIS plan hash + derived execution config hash",
+  "real model seats driving handoffs; live socket liveness re-witness at execution"
+ ],
+ "phases": {
+  "1_derive": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py derive-config --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --binding /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/live-preparation-3/launch-manifest-reconciled.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --out ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json",
+  "2_gate": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py gate --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json",
+  "3_positive": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case positive-handoff --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-positive.json",
+  "4_lost_completion": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case lost-completion --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-lost.json",
+  "5_failure_recovery": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case failed-verification --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-failed.json",
+  "6_queued_restart": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case queued-ambiguous-restart --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-queued.json",
+  "7_quiet_rest": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py run-case --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/stagec-plan.json --signatures ${STAGEC_ROOT:-/tmp/p6stagec}/signatures.json --case quiet-rest --out ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-quiet.json",
+  "8_timecheck": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py timecheck --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --latency ${STAGEC_ROOT:-/tmp/p6stagec}/latency.jsonl --witness ${STAGEC_ROOT:-/tmp/p6stagec}/witness-rows.jsonl --receipt ${STAGEC_ROOT:-/tmp/p6stagec}/receipt-positive.json --out ${STAGEC_ROOT:-/tmp/p6stagec}/verdict.json",
+  "9_rollback": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r7-real-host-path/src/stagec_host.py rollback --config ${STAGEC_ROOT:-/tmp/p6stagec}/execution-config.json --root-dir ${STAGEC_ROOT:-/tmp/p6stagec} --archive-dir ${STAGEC_ROOT:-/tmp/p6stagec}/archive"
+ },
+ "plan_id": "P6R7-host-exact-1",
+ "signatures": "Tern-authored file {signer: tern, purpose: stagec-task, plan_sha256, binding_sha256 then config_sha256, stagec_entry_sha256, candidate_harness_sha256}; preparation-only purpose rejected; any byte change voids release",
+ "status": "PROPOSED ONLY - Tern signature (purpose stagec-task) over this file + execution config + entrypoint/candidate hashes required before any send",
+ "timer_unit": "p6-stagec-handoff-1.timer",
+ "timing_bounds": {
+  "detect_s": 30.0,
+  "recover_s": 60.0,
+  "suspicion_detect_s": 180.0,
+  "suspicion_recover_s": 60.0,
+  "suspicion_total_s": 240.0,
+  "total_s": 90.0
+ }
+}
