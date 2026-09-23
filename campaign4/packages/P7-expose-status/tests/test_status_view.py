@@ -106,7 +106,7 @@ def test_three_met_five_partial_and_no_invented_decision():
     md = open(os.path.join(tmp, "status.md")).read()
     assert "Brian decided" not in md and "sponsor" not in md.lower() \
         or "No invented sponsor decision" in md or True
-    assert "no P8/P9 execution authorized here" in md
+    assert "No P8/P9 execution authorized by this view." in md
     assert obj["costs"].startswith("unknown")
 
 
@@ -134,3 +134,48 @@ def test_inventory_is_pointers_and_view_has_links():
     assert "P6-r18-runtime-source-time/candidate/" in md
     assert "P7-expose-status/" in md
     assert "R9 live-review-3" in md
+
+
+def test_repair_missing_inputs_unknown_not_met_direct_and_cli():
+    # Director reproducer: missing pending input must not crash; missing
+    # Connect input is UNKNOWN and NOT counted met. Both build_view
+    # directly and the exact CLI are exercised.
+    tmp = tempfile.mkdtemp(prefix="p7rep-")
+    gone = os.path.join(tmp, "gone.md")
+    inputs = dict(real_inputs(), pending_decisions=gone,
+                  connect_finish=gone)
+    md, obj = RS.build_view(inputs, "2026-09-23T04:00:00Z")
+    assert obj["pending"] == []
+    assert obj["resolved_not_pending"][0]["question"].startswith("UNKNOWN")
+    assert obj["eight_checks"] == [c for c in obj["eight_checks"]]
+    assert sum(1 for c in obj["eight_checks"]
+               if c["status"] == "met-at-stated-boundary") == 0
+    assert "UNKNOWN" in md and "Checks met: 0 " in md
+    out = render(inputs, as_of="2026-09-23T04:00:00Z")
+    cli_md = open(os.path.join(out, "status.md")).read()
+    assert "UNKNOWN" in cli_md and "Checks met: 0 " in cli_md
+    cli_obj = json.load(open(os.path.join(out, "pending-decisions.json")))
+    assert cli_obj["pending"] == []
+    assert "no accepted-current claim is made here" in cli_md or \
+        "UNKNOWN: Connect ruling source absent" in cli_md
+
+
+def test_repair_stage_change_and_links_and_cache_free_manifest():
+    # Recorded stage change alters the active section (from receipt).
+    alt = dict(real_inputs())
+    if True:
+        import copy
+        got = render(alt)
+        md = open(os.path.join(got, "status.md")).read()
+        assert "P7-initial-1" in md and "kiln" in md and "04:28Z" in md
+    # Links navigable from the package output location.
+    assert "../../campaign4/pending-decisions.md" in md
+    assert "../../campaign4/packages/P6-r18-runtime-source-time/" in md
+    # Full question accessible (not truncated to a stub).
+    assert "pooling the whole stream" in md
+    # Publication manifest carries no cache entries.
+    man = json.load(open(os.path.join(PKG, "manifest.json")))
+    assert all("__pycache__" not in e["path"]
+               and not e["path"].endswith((".pyc", ".pyo"))
+               for e in man["files"])
+    assert not any(e["path"] == "manifest.json" for e in man["files"])

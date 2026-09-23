@@ -30,6 +30,7 @@ DEFAULT_INPUTS = {
         "terminal-disposition.json"),
     "charter": os.path.join(C4, "CHARTER.md"),
     "architecture": os.path.join(C4, "ACCEPTED-ARCHITECTURE.md"),
+    "p7_dispatch": os.path.join(PKG, "dispatch-receipt.json"),
 }
 
 STALE_AFTER_S = 24 * 3600
@@ -89,6 +90,8 @@ def parse_pending_decisions(text):
     pending, resolved = [], []
     if text is None:
         return pending, [{"status": "UNKNOWN", "owner": "unknown",
+                          "question": "UNKNOWN (pending-decisions.md "
+                                      "unreadable)",
                           "reason": "pending-decisions.md unreadable",
                           "source": "pending-decisions.md"}]
     in_table = False
@@ -129,7 +132,8 @@ def parse_connect_checks(text):
     checks = []
     if text is None:
         return [{"check": "UNKNOWN", "status": "UNKNOWN", "owner": "unknown",
-                 "reason": "CONNECT-FINISH-LINE unreadable"}]
+                 "reason": "CONNECT-FINISH-LINE unreadable",
+                 "disposition": "UNKNOWN", "evidence": "UNKNOWN"}]
     in_table = False
     for line in text.splitlines():
         if line.startswith("| Check |"):
@@ -232,14 +236,35 @@ def build_view(inputs, as_of):
         snap[key]["stale"] = _stale_flag(snap[key]["observed_at"], as_of)
         if snap[key]["sha256"] is None:
             snap[key]["status"] = "UNKNOWN"
+    # Active stage from the named dispatch receipt (or UNKNOWN): never
+    # static worker prose. Stale here is file age, not factual invalidity.
+    disp = load_json(inputs.get("p7_dispatch", "") or "") or {}
+    if isinstance(disp, dict) and disp.get("action_id") and \
+            not disp.get("_malformed"):
+        snap["p7_dispatch"].update({
+            "action": disp.get("action_id"),
+            "owner": disp.get("owner", "unknown"),
+            "deadline": disp.get("deadline", "unknown"),
+            "next": "verifier review, then director publish decision"})
+    else:
+        snap["p7_dispatch"].update({"action": None})
     pending, resolved = parse_pending_decisions(
         _read(inputs["pending_decisions"]))
     checks = parse_connect_checks(_read(inputs["connect_finish"]))
     verdicts = summarize_acceptance_vs_terminal(
         load_json(inputs["r18_acceptance"]), load_json(inputs["r19_terminal"]))
     tsv = summarize_tsv(inputs["control_tsv"])
-    met = [c for c in checks if c.get("status") != "partial"]
+    # Count ONLY explicit met status as met; unrecognised dispositions
+    # are UNKNOWN, never default PASS/met.
+    met = [c for c in checks
+           if c.get("status") == "met-at-stated-boundary"]
     partial = [c for c in checks if c.get("status") == "partial"]
+    unknown_checks = [c for c in checks
+                      if c.get("status") not in (
+                          "met-at-stated-boundary", "partial")]
+    connect_known = snap.get("connect_finish", {}).get("sha256") is not None
+    r18_known = verdicts["r18"].get("status") not in (
+        "UNKNOWN", None) and "source_commit" in verdicts["r18"]
     lines = []
     A = lines.append
     A("# P7 status view (derived, read-only)")
@@ -249,11 +274,20 @@ def build_view(inputs, as_of):
       % as_of)
     A("")
     A("## Connect ruling")
-    A("Connect is CLOSED as a demonstrated integration stage, NOT accepted "
-      "for general unattended adoption (director decision "
-      "CONNECT-FINISH-LINE-20260923.md). R18 is the latest accepted "
-      "candidate, not a new live PASS. Checks met at stated boundary: "
-      "%d; partial: %d." % (len(met), len(partial)))
+    if connect_known:
+        A("Connect is CLOSED as a demonstrated integration stage, NOT "
+          "accepted for general unattended adoption (director decision "
+          "[CONNECT-FINISH-LINE-20260923.md](../../campaign4/"
+          "CONNECT-FINISH-LINE-20260923.md)). R18 is the latest accepted "
+          "candidate, not a new live PASS. " if r18_known else
+          "Connect ruling present; R18 acceptance source absent or "
+          "conflicting, so no accepted-current claim is made here. ")
+        A("Checks met at stated boundary: %d; partial: %d; unknown: %d."
+          % (len(met), len(partial), len(unknown_checks)))
+    else:
+        A("UNKNOWN: Connect ruling source absent; no Connect conclusion "
+          "asserted. Checks met: %d (explicit only); partial: %d; "
+          "unknown: %d." % (len(met), len(partial), len(unknown_checks)))
     A("")
     A("## Eight pre-unattended-use checks")
     for c in checks:
@@ -262,9 +296,15 @@ def build_view(inputs, as_of):
                                      c.get("owner", "unknown")))
     A("")
     A("## Accepted source vs historical witness")
-    A("- R18: %s (commit %s, owner tern)" % (
-        verdicts["r18"].get("status"),
-        verdicts["r18"].get("source_commit", "?")))
+    if r18_known:
+        A("- R18: %s (commit %s, owner tern) "
+          "[acceptance](../../campaign4/packages/"
+          "P6-r18-runtime-source-time/acceptance.json)" % (
+              verdicts["r18"].get("status"),
+              verdicts["r18"].get("source_commit", "?")))
+    else:
+        A("- R18: UNKNOWN (acceptance source absent/conflicting; no "
+          "accepted-current state asserted)")
     A("- R19: %s (%s; live_executed=%s)" % (
         verdicts["r19"].get("status"), verdicts["r19"].get("reason", ""),
         verdicts["r19"].get("live_executed", "?")))
@@ -273,17 +313,29 @@ def build_view(inputs, as_of):
     A("")
     A("## Pending decisions (%d open)" % len(pending))
     for p in pending:
-        A("- %s | owner: %s | raised: %s | affects: %s" % (
-            p["question"][:160], p["owner"], p["raised"], p["affected"]))
+        A("- owner: %s | raised: %s | affects: %s "
+          "[source](../../campaign4/pending-decisions.md)" % (
+              p.get("owner", "unknown"), p.get("raised", "?"),
+              p.get("affected", "?")))
+        A("  question: %s" % p.get("question", "UNKNOWN"))
         A("  next: %s" % p.get("next_action", "unknown"))
     for r in resolved:
-        A("- RESOLVED/RETRACTED (not pending): %s... -> %s" % (
-            r["question"][:80], r.get("resolution", "")[:120]))
+        A("- RESOLVED/RETRACTED (not pending): %s... -> %s "
+          "[source](../../campaign4/pending-decisions.md)" % (
+              r.get("question", "?")[:80],
+              r.get("resolution", "")[:120]))
     A("")
     A("## Active package")
-    A("P7-expose-status: worker kiln builds this view (cap 100m with "
-      "admission/verification/repair); no P8/P9 execution authorized here. "
-      "Next action: verifier review, then director publish decision.")
+    stage = snap.get("p7_dispatch", {})
+    if stage.get("action"):
+        A("%s: owner %s, deadline %s. Next action: %s." % (
+            stage.get("action"), stage.get("owner", "unknown"),
+            stage.get("deadline", "unknown"),
+            stage.get("next", "unknown")))
+    else:
+        A("UNKNOWN: no active-stage receipt bound; no static worker claim "
+          "made here.")
+    A("No P8/P9 execution authorized by this view.")
     A("")
     A("## Costs and limits")
     A("Allocations are ceilings, not actual costs; actual worker/verifier "
@@ -292,13 +344,20 @@ def build_view(inputs, as_of):
     A("")
     A("## Code links")
     A("- R18 candidate: "
-      "campaign4/packages/P6-r18-runtime-source-time/candidate/")
-    A("- This package: campaign4/packages/P7-expose-status/")
+      "[candidate](../../campaign4/packages/P6-r18-runtime-source-time/"
+      "candidate/)")
+    A("- This package: [P7-expose-status](../../campaign4/packages/"
+      "P7-expose-status/)")
     A("- TSV activity (log, not truth): %s rows, owners %s" % (
         tsv.get("rows_total", "?"),
         json.dumps(tsv.get("by_owner", {}), sort_keys=True)))
+    A("- Evidence rows: [latency policy](../../campaign4/packages/"
+      "P6-r18-runtime-source-time/candidate/runtime/interface.md)")
     A("")
     A("## Inputs (pointers with hashes and freshness)")
+    A("Freshness (`stale`) is file age versus as-of time, not a validity "
+      "judgment: stale evidence is labelled, never silently dropped or "
+      "treated as invalid.")
     for key, s in snap.items():
         A("- %s: %s sha256=%s observed=%s stale=%s" % (
             key, s["path"], (s["sha256"] or "UNKNOWN")[:12],
