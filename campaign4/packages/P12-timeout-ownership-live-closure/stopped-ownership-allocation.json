@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-23T17:43:30.595208+00:00",
+  "signer": "tern",
+  "action": "P12-stopped-ownership-1",
+  "authorization": "Explicit prospective director amendment, not automatic repair; preserve spent closure and original repair",
+  "prior_ceiling_minutes": 420,
+  "author_minutes": 30,
+  "independent_review_minutes": 25,
+  "new_ceiling_minutes": 475,
+  "base_source": "669648cb66b771a147a6ce8197e6654461abe7fc",
+  "scope": [
+    "Outside liveness check may service outstanding step-timeout ownership through the same shared escalation logic even when run is stopped. Keep unit/pass verdict distinct; stopped with no actionable incident remains quiet, stopped with unacked/expired ownership is not silence by default.",
+    "Use shared durable incident/action/principal checks and bounded sends. Concurrent run Tick and outside checker, retries and reopen must not duplicate successful escalation or overwrite valid ack. Demonstrate actual concurrency/transaction discipline, not merely sequential helper reuse. Preserve failed-send owned state/retry; no stale action/principal resurrection.",
+    "State stopped-mode bounds honestly: threshold60s plus checker45s plus bounded check time for duty; director threshold120s plus cadence/check time, or promptly if duty unavailable. This notification bound is NOT ack<=60s and cannot PASS that gate. Later valid ack suppresses outstanding no-ack escalation. Preserve existing ack-expiry behavior.",
+    "Outside command must not resume worker, dispatch verifier, clear stop marker or mark recovery/ack. Do not turn every intentional stop into alarm. Capture timeout escalation outcome separately in checker output/status, including failure.",
+    "Tests on live entrypoint: stopped+no-timeout quiet; stopped+unacked duty/director; wrong principal/action, failed send, valid late ack, reopen and concurrent checker/run with one incident. Core/py/cases remain frozen; new isolated binary/manifest, retained conformance and relevant regressions.",
+    "Add L6b explicit no-ack stopped fixture case within EXISTING75m live budget, no source change at live. Use controlled ack withholding tied to exact test incident; do not rely on hoping model fails to respond. Prove callback settlement, duty then director escalation while run remains stopped; record trusted intervals and no unintended work. This is escalation evidence, not human ack/recovery PASS. Real L6 positive ack<=60s remains separate.",
+    "Freeze prior claims/verdicts. No main/install/host clock changes. Author declares COMPLETE or INCOMPLETE; no automatic extra repair."
+  ],
+  "review": "Fresh corvid25m after bound completion, includes independent concurrent/quiet negatives and exact production entrypoint. Prior closure review finishes separately; no verifier overlap. PASS returns Tern for fresh prep/live signature.",
+  "allocation": "New55m grant; existing live75/cutover45 unchanged. Total475. No retrospective reuse of spent time."
+}
