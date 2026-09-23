@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-23T16:51:51.680563+00:00",
+  "signer": "tern",
+  "scope": "C existing normal stop/restart blocker; no new allocation or work release",
+  "source": "1341f0469fba84787112a705b0d107e096644085",
+  "inspected_sha256": {
+    "cmd/agent-loop/loop.go": "dd351d74b765d4bbc29b7390e385320686bd7913171ae374ea5c923a7b3bc446",
+    "internal/host/notify.go": "6e4fd20a338efb3f7afe0117b479ff1fbbbfd4c20b03cc5f5abf79988259cbcd"
+  },
+  "confirmed_code": "signal.Notify catches SIGTERM/SIGINT; nonblocking signal check only before blocking DirNotifier.Wait(every), fallback time.Sleep(every). Current Wait uses syscall.Select, not poll. No signal channel integrated with either wait.",
+  "causal_evidence": "Claude correlates idle goroutine dump and20s TimeoutStopSec vs30s wait. Strong concrete hypothesis; independent baseline real-service reproduction still required, signal delivery timing not assumed universally.",
+  "required_tests": [
+    "Synchronize baseline run into idle wait then SIGTERM via real isolated systemd stop; capture elapsed/exit code/journal and absence/presence of stop timeout/SIGABRT.",
+    "Corrected target: idle shutdown under1s on healthy host, clean exit0 and never20s forced timeout; distinguish D-Bus command latency from process exit time. Record actual values, not solely rc.",
+    "Exercise both notifier and fallback wait paths, SIGINT and repeated stop/restart; no leaked watcher goroutines/fds, no missed or duplicate handoff on restart.",
+    "Keep deliberate stop marker exit64, watchdog abort behavior and independent liveness semantics distinct. No globally increasing TimeoutStopSec to hide delayed signal handling."
+  ],
+  "implementation": "Author chooses cancelable wait design; narrowly permit host notifier cancellation interface changes if needed for C, retained host parity/regressions with named adjudication, core frozen. No broad host rewrite.",
+  "admission": "Read this evidence supplement and incorporate C checks before author release. Contract365m unchanged."
+}
