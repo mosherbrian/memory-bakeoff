@@ -1,0 +1,74 @@
+{
+ "applied_receipt": "/tmp/p6r17-live-failed-1/faults/failed-verification.applied.json",
+ "candidate_gate": "check-latency-rc3",
+ "carried_bindings": [],
+ "case": "failed-verification",
+ "committed_actions": [
+  "p6r17-f1-failed-verification-v",
+  "p6r17-f1-failed-verification-w"
+ ],
+ "executions": {
+  "p6r17-f1-failed-verification-v": "exv-75ca81d45b77",
+  "p6r17-f1-failed-verification-w": "ex-75ca81d45b77"
+ },
+ "gate": {
+  "gate": "PASS",
+  "registry_source": "live-agent-deck",
+  "verifier": "576b7ed5-1790129305",
+  "worker": "a94e7711-1790129305"
+ },
+ "induced": true,
+ "intervention": {
+  "actor": "cairn",
+  "armed_at": "2026-09-23T02:15:00Z",
+  "case": "failed-verification",
+  "control": "corrupt-after-worker",
+  "induced": true,
+  "params": {},
+  "scope": "future isolated fixture only"
+ },
+ "outcome": {
+  "action": "p6r17-f1-failed-verification-v",
+  "claim_execution": "exv-75ca81d45b77",
+  "decision": "verified-rejection",
+  "durable": true,
+  "execution": "exv-75ca81d45b77",
+  "expected": {
+   "out.bin": "c16a40a4584e5bccc84b45172fcdfa922f59ff1edebf3adba7b8266ea04eb39a"
+  },
+  "latency_samples": 2,
+  "observed": {
+   "out.bin": "9809428be764eec8582fc8be345d5dbdf89ece29f1c536bd6567691d3970300e"
+  },
+  "outbox_settled": [],
+  "reason": "hash mismatch: out.bin",
+  "verifier_outbox": "ob-17f5d63e7d38a40c",
+  "verifier_window": {
+   "dispatch_at": "2026-09-23T02:15:33Z",
+   "effective_deadline": "2026-09-23T02:20:33Z",
+   "esc_deadline": "2026-09-23T02:22:33Z",
+   "verify_deadline": "2026-09-23T02:20:33Z"
+  },
+  "worker": {
+   "decision": "transition-committed",
+   "duplicate": false,
+   "next": {
+    "next_action": "p6r17-f1-failed-verification-v",
+    "published": "checking"
+   },
+   "outbox": null
+  },
+  "worker_outbox": "ob-0ebc0a58f459b8d9"
+ },
+ "overlay": false,
+ "sends": {
+  "verifier": 1,
+  "worker": 1
+ },
+ "settled_actions": [],
+ "simulated": false,
+ "transport_states": {},
+ "verifier_item": null,
+ "verify_action": "p6r17-f1-failed-verification-v",
+ "worker_item": null
+}
