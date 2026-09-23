@@ -1,0 +1,35 @@
+{
+  "signer": "tern",
+  "at": "2026-09-23T06:23:46.043711+00:00",
+  "action": "P9-initial-1-intake",
+  "disposition": "BOUND_COMPLETE_INDEPENDENT_REVIEW_IN_FLIGHT",
+  "claim_sha256": "916f386f5b13e85d0fe713e5ff15cb9ba45d4508f08e8222181e374d40b713da",
+  "source_commit": "c124d82cd26ae4966f3e6a935cb24d971347ec8c",
+  "source_files_checked": 197,
+  "source_mismatch": [],
+  "evidence_mismatch": [],
+  "archive_sha256": "e559ad175c3a21e99c3bf763a4366a4143ccafc5c1dcf0071250132ade4a8934",
+  "binary_sha256": "221bb3aaaf68ddf98d8317b06b8cf22ee51fe785ac1f61b23b561a0b57fd7fd5",
+  "release_manifest_sha256": "d9c55765699ce8db16ab6e633a5df3932ffbeeda39c315525e6d445fccbeff3f",
+  "all_claimed_release_hashes_checked": true,
+  "frozen_core_host_py_loop_diff": "empty",
+  "timeliness": "filed06:22:11Z before07:07:08Z",
+  "review_action": "P9-verify-1",
+  "review_deadline": "2026-09-23T06:42:00Z",
+  "review_clock_note": "governing precise receipt if available; no reset of already dispatched20m",
+  "deviations": {
+    "private_db_wal_copy": "presentation-only scope is allowed; accuracy is not accepted merely because source files unchanged. Review committed WAL-only data and a concurrent checkpoint/write interval, and what as-of/freshness tells the user. No requirement to change core or adopt live services.",
+    "block_counts": "current blocked state plus explicit unavailable event count acceptable; never mislabeled event count",
+    "new_expose_command": "acceptable documented single view entrypoint, existing status/control behavior frozen",
+    "inventory": "hash validates bytes not semantic status; no readiness inference from arbitrary authored status strings"
+  },
+  "review_focus": [
+    "all six predeclared checklist checks on final archive",
+    "WAL-only committed data retained; changing or torn copied input cannot silently present as current authoritative state; exercise concurrency or record concrete residual",
+    "missing history UNKNOWN; event counts and duration origin truthful",
+    "private extraction and command examples portable; manifest no debris",
+    "P8 NOT READY and three liveness blockers remain visible"
+  ],
+  "acceptance": false,
+  "no_implementation_or_live_release": true
+}
