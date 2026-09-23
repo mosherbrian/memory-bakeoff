@@ -10,7 +10,7 @@ set -u
 A_=$1; MODE=$2; OUT=$3; mkdir -p $OUT
 X=$(mktemp -d /var/tmp/p12-rp-XXXX); S=$X/stubs; mkdir -p $S $X/stream $X/art $X/claims
 ARRIVE_FROM=${ARRIVE_FROM:-stall}; SLOW_ORDINARY=${SLOW_ORDINARY:-1}
-N=14; DUR=45; STALL_LEAD=3; STALL=40; ARRIVE_EVERY=5; ARRIVE_FOR=90; TAIL=150; NOTICE_S=1.0; DISPATCH_S=20; FAIL_EVERY=5
+N=14; DUR=45; STALL_LEAD=3; STALL=40; ARRIVE_EVERY=5; ARRIVE_FOR=90; TAIL=150; NOTICE_S=1.0; DISPATCH_S=20; FAIL_EVERY=${FAIL_EVERY:-5}
 cat > $OUT/workload.json <<EOF
 {"mode": "$MODE", "binary_sha256": "$(sha256sum $A_ | cut -d' ' -f1)", "workdir": "$X",
  "backlog": {"packages": $N, "qids": "B01..B$N", "worker": "fx-worker", "verifiers": ["fx-v1", "fx-v2", "fx-v3"], "duration_s": $DUR,
