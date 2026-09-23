@@ -1,0 +1,25 @@
+{
+ "action_id": "P6r18-launch-portability-1",
+ "base": "3964080",
+ "carry": "90+83+59 on unchanged executable bytes",
+ "corrections": [
+  "alias-safe identity: realpath equality both aliases; decoy same-basename rejected; argv tail/length/model kept",
+  "executable env schema: per-lane set map + unset array + application order; worker clears inherited override/model keys; deepseek sets own; capture knobs after policy",
+  "plan argv + env together under hostile ACP_GO_MODEL/ACP_MODEL/PINNED_MODEL_OVERRIDE=deepseek: worker Muse, verifier DeepSeek, backend once, local identity, no fallback"
+ ],
+ "evidence": {
+  "launch_tests": "5 passed rc0",
+  "production_diff_vs_base": "none (plan + launch tests + metadata only)"
+ },
+ "manifests": {
+  "composition": "74 refreshed",
+  "outer": "86 zero-drift, no self-entry"
+ },
+ "outcome": "COMPLETE-portability",
+ "package_id": "P6-r18-runtime-source-time",
+ "scope": "tests/plan/metadata only; ALL production wrappers/runtime/helper/consumer/core frozen",
+ "timestamp": "2026-09-23T03:37Z",
+ "unresolved": [
+  "corvid 10m verification pending"
+ ]
+}

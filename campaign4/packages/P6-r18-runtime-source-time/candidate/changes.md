@@ -93,3 +93,18 @@ records stay unmeasurable.
 - Plan environment rewritten as machine-executable per-lane KEY=VALUE
   maps (no prose masquerading as values). Negative tests retained
   (missing-local hard fail, test-clock rejection untouched).
+
+## Launch-portability-1 (alias-safe identity + executable env; tests/plan/metadata only)
+- Launch tests: captured runtime identity compares resolved filesystem
+  identity (realpath), never /home-vs-/var/home spelling, basename or
+  suffix; suite runs through both aliases; same-basename decoy negative
+  retained; exact argv tail/length/model assertions kept.
+- Plan exact_environment is now per-lane explicit set mapping + unset
+  array with documented application order (copy ambient, unset named,
+  apply literals). Worker clears inherited PINNED_MODEL_OVERRIDE,
+  ACP_GO_MODEL, ACP_MODEL; deepseek sets its own override. Capture
+  knobs are added by tests only after the real policy.
+- Plan argv + environment tested together under hostile inherited model
+  values incl. PINNED_MODEL_OVERRIDE=deepseek: worker Muse, verifier
+  DeepSeek, backend exactly once, local identity equal, no fallback.
+  Production wrappers/runtime/helper/consumer/core frozen.

@@ -28,7 +28,7 @@ def sha(p):
         return hashlib.sha256(fh.read()).hexdigest()
 
 
-def _capture(argv, env_extra=None):
+def _capture(argv, env_extra=None, lane=None):
     tmp = tempfile.mkdtemp(prefix="p6r18-launch-")
     cap = os.path.join(tmp, "exec")
     out = os.path.join(tmp, "captured.json")
@@ -40,15 +40,25 @@ def _capture(argv, env_extra=None):
                  "  \"env\": {k: os.environ.get(k) for k in\n"
                  "   [\"ACP_MODEL\",\"ACP_GO_MODEL\",\"ACP_AUTO_APPROVE\",\n"
                  "    \"ACP_STALL_SECS\",\"ACP_PROMISE_CHECK\",\n"
-                 "    \"P6_SOURCE_MODE\",\"OPENCODE_API_KEY\"]}},\n"
+                 "    \"P6_SOURCE_MODE\",\"OPENCODE_API_KEY\",\n"
+                 "    \"PINNED_MODEL_OVERRIDE\"]}},\n"
                  "  open(os.environ[\"CAPTURE_OUT\"],\"w\"), sort_keys=True)\n"
                  "PYEOF\n")
     os.chmod(cap, 0o755)
+    # Plan policy application order: inherited ambient first, then copy
+    # ambient, unset named keys, apply literal set values. Test/capture
+    # knobs only AFTER the real policy (never part of live environment).
     env = dict(os.environ)
-    env.pop("ACP_SOURCE_TEST_NOW", None)
+    env.update(env_extra or {})  # hostile inherited values live here
+    if lane is not None:
+        policy = _plan_env_policy(lane)
+        for key in policy.get("unset", []):
+            env.pop(key, None)
+        env.update(policy.get("set", {}))
+    else:
+        env.pop("ACP_SOURCE_TEST_NOW", None)
     env["FIXTURE_LAUNCH_EXEC"] = cap
     env["CAPTURE_OUT"] = out
-    env.update(env_extra or {})
     r = subprocess.run(argv, capture_output=True, text=True, timeout=30,
                        env=env)
     assert r.returncode == 0, r.stderr[-1000:]
@@ -56,7 +66,8 @@ def _capture(argv, env_extra=None):
 
 
 HOSTILE = {"ACP_GO_MODEL": "hostile-inherited-model",
-           "ACP_MODEL": "hostile-inherited-model"}
+           "ACP_MODEL": "hostile-inherited-model",
+           "PINNED_MODEL_OVERRIDE": "deepseek"}
 
 
 def _plan_argv(lane):
@@ -64,31 +75,75 @@ def _plan_argv(lane):
     return plan["launch_closure"]["exact_argv"][lane]
 
 
+def _plan_env_policy(lane):
+    plan = json.load(open(os.path.join(PKG, "fixture-launch-plan.json")))
+    return plan["launch_closure"]["exact_environment"][lane]
+
+
+def _runtime_identity_ok(captured_argv0):
+    """Alias-safe identity: resolved filesystem identity, never spelling,
+    basename or suffix. A wrong runtime with the same basename fails."""
+    return os.path.realpath(captured_argv0) == os.path.realpath(LOCAL_RT)
+
+
+def _alias(path):
+    if path.startswith("/home/"):
+        return path.replace("/home/", "/var/home/", 1)
+    return path.replace("/var/home/", "/home/", 1)
+
+
 def test_both_lanes_resolve_local_runtime_and_settings():
-    # EXACT plan argv, hostile inherited model values: backend appears
-    # exactly once, no extra args, worker Muse / verifier DeepSeek.
-    got = _capture(_plan_argv("go"), env_extra=dict(HOSTILE))
-    assert got["argv"] == [os.path.realpath(LOCAL_RT), "muse-engine",
-                           "acp"], got["argv"]
-    assert got["argv"].count("muse-engine") == 1
-    assert got["argv"].count("acp") == 1
-    assert got["env"]["ACP_MODEL"] == \
-        "opencode-go/muse-spark-1.3-contributor", got["env"]
+    # EXACT plan argv AND its environment transformation together, from
+    # hostile inherited model values (incl. PINNED_MODEL_OVERRIDE).
+    # Backend exactly once, no extra args, worker Muse / verifier
+    # DeepSeek, alias-safe local runtime identity, no shared fallback.
+    for lane, model in (("go", "opencode-go/muse-spark-1.3-contributor"),
+                        ("deepseek", "opencode-go/deepseek-v4.1-flash")):
+        base = _plan_argv(lane)
+        for argv in (base, [_alias(base[0])] + base[1:]):
+            got = _capture(argv, env_extra=dict(HOSTILE), lane=lane)
+            assert got["argv"][1:] == ["muse-engine", "acp"], got["argv"]
+            assert got["argv"].count("muse-engine") == 1
+            assert got["argv"].count("acp") == 1
+            assert _runtime_identity_ok(got["argv"][0]), got["argv"]
+            assert got["env"]["ACP_MODEL"] == model, got["env"]
+    got = _capture(_plan_argv("go"), env_extra=dict(HOSTILE), lane="go")
     assert got["env"]["ACP_AUTO_APPROVE"] == "1"
     assert got["env"]["ACP_STALL_SECS"] == "1800"
     assert got["env"]["ACP_PROMISE_CHECK"] == "1"
     assert got["env"]["P6_SOURCE_MODE"] == "runtime"
     assert got["env"]["OPENCODE_API_KEY"] is None
     assert ".config/agent-deck" not in " ".join(got["argv"])
-    got = _capture(_plan_argv("deepseek"), env_extra=dict(HOSTILE))
-    assert got["argv"] == [os.path.realpath(LOCAL_RT), "muse-engine",
-                           "acp"], got["argv"]
-    assert got["argv"].count("muse-engine") == 1
-    assert got["argv"].count("acp") == 1
-    assert got["env"]["ACP_MODEL"] == "opencode-go/deepseek-v4.1-flash", \
-        got["env"]
+    got = _capture(_plan_argv("deepseek"), env_extra=dict(HOSTILE),
+                   lane="deepseek")
     assert got["env"]["ACP_GO_MODEL"] == "opencode-go/deepseek-v4.1-flash"
+    assert got["env"]["PINNED_MODEL_OVERRIDE"] == "deepseek"
     assert got["env"]["P6_SOURCE_MODE"] == "runtime"
+    assert ".config/agent-deck" not in " ".join(got["argv"])
+
+
+def test_wrapper_layer_pinning_without_policy_and_decoy_rejected():
+    # Wrapper-layer defense alone (no plan policy): hostile inherited
+    # values cannot reselect the worker model.
+    got = _capture([GO], env_extra=dict(HOSTILE))
+    assert got["env"]["ACP_MODEL"] == \
+        "opencode-go/muse-spark-1.3-contributor", got["env"]
+    assert _runtime_identity_ok(got["argv"][0])
+    # Same-basename decoy runtime is NOT our runtime: suffix/basename
+    # matching would pass it, resolved identity rejects it.
+    tmp = tempfile.mkdtemp(prefix="p6r18-decoy-")
+    decoy = os.path.join(tmp, "acp-worker")
+    with open(decoy, "w") as fh:
+        fh.write("# decoy\n")
+    assert os.path.basename(decoy) == os.path.basename(LOCAL_RT)
+    assert not _runtime_identity_ok(decoy)
+    assert not _runtime_identity_ok(
+        os.path.join(tmp, "acp-worker"))
+    assert got["env"]["ACP_AUTO_APPROVE"] == "1"
+    assert got["env"]["ACP_STALL_SECS"] == "1800"
+    assert got["env"]["ACP_PROMISE_CHECK"] == "1"
+    assert got["env"]["P6_SOURCE_MODE"] == "runtime"
+    assert got["env"]["OPENCODE_API_KEY"] is None
     assert ".config/agent-deck" not in " ".join(got["argv"])
 
 
