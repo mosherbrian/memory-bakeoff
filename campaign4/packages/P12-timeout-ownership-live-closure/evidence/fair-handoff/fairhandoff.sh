@@ -14,7 +14,7 @@ A_=$1; MODE=$2; OUT=$3; mkdir -p $OUT
 X=$(mktemp -d /var/tmp/p12-rp-XXXX); S=$X/stubs; mkdir -p $S $X/stream $X/art $X/claims
 ARRIVE_FROM=${ARRIVE_FROM:-stall}; SLOW_ORDINARY=${SLOW_ORDINARY:-1}
 N=14; DUR=45; STALL_LEAD=3; STALL=40; ARRIVE_EVERY=${ARRIVE_EVERY:-5}; ARRIVE_FOR=90; TAIL=150; NOTICE_S=1.0; DISPATCH_S=20; FAIL_EVERY=${FAIL_EVERY:-5}
-QUEUED_EVERY=${QUEUED_EVERY:-0}; HANG_EVERY=${HANG_EVERY:-0}; HANG_S=15
+QUEUED_EVERY=${QUEUED_EVERY:-0}; HANG_EVERY=${HANG_EVERY:-0}; HANG_S=15; FAIL_FIRST_DUTY=${FAIL_FIRST_DUTY:-0}
 cat > $OUT/workload.json <<EOF
 {"mode": "$MODE", "binary_sha256": "$(sha256sum $A_ | cut -d' ' -f1)", "workdir": "$X",
  "backlog": {"packages": $N, "qids": "B01..B$N", "worker": "fx-worker", "verifiers": ["fx-v1", "fx-v2", "fx-v3"], "duration_s": $DUR,
@@ -22,7 +22,7 @@ cat > $OUT/workload.json <<EOF
  "stalled_holder_fixture": {"what": "flock(1) holds <db>.lock (an external writer that does not release)", "starts": "first deadline - ${STALL_LEAD}s", "holds_s": $STALL,
    "why": "every deadline callback must wait DueWait 8 s, write its marker and give up at DueWindow 22 s, so all $N deadlines become accepted due markers"},
  "ordinary_arrivals": {"every_s": $ARRIVE_EVERY, "for_s": $ARRIVE_FOR, "from": "$ARRIVE_FROM", "slow_dispatch_transport": $SLOW_ORDINARY, "duration": "10m (never due in the window)"},
- "transport": {"cancel": "fast, rc 1 'nothing running'", "notice_s": $NOTICE_S, "notice_fail_every": $FAIL_EVERY, "notice_queued_rc3_every": $QUEUED_EVERY, "notice_hang_every": $HANG_EVERY, "hang_s": $HANG_S, "hang_effect": "lands after the sleep (a capped send whose effect still arrives: ambiguous)",
+ "transport": {"cancel": "fast, rc 1 'nothing running'", "notice_s": $NOTICE_S, "notice_fail_every": $FAIL_EVERY, "notice_queued_rc3_every": $QUEUED_EVERY, "notice_hang_every": $HANG_EVERY, "fail_first_duty_notice": $FAIL_FIRST_DUTY, "notice_start_lines": "every notice logs a 'started' line at entry (attempt; interval for the local-time measure)", "hang_s": $HANG_S, "hang_effect": "lands after the sleep (a capped send whose effect still arrives: ambiguous)",
    "dispatch_s": $DISPATCH_S, "dispatch_effect": "logged BEFORE the slow reply, so a capped/killed send has landed (ambiguous delivery)"},
  "run": "run --every 2s, its own process", "callbacks": "each armed deadline fired at its calendar instant in its own process",
  "finite_duration": "stall end + ${TAIL}s", "crash": "crash mode only: SIGKILL run at its first hold after the stall in which due markers exist and a send started by run is in flight; restart 3 s later", "crash2": "crash2 mode only: see the header"}
@@ -38,7 +38,9 @@ case "\$2" in
   '{"kind": "dispatch"'*) [ -e $X/slow ] || { echo "\$t \$(date +%s.%N) \$PPID \$1 dispatch ok \$txt" >> $X/wake.log; echo "wake: \$1 -> started"; exit 0; }
       echo "\$t - \$PPID \$1 dispatch landed \$txt" >> $X/wake.log; sleep $DISPATCH_S
       echo "\$t \$(date +%s.%N) \$PPID \$1 dispatch replied \$txt" >> $X/wake.log;;
-  *) n=\$(flock $X/seq.lock sh -c 'n=\$(( \$(cat $X/seq 2>/dev/null || echo 0) + 1 )); echo \$n > $X/seq; echo \$n'); sleep $NOTICE_S
+  *) echo "\$t - \$PPID \$1 notice started \$txt" >> $X/wake.log
+     if [ $FAIL_FIRST_DUTY = 1 ] && [ "\$1" = U1 ] && mkdir $X/dutyfailed 2>/dev/null; then sleep $NOTICE_S; echo "\$t \$(date +%s.%N) \$PPID \$1 notice fail \$txt" >> $X/wake.log; echo "wake: could not reach \$1" >&2; exit 1; fi
+     n=\$(flock $X/seq.lock sh -c 'n=\$(( \$(cat $X/seq 2>/dev/null || echo 0) + 1 )); echo \$n > $X/seq; echo \$n'); sleep $NOTICE_S
      if [ $HANG_EVERY -gt 0 ] && [ \$((n % $HANG_EVERY)) -eq 0 ]; then sleep $HANG_S; echo "\$t \$(date +%s.%N) \$PPID \$1 notice late-ok \$txt" >> $X/wake.log; echo "wake: \$1 -> started"; exit 0; fi
      if [ $QUEUED_EVERY -gt 0 ] && [ \$((n % $QUEUED_EVERY)) -eq 0 ]; then echo "\$t \$(date +%s.%N) \$PPID \$1 notice queued \$txt" >> $X/wake.log; echo "wake: \$1 -> queued"; exit 3; fi
      if [ \$((n % $FAIL_EVERY)) -eq 0 ]; then echo "\$t \$(date +%s.%N) \$PPID \$1 notice fail \$txt" >> $X/wake.log; echo "wake: could not reach \$1: [Errno 111] Connection refused" >&2; exit 1; fi
@@ -101,8 +103,9 @@ if [ "$MODE" = crash ]; then
 fi
 if [ "$MODE" = crash2 ]; then
   ws() { ps -eo pid,ppid,args | awk -v s="$S/wake" '$3=="/bin/sh" && $4==s {print}'; }
-  Q=""; k1=""; k2=""; kw=""; ks=""
-  while [ $(date +%s) -lt $stop_at ] && [ -z "$k2" ]; do
+  Q=""; k1=""; k2=""; kw=""; ks=""; r2=""
+  while [ $(date +%s) -lt $stop_at ] && { [ -z "$k2" ] || [ -z "$kw" ] || [ -z "$ks" ]; }; do
+    if [ -n "$k1" ] && ! kill -0 $PR 2>/dev/null && [ -z "$r2" ]; then r2=1; wait $PR 2>/dev/null; echo "run1 pid=$PR was killed; restarting in 3 s" >> $OUT/crash2.txt; sleep 3; $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo "run2 pid=$PR started=$(ts)" >> $OUT/crash2.txt; fi
     if [ -z "$k1" ] && [ $(date +%s) -ge $stall_end ]; then
       l=$(ws | grep ' D1 \[agent-loop\] deadline-expired:B' | head -1)
       if [ -n "$l" ]; then hp=$(echo "$l" | awk '{print $2}'); Q=$(echo "$l" | grep -o 'deadline-expired:B[0-9]*' | cut -d: -f2)
@@ -126,7 +129,7 @@ if [ "$MODE" = crash2 ]; then
     fi
     sleep 0.05
   done
-  if ! kill -0 $PR 2>/dev/null; then wait $PR 2>/dev/null; echo "run1 pid=$PR was killed; restarting" >> $OUT/crash2.txt; sleep 3; $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo "run2 pid=$PR started=$(ts)" >> $OUT/crash2.txt; fi
+  if [ -z "$r2" ] && ! kill -0 $PR 2>/dev/null; then wait $PR 2>/dev/null; echo "run1 pid=$PR was killed; restarting" >> $OUT/crash2.txt; sleep 3; $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo "run2 pid=$PR started=$(ts)" >> $OUT/crash2.txt; fi
   echo "incident=$Q kill1=$k1 kill2=$k2 killed_waiter=$kw stopped_waiter=$ks" >> $OUT/crash2.txt
 fi
 while [ $(date +%s) -lt $stop_at ]; do sleep 1; done

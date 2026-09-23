@@ -68,10 +68,17 @@ wk = []
 for l in rd('wake.log').splitlines():
     f = l.split(' ', 6)
     wk.append(dict(s=float(f[0]), e=None if f[1] == '-' else float(f[1]), pid=f[2], seat=f[3], kind=f[4], out=f[5], text=f[6] if len(f) > 6 else ''))
+# 'started' lines mark each notice attempt at entry: an interval for the local-time measure (open until the
+# matching outcome line, or the hold end if the send was cut off); they are not outcomes.
+starts = [w for w in wk if w['out'] == 'started']
+wk = [w for w in wk if w['out'] != 'started']
+done = collections.Counter((w['s'], w['pid'], w['seat']) for w in wk)
+ivals = wk + [w for w in starts if not done[(w['s'], w['pid'], w['seat'])]]
+print('notice attempts started: %d; with no outcome line (cut off by the budget or a kill): %d' % (len(starts), sum(1 for w in starts if not done[(w['s'], w['pid'], w['seat'])])))
 by = collections.defaultdict(list); local = collections.defaultdict(list)
 for s, e, pid, c in holds:
     by[c].append(e - s)
-    iv = sorted((max(w['s'], s), min(w['e'] if w['e'] else e, e)) for w in wk if w['pid'] == pid and w['s'] < e and (w['e'] or e) > s)
+    iv = sorted((max(w['s'], s), min(w['e'] if w['e'] else e, e)) for w in ivals if w['pid'] == pid and w['s'] < e and (w['e'] or e) > s)
     io, cur = 0.0, None
     for a, b in iv:
         if cur and a <= cur[1]: cur = (cur[0], max(cur[1], b))
