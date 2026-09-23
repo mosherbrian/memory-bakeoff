@@ -1,0 +1,365 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index e88f1f5..855f713 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -46,6 +46,28 @@ func openLoop(path string) (*loop.Loop, error) {
+ 	return loop.Open(cfg, nil)
+ }
+ 
++// openLocked opens the ledger after taking the ledger lock (bounded 60 s);
++// done() closes the ledger, then releases the lock.
++func openLocked(path string) (*loop.Loop, func(), error) {
++	if path == "" {
++		return nil, nil, errors.New("--config is required")
++	}
++	cfg, err := loop.LoadConfig(path)
++	if err != nil {
++		return nil, nil, err
++	}
++	k, err := loop.LockLedger(cfg, 60*time.Second)
++	if err != nil {
++		return nil, nil, err
++	}
++	l, err := loop.Open(cfg, nil)
++	if err != nil {
++		k.Unlock()
++		return nil, nil, err
++	}
++	return l, func() { l.Close(); k.Unlock() }, nil
++}
++
+ func fail(err error) int {
+ 	if f, ok := host.IsFault(err); ok {
+ 		fmt.Fprintf(os.Stderr, "agent-loop: %s: %s\n", f.Code, f.Detail)
+@@ -98,11 +120,11 @@ func runDispatch(args []string) int {
+ 		}
+ 		op = &loop.OnPass{Kind: parts[0], DecisionRef: parts[1], Reason: parts[2]}
+ 	}
+-	l, err := openLoop(*cfg)
++	l, done, err := openLocked(*cfg)
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	defer l.Close()
++	defer done()
+ 	p, err := l.Dispatch(loop.Request{QID: *qid, Worker: *worker, Verifier: *verifier, WorkerTask: wt, VerifyTask: vt,
+ 		DurationS: int64(dur.Seconds()), VerifyS: int64(vwin.Seconds()), OnPass: op, Inputs: inputs, After: after})
+ 	if err != nil {
+@@ -133,11 +155,11 @@ func runClaim(args []string) int {
+ 		}
+ 		m[n] = p
+ 	}
+-	l, err := openLoop(*cfg)
++	l, done, err := openLocked(*cfg)
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	defer l.Close()
++	defer done()
+ 	path, err := l.Claim(*qid, *step, *outcome, m)
+ 	if err != nil {
+ 		return fail(err)
+@@ -153,11 +175,11 @@ func runDecide(args []string) int {
+ 	ref := fs.String("ref", "", "decision reference")
+ 	reason := fs.String("reason", "", "reason")
+ 	fs.Parse(args)
+-	l, err := openLoop(*cfg)
++	l, done, err := openLocked(*cfg)
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	defer l.Close()
++	defer done()
+ 	if err := l.Decide(*qid, *kind, *ref, *reason); err != nil {
+ 		return fail(err)
+ 	}
+@@ -282,6 +304,11 @@ func runRun(args []string) int {
+ 	watcher, cursors := host.NewTurnWatcher(cfg.StreamDir), py.NewDict()
+ 	var pass int64
+ 	for {
++		// The whole pass holds the ledger lock (bounded 60 s wait).
++		k, err := loop.LockLedger(cfg, 60*time.Second)
++		if err != nil {
++			return fail(err)
++		}
+ 		l, err := loop.Open(cfg, nil)
+ 		if err != nil {
+ 			return fail(err)
+@@ -301,6 +328,7 @@ func runRun(args []string) int {
+ 			fmt.Fprintln(os.Stderr, "agent-loop: pass record:", err)
+ 		}
+ 		l.Close()
++		k.Unlock()
+ 		for _, m := range msgs {
+ 			fmt.Println(time.Now().UTC().Format(time.RFC3339), m)
+ 		}
+@@ -402,6 +430,15 @@ func runTimerCallback(args []string) int {
+ 	if err != nil {
+ 		return fail(err)
+ 	}
++	k, err := loop.LockLedger(cfg, 120*time.Second)
++	if err != nil {
++		// Owned: the deadline is not settled; duty gets the exact command to rerun.
++		rerun := strings.Join(append([]string{cfg.Bin}, os.Args[1:]...), " ")
++		exec.Command(cfg.Wake, cfg.Seats[cfg.Duty], "[agent-loop] deadline callback for "+*qid+" "+*action+
++			" could not take the ledger lock: "+err.Error()+". The deadline is NOT settled. Rerun: "+rerun).Run()
++		return fail(err)
++	}
++	defer k.Unlock()
+ 	out, err := loop.TimerCallback(cfg, *qid, *action, *execution)
+ 	if err != nil {
+ 		// The core may have interrupted the step and then failed an effect
+@@ -458,6 +495,11 @@ func runTimeoutAck(args []string) int {
+ 	if err != nil {
+ 		return fail(err)
+ 	}
++	k, err := loop.LockLedger(cfg, 60*time.Second)
++	if err != nil {
++		return fail(err)
++	}
++	defer k.Unlock()
+ 	l, err := loop.Open(cfg, nil)
+ 	if err != nil {
+ 		return fail(err)
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 4e8f095..3c0ade9 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -130,8 +130,6 @@ LOOP_MUTANTS = [
+     # P12-stopped-ownership-1: the outside check escalates while run is stopped; fresh locked view
+     (LP + "liveness.go", "if _, serr := os.Stat(c.Cfg.DB); serr == nil {", "if _, serr := os.Stat(c.Cfg.DB); serr == nil && false {",
+      "the outside check never escalates a timeout while run is stopped"),
+-    (LP + "loop.go", "msgs, err := EscalateTimeouts(l.Cfg, l.D.Clock)", "msgs, err := append(l.unacked(), l.expiredAcks()...), error(nil)",
+-     "run escalates from its stale in-memory view (double escalation)"),
+     # P12-closure-1: never-acked escalation and early-callback re-arm
+     (LP + "timeout.go", "if !ok || now.Sub(at) < NoAckAfter {", "if !ok || now.Sub(at) < 2*NoAckAfter {", "no-ack duty escalation late"),
+     (LP + "timeout.go", 'if !strings.HasPrefix(t.NoAckDuty, "sent") {', 'if t.NoAckDuty == "" {', "a failed no-ack send is never retried"),
+@@ -146,8 +144,12 @@ LOOP_MUTANTS = [
+     (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', 'if rec == nil {',
+      "a timeout settled without a core interrupt"),
+     (LP + "timeout.go", "		if inForce {", "		if false {", "a conflicting ack replaces one in force"),
+-    (LP + "timeout.go", '	if cur != action || rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', "	if cur != action || rec == nil {",
++    (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" ||\n\t\tpy.S(py.AsDict(rec.GetOr("flight", py.NewDict())).Get("action_id")) != action {',
++     'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', "a timeout recorded for an action that is not the core's current one"),
++    (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" ||\n\t\tpy.S(py.AsDict', 'if rec == nil || false ||\n\t\tpy.S(py.AsDict',
+      "a step recorded as timed out without a core interrupt"),
++    (LP + "timeout.go", "		if err == nil {\n			return &LedgerLock{f}, nil", "		if true {\n			return &LedgerLock{f}, nil",
++     "the ledger lock does not exclude a second writer"),
+     (LP + "timeout.go", "	if _, err := l.authority(p, role); err != nil {\n\t\treturn nil, err", "	if _, err := l.authority(p, role); false && err != nil {\n\t\treturn nil, err",
+      "an ack from a changed principal accepted"),
+     (LP + "timeout.go", "	if within <= 0 || within > MaxAckWithin {", "	if within < 0 {", "an unbounded or zero ack deadline accepted"),
+diff --git a/internal/loop/closure_p12_test.go b/internal/loop/closure_p12_test.go
+index 3549a9d..25e5df3 100644
+--- a/internal/loop/closure_p12_test.go
++++ b/internal/loop/closure_p12_test.go
+@@ -348,22 +348,25 @@ func TestStoppedRunTimeoutIsEscalatedByTheOutsideCheck(t *testing.T) {
+ // ack taken between them is never overwritten by a stale view.
+ func TestRunAndCheckerNeverDoubleEscalateOrLoseAnAck(t *testing.T) {
+ 	r := newRig(t)
+-	l := settledAt(t, r) // l's view is from before any escalation
+-	defer l.Close()
++	l := settledAt(t, r)
++	l.Close()
+ 	at, _ := py.Instant(r.fresh("Q").At)
+ 	r.clock.Advance(60)
+ 	n := r.noAckWakes()
+ 	(&Checker{Cfg: r.cfg, Now: at.Add(60 * time.Second)}).Check()
+-	r.tick(l) // same moment, stale in-memory view
++	r.pass(t) // a real run pass: lock, fresh open, Tick, close
+ 	if r.noAckWakes() != n+1 {
+ 		t.Fatalf("double duty escalation: %v", r.wakesTo("T"))
+ 	}
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
+ 	f := r.open()
+-	_, err := f.AckTimeout("Q", "Q-w1", "tern", "on it", 10*time.Minute)
++	_, err = f.AckTimeout("Q", "Q-w1", "tern", "on it", 10*time.Minute)
+ 	f.Close()
++	k.Unlock()
+ 	must(t, err)
+ 	r.clock.Advance(60)
+-	r.tick(l) // stale view still has no ack
++	r.pass(t)
+ 	(&Checker{Cfg: r.cfg, Now: at.Add(120 * time.Second)}).Check()
+ 	to := r.fresh("Q")
+ 	if to.Ack == nil || to.Ack.By != "tern" || r.noAckWakes() != n+1 {
+@@ -371,6 +374,33 @@ func TestRunAndCheckerNeverDoubleEscalateOrLoseAnAck(t *testing.T) {
+ 	}
+ }
+ 
++// pass runs one run pass the way `agent-loop run` does.
++func (r *rig) pass(t *testing.T) {
++	k, err := LockLedger(r.cfg, 5*time.Second)
++	must(t, err)
++	defer k.Unlock()
++	l := r.open()
++	defer l.Close()
++	r.tick(l)
++}
++
++func TestLedgerLockIsExclusiveAndBounded(t *testing.T) {
++	r := newRig(t)
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	start := time.Now()
++	if _, err := LockLedger(r.cfg, 300*time.Millisecond); err == nil || !strings.Contains(err.Error(), "E_LEDGER_BUSY") {
++		t.Fatalf("second writer got the lock: %v", err)
++	}
++	if w := time.Since(start); w < 300*time.Millisecond || w > 2*time.Second {
++		t.Fatalf("bounded wait took %s", w)
++	}
++	k.Unlock()
++	k2, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	k2.Unlock()
++}
++
+ // noAckWakes counts never-acked escalations (not liveness incidents).
+ func (r *rig) noAckWakes() int {
+ 	n := 0
+@@ -381,3 +411,18 @@ func (r *rig) noAckWakes() int {
+ 	}
+ 	return n
+ }
++
++// A settlement is recorded only for the core's current action: a callback
++// for another action never overwrites the recorded timeout.
++func TestMarkTimedOutOnlyForTheCoresCurrentAction(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	l := r.open()
++	defer l.Close()
++	must(t, l.MarkTimedOut("Q", "Q-v1"))
++	if to := l.Pkg("Q").Timeout; to == nil || to.Action != "Q-w1" || to.ID != "T-Q-w1" {
++		t.Fatalf("a callback for another action rewrote the timeout: %+v", to)
++	}
++}
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index fcecbc8..c5574e8 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -702,11 +702,9 @@ func (l *Loop) Tick() ([]string, error) {
+ 	if _, err := l.Adapter.DrainOutboxSettled(""); err != nil {
+ 		return done, err
+ 	}
+-	msgs, err := EscalateTimeouts(l.Cfg, l.D.Clock)
+-	if err != nil {
+-		done = append(done, "timeout escalation failed: "+err.Error())
+-	}
+-	return append(done, msgs...), nil
++	// run holds the ledger lock for the whole pass: this view is fresh.
++	done = append(done, l.unacked()...)
++	return append(done, l.expiredAcks()...), nil
+ }
+ 
+ func (l *Loop) lastEnd(p *Pkg) *py.Dict {
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index c20cd13..3136e06 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -10,6 +10,7 @@ import (
+ 	"time"
+ 
+ 	"agent-loop/internal/core"
++	"agent-loop/internal/host"
+ 	"agent-loop/internal/py"
+ )
+ 
+@@ -88,10 +89,12 @@ func (l *Loop) MarkTimedOut(qid, action string) error {
+ 	if p.Step == "timed-out" && p.Timeout != nil && p.Timeout.Action == action {
+ 		return nil // already recorded
+ 	}
+-	cur := map[string]string{"worker": p.WorkAction, "verify": p.VerifyAction}[p.Step]
++	// The core's current action is the authority, not the loop step: a step
++	// the loop marked blocked (or recovery) is still timed out by its deadline.
+ 	rec := l.D.Store.Revs.Get(core.RevKey{Q: qid, Rev: int64(1)})
+-	if cur != action || rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {
+-		return nil // not this step's timeout, or the core did not interrupt it
++	if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" ||
++		py.S(py.AsDict(rec.GetOr("flight", py.NewDict())).Get("action_id")) != action {
++		return nil // not the core's current action, or the core did not interrupt it
+ 	}
+ 	if p.Timeout == nil || p.Timeout.Action != action {
+ 		mid, st := l.lastReceipt(action, "stop")
+@@ -210,13 +213,9 @@ func (l *Loop) SettleTimeoutFailure(qid, action string, cause error) (string, er
+ // the next action and a response deadline. Same ack again is a no-op; a
+ // different ack while one is in force is refused. It never resumes or
+ // closes the package.
++// The caller holds the ledger lock and opened l under it (timeout-ack does).
+ func (l *Loop) AckTimeout(qid, action, by, next string, within time.Duration) (*StepAck, error) {
+-	var a *StepAck
+-	err := withTimeouts(l.Cfg, l.D.Clock, func(f *Loop) (e error) {
+-		a, e = f.ackTimeout(qid, action, by, next, within)
+-		return e
+-	})
+-	return a, err
++	return l.ackTimeout(qid, action, by, next, within)
+ }
+ 
+ func (l *Loop) ackTimeout(qid, action, by, next string, within time.Duration) (*StepAck, error) {
+@@ -260,20 +259,53 @@ func (l *Loop) ackTimeout(qid, action, by, next string, within time.Duration) (*
+ 	return p.Timeout.Ack, l.save(p)
+ }
+ 
+-// withTimeouts runs fn on a freshly opened ledger while holding the timeout
+-// lock (<db>.timeouts.lock). The run loop, the outside liveness check and
+-// timeout-ack all write timeout records this way, so none of them writes
+-// from a stale view: no double escalation and no lost acknowledgement.
+-func withTimeouts(cfg *Config, clock core.DriverClock, fn func(f *Loop) error) error {
+-	fh, err := os.OpenFile(cfg.DB+".timeouts.lock", os.O_CREATE|os.O_RDWR, 0o644)
++// LedgerLock serializes every writer of one project's ledger across
++// processes: run passes, deadline callbacks, the outside check's timeout
++// escalation, timeout-ack, decide, dispatch and claim. The holder opens the
++// ledger only AFTER taking the lock, so it reads fresh core and package state,
++// and keeps the lock for the whole operation (core transition, package record
++// and effects), so no writer acts on a stale view. There is no nesting (each
++// process takes it once per operation). Waits are bounded: a timeout is the
++// owned fault E_LEDGER_BUSY, never a silent skip.
++type LedgerLock struct{ f *os.File }
++
++func LockLedger(cfg *Config, wait time.Duration) (*LedgerLock, error) {
++	f, err := os.OpenFile(cfg.DB+".lock", os.O_CREATE|os.O_RDWR, 0o644)
+ 	if err != nil {
+-		return err
++		return nil, err
++	}
++	deadline := time.Now().Add(wait)
++	for {
++		err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
++		if err == nil {
++			return &LedgerLock{f}, nil
++		}
++		if err != syscall.EWOULDBLOCK {
++			f.Close()
++			return nil, err
++		}
++		if time.Now().After(deadline) {
++			f.Close()
++			return nil, &host.Fault{Code: "E_LEDGER_BUSY", Detail: fmt.Sprintf("ledger %s held by another writer for more than %s", cfg.DB, wait), Owner: "cairn"}
++		}
++		time.Sleep(50 * time.Millisecond)
+ 	}
+-	defer fh.Close()
+-	if err := syscall.Flock(int(fh.Fd()), syscall.LOCK_EX); err != nil {
++}
++
++// Unlock releases the lock (process exit releases it too).
++func (k *LedgerLock) Unlock() {
++	syscall.Flock(int(k.f.Fd()), syscall.LOCK_UN)
++	k.f.Close()
++}
++
++// withTimeouts takes the ledger lock (bounded 30 s), opens the ledger fresh
++// and runs fn: the outside check's entry point.
++func withTimeouts(cfg *Config, clock core.DriverClock, fn func(f *Loop) error) error {
++	k, err := LockLedger(cfg, 30*time.Second)
++	if err != nil {
+ 		return err
+ 	}
+-	defer syscall.Flock(int(fh.Fd()), syscall.LOCK_UN)
++	defer k.Unlock()
+ 	f, err := Open(cfg, clock)
+ 	if err != nil {
+ 		return err

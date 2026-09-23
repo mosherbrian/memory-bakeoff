@@ -68,3 +68,22 @@ Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. T
   - `f1-helpers.txt` 29/0 and `r1-repair-tests.txt` 58/0 on the new driver;
   - `e-wall-reload.txt` (WALLSTOP, LATE 0);
   - construction dry run.
+
+## P12-writer-safety-1 (candidate 844d156, bin `ab3cfc22…`; templates now pin this release)
+
+- **One ledger lock for every writer**:
+  - `run` passes, deadline callbacks, the outside check's timeout escalation, `timeout-ack`, `decide`, `dispatch` and `claim` all take `<db>.lock` (flock) before they open the ledger.
+  - They hold it through the core transition, the package record and the effects. So no writer acts on a stale view, and the core state and the package record cannot diverge.
+  - There is no nesting: a run pass escalates on its own locked view.
+  - Waits are bounded: 60 s for run and the CLI commands, 120 s for a callback, 30 s for the outside check. A timeout is `E_LEDGER_BUSY`. A callback that cannot get the lock tells duty the exact command to rerun.
+  - The lock is held while wake sends are made (each send times out at 30 s), so a stalled transport slows other writers but cannot block them forever.
+- **Timeout record**: a timeout is recorded only for the core's current action. A step the loop marked `blocked` is still timed out by its deadline.
+- **Real process race** (`evidence/writer-safety/race-callback-vs-run.sh`): a run pass is frozen after it has read the ledger, the callback runs in a second process, then the pass is released. The frozen pass reads a declared input that is a named pipe, before its hand-off. Results:
+  - old build 53c9719, input changed: the callback finishes while the pass is frozen, the pass then writes `blocked` from its old view, and the final state is `timeout=null`: **the timeout is lost**;
+  - new build: the callback waits for the lock, and the final state is `timed-out` with the timeout recorded, one cancel and no duplicate;
+  - same-content mode: both builds keep the timeout; the new build still serializes.
+- **Measured timer cadence** (`cadence-unitfile-*.txt`, a real unit-file timer with OnActiveSec/OnUnitActiveSec=45s and AccuracySec=1s):
+  - no reloads: checks at 45.8 s and 91.8 s;
+  - a reload every 60 s: checks every 46 s;
+  - a reload every 20 s: **no check at all in 300 s**, because each reload restarts the first OnActiveSec countdown until the timer has fired once.
+  - Declared limit: a reload storm less than 45 s apart just after the liveness timer starts delays the outside check. Once it has fired, reloads did not move it.

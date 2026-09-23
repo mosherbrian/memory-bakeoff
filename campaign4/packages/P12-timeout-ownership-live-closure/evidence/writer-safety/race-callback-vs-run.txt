@@ -1,0 +1,50 @@
+== ec184be99d15905f mode changed workdir /tmp/p12-race-eJiy
+dispatch rc=0 L: worker (ex-L-w1); verifier fx-verifier
+A (run pass) frozen on the input pipe after loading the ledger at 18:14:32.217
+B (callback) FINISHED while A was frozen: {"decision": "interrupted", "dedup": false, "timer": "deadline:L-w1"}
+A rc=0 2026-09-23T18:14:35Z L: blocked: E_INPUT_CHANGED: gate.fifo changed during the work; verifier not dispatched
+B rc=0 {"decision": "interrupted", "dedup": false, "timer": "deadline:L-w1"}
+FINAL step=blocked phase=BLOCKED timeout=null
+cancels=1 verifier_dispatches=0 director_notices=2
+   wake 18:14:24.704 W1 {"kind": "dispatch", "package": "L", "action": "L-w1", "execution": "ex-L-w1", "text": "w\
+   wake 18:14:32.222 W1 /cancel 
+   wake 18:14:32.225 D1 [agent-loop] deadline-expired:L. See: agent-loop status --config /tmp/p12-race-eJiy/fx.jso
+   wake 18:14:35.226 D1 [agent-loop] L is BLOCKED: E_INPUT_CHANGED: gate.fifo changed during the work; verifier no
+
+== ab3cfc22a7664b0c mode changed workdir /tmp/p12-race-zUi2
+dispatch rc=0 L: worker (ex-L-w1); verifier fx-verifier
+A (run pass) frozen on the input pipe after loading the ledger at 18:14:42.781
+B (callback) still WAITING after 3 s while A holds the ledger
+A rc=0 2026-09-23T18:14:45Z L: blocked: E_INPUT_CHANGED: gate.fifo changed during the work; verifier not dispatched
+B rc=0 {"decision": "interrupted", "dedup": false, "timer": "deadline:L-w1"}
+FINAL step=timed-out phase=BLOCKED timeout={"id": "T-L-w1", "action": "L-w1", "at": "2026-09-23T18:14:45Z", "cancel": "idle (msg-L-w1-3)", "director": "told", "callback_lateness": "5s"}
+cancels=1 verifier_dispatches=0 director_notices=2
+   wake 18:14:35.267 W1 {"kind": "dispatch", "package": "L", "action": "L-w1", "execution": "ex-L-w1", "text": "w\
+   wake 18:14:45.786 D1 [agent-loop] L is BLOCKED: E_INPUT_CHANGED: gate.fifo changed during the work; verifier no
+   wake 18:14:45.821 W1 /cancel 
+   wake 18:14:45.824 D1 [agent-loop] deadline-expired:L. See: agent-loop status --config /tmp/p12-race-zUi2/fx.jso
+
+== ec184be99d15905f mode same workdir /tmp/p12-race-TR3H
+dispatch rc=0 L: worker (ex-L-w1); verifier fx-verifier
+A (run pass) frozen on the input pipe after loading the ledger at 18:14:53.377
+B (callback) FINISHED while A was frozen: {"decision": "interrupted", "dedup": false, "timer": "deadline:L-w1"}
+A rc=0 agent-loop: E_DEADLINE_EXPIRED: publish after deadline
+B rc=0 {"decision": "interrupted", "dedup": false, "timer": "deadline:L-w1"}
+FINAL step=timed-out phase=BLOCKED timeout={"id": "T-L-w1", "action": "L-w1", "at": "2026-09-23T18:14:53Z", "cancel": "idle (msg-L-w1-2)", "director": "told", "callback_lateness": "3s"}
+cancels=1 verifier_dispatches=0 director_notices=1
+   wake 18:14:45.861 W1 {"kind": "dispatch", "package": "L", "action": "L-w1", "execution": "ex-L-w1", "text": "w\
+   wake 18:14:53.382 W1 /cancel 
+   wake 18:14:53.386 D1 [agent-loop] deadline-expired:L. See: agent-loop status --config /tmp/p12-race-TR3H/fx.jso
+
+== ab3cfc22a7664b0c mode same workdir /tmp/p12-race-2AuE
+dispatch rc=0 L: worker (ex-L-w1); verifier fx-verifier
+A (run pass) frozen on the input pipe after loading the ledger at 18:15:03.932
+B (callback) still WAITING after 3 s while A holds the ledger
+A rc=0 agent-loop: E_DEADLINE_EXPIRED: publish after deadline
+B rc=0 {"decision": "interrupted", "dedup": false, "timer": "deadline:L-w1"}
+FINAL step=timed-out phase=BLOCKED timeout={"id": "T-L-w1", "action": "L-w1", "at": "2026-09-23T18:15:06Z", "cancel": "idle (msg-L-w1-2)", "director": "told", "callback_lateness": "5s"}
+cancels=1 verifier_dispatches=0 director_notices=1
+   wake 18:14:56.418 W1 {"kind": "dispatch", "package": "L", "action": "L-w1", "execution": "ex-L-w1", "text": "w\
+   wake 18:15:06.966 W1 /cancel 
+   wake 18:15:06.968 D1 [agent-loop] deadline-expired:L. See: agent-loop status --config /tmp/p12-race-2AuE/fx.jso
+

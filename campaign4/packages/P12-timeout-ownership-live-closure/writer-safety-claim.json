@@ -1,0 +1,89 @@
+{
+ "qid": "P12-writer-safety-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "decision": {
+  "writer-safety-allocation.json": "cb89137b87e78ce0222720726c6aac709e08e7d0d4ca88a964396e54639f3ac6",
+  "writer-safety-receipt.json": "d9c52ce53c0d3e7648369fb1ec0747a3ee006cab10d0e0816c142cf98629e3d6"
+ },
+ "base": "53c97191c8c89cca7b84de93f0c3b263fbb61e6a (stopped-ownership candidate; its worktree and release untouched)",
+ "candidate": {
+  "commit": "844d15670aeb904777e39ad1bfd21676c0a20876",
+  "branch": "p12-writers (new worktree agent-loop-p12w, pushed)",
+  "release": "/home/bmosher/projects/agent-loop-releases/agent-loop-844d15670aeb",
+  "binary_sha256": "ab3cfc22a7664b0c088c6c40909ef58bf3b7b062ba0d0385749dad0d6c911815",
+  "manifest_sha256": "d9b3c68f74301f7648467d5d9f695a0d981a2dbf9e762cb8515873909106ee23",
+  "diff": "evidence/writer-safety/source-53c9719-to-844d156.diff",
+  "frozen_unchanged": "internal/core, internal/py, conformance/cases; main and installed preview untouched"
+ },
+ "mechanism": "one ledger lock (<db>.lock, flock) taken BEFORE opening the ledger and held for the whole operation by every writer: run pass, deadline callback (incl. settlement/failure/re-arm), outside-check escalation, timeout-ack, decide, dispatch, claim. Fresh state per operation; core transition, package record and effects inside one critical section; no step_at comparison. No nesting (Tick escalates on its own locked view). Bounded waits (run/CLI 60 s, callback 120 s, check 30 s) -> E_LEDGER_BUSY; a callback that cannot lock tells duty the exact rerun command. MarkTimedOut/SettleTimeoutFailure key on the core's current action.",
+ "requirements": {
+  "all_writers": "covered by the lock at their CLI/process entry (runRun, runTimerCallback, runTimeoutAck, runDecide, runDispatch, runClaim) and liveness Check (withTimeouts); read-only status/expose not locked",
+  "consistency": "the critical section spans core transition + package save + effect sends; the core's existing intent/effect keys (stop/wake intended -> delivered) still govern crash replay; no E_STALE rollback path is needed because no stale write can start",
+  "deadlock_bounded": "one acquisition per process operation, no nesting; LOCK_NB polling with a bounded wait; transport sends inside the lock are bounded by the wake timeout (30 s each)",
+  "races": "evidence/writer-safety/race-callback-vs-run.txt (real processes, pipe barrier): baseline changed-mode loses the timeout (final blocked, timeout null); candidate serializes (callback waits >3 s) and keeps it; same-mode kept on both. Go: TestRunAndCheckerNeverDoubleEscalateOrLoseAnAck (real passes), TestLedgerLockIsExclusiveAndBounded, TestMarkTimedOutOnlyForTheCoresCurrentAction",
+  "cadence": {
+   "control_no_reload": "evidence/writer-safety/cadence-unitfile-control.txt (45.8, 91.8 s)",
+   "reload_every_60s": "evidence/writer-safety/cadence-unitfile-reload60s.txt (gaps 46 s)",
+   "reload_every_20s": "evidence/writer-safety/cadence-unitfile-reload20s.txt (0 checks in 300 s)"
+  }
+ },
+ "evidence": {
+  "conformance_release_binary": {
+   "rc": "0",
+   "stderr": "conformance: 125/125 cases ok, 1751 steps"
+  },
+  "host_parity": "evidence/writer-safety/host-parity.txt 316/321 + 5",
+  "go_test": "evidence/writer-safety/go-test.txt all ok",
+  "mutation": "evidence/writer-safety/mutate-go.txt 113/113 (2 new; the stale-view Tick mutant removed because Tick no longer has its own escalation lock path; the core-interrupt mutant re-anchored)",
+  "regressions_on_release": [
+   "evidence/writer-safety/cli-stopped-noack.txt (stopped quiet, duty +60 s, director +120 s, no incident)",
+   "evidence/writer-safety/a-cli-timeout-idle.txt",
+   "evidence/writer-safety/a-cli-timeout-refused.txt"
+  ]
+ },
+ "evidence_sha256": {
+  "evidence/writer-safety/a-cli-timeout-idle.txt": "60be43478d2698affb46f9d8834b47e43ce8b028d3e4b45c84437b02011581a2",
+  "evidence/writer-safety/a-cli-timeout-refused.txt": "eb77477b3f1b96313cb2290654ffc4948e8f680ae385073c90c28be15fa1d033",
+  "evidence/writer-safety/cadence-unitfile-control.txt": "cfb70140c58fad2411c22c196c261150cfb1cd2de44305738cd7a35dda8221d2",
+  "evidence/writer-safety/cadence-unitfile-reload20s.txt": "a66084c890333ba467b41b338f77e07a655456910450e98c3520d4535903a662",
+  "evidence/writer-safety/cadence-unitfile-reload60s.txt": "62ce29b313151d3b849b0436f117cabfe9c6029882fb4279c6e7ea2a1654d68a",
+  "evidence/writer-safety/cadence-unitfile.sh": "ae16eff8e8dfb6b4de04c946e81514ae07a4c948a5a7d61f660cd4b00ec4ac97",
+  "evidence/writer-safety/cli-stopped-noack.txt": "2475e47727d1d840d964ad74638df9256dbad75a43d460aaecd7786674295859",
+  "evidence/writer-safety/conformance-release-binary/README.txt": "30406eba87dea8d6d2f90d0188e93eb28ad89d7c998591fce922762e45ddc1ba",
+  "evidence/writer-safety/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/writer-safety/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/writer-safety/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/writer-safety/go-test.txt": "4b2bb48eb65fbd5f290eb075e43e43079927d4960e5a2b68cb59c5ec18eb6ad7",
+  "evidence/writer-safety/host-parity.txt": "e89b7943577ea6013114d6e37345ff8fee75e90b490ade1245ce15abd2aa261e",
+  "evidence/writer-safety/mutate-go.txt": "68ab0356a92b7013fda0506f14c70f1af3109d0a662700e7f52c20f9b0a79d00",
+  "evidence/writer-safety/race-callback-vs-run.sh": "5e98684fb1de71b4517ee0c955086e6f46b168d6f4ac3f7cbc81f31dbaa2ebaf",
+  "evidence/writer-safety/race-callback-vs-run.txt": "72bc9a24d09827dc63a472519cddb96dfb000340916c3e283c8c18a79ab99a02",
+  "evidence/writer-safety/source-53c9719-to-844d156.diff": "584ccdb121804f8acd04f0aa47ef078eda73167d586f05e0dd9b8b6fcb8195f2"
+ },
+ "plans_sha256": {
+  "plans/README.md": "dbb5c1a9033a91042372a688c2f92b5ad3ecace93b0acfd9793bc8e9c4222e22",
+  "plans/cutover-inputs.template.env": "fc114b8839ca1f44cf38cd8253902e1b7bbc2fda4ac13f1ec96407720c3a515c",
+  "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+  "plans/live-driver.sh": "fb1ce0607a5385d4a82550ec7014b2c611f37d9d2aaed9ad5224ebe099a8536b",
+  "plans/live-inputs.template.env": "0d5a126a470cae12cb3fbd6f497cf0decf9629f38bc93d07f77a330b20e3fbed",
+  "plans/tasks/ack.md": "95e37529a32ba67fb7df3ad48ce039d609e4da8952942e8a4839340b5b751d0a",
+  "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+  "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+  "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+  "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+  "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+ },
+ "host_effects": [
+  "4 unit-file timer runs p12test-cadence-* in ~/.config/systemd/user with 18 real daemon-reloads total; files and units removed (0 left)",
+  "no seats, main, install or clock change"
+ ],
+ "residuals": [
+  "Reload storm: a daemon-reload less than 45 s apart restarts the liveness timer's first OnActiveSec countdown (measured: 0 checks in 300 s with 20 s reloads); after the first firing, 60 s reloads did not move it. Not fixed here (unit template unchanged).",
+  "A writer holding the lock during a stalled transport delays others by up to 30 s per send; a callback waits at most 120 s, then tells duty the rerun command (the deadline is then not settled until rerun).",
+  "Checker own-supervision and systemwide failure: if run and the liveness timer are both down, nothing escalates (qualification limit).",
+  "Clock: continuous host UTC assumed (unchanged).",
+  "Read-only status/expose are not locked and may show a state mid-operation.",
+  "L4a/L4b, live ack latency, L6b cadence on real seats: live run only."
+ ]
+}
