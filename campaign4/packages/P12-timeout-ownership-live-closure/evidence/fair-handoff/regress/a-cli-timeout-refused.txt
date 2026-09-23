@@ -1,0 +1,14 @@
+== 842e44d67646c385 cancel reply: refused
+armed: --user --unit=agent-loop-fx-L2-w1.timer --timer-property=AccuracySec=1s --on-calendar=2026-09-23 20:53:05 UTC /home/bmosher/projects/agent-l
+callback rc=1 stdout={"decision": "interrupted-effect-failed", "note": "settled: cancel failed, director told"} stderr=agent-loop: wake to W1: failed (receipt msg-L2-w1-2)
+STEP=timed-out DIRECTOR_WAKES=1 DUTY_WAKES=0
+director notice: D1 [agent-loop] L2: step L2-w1 passed its deadline and the cancel was NOT confirmed (failed: receipt msg-L2-w1-2 state "failed": wake to W1: failed (receipt msg-L2-w1-2)). The turn may still be running. Acknowledge ownership with: /home/bmosher/projects/agent-loop-releases/agent-loop-5da2b36f87f7/bi
+TIMEOUT {"id": "T-L2-w1", "action": "L2-w1", "at": "2026-09-23T20:53:07Z", "cancel": "failed: receipt msg-L2-w1-2 state \"failed\": wake to W1: failed (receipt msg-L2-w1-2)", "director": "told", "callback_lateness": "2s"}
+-- replay
+replay rc=1 {"decision": "interrupted-effect-failed", "note": "already settled"}
+agent-loop: wake to W1: failed (receipt msg-L2-w1-4); director wakes now 1
+-- ack
+   wrong actor: agent-loop: fx-worker is neither the director (fx-director) nor duty (fx-duty)
+   director: timeout T-L2-w1 of L2 acknowledged by fx-director at 2026-09-23T20:53:07Z; respond by 2026-09-23T21:03:07Z: re-dispatch. This does not resume or close the package.
+   conflicting: agent-loop: T-L2-w1 is already acknowledged by fx-director until 2026-09-23T21:03:07Z (re-dispatch)
+ACK {"by": "fx-director", "next_action": "re-dispatch", "response_deadline": "2026-09-23T21:03:07Z", "at": "2026-09-23T20:53:07Z"} STEP timed-out

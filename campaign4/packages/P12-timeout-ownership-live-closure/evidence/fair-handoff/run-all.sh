@@ -16,3 +16,5 @@ esac
 wait
 # C: re-run of new-crash2 only, after the harness fix (run2 restart no longer pauses the crash watcher).
 [ "$1" = C ] && { run new-crash2 $NEW crash2 ARRIVE_FROM=end SLOW_ORDINARY=1 FAIL_EVERY=100000; wait; }
+# D: crash before / during / after notice delivery (one incident each), final release only.
+[ "$1" = D ] && { run new-crash3 $NEW crash3 ARRIVE_FROM=end SLOW_ORDINARY=0 FAIL_EVERY=100000; wait; }

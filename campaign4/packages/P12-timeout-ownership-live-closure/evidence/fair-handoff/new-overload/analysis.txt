@@ -1,0 +1,141 @@
+== env
+== binary 842e44d67646c385 mode=drain workdir=/var/tmp/p12-rp-qH9f
+7.0.14-101.fc43.x86_64
+model name	: AMD RYZEN AI MAX+ 395 w/ Radeon 8060S
+32
+overlay        overlay 731906048 638034704  90899984  88% /
+armed deadlines: 14 first=1790196820 last=1790196820 accepted_at=1790196775.489288841
+stall_start=1790196817 stall_end=1790196857 stop_at=1790197007
+
+== backlog: 14 distinct accepted due markers observed (pre-registered N=14, required >= 12)
+callbacks: 14 processes, rc {'0': 14}
+settled (marker gone) within the finite window: 14 of 14; never settled: []
+drain order: 0 pairwise inversions against first-seen order (0.5 s sample resolution; ties by name)
+  B01-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+38.2s after deadline (marker age at settlement 29.9s)
+  B02-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+39.2s after deadline (marker age at settlement 30.9s)
+  B03-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+40.3s after deadline (marker age at settlement 31.9s)
+  B04-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+41.3s after deadline (marker age at settlement 33.0s)
+  B05-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+43.4s after deadline (marker age at settlement 35.0s)
+  B06-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+44.4s after deadline (marker age at settlement 36.1s)
+  B07-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+48.5s after deadline (marker age at settlement 40.2s)
+  B08-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+58.9s after deadline (marker age at settlement 50.5s)
+  B09-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+59.9s after deadline (marker age at settlement 51.5s)
+  B10-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+63.0s after deadline (marker age at settlement 54.6s)
+  B11-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+64.0s after deadline (marker age at settlement 55.7s)
+  B12-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+65.0s after deadline (marker age at settlement 56.7s)
+  B13-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+66.1s after deadline (marker age at settlement 57.7s)
+  B14-w1.json  deadline=1790196820 marker_seen=+8.4s settled=+67.1s after deadline (marker age at settlement 58.8s)
+MAX settlement latency after deadline: 67.1s (B14-w1.json); MAX marker age: 58.8s; n=14 (empirical, this host, this workload)
+final due dir: total 12 | drwxr-xr-x. 1 bmosher bmosher   80 Sep 23 13:54 . | drwx------. 1 bmosher bmosher 1242 Sep 23 13:56 .. | -rw-r--r--. 1 bmosher bmosher   81 Sep 23 13:54 .saturation-attempts | -rw-r--r--. 1 bmosher bmosher   20 Sep 23 13:54 .saturation-reported
+
+== final status (status --json after the window)
+  B01 step=timed-out cancel=idle (msg-B01-w1-15) director=told duty=None at=2026-09-23T20:54:18Z deferred=2026-09-23T20:53:48Z
+  B02 step=timed-out cancel=idle (msg-B02-w1-17) director=told duty=None at=2026-09-23T20:54:19Z deferred=2026-09-23T20:53:48Z
+  B03 step=timed-out cancel=idle (msg-B03-w1-19) director=told duty=None at=2026-09-23T20:54:20Z deferred=2026-09-23T20:53:48Z
+  B04 step=timed-out cancel=idle (msg-B04-w1-21) director=told duty=None at=2026-09-23T20:54:21Z deferred=2026-09-23T20:53:48Z
+  B05 step=timed-out cancel=idle (msg-B05-w1-23) director=told duty=None at=2026-09-23T20:54:23Z deferred=2026-09-23T20:53:48Z
+  B06 step=timed-out cancel=idle (msg-B06-w1-25) director=told duty=None at=2026-09-23T20:54:24Z deferred=2026-09-23T20:53:48Z
+  B07 step=timed-out cancel=idle (msg-B07-w1-27); settlement notice: wake to D1: failed (receipt msg-na-28) director=told duty=None at=2026-09-23T20:54:25Z deferred=2026-09-23T20:53:48Z
+  B08 step=timed-out cancel=idle (msg-B08-w1-31); settlement notice: wake to D1: ambiguous (receipt msg-na-32) director=failed: E_BUDGET_EXHAUSTED: wake to D1 not started: the ledger-lock hold's budget is spent; duty failed: E_BUDGET_EXHAUSTED: wake to U1 not started: the ledger-lock hold's budget is spent duty=None at=2026-09-23T20:54:37Z deferred=2026-09-23T20:53:48Z
+  B09 step=timed-out cancel=idle (msg-B09-w1-34) director=told duty=None at=2026-09-23T20:54:39Z deferred=2026-09-23T20:53:48Z
+  B10 step=timed-out cancel=idle (msg-B10-w1-36); settlement notice: wake to D1: failed (receipt msg-na-37) director=told duty=None at=2026-09-23T20:54:40Z deferred=2026-09-23T20:53:48Z
+  B11 step=timed-out cancel=idle (msg-B11-w1-40) director=told duty=None at=2026-09-23T20:54:43Z deferred=2026-09-23T20:53:48Z
+  B12 step=timed-out cancel=idle (msg-B12-w1-42) director=told duty=None at=2026-09-23T20:54:44Z deferred=2026-09-23T20:53:48Z
+  B13 step=timed-out cancel=idle (msg-B13-w1-44) director=told duty=None at=2026-09-23T20:54:46Z deferred=2026-09-23T20:53:48Z
+  B14 step=timed-out cancel=idle (msg-B14-w1-46) director=told duty=None at=2026-09-23T20:54:47Z deferred=2026-09-23T20:53:48Z
+  B timed-out: 14 of 14; outbox_pending=23
+  ordinary packages registered: 9
+ordinary arrivals: 23 attempted, rc {'rc=3': 14, 'rc=0': 9}
+
+== lock: 54 completed holds; unreleased at end (a killed holder shows here): {}
+notice attempts started: 34; with no outcome line (cut off by the budget or a kill): 3
+  hold dispatch        n=26   max=10.52s median=0.017s
+  hold fixture         n=1    max=40.00s median=40.001s
+  hold run             n=27   max=10.53s median=0.006s
+
+== local (non-subprocess) time inside holds = hold - union of stub wake intervals of the holder
+  dispatch        n=26   max=0.084s p50=0.013s p95=0.035s
+  run             n=27   max=0.082s p50=0.006s p95=0.011s
+  ALL holders n=53 MAX local=0.084s (includes fork/exec of stubs, SQLite, file I/O, CPU; empirical, not a guarantee)
+
+== yield: 2 yield lines in run output; 77 heartbeat samples with yielded=true
+   2026-09-23T20:54:27Z yield: ledger-lock budget spent; the rest continues in the next pass
+   2026-09-23T20:54:46Z yield: ledger-lock budget spent; the rest continues in the next pass
+   heartbeat sample: pass={"at":"2026-09-23T20:54:27Z","pid":3311621,"pass":22,"advanced":1,"open_packages":7,"error_streak":0,"yielded":true}
+  longest gap between run holds: 46.5s (from -1.3 s after the stall start); run pass skips (E_LEDGER_BUSY): 0
+  hand-offs after a run hold (next holder): {'run->run': 20, 'run->fixture': 1, 'run->dispatch': 5}
+  run holds >= 4s (budget spent on due work): 5; longest run hold 10.53s
+
+== transport: attempts (lines) vs effects (ok|landed) vs failures
+  by kind/outcome: {('dispatch', 'ok'): 14, ('cancel', 'ok'): 14, ('notice', 'ok'): 20, ('notice', 'fail'): 5, ('notice', 'queued'): 6, ('dispatch', 'landed'): 9}
+  SATURATED notices to duty: 2 attempts, outcomes {'fail': 1, 'ok': 1}; first: [agent-loop] due backlog SATURATED: 10 deadline marker(s) unsettled for more than 20s (oldest 33s). See: agent-loop status --config /var/tmp
+  identical notice EFFECTS delivered more than once: 0 []
+  B01 notices {'D1:ok': 2, 'U1:fail': 1, 'U1:ok': 1}
+  B02 notices {'D1:ok': 2, 'U1:queued': 1}
+  B03 notices {'D1:ok': 2, 'U1:ok': 1, 'D1:fail': 1}
+  B04 notices {'D1:ok': 1, 'U1:ok': 1}
+  B05 notices {'D1:queued': 1, 'U1:queued': 1}
+  B06 notices {'D1:ok': 1, 'U1:ok': 1}
+  B07 notices {'D1:fail': 1, 'D1:ok': 1, 'D1:queued': 1}
+  B08 notices {'D1:ok': 1}
+  B09 notices {'D1:ok': 1}
+  B10 notices {'D1:fail': 1, 'D1:queued': 1, 'D1:ok': 1}
+  B11 notices {'D1:ok': 1}
+  B12 notices {'D1:ok': 1}
+  B13 notices {'D1:ok': 1}
+  B14 notices {'D1:queued': 1}
+  slow ordinary dispatches: 9 landed (effect) / 0 replied before the sender stopped waiting -> 9 ambiguous deliveries (effect landed, sender saw no receipt)
+
+== queue events (lock.log): {'queue-admitted': 67, 'queue-refused': 57}
+  admitted->acquire wait dispatch        n=26   max=46.24s median=0.05s
+  admitted->acquire wait run             n=27   max=44.47s median=0.00s
+  yield boundaries (2 yields): next holder {'next=dispatch': 2}
+  heartbeat: max age of the last pass record 52.0s (at +50.0s after the stall start; 1 s resolution; includes the 40 s stall)
+  heartbeat after the stall end +5 s: max age 52.0s
+  ordinary arrivals by outcome: {'SATURATED': 14, 'rc=0': 9}
+
+== D3: director deadline-expired notices per incident (effects = ok|queued|late-ok|landed)
+  B01 {'ok': 1}
+  B02 {'ok': 1}
+  B03 {'ok': 1}
+  B04 {'ok': 1}
+  B05 {'queued': 1}
+  B06 {'ok': 1}
+  B07 {'fail': 1, 'queued': 1}
+  B08 {'ok': 1}
+  B09 {'ok': 1}
+  B10 {'fail': 1, 'ok': 1}
+  B11 {'ok': 1}
+  B12 {'ok': 1}
+  B13 {'ok': 1}
+  B14 {'queued': 1}
+  max effects for one incident: 1; incidents with > 1 effect: {}
+  durable notice records: 63, states {'accepted': 39, 'not-started': 20, 'failed': 2, 'ambiguous': 2}; repeats used 1
+    notice:0b3d5ba8a21b9ed6f2a06a1f {"key":"D1|escalation|noack|B01|director|T-B01-w1|2026-09-23T20:54:18Z","state":"accepted","attempts":2,"repeats":1,"failures":0,"last_mid":"msg-B01-59","last_state":"sent","updated":"2026-09-23T20:56:21Z"}
+    notice:10c795c414e26a5199ceedbf {"key":"U1|escalation|noack|B08|duty|T-B08-w1|2026-09-23T20:54:37Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:1e1374e24ffaa03fbb8e1718 {"key":"D1|wake|wake|deadline-expired:B10|B10-w1","state":"failed","attempts":1,"repeats":0,"failures":1,"last_mid":"msg-na-37","last_state":"failed","updated":"2026-09-23T20:54:39Z"}
+    notice:24c877626ff1051691f8edbc {"key":"U1|escalation|noack|B09|duty|T-B09-w1|2026-09-23T20:54:39Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:31c83af945440bef34d02194 {"key":"U1|escalation|noack|B11|duty|T-B11-w1|2026-09-23T20:54:43Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:369bc92cf482dca501742dc6 {"key":"U1|escalation|noack|B10|duty|T-B10-w1|2026-09-23T20:54:40Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:53c968cbcf052e777073ac78 {"key":"D1|wake|wake|deadline-expired:B08|B08-w1","state":"ambiguous","attempts":1,"repeats":0,"failures":0,"last_mid":"msg-na-32","last_state":"ambiguous","updated":"2026-09-23T20:54:28Z"}
+    notice:5e726250cf8853847d00f716 {"key":"D1|escalation|noack|B12|director|T-B12-w1|2026-09-23T20:54:44Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:5f17f3c25602f2dd2fa58531 {"key":"D1|escalation|noack|B05|director|T-B05-w1|2026-09-23T20:54:23Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:690c81a1b06652aa3d796889 {"key":"D1|escalation|noack|B07|director|T-B07-w1|2026-09-23T20:54:25Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:73530ca67b54d736bb01ea65 {"key":"U1|escalation|noack|B07|duty|T-B07-w1|2026-09-23T20:54:25Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:75b828fe84bffcfc97fefa33 {"key":"D1|escalation|noack|B11|director|T-B11-w1|2026-09-23T20:54:43Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:77031a9560d66b596b15bb7d {"key":"U1|escalation|settlefail|B08|B08-w1","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:54:37Z"}
+    notice:7b3053d5eda6fe296bf6464a {"key":"D1|wake|wake|deadline-expired:B07|B07-w1","state":"failed","attempts":1,"repeats":0,"failures":1,"last_mid":"msg-na-28","last_state":"failed","updated":"2026-09-23T20:54:24Z"}
+    notice:934f36a1aa020195c1802b6b {"key":"D1|escalation|noack|B14|director|T-B14-w1|2026-09-23T20:54:47Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:94ec9b039e40b0d932a138bd {"key":"D1|escalation|noack|B04|director|T-B04-w1|2026-09-23T20:54:21Z","state":"ambiguous","attempts":1,"repeats":0,"failures":0,"last_mid":"msg-B04-69","last_state":"ambiguous","updated":"2026-09-23T20:56:41Z"}
+    notice:aae60937cf7ef2a25ca66110 {"key":"D1|escalation|settlefail|B08|B08-w1","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:54:37Z"}
+    notice:ae7989aaaa0ae9dd3bd63ab5 {"key":"U1|escalation|noack|B13|duty|T-B13-w1|2026-09-23T20:54:46Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:b9a44c95c3827867434b35b0 {"key":"D1|escalation|noack|B10|director|T-B10-w1|2026-09-23T20:54:40Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:c40663b6e3198f5c41419c1b {"key":"D1|escalation|noack|B09|director|T-B09-w1|2026-09-23T20:54:39Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:cfb667c25d38a8ceda609d9c {"key":"D1|escalation|noack|B06|director|T-B06-w1|2026-09-23T20:54:24Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:d38bfc9354c692f26bf3e12f {"key":"U1|escalation|noack|B12|duty|T-B12-w1|2026-09-23T20:54:44Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:d64efcf5f836ed4c62fede57 {"key":"D1|escalation|noack|B13|director|T-B13-w1|2026-09-23T20:54:46Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:d6abc62e100e1a05a249fd35 {"key":"D1|escalation|noack|B08|director|T-B08-w1|2026-09-23T20:54:37Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+    notice:eb666208d28562b667cd31db {"key":"U1|escalation|noack|B14|duty|T-B14-w1|2026-09-23T20:54:47Z","state":"not-started","attempts":0,"repeats":0,"failures":0,"updated":"2026-09-23T20:56:50Z"}
+
+== SATURATED attempts: 2026-09-23T20:54:21Z accepted=false rc 1 | 2026-09-23T20:54:26Z accepted=true rc 0
+analysis rc=0

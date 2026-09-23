@@ -202,5 +202,6 @@ for l in nr:
     r_ = J.loads(l.split(' ', 1)[1])
     if r_.get('repeats') or r_.get('state') not in ('accepted',): print('   ', l[:260])
 if rd('crash2.txt'): print('\n== crash2'); print(rd('crash2.txt').strip())
+if rd('crash3.txt'): print('\n== crash3'); print(rd('crash3.txt').strip())
 sa = rd('.saturation-attempts')
 print('\n== SATURATED attempts: %s' % (sa.strip().replace('\n', ' | ') or 'none'))

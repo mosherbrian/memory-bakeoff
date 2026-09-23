@@ -6,6 +6,9 @@
 #          yields (run output + heartbeat), lock hand-offs, local (non-subprocess) time inside every hold.
 #   crash: the same workload; the run process is SIGKILLed mid-hold while a settlement send is in flight,
 #          then a new run process is started on the same ledger; pre/post state is captured.
+#   crash3: one crash per point on three incidents: BEFORE delivery (holder and its wake killed before the effect,
+#          B01), DURING (holder killed, its orphaned wake delivers, B02), AFTER (effect logged, receipt held 3 s, holder
+#          killed before it records the receipt, B03). run restarted after the third kill.
 #   crash2: two successive crashes on ONE notice incident: SIGKILL the holder (any writer) while the director
 #          notice deadline-expired:Q is in flight, then SIGKILL the holder of its labelled REPEAT; also SIGKILL
 #          one queued waiter and SIGSTOP another for 6 s (stuck waiter), then restart run.
@@ -40,6 +43,7 @@ case "\$2" in
       echo "\$t \$(date +%s.%N) \$PPID \$1 dispatch replied \$txt" >> $X/wake.log;;
   *) echo "\$t - \$PPID \$1 notice started \$txt" >> $X/wake.log
      if [ $FAIL_FIRST_DUTY = 1 ] && [ "\$1" = U1 ] && mkdir $X/dutyfailed 2>/dev/null; then sleep $NOTICE_S; echo "\$t \$(date +%s.%N) \$PPID \$1 notice fail \$txt" >> $X/wake.log; echo "wake: could not reach \$1" >&2; exit 1; fi
+     case "\$2" in *deadline-expired:B03.*) case "\$2" in REPEAT*) ;; *) [ "$MODE" = crash3 ] && { sleep $NOTICE_S; echo "\$t \$(date +%s.%N) \$PPID \$1 notice ok \$txt" >> $X/wake.log; sleep 3; echo "wake: \$1 -> started"; exit 0; };; esac;; esac
      n=\$(flock $X/seq.lock sh -c 'n=\$(( \$(cat $X/seq 2>/dev/null || echo 0) + 1 )); echo \$n > $X/seq; echo \$n'); sleep $NOTICE_S
      if [ $HANG_EVERY -gt 0 ] && [ \$((n % $HANG_EVERY)) -eq 0 ]; then sleep $HANG_S; echo "\$t \$(date +%s.%N) \$PPID \$1 notice late-ok \$txt" >> $X/wake.log; echo "wake: \$1 -> started"; exit 0; fi
      if [ $QUEUED_EVERY -gt 0 ] && [ \$((n % $QUEUED_EVERY)) -eq 0 ]; then echo "\$t \$(date +%s.%N) \$PPID \$1 notice queued \$txt" >> $X/wake.log; echo "wake: \$1 -> queued"; exit 3; fi
@@ -100,6 +104,26 @@ if [ "$MODE" = crash ]; then
   done
   wait $PR 2>/dev/null; echo "run1 exit=$? at $(ts)" >> $OUT/crash-pre.txt; sleep 3
   $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo $PR > $X/run2.pid; echo "run2 pid=$PR started=$(ts)" >> $OUT/crash-pre.txt
+fi
+if [ "$MODE" = crash3 ]; then
+  ws() { ps -eo pid,ppid,args | awk -v s="$S/wake" '$3=="/bin/sh" && $4==s {print}'; }
+  kb=""; kd=""; ka=""; r2=""
+  while [ $(date +%s) -lt $stop_at ] && { [ -z "$kb" ] || [ -z "$kd" ] || [ -z "$ka" ]; }; do
+    if [ $(date +%s) -ge $stall_end ]; then
+      if [ -z "$kb" ]; then l=$(ws | grep ' D1 \[agent-loop\] deadline-expired:B01\.' | head -1)
+        if [ -n "$l" ]; then cp=$(echo "$l" | awk '{print $1}'); hp=$(echo "$l" | awk '{print $2}'); kill -9 $cp $hp; kb=$hp
+          echo "BEFORE kill_at=$(ts) holder=$hp wake_child=$cp (both killed before the effect) incident=deadline-expired:B01" >> $OUT/crash3.txt; fi; fi
+      if [ -z "$kd" ]; then l=$(ws | grep ' D1 \[agent-loop\] deadline-expired:B02\.' | head -1)
+        if [ -n "$l" ]; then hp=$(echo "$l" | awk '{print $2}'); kill -9 $hp; kd=$hp
+          echo "DURING kill_at=$(ts) holder=$hp (its wake child left to deliver) incident=deadline-expired:B02" >> $OUT/crash3.txt; fi; fi
+      if [ -z "$ka" ] && grep -q ' D1 notice ok \[agent-loop\] deadline-expired:B03\.' $X/wake.log 2>/dev/null; then
+        l=$(ws | grep ' D1 \[agent-loop\] deadline-expired:B03\.' | head -1)
+        if [ -n "$l" ]; then hp=$(echo "$l" | awk '{print $2}'); kill -9 $hp; ka=$hp
+          echo "AFTER kill_at=$(ts) holder=$hp (effect logged, receipt not yet returned) incident=deadline-expired:B03" >> $OUT/crash3.txt; else ka=missed; echo "AFTER missed: the B03 receipt returned before the watcher saw it" >> $OUT/crash3.txt; fi; fi
+    fi
+    sleep 0.02
+  done
+  if ! kill -0 $PR 2>/dev/null; then wait $PR 2>/dev/null; sleep 1; $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo "run restarted pid=$PR at $(ts)" >> $OUT/crash3.txt; fi
 fi
 if [ "$MODE" = crash2 ]; then
   ws() { ps -eo pid,ppid,args | awk -v s="$S/wake" '$3=="/bin/sh" && $4==s {print}'; }
