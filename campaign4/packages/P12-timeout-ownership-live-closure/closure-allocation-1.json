@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-23T17:27:21.504813+00:00",
+  "signer": "tern",
+  "action": "P12-closure-1",
+  "authorization": "Explicit prospective director amendment under current sponsor P12 authority, not automatic repair or budget reuse",
+  "prior_allocation_minutes": 365,
+  "additional_author_minutes": 30,
+  "additional_independent_review_minutes": 25,
+  "new_ceiling_minutes": 420,
+  "spent_history": "Initial75/review30 and sole repair40/recheck25 retained; no retrospective refund. This is one named extension, no automatic successor or further repair.",
+  "base": "cbfe3d91d02c86942e7640cbd0fe41027bfcbad0; reviewed plan repair9a2a1795",
+  "scope": [
+    "Implement durable never-acked timeout escalation to duty then director, bound to same current incident/action/principals. Trigger and scheduling cadence explicitly documented:60s age threshold plus polling delay is NOT a60s guarantee. Account for Tick/service delays and failed delivery; record owned failure/retry state rather than marking escalation delivered on failed send. No claim that escalation itself is human ack or recovery. Ack still subject to live60s from detection.",
+    "Retain ack-expiry escalation; tests exact threshold, just before/after, reopen, repeated Tick, failed send, absent duty/director, later valid ack, wrong action/principal and no duplicate work. Author must state achievable trigger-to-escalation bound with existing scheduler.",
+    "Clock treatment: keep explicitUTC calendar timer exception because actual reload defect reproduced. Controlled injected-clock tests prove early callback no-op plus preserved/rearmed authoritative due instant, late callback settles with true lateness, and discontinuity yields non-green owned state. No real host-clock changes. Realtime calendar delivery after host clock rollback is NOT established by FakeClock. Supported qualification assumes non-discontinuous host UTC; actual discontinuity invalidates timing sample and requires reconciliation, never silent extension or false healthy/recovered. If existing detection cannot enforce this statement, report gap rather than claim it.",
+    "Duplicate director notice ACCEPTABLE only as the same stable T-<action> incident with unchanged ownership/deadline, bounded to failed-cancel settlement then later recovery replay. No repeated per-tick flood, no second cancel/dispatch or new incident. Document and independently test this exact exception; arbitrary duplicates not authorized. No need to dedup beyond this requirement.",
+    "Freeze core/py/cases, preserve prior binary/plans/claims/verdicts. Isolated source/private binary new manifest; no main/install/live. Retain shipped conformance125, relevant loop/host tests, L6 three-interval predicate, shutdown and timer regressions. New claim must identify changed behavior and residuals."
+  ],
+  "review": "Fresh corvid25m exact new candidate, unshared missing-ack/clock/replay negatives. Scope/feasibility issue returns Tern; no silent requirement change. PASS returns Tern for fresh prep/live signature; no automatic cutover.",
+  "claim_path": "campaign4/packages/P12-timeout-ownership-live-closure/closure-1-claim.json"
+}
