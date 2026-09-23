@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-23T16:17:03.962930+00:00",
+  "action": "P11-live-1",
+  "source": "Claude live observation16:17Z; no edits",
+  "disposition": "CONTINUE_UNCHANGED_BOUNDED_EVIDENCE_WITH_INVALID_JOURNAL_CHECKS_FLAGGED",
+  "findings": [
+    {
+      "id": "LIVE-JOURNAL-TZ",
+      "reported": "date -u emits zone-less journalctl --since values; journalctl interprets local America/Los_Angeles, starting7h in future. Affected checks_since/quiet_window/L7a/L5-stray restart count.",
+      "review_rule": "Zero rows is missing evidence, not quiet/rest/no-restart PASS. Preserve all raw results; any derived result needs explicit UTC absolute onset and endpoint and complete archived journal, separately labelled retrospective reconciliation. Do not replace raw failed outcomes or claim driver passed."
+    },
+    {
+      "id": "LIVE-SETUP-STATE",
+      "reported": "First-pass wait requires ok while idle loop returns rest; deterministic setup INCOMPLETE before rest wait.",
+      "review_rule": "Preserve INCOMPLETE; assess actual completed pass from bound trusted heartbeat/journal. Do not suppress exit1 or turn observed rest into a successful ok assertion."
+    }
+  ],
+  "instructions": "No driver/source edits, no restart/retry, no added budget. Unaffected state/wake/systemctl cases may continue within original17:23:36Z including cleanup. Preserve timezone, original command strings, broad journal with explicit UTC epoch bounds and relevant service properties. No live qualification/cutover PASS from missing or invalid evidence. Corvid20m later evaluates independent components; L6 ack NOT READY unchanged."
+}
