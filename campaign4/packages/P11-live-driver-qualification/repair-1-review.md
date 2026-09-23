@@ -99,3 +99,70 @@ reproduced. F1/F2/F3 regressions preserved; frozen Go source `1341f04…` and bi
 
 No source/live/cutover change made by corvid. **PASS** returned to Tern for fresh
 prep/live signature (no automatic live).
+
+---
+
+## Steering addendum (director-repair-intake, same pass, no reset)
+
+Claim re-pinned: `repair-1-claim.json` = `f89d77e9…`; 36/36 files match.
+
+### L6 acknowledgement gap (code PASS vs live readiness — reported separately)
+
+The intake is right and my earlier residual understated it: **wake delivery plus a
+static `timed-out` owner is not acknowledged ownership.**
+
+- The only acknowledgement command in the frozen CLI is
+  `liveness-ack --incident ID --by SEAT --next TEXT [--within]`, which targets
+  **liveness incidents**, not step timeouts. There is **no** ack command for a step
+  timeout (`decide` is refused in `BLOCKED`), as the claim itself states.
+- The `status --json` package schema for an L6 timeout exposes `deadline`, `last`,
+  `phase`, `principals`, `qid`, `since`, `step`, `verdict`, `waiting_on` — **no
+  `ack` / `next_action` / `response_deadline` / acknowledged-owner field**. This is
+  unlike L4a/L4b, which record `open.ack.{by,next_action,response_deadline}`.
+- `l6_eval`'s **owned** value is computed from the `/cancel` and director **send
+  times** (wake-send.log) — i.e. **delivery**, which the contract explicitly says
+  is not acknowledgement.
+
+**Interruption vs recovery.** The L6 event is an interruption settlement: the step
+becomes `timed-out` (phase `BLOCKED`, `waiting_on` worker) and stays there on
+resume; it is **not** a recovery, and no owner has acknowledged with a next action
+or response deadline. So the inherited **60 s recovery/ack bound is not evidenced**
+for L6 — only the **30 s explicit detection** bound and delivery timing are. This
+is a **live-readiness gap**, not a code defect: the code correctly measures and
+reports what exists. Do not substitute delivery for acknowledgement.
+
+**Required before live signature:** either (a) the live reviewer must accept L6 as
+an *interrupted/settled* case (detection bound only) and drop the ack claim for it,
+or (b) an explicit acknowledged owner with next action/deadline must be produced
+for the step timeout. The current 30 s detection / 60 s recovery bounds are
+unchanged; the 60 s half simply has no acknowledgement evidence to bind to.
+
+### Other focus points
+
+- Guard permits **read-only** observation after the deadline (the one late
+  `expose` is read-only); **no workload mutation is waived**. Deadline-origin and
+  wall-row origins are both retained; no blanket zero-effects claim is made.
+- Timer default accuracy remains a declared live risk, **not** a waiver.
+- Scope-creation failure is now fail-closed `SETUP FAIL` (verified). Go remains
+  frozen; no further source edits or automatic repair.
+
+Verdict unchanged: **code PASS**; the L6 acknowledgement gap above is the live
+readiness item returned to Tern.
+
+### Steer closure (5 points, same pass)
+
+1. Profile preflight (registry four distinct IDs/titles in `$PROFILE`, main-seat
+   exclusion) runs before any unit/seat effect; detached wall carries
+   `AGENTDECK_PROFILE`; `stop_seat`/cleanup failures surface as INCOMPLETE/CLEANUP
+   FAIL; scope-create failure is fail-closed `SETUP FAIL` — all reproduced (51/0).
+2. Guard permits read-only observation after the deadline; the one late call is a
+   read-only `expose`. Workload mutation is not waived; deadline-origin and
+   wall-row origins both retained; no blanket zero-effects claim.
+3. L6 gap reported separately: delivery (send log) + static `timed-out` owner is
+   **not** acknowledgement; no step-timeout ack exists; `status` has no ack/next-
+   action/deadline field. Witnessed L6 is interruption settlement, not recovery, so
+   the 60 s recovery/ack bound has no evidence. No inference from the static ledger.
+4. Bounds retained: 30 s explicit detection, 60 s recovery/ack; timer default
+   accuracy is a declared live risk, not a waiver.
+5. Executable paths and the full 36-file manifest/diffs were inspected and the
+   tests re-run; Go source/binary frozen; no new edits.

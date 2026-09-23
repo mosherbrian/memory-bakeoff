@@ -1,0 +1,61 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-23T16:08:36.894795+00:00",
+  "action": "P11-live-1",
+  "authorized": true,
+  "not_before": "2026-09-23T16:08:36Z",
+  "latest_start": "2026-09-23T16:13:36Z",
+  "absolute_end": "2026-09-23T17:23:36Z",
+  "allocation": "Existing cairn75m INCLUDING archive/cleanup; clock starts at signature, no reset on delayed delivery. corvid20m live review after bound completion.",
+  "argv": [
+    "/bin/bash",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/plans/live-driver.sh",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/live-inputs-1.env"
+  ],
+  "env": {
+    "AGENTDECK_PROFILE": "campaign4",
+    "DRY": "0"
+  },
+  "unset_env": [
+    "EV_DIR",
+    "P11_IN_SCOPE",
+    "TEARDOWN"
+  ],
+  "bound_files": {
+    "campaign4/packages/P11-live-driver-qualification/live-inputs-1.env": "01982e2bbcbbaeaa73d77b8ee4b93e54378994b4eaa9a467ffa58242ec8c713f",
+    "campaign4/packages/P11-live-driver-qualification/live-preflight-1.json": "e0f669d2b47094ded42d2333afd4e827a15df61eae885cb6e8db4b8c2788844c",
+    "campaign4/packages/P11-live-driver-qualification/binding-verdict.md": "d91d5f212ec92ddb306ef0e881ea07b257226edbc42431f5044e7a19cfcde109",
+    "campaign4/packages/P11-live-driver-qualification/repair-1-review.md": "eef3be95261f63572a7fe0ff81116dd0037672e9950bb9bec55881aa4ccae2d8",
+    "campaign4/packages/P11-live-driver-qualification/sponsor-staged-qualification-decision.json": "21567541da7e6f28bbd2a7986476ae5d8bb3b0850debd2a0812d898c0baf93d6"
+  },
+  "plans_sha256": {
+    "plans/README.md": "debba2265777a0ada5090cf0638dc4e01a46ee9f009fb5b2cc9ccd1a3ec3fbfa",
+    "plans/cutover-inputs.template.env": "6cf21d6b858ea44dd0e6add3d02e76a640ec7e301597a4a3ab089a9da3d14f2b",
+    "plans/cutover.sh": "2f0815eb95c0846c9d5d79e2c6b3ac4c278d1f7d08986dd94208a7cb0660d6ab",
+    "plans/live-driver.sh": "2eb4ffbe8f23783a0d0eb7bd6bfc292a85b6ba07e14e5170bc3143c4355cbb1e",
+    "plans/live-inputs.template.env": "bb2f088f378181bf427d964c3ff85787c3eebbe8ffe38e3b0c98f02874dae56f",
+    "plans/tasks/ack.md": "4b803148d5744e988b65506425ce92d955dd1cb5c595d49cd3fa2d0165847877",
+    "plans/tasks/handoff-task.md": "57f556aa2aca1306de6e405a57ea0c637a4399f44da19d325f56d1da9b92bdf0",
+    "plans/tasks/handoff-verify.md": "2709dc9cb907f74a119e55877c0168a9f1f19589be6e2d89e3d2c2b3e2535ed5",
+    "plans/tasks/l-noclaim-worker.md": "6ff2afd09742d8c2fa60156ab6b56dca8e2f938345285071b845188561fe1485",
+    "plans/tasks/l-verify.md": "5084a002685a2aa6a63970f5d7c263c5ea9d21f0c5459d29ac9e8de422058a94",
+    "plans/tasks/l-worker.md": "b2bb58ad51cc728482df83fa5900446c257a93e16d9ba470aef49fc60838e5ef"
+  },
+  "units_sha256": {
+    "/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/examples/systemd-unqualified/agent-loop-liveness@.service": "cd28d396e5e5fd4d11c640a27f9f35dace66512b9ab4c525ee91e94d157860ed",
+    "/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/examples/systemd-unqualified/agent-loop-liveness@.timer": "cd4db5e8129c5cdb1e359009a8cffc15aba906267ab05f5b2598d0c950b3bd52",
+    "/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/examples/systemd-unqualified/agent-loop@.service": "7f70ee5790df63c156af60c32c71d2c87bb814cfb58ae910ac20b908a1768bbf"
+  },
+  "binary_sha256": "c1c49a293ed9434c1f6e1f539fd5d9ebf89a0fab220580cf69ddd821547afac8",
+  "fixture_ids": {
+    "director": "05f3f2f0-1790178593",
+    "duty": "bd003027-1790178593",
+    "verifier": "83d58448-1790178593",
+    "worker": "92f3baf8-1790178592"
+  },
+  "scope": "Execute exact L1-L7 fault sequence in hashed driver; candidate copied only to private ROOT/bin, private ledger, owned fixture units. Main installed binary stays unchanged.",
+  "cleanup": "Driver scope wall AccuracySec1 at absolute_end, exact fixture cleanup; prep cleanup timer still armed17:39:44Z as independent fallback. If wall cannot arm, no tasks. No extending/restarting attempt.",
+  "L6_predeclared": "Acknowledgement/60s recovery NOT READY regardless of raw driver send-based owned/PASS label. Live explicit detection30s evaluated separately, preserve late/missing/failure outcomes. No blanket PASS or delivery-as-ack.",
+  "cutover": "FORBIDDEN. No production switch, old-script retirement or research. P12 separate admission/release.",
+  "completion_command": "AGENTDECK_PROFILE=campaign4 /home/bmosher/.config/agent-deck/wake 0c933c75-1790000758 \"P11-live-1 COMPLETE evidence=/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/live-p11live1/\""
+}
