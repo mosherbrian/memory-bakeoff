@@ -80,3 +80,14 @@ behind final rc0. Inspect every results row, not just process exit.
       dispatch before PASS. Missing required live evidence → NOT READY, no cutover.
 - [ ] PASS-only cutover with fresh production ledger, exact bindings, one owner,
       rollback reconciliation; first real package `P11-production-handoff-1`.
+
+---
+
+## Budget/pin reconciliation (append; original pin preserved)
+
+- Corrected contract pin: `package.md` sha256
+  `ca512b21c7017d126908d7b42d02c0ac8dfa84403247704bde8d2d090a6f047e`
+  (`budget-correction.json`, push `0e3847e`). Supersedes the precondition hash
+  `61ae7ed6…` above; all other preconditions and checks unchanged.
+- Stage allocations unchanged; corrected total **310 m** (sponsor has no numeric
+  figure). Budget precondition now **met**.
