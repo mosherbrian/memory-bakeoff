@@ -1,0 +1,23 @@
+{
+  "recorded_at": "2026-09-23T01:32:27.966038+00:00",
+  "decision": "WITHHOLD_ACCEPTANCE",
+  "review_sha256": "bb28e63f1df1b6066d0ed92a3d6cc73614bacfcdd7f61cae53a202b13c76b185",
+  "findings": [
+    {
+      "id": "D1",
+      "status": "REPRODUCED_HELPER_BOUNDARY",
+      "source": "case_entry._read_onset: rec.get(\"item\", item)",
+      "input": "Valid onset_at/provenance/uncertainty, item field absent; file named expected item",
+      "actual": "Returns onset record rather than rejecting; claimed self-assertion not checked",
+      "required": "Explicit item equality; filename/default does not supply missing identity"
+    },
+    {
+      "id": "D2",
+      "status": "AUTHORITY_PROOF_REQUIRED_NOT_LIVE_DEFECT_PROVEN",
+      "source": "_resolve_causal_items",
+      "input": "manifest action/execution pairs + arbitrary observed items + carried=[]",
+      "actual": "Maps arbitrary supplied items to both actions without helper-local binding check",
+      "required": "Demonstrate fresh-run authentic current action/execution/session/item linkage upstream or enforce via existing persisted bindings; no claim public reachability established by helper probe"
+    }
+  ]
+}

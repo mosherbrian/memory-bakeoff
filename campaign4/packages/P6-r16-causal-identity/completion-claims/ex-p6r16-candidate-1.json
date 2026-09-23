@@ -1,0 +1,35 @@
+{
+ "action_id": "P6r16-candidate-1",
+ "descriptors": {
+  "composition": "74 refreshed, no self-ref",
+  "outer": "78 zero-drift, no self-entry",
+  "r3": "drift-free"
+ },
+ "disclosures": [
+  "R15 replay diagnostic only, never retroactive live PASS",
+  "test_r16 file bound by outer manifest (composition retains inherited 74-entry set)"
+ ],
+ "evidence": {
+  "cli": "exact run-case failed-verification (corrupt-after-worker) receipt pairs match bound items",
+  "full_gate": "76 passed in 635.72s rc0 (PYTHONPATH=candidate/src pytest candidate/tests)",
+  "new_join": "worker id492c9c28b64<->00:51:11 det, verifier i42e65da2879b<->00:52:37 det; reorder both ways + unbound earlier file; genuine violations still E_CAUSAL; missing/swapped/conflict/wrong-exec/nonfinite negatives",
+  "old_fails": "real immutable-parent _check_causal on R15 evidence copies -> E_CAUSAL (false cross-pair)",
+  "retained": {
+   "p3r3": "59 passed rc0 (18+9+5+5+22)",
+   "p5r2": "83 passed rc0"
+  }
+ },
+ "fix": "identity-joined causal gate: worker onset<->worker detection, verifier onset<->verifier detection via verified item->action bindings; filename/seat/prefix never identity; missing/ambiguous/conflicting/nonfinite-uncertainty owned errors; inequalities unchanged",
+ "new_bytes": {
+  "case_entry": "b14de4c46d03",
+  "other_production": "byte-identical to parent (verified per-file)"
+ },
+ "outcome": "COMPLETE-candidate",
+ "package_id": "P6-r16-causal-identity",
+ "parent": "R14 02ea693e48cc manifest 8584cbed8a97",
+ "scope": "case_entry only per review; injected effects only; live held",
+ "timestamp": "2026-09-23T01:24Z",
+ "unresolved": [
+  "corvid 30m independent verification pending (incl. unshared identity mutation)"
+ ]
+}
