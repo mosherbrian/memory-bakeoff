@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-23T16:47:27.321729+00:00",
+  "source": "Claude report of wall timer state during real daemon reloads",
+  "classification": "LIVE_ENFORCEMENT_EVIDENCE_GAP",
+  "observed_report": "Wall timer lost TimersMonotonic, NextElapseUSecMonotonic=infinity and empty realtime next deadline; driver repeatedly called daemon-reload. Offline witness stubbed reload.",
+  "causality": "Reload-to-disarm is reported hypothesis requiring controlled real-systemd reproduction on this host; do not generalize all monotonic timers or substitute inferred causality for journal/property evidence.",
+  "run_outcome": "Early driver completion and exact cleanup already verified before17:23:36. No observed deadline overrun. This does not prove functioning independent deadline enforcement. Internal guard cannot replace wall termination of blocked work.",
+  "next_package_requirement": "Before a further live signature: reproduce real reload across owned transient timer/scope, query scheduled deadline before/after every reload, and demonstrate deadline firing while worker/driver blocked. Verify fallback independence. If adopting calendar timer use explicit UTC with exact expected next instant; consider clock discontinuity and lateness and retain monotonic elapsed evidence. Existing charter prefers relative timers; any exception requires explicit scoped director amendment. No timer change released now.",
+  "scope": "Return this as an additional P12 admission/readiness obligation; do not silently fit it into acknowledgement-only work. Prospective260m subject to final bounded scope decision.",
+  "review": "Keep early-cleanup PASS separate from wall enforcement NOT PROVEN/failed scheduling evidence. Preserve raw property snapshots and capture times when available."
+}
