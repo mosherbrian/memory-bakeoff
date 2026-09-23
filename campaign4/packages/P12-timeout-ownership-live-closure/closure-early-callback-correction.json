@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-23T17:28:59.750983+00:00",
+  "signer": "tern",
+  "action": "P12-closure-1",
+  "deadline_unchanged": "2026-09-23T17:58:03Z",
+  "correction": "Author withdraws early-callback rearm claim: frozen core no-op-early returns without scheduling another timer. No existing rearm evidence may be cited.",
+  "decision": "Authorize narrowly bounded loop/host-side rearm for no-op-early within current closure attempt, core frozen. No new allocation or clock change.",
+  "requirements": [
+    "Rearm same current action/unit identity at original ledger-authorized instant, not now+duration and not a new attempt/grant. Validate current package phase/action/principal to prevent obsolete callback resurrecting finished work.",
+    "Preserve interrupted/handled/terminal dedup semantics; early callback causes no cancellation/dispatch/settlement. Repeated early callbacks/reopen must leave one correct due timer; due callback settles once.",
+    "Rearm failure must be visible owned failure, not successful no-op silently losing the deadline. Retain exact timer argv/receipt and authoritative due instant.",
+    "Controlled clock-step race test: timer fires, callback reads earlier clock -> no-op-early plus rearm; then original instant reached -> one timeout. Wrong/stale/terminal action and failed timer creation negatives. No FakeClock result claimed as systemd time-jump guarantee.",
+    "If not completed by17:58:03Z file honest INCOMPLETE and precise residual; no silent extension or unsupported host-dependency waiver for lost deadline."
+  ],
+  "budget": "Current30m closure +25m review, total420 unchanged"
+}
