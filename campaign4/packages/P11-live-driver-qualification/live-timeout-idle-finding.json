@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-23T16:44:21.688358+00:00",
+  "finding": "Idle-worker cancellation failure prevents deadline settlement and escalation",
+  "status": "Reported live product defect; independently reproduce during P12 admission before repair",
+  "P11": "Keep immutable. L2/L6 failed, not merely L6 acknowledgement gap. No timer/callback replay or source edit. Intentional duty-stop L4b is a separate injected event. Corvid final review must enumerate remaining failures and contamination; no general PASS.",
+  "P12_proposed_scope_addition": "Timeout progression must not depend on cancellation of an already-idle worker. Require reliable classification of nothing-running vs failed/ambiguous transport; do not swallow all errors or claim a turn was cancelled. Preserve durable at-most-once timeout settlement, escalate actual cancellation failure with owned evidence, deliver director action, and record authenticated timeout acknowledgement. Tests must use actual wake outcome/error shape and cover idle/running/missing/wrong-session/transport-failure/reopen.",
+  "budget": "Proposed P12 remains260m pending admission. No author release; assess whether this and other final live failures fit before dispatch."
+}
