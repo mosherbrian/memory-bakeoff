@@ -188,3 +188,30 @@ Removes the live blocker from P12-fair-handoff-1: under a deadline burst, a time
 | duplicate / conflicting / forged / expired | 1 ack / `E_ACK_CONFLICT` / rejected / rejected | 1 ack / conflict / rejected / committed in time (drained before its 1 s deadline) |
 | outside check, admission to lock | max 19.9 s with the callback places full | max 0.1 s |
 | run restarted after the stop | yes | yes |
+
+## P12-checker-ownership-1 (candidate 8ad12b8, bin `97a57db1…`; live and cutover templates now pin this release)
+
+Closes the checker-ownership live blocker from P12-ack-capacity-1. Evidence: `evidence/checker-ownership/`. Tern accepted the other two points as declared LIVE-TEST limits: the 143 s non-priority contention bound (the 100 s freshness limit is kept; its alarm is honest) and the measured local commit time.
+
+- **An incomplete check fails.** The outside check waits at most 10 s for the ledger lock. If it cannot do its ledger work (lock held, or refused at admission), it writes one coalesced `<db>.check-pending.json` (no ledger lock needed) and exits nonzero. It never reports a completed check.
+  - The pending ledger work is retried by run after every pass, and by every ledger holder for acks. With run stopped, the next check on the 30 s calendar timer retries it.
+  - Only a check that completes clears the marker and closes the incident.
+- **Independent owner.** `agent-loop-liveness@.service` has `TimeoutStartSec=35` (worst case of one check 28.5 s) and `OnFailure=agent-loop-liveness-failed@%i.service`.
+  - The handler runs `agent-loop checker-failed`: no ledger lock, no dependence on run or the check.
+  - It keeps one incident (`<db>.checker-incident.json`). Duty is told at once. The director is told when duty's wake is not accepted, or when the incident is still failing 60 s after duty was told. Sends are bounded to 5 s, and only rc 0/3 counts as told.
+  - The handler's `TimeoutStartSec` is 20 s (worst case 12 s), and it has no OnFailure of its own.
+- **Not covered (host boundary):** the timer not firing, and the systemd user manager being down.
+- **Live plan.** `live-driver.sh` installs the handler unit (as `agent-loop-liveness-failed-$P`) and refuses to start if the check unit lacks `OnFailure=`. A new observation `L7-checker` sits inside the existing L7 supervision case: hold the ledger lock 45 s. Expected: the handler tells duty within 60 s of the hold, and the incident is closed by a completed check within 45 s of the release.
+
+**Measured** (`checker-ownership/witness-4`: real systemd user units, isolated names, lock held by a fixture):
+
+| scenario | check result | owner action |
+|---|---|---|
+| S1 ledger lock held | exit 1 after 10.1 s, pending marker written | duty told 10.1 s after the hold started, lock still held |
+| S2 check place taken (refused, `queue-refused` in lock.log) | exit 1 after 10.1 s | same incident, failures 2, duty not re-told |
+| S3 check hung (SIGSTOP) | killed at 35.1 s, Result=timeout | director told at once (duty told 65 s earlier) |
+| S4 check SIGKILLed while waiting | Result=signal | same incident, failures 4 |
+| S5 completed check | success | incident closed, duty told RECOVERED |
+| S6 duty transport refused, lock held | exit 1 | duty `failed`, director told at once |
+| S7 completed check | success | closed, duty told RECOVERED |
+| S8 run stopped intentionally, healthy | success | quiet: no wake |

@@ -35,6 +35,7 @@ CFG=$ROOT/$P.json
 C="--config $CFG"
 U=agent-loop-$P.service
 LU=agent-loop-liveness-$P
+LF=agent-loop-liveness-failed-$P   # P12-checker-ownership-1: the check's OnFailure handler
 SD=/home/bmosher/.config/systemd/user
 EV=${EV_DIR:-$PKG/live-$RUN}   # EV_DIR only for offline rehearsal
 WALL=p12live-wallstop-$RUN
@@ -170,10 +171,10 @@ cleanup() {
   log "cleanup (exact IDs)"
   mkdir -p "$EV/archive"
   [ "$DRY" = 1 ] || cp -a "$ROOT"/. "$EV/archive/" 2>/dev/null
-  run systemctl --user stop "$LU.timer" "$LU.service" "$U"
+  run systemctl --user stop "$LU.timer" "$LU.service" "$LF.service" "$U"
   for t in $(systemctl --user list-units --all --plain --no-legend "agent-loop-$P-*" 2>/dev/null | awk '{print $1}'); do run systemctl --user stop "$t"; done
-  run systemctl --user reset-failed "agent-loop-$P*" "$LU*"
-  run rm -f "$SD/$U" "$SD/$LU.service" "$SD/$LU.timer"
+  run systemctl --user reset-failed "agent-loop-$P*" "$LU*" "$LF*"
+  run rm -f "$SD/$U" "$SD/$LU.service" "$SD/$LU.timer" "$SD/$LF.service"
   run rm -rf "$SD/$U.d"
   run systemctl --user daemon-reload
   for id in $W_ID $V_ID $D_ID $U_ID; do run agent-deck session stop "$id"; run agent-deck session remove "$id"; done
@@ -182,7 +183,7 @@ cleanup() {
   local left="" id u
   if [ "$DRY" != 1 ]; then
     for id in $W_ID $V_ID $D_ID $U_ID; do st=$(seat_status "$id"); [ "$st" = absent ] || left="$left seat $id ($st);"; done
-    for u in "$LU.timer" "$LU.service" "$U" $(systemctl --user list-units --all --plain --no-legend "agent-loop-$P-*" 2>/dev/null | awk '{print $1}'); do
+    for u in "$LU.timer" "$LU.service" "$LF.service" "$U" $(systemctl --user list-units --all --plain --no-legend "agent-loop-$P-*" 2>/dev/null | awk '{print $1}'); do
       [ "$(systemctl --user is-active "$u" 2>/dev/null)" = active ] && left="$left unit $u active;"; done
   fi
   if [ -n "$left" ]; then result CLEANUP FAIL "unresolved:$left"; log "cleanup INCOMPLETE:$left"; return 1; fi
@@ -257,11 +258,13 @@ json.dump({"project": "$P", "profile": "$PROFILE", "wake": "$WAKE", "db": "$ROOT
   "seats": {"$W_NAME": "$W_ID", "$V_NAME": "$V_ID", "$D_NAME": "$D_ID", "$U_NAME": "$U_ID"},
   "bin": "$A", "unit": "$U"}, open(sys.argv[1], "w"), indent=1)
 PY
-sub="s#%h/.local/bin/agent-loop#$A#g; s#%h/.config/agent-loop/%i.json#$CFG#g; s#agent-loop %i#agent-loop $P#g; s#%i#$P#g"
+sub="s#agent-loop-liveness-failed@%i.service#$LF.service#g; s#agent-loop-liveness@%i.service#$LU.service#g; s#%h/.local/bin/agent-loop#$A#g; s#%h/.config/agent-loop/%i.json#$CFG#g; s#agent-loop %i#agent-loop $P#g; s#%i#$P#g"
 run sh -c "sed '$sub' '$UNITS_SRC/agent-loop@.service' > '$SD/$U'"
 run sh -c "sed '$sub' '$UNITS_SRC/agent-loop-liveness@.service' > '$SD/$LU.service'"
 run sh -c "sed '$sub' '$UNITS_SRC/agent-loop-liveness@.timer' > '$SD/$LU.timer'"
-run grep -c "$A" "$SD/$U" "$SD/$LU.service"
+run sh -c "sed '$sub' '$UNITS_SRC/agent-loop-liveness-failed@.service' > '$SD/$LF.service'"
+run grep -c "$A" "$SD/$U" "$SD/$LU.service" "$SD/$LF.service"
+run grep -q "^OnFailure=$LF.service$" "$SD/$LU.service" || { result SETUP FAIL "check unit has no OnFailure=$LF.service"; exit 3; }
 reload
 run "$A" check $C || { result SETUP FAIL "seat binding check failed"; exit 3; }
 for seat in "$D_NAME:$D_ID" "$U_NAME:$U_ID"; do run "$WAKE" "${seat#*:}" "$(cat "$PLANS/tasks/ack.md")"; done
@@ -350,6 +353,20 @@ else result L4a FAIL "no start-limit/restart-loop within bounds"; fi
 run rm -f "$SD/$U.d/fail.conf"; reload; run systemctl --user reset-failed "$U"; run systemctl --user start "$U"
 wait_for "L4a settled" 90 state_is rest; snap L4a
 
+# ---------------------------------------------------------------- L7 observation: the check's own failure (P12-checker-ownership-1)
+# Within the existing supervision case, no new matrix row: hold the ledger lock 45 s so at least one timer tick's
+# check cannot do its ledger work (10 s wait) and fails. Its OnFailure handler must tell duty (no ledger lock)
+# within 60 s of the hold start (tick <= 31 s + 10 s wait + handler <= 12 s), and a completed check after the release
+# must close the checker incident (duty told RECOVERED) within 45 s of the release (tick <= 31 s + check).
+if [ "$DRY" = 1 ]; then result L7-checker DRY "hold ledger lock 45 s; expect handler duty wake <= 60 s; recovery <= 45 s after release"; else
+  u0=$(wakes "$U_ID"); hs=$(date +%s); ( flock -x "$ROOT/$P.db.lock" sleep 45 ) & hp=$!
+  wait_for "L7 checker incident" 60 sh -c "python3 -c 'import json;d=json.load(open(\"$ROOT/$P.db.checker-incident.json\"));assert d[\"duty\"].startswith(\"sent\") and not d.get(\"closed_at\")'"
+  ci=$(( $(date +%s) - hs )); wait $hp; rs=$(date +%s)
+  wait_for "L7 checker recovered" 45 sh -c "python3 -c 'import json;d=json.load(open(\"$ROOT/$P.db.checker-incident.json\"));assert d.get(\"closed_at\")'"
+  cr=$(( $(date +%s) - rs ))
+  if [ "$ci" -le 60 ] && [ "$cr" -le 45 ] && [ "$(wakes "$U_ID")" -ge $(( u0 + 2 )) ]; then result L7-checker PASS "handler told duty ${ci}s after the hold; recovered ${cr}s after release ($ROOT/$P.db.checker-incident.json)"
+  else result L7-checker FAIL "incident after ${ci}s, recovery after ${cr}s, duty wakes $u0->$(wakes "$U_ID")"; fi
+  cp "$ROOT/$P.db.checker-incident.json" "$EV/l7-checker-incident.json" 2>/dev/null; fi
 # ---------------------------------------------------------------- L7a damaged state, L7b future pass (real checker path)
 run sh -c "printf '{bad-$RUN' > '$ROOT/$P.db.liveness.json'"; u1=$(wakes "$U_ID")
 wait_for "L7a alarm" 60 sh -c "ls $ROOT/$P.db.liveness.json.damaged-*.json"
