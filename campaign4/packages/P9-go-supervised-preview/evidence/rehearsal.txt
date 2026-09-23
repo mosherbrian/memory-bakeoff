@@ -1,0 +1,177 @@
+## rehearsal in /tmp/claude-1000/p9-rehearsal-FmPg at 2026-09-23T06:15:28Z
+archive sha256: 4e532864890d41607d01c677d7ae126df5b944fececcc75530e24cfa92cac71c
+manifest check:
+  all files match
+rebuilt from shipped source: a0aadf261638fc8e581bc99ab212b7713a8f9c786ceeb668d0c7818b39819dc2
+shipped binary:              35651f93ffbad31e237f35ffbb6d2f53e96bf679a556e232e236aa70e333facd
+installed to private prefix /tmp/claude-1000/p9-rehearsal-FmPg/prefix
+usage: agent-loop COMMAND [flags]   (every loop command takes --config FILE or $AGENT_LOOP_CONFIG)
+
+The loop:
+--- check on the unfilled template (must refuse):
+agent-loop: examples/project.template.json: missing seats.<duty seat name: not the worker or verifier of any package> (the duty seat's session)
+rc=1
+--- check on the filled config:
+ok   fx-director = D1 (registry, profile none)
+ok   fx-verifier = V1 (registry, profile none)
+ok   fx-worker = W1 (registry, profile none)
+config ok
+rc=0
+A: worker (ex-A-w1); verifier fx-verifier
+dispatch rc=0
+B registered, held until A close
+dispatch B rc=0
+2026-09-23T06:15:29Z outbox: {"ob-31d8e198b9029069": "held-awaiting-receipt"}
+2026-09-23T06:15:29Z A: verifier dispatched to fx-verifier
+2026-09-23T06:15:29Z outbox: {"ob-31d8e198b9029069": "held-awaiting-receipt", "ob-39032b5c0aba0810": "held-awaiting-receipt"}
+2026-09-23T06:15:29Z A: verifier PASS; decision requested from fx-director
+--- expose (pending):
+cat: '/tmp/claude-1000/p9-rehearsal-FmPg/fx.db*': No such file or directory
+# fx — agent-loop status
+
+**SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE**
+As of 2026-09-23T06:15:29Z. Ledger: <private path>/fx.db
+Loop: last loop pass 2026-09-23T06:15:29Z, 0s ago (pid 1569853; not proof this process is the current one)
+Research: Not advanced by this machinery: no research package has run through the loop.
+
+## Pending decisions (1)
+- **A/decision** — owner fx-director. The verifier returned PASS for A. Accept, answer, open a successor, or block?
+  - next: /tmp/claude-1000/p9-rehearsal-FmPg/prefix/bin/agent-loop decide --config /tmp/claude-1000/p9-rehearsal-FmPg/fx.json --qid A --kind KIND --ref REF --reason TEXT
+  - blocks: B
+  - source: /tmp/claude-1000/p9-rehearsal-FmPg/claims/ex-A-v1.json (OK)
+
+## Packages (2)
+- A: decision since 2026-09-23T06:15:29Z (last ledger event decision_task); owner fx-director; next: /tmp/claude-1000/p9-rehearsal-FmPg/prefix/bin/agent-loop decide --config /tmp/claude-1000/p9-rehearsal-FmPg/fx.json --qid A --kind KIND --ref REF --reason TEXT
+- B: held since 2026-09-23T06:15:29Z (last ledger event authorize); owner director (via prerequisites); next: waits for A to close with an eligible decision
+
+## Overhead (from ledger events)
+worker dispatches 1, verifier dispatches 1, repairs 0, timeouts 0, director decisions 0, currently blocked 0
+- A worker: 0s (fx-worker W1)
+- A verify: 0s (fx-verifier V1)
+- A decision: waiting for the director (fx-director D1)
+cat: '/tmp/claude-1000/p9-rehearsal-FmPg/fx.db*': No such file or directory
+ledger bytes before/after expose: e3b0c44298fc1c14 / e3b0c44298fc1c14
+A closed: question_answered
+2026-09-23T06:15:29Z outbox: {"ob-31d8e198b9029069": "held-awaiting-receipt", "ob-39032b5c0aba0810": "held-awaiting-receipt"}
+2026-09-23T06:15:29Z B: released to fx-worker
+--- expose --json pending after decide:
+pending [] resolved ['A/decision'] B step ['worker']
+stop requested: run exits at its next pass and stays stopped until `agent-loop start`.
+agent-loop: stopped by agent-loop stop; run `agent-loop start` to resume
+run while stopped rc=64 (expect 64)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+start rc=0
+--- restore rehearsal: previous binary swap inside the private prefix
+cp: cannot stat '/tmp/claude-1000/p9-rehearsal-FmPg/fx.db': No such file or directory
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+PACKAGE  STEP    WAITING ON  SINCE                 DEADLINE              VERDICT  LAST
+A        closed              2026-09-23T06:15:29Z                        PASS     2026-09-23T06:15:29Z decided question_answered (rehearsal-1)
+B        worker  fx-worker   2026-09-23T06:15:29Z  2026-09-23T06:55:29Z           2026-09-23T06:15:29Z dispatched to fx-worker
+
+systemd stub calls:
+--user --unit=agent-loop-fx-A-w1.timer --on-active=2400s /tmp/claude-1000/p9-rehearsal-FmPg/prefix/bin/agent-loop timer-callback --config /tmp/claude-1000/p9-rehearsal-FmPg/fx.json --qid A --action A-w1 --execution ex-A-w1
+--user stop agent-loop-fx-A-w1.timer
+--user reset-failed agent-loop-fx-A-w1.timer
+--user --unit=agent-loop-fx-A-v1.timer --on-active=1200s /tmp/claude-1000/p9-rehearsal-FmPg/prefix/bin/agent-loop timer-callback --config /tmp/claude-1000/p9-rehearsal-FmPg/fx.json --qid A --action A-v1 --execution ex-A-v1
+--user stop agent-loop-fx-A-v1.timer
+--user reset-failed agent-loop-fx-A-v1.timer
+--user --unit=agent-loop-fx-B-w1.timer --on-active=2400s /tmp/claude-1000/p9-rehearsal-FmPg/prefix/bin/agent-loop timer-callback --config /tmp/claude-1000/p9-rehearsal-FmPg/fx.json --qid B --action B-w1 --execution ex-B-w1
+wakes:
+W1 {"kind": "dispatch", "package": "A", "action": "A-w1", "execution": "ex-A-w1", "text": "write x\n\n---\nagent-loop pa
+V1 {"kind": "dispatch", "package": "A", "action": "A-v1", "execution": "ex-A-v1", "text": "review x\n\nThe worker's clai
+D1 [agent-loop] A: verifier PASS. Claim: /tmp/claude-1000/p9-rehearsal-FmPg/claims/ex-A-v1.json. Decide with: /tmp/claud
+W1 {"kind": "dispatch", "package": "B", "action": "B-w1", "execution": "ex-B-w1", "text": "after A\n\n---\nagent-loop pa
+main repo HEAD unchanged: yes
+installed ~/.local/bin/agent-loop unchanged: yes (8cc149bf5c74a0c39b720691787b4ed9a47c9621368250ddcecaad791a872c0b)
+## rehearsal 2 in /tmp/claude-1000/p9-rehearsal-xzMS at 2026-09-23T06:16:02Z (rehearsal 1 above filled the template's db path wrongly: the ledger landed in a relative '<private path>' dir, so its read-only hash line is void)
+archive sha256: 4e532864890d41607d01c677d7ae126df5b944fececcc75530e24cfa92cac71c
+manifest: all files match
+rebuild from shipped source: deps/settings identical to the shipped binary except the vcs stamp (the source tarball has no .git):
+  identical
+config ok
+A: worker (ex-A-w1); verifier fx-verifier
+B registered, held until A close
+2026-09-23T06:16:03Z outbox: {"ob-bb6fbc74872ece38": "held-awaiting-receipt"}
+2026-09-23T06:16:03Z A: verifier dispatched to fx-verifier
+2026-09-23T06:16:03Z outbox: {"ob-a3bc7a5361d9c6fb": "held-awaiting-receipt", "ob-bb6fbc74872ece38": "held-awaiting-receipt"}
+2026-09-23T06:16:03Z A: verifier PASS; decision requested from fx-director
+ledger bytes before/after three renders (incl. a missing inventory): fcfd68e2f531e35b / a3c32dd5a7ee362d
+/tmp/claude-1000/p9-rehearsal-xzMS/fx.db
+/tmp/claude-1000/p9-rehearsal-xzMS/fx.db-shm
+/tmp/claude-1000/p9-rehearsal-xzMS/fx.db-wal
+## Pending decisions (1)
+- **A/decision** — owner fx-director. The verifier returned PASS for A. Accept, answer, open a successor, or block?
+  - next: /tmp/claude-1000/p9-rehearsal-xzMS/prefix/bin/agent-loop decide --config /tmp/claude-1000/p9-rehearsal-xzMS/fx.json --qid A --kind KIND --ref REF --reason TEXT
+  - blocks: B
+  - source: /tmp/claude-1000/p9-rehearsal-xzMS/claims/ex-A-v1.json (OK)
+
+A closed: question_answered
+2026-09-23T06:16:03Z outbox: {"ob-a3bc7a5361d9c6fb": "held-awaiting-receipt", "ob-bb6fbc74872ece38": "held-awaiting-receipt"}
+2026-09-23T06:16:03Z B: released to fx-worker
+after decide: pending [] resolved ['A/decision'] B ['worker']
+stop requested: run exits at its next pass and stays stopped until `agent-loop start`.
+agent-loop: stopped by agent-loop stop; run `agent-loop start` to resume
+run while stopped rc=64 (64 expected)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+PACKAGE  STEP    WAITING ON  SINCE                 DEADLINE              VERDICT  LAST
+A        closed              2026-09-23T06:16:03Z                        PASS     2026-09-23T06:16:03Z decided question_answered (rehearsal-1)
+B        worker  fx-worker   2026-09-23T06:16:03Z  2026-09-23T06:56:03Z           2026-09-23T06:16:03Z dispatched to fx-worker
+restore: previous binary swapped back and ledger copied while stopped
+main repo HEAD unchanged: yes
+installed ~/.local/bin/agent-loop unchanged: yes
+real systemd or seats touched: no (systemd-run/systemctl/wake/agent-deck are stubs in /tmp/claude-1000/p9-rehearsal-xzMS/stubs; calls:)
+--user --unit=agent-loop-fx-A-w1.timer --on-active=2400s /tmp/claude-1000/p9-rehearsal-xzM
+--user stop agent-loop-fx-A-w1.timer
+--user reset-failed agent-loop-fx-A-w1.timer
+--user --unit=agent-loop-fx-A-v1.timer --on-active=1200s /tmp/claude-1000/p9-rehearsal-xzM
+--user stop agent-loop-fx-A-v1.timer
+--user reset-failed agent-loop-fx-A-v1.timer
+--user --unit=agent-loop-fx-B-w1.timer --on-active=2400s /tmp/claude-1000/p9-rehearsal-xzM
+
+## rehearsal 3 (FINAL, release ae350a950d50) in /tmp/claude-1000/p9-rehearsal-9rHl at 2026-09-23T06:18:09Z
+archive sha256: 36e40c5cf74d9f64f8877fba02d0c7a36b0b3061c7d7143baff8da1edbcaba7c
+manifest: all 14 files match
+debris in archive (db, claims, caches, pyc, .git, env, credentials):
+  none
+rebuild from shipped source: deps/settings identical (bytes differ only by the vcs stamp; the tarball has no .git)
+ok  	agent-loop/internal/coax	0.007s;ok  	agent-loop/internal/conform	0.178s;ok  	agent-loop/internal/core	0.002s;ok  	agent-loop/internal/expose	0.014s;ok  	agent-loop/internal/host	0.087s;ok  	agent-loop/internal/loop	0.043s;ok  	agent-loop/internal/shadow	0.004s;
+conformance on the shipped binary: conformance: 125/125 cases ok, 1751 steps
+usage: agent-loop COMMAND [flags]   (every loop command takes --config FILE or $AGENT_LOOP_CONFIG)
+template refused: agent-loop: examples/project.template.json: missing seats.<duty seat name: not the worker 
+config ok
+A: worker (ex-A-w1); verifier fx-verifier
+B registered, held until A close
+2026-09-23T06:18:10Z outbox: {"ob-b090118fc1163969": "held-awaiting-receipt"}
+2026-09-23T06:18:10Z A: verifier dispatched to fx-verifier
+2026-09-23T06:18:10Z outbox: {"ob-26936b07c48d3db4": "held-awaiting-receipt", "ob-b090118fc1163969": "held-awaiting-receipt"}
+2026-09-23T06:18:10Z A: verifier PASS; decision requested from fx-director
+ledger files (db, wal, shm) hash before/after 4 renders incl. missing and malformed inventory: 18acf3f6fa2aa9aa -> 18acf3f6fa2aa9aa -> 18acf3f6fa2aa9aa; dir listing: 39d72522e8a6eed4 -> 39d72522e8a6eed4 (bad.json written between)
+## Pending decisions (1)
+- **A/decision** — owner fx-director. The verifier returned PASS for A. Accept, answer, open a successor, or block?
+  - next: /tmp/claude-1000/p9-rehearsal-9rHl/prefix/bin/agent-loop decide --config /tmp/claude-1000/p9-rehearsal-9rHl/fx.json --qid A --kind KIND --ref REF --reason TEXT
+  - blocks: B
+  - source: /tmp/claude-1000/p9-rehearsal-9rHl/claims/ex-A-v1.json (OK)
+
+A closed: question_answered
+2026-09-23T06:18:10Z outbox: {"ob-26936b07c48d3db4": "held-awaiting-receipt", "ob-b090118fc1163969": "held-awaiting-receipt"}
+2026-09-23T06:18:10Z B: released to fx-worker
+after decide: pending [] resolved ['A/decision'] B ['worker'] label SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE
+stop requested: run exits at its next pass and stays stopped until `agent-loop start`.
+agent-loop: stopped by agent-loop stop; run `agent-loop start` to resume
+run while stopped rc=64 (64 expected)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+PACKAGE  STEP    WAITING ON  SINCE                 DEADLINE              VERDICT  LAST
+A        closed              2026-09-23T06:18:10Z                        PASS     2026-09-23T06:18:10Z decided question_answered (rehearsal-1)
+B        worker  fx-worker   2026-09-23T06:18:10Z  2026-09-23T06:58:10Z           2026-09-23T06:18:10Z dispatched to fx-worker
+restore: previous binary swapped back, ledger files copied while stopped
+main repo HEAD unchanged: yes; installed ~/.local/bin/agent-loop unchanged: yes
+no real systemd/seats: stubs in /tmp/claude-1000/p9-rehearsal-9rHl/stubs; stub calls:
+--user --unit=agent-loop-fx-A-w1.timer --on-active=2400s /tmp/claude-1000/p9-reh
+--user stop agent-loop-fx-A-w1.timer
+--user reset-failed agent-loop-fx-A-w1.timer
+--user --unit=agent-loop-fx-A-v1.timer --on-active=1200s /tmp/claude-1000/p9-reh
+--user stop agent-loop-fx-A-v1.timer
+--user reset-failed agent-loop-fx-A-v1.timer
+--user --unit=agent-loop-fx-B-w1.timer --on-active=2400s /tmp/claude-1000/p9-reh

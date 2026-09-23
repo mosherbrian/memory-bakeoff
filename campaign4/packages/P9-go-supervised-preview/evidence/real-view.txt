@@ -1,0 +1,48 @@
+# campaign4-P8-live-1 — agent-loop status
+
+**SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE**
+As of 2026-09-23T06:21:29Z. Ledger: /home/bmosher/memory-bake-off/campaign4/packages/P8-go-unattended-qualification/live-1/loop.db
+Loop: UNKNOWN: no loop pass recorded (the loop has not run, or not since this ledger was created)
+Research: Not advanced by this machinery: no research package has run through the loop.
+
+## Problems (UNKNOWN or CONFLICT: not healthy)
+- P8-positive-1: UNKNOWN owner: no recorded principals; the loop cannot continue it
+
+## Pending decisions (2)
+- **CUTOVER** — owner tern. Cut over after P9, or keep the current scripts until unattended qualification passes?
+  - next: Tern records a cutover decision after P9 (P8 is NOT READY)
+  - blocks: script retirement, unattended use
+  - source: packages/P8-go-unattended-qualification/terminal-disposition.json (OK)
+- **P8-positive-1/decision** — owner UNKNOWN. The verifier returned PASS for P8-positive-1. Accept, answer, open a successor, or block?
+  - next: none in the loop: registered without recorded principals (E_AUTHORITY_MISSING); dispose of it outside the loop
+  - source: /home/bmosher/memory-bake-off/campaign4/packages/P8-go-unattended-qualification/live-1/claims/ex-P8-positive-1-v1.json (OK)
+
+## Packages (1)
+- P8-positive-1: decision since 2026-09-23T05:34:42Z (last ledger event decision_task); owner UNKNOWN; next: none in the loop: registered without recorded principals (E_AUTHORITY_MISSING); dispose of it outside the loop
+
+## Recorded campaign state (inventory pointers)
+- [qualification] P8: NOT_READY_UNATTENDED (terminal EXHAUSTED) — packages/P8-go-unattended-qualification/terminal-disposition.json (OK)
+- [qualification] P8-final: NOT READY — packages/P8-go-unattended-qualification/qualification-final.md (OK)
+- [finding] P8-liveness: open blockers — packages/P8-go-unattended-qualification/liveness-blockers-addendum.md (OK)
+- [code] P7: EXHAUSTED, not accepted — packages/P7-expose-status/terminal-disposition.json (OK)
+- [ruling] CONNECT: closed; fixed list P7/P8/P9 — CONNECT-FINISH-LINE-20260923.md (OK)
+- [ruling] GO-TARGET: Go binary is the deliverable; Python stays the reference — GO-RELEASE-TARGET-20260923.md (OK)
+- [code] P9: in progress (author stage) — packages/P9-go-supervised-preview/package.md (OK)
+- [deployment] DEPLOY: not deployed: no service installed or enabled; supervised preview only — packages/P9-go-supervised-preview/package.md (OK)
+- [decision] CUTOVER: OPEN — packages/P8-go-unattended-qualification/terminal-disposition.json (OK)
+
+## Overhead (from ledger events)
+worker dispatches 1, verifier dispatches 1, repairs 0, timeouts 0, director decisions 0, currently blocked 0
+- P8-positive-1 worker: 4s (principal UNKNOWN)
+- P8-positive-1 verify: 13s (principal UNKNOWN)
+- P8-positive-1 decision: waiting for the director (principal UNKNOWN)
+Costs: not in this binary: join steps[].session and started_at/ended_at with the provider's billing (e.g. go-budget)
+
+## Known limits
+- P8 ended NOT READY (EXHAUSTED at its one repair): unattended use is not qualified.
+- Liveness: a damaged or unreadable <db>.liveness.json makes `agent-loop liveness` exit 1 before assessing; no one is notified (missed owned detection).
+- Liveness: a pass time in the future (e.g. a host clock step back) reads as fresh and can report false REST until the clock catches up.
+- Liveness: no process-incarnation binding; a pass recorded by a previous run can stand for the current one until its first pass completes.
+- Real systemd behaviour (restart, watchdog, exit 64, start limit, timer accuracy) was never observed live; the unit files are unqualified examples.
+- The CLI does not authenticate its caller: any host user who can run it acts for the recorded roles.
+- Packages registered before principals were recorded cannot be continued (E_AUTHORITY_MISSING, by design).

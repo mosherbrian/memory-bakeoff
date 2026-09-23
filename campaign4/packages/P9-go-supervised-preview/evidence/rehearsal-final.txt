@@ -1,0 +1,45 @@
+## rehearsal of release c124d82cd26a in /tmp/p9-rehearsal-AQx2 at 2026-09-23T06:21:28Z
+archive sha256: e559ad175c3a21e99c3bf763a4366a4143ccafc5c1dcf0071250132ade4a8934
+manifest: all 14 files match
+debris (db, claims, caches, pyc, .git, env, credentials, keys):
+  none
+rebuild from shipped source: deps/settings identical (bytes differ only by the vcs stamp; the tarball has no .git)
+go test on shipped source: ok  	agent-loop/internal/coax	0.007s;ok  	agent-loop/internal/conform	0.189s;ok  	agent-loop/internal/core	0.002s;ok  	agent-loop/internal/expose	0.016s;ok  	agent-loop/internal/host	0.089s;ok  	agent-loop/internal/loop	0.044s;ok  	agent-loop/internal/shadow	0.006s;
+conformance on the shipped binary: conformance: 125/125 cases ok, 1751 steps
+unfilled template: agent-loop: examples/project.template.json: missing seats.<duty seat name: not the worker or verifie (rc refused)
+config ok
+A: worker (ex-A-w1); verifier fx-verifier
+B registered, held until A close
+2026-09-23T06:21:29Z outbox: {"ob-e3aae9db13adbe4d": "held-awaiting-receipt"}
+2026-09-23T06:21:29Z A: verifier dispatched to fx-verifier
+2026-09-23T06:21:29Z outbox: {"ob-a786567018353b88": "held-awaiting-receipt", "ob-e3aae9db13adbe4d": "held-awaiting-receipt"}
+2026-09-23T06:21:29Z A: verifier PASS; decision requested from fx-director
+read-only: ledger files hash 13b83ff0ec3d73b8 -> 13b83ff0ec3d73b8; directory listing ccd515dc13f7094a -> ccd515dc13f7094a (4 renders incl. missing and malformed inventory)
+## Pending decisions (1)
+- **A/decision** — owner fx-director. The verifier returned PASS for A. Accept, answer, open a successor, or block?
+  - next: /tmp/p9-rehearsal-AQx2/prefix/bin/agent-loop decide --config /tmp/p9-rehearsal-AQx2/fx.json --qid A --kind KIND --ref REF --reason TEXT
+  - blocks: B
+  - source: /tmp/p9-rehearsal-AQx2/claims/ex-A-v1.json (OK)
+
+A closed: question_answered
+2026-09-23T06:21:29Z outbox: {"ob-a786567018353b88": "held-awaiting-receipt", "ob-e3aae9db13adbe4d": "held-awaiting-receipt"}
+2026-09-23T06:21:29Z B: released to fx-worker
+after decide: pending [] resolved ['A/decision'] B ['worker'] | label: SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE
+stop requested: run exits at its next pass and stays stopped until `agent-loop start`.
+agent-loop: stopped by agent-loop stop; run `agent-loop start` to resume
+run while stopped rc=64 (64 expected)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+stop marker cleared (no unit configured; start `agent-loop run` yourself)
+PACKAGE  STEP    WAITING ON  SINCE                 DEADLINE              VERDICT  LAST
+A        closed              2026-09-23T06:21:29Z                        PASS     2026-09-23T06:21:29Z decided question_answered (rehearsal-1)
+B        worker  fx-worker   2026-09-23T06:21:29Z  2026-09-23T07:01:29Z           2026-09-23T06:21:29Z dispatched to fx-worker
+restore: previous binary swapped back, ledger files copied while stopped
+main repo HEAD unchanged: yes; installed ~/.local/bin/agent-loop unchanged: yes
+no real systemd/seats: stubs in /tmp/p9-rehearsal-AQx2/stubs; stub calls:
+--user --unit=agent-loop-fx-A-w1.timer --on-active=2400s /tmp/p9-rehearsal-AQx2/
+--user stop agent-loop-fx-A-w1.timer
+--user reset-failed agent-loop-fx-A-w1.timer
+--user --unit=agent-loop-fx-A-v1.timer --on-active=1200s /tmp/p9-rehearsal-AQx2/
+--user stop agent-loop-fx-A-v1.timer
+--user reset-failed agent-loop-fx-A-v1.timer
+--user --unit=agent-loop-fx-B-w1.timer --on-active=2400s /tmp/p9-rehearsal-AQx2/

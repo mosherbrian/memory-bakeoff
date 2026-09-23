@@ -1,0 +1,180 @@
+{
+ "label": "SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE",
+ "as_of": "2026-09-23T06:21:29Z",
+ "project": "campaign4-P8-live-1",
+ "ledger": "/home/bmosher/memory-bake-off/campaign4/packages/P8-go-unattended-qualification/live-1/loop.db",
+ "freshness": "UNKNOWN: no loop pass recorded (the loop has not run, or not since this ledger was created)",
+ "research": "Not advanced by this machinery: no research package has run through the loop.",
+ "packages": [
+  {
+   "qid": "P8-positive-1",
+   "step": "decision",
+   "since": "2026-09-23T05:34:42Z",
+   "last_ledger_event": "decision_task",
+   "owner": "UNKNOWN",
+   "next_action": "none in the loop: registered without recorded principals (E_AUTHORITY_MISSING); dispose of it outside the loop",
+   "verdict": "PASS",
+   "last_note": "2026-09-23T05:34:42Z verifier PASS; waiting for the director"
+  }
+ ],
+ "pending": [
+  {
+   "id": "CUTOVER",
+   "question": "Cut over after P9, or keep the current scripts until unattended qualification passes?",
+   "owner": "tern",
+   "dependents": [
+    "script retirement",
+    "unattended use"
+   ],
+   "next_action": "Tern records a cutover decision after P9 (P8 is NOT READY)",
+   "source": "packages/P8-go-unattended-qualification/terminal-disposition.json",
+   "evidence": "OK"
+  },
+  {
+   "id": "P8-positive-1/decision",
+   "question": "The verifier returned PASS for P8-positive-1. Accept, answer, open a successor, or block?",
+   "owner": "UNKNOWN",
+   "dependents": [],
+   "next_action": "none in the loop: registered without recorded principals (E_AUTHORITY_MISSING); dispose of it outside the loop",
+   "since": "2026-09-23T05:34:42Z",
+   "source": "/home/bmosher/memory-bake-off/campaign4/packages/P8-go-unattended-qualification/live-1/claims/ex-P8-positive-1-v1.json",
+   "evidence": "OK"
+  }
+ ],
+ "resolved": [],
+ "inventory": [
+  {
+   "id": "P8",
+   "kind": "qualification",
+   "title": "Go agent-loop unattended qualification",
+   "status": "NOT_READY_UNATTENDED (terminal EXHAUSTED)",
+   "source": "packages/P8-go-unattended-qualification/terminal-disposition.json",
+   "sha256": "02a7317a449432e195f7fde406d10f7479052b4efda65f4f232ea1b5d54feac4",
+   "evidence": "OK"
+  },
+  {
+   "id": "P8-final",
+   "kind": "qualification",
+   "title": "P8 final report",
+   "status": "NOT READY",
+   "source": "packages/P8-go-unattended-qualification/qualification-final.md",
+   "sha256": "f6009bbc9b44ae8d2cb222c795af556b915e30c03f1faf6abbd7f4b7b6c55644",
+   "evidence": "OK"
+  },
+  {
+   "id": "P8-liveness",
+   "kind": "finding",
+   "title": "three liveness blockers",
+   "status": "open blockers",
+   "source": "packages/P8-go-unattended-qualification/liveness-blockers-addendum.md",
+   "sha256": "32963c793c7565da2152e3975ec8921fe4f940ac0f09a1d5cf3e14447ec5a2ad",
+   "evidence": "OK"
+  },
+  {
+   "id": "P7",
+   "kind": "code",
+   "title": "Python P7 Expose attempt",
+   "status": "EXHAUSTED, not accepted",
+   "source": "packages/P7-expose-status/terminal-disposition.json",
+   "sha256": "af7fba679aee7c7fedb06e11ced0dcdacaac960f89844fd98927460a0d1c530e",
+   "evidence": "OK"
+  },
+  {
+   "id": "CONNECT",
+   "kind": "ruling",
+   "title": "Connect finish line",
+   "status": "closed; fixed list P7/P8/P9",
+   "source": "CONNECT-FINISH-LINE-20260923.md",
+   "sha256": "e34e5a752333e9d771ddc0e61efeb7678dc333eb89dd910e1e59e59fe364372b",
+   "evidence": "OK"
+  },
+  {
+   "id": "GO-TARGET",
+   "kind": "ruling",
+   "title": "release target",
+   "status": "Go binary is the deliverable; Python stays the reference",
+   "source": "GO-RELEASE-TARGET-20260923.md",
+   "sha256": "11d844f860e97624900c79e2bb32ca848a24ba895cebfd80fa013a807a1a4e60",
+   "evidence": "OK"
+  },
+  {
+   "id": "P9",
+   "kind": "code",
+   "title": "this supervised preview",
+   "status": "in progress (author stage)",
+   "source": "packages/P9-go-supervised-preview/package.md",
+   "sha256": "63053fe3447fe05dcdc882fe60db5c3a4e6224c7390a55994010c33916d362a3",
+   "evidence": "OK"
+  },
+  {
+   "id": "DEPLOY",
+   "kind": "deployment",
+   "title": "deployment state",
+   "status": "not deployed: no service installed or enabled; supervised preview only",
+   "source": "packages/P9-go-supervised-preview/package.md",
+   "sha256": "63053fe3447fe05dcdc882fe60db5c3a4e6224c7390a55994010c33916d362a3",
+   "evidence": "OK"
+  },
+  {
+   "id": "CUTOVER",
+   "kind": "decision",
+   "title": "Cut campaign 4 over to agent-loop and retire the old scripts?",
+   "status": "OPEN",
+   "owner": "tern",
+   "question": "Cut over after P9, or keep the current scripts until unattended qualification passes?",
+   "dependents": [
+    "script retirement",
+    "unattended use"
+   ],
+   "next_action": "Tern records a cutover decision after P9 (P8 is NOT READY)",
+   "source": "packages/P8-go-unattended-qualification/terminal-disposition.json",
+   "sha256": "02a7317a449432e195f7fde406d10f7479052b4efda65f4f232ea1b5d54feac4",
+   "evidence": "OK"
+  }
+ ],
+ "overhead": {
+  "worker_dispatches": 1,
+  "verifier_dispatches": 1,
+  "repairs": 0,
+  "timeouts": 0,
+  "director_decisions": 0,
+  "currently_blocked": 0,
+  "block_events": "not recorded as ledger events; see currently_blocked",
+  "steps": [
+   {
+    "qid": "P8-positive-1",
+    "step": "worker",
+    "started_at": "2026-09-23T05:34:25Z",
+    "ended_at": "2026-09-23T05:34:29Z",
+    "seconds": 4
+   },
+   {
+    "qid": "P8-positive-1",
+    "step": "verify",
+    "started_at": "2026-09-23T05:34:29Z",
+    "ended_at": "2026-09-23T05:34:42Z",
+    "seconds": 13
+   },
+   {
+    "qid": "P8-positive-1",
+    "step": "decision",
+    "started_at": "2026-09-23T05:34:42Z",
+    "seconds": null,
+    "note": "waiting for the director"
+   }
+  ],
+  "costs": "not in this binary: join steps[].session and started_at/ended_at with the provider's billing (e.g. go-budget)"
+ },
+ "known_limits": [
+  "P8 ended NOT READY (EXHAUSTED at its one repair): unattended use is not qualified.",
+  "Liveness: a damaged or unreadable \u003cdb\u003e.liveness.json makes `agent-loop liveness` exit 1 before assessing; no one is notified (missed owned detection).",
+  "Liveness: a pass time in the future (e.g. a host clock step back) reads as fresh and can report false REST until the clock catches up.",
+  "Liveness: no process-incarnation binding; a pass recorded by a previous run can stand for the current one until its first pass completes.",
+  "Real systemd behaviour (restart, watchdog, exit 64, start limit, timer accuracy) was never observed live; the unit files are unqualified examples.",
+  "The CLI does not authenticate its caller: any host user who can run it acts for the recorded roles.",
+  "Packages registered before principals were recorded cannot be continued (E_AUTHORITY_MISSING, by design)."
+ ],
+ "problems": [
+  "P8-positive-1: UNKNOWN owner: no recorded principals; the loop cannot continue it"
+ ]
+}
