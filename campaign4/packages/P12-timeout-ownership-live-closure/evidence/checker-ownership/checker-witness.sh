@@ -27,6 +27,7 @@ Description=P12 checker witness check (isolated, no seats)
 OnFailure=$N-failed.service
 [Service]
 Type=oneshot
+Environment=AGENT_LOOP_LOCK_LOG=$X/lock.log
 ExecStart=$A_ liveness --config $X/fx.json
 TimeoutStartSec=35
 EOF
@@ -57,7 +58,7 @@ runcheck() { # label [stop|kill|none]; starts the check unit, waits for it and f
   systemctl --user reset-failed $N-check.service $N-failed.service 2>/dev/null
   systemctl --user start --no-block $N-check.service; log "$label: check started"
   if [ "$how" != none ]; then until p=$(systemctl --user show $N-check.service -p MainPID --value); [ "${p:-0}" != 0 ]; do sleep 0.05; done
-    if [ $how = stop ]; then kill -STOP $p; log "$label: SIGSTOP check pid $p"; else sleep 0.5; kill -9 $p; log "$label: SIGKILL check pid $p"; fi; fi
+    if [ $how = stop ]; then kill -STOP $p; log "$label: SIGSTOP check pid $p"; else sleep 2; kill -9 $p; log "$label: SIGKILL check pid $p (2 s in, waiting for the held lock)"; fi; fi
   while [ "$(systemctl --user show $N-check.service -p ActiveState --value)" = activating ]; do sleep 0.1; done
   log "$label: check ended after $(python -c "print(round($(ep)-$t0,1))") s: $(systemctl --user show $N-check.service -p Result,ExecMainCode,ExecMainStatus --value | tr '\n' ' ')"
   sleep 0.5; while [ "$(systemctl --user show $N-failed.service -p ActiveState --value)" = activating ]; do sleep 0.1; done
@@ -66,17 +67,17 @@ runcheck() { # label [stop|kill|none]; starts the check unit, waits for it and f
 hold() { ( flock -x $X/fx.db.lock sh -c "echo held > $X/held; sleep $1" ) & HP=$!; until [ -e $X/held ]; do sleep 0.05; done; rm -f $X/held; log "ledger lock held by fixture pid $HP for $1 s"; }
 runcheck S0-healthy
 hold 40; runcheck S1-lock-held-nonzero
-( $A_ liveness --config $X/fx.json > $OUT/S2-occupier.out 2>&1 ) & OC=$!; sleep 0.5; log "S2: a manual check occupies the one check place (pid $OC)"
+( AGENT_LOOP_LOCK_LOG=$X/lock.log $A_ liveness --config $X/fx.json > $OUT/S2-occupier.out 2>&1 ) & OC=$!; sleep 0.5; log "S2: a manual check occupies the one check place (pid $OC)"
 runcheck S2-due-cap-refused; wait $OC; wait $HP
 runcheck S3-hung-killed-at-timeout stop
-runcheck S4-sigkill kill
+hold 15; runcheck S4-sigkill-while-waiting kill; wait $HP
 runcheck S5-recovery
 touch $X/duty-down; log "duty transport now REFUSES"
 hold 25; runcheck S6-duty-down-director; wait $HP
 rm -f $X/duty-down; runcheck S7-recovery
 $A_ stop --config $X/fx.json > $OUT/stop.out 2>&1; sleep 3; log "run stopped intentionally: $(systemctl --user show $N-run.service -p ActiveState --value)"
 runcheck S8-stopped-quiet
-cp $X/wake.log $OUT/; cp $X/fx.db.checker-incident.json $OUT/final-incident.json 2>/dev/null; ls $X/fx.db.check-pending.json > $OUT/final-pending.txt 2>&1
+cp $X/wake.log $X/lock.log $OUT/; cp $X/fx.db.checker-incident.json $OUT/final-incident.json 2>/dev/null; ls $X/fx.db.check-pending.json > $OUT/final-pending.txt 2>&1
 journalctl --user -u $N-check.service -u $N-failed.service -u $N-run.service --since "@${START:-$(date -d "$(sed -n 's/host_utc_start //p' $OUT/env.txt)" +%s)}" -o short-iso-precise --no-pager > $OUT/journal.txt 2>&1
 # exact cleanup
 systemctl --user stop $N-run.service $N-check.service $N-failed.service 2>/dev/null
