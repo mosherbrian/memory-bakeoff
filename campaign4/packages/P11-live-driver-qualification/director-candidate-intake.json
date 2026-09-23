@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-23T15:23:12.652028+00:00",
+  "claim_sha256": "24d3bc6c99f91eef8277de407348f62747e02084dd9e9fc470173ee65e2cb865",
+  "bound_files_checked": 30,
+  "mismatches": [],
+  "decision": "ROUTE_EXISTING_25M_REVIEW_NO_LIVE_RELEASE",
+  "review_focus": [
+    "Test F1/F2/F3 independently, old failures versus corrected behavior; not DRY rc0.",
+    "F2 witness is NOT entirely offline: real private transient scopes/timers were used; baseline wall leaked real daemon-reload and nonexistent-ID lookups. Preserve as deviation, verify impact and remaining units, do not repeat uncontained baseline.",
+    "Independent reviewer may exercise isolated private transient scope/timer termination only, with cleanup and fully stubbed agent-deck/global systemctl paths; no fixture tasks, real seats, global daemon-reload, live agent-loop service or source edits. If safe containment unavailable report INCOMPLETE.",
+    "Check wall termination onset against authorized deadline AND WALLSTOP timestamp; late effects must not disappear by shifting measurement origin. Verify process descendants and timer-arm failure.",
+    "Frozen Go timers lack AccuracySec: actual live timeout latency must meet contract, never assumed from tolerance or wait length. Document potential failure; no Go change authorized.",
+    "L2 timeout settlement must retain restart/no-resend, reconcile outstanding timer/wakes and not count unresolved work as REST. Later stages must not proceed with effects after failed settlement.",
+    "Missing profile on cleanup commands: establish actual exact-ID/profile resolution before eventual signature; no speculative acceptance."
+  ],
+  "allocation": "Existing corvid25m candidate pass; no duplicate/reset or repair release. Candidate source/binary remains frozen."
+}
