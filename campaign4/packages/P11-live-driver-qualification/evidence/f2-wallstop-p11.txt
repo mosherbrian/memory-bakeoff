@@ -1,0 +1,33 @@
+   redirect: < PKG=/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification
+   redirect: < PLANS=$PKG/plans
+   redirect: > PKG=/tmp/p11-f2-C535/pkg
+   redirect: > PLANS=/tmp/p11-f2-C535/plans
+   redirect: < SD=/home/bmosher/.config/systemd/user
+   redirect: > SD=/tmp/p11-f2-C535/sd
+== driver 1f4bc4d44eab4e70 run W082025 wall at 2026-09-23T15:20:55Z, workdir /tmp/p11-f2-C535
+-- bound used: 2026-09-23T15:20:56.033Z
+-- after 50s: driver pid 245756 alive=no
+-- results.tsv:
+   WALLSTOP	INCOMPLETE	2026-09-23T15:20:56.033Z	live deadline 2026-09-23T15:20:55Z reached; driver scope stopped before cleanup
+-- effects by the driver's cgroup after the bound (deadline 2026-09-23T15:20:55Z):
+-- every effect, by cgroup:
+         8 agent-deck cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-wallstop-W082025.service
+         9 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W082025.scope
+         2 command it
+         2 investigating", and
+         1 journalctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W082025.scope
+         3 systemctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W082025.scope
+         4 systemctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-wallstop-W082025.service
+         2 wake cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W082025.scope
+      none
+-- cleanup runs: 1
+-- scope: inactive; wall timer: inactive inactive 
+-- sleep children of the driver left: 0
+LATE_EFFECTS=0 WALLSTOP_ROWS=1 CLEANUPS=1 DRIVER_ALIVE=0
+SECOND_CLEANUP_EFFECTS=0 msg="cleanup already ran"
+-- driver.log tail:
+   2026-09-23T15:20:56.082Z + systemctl --user stop p11live-wallstop-W082025.timer
+   2026-09-23T15:20:56.087Z   rc=0
+   2026-09-23T15:20:56.088Z cleanup done
+   2026-09-23T15:21:15.922Z cleanup already ran (lock /tmp/p11-f2-C535/ev/cleanup.lock)
+WORKDIR=/tmp/p11-f2-C535

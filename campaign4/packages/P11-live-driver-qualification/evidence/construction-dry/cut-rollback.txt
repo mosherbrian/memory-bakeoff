@@ -1,0 +1,6 @@
+2026-09-23T15:16:58.369Z + systemctl --user disable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-23T15:16:58.374Z drained agent-loop-liveness@campaign4.service: 
+2026-09-23T15:16:58.375Z + systemctl --user enable --now openwork.timer coax-dry.timer shadow-watch.timer
+2026-09-23T15:16:58.376Z + systemd-run --user --unit=campaign4-watch --on-active=45min --on-unit-active=45min /home/bmosher/.config/agent-deck/campaign4-watch
+2026-09-23T15:16:58.377Z + /home/bmosher/.config/agent-deck/wake 56513e0e-1790000758 [P11 cutover P11DRY] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): /tmp/p11-dry-so8Z/cut/rollback/open-items.json
+rollback	PASS	2026-09-23T15:16:58.378Z	rolled back: old owners active, agent-loop off, open items handed to cairn

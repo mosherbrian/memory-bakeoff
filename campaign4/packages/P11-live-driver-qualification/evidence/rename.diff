@@ -1,0 +1,141 @@
+--- ../P10-go-requalification-cutover/plans/cutover.sh	2026-09-23 07:24:47.653279833 -0700
++++ plans/cutover.sh	2026-09-23 08:14:40.396936964 -0700
+@@ -1,11 +1,11 @@
+ #!/bin/bash
+-# P10 stage D: cutover of campaign4 from the old scripts to agent-loop, the first
++# P11 stage D: cutover of campaign4 from the old scripts to agent-loop, the first
+ # real package, and rollback. Only after corvid's live PASS and Tern's signature
+ # of the filled inputs (sha256 of CUTOVER_INPUTS).
+ #
+ #   cutover.sh INPUTS.env capture     record the exact prior state (restorable)
+ #   cutover.sh INPUTS.env switch      drain old effects, install and start agent-loop, verify
+-#   cutover.sh INPUTS.env handoff     dispatch P10-production-handoff-1 through agent-loop
++#   cutover.sh INPUTS.env handoff     dispatch P11-production-handoff-1 through agent-loop
+ #   cutover.sh INPUTS.env rollback    drain agent-loop effects, restore the old owners
+ #   DRY=1 ... prints every command, runs none.
+ # Paths are absolute; no %h. The TSV ledger is archived, never imported or edited.
+@@ -17,7 +17,7 @@
+   val=${!v:-}; if [ -z "$val" ] || [[ "$val" == *"<"* ]]; then echo "input $v missing or unfilled" >&2; exit 2; fi
+ done
+ H=/home/bmosher
+-PKG=$H/memory-bake-off/campaign4/packages/P10-go-requalification-cutover
++PKG=$H/memory-bake-off/campaign4/packages/P11-live-driver-qualification
+ EV=${EV_DIR:-$PKG/cutover-$CUT_RUN}; PRE=$EV/pre   # EV_DIR only for offline rehearsal
+ SD=$H/.config/systemd/user
+ BIN=$H/.local/bin/agent-loop
+@@ -81,7 +81,7 @@
+   run systemctl --user stop campaign4-watch.timer
+   drain $OLD_SERVICES
+   for u in $OLD_TIMERS campaign4-watch.timer; do [ "$DRY" = 1 ] || [ "$(systemctl --user is-active "$u")" != active ] || fail "$u still active"; done
+-  run "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P10 cutover $CUT_RUN] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry)."
++  run "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P11 cutover $CUT_RUN] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry)."
+   # 2. qualified binary, config, units
+   run install -m 755 "$BIN" "$PREV"
+   run install -m 755 "$QUALIFIED_BIN" "$BIN"
+@@ -109,9 +109,9 @@
+ }
+ 
+ handoff() {
+-  run "$BIN" dispatch $C --qid P10-production-handoff-1 --worker kiln --verifier corvid --duration 20m --verify-window 10m \
++  run "$BIN" dispatch $C --qid P11-production-handoff-1 --worker kiln --verifier corvid --duration 20m --verify-window 10m \
+     --task "@$PKG/plans/tasks/handoff-task.md" --verify-task "@$PKG/plans/tasks/handoff-verify.md"
+-  ok "P10-production-handoff-1 dispatched through agent-loop; Tern decides with: $BIN decide $C --qid P10-production-handoff-1 --kind question_answered --ref <record> --reason <text>"
++  ok "P11-production-handoff-1 dispatched through agent-loop; Tern decides with: $BIN decide $C --qid P11-production-handoff-1 --kind question_answered --ref <record> --reason <text>"
+ }
+ 
+ rollback() {
+@@ -134,7 +134,7 @@
+   [ -e "$PREV" ] && run install -m 755 "$PREV" "$BIN"
+   run systemctl --user enable --now $OLD_TIMERS
+   run systemd-run --user --unit=campaign4-watch --on-active=45min --on-unit-active=45min $H/.config/agent-deck/campaign4-watch
+-  run "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P10 cutover $CUT_RUN] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): $EV/rollback/open-items.json"
++  run "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P11 cutover $CUT_RUN] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): $EV/rollback/open-items.json"
+   # 5. one owner
+   for u in $OLD_TIMERS; do [ "$DRY" = 1 ] || [ "$(systemctl --user is-active "$u")" = active ] || fail "$u not active after rollback"; done
+   [ "$DRY" = 1 ] || [ "$(systemctl --user is-active "$NEW_RUN")" != active ] || fail "agent-loop still active after rollback"
+--- ../P10-go-requalification-cutover/plans/live-inputs.template.env	2026-09-23 07:21:21.476118688 -0700
++++ plans/live-inputs.template.env	2026-09-23 08:14:40.397428424 -0700
+@@ -1,7 +1,7 @@
+-# P10 live inputs. Late-bound values are filled at prep, then this file is hashed
++# P11 live inputs. Late-bound values are filled at prep, then this file is hashed
+ # and the hash signed by Tern before live-driver.sh runs. No value may be left <...>.
+ RUN=<fresh run id, e.g. 20260923T1500Z; used in every qid and unit name>
+-ROOT=<absolute private root, e.g. /home/bmosher/p10live-RUN; must not exist yet>
++ROOT=<absolute private root, e.g. /home/bmosher/p11live-RUN; must not exist yet>
+ LIVE_DEADLINE=<absolute UTC end of the live grant, e.g. 2026-09-23T16:00:00Z>
+ PROFILE=campaign4
+ WAKE=/home/bmosher/.config/agent-deck/wake
+--- ../P10-go-requalification-cutover/plans/cutover-inputs.template.env	2026-09-23 07:24:13.360491698 -0700
++++ plans/cutover-inputs.template.env	2026-09-23 08:14:40.397374754 -0700
+@@ -1,4 +1,4 @@
+-# P10 cutover inputs. Filled and hashed before Tern signs stage D.
++# P11 cutover inputs. Filled and hashed before Tern signs stage D.
+ CUT_RUN=<fresh cutover id>
+ QUALIFIED_BIN=/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/agent-loop
+ QUALIFIED_SHA=c1c49a293ed9434c1f6e1f539fd5d9ebf89a0fab220580cf69ddd821547afac8
+--- ../P10-go-requalification-cutover/plans/tasks/l-worker.md	2026-09-23 07:21:21.477109563 -0700
++++ plans/tasks/l-worker.md	2026-09-23 08:14:40.397335330 -0700
+@@ -1,5 +1,5 @@
+-Harmless P10 live fixture, package {QID}. Do exactly this and nothing else:
+-1. Write the single line "P10 live witness {QID}" to the file {ARTIFACTS}/{QID}.txt.
++Harmless P11 live fixture, package {QID}. Do exactly this and nothing else:
++1. Write the single line "P11 live witness {QID}" to the file {ARTIFACTS}/{QID}.txt.
+ 2. Run this exact command:
+    {BIN} claim --config {CONFIG} --qid {QID} --step worker --outcome completed --artifact out={QID}.txt
+ 3. End your turn. Do not wake anyone.
+--- ../P10-go-requalification-cutover/plans/tasks/l-verify.md	2026-09-23 07:21:21.477708163 -0700
++++ plans/tasks/l-verify.md	2026-09-23 08:14:40.397294594 -0700
+@@ -1,5 +1,5 @@
+-Harmless P10 live fixture, package {QID}, verifier step. Do exactly this:
+-1. Check that {ARTIFACTS}/{QID}.txt contains exactly "P10 live witness {QID}".
++Harmless P11 live fixture, package {QID}, verifier step. Do exactly this:
++1. Check that {ARTIFACTS}/{QID}.txt contains exactly "P11 live witness {QID}".
+ 2. Write one line to {ARTIFACTS}/{QID}-review.txt: "PASS" if it does, "FAIL" and the reason if not.
+ 3. Run this exact command, with completed for PASS or failed for FAIL:
+    {BIN} claim --config {CONFIG} --qid {QID} --step verify --outcome completed --artifact review={QID}-review.txt
+--- ../P10-go-requalification-cutover/plans/tasks/l-noclaim-worker.md	2026-09-23 07:21:21.478208870 -0700
++++ plans/tasks/l-noclaim-worker.md	2026-09-23 08:14:40.397257234 -0700
+@@ -1,2 +1,2 @@
+-Harmless P10 live fixture, package {QID}: a deliberate timeout case.
++Harmless P11 live fixture, package {QID}: a deliberate timeout case.
+ Do not write any file and do not run any claim command. Reply "acknowledged" and end your turn.
+--- ../P10-go-requalification-cutover/plans/tasks/ack.md	2026-09-23 07:21:21.478743581 -0700
++++ plans/tasks/ack.md	2026-09-23 08:14:40.397098166 -0700
+@@ -1,3 +1,3 @@
+-When a message starting "[agent-loop liveness]" reaches you during P10 live, run the exact
+-liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P10 live witness: observed
++When a message starting "[agent-loop liveness]" reaches you during P11 live, run the exact
++liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P11 live witness: observed
+ <state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+--- ../P10-go-requalification-cutover/plans/tasks/handoff-task.md	2026-09-23 07:25:39.459979620 -0700
++++ plans/tasks/handoff-task.md	2026-09-23 08:14:40.397161545 -0700
+@@ -1,11 +1,11 @@
+-Package P10-production-handoff-1 (the first real package on agent-loop). Write two files:
++Package P11-production-handoff-1 (the first real package on agent-loop). Write two files:
+ 
+ 1. /home/bmosher/memory-bake-off/campaign4/OPERATOR-HANDOFF-20260923.md, an operator handoff for the deployed loop, with these sections, each filled from the live host (run the commands; do not copy from plans):
+    - Pins: `sha256sum /home/bmosher/.local/bin/agent-loop`, `/home/bmosher/.local/bin/agent-loop version`, the source commit (from `go version -m /home/bmosher/.local/bin/agent-loop | grep vcs.revision`), `sha256sum /home/bmosher/.config/agent-loop/campaign4.json`, `systemctl --user cat agent-loop@campaign4.service agent-loop-liveness@campaign4.timer`.
+-   - Commands: install, run (the units), status (`agent-loop expose --config /home/bmosher/.config/agent-loop/campaign4.json`), stop (`agent-loop stop`), start, restore/rollback (from /home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/plans/cutover.sh rollback).
++   - Commands: install, run (the units), status (`agent-loop expose --config /home/bmosher/.config/agent-loop/campaign4.json`), stop (`agent-loop stop`), start, restore/rollback (from /home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/plans/cutover.sh rollback).
+    - Effect ownership: which units are enabled and active now (`systemctl --user list-timers --all`, `systemctl --user is-enabled` for openwork.timer coax-dry.timer shadow-watch.timer agent-loop@campaign4.service agent-loop-liveness@campaign4.timer), and that cairn is duty only.
+    - Known limits: copy the list from `agent-loop expose --json` (known_limits).
+-2. /home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/operator-handoff-manifest.json: {"handoff_sha256": <sha256 of the .md>, "binary_sha256": <sha256 of /home/bmosher/.local/bin/agent-loop>, "config_sha256": <sha256 of /home/bmosher/.config/agent-loop/campaign4.json>, "units": {<unit>: <sha256 of its file>}, "generated_at": <`date -u +%FT%TZ`>}.
++2. /home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/operator-handoff-manifest.json: {"handoff_sha256": <sha256 of the .md>, "binary_sha256": <sha256 of /home/bmosher/.local/bin/agent-loop>, "config_sha256": <sha256 of /home/bmosher/.config/agent-loop/campaign4.json>, "units": {<unit>: <sha256 of its file>}, "generated_at": <`date -u +%FT%TZ`>}.
+ 
+ Then run this exact command and end your turn:
+-   /home/bmosher/.local/bin/agent-loop claim --config /home/bmosher/.config/agent-loop/campaign4.json --qid P10-production-handoff-1 --step worker --outcome completed --artifact handoff=OPERATOR-HANDOFF-20260923.md --artifact manifest=packages/P10-go-requalification-cutover/operator-handoff-manifest.json
++   /home/bmosher/.local/bin/agent-loop claim --config /home/bmosher/.config/agent-loop/campaign4.json --qid P11-production-handoff-1 --step worker --outcome completed --artifact handoff=OPERATOR-HANDOFF-20260923.md --artifact manifest=packages/P11-live-driver-qualification/operator-handoff-manifest.json
+--- ../P10-go-requalification-cutover/plans/tasks/handoff-verify.md	2026-09-23 07:21:21.479743353 -0700
++++ plans/tasks/handoff-verify.md	2026-09-23 08:14:40.397212610 -0700
+@@ -1,7 +1,7 @@
+-Package P10-production-handoff-1, verifier step. Check the worker's two files against the live host, read-only:
+-1. Recompute every hash in /home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/operator-handoff-manifest.json from the files it names; all must match.
++Package P11-production-handoff-1, verifier step. Check the worker's two files against the live host, read-only:
++1. Recompute every hash in /home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/operator-handoff-manifest.json from the files it names; all must match.
+ 2. Run each status/pin command the handoff lists and compare the output with what the handoff says.
+ 3. Confirm with `systemctl --user is-enabled` / `is-active` that openwork.timer, coax-dry.timer and shadow-watch.timer are disabled and inactive, and agent-loop@campaign4.service and agent-loop-liveness@campaign4.timer are enabled and active.
+-Write your findings, one line per check with PASS or FAIL, to /home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/operator-handoff-verification.md. Then run exactly one of these and end your turn:
+-   all PASS: /home/bmosher/.local/bin/agent-loop claim --config /home/bmosher/.config/agent-loop/campaign4.json --qid P10-production-handoff-1 --step verify --outcome completed --artifact review=packages/P10-go-requalification-cutover/operator-handoff-verification.md
++Write your findings, one line per check with PASS or FAIL, to /home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/operator-handoff-verification.md. Then run exactly one of these and end your turn:
++   all PASS: /home/bmosher/.local/bin/agent-loop claim --config /home/bmosher/.config/agent-loop/campaign4.json --qid P11-production-handoff-1 --step verify --outcome completed --artifact review=packages/P11-live-driver-qualification/operator-handoff-verification.md
+    any FAIL: the same command with --outcome failed

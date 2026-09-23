@@ -1,0 +1,18 @@
+2026-09-23T15:16:58.339Z + systemctl --user disable --now openwork.timer coax-dry.timer shadow-watch.timer
+2026-09-23T15:16:58.339Z + systemctl --user stop campaign4-watch.timer
+2026-09-23T15:16:58.342Z drained openwork.service: 
+2026-09-23T15:16:58.344Z drained coax-dry.service: 
+2026-09-23T15:16:58.347Z drained shadow-watch.service: 
+2026-09-23T15:16:58.349Z drained campaign4-watch.service: 
+2026-09-23T15:16:58.350Z + /home/bmosher/.config/agent-deck/wake 56513e0e-1790000758 [P11 cutover P11DRY] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry).
+2026-09-23T15:16:58.351Z + install -m 755 /home/bmosher/.local/bin/agent-loop /home/bmosher/.local/bin/agent-loop.prev-c124d82
+2026-09-23T15:16:58.351Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/agent-loop /home/bmosher/.local/bin/agent-loop
+2026-09-23T15:16:58.353Z + mkdir -p /home/bmosher/.config/agent-loop /home/bmosher/.local/share/agent-loop /home/bmosher/.local/share/agent-loop/campaign4/claims
+2026-09-23T15:16:58.354Z + write /home/bmosher/.config/agent-loop/campaign4.json
+2026-09-23T15:16:58.355Z + cp /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/../examples/systemd-unqualified/agent-loop@.service /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/../examples/systemd-unqualified/agent-loop-liveness@.service /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/../examples/systemd-unqualified/agent-loop-liveness@.timer /home/bmosher/.config/systemd/user/
+2026-09-23T15:16:58.356Z + systemctl --user daemon-reload
+2026-09-23T15:16:58.357Z + /home/bmosher/.local/bin/agent-loop check --config /home/bmosher/.config/agent-loop/campaign4.json
+2026-09-23T15:16:58.358Z + systemctl --user enable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-23T15:16:58.360Z + systemctl --user start agent-loop-liveness@campaign4.service
+2026-09-23T15:16:58.360Z + systemctl --user list-timers --all --no-pager
+switch	PASS	2026-09-23T15:16:58.361Z	old owners off and drained; agent-loop serving; outside check rest; one owner

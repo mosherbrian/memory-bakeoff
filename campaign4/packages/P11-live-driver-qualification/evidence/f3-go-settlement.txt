@@ -1,0 +1,21 @@
+== binary c1c49a293ed9434c  workdir /tmp/p11-f3-kAeB
+PASS  idle loop is rest: rest
+PASS  L2 in worker step after dispatch: worker
+PASS  worker woken once: 1
+PASS  NEGATIVE: open L2 is not rest: ok
+   armed: --user --unit=agent-loop-fx-L2-w1.timer --on-active=20s /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/agent-loop timer-callback --confi
+PASS  restart: no second dispatch to the worker: 1
+   callback: {"decision": "interrupted", "dedup": false, "timer": "deadline:L2-w1"}
+PASS  callback decision: interrupted
+PASS  L2 settled step: timed-out
+PASS  one /cancel to the worker: 1
+PASS  one director wake: 1
+PASS  rest once L2 is settled (no open work): rest
+   replay: {"decision": "already-handled", "dedup": true, "timer": "deadline:L2-w1"}
+PASS  replay decision: already-handled
+PASS  replay: no worker/director effect: 0:0
+   decide rc=1: agent-loop: E_PHASE_MISMATCH: decide not allowed in actual phase BLOCKED   step now: timed-out
+PASS  L6: one /cancel only after its dispatch (no L2 effect): 1
+PASS  L6: one director wake: 1
+PASS  L6 step: timed-out
+== 15 PASS, 0 FAIL

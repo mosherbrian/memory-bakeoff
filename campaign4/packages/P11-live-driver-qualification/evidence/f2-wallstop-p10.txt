@@ -1,0 +1,39 @@
+   redirect: < PKG=/home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover
+   redirect: < PLANS=$PKG/plans
+   redirect: > PKG=/tmp/p11-f2-qp0J/pkg
+   redirect: > PLANS=/tmp/p11-f2-qp0J/plans
+   redirect: < SD=/home/bmosher/.config/systemd/user
+   redirect: > SD=/tmp/p11-f2-qp0J/sd
+== driver 912b55b2fb374022 run W081630 wall at 2026-09-23T15:17:00Z, workdir /tmp/p11-f2-qp0J
+-- bound used: 2026-09-23T15:17:00Z (no WALLSTOP row)
+-- after 150s: driver pid 220659 alive=yes
+-- results.tsv:
+-- effects by the driver's cgroup after the bound (deadline 2026-09-23T15:17:00Z):
+-- every effect, by cgroup:
+         9 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container
+         2 command it
+         2 investigating", and
+         1 journalctl cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container
+         3 systemctl cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container
+         2 wake cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container
+   1790176711.396204044 systemctl cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: --user show age
+   1790176711.399331679 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+   1790176711.401740668 journalctl cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: --user -u agen
+   1790176711.408787259 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: dispatch --con
+   1790176711.413053786 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+   1790176716.438151339 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+   1790176721.464831798 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+   1790176726.494357175 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+   1790176731.521033299 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+   1790176736.550311533 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/user.slice/libpod-561fe9b30e6156873ce8dafb18085f987111d653180530e1ab5a57ddac2c9851.scope/container :: expose --confi
+-- cleanup runs: 0
+-- scope: inactive; wall timer: inactive inactive 
+-- sleep children of the driver left: 1
+LATE_EFFECTS=10 WALLSTOP_ROWS= CLEANUPS=0 DRIVER_ALIVE=1
+SECOND_CLEANUP_EFFECTS=12 msg=""
+-- driver.log tail:
+   2026-09-23T15:19:00.787Z + systemctl --user stop p10live-wallstop-W081630.timer
+   Failed to stop p10live-wallstop-W081630.timer: Unit p10live-wallstop-W081630.timer not loaded.
+   2026-09-23T15:19:00.792Z   rc=5
+   2026-09-23T15:19:00.793Z cleanup done
+WORKDIR=/tmp/p11-f2-qp0J
