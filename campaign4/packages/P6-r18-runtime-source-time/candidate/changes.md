@@ -56,3 +56,11 @@ Parent: R16 candidate source `c8e99cf`, outer manifest `3862a0a2`
 Quiet-rest window correction (still owed); fleet adoption (fresh
 prep/review/signature); live timing certification. No backfill: legacy
 records stay unmeasurable.
+
+## Manifest repair-1 (packaging only; no production/test/plan/runtime/interface byte edits)
+- Removed stale nested duplicate `candidate/candidate/` (79 entries;
+  preserved in base commit 05a4568) and bytecode/cache debris.
+- Re-emitted composition + outer manifests acyclically: unique canonical
+  paths, no escaping/symlink aliases, no self-cycle, no omitted executed
+  helper/wrapper. Executable closure smoke-checked (case_entry, harness,
+  srcemit, driver/ingress/store/lifecycle import from canonical tree).
