@@ -17,7 +17,7 @@ set -u
 A_=$1; MODE=$2; OUT=$3; mkdir -p $OUT
 X=$(mktemp -d /var/tmp/p12-rp-XXXX); S=$X/stubs; mkdir -p $S $X/stream $X/art $X/claims
 ARRIVE_FROM=${ARRIVE_FROM:-stall}; SLOW_ORDINARY=${SLOW_ORDINARY:-1}
-N=14; DUR=45; STALL_LEAD=3; STALL=40; ARRIVE_EVERY=${ARRIVE_EVERY:-5}; ARRIVE_FOR=90; TAIL=${TAIL:-150}; NOTICE_S=1.0; DISPATCH_S=20; FAIL_EVERY=${FAIL_EVERY:-5}
+N=14; DUR=45; STALL_LEAD=3; STALL=${STALL:-40}; ARRIVE_EVERY=${ARRIVE_EVERY:-5}; ARRIVE_FOR=90; TAIL=${TAIL:-150}; NOTICE_S=1.0; DISPATCH_S=20; FAIL_EVERY=${FAIL_EVERY:-5}
 QUEUED_EVERY=${QUEUED_EVERY:-0}; HANG_EVERY=${HANG_EVERY:-0}; HANG_S=15; FAIL_FIRST_DUTY=${FAIL_FIRST_DUTY:-0}
 cat > $OUT/workload.json <<EOF
 {"mode": "$MODE", "binary_sha256": "$(sha256sum $A_ | cut -d' ' -f1)", "workdir": "$X",
