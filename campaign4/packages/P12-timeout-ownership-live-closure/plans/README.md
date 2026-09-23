@@ -87,3 +87,15 @@ Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. T
   - a reload every 60 s: checks every 46 s;
   - a reload every 20 s: **no check at all in 300 s**, because each reload restarts the first OnActiveSec countdown until the timer has fired once.
   - Declared limit: a reload storm less than 45 s apart just after the liveness timer starts delays the outside check. Once it has fired, reloads did not move it.
+
+## P12-bounded-deadline-1 (candidate f86daf9, bin `2656bb97…`; templates now pin this release) — INCOMPLETE on the aggregate bound
+
+- **Liveness timer**: now `OnCalendar=*-*-* *:*:00,30 UTC`, `AccuracySec=1s`, `Persistent=false`; the monotonic triggers are removed. Measured on the exact templates, installed as the driver installs them, with a real daemon-reload every 20 s for 300 s:
+  - old template: 0 checks;
+  - new template: 10 checks, gaps 29.7–30.3 s (`evidence/bounded-deadline/cadence-templates-reload20s.txt`).
+  - The L6b bounds are now duty 60–95 s and director 120–155 s (60 + 30 + 1 + check time).
+- **Busy deadline callback**:
+  - The callback waits 5 s for the ledger lock. If it is still busy, it writes a due marker (`<db>.due/<action>.json`: atomic, safe names). The marker is a hint only, and its time is recorded as `timeout.deferred_callback` (detection evidence, not settlement).
+  - Every lock holder runs `ProcessDue` when it takes the lock and again before it releases it. Each marker is checked against the ledger through the core's own callback identity checks under the lock, then settled once, or rejected and kept as `.rejected-<time>.json` with the reason.
+  - Real processes (`race-busy-callback.txt`): the callback deferred after 5.1 s; the holder settled it at release (one cancel; `deferred_callback` recorded).
+- **Not met (INCOMPLETE)**: an end-to-end bound under contention. Settlement after a busy callback happens when the current holder releases the lock. A run pass's hold time is not bounded by a constant: it is the pass work plus the number of wake sends × the transport timeout (30 s each). So detection ≤ 30 s is guaranteed only when holders release within about 25 s. No fixed aggregate bound is claimed.

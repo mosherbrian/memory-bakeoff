@@ -1,0 +1,449 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index 855f713..d937b07 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -60,12 +60,13 @@ func openLocked(path string) (*loop.Loop, func(), error) {
+ 	if err != nil {
+ 		return nil, nil, err
+ 	}
++	loop.ProcessDue(cfg) // due deadlines before ordinary work
+ 	l, err := loop.Open(cfg, nil)
+ 	if err != nil {
+ 		k.Unlock()
+ 		return nil, nil, err
+ 	}
+-	return l, func() { l.Close(); k.Unlock() }, nil
++	return l, func() { l.Close(); loop.ProcessDue(cfg); k.Unlock() }, nil
+ }
+ 
+ func fail(err error) int {
+@@ -309,6 +310,9 @@ func runRun(args []string) int {
+ 		if err != nil {
+ 			return fail(err)
+ 		}
++		for _, m := range loop.ProcessDue(cfg) { // due deadlines before ordinary work
++			fmt.Println(time.Now().UTC().Format(time.RFC3339), m)
++		}
+ 		l, err := loop.Open(cfg, nil)
+ 		if err != nil {
+ 			return fail(err)
+@@ -328,6 +332,9 @@ func runRun(args []string) int {
+ 			fmt.Fprintln(os.Stderr, "agent-loop: pass record:", err)
+ 		}
+ 		l.Close()
++		for _, m := range loop.ProcessDue(cfg) { // and before the lock is released
++			fmt.Println(time.Now().UTC().Format(time.RFC3339), m)
++		}
+ 		k.Unlock()
+ 		for _, m := range msgs {
+ 			fmt.Println(time.Now().UTC().Format(time.RFC3339), m)
+@@ -430,54 +437,28 @@ func runTimerCallback(args []string) int {
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	k, err := loop.LockLedger(cfg, 120*time.Second)
++	k, err := loop.LockLedger(cfg, loop.DueWait)
+ 	if err != nil {
+-		// Owned: the deadline is not settled; duty gets the exact command to rerun.
+-		rerun := strings.Join(append([]string{cfg.Bin}, os.Args[1:]...), " ")
+-		exec.Command(cfg.Wake, cfg.Seats[cfg.Duty], "[agent-loop] deadline callback for "+*qid+" "+*action+
+-			" could not take the ledger lock: "+err.Error()+". The deadline is NOT settled. Rerun: "+rerun).Run()
+-		return fail(err)
++		// Busy: leave a durable due marker; the current holder settles it
++		// before it releases the lock (and every holder does so first).
++		path, werr := loop.WriteDue(cfg, *qid, *action, *execution, time.Now().UTC())
++		if werr != nil {
++			return fail(fmt.Errorf("ledger busy (%v) and no due marker: %v", err, werr))
++		}
++		fmt.Println(py.Dumps(py.D("decision", "deferred", "due_marker", path, "reason", err.Error())))
++		return 0
+ 	}
+ 	defer k.Unlock()
+-	out, err := loop.TimerCallback(cfg, *qid, *action, *execution)
+-	if err != nil {
+-		// The core may have interrupted the step and then failed an effect
+-		// (a /cancel that did not arrive): the timeout is still owned here,
+-		// with the failure, never left waiting on nobody.
+-		if l, oerr := loop.Open(cfg, nil); oerr == nil {
+-			msg, serr := l.SettleTimeoutFailure(*qid, *action, err)
+-			l.Close()
+-			if serr == nil {
+-				fmt.Println(py.Dumps(py.D("decision", "interrupted-effect-failed", "settlement", msg, "error", err.Error())))
+-			}
+-		}
+-		return fail(err)
++	for _, m := range loop.ProcessDue(cfg) {
++		fmt.Println(m)
+ 	}
+-	fmt.Println(py.Dumps(out))
+-	if py.S(out.Get("decision")) == "no-op-early" {
+-		l, err := loop.Open(cfg, nil)
+-		if err != nil {
+-			return fail(err)
+-		}
+-		defer l.Close()
+-		note, err := l.RearmEarly(*qid, *action, *execution)
+-		fmt.Println(note)
+-		if err != nil {
+-			return fail(err)
+-		}
+-		return 0
++	d, note, err := loop.RunDeadline(cfg, *qid, *action, *execution, "")
++	fmt.Println(py.Dumps(py.D("decision", d, "note", note)))
++	for _, m := range loop.ProcessDue(cfg) {
++		fmt.Println(m)
+ 	}
+-	// already-handled too: a callback that crashed after the core's effects
+-	// but before this record is completed by the timer's replay.
+-	if d := py.S(out.Get("decision")); d == "interrupted" || d == "recovered" || d == "already-handled" {
+-		l, err := loop.Open(cfg, nil)
+-		if err != nil {
+-			return fail(err)
+-		}
+-		defer l.Close()
+-		if err := l.MarkTimedOut(*qid, *action); err != nil {
+-			return fail(err)
+-		}
++	if err != nil {
++		return fail(err)
+ 	}
+ 	return 0
+ }
+@@ -500,6 +481,8 @@ func runTimeoutAck(args []string) int {
+ 		return fail(err)
+ 	}
+ 	defer k.Unlock()
++	loop.ProcessDue(cfg)
++	defer loop.ProcessDue(cfg)
+ 	l, err := loop.Open(cfg, nil)
+ 	if err != nil {
+ 		return fail(err)
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 3c0ade9..4eec6b3 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -127,6 +127,12 @@ HOST_MUTANTS = [
+ # reference exists for it).
+ LP = "internal/loop/"
+ LOOP_MUTANTS = [
++    # P12-bounded-deadline-1: due markers are hints checked against the ledger
++    (LP + "due.go", 'var dueName = regexp.MustCompile(`^[A-Za-z0-9._-]{1,200}$`)', 'var dueName = regexp.MustCompile(`^.*$`)',
++     "an unsafe (path-traversing) due marker identity is accepted"),
++    (LP + "due.go", ' || n != h.Action+".json" {', " {", "a due marker whose name does not match its action is acted on"),
++    (LP + "due.go", '	case "E_UNKNOWN_PACKAGE", "E_ACTION_MISMATCH", "E_EXECUTION_MISMATCH", "E_SUPERSEDED_ACTION", "E_NO_EXECUTION_AUTHORITY", "E_NO_IDENTITY":\n		return true',
++     '	case "E_UNKNOWN_PACKAGE":\n		return true', "a forged due marker (wrong action/execution) is kept instead of rejected"),
+     # P12-stopped-ownership-1: the outside check escalates while run is stopped; fresh locked view
+     (LP + "liveness.go", "if _, serr := os.Stat(c.Cfg.DB); serr == nil {", "if _, serr := os.Stat(c.Cfg.DB); serr == nil && false {",
+      "the outside check never escalates a timeout while run is stopped"),
+diff --git a/examples/systemd-unqualified/agent-loop-liveness@.timer b/examples/systemd-unqualified/agent-loop-liveness@.timer
+index 5060bf1..bbbf520 100644
+--- a/examples/systemd-unqualified/agent-loop-liveness@.timer
++++ b/examples/systemd-unqualified/agent-loop-liveness@.timer
+@@ -7,8 +7,11 @@
+ Description=agent-loop %i liveness check timer
+ 
+ [Timer]
+-OnActiveSec=45s
+-OnUnitActiveSec=45s
++# Every 30 s at fixed UTC wall-clock seconds (:00 and :30). A calendar schedule is
++# not restarted by daemon-reload; OnActiveSec/OnUnitActiveSec were (P12 measured:
++# 0 checks in 300 s with a reload every 20 s).
++OnCalendar=*-*-* *:*:00,30 UTC
++Persistent=false
+ AccuracySec=1s
+ RandomizedDelaySec=0
+ 
+diff --git a/internal/loop/due.go b/internal/loop/due.go
+new file mode 100644
+index 0000000..7bd464d
+--- /dev/null
++++ b/internal/loop/due.go
+@@ -0,0 +1,178 @@
++package loop
++
++import (
++	"encoding/json"
++	"fmt"
++	"os"
++	"path/filepath"
++	"regexp"
++	"sort"
++	"strings"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// DueWait is how long a deadline callback waits for the ledger lock before
++// it leaves a due marker instead (P12-bounded-deadline-1).
++const DueWait = 5 * time.Second
++
++// DueHint is a deadline callback that could not take the ledger lock. It is
++// only a hint: it names an action, and whoever holds the lock next checks it
++// against the ledger (current package, action, execution, phase) before
++// anything happens. It never extends a deadline or carries authority.
++type DueHint struct {
++	QID        string `json:"qid"`
++	Action     string `json:"action"`
++	Execution  string `json:"execution"`
++	WrittenAt  string `json:"written_at"`
++	PID        int    `json:"pid"`
++	Invocation string `json:"invocation,omitempty"` // systemd INVOCATION_ID of the callback unit
++}
++
++var dueName = regexp.MustCompile(`^[A-Za-z0-9._-]{1,200}$`)
++
++func dueDir(cfg *Config) string { return cfg.DB + ".due" }
++
++// WriteDue records a due callback atomically (temp file + rename).
++func WriteDue(cfg *Config, qid, action, execution string, now time.Time) (string, error) {
++	for _, s := range []string{qid, action, execution} {
++		if !dueName.MatchString(s) {
++			return "", fmt.Errorf("refusing a due marker for unsafe identity %q", s)
++		}
++	}
++	if err := os.MkdirAll(dueDir(cfg), 0o755); err != nil {
++		return "", err
++	}
++	b, _ := json.Marshal(DueHint{QID: qid, Action: action, Execution: execution, WrittenAt: py.ISO(now),
++		PID: os.Getpid(), Invocation: os.Getenv("INVOCATION_ID")})
++	path := filepath.Join(dueDir(cfg), action+".json")
++	tmp := path + ".tmp"
++	f, err := os.OpenFile(tmp, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0o644)
++	if err != nil {
++		return "", err
++	}
++	if _, err := f.Write(b); err != nil {
++		f.Close()
++		return "", err
++	}
++	if err := f.Sync(); err != nil {
++		f.Close()
++		return "", err
++	}
++	f.Close()
++	return path, os.Rename(tmp, path)
++}
++
++// ProcessDue settles every due marker. The caller holds the ledger lock and
++// runs it before ordinary work and again before releasing the lock, so due
++// deadlines are never starved. A marker is removed only after the deadline
++// is settled or explicitly rejected (kept as <name>.rejected-<time>.json
++// with the reason); any other failure keeps it for the next holder.
++func ProcessDue(cfg *Config) []string {
++	ents, err := os.ReadDir(dueDir(cfg))
++	if err != nil {
++		return nil
++	}
++	var names []string
++	for _, e := range ents {
++		if n := e.Name(); strings.HasSuffix(n, ".json") && !strings.Contains(n, ".rejected-") {
++			names = append(names, n)
++		}
++	}
++	sort.Strings(names)
++	var out []string
++	for _, n := range names {
++		path := filepath.Join(dueDir(cfg), n)
++		reject := func(why string) {
++			os.Rename(path, strings.TrimSuffix(path, ".json")+".rejected-"+time.Now().UTC().Format("20060102T150405Z")+".json")
++			out = append(out, "due "+n+": REJECTED: "+why)
++		}
++		var h DueHint
++		b, err := os.ReadFile(path)
++		if err != nil || json.Unmarshal(b, &h) != nil {
++			reject("unreadable or malformed marker")
++			continue
++		}
++		if !dueName.MatchString(h.QID) || !dueName.MatchString(h.Action) || !dueName.MatchString(h.Execution) || n != h.Action+".json" {
++			reject("identity does not match the marker name or is unsafe")
++			continue
++		}
++		decision, note, err := RunDeadline(cfg, h.QID, h.Action, h.Execution, h.WrittenAt)
++		switch {
++		case err == nil && (decision == "interrupted" || decision == "recovered" || decision == "already-handled" || decision == "interrupted-effect-failed"):
++			os.Remove(path)
++			out = append(out, fmt.Sprintf("due %s: settled (%s) %s", n, decision, note))
++		case err == nil && strings.HasPrefix(decision, "no-op") && decision != "no-op-early":
++			reject("the ledger no longer has this deadline due (" + decision + ")")
++		case err == nil && decision == "no-op-early":
++			os.Remove(path) // re-armed at the original deadline by RunDeadline
++			out = append(out, "due "+n+": early, re-armed: "+note)
++		default:
++			if f, ok := host.IsFault(err); ok && strings.HasPrefix(f.Code, "E_") && f.Code != "E_LEDGER_BUSY" && isIdentityFault(f.Code) {
++				reject(f.Code + ": " + f.Detail)
++				continue
++			}
++			out = append(out, fmt.Sprintf("due %s: kept for the next holder: %s %v", n, decision, err))
++		}
++	}
++	return out
++}
++
++func isIdentityFault(code string) bool {
++	switch code {
++	case "E_UNKNOWN_PACKAGE", "E_ACTION_MISMATCH", "E_EXECUTION_MISMATCH", "E_SUPERSEDED_ACTION", "E_NO_EXECUTION_AUTHORITY", "E_NO_IDENTITY":
++		return true
++	}
++	return false
++}
++
++// RunDeadline runs one deadline callback while the caller holds the ledger
++// lock: the core's deadline handling, then the loop's settlement record, the
++// re-arm of an early callback, or the owned settlement of a failed effect.
++// deferredAt, when set, is the due marker's written_at (detection evidence).
++func RunDeadline(cfg *Config, qid, action, execution, deferredAt string) (string, string, error) {
++	out, err := TimerCallback(cfg, qid, action, execution)
++	if err != nil {
++		l, oerr := Open(cfg, nil)
++		if oerr != nil {
++			return "", "", err
++		}
++		defer l.Close()
++		msg, serr := l.SettleTimeoutFailure(qid, action, err)
++		if serr != nil {
++			return "", "", err
++		}
++		l.noteDeferred(qid, action, deferredAt)
++		return "interrupted-effect-failed", msg, err
++	}
++	d := py.S(out.Get("decision"))
++	l, oerr := Open(cfg, nil)
++	if oerr != nil {
++		return d, "", oerr
++	}
++	defer l.Close()
++	switch d {
++	case "no-op-early":
++		note, err := l.RearmEarly(qid, action, execution)
++		return d, note, err
++	case "interrupted", "recovered", "already-handled":
++		if err := l.MarkTimedOut(qid, action); err != nil {
++			return d, "", err
++		}
++		l.noteDeferred(qid, action, deferredAt)
++	}
++	return d, py.Dumps(out), nil
++}
++
++// noteDeferred records when a busy callback left its due marker.
++func (l *Loop) noteDeferred(qid, action, at string) {
++	if at == "" {
++		return
++	}
++	if p := l.Pkg(qid); p != nil && p.Timeout != nil && p.Timeout.Action == action && p.Timeout.Deferred == "" {
++		p.Timeout.Deferred = at
++		l.save(p)
++	}
++}
+diff --git a/internal/loop/due_p12_test.go b/internal/loop/due_p12_test.go
+new file mode 100644
+index 0000000..45a0b39
+--- /dev/null
++++ b/internal/loop/due_p12_test.go
+@@ -0,0 +1,73 @@
++package loop
++
++import (
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++)
++
++// P12-bounded-deadline-1: a busy deadline callback leaves a due marker; the
++// next lock holder settles it after checking it against the ledger.
++
++func (r *rig) cancels() int {
++	n := 0
++	for _, c := range r.calls {
++		if filepath.Base(c[0]) == "wake" && c[2] == "/cancel" {
++			n++
++		}
++	}
++	return n
++}
++
++func TestDueMarkerIsSettledByTheNextHolder(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	path, err := WriteDue(r.cfg, "Q", "Q-w1", "ex-Q-w1", time.Now().UTC())
++	must(t, err)
++	msgs := ProcessDue(r.cfg)
++	to := r.fresh("Q")
++	if _, err := os.Stat(path); err == nil || to == nil || to.Deferred == "" || !strings.Contains(strings.Join(msgs, "|"), "settled (interrupted)") {
++		t.Fatalf("not settled: %v %+v", msgs, to)
++	}
++	// A replayed marker (the timer or a second busy callback): no second cancel.
++	n := r.cancels()
++	WriteDue(r.cfg, "Q", "Q-w1", "ex-Q-w1", time.Now().UTC())
++	msgs = ProcessDue(r.cfg)
++	if r.cancels() != n || !strings.Contains(strings.Join(msgs, "|"), "already-handled") {
++		t.Fatalf("replay: %v, cancels %d -> %d", msgs, n, r.cancels())
++	}
++}
++
++func TestDueMarkerHintsAreCheckedAgainstTheLedger(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	dir := r.cfg.DB + ".due"
++	os.MkdirAll(dir, 0o755)
++	for _, c := range []struct{ name, body string }{
++		{"Q-v1.json", `{"qid": "Q", "action": "Q-v1", "execution": "ex-Q-v1", "written_at": "x"}`},   // not the current action
++		{"Q-w1.json", `{"qid": "Q", "action": "Q-w1", "execution": "ex-forged", "written_at": "x"}`}, // wrong execution
++		{"Z-w1.json", `{"qid": "Z", "action": "Z-w1", "execution": "ex-Z-w1", "written_at": "x"}`},   // no such package
++		{"bad.json", `{not json`}, // malformed
++		{"other.json", `{"qid": "Q", "action": "Q-w1", "execution": "ex-Q-w1", "written_at": "x"}`},   // name != action
++		{"dots.json", `{"qid": "Q", "action": "../../x", "execution": "ex-Q-w1", "written_at": "x"}`}, // unsafe
++	} {
++		os.WriteFile(filepath.Join(dir, c.name), []byte(c.body), 0o644)
++		n := r.cancels()
++		msgs := ProcessDue(r.cfg)
++		if r.cancels() != n || !strings.Contains(strings.Join(msgs, "|"), "REJECTED") {
++			t.Errorf("%s: not rejected or acted on: %v", c.name, msgs)
++		}
++		if _, err := os.Stat(filepath.Join(dir, c.name)); err == nil {
++			t.Errorf("%s: left in place", c.name)
++		}
++	}
++	if r.fresh("Q") != nil {
++		t.Fatal("a forged hint settled the step")
++	}
++	if _, err := WriteDue(r.cfg, "Q", "../../x", "e", time.Now()); err == nil {
++		t.Fatal("an unsafe due marker was written")
++	}
++}
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 3136e06..0b04680 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -32,6 +32,7 @@ type StepTimeout struct {
+ 	NoAckDuty     string `json:"no_ack_duty,omitempty"`
+ 	NoAckDirector string `json:"no_ack_director,omitempty"`
+ 	Lateness      string `json:"callback_lateness,omitempty"` // settlement time minus the ledger deadline
++	Deferred      string `json:"deferred_callback,omitempty"` // a busy callback's due marker time (detection evidence, not settlement)
+ }
+ 
+ // NoAckAfter is how long a settled timeout may stay unacknowledged before
+@@ -306,12 +307,16 @@ func withTimeouts(cfg *Config, clock core.DriverClock, fn func(f *Loop) error) e
+ 		return err
+ 	}
+ 	defer k.Unlock()
++	due := ProcessDue(cfg) // due deadlines before ordinary work
+ 	f, err := Open(cfg, clock)
+ 	if err != nil {
+ 		return err
+ 	}
+-	defer f.Close()
+-	return fn(f)
++	err = fn(f)
++	f.Close()
++	ProcessDue(cfg) // and again before the lock is released
++	_ = due
++	return err
+ }
+ 
+ // EscalateTimeouts runs the never-acked and expired-ack escalations under

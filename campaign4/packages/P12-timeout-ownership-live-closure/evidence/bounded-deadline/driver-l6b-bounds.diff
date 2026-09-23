@@ -1,0 +1,36 @@
+--- /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/p12-driver-stopped.sh	2026-09-23 11:38:20.837549062 -0700
++++ /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/live-driver.sh	2026-09-23 11:38:20.843904707 -0700
+@@ -193,7 +193,8 @@
+ wall_ok() { [ "$(wall_next)" = "@$DL_EPOCH" ]; }
+ reload() { run systemctl --user daemon-reload || return 1; [ "$DRY" = 1 ] || wall_ok || { result WALL FAIL "after daemon-reload the wall reads '$(wall_next)', not @$DL_EPOCH"; exit 3; }; }
+ # L6b (no ack while run is stopped): timeout JSON on stdin -> "PASS|FAIL detail". Bounds from
+-# settlement: duty 60..110 s, director 120..170 s, and no acknowledgement recorded.
++# settlement (checker = calendar timer every 30 s, AccuracySec=1s, P12-bounded-deadline-1): duty
++# 60..95 s (60 + 30 + 1 + check time), director 120..155 s, and no acknowledgement recorded.
+ l6b_eval() { python3 -c '
+ import json, sys, datetime as D
+ try:
+@@ -202,8 +203,8 @@
+     st = at(t["at"]); du = (at(t["no_ack_duty"]) - st).total_seconds(); di = (at(t["no_ack_director"]) - st).total_seconds()
+ except Exception as e:
+     print("FAIL unreadable timeout record:", e); sys.exit()
+-ok = 60 <= du <= 110 and 120 <= di <= 170 and not t.get("ack")
+-print("%s duty %.0fs after settlement (60..110), director %.0fs (120..170), ack %s" % ("PASS" if ok else "FAIL", du, di, t.get("ack")))'; }
++ok = 60 <= du <= 95 and 120 <= di <= 155 and not t.get("ack")
++print("%s duty %.0fs after settlement (60..95), director %.0fs (120..155), ack %s" % ("PASS" if ok else "FAIL", du, di, t.get("ack")))'; }
+ # end of helpers
+ if [ "$MODE" = cleanup ]; then
+   TEARDOWN=1
+@@ -389,9 +390,9 @@
+ run "$A" start $C; wait_for "L5 resumed" 90 sh -c "systemctl --user is-active $U"; snap L5-L6
+ 
+ # ---------------------------------------------------------------- L6b no acknowledgement while run is stopped
+-# The outside liveness check (its own 45 s timer, AccuracySec=1s) escalates an unacknowledged timeout
+-# while run is stopped: duty at >= 60 s after settlement, the director at >= 120 s. Declared bounds from
+-# settlement: duty <= 110 s (60 + 45 + check time), director <= 170 s (120 + 45 + check time). The
++# The outside liveness check (calendar timer every 30 s UTC, AccuracySec=1s) escalates an unacknowledged
++# timeout while run is stopped: duty at >= 60 s after settlement, the director at >= 120 s. Declared bounds
++# from settlement: duty <= 95 s (60 + 30 + 1 + check time), director <= 155 s. The
+ # fixtures are told NOT to acknowledge L6b (tasks/ack.md). The stop itself must stay quiet (no alarm).
+ Q=L6b-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 1m --verify-window 5m
+ wait_for "L6b worker step" 30 is_step "$Q" worker

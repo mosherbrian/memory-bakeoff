@@ -1,0 +1,92 @@
+{
+ "qid": "P12-bounded-deadline-1",
+ "status": "INCOMPLETE",
+ "author": "claude",
+ "incomplete_because": "No fixed END-TO-END bound under lock contention: a busy callback's deadline is settled when the current lock holder releases; a run pass's hold time grows with its number of wake sends x the 30 s transport timeout, so detection <= 30 s holds only when holders release within about 25 s. Everything else in the allocation is delivered with evidence.",
+ "decision": {
+  "bounded-deadline-allocation.json": "438c81f3fa9561922ffbc97a552b7e2c507be91491afa3e99bca380e2b80b446",
+  "bounded-deadline-receipt.json": "f8e58d50697b95d8ecc9da327ef4239f3ba6bf0e52f95823cd1011f41b0c6378"
+ },
+ "base": "844d15670aeb904777e39ad1bfd21676c0a20876 (writer-safety candidate, untouched)",
+ "candidate": {
+  "commit": "f86daf91be5821c9deea707d4decf0ac33625c89",
+  "branch": "p12-bounded (new worktree agent-loop-p12b, pushed)",
+  "release": "/home/bmosher/projects/agent-loop-releases/agent-loop-f86daf91be58",
+  "binary_sha256": "2656bb97f314325aa7bbf931cc1ecae59bb18970c624382a382f1a9c06303b2e",
+  "manifest_sha256": "ba247513739ba4bf12127bc52e3eb5ab98e8935fc75e6f7a8215fd69770650f9",
+  "diff": "evidence/bounded-deadline/source-844d156-to-f86daf9.diff",
+  "timer_template_sha256": "502745ac8bc4431fe6d63177011451dcbfa678b87ea2ff9fe6023ced05fbd05b",
+  "frozen_unchanged": "internal/core, internal/py, conformance/cases; main and installed preview untouched"
+ },
+ "delivered": {
+  "timer": "exact template, OnCalendar=*-*-* *:*:00,30 UTC, AccuracySec=1s, Persistent=false, monotonic triggers removed; evidence/bounded-deadline/cadence-templates-reload20s.txt: 15 real reloads in 300 s -> old template 0 checks, new 10 checks, gaps 29.7-30.3 s",
+  "due_markers": "timer-callback waits 5 s; busy -> atomic due marker (safe names, hint only, deferred_callback recorded as detection evidence); every lock holder runs ProcessDue on acquire and before release; each marker re-validated by the core callback's identity checks under the lock, settled once or rejected (.rejected-<time>.json with reason); retained until settled or rejected",
+  "races": [
+   "evidence/bounded-deadline/race-busy-callback.txt: callback deferred after 5.08 s while a run pass held the lock; the holder settled it at release; one cancel",
+   "evidence/bounded-deadline/race-callback-vs-run-changed.txt: writer-safety race still keeps the timeout"
+  ],
+  "tests": "evidence/bounded-deadline/tests.txt (due settled/replay, 6 forged/malformed/unsafe/mismatched hints rejected, lock, stopped, current action)",
+  "l6b_bounds": "updated to duty 60..95 s, director 120..155 s (30 s cadence); evidence/bounded-deadline/l6b-eval-tests.txt 7/7",
+  "regressions": [
+   "evidence/bounded-deadline/cli-stopped-noack.txt (stopped quiet, duty +60 s, director +120 s, no incident)",
+   "evidence/bounded-deadline/a-cli-timeout-idle.txt",
+   "evidence/bounded-deadline/a-cli-timeout-refused.txt",
+   "evidence/bounded-deadline/c-stop.txt (0.008 s; marker 1.024 s exit 64, no restart)",
+   "evidence/bounded-deadline/e-wall-reload.txt (LATE 0, WALLSTOP 1)",
+   "evidence/bounded-deadline/f1-helpers.txt 29/0",
+   "evidence/bounded-deadline/r1-repair-tests.txt 58/0"
+  ],
+  "conformance_release_binary": {
+   "rc": "0",
+   "stderr": "conformance: 125/125 cases ok, 1751 steps"
+  },
+  "host_parity": "evidence/bounded-deadline/host-parity.txt 316/321 + 5",
+  "mutation": "evidence/bounded-deadline/mutate-go.txt 116/116 (3 new)"
+ },
+ "evidence_sha256": {
+  "evidence/bounded-deadline/a-cli-timeout-idle.txt": "25aa5d83f2ee8cf2f6595dea3171dd97ab6b2ca4fb8a4adaacacc0fab0f93b53",
+  "evidence/bounded-deadline/a-cli-timeout-refused.txt": "a8351a2bc2e40596c9c9a7a07783f92f7409023b0e43ff9e4ad4a1d94d88d226",
+  "evidence/bounded-deadline/c-stop.txt": "4c4047c4270d48647c131583dff3ec928aef9f489fc48f22c202c0558a71388d",
+  "evidence/bounded-deadline/cadence-templates-reload20s.txt": "9fc88531262ce6c27538aa89ac846dfebab9a1e038c3baed12d722873714cc40",
+  "evidence/bounded-deadline/cadence-templates.sh": "60bd6654e92a9d822657944bb408df935183dcd4a982e884975aa31ff1696874",
+  "evidence/bounded-deadline/cli-stopped-noack.txt": "bfdc524f2ad104f409328df90ec25d6e72f5a122e6241c90fff8cfa6fe0966fb",
+  "evidence/bounded-deadline/conformance-release-binary/README.txt": "118dd9c9a2e78e2e44bc6c68d7b75f83d29dc834b9cc6295723d5e42a47efbca",
+  "evidence/bounded-deadline/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/bounded-deadline/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/bounded-deadline/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/bounded-deadline/driver-l6b-bounds.diff": "3769138479cda2d44655f17bce9ec99ab6c45f029b20eaa95ee80e6291fe9fb6",
+  "evidence/bounded-deadline/e-wall-reload.txt": "c41fe09c75953b17009adb249fedfeaaed226059135065c53b09c48a17271557",
+  "evidence/bounded-deadline/f1-helpers.txt": "a26a6d4e2b75b6ca8bec377c0bb26683a538ec806f2a19162c211d381d8cc9eb",
+  "evidence/bounded-deadline/go-test.txt": "f0fb8ebdd6e509b50c0e49993cd72ce92d2a5f88b9693e5667a4c6bb12e79774",
+  "evidence/bounded-deadline/host-parity.txt": "d6ecf31056006935e099d333b8495e1a46af50216a0107d496591692af5623de",
+  "evidence/bounded-deadline/l6b-eval-tests.txt": "7423441614f8f523fd9dd421f9062b4653f62fe3aa96988f106f7fd2e4336897",
+  "evidence/bounded-deadline/mutate-go.txt": "813a79fb3a879b17bf6220bfa1e4479a7150890c42179e0db01ae413ad447d7b",
+  "evidence/bounded-deadline/r1-repair-tests.txt": "47a9188737be00f42ddd64dbe641003dbc6b2817f18e959f3e96ed59994b4045",
+  "evidence/bounded-deadline/race-busy-callback.sh": "9a9bcd08c9301c4671336637e8fe2a0da6a0eb967f7a95edfce8a1bdb0670fe7",
+  "evidence/bounded-deadline/race-busy-callback.txt": "bde01cd8be13135f23060f2815788505867d337a617c7266cac4f1f222e0cb84",
+  "evidence/bounded-deadline/race-callback-vs-run-changed.txt": "1056b079cf0bc4d418c70bac33d9def5aebe7a807c505af102c682bbaaeff08d",
+  "evidence/bounded-deadline/source-844d156-to-f86daf9.diff": "72b5752bda90ecc957eb4d230a8422674c9c821e3d51def73476b1f0fb4fe56b",
+  "evidence/bounded-deadline/tests.txt": "d450015dbbe95cc1c540cd2297880101e73caf239ddbcfc1e1ab5d58f375b337"
+ },
+ "plans_sha256": {
+  "plans/README.md": "cd15e06d3251b54b4f3511c5ccd0571f476898e9ee2337ce414b83dfede27dcc",
+  "plans/cutover-inputs.template.env": "46daf0c96290cffd83dcfce7704e30f9fda96f09df8e1310f87bcd1131311208",
+  "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+  "plans/live-driver.sh": "dbdb0723303d5162dd20a347fcbc86996e3bd1ad32382be4a615aaffd95aefab",
+  "plans/live-inputs.template.env": "de1c26b87103f6be5285f9d5a94dc082b8dcd3dd73a2be6316b50f530f128502",
+  "plans/tasks/ack.md": "95e37529a32ba67fb7df3ad48ce039d609e4da8952942e8a4839340b5b751d0a",
+  "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+  "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+  "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+  "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+  "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+ },
+ "host_effects": [
+  "15 real daemon-reloads; 2 private liveness template instances p12tpl* created and removed (0 left); transient p12test-stop-bd and p12live units created and removed; no seats, main, install or clock change"
+ ],
+ "residuals": [
+  "Aggregate contention bound not fixed (see incomplete_because). A fix would bound a holder's work per lock hold (e.g. stop starting new sends after a budget and yield), which is a change to the run pass not made here.",
+  "The timer cadence proof used the 844d156 binary as the checked command; cadence is the template's, the release carries the same template bytes (502745ac).",
+  "Checker own-supervision, continuous UTC, unlocked status/expose, live-only cases: unchanged."
+ ]
+}
