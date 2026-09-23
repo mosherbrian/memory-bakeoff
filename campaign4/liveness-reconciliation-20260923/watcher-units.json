@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "systemctl",
+    "--user",
+    "cat",
+    "campaign4-watch.timer",
+    "campaign4-watch.service"
+  ],
+  "rc": 0,
+  "stdout": "# /run/user/1000/systemd/transient/campaign4-watch.timer\n# This is a transient unit file, created programmatically via the systemd API. Do not edit.\n[Unit]\nDescription=[systemd-run] /home/bmosher/.config/agent-deck/campaign4-watch\n\n[Timer]\nOnActiveSec=45min\nOnUnitActiveSec=45min\nAccuracySec=1s\nRemainAfterElapse=no\n\n# /run/user/1000/systemd/transient/campaign4-watch.service\n# This is a transient unit file, created programmatically via the systemd API. Do not edit.\n[Unit]\nDescription=[systemd-run] /home/bmosher/.config/agent-deck/campaign4-watch\n\n[Service]\nExecStart=\nExecStart=\"/home/bmosher/.config/agent-deck/campaign4-watch\"\n\n# /usr/lib/systemd/user/service.d/10-timeout-abort.conf\n# This file is part of the systemd package.\n# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.\n#\n# To facilitate debugging when a service fails to stop cleanly,\n# TimeoutStopFailureMode=abort is set to \"crash\" services that fail to stop in\n# the time allotted. This will cause the service to be terminated with SIGABRT\n# and a coredump to be generated.\n#\n# To undo this configuration change, create a mask file:\n#   sudo mkdir -p /etc/systemd/user/service.d\n#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf\n\n[Service]\nTimeoutStopFailureMode=abort\n",
+  "stderr": ""
+}

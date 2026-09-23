@@ -1,0 +1,42 @@
+{
+  "signer": "tern",
+  "recorded_at": "2026-09-23T08:43:44.664152+00:00",
+  "state": "LEGITIMATE_REST",
+  "in_flight": [],
+  "terminal_package": "P9-go-supervised-preview",
+  "disposition": "question_answered",
+  "terminal_receipt_sha256": "23b0f8c035e57836fde86040b8acdb27c8f28accbaaa93d7713ad96288264238",
+  "acceptance_sha256": "6faa8aa3ab93e7ce7aa1afad1cca9cc363ac1ddc15c4c85ab99eca7719c080a0",
+  "evidence": "Terminal06:32Z; latest ledger terminal; observed no campaign package deadline timers; worker/verifier/controller idle; no new release",
+  "cause": "state.json absent; provisional watcher also falls through to silence after recognizing valid rest. Silence is not proof of a missing successor.",
+  "responsibility": "Tern left silence-only watcher armed at closeout. Cairn correctly did not invent work.",
+  "pause_required": false,
+  "action": "suspend transient watcher during recorded rest, archive/reset false-positive rung2",
+  "stop_receipt": {
+    "command": [
+      "systemctl",
+      "--user",
+      "stop",
+      "campaign4-watch.timer",
+      "campaign4-watch.service"
+    ],
+    "result": "timer stopped; command nonzero only because service already unloaded; both independently confirmed inactive afterwards"
+  },
+  "verified_states": [
+    "inactive",
+    "inactive"
+  ],
+  "watcher_sha256": "6c00cc3ecf4358d88062ede0ae819b64acbefa7c6e0f80bdc3e66e2e4a3aa759",
+  "old_alarm_rung": "2",
+  "unchanged": "watcher script, main seats, coax/openwork; no P8 adoption, no replacement controller",
+  "resume_requires": "Tern must end rest explicitly and recreate/verify watchdog BEFORE next execution release; reconcile open work and arm per-action deadline. At next terminal rest suspend again until reader supports disposition semantics.",
+  "rearm_argv": [
+    "systemd-run",
+    "--user",
+    "--unit=campaign4-watch",
+    "--on-active=45m",
+    "--on-unit-active=45m",
+    "--timer-property=AccuracySec=1s",
+    "/home/bmosher/.config/agent-deck/campaign4-watch"
+  ]
+}

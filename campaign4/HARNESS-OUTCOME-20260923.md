@@ -40,3 +40,12 @@ Cairn/coax operations retain ownership. P9's unused repair/recheck grants are
 cancelled. No pending decision is required to make this terminal state legitimate;
 future safety work or research gets a separate explicit scope decision, not an
 automatic package produced by this boundary.
+
+## Rest reconciliation, 2026-09-23
+The silence watcher later alarmed on this legitimate terminal rest. Tern suspended
+only transient campaign4-watch.timer/service after confirming no open package
+deadlines. Script bytes and Cairn/coax/openwork remain unchanged. See
+[rest record](CAMPAIGN-REST.json) and
+[reconciliation](liveness-reconciliation-20260923/decision.json). Recreate and
+verify the backstop before any new campaign execution; this is operational rest,
+not adoption of P8 or permanent script retirement.
