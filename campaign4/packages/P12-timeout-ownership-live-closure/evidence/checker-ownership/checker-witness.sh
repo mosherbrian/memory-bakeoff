@@ -1,10 +1,11 @@
 #!/bin/bash
 # P12-checker-ownership-1: real systemd witness of the outside check's failure owner. Isolated user units
 # p12test-chk-<pid>-{run,check,failed}.service in ~/.config/systemd/user (removed at the end), a fixture ledger
-# under /var/tmp, stub wake/agent-deck, REAL systemctl. No fleet seat, no production unit.
+# under ~/.cache/p12-chk, stub wake/agent-deck, REAL systemctl. No fleet seat, no production unit.
 # Usage: checker-witness.sh BINARY OUTDIR
 set -u
-A_=$1; OUT=$2; mkdir -p $OUT; mkdir -p ~/.cache/p12-chk; X=$(mktemp -d ~/.cache/p12-chk/w-XXXX)   # under HOME: the host systemd user manager cannot see a toolbox /var/tmp; S=$X/stubs; mkdir -p $S $X/stream $X/art $X/claims
+# The workdir is under HOME: the host systemd user manager cannot see a toolbox /var/tmp.
+A_=$1; OUT=$2; mkdir -p $OUT; mkdir -p ~/.cache/p12-chk; X=$(mktemp -d ~/.cache/p12-chk/w-XXXX); S=$X/stubs; mkdir -p $S $X/stream $X/art $X/claims
 N=p12test-chk-$$; UD=~/.config/systemd/user; ts() { date -u +%FT%T.%3NZ; }; ep() { date +%s.%N; }
 log() { echo "$(ts) $*" | tee -a $OUT/witness.log; }
 printf '#!/bin/sh\necho %s\n' "'[{\"id\": \"W1\", \"title\": \"fx-worker\"}, {\"id\": \"V1\", \"title\": \"fx-v1\"}, {\"id\": \"D1\", \"title\": \"fx-director\"}, {\"id\": \"U1\", \"title\": \"fx-duty\"}]'" > $S/agent-deck
