@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-23T18:31:06.458517+00:00",
+  "signer": "tern",
+  "action": "P12-bounded-deadline-1",
+  "authorization": "Explicit prospective director amendment; all prior attempts and failed readiness retained",
+  "prior_ceiling_minutes": 540,
+  "author_minutes": 40,
+  "review_minutes": 25,
+  "new_ceiling_minutes": 605,
+  "base": "844d15670aeb904777e39ad1bfd21676c0a20876",
+  "requirements": [
+    "Checker unit-file calendar every30s explicitUTC AccuracySec1 Persistent=false is authorized candidate design. Remove conflicting monotonic triggers. Prove exact installed-template unit under20s reloads300s vs baseline; record actual check start/completion/max gaps and no task/seat effects; controlled private units with cleanup. Update all cadence-derived docs/tests/live thresholds honestly.",
+    "Keep detection<=30s from authoritative expiry AND detection-to-recovery-or-actual-ack<=60s, total<=90. Five-second lock wait plus next30s pass is NOT a30s guarantee. Timestamped durable pending marker can evidence detection, never settlement/ownership by itself. Require independently checkable timestamps and exact classification.",
+    "Deferred deadline markers may be durable hints only: atomic write, safe filename/path, original immutable package/action/deadline reference, candidate trusted receipt/provenance, validate against current ledger/principal/phase under lock before effects. Reject forged/malformed/stale/terminal/wrong-action hints; no caller deadline extension or path traversal. No new source of authority outside ledger.",
+    "Process due work before new ordinary work under acquired lock; retain marker until durable settlement or explicit owned rejection, crash/reopen reconciliation and one cancellation/dispatch/settlement. Tests marker-before/after-write/crash/settlement and same-action replays, actual process contention. No unbounded loop or independent polling model.",
+    "Bound END-TO-END contention path, including prior holder and number of transport sends, lock scheduling, checker startup/cadence and failed send. Per-send10s cap alone is not aggregate bound. Prove busy callback durable detection and eventual settlement/actual ack or owned failure; a pending marker/rerun message alone cannot count as recovery or acknowledgement. Prevent continuous ordinary work starving due actions.",
+    "Keep shared writer serialization and lost-timeout fix; do not bypass lock for ledger mutation. Real held-lock/slow-transport tests with timestamps plus frozen core/py/cases and retained conformance, ack, shutdown, early-rearm and marker negatives. Source isolated/private new release, no main/install/live/host clock changes.",
+    "Liveness caller uses changed template from exact candidate; qualify shipped config, no bespoke bypass test. Supported continuous-UTC assumption retained. Do not silently expand scope to unrelated service manager or transport redesign. Honest INCOMPLETE if bounded proof or fix cannot finish."
+  ],
+  "review": "Fresh corvid25m independent cadence and contention validation; explicitly distinguish detection, settlement, notification, actual acknowledgement. PASS returns Tern for fresh prep/live signature, no automatic new attempt/cutover."
+}
