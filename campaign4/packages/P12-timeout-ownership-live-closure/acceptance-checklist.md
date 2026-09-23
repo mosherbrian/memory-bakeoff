@@ -107,3 +107,35 @@ on the pinned `1341f04` before any fix.
       watch/coax/shadow-watch/Cairn manual dispatch, no dual control, rollback
       reconciles in-flight identities and restores one owner; corvid verifies the
       handoff through actual Go, not manual substitutes.
+
+---
+
+## C supplement — shutdown causal evidence (incorporated before author)
+
+Source: `shutdown-causal-evidence.json` (`293b08af…`, Tern `16:51:51Z`), base
+`1341f04`. Verified independently at base: `cmd/agent-loop/loop.go`
+`dd351d74…` (signal.Notify at :273, nonblocking check before the blocking wait,
+`time.Sleep` fallback at :329) and `internal/host/notify.go` `6e4fd20a…`
+(`DirNotifier.Wait` at :38). Technical correction accepted: **`Wait` uses
+`syscall.Select`, not `poll`.** Causal hypothesis (idle wait vs 20 s
+`TimeoutStopSec`) is concrete but not universally assumed.
+
+Additional C checks:
+
+- [ ] **Synchronized baseline repro:** drive a baseline run into the idle wait,
+      then `SIGTERM` via a **real isolated systemd stop**; capture elapsed time,
+      exit code, journal, and presence/absence of `stop-sigterm` timeout / SIGABRT.
+      Reproduce before any fix.
+- [ ] **Corrected prompt clean exit:** idle shutdown **< 1 s on a healthy host**,
+      independently measured; clean exit 0; never the 20 s forced timeout.
+      Distinguish D-Bus command latency from process exit time; record actual
+      values, not only rc.
+- [ ] Exercise **both** the notifier and the fallback wait paths; `SIGINT` and
+      repeated stop/restart; no leaked watcher goroutines/fds; no missed or
+      duplicate handoff on restart.
+- [ ] Retain deliberate-stop marker **exit 64**, watchdog abort behaviour, and
+      independent liveness semantics as distinct; do **not** raise `TimeoutStopSec`
+      globally to hide delayed signal handling.
+- [ ] Narrow notifier **cancellation interface** change permitted under C if needed
+      (author chooses cancelable wait design); retained host parity/regressions with
+      named adjudication; core frozen; no broad host rewrite; budget 365 m unchanged.

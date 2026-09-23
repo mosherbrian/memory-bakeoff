@@ -60,3 +60,18 @@
 contract, Cairn may conditionally release Claude's 75 m author grant via
 `notify-claude tern`. No author start before admission; candidate PASS returns Tern
 with no automatic prep/live/cutover. No source/live/cutover change made by corvid.
+
+---
+
+## C supplement incorporated (append; ACCEPTED preserved)
+
+Read `shutdown-causal-evidence.json` (`293b08af…`). Independently verified at base
+`1341f04`: `loop.go dd351d74…` (signal.Notify :273; nonblocking check; `time.Sleep`
+fallback :329) and `notify.go 6e4fd20a…` (`DirNotifier.Wait` :38). Technical
+correction accepted: **`Wait` uses `syscall.Select`, not `poll`.** The C checks
+(baseline synchronized real-systemd idle-stop repro; corrected < 1 s clean-exit
+target measured independently; both notifier+fallback paths; SIGINT/repeated
+stop/restart; no leaked goroutines/fds; retain stop64/watchdog/no-resend; no global
+`TimeoutStopSec` increase) are appended to `acceptance-checklist.md`. A narrow
+notifier cancellation-interface change is permitted under C; core frozen; contract
+365 m unchanged. **Verdict unchanged: ACCEPTED.**
