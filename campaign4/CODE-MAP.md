@@ -39,3 +39,5 @@ Tern updates this map at source acceptance/promotion boundaries; ordinary receip
 and dispatches do not require updates. This file is navigation, not execution authority.
 
 Latest accepted composed surface: [R14 candidate](packages/P6-r14-host-timing/candidate/src/) at `02ea693e48cce93deace64e7e1e545f831506d8d`, [acceptance](packages/P6-r14-host-timing/acceptance.json). Timer authority, separate verifier grants, owned observation continuation and honest metrics; 70+83+59 injected tests. R13 core unchanged. R15 is the pending fresh live failure/rest witness, not deployment. Lost-completion proof and queued/ambiguous controls still unresolved.
+
+R15 live failure case demonstrated genuine rejection/no-COMPLETE/1+1 sends, but causal timing was INCOMPLETE: onset selected by filename order. [R15 disposition](packages/P6-r15-live-failure-rest/terminal-disposition.json) preserves it; R16 is the pending narrow identity-join correction. R14 remains accepted injected candidate, not live recovery acceptance.
