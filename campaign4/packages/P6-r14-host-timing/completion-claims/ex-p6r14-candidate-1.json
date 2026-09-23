@@ -1,0 +1,43 @@
+{
+ "action_id": "P6r14-candidate-1",
+ "disclosures": [
+  "test_r14_host_timing.py bound by outer manifest.json (77 entries) only; composition-manifest retains 74-entry inherited set, hashes refreshed",
+  "full-gate failures fully explained with green reruns on final bytes; no test deleted; superseded assertions reconciled in changes.md"
+ ],
+ "gate": {
+  "failures": {
+   "drift_6": "E_R3_DRIFT from my own mid-gate descriptor refresh (stale copy hash during run); descriptor current, reruns green: host d4 1/1, case_execution 7/7",
+   "r13_origin_4": "R13-pinned absolute NEWC path vs P14 tree (portability, not behavior); fixed to location-derived NEWC; rerun 17/17 pass"
+  },
+  "full_command": "PYTHONPATH=candidate/src python3 -m pytest candidate/tests -q -p no:cacheprovider",
+  "full_result": "59 passed, 10 failed in 840.54s (log /tmp/p6r14-fullgate.log)",
+  "reruns": {
+   "case_execution": "7 passed rc0",
+   "host_d4": "1 passed rc0",
+   "r13_files": "17 passed rc0"
+  },
+  "retained": {
+   "p3r3": "59 passed rc0 (18+9+5+5+22)",
+   "p5r2": "83 passed rc0"
+  }
+ },
+ "new_bytes": {
+  "case_entry": "64edb54e63c87406599550eff",
+  "core": "driver/ingress/store/lifecycle/validator/turn_handoff byte-identical",
+  "harness": "62b86917e622e1c2b912f43c60a8d37ec751fb7ed7f56f300f9d84cdde255b63",
+  "host_adapter": "unchanged 231f45f0c1b6"
+ },
+ "old_fails_parent": [
+  "P1 parent CLI has no --execution flag (rc2)",
+  "P2 parent slice miss terminal owned-failure/no-end",
+  "P3 parent has no r3v window facts; esc derives from worker t0"
+ ],
+ "outcome": "COMPLETE-candidate",
+ "package_id": "P6-r14-host-timing",
+ "parent": "R13 5410332b manifest e307fa3d",
+ "scope": "injected effects only; out-of-scope items untouched; live held",
+ "timestamp": "2026-09-23T00:05Z",
+ "unresolved": [
+  "corvid 40m independent full gate pending (must run full command on final bytes)"
+ ]
+}

@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""P6-r8 fixture wake-deposit wrapper (signed fixture path, all branches).
+
+The candidate transport invokes this as its wake command. It deposits the
+dispatch ({seat, text, received_at}) into the case outbox and returns an
+accepted receipt. It NEVER synthesizes queued/ambiguous returns: the only
+success receipt is a deposit acceptance. Induced transport states in tests
+come from a clearly labeled test deposit executable, never from this file.
+Delivery to seats happens exclusively in fixture_control.deliver_pending
+(the executing consumer), with applied receipts.
+"""
+from __future__ import annotations
+
+import json
+import os
+import sys
+import time
+
+
+def main(argv):
+    if len(argv) < 3:
+        print("usage: fixture-wake-deposit <seat> <text>",
+              file=sys.stderr)
+        return 2
+    seat, text = argv[1], argv[2]
+    outbox = os.environ.get("FIXTURE_OUTBOX", "")
+    if not outbox:
+        print("wake: %s -> refused-no-outbox" % seat)
+        return 1
+    os.makedirs(outbox, exist_ok=True)
+    existing = sorted(f for f in os.listdir(outbox)
+                      if f.startswith("send-"))
+    path = os.path.join(outbox, "send-%03d.json" % len(existing))
+    with open(path, "w") as fh:
+        json.dump({"seat": seat, "text": text,
+                   "received_at": time.strftime("%Y-%m-%dT%H:%M:%SZ",
+                                                time.gmtime())},
+                  fh, sort_keys=True)
+    print("wake: %s -> deposited-to-fixture-outbox" % seat)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))
