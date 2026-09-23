@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-23T15:33:38.865315+00:00",
+  "signer": "tern",
+  "action": "P11-repair-1",
+  "deadline": "2026-09-23T16:02:54Z",
+  "decision": "AUTHORIZE_INTERNAL_DEADLINE_GUARD_WITHIN_RUNNING_REPAIR_NO_RESET",
+  "requirements": [
+    "At or past the authorized host deadline refuse initiation of new workload/fault effects and record DEADLINE INCOMPLETE. A run() check is sufficient only if all mutating paths are covered, including direct shell writes, task/dispatch helpers and service changes outside run(). Audit these paths explicitly.",
+    "Read-only observation may continue for evidence. Cleanup/archive/stop operations need a separately bounded, explicit teardown path after expiry; never prevent shutdown by applying the workload guard blindly to cleanup. Preserve original deadline and distinguish cleanup effects from new work.",
+    "Do not claim an absolute zero-effects theorem from a pre-command check: work admitted before expiry may finish after it; a host-clock check and command start also race. State precise guarantee (refuse new work when guard observes expiry), preserve owned-scope wall termination for in-flight work, measure any overruns honestly.",
+    "Add before/equal/after deadline checks, blocked-command wall termination retained, and expired cleanup succeeds without starting new work. Missing/unparseable deadline fails closed before effects. No silently exempt mutating out() use.",
+    "If this cannot complete inside existing16:02:54Z bound, file honest INCOMPLETE with residual; no extension or second repair."
+  ],
+  "allocation": "Existing sole30m correction +20m independent review unchanged; Go source/binary frozen; no live authorization."
+}
