@@ -8,26 +8,30 @@
  "launch_closure": {
   "exact_argv": {
    "deepseek": [
-    "candidate/runtime/launch-acp-go-deepseek",
-    "muse-engine",
-    "acp"
+    "candidate/runtime/launch-acp-go-deepseek"
    ],
    "go": [
-    "candidate/runtime/launch-acp-go",
-    "muse-engine",
-    "acp"
+    "candidate/runtime/launch-acp-go"
    ]
   },
   "exact_environment": {
-   "ACP_AUTO_APPROVE": "1 (when unset)",
-   "ACP_GO_MODEL": "opencode-go/deepseek-v4.1-flash (deepseek lane)",
-   "ACP_MODEL": "opencode-go/muse-spark-1.3-contributor (go lane; ACP_GO_MODEL override honored)",
-   "ACP_PROMISE_CHECK": "1",
-   "ACP_SOURCE_TEST_NOW": "must be absent; wrapper exits 1 if set",
-   "ACP_STALL_SECS": "1800",
-   "FIXTURE_LAUNCH_EXEC": "fixture-only capture hook; unset in real launches",
-   "OPENCODE_API_KEY": "unset (go lane)",
-   "P6_SOURCE_MODE": "runtime"
+   "deepseek": {
+    "ACP_GO_MODEL": "opencode-go/deepseek-v4.1-flash",
+    "ACP_SOURCE_TEST_NOW": "absent (wrapper exits 1 if set)",
+    "FIXTURE_LAUNCH_EXEC": "absent (fixture-only capture; live must unset)",
+    "P6_SOURCE_MODE": "runtime",
+    "PINNED_MODEL_OVERRIDE": "deepseek"
+   },
+   "go": {
+    "ACP_AUTO_APPROVE": "1",
+    "ACP_MODEL": "opencode-go/muse-spark-1.3-contributor",
+    "ACP_PROMISE_CHECK": "1",
+    "ACP_SOURCE_TEST_NOW": "absent (wrapper exits 1 if set)",
+    "ACP_STALL_SECS": "1800",
+    "FIXTURE_LAUNCH_EXEC": "absent (fixture-only capture; live must unset)",
+    "OPENCODE_API_KEY": null,
+    "P6_SOURCE_MODE": "runtime"
+   }
   },
   "paths": {
    "helper": "candidate/runtime/srcemit.py",
@@ -37,11 +41,11 @@
   "wrappers": {
    "deepseek": {
     "path": "candidate/runtime/launch-acp-go-deepseek",
-    "sha256": "e9f085d264ab7113f95675866fdb043d24979dd20033503a2730e93e17a6be92"
+    "sha256": "a8a39bba556afad0b99dd098bd1574b8824e5eee635926a06429c2eac94b4964"
    },
    "go": {
     "path": "candidate/runtime/launch-acp-go",
-    "sha256": "d0f5b56d2c94eb8bacfc0a2f002895bad23b2e0b71f99fb7a262a85cfbd371b9"
+    "sha256": "a26f17318a16120f1930bb1163bea074048ada942d7a6a5399e6d7a51fed1616"
    }
   }
  },

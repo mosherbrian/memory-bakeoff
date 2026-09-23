@@ -38,8 +38,18 @@ fi
 
 # Lane configuration preserved from pinned inputs/acp-go (byte-exact
 # semantics): stored-credential lane, never the Zen key workspace.
+# Per-lane model pinning: the worker lane is Muse regardless of any
+# inherited ACP_GO_MODEL/ACP_MODEL. An override is honored only when it
+# carries the deepseek lane's explicit opt-in AND the pinned DeepSeek
+# value (set by launch-acp-go-deepseek itself); anything else,
+# including hostile inherited model values, resolves to Muse.
 unset OPENCODE_API_KEY
-export ACP_MODEL="${ACP_GO_MODEL:-opencode-go/muse-spark-1.3-contributor}"
+if [ "${PINNED_MODEL_OVERRIDE:-}" = "deepseek" ] && \
+        [ "${ACP_GO_MODEL:-}" = "opencode-go/deepseek-v4.1-flash" ]; then
+    export ACP_MODEL="${ACP_GO_MODEL}"
+else
+    export ACP_MODEL="opencode-go/muse-spark-1.3-contributor"
+fi
 if [ -z "${ACP_AUTO_APPROVE:-}" ]; then
     export ACP_AUTO_APPROVE=1
 fi

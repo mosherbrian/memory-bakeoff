@@ -23,7 +23,11 @@ if [ ! -x "$LOCAL_GO" ]; then
     exit 1
 fi
 
-# Preserved model selection from pinned inputs/acp-go-deepseek.
+# Preserved model selection from pinned inputs/acp-go-deepseek,
+# stated explicitly (overwrites any inherited value): the verifier lane
+# is DeepSeek. The opt-in flag below is the only override the go wrapper
+# honors, and only together with this exact pinned value.
 export ACP_GO_MODEL=opencode-go/deepseek-v4.1-flash
+export PINNED_MODEL_OVERRIDE=deepseek
 
 exec "$LOCAL_GO" "$@"

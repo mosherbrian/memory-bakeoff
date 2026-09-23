@@ -55,10 +55,23 @@ def _capture(argv, env_extra=None):
     return json.load(open(out))
 
 
+HOSTILE = {"ACP_GO_MODEL": "hostile-inherited-model",
+           "ACP_MODEL": "hostile-inherited-model"}
+
+
+def _plan_argv(lane):
+    plan = json.load(open(os.path.join(PKG, "fixture-launch-plan.json")))
+    return plan["launch_closure"]["exact_argv"][lane]
+
+
 def test_both_lanes_resolve_local_runtime_and_settings():
-    got = _capture([GO, "--session", "s1"])
+    # EXACT plan argv, hostile inherited model values: backend appears
+    # exactly once, no extra args, worker Muse / verifier DeepSeek.
+    got = _capture(_plan_argv("go"), env_extra=dict(HOSTILE))
     assert got["argv"] == [os.path.realpath(LOCAL_RT), "muse-engine",
-                           "acp", "--session", "s1"], got["argv"]
+                           "acp"], got["argv"]
+    assert got["argv"].count("muse-engine") == 1
+    assert got["argv"].count("acp") == 1
     assert got["env"]["ACP_MODEL"] == \
         "opencode-go/muse-spark-1.3-contributor", got["env"]
     assert got["env"]["ACP_AUTO_APPROVE"] == "1"
@@ -67,9 +80,13 @@ def test_both_lanes_resolve_local_runtime_and_settings():
     assert got["env"]["P6_SOURCE_MODE"] == "runtime"
     assert got["env"]["OPENCODE_API_KEY"] is None
     assert ".config/agent-deck" not in " ".join(got["argv"])
-    got = _capture([DEEPSEEK, "--session", "s9"])
+    got = _capture(_plan_argv("deepseek"), env_extra=dict(HOSTILE))
     assert got["argv"] == [os.path.realpath(LOCAL_RT), "muse-engine",
-                           "acp", "--session", "s9"], got["argv"]
+                           "acp"], got["argv"]
+    assert got["argv"].count("muse-engine") == 1
+    assert got["argv"].count("acp") == 1
+    assert got["env"]["ACP_MODEL"] == "opencode-go/deepseek-v4.1-flash", \
+        got["env"]
     assert got["env"]["ACP_GO_MODEL"] == "opencode-go/deepseek-v4.1-flash"
     assert got["env"]["P6_SOURCE_MODE"] == "runtime"
     assert ".config/agent-deck" not in " ".join(got["argv"])

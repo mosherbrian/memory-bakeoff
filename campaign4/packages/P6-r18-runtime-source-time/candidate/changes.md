@@ -78,3 +78,18 @@ records stay unmeasurable.
 - `fixture-launch-plan.json`: exact argv/environment/paths + wrapper
   hashes (launch_closure block). All existing production/tests frozen;
   90+83+59 carried on unchanged executable bytes.
+
+## Exact-launch-1 (dedup backend argv at correct layer; wrappers+plan only)
+- Root cause: wrappers own the backend triplet (`muse-engine acp`)
+  exactly once, but the plan recorded it in the lane argv too, so the
+  deepseek chain produced it twice (reproduced:
+  `... acp-worker muse-engine acp muse-engine acp`). Fixed at the plan
+  layer: exact per-lane argv is the bare wrapper path (wrappers add the
+  backend exactly once); verified executable as recorded.
+- Per-lane model pinning regardless of inherited env: go lane resolves
+  Muse unless the deepseek lane's explicit opt-in with the exact pinned
+  DeepSeek value is present; hostile inherited ACP_GO_MODEL/ACP_MODEL
+  cannot reselect. Deepseek wrapper overwrites both explicitly.
+- Plan environment rewritten as machine-executable per-lane KEY=VALUE
+  maps (no prose masquerading as values). Negative tests retained
+  (missing-local hard fail, test-clock rejection untouched).
