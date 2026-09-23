@@ -1,0 +1,44 @@
+   redirect: < PKG=/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification
+   redirect: < PLANS=$PKG/plans
+   redirect: > PKG=/tmp/p12-e-uz8P/pkg
+   redirect: > PLANS=/tmp/p12-e-uz8P/plans
+   redirect: < SD=/home/bmosher/.config/systemd/user
+   redirect: > SD=/tmp/p12-e-uz8P/sd
+== driver 2eb4ffbe8f23783a run W100251 wall at 2026-09-23T17:03:31Z, workdir /tmp/p12-e-uz8P
+-- wall unit p11live-wallstop-W100251.timer (deadline 2026-09-23T17:03:31Z = @1790183011)
+   before reloads 17:02:57.913: TimersMonotonic={ OnActiveUSec=40s ; next_elapse=4d 10h 15min 21.361844s } NextElapseUSecRealtime= NextElapseUSecMonotonic=4d 10h 15min 21.361844s 
+   REAL daemon-reload 1 rc=0 at 17:03:08.121
+   after reload 1 17:03:08.122: TimersMonotonic={ OnActiveUSec=40s ; next_elapse=4d 10h 15min 37.437519s } NextElapseUSecRealtime= NextElapseUSecMonotonic=4d 10h 15min 37.437519s 
+   REAL daemon-reload 2 rc=0 at 17:03:18.318
+   after reload 2 17:03:18.319: TimersMonotonic={ OnActiveUSec=40s ; next_elapse=4d 10h 15min 47.646660s } NextElapseUSecRealtime= NextElapseUSecMonotonic=4d 10h 15min 47.646660s 
+   REAL daemon-reload 3 rc=0 at 17:03:28.526
+   after reload 3 17:03:28.527: TimersMonotonic={ OnActiveUSec=40s ; next_elapse=4d 10h 15min 57.844834s } NextElapseUSecRealtime= NextElapseUSecMonotonic=4d 10h 15min 57.844834s 
+-- bound used: 2026-09-23T17:03:31Z (no WALLSTOP row)
+-- after 60s: driver pid 943539 alive=yes
+-- results.tsv:
+-- effects by the driver's cgroup after the bound (deadline 2026-09-23T17:03:31Z):
+-- every effect, by cgroup:
+        15 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope
+         2 command it
+         2 investigating", and
+         1 journalctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope
+         3 systemctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope
+         2 wake cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope
+   1790183012.305334510 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope prof=fxprof :: expose --config /tmp/p12-e-uz8P/root/fxW100251.json --json
+   1790183017.330056655 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope prof=fxprof :: expose --config /tmp/p12-e-uz8P/root/fxW100251.json --json
+   1790183022.354557616 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope prof=fxprof :: expose --config /tmp/p12-e-uz8P/root/fxW100251.json --json
+   1790183027.379208007 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p11live-driver-W100251.scope prof=fxprof :: expose --config /tmp/p12-e-uz8P/root/fxW100251.json --json
+LATE_FROM_DEADLINE=4 (driver-scope effects at or after the authorized deadline 2026-09-23T17:03:31Z)
+-- cleanup runs: 0
+-- scope: active; wall timer: active inactive 
+-- sleep children of the driver left: 1
+LATE_EFFECTS=4 WALLSTOP_ROWS= CLEANUPS=0 DRIVER_ALIVE=1
+SECOND_CLEANUP_EFFECTS=16 msg=""
+-- wall-side agent-deck calls and their profile:
+WALL_AGENTDECK_PROFILES=
+-- driver.log tail:
+   2026-09-23T17:03:51.785Z   rc=0
+   2026-09-23T17:03:51.786Z + systemctl --user stop p11live-wallstop-W100251.timer
+   2026-09-23T17:03:51.793Z   rc=0
+   2026-09-23T17:03:51.877Z cleanup done
+WORKDIR=/tmp/p12-e-uz8P

@@ -1,0 +1,895 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index ca3468a..5d3ce9d 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -318,16 +318,36 @@ func runRun(args []string) int {
+ 			fmt.Println("stop requested; exiting", loop.ExitStopped)
+ 			return loop.ExitStopped
+ 		}
+-		select {
+-		case <-sig:
+-			return 0
+-		default:
+-		}
+-		if n != nil {
+-			n.Wait(*every)
+-		} else {
+-			time.Sleep(*every)
++		// The wait between passes ends at a turn event, the pass interval or
++		// SIGTERM/SIGINT, whichever is first: a stop must not wait out the
++		// interval (P11: TimeoutStopSec 20 s < every 30 s -> SIGABRT).
++		waited := make(chan struct{})
++		go func() {
++			defer close(waited)
++			if n != nil {
++				n.Wait(*every)
++			} else {
++				time.Sleep(*every)
++			}
++		}()
++		// An intentional stop (the marker) is seen within a second, not at
++		// the end of the interval.
++		tick := time.NewTicker(time.Second)
++	wait:
++		for {
++			select {
++			case <-sig:
++				return 0
++			case <-waited:
++				break wait
++			case <-tick.C:
++				if stopped() {
++					fmt.Println("stop requested; exiting", loop.ExitStopped)
++					return loop.ExitStopped
++				}
++			}
+ 		}
++		tick.Stop()
+ 	}
+ }
+ 
+@@ -384,15 +404,58 @@ func runTimerCallback(args []string) int {
+ 	}
+ 	out, err := loop.TimerCallback(cfg, *qid, *action, *execution)
+ 	if err != nil {
++		// The core may have interrupted the step and then failed an effect
++		// (a /cancel that did not arrive): the timeout is still owned here,
++		// with the failure, never left waiting on nobody.
++		if l, oerr := loop.Open(cfg, nil); oerr == nil {
++			msg, serr := l.SettleTimeoutFailure(*qid, *action, err)
++			l.Close()
++			if serr == nil {
++				fmt.Println(py.Dumps(py.D("decision", "interrupted-effect-failed", "settlement", msg, "error", err.Error())))
++			}
++		}
+ 		return fail(err)
+ 	}
+ 	fmt.Println(py.Dumps(out))
+-	if d := py.S(out.Get("decision")); d == "interrupted" || d == "recovered" {
+-		if l, err := loop.Open(cfg, nil); err == nil {
+-			l.MarkTimedOut(*qid, *action)
+-			l.Close()
++	// already-handled too: a callback that crashed after the core's effects
++	// but before this record is completed by the timer's replay.
++	if d := py.S(out.Get("decision")); d == "interrupted" || d == "recovered" || d == "already-handled" {
++		l, err := loop.Open(cfg, nil)
++		if err != nil {
++			return fail(err)
+ 		}
++		defer l.Close()
++		if err := l.MarkTimedOut(*qid, *action); err != nil {
++			return fail(err)
++		}
++	}
++	return 0
++}
++
++// runTimeoutAck records that the director or duty owns a step timeout.
++func runTimeoutAck(args []string) int {
++	fs, cfgPath := loopFlags("timeout-ack")
++	qid := fs.String("qid", "", "package id")
++	action := fs.String("action", "", "the timed-out action")
++	by := fs.String("by", "", "your seat: the director or duty")
++	next := fs.String("next", "", "the next action you will take")
++	within := fs.Duration("within", 15*time.Minute, "response deadline from now (max 1h)")
++	fs.Parse(args)
++	cfg, err := loop.LoadConfig(*cfgPath)
++	if err != nil {
++		return fail(err)
++	}
++	l, err := loop.Open(cfg, nil)
++	if err != nil {
++		return fail(err)
++	}
++	defer l.Close()
++	a, err := l.AckTimeout(*qid, *action, *by, *next, *within)
++	if err != nil {
++		return fail(err)
+ 	}
++	fmt.Printf("timeout T-%s of %s acknowledged by %s at %s; respond by %s: %s. This does not resume or close the package.\n",
++		*action, *qid, a.By, a.At, a.Deadline, a.NextAction)
+ 	return 0
+ }
+ 
+diff --git a/cmd/agent-loop/main.go b/cmd/agent-loop/main.go
+index 7279d3e..03710ad 100644
+--- a/cmd/agent-loop/main.go
++++ b/cmd/agent-loop/main.go
+@@ -54,6 +54,8 @@ func main() {
+ 		os.Exit(runLiveness(os.Args[2:]))
+ 	case "liveness-ack":
+ 		os.Exit(runLivenessAck(os.Args[2:]))
++	case "timeout-ack":
++		os.Exit(runTimeoutAck(os.Args[2:]))
+ 	case "timer-callback":
+ 		os.Exit(runTimerCallback(os.Args[2:]))
+ 	default:
+diff --git a/conformance/host/adjudicated.json b/conformance/host/adjudicated.json
+index 7375f8c..0fb4529 100644
+--- a/conformance/host/adjudicated.json
++++ b/conformance/host/adjudicated.json
+@@ -26,5 +26,11 @@
+   {"scenario": "handoff: worker end -> verifier -> terminal rest", "why": "finding 2: different close records; asserted by internal/host/closure_test.go"},
+   {"scenario": "handoff: an invalid disposition fails the close; a retry still marks it closed", "why": "finding 2: no verdict, seen or done is written; asserted by closure_test.go"},
+   {"scenario": "handoff: declared intent rolls forward, director close recovers", "why": "finding 2: done stays unset; asserted by closure_test.go"}
++ ],
++ "final_corrected": [
++  {"scenario": "host timers: create, reuse, conflict, refuse, query, cancel", "key": "runner_calls",
++   "go": [["systemd-run", "--user", "--unit=p6-u1.timer", "--timer-property=AccuracySec=1s", "--on-calendar=2026-09-21 12:30:00 UTC", "python3", "harness.py", "timer-callback"], ["systemd-run", "--user", "--unit=p6-u2.timer", "--timer-property=AccuracySec=1s", "--on-calendar=2026-09-21 12:30:00 UTC", "x", "--timer", "p6-u2"], ["systemd-run", "--user", "--unit=p6-u3.timer", "--timer-property=AccuracySec=1s", "--on-calendar=2026-09-21 12:30:00 UTC", "python3", "harness.py", "timer-callback"], ["systemctl", "--user", "show", "p6-u1.timer", "--property=ActiveState,SubState"], ["systemctl", "--user", "show", "p6-u1.timer", "--property=ActiveState,SubState"], ["systemctl", "--user", "show", "p6-u1.timer", "--property=ActiveState,SubState"], ["systemctl", "--user", "stop", "p6-u1.timer"], ["systemctl", "--user", "reset-failed", "p6-u1.timer"]],
++   "ruling": "P12 package.md section E (Tern 1315196): step-timer precision and reload robustness",
++   "why": "P12 measured on real systemd (evidence/e-reload-timers-run1.txt) that daemon-reload restarts an --on-active countdown and that the default AccuracySec is 1 min. A deadline with a known UTC instant is armed as an explicit-UTC --on-calendar timer with AccuracySec=1s. Python arms --on-active and stays recorded in expected.json."}
+  ]
+ }
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 7bda8ca..1842c04 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -76,6 +76,17 @@ HOST_MUTANTS = [
+      "timer due exactly at its deadline treated as early"),
+     (H + "host.go", 'fmt.Sprintf("--on-active=%ds", int64(delayS))',
+      'fmt.Sprintf("--on-active=%ds", int64(delayS+1))', "timer delay off by one second"),
++    # P12: explicit-UTC calendar deadlines and exact /cancel receipts
++    (H + "host.go", 'at.Format("2006-01-02 15:04:05") + " UTC"', 'at.Format("2006-01-02 15:04:05")',
++     "calendar deadline without an explicit zone"),
++    (H + "host.go", "at = at.UTC().Add(time.Second - 1).Truncate(time.Second)", "at = at.UTC().Truncate(time.Second)",
++     "calendar deadline rounded down (fires before the deadline)"),
++    (H + "host.go", '"--timer-property=AccuracySec=1s",', "",
++     "deadline timer at systemd's default 1 min accuracy"),
++    (H + "host.go", 'strings.CutPrefix(last, "wake: "+seat+" -> ")', 'strings.CutPrefix(last, "wake: ")',
++     "a /cancel receipt for another session accepted"),
++    (H + "host.go", 'case kind == "stop" && proc.RC == 1:', 'case proc.RC == 1:',
++     "nothing-running accepted outside a /cancel"),
+     (H + "adapter.go", 'case "sent", "queued", "delivered":', 'case "sent", "queued", "delivered", "ambiguous":',
+      "ambiguous delivery settles the outbox"),
+     (H + "adapter.go", "if s > FutureSkewToleranceS {", "if s > FutureSkewToleranceS+1 {",
+@@ -114,6 +125,18 @@ HOST_MUTANTS = [
+ # reference exists for it).
+ LP = "internal/loop/"
+ LOOP_MUTANTS = [
++    # P12: timeout settlement and acknowledgement
++    (LP + "loop.go", 'case kind == "stop" && (st == "cancelled" || st == "idle"):', 'case kind == "stop" && st == "cancelled":',
++     "an idle worker's /cancel aborts the timeout (P11 L2/L6)"),
++    (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', 'if rec == nil {',
++     "a timeout settled without a core interrupt"),
++    (LP + "timeout.go", "		if inForce {", "		if false {", "a conflicting ack replaces one in force"),
++    (LP + "timeout.go", '	if cur != action || rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', "	if cur != action || rec == nil {",
++     "a step recorded as timed out without a core interrupt"),
++    (LP + "timeout.go", "	if _, err := l.authority(p, role); err != nil {", "	if _, err := l.authority(p, role); false && err != nil {",
++     "an ack from a changed principal accepted"),
++    (LP + "timeout.go", "	if within <= 0 || within > MaxAckWithin {", "	if within < 0 {", "an unbounded or zero ack deadline accepted"),
++    (LP + "timeout.go", "		t.AckExpiredAt = py.ISO(l.now())", "		_ = t", "an expired ack escalated on every pass"),
+     (LP + "loop.go", "ok && it.Before(at.Add(-2*time.Second)) {", "ok && it.Before(at.Add(-2*time.Second)) && false {",
+      "a turn from before the dispatch moves the package"),
+     (LP + "loop.go", "\tif err := l.arm(qid, p.WorkAction, p.WorkExec, deadline); err != nil {",
+diff --git a/internal/host/host.go b/internal/host/host.go
+index ac20b68..3c3439f 100644
+--- a/internal/host/host.go
++++ b/internal/host/host.go
+@@ -204,6 +204,16 @@ func (t *WakeTransport) Send(seat, text, kind string, action, execution any) (st
+ 		state = "queued"
+ 	case proc.RC == WakeRCSent || proc.RC == WakeRCQueued:
+ 		state = "ambiguous" // right code, malformed receipt
++	case kind == "stop" && proc.RC == 1:
++		// The worker answered a /cancel (wake exits 1 for anything but
++		// started/queued). Only its exact receipt for this session counts:
++		// "wake: <seat> -> cancelled..." or "wake: <seat> -> nothing running...".
++		switch reply, ok := strings.CutPrefix(last, "wake: "+seat+" -> "); {
++		case ok && strings.HasPrefix(reply, "cancelled"):
++			state = "cancelled"
++		case ok && strings.HasPrefix(reply, "nothing running"):
++			state = "idle" // the turn had already ended: nothing to cancel
++		}
+ 	}
+ 	return t.record(seat, kind, action, execution, state, int64(proc.RC), last)
+ }
+@@ -370,6 +380,21 @@ func (t *Timers) CommandFor(id string, delayS float64, cb []string) []string {
+ 		fmt.Sprintf("--on-active=%ds", int64(delayS))}, cb...)
+ }
+ 
++// CommandAt is the systemd-run argv for a one-shot timer at an absolute
++// instant: an explicit-UTC calendar time (rounded up to the second), with
++// AccuracySec=1s. P12 measured that `systemctl --user daemon-reload`
++// restarts an --on-active timer's countdown (each reload postponed it by
++// the time since the last), and that systemd's default 1 min accuracy
++// fires up to a minute late; a known deadline is bounded at 30 s.
++func (t *Timers) CommandAt(id string, at time.Time, cb []string) []string {
++	if cb == nil {
++		cb = t.CallbackArg
++	}
++	at = at.UTC().Add(time.Second - 1).Truncate(time.Second)
++	return append([]string{t.SystemdRun, "--user", "--unit=" + CanonicalUnit(id), "--timer-property=AccuracySec=1s",
++		"--on-calendar=" + at.Format("2006-01-02 15:04:05") + " UTC"}, cb...)
++}
++
+ // CreateHost creates a real one-shot timer. The same identity with the
+ // same grant deadline is reused, never recreated; any other conflict is
+ // refused rather than hijacked or extended.
+@@ -390,6 +415,9 @@ func (t *Timers) CreateHost(id string, deadline any, delayS float64, cb []string
+ 		return nil, fault("E_TIMER_CONFLICT", "conflicting timer identity/deadline; refusing to hijack or extend")
+ 	}
+ 	argv := t.CommandFor(canon, delayS, cb)
++	if at, ok := py.Instant(deadline); ok {
++		argv = t.CommandAt(canon, at, cb)
++	}
+ 	proc, err := t.run("create", argv)
+ 	if err != nil {
+ 		return nil, err
+diff --git a/internal/host/parity_test.go b/internal/host/parity_test.go
+index f3fd27c..6dcbd07 100644
+--- a/internal/host/parity_test.go
++++ b/internal/host/parity_test.go
+@@ -28,6 +28,11 @@ type adjudicated struct {
+ 	FinalExcluded []struct {
+ 		Scenario string `json:"scenario"`
+ 	} `json:"final_excluded"`
++	FinalCorrected []struct {
++		Scenario string `json:"scenario"`
++		Key      string `json:"key"`
++		Go       any    `json:"go"`
++	} `json:"final_corrected"`
+ }
+ 
+ type scenario struct {
+@@ -54,6 +59,10 @@ func TestParity(t *testing.T) {
+ 	for _, c := range adj.Cases {
+ 		corrected[c.Scenario+"#"+itoa(c.Op)] = c.Go
+ 	}
++	finalFix := map[string]any{}
++	for _, f := range adj.FinalCorrected {
++		finalFix[f.Scenario+"#"+f.Key] = f.Go
++	}
+ 	for _, f := range adj.FinalExcluded {
+ 		noFinal[f.Scenario] = true
+ 	}
+@@ -88,6 +97,12 @@ func TestParity(t *testing.T) {
+ 			}
+ 			wf, gf := want[i]["final"].(map[string]any), got["final"].(map[string]any)
+ 			for _, k := range []string{"kv", "runner_calls", "transport_calls", "escalations"} {
++				if exp, ok := finalFix[sc.Name+"#"+k]; ok {
++					if canon(gf[k]) != canon(exp) {
++						t.Errorf("final %s: adjudicated expectation %s, got %s", k, canon(exp), canon(gf[k]))
++					}
++					continue
++				}
+ 				if canon(wf[k]) != canon(gf[k]) {
+ 					t.Errorf("final %s differs\n  python: %s\n  go:     %s", k, canon(wf[k]), canon(gf[k]))
+ 				}
+diff --git a/internal/host/timer_p12_test.go b/internal/host/timer_p12_test.go
+new file mode 100644
+index 0000000..9dfc7d5
+--- /dev/null
++++ b/internal/host/timer_p12_test.go
+@@ -0,0 +1,68 @@
++package host
++
++import (
++	"testing"
++	"time"
++)
++
++// P12: a deadline with a known instant is armed as an explicit-UTC
++// calendar timer (daemon-reload restarts --on-active countdowns); the
++// relative form stays for a deadline without an instant.
++
++func TestCommandForKeepsTheRelativeForm(t *testing.T) {
++	tm := &Timers{SystemdRun: "systemd-run"}
++	got := tm.CommandFor("u", 59, []string{"cb"})
++	if len(got) != 5 || got[3] != "--on-active=59s" || got[4] != "cb" {
++		t.Fatalf("argv %q", got)
++	}
++}
++
++func TestCommandAtIsAnExplicitUTCInstant(t *testing.T) {
++	tm := &Timers{SystemdRun: "systemd-run"}
++	la, _ := time.LoadLocation("America/Los_Angeles")
++	for _, c := range []struct {
++		at   time.Time
++		want string
++	}{
++		{time.Date(2026, 9, 21, 12, 30, 0, 0, time.UTC), "--on-calendar=2026-09-21 12:30:00 UTC"},
++		// never before the deadline: a fraction rounds up
++		{time.Date(2026, 9, 21, 12, 29, 59, 200e6, time.UTC), "--on-calendar=2026-09-21 12:30:00 UTC"},
++		// a zoned instant is written in UTC
++		{time.Date(2026, 9, 21, 5, 30, 0, 0, la), "--on-calendar=2026-09-21 12:30:00 UTC"},
++	} {
++		got := tm.CommandAt("u", c.at, []string{"cb"})
++		if len(got) != 6 || got[3] != "--timer-property=AccuracySec=1s" || got[4] != c.want || got[5] != "cb" {
++			t.Errorf("%v: argv %q", c.at, got)
++		}
++	}
++}
++
++func TestCancelReceiptsAreClassifiedExactly(t *testing.T) {
++	for _, c := range []struct {
++		kind, stdout, want string
++		rc                 int
++	}{
++		{"stop", "wake: K -> nothing running\n", "idle", 1},
++		{"stop", "wake: K -> cancelled\n", "cancelled", 1},
++		{"stop", "wake: X -> cancelled\n", "failed", 1}, // another session's receipt
++		{"stop", "nothing running\n", "failed", 1},      // no receipt
++		{"stop", "", "failed", 1},                       // transport error (stderr only)
++		{"dispatch", "wake: K -> nothing running\n", "failed", 1},
++		{"stop", "wake: K -> started\n", "sent", 0},
++	} {
++		kv := mapKV{}
++		tr := &WakeTransport{WakePath: "wake", Allowlist: []string{"K"}, Enabled: true, KV: kv,
++			Run: func(argv []string, env []string, timeout time.Duration) (Proc, error) {
++				return Proc{RC: c.rc, Stdout: c.stdout, Stderr: "could not reach"}, nil
++			}}
++		mid, err := tr.Send("K", "/cancel", c.kind, "a", nil)
++		if err != nil || tr.State(mid) != c.want {
++			t.Errorf("%s %q rc %d: %s %v, want %s", c.kind, c.stdout, c.rc, tr.State(mid), err, c.want)
++		}
++	}
++}
++
++type mapKV map[string]string
++
++func (m mapKV) Get(k string) (string, bool) { v, ok := m[k]; return v, ok }
++func (m mapKV) Put(k, v string) error       { m[k] = v; return nil }
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 34ffac7..0fa962c 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -147,6 +147,7 @@ type Pkg struct {
+ 	StepAt       string               `json:"step_at"`
+ 	Verdict      string               `json:"verdict,omitempty"`
+ 	Notes        []string             `json:"notes,omitempty"`
++	Timeout      *StepTimeout         `json:"timeout,omitempty"` // set when a step deadline passed
+ }
+ 
+ // OnPass is a director-authorized disposition that closes the package
+@@ -271,7 +272,15 @@ func (l *Loop) wire() {
+ 	}
+ 	l.D.Ext.OnWake = func(seat, reason string) error {
+ 		// The core wakes its director by role name.
+-		return l.send(l.Cfg.Director, "[agent-loop] "+reason+". See: agent-loop status --config "+l.Cfg.Path, "wake", "")
++		text := "[agent-loop] " + reason + ". See: agent-loop status --config " + l.Cfg.Path
++		if qid, ok := strings.CutPrefix(reason, "deadline-expired:"); ok {
++			if p := l.Pkg(qid); p != nil {
++				if a := map[string]string{"worker": p.WorkAction, "verify": p.VerifyAction}[p.Step]; a != "" {
++					text += ". Acknowledge ownership with: " + l.AckCommand(qid, a)
++				}
++			}
++		}
++		return l.send(l.Cfg.Director, text, "wake", "")
+ 	}
+ }
+ 
+@@ -281,15 +290,6 @@ func (l *Loop) SetWatcher(w *host.TurnWatcher, cursors *py.Dict) { l.watcher, l.
+ // Cursors are the watcher's byte cursors after the last Tick.
+ func (l *Loop) Cursors() *py.Dict { return l.cursors }
+ 
+-// MarkTimedOut records that a deadline interrupted a package's step.
+-func (l *Loop) MarkTimedOut(qid, action string) error {
+-	p := l.Pkg(qid)
+-	if p == nil || p.Step == "closed" {
+-		return nil
+-	}
+-	return l.setStep(p, "timed-out", "deadline passed for "+action+"; turn cancelled, director told")
+-}
+-
+ // Close closes the ledger.
+ func (l *Loop) Close() error { return l.D.Close() }
+ 
+@@ -312,8 +312,12 @@ func (l *Loop) sendID(id, text, kind, action string) error {
+ 	if err != nil {
+ 		return err
+ 	}
+-	if st := l.Adapter.Transport.State(mid); st != "sent" && st != "queued" {
+-		return fmt.Errorf("wake to %s: %s", id, st)
++	switch st := l.Adapter.Transport.State(mid); {
++	case st == "sent" || st == "queued":
++	case kind == "stop" && (st == "cancelled" || st == "idle"):
++		// A /cancel that the worker confirmed, or that found no running turn.
++	default:
++		return fmt.Errorf("wake to %s: %s (receipt %s)", id, st, mid)
+ 	}
+ 	return nil
+ }
+@@ -698,7 +702,7 @@ func (l *Loop) Tick() ([]string, error) {
+ 	if _, err := l.Adapter.DrainOutboxSettled(""); err != nil {
+ 		return done, err
+ 	}
+-	return done, nil
++	return append(done, l.expiredAcks()...), nil
+ }
+ 
+ func (l *Loop) lastEnd(p *Pkg) *py.Dict {
+@@ -962,7 +966,7 @@ func (l *Loop) Status() []map[string]any {
+ 			last = p.Notes[len(p.Notes)-1]
+ 		}
+ 		out = append(out, map[string]any{"qid": p.QID, "step": p.Step, "since": p.StepAt, "phase": phase,
+-			"deadline": deadline, "waiting_on": waiting, "verdict": p.Verdict, "last": last, "principals": p.Principals})
++			"deadline": deadline, "waiting_on": waiting, "verdict": p.Verdict, "last": last, "principals": p.Principals, "timeout": p.Timeout})
+ 	}
+ 	return out
+ }
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+new file mode 100644
+index 0000000..7c07034
+--- /dev/null
++++ b/internal/loop/timeout.go
+@@ -0,0 +1,201 @@
++package loop
++
++import (
++	"fmt"
++	"sort"
++	"strconv"
++	"strings"
++	"time"
++
++	"agent-loop/internal/core"
++	"agent-loop/internal/py"
++)
++
++// StepTimeout is the durable record of a step whose deadline passed: how
++// the cancel went, whether the director was told, and who acknowledged
++// ownership. It never resumes or closes the package.
++type StepTimeout struct {
++	ID           string   `json:"id"` // T-<action>
++	Action       string   `json:"action"`
++	At           string   `json:"at"`       // host clock when the timeout was settled
++	Cancel       string   `json:"cancel"`   // cancelled | idle | failed: <receipt state and error>
++	Director     string   `json:"director"` // told | failed: <why>
++	Ack          *StepAck `json:"ack,omitempty"`
++	AckExpiredAt string   `json:"ack_expired_escalated_at,omitempty"`
++}
++
++// StepAck is an acknowledgement of a step timeout by the director or duty.
++type StepAck struct {
++	By         string `json:"by"`
++	NextAction string `json:"next_action"`
++	Deadline   string `json:"response_deadline"`
++	At         string `json:"at"`
++}
++
++// AckCommand is the exact command a principal runs to acknowledge a timeout.
++func (l *Loop) AckCommand(qid, action string) string {
++	return fmt.Sprintf("%s timeout-ack --config %s --qid %s --action %s --by SEAT --next 'NEXT ACTION' --within 15m",
++		l.Cfg.Bin, l.Cfg.Path, qid, action)
++}
++
++// lastReceipt is the newest transport receipt for an action and kind.
++func (l *Loop) lastReceipt(action, kind string) (string, string) {
++	best, bestN, state := "", int64(-1), ""
++	for k, v := range l.D.KV {
++		if !strings.HasPrefix(k, "msg:") {
++			continue
++		}
++		d := py.AsDict(mustLoads(v))
++		if d == nil || py.S(d.Get("kind")) != kind || py.S(d.Get("action")) != action {
++			continue
++		}
++		i := strings.LastIndex(k, "-")
++		n, _ := strconv.ParseInt(k[i+1:], 10, 64)
++		if n > bestN {
++			best, bestN, state = strings.TrimPrefix(k, "msg:"), n, py.S(d.Get("state"))
++		}
++	}
++	return best, state
++}
++
++func mustLoads(s string) any { v, _ := py.Loads([]byte(s)); return v }
++
++// MarkTimedOut records a timeout that the core settled: the cancel was
++// confirmed (or found nothing running) and the director was told.
++func (l *Loop) MarkTimedOut(qid, action string) error {
++	p := l.Pkg(qid)
++	if p == nil || p.Step == "closed" {
++		return nil
++	}
++	if p.Step == "timed-out" && p.Timeout != nil && p.Timeout.Action == action {
++		return nil // already recorded
++	}
++	cur := map[string]string{"worker": p.WorkAction, "verify": p.VerifyAction}[p.Step]
++	rec := l.D.Store.Revs.Get(core.RevKey{Q: qid, Rev: int64(1)})
++	if cur != action || rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {
++		return nil // not this step's timeout, or the core did not interrupt it
++	}
++	if p.Timeout == nil || p.Timeout.Action != action {
++		mid, st := l.lastReceipt(action, "stop")
++		p.Timeout = &StepTimeout{ID: "T-" + action, Action: action, At: py.ISO(l.now()),
++			Cancel: st + " (" + mid + ")", Director: "told"}
++	}
++	return l.setStep(p, "timed-out", "deadline passed for "+action+"; cancel "+p.Timeout.Cancel+", director told")
++}
++
++// SettleTimeoutFailure owns a timeout whose effects failed after the core
++// recorded the interrupt (e.g. the /cancel did not arrive): the step is
++// settled as timed-out with the truthful failure, and the director (else
++// duty) is told with the evidence and the ack command. It does nothing if
++// the package is not at that action, or the core did not interrupt it.
++func (l *Loop) SettleTimeoutFailure(qid, action string, cause error) (string, error) {
++	p := l.Pkg(qid)
++	if p == nil {
++		return "", fmt.Errorf("no package %s", qid)
++	}
++	cur := map[string]string{"worker": p.WorkAction, "verify": p.VerifyAction}[p.Step]
++	if p.Step == "timed-out" && p.Timeout != nil && p.Timeout.Action == action && p.Timeout.Director == "told" {
++		return "already settled", nil
++	}
++	if p.Step != "timed-out" && cur != action {
++		return "", fmt.Errorf("%s is at step %s, not at %s: not settled", qid, p.Step, action)
++	}
++	rec := l.D.Store.Revs.Get(core.RevKey{Q: qid, Rev: int64(1)})
++	if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {
++		return "", fmt.Errorf("the core did not interrupt %s: not settled", qid)
++	}
++	mid, st := l.lastReceipt(action, "stop")
++	if p.Timeout == nil || p.Timeout.Action != action {
++		p.Timeout = &StepTimeout{ID: "T-" + action, Action: action, At: py.ISO(l.now())}
++	}
++	p.Timeout.Cancel = fmt.Sprintf("failed: receipt %s state %q: %v", mid, st, cause)
++	text := fmt.Sprintf("[agent-loop] %s: step %s passed its deadline and the cancel was NOT confirmed (%s). "+
++		"The turn may still be running. Acknowledge ownership with: %s", qid, action, p.Timeout.Cancel, l.AckCommand(qid, action))
++	p.Timeout.Director = "told"
++	if err := l.send(l.Cfg.Director, text, "escalation", qid); err != nil {
++		p.Timeout.Director = "failed: " + err.Error()
++		if derr := l.send(l.Cfg.Duty, text, "escalation", qid); derr != nil {
++			p.Timeout.Director += "; duty failed: " + derr.Error()
++		} else {
++			p.Timeout.Director += "; duty told"
++		}
++	}
++	if err := l.setStep(p, "timed-out", "deadline passed for "+action+"; "+p.Timeout.Cancel+"; director "+p.Timeout.Director); err != nil {
++		return "", err
++	}
++	return "settled: cancel failed, director " + p.Timeout.Director, nil
++}
++
++// AckTimeout records that the director or duty owns a step timeout, with
++// the next action and a response deadline. Same ack again is a no-op; a
++// different ack while one is in force is refused. It never resumes or
++// closes the package.
++func (l *Loop) AckTimeout(qid, action, by, next string, within time.Duration) (*StepAck, error) {
++	p := l.Pkg(qid)
++	if p == nil {
++		return nil, fmt.Errorf("no package %s", qid)
++	}
++	if p.Step != "timed-out" || p.Timeout == nil || p.Timeout.Action != action {
++		return nil, fmt.Errorf("%s has no open step timeout for %s (step %s)", qid, action, p.Step)
++	}
++	role := map[string]string{l.Cfg.Director: "director", l.Cfg.Duty: "duty"}[by]
++	if role == "" {
++		return nil, fmt.Errorf("%s is neither the director (%s) nor duty (%s)", by, l.Cfg.Director, l.Cfg.Duty)
++	}
++	if _, err := l.authority(p, role); err != nil {
++		return nil, err
++	}
++	if err := l.Cfg.VerifySeats(by); err != nil {
++		return nil, err
++	}
++	if strings.TrimSpace(next) == "" {
++		return nil, fmt.Errorf("--next must name the next action")
++	}
++	if within <= 0 || within > MaxAckWithin {
++		return nil, fmt.Errorf("--within must be between 1s and %s", MaxAckWithin)
++	}
++	now := l.now()
++	if a := p.Timeout.Ack; a != nil {
++		dl, ok := py.Instant(a.Deadline)
++		inForce := ok && now.Before(dl)
++		if inForce && a.By == by && a.NextAction == next {
++			return a, nil // replay
++		}
++		if inForce {
++			return nil, fmt.Errorf("%s is already acknowledged by %s until %s (%s)", p.Timeout.ID, a.By, a.Deadline, a.NextAction)
++		}
++	}
++	p.Timeout.Ack = &StepAck{By: by, NextAction: next, Deadline: py.ISO(now.Add(within)), At: py.ISO(now)}
++	p.Timeout.AckExpiredAt = ""
++	p.Notes = append(p.Notes, py.ISO(now)+" timeout "+p.Timeout.ID+" acknowledged by "+by+": "+next)
++	return p.Timeout.Ack, l.save(p)
++}
++
++// expiredAcks escalates, once, every timeout whose acknowledged response
++// deadline passed while the package is still timed out.
++func (l *Loop) expiredAcks() []string {
++	var out []string
++	pk := l.Pkgs()
++	sort.Slice(pk, func(i, j int) bool { return pk[i].QID < pk[j].QID })
++	for _, p := range pk {
++		t := p.Timeout
++		if p.Step != "timed-out" || t == nil || t.Ack == nil || t.AckExpiredAt != "" {
++			continue
++		}
++		dl, ok := py.Instant(t.Ack.Deadline)
++		if !ok || l.now().Before(dl) {
++			continue
++		}
++		msg := fmt.Sprintf("[agent-loop] %s: the acknowledgement of %s by %s expired at %s (next action was: %s). Re-acknowledge with: %s",
++			p.QID, t.ID, t.Ack.By, t.Ack.Deadline, t.Ack.NextAction, l.AckCommand(p.QID, t.Action))
++		if err := l.send(l.Cfg.Director, msg, "escalation", p.QID); err != nil {
++			out = append(out, p.QID+": ack expiry escalation failed: "+err.Error())
++			continue
++		}
++		t.AckExpiredAt = py.ISO(l.now())
++		if err := l.save(p); err == nil {
++			out = append(out, p.QID+": acknowledgement expired; director told")
++		}
++	}
++	return out
++}
+diff --git a/internal/loop/timeout_p12_test.go b/internal/loop/timeout_p12_test.go
+new file mode 100644
+index 0000000..b9ba7de
+--- /dev/null
++++ b/internal/loop/timeout_p12_test.go
+@@ -0,0 +1,254 @@
++package loop
++
++import (
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/host"
++)
++
++// P12: a step deadline is settled and owned whatever the /cancel finds.
++// The /cancel replies below are the real wake script's shapes (wake exits
++// 1 for every reply except started/queued; P11 live send log).
++
++// cancelReply makes the rig's wake answer /cancel with rc and stdout.
++func (r *rig) cancelReply(rc int, stdout, stderr string) {
++	run := r.cfg.Run
++	r.cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++		if filepath.Base(argv[0]) == "wake" && argv[2] == "/cancel" {
++			r.calls = append(r.calls, argv)
++			return host.Proc{RC: rc, Stdout: stdout, Stderr: stderr}, nil
++		}
++		return run(argv, env, timeout)
++	}
++}
++
++func (r *rig) timedOut(t *testing.T, qid string) *Loop {
++	l := r.open()
++	_, err := l.Dispatch(Request{QID: qid, Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 60, VerifyS: 60})
++	must(t, err)
++	l.Close()
++	return nil
++}
++
++// settle runs the deadline callback the way `agent-loop timer-callback` does.
++func (r *rig) settle(t *testing.T, qid, action, exec string) (string, error) {
++	out, err := TimerCallback(r.cfg, qid, action, exec)
++	l := r.open()
++	defer l.Close()
++	if err != nil {
++		msg, serr := l.SettleTimeoutFailure(qid, action, err)
++		if serr != nil {
++			t.Fatalf("not settled: %v (callback: %v)", serr, err)
++		}
++		return msg, err
++	}
++	d := out.Get("decision").(string)
++	if d == "interrupted" || d == "recovered" || d == "already-handled" { // as the CLI does
++		must(t, l.MarkTimedOut(qid, action))
++	}
++	return d, nil
++}
++
++func TestTimeoutSettlesWhateverTheCancelFinds(t *testing.T) {
++	for _, c := range []struct {
++		name, stdout, stderr string
++		rc                   int
++		cancel               string // prefix of the recorded cancel outcome
++		failed               bool
++	}{
++		{"idle worker (P11 L2/L6)", "wake: K -> nothing running\n", "", 1, "idle", false},
++		{"running turn cancelled", "wake: K -> cancelled\n", "", 1, "cancelled", false},
++		{"transport refused", "", "wake: could not reach K: [Errno 111] Connection refused", 1, "failed", true},
++		{"receipt for another session", "wake: X -> nothing running\n", "", 1, "failed", true},
++		{"reply without a receipt", "nothing running\n", "", 1, "failed", true},
++		{"unknown reply", "wake: K -> busy\n", "", 1, "failed", true},
++	} {
++		t.Run(c.name, func(t *testing.T) {
++			r := newRig(t)
++			r.timedOut(t, "Q")
++			r.cancelReply(c.rc, c.stdout, c.stderr)
++			_, err := r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++			if (err != nil) != c.failed {
++				t.Fatalf("callback error %v, want failed=%v", err, c.failed)
++			}
++			l := r.open()
++			defer l.Close()
++			p := l.Pkg("Q")
++			if p.Step != "timed-out" || p.Timeout == nil || !strings.HasPrefix(p.Timeout.Cancel, c.cancel) || p.Timeout.Director != "told" {
++				t.Fatalf("not settled and owned: step %s timeout %+v", p.Step, p.Timeout)
++			}
++			w := r.wakes()
++			last := w[len(w)-1]
++			if !strings.HasPrefix(last, "tern: [agent-loop]") {
++				t.Fatalf("director not told last: %v", w)
++			}
++			// Every director notice carries the exact ack command.
++			var dir string
++			for _, call := range r.calls {
++				if filepath.Base(call[0]) == "wake" && call[1] == "T" {
++					dir = call[2]
++				}
++			}
++			if !strings.Contains(dir, "timeout-ack --config "+r.cfg.Path+" --qid Q --action Q-w1") {
++				t.Fatalf("no ack command in the director notice: %q", dir)
++			}
++			// Status is readable and durable across a reopen.
++			rows := l.Status()
++			if rows[0]["timeout"] == nil {
++				t.Fatal("status has no timeout record")
++			}
++		})
++	}
++}
++
++func TestSettlementIsNotRepeated(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	n := len(r.wakes())
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1") // the timer's replay
++	if len(r.wakes()) != n {
++		t.Fatalf("replay repeated effects: %v", r.wakes()[n:])
++	}
++	// A failed cancel settles once; the settlement is not re-sent.
++	r2 := newRig(t)
++	r2.timedOut(t, "Q")
++	r2.cancelReply(1, "", "wake: could not reach K")
++	r2.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	l := r2.open()
++	msg, err := l.SettleTimeoutFailure("Q", "Q-w1", nil)
++	l.Close()
++	if err != nil || msg != "already settled" {
++		t.Fatalf("second settlement: %q %v", msg, err)
++	}
++}
++
++func TestSettlementRefusesAPackageTheCoreDidNotInterrupt(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	l := r.open()
++	defer l.Close()
++	if _, err := l.SettleTimeoutFailure("Q", "Q-w1", nil); err == nil {
++		t.Fatal("settled a running step without a core interrupt")
++	}
++	if _, err := l.SettleTimeoutFailure("Q", "Q-v1", nil); err == nil {
++		t.Fatal("settled the wrong action")
++	}
++}
++
++func TestTimeoutAcknowledgement(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	l := r.open()
++	// Delivery is not acknowledgement: before an ack there is none.
++	if l.Pkg("Q").Timeout.Ack != nil {
++		t.Fatal("an ack exists before anyone acknowledged")
++	}
++	for _, c := range []struct {
++		name, action, by, next string
++		within                 time.Duration
++	}{
++		{"wrong actor", "Q-w1", "kiln", "look", 10 * time.Minute},
++		{"unknown actor", "Q-w1", "mallory", "look", 10 * time.Minute},
++		{"wrong action", "Q-v1", "tern", "look", 10 * time.Minute},
++		{"no next action", "Q-w1", "tern", " ", 10 * time.Minute},
++		{"zero deadline", "Q-w1", "tern", "look", 0},
++		{"past deadline", "Q-w1", "tern", "look", -time.Minute},
++		{"unbounded deadline", "Q-w1", "tern", "look", 25 * time.Hour},
++	} {
++		if _, err := l.AckTimeout("Q", c.action, c.by, c.next, c.within); err == nil {
++			t.Errorf("%s: accepted", c.name)
++		}
++	}
++	a, err := l.AckTimeout("Q", "Q-w1", "tern", "re-dispatch after reading the log", 10*time.Minute)
++	must(t, err)
++	r.clock.Advance(5)
++	b, err := l.AckTimeout("Q", "Q-w1", "tern", "re-dispatch after reading the log", 10*time.Minute)
++	if err != nil || b.At != a.At || b.Deadline != a.Deadline {
++		t.Fatalf("replay changed the ack: %+v %+v %v", a, b, err)
++	}
++	if _, err := l.AckTimeout("Q", "Q-w1", "tern", "something else", 10*time.Minute); err == nil {
++		t.Fatal("a conflicting ack replaced one in force")
++	}
++	l.Close()
++	// Durable across a restart; not a resume or a close.
++	l = r.open()
++	p := l.Pkg("Q")
++	if p.Timeout.Ack == nil || p.Timeout.Ack.By != "tern" || p.Step != "timed-out" {
++		t.Fatalf("after reopen: step %s ack %+v", p.Step, p.Timeout.Ack)
++	}
++	// An expired response is escalated once, then a fresh ack is allowed.
++	n := len(r.wakes())
++	r.clock.Advance(11 * 60)
++	r.tick(l)
++	r.tick(l)
++	if got := r.wakes()[n:]; len(got) != 1 || !strings.HasPrefix(got[0], "tern: [agent-loop] Q: the acknowledgement") {
++		t.Fatalf("expiry escalation: %v", got)
++	}
++	if _, err := l.AckTimeout("Q", "Q-w1", "tern", "second look", 10*time.Minute); err != nil {
++		t.Fatalf("re-ack after expiry: %v", err)
++	}
++	l.Close()
++}
++
++func TestTimeoutAckRejectsAChangedPrincipal(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	// The config now binds the director seat to another session: forged.
++	r.cfg.Seats["tern"] = "T2"
++	r.registry = `[{"id": "K", "title": "kiln"}, {"id": "C", "title": "corvid - reviewer"}, {"id": "T2", "title": "tern"}]`
++	l := r.open()
++	defer l.Close()
++	if _, err := l.AckTimeout("Q", "Q-w1", "tern", "look", 10*time.Minute); err == nil {
++		t.Fatal("an ack from a changed principal was accepted")
++	}
++}
++
++func TestStepTimersAreArmedAtAnExplicitUTCInstant(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	for _, c := range r.calls {
++		if c[0] == "systemd-run" {
++			if c[3] != "--timer-property=AccuracySec=1s" || !strings.HasPrefix(c[4], "--on-calendar=") || !strings.HasSuffix(c[4], " UTC") {
++				t.Fatalf("timer argv %v", c)
++			}
++			return
++		}
++	}
++	t.Fatal("no timer armed")
++}
++
++// The callback crashes after the core's effects, before the loop record:
++// the timer's replay (core: already-handled) completes the record.
++func TestAReplayCompletesACrashedSettlement(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	_, err := TimerCallback(r.cfg, "Q", "Q-w1", "ex-Q-w1") // crash here: no MarkTimedOut
++	must(t, err)
++	n := len(r.wakes())
++	d, err := r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	must(t, err)
++	l := r.open()
++	defer l.Close()
++	if d != "already-handled" || l.Pkg("Q").Step != "timed-out" || len(r.wakes()) != n {
++		t.Fatalf("replay: %s step %s wakes %v", d, l.Pkg("Q").Step, r.wakes()[n:])
++	}
++	// A deadline the core did not act on is never recorded as timed out.
++	r2 := newRig(t)
++	r2.timedOut(t, "Q")
++	l2 := r2.open()
++	defer l2.Close()
++	must(t, l2.MarkTimedOut("Q", "Q-w1"))
++	if l2.Pkg("Q").Step != "worker" {
++		t.Fatal("marked timed out without a core interrupt")
++	}
++}

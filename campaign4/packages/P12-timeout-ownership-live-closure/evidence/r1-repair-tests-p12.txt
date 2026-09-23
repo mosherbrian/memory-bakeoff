@@ -1,0 +1,84 @@
+== driver c2f80e2fe129e036 workdir /tmp/p11-r1-Eqhs
+-- deadline guard
+PASS  guard before deadline: exit: '0'
+PASS  guard before deadline: command: 'ran'
+PASS  guard equal deadline: exit: '3'
+PASS  guard equal deadline: command: 'absent'
+PASS  guard equal: DEADLINE INCOMPLETE row: 'DEADLINE INCOMPLETE'
+PASS  guard after deadline: exit: '3'
+PASS  guard after deadline: command: 'absent'
+PASS  guard after: DEADLINE INCOMPLETE row: 'DEADLINE INCOMPLETE'
+PASS  task() refused after deadline: no task file: 'absent'
+PASS  expired cleanup runs (teardown not refused): 'rc=0'
+PASS  expired cleanup: no DEADLINE row: '0'
+PASS  expired cleanup: fixtures removed: '0'
+PASS  expired cleanup: driver.log says cleanup done: 'cleanup done'
+-- registry_check
+PASS  registry valid rc: '0'
+      (ok)
+PASS  registry title rc: '1'
+      (W1: title 'other', declared 'fxw')
+PASS  registry missing rc: '1'
+      (U1: 0 registry rows)
+PASS  registry duplicate rc: '1'
+      (V1: 2 registry rows)
+PASS  registry archived rc: '1'
+      (D1: archived)
+PASS  registry wrongprofile rc: '1'
+      (W1: 0 registry rows; V1: 0 registry rows; D1: 0 registry rows; U1: 0 registry rows)
+-- stop_seat (L4b onset precondition)
+PASS  stop_seat: stop ok, registry stopped: '0'
+PASS  stop_seat: stop command fails: '1'
+PASS  stop_seat: stop ok, registry still idle: '1'
+-- cleanup outcome checked
+PASS  cleanup with failing remove: rc: 'rc=1'
+PASS  cleanup with failing remove: CLEANUP FAIL row: 'CLEANUP FAIL'
+PASS  cleanup with failing remove: no 'cleanup done': '0'
+      (unresolved: seat W1 (stopped); seat V1 (stopped); seat D1 (stopped); seat U1 (stopped);)
+-- L6 timing (explicit class)
+PASS  L6 on time, acked: 'PASS'
+      (PASS explicit: detection 20.0s (bound 30), acknowledged ownership 60.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 timer 45 s late: 'FAIL'
+      (FAIL explicit: detection 45.0s (bound 30), acknowledged ownership 50.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 detection 30 s exactly: 'PASS'
+      (PASS explicit: detection 30.0s (bound 30), acknowledged ownership 60.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 detection 31 s: 'FAIL'
+      (FAIL explicit: detection 31.0s (bound 30), acknowledged ownership 60.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 ack at 90 s exactly: 'PASS'
+      (PASS explicit: detection 10.0s (bound 30), acknowledged ownership 90.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 ack at 91 s: 'FAIL'
+      (FAIL explicit: detection 10.0s (bound 30), acknowledged ownership 91.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 settled before deadline: 'FAIL'
+      (FAIL explicit: detection -10.0s (bound 30), acknowledged ownership 30.0s (bound 90) from deadline 2026-09-23T16:00:00Z)
+PASS  L6 no acknowledgement (delivery only): 'FAIL'
+      (FAIL explicit: detection 10.0s (bound 30); NO acknowledgement recorded (ownership bound 90))
+PASS  L6 no settled timeout: 'INCOMPLETE'
+      (INCOMPLETE missing timestamp(s): deadline=2026-09-23T16:00:00Z settled=)
+PASS  L6 no deadline recorded: 'INCOMPLETE'
+      (INCOMPLETE missing timestamp(s): deadline= settled=2026-09-23T16:00:10Z)
+-- whole driver preflight
+PASS  driver wrong profile: exit: '3'
+PASS  driver wrong profile: row: 'SETUP FAIL'
+PASS  driver wrong profile: effects before exit: '0'
+      (SETUP	FAIL	2026-09-23T17:07:07.864Z	fixture registry check in profile campaign4: W1: 0 registry rows; V1: 0 registry rows; D1: 0 registry rows; U1: 0 )
+PASS  driver title mismatch: exit: '3'
+PASS  driver title mismatch: row: 'SETUP FAIL'
+PASS  driver title mismatch: effects before exit: '0'
+      (SETUP	FAIL	2026-09-23T17:07:07.907Z	fixture registry check in profile fxprof: W1: title 'x', declared 'fxw')
+PASS  driver duplicate id: exit: '2'
+PASS  driver duplicate id: row: ''
+PASS  driver duplicate id: effects before exit: '0'
+      (fixture IDs and names must be four distinct pairs)
+PASS  driver bad deadline: exit: '2'
+PASS  driver bad deadline: row: ''
+PASS  driver bad deadline: effects before exit: '0'
+      (LIVE_DEADLINE 'not-a-time' is not a valid time)
+PASS  driver past deadline: exit: '3'
+PASS  driver past deadline: row: 'SETUP INCOMPLETE'
+PASS  driver past deadline: effects before exit: '0'
+      (SETUP	INCOMPLETE	2026-09-23T17:07:07.983Z	live deadline 2026-09-23T00:00:00Z already passed: no effect started)
+PASS  driver scope not created (stub systemd-run): exit: '3'
+PASS  driver scope not created (stub systemd-run): row: 'SETUP FAIL'
+PASS  driver scope not created (stub systemd-run): effects before exit: '1'
+      (SETUP	FAIL	2026-09-23T17:07:08.026Z	owned scope p12live-driver-T6 not created (systemd-run rc=0): no effect started)
+== 53 PASS, 0 FAIL
