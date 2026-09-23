@@ -1,0 +1,26 @@
+{
+  "at": "2026-09-23T18:54:20.011713+00:00",
+  "signer": "tern",
+  "sponsor": "Brian via Claude: Okay, I authorize to proceed. We need to work out the kinks so we can cut over at some point in the near future when the issues are resolved.",
+  "action": "P12-lock-budget-1",
+  "authorization": "Explicit new sponsor-funded round; all previous grants and INCOMPLETE evidence preserved",
+  "prior_ceiling_minutes": 605,
+  "author_minutes": 60,
+  "independent_review_minutes": 30,
+  "new_ceiling_minutes": 695,
+  "base": "f86daf91be5821c9deea707d4decf0ac33625c89",
+  "base_binary": "2656bb97f314325aa7bbf931cc1ecae59bb18970c624382a382f1a9c06303b2e",
+  "input_review_sha256": "1767a4c54e06f69e8fe037433c584268d0b6cc957af8f1b092b395a2244cbc6c",
+  "requirements": [
+    "Bound each lock hold by monotonic elapsed work budget with safe yield/release, both run-pass processing and ProcessDue on acquire/release. Include checker escalation, CLI/callback/ack/decide/dispatch/claim writers and all blocking operations; a hidden unbounded holder invalidates the claim. Author picks concrete budget and demonstrates arithmetic before claiming completion.",
+    "Stop starting work without enough remaining time; individual I/O uses remaining budget, not fixed30s per send. Check-before-send alone permits overshoot unless in-flight send is bounded by remainder. No unsafe unlock mid core/package transition; persist/resume durable intent when yielding, no lost event/cursor, ack, pending timeout or duplicate effect. Core/py/cases frozen.",
+    "Due work gets bounded priority and fair continuation across yields/restarts, including marker backlog. Do not process unlimited markers at acquire/release. Prove ordinary work cannot starve due work and due backlog cannot hold lock forever. Specify supported capacity/overload handling honestly; no finite latency guarantee for arbitrary unbounded arrivals. Saturation must be visible owned failure, not silently discarded/accepted work. Any proposed workload restriction changing acceptance returns Tern explicitly.",
+    "Preserve separation: durable trusted deferred marker can evidence detection<=30s; settlement/notification/actual acknowledgement are different. Require actual recovery or authenticated ack<=60s after detection,total<=90 for explicit events. A short critical section alone is not proof: account for acquisition fairness, next scheduling/cadence, remaining sends and all holders. No later onset shift or delivery-as-ack.",
+    "Real separate-process contention tests on one ledger with held lock, several due actions, repeated ordinary arrivals, slow/failed transport and crash/reopen; trusted timestamps and maximum hold/detection/settlement/notification/ack intervals. Original candidate demonstrates unbounded scaling; corrected candidate shows budget/yield/fairness. Independent verifier gets unshared backlog/slow-sender negatives. Do not mock away the scheduler or every send delay.",
+    "Heartbeat/status must report actual progress/completed bounded work truthfully; yielding is neither whole-work completion nor an error hidden as healthy. Preserve supervisor and quiet intentional stop behavior, outside stopped-mode escalation, writer-safety race, original-instant rearm, marker authority/replay and deadline predicates.",
+    "Retain verified UTC calendar template/reload behavior. New immutable isolated source/private release from f86daf9, manifest/diffs/claim. Run conformance125 exact shipped bytes, relevant host/loop/plan regressions and changed-path mutations. No main/install/live/host-clock changes. Record isolated systemd effects and cleanup.",
+    "File COMPLETE only with fixed end-to-end contention evidence; otherwise INCOMPLETE with precise remaining gap. No automatic extension or hidden reuse of earlier grants."
+  ],
+  "review": "Fresh corvid30m on bound claim (partial review requires director routing if INCOMPLETE), no verifier overlap. PASS returns Tern to release fresh prep/binding/live then PASS-only cutover. Existing live75/cutover45 unchanged and unreleased.",
+  "claim_path": "campaign4/packages/P12-timeout-ownership-live-closure/lock-budget-claim.json"
+}
