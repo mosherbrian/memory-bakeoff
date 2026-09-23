@@ -129,3 +129,29 @@ Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. T
   - Release binary b70665f5, overloaded (a dispatch every 4 s): max hold 10.51 s; the one armed deadline (T1) settled at 17 s. T2 and T3 were refused at dispatch (`E_LEDGER_BUSY`) and never armed (`contention-release-overload-4s.txt`). (Corrected in P12-realprocess-1; the earlier figures were from the pre-release candidate run.)
   - Old build, a dispatch every 15 s: 2 of the 3 deadlines were never even armed within the window.
 - Overload (release run, a dispatch every 4 s = about 250% of the lock capacity with 10 s holds): new dispatches are refused with `E_LEDGER_BUSY` after 60 s, and the caller sees the error; nothing is silently accepted. The due deadline that was armed still settled at 17 s.
+
+## P12-fair-handoff-1 (candidate 5da2b36, bin `842e44d6…`; templates NOT re-pinned: they still pin b70665f5, live is held)
+
+Fixes the three defects P12-realprocess-1 found (`evidence/real-process/defects-found.md`). Evidence: `evidence/fair-handoff/`.
+
+- **D2, lock order.** Every writer takes a numbered place in `<db>.queue/` and may try the ledger flock only while it is the oldest live entry. Its entry goes when it gets the lock, so a holder that locks again (run after a yield) queues at the back.
+  - Admission caps: run 1, due (timer-callback, check, timeout-ack) 3, ordinary 2. A full class is refused at once with `E_LEDGER_SATURATED`.
+  - An admitted writer waits at most `AdmittedWait` = 6 × (10 s + 1 s) = 66 s, counted from its admission.
+  - Dead, pid-reused, stale (not refreshed for 3 s) and malformed entries are removed by whoever sees them. Malformed ones are kept in `rejected/`.
+- **D1, SATURATED.** The report is stamped only when duty's wake returns rc 0 (started) or rc 3 (queued). Accepted is transport only, not an acknowledgement. Every attempt goes to `.saturation-attempts`. A refused report is retried by the next holder.
+- **D3, notices.** Each notice has a stable incident key, and its attempt is recorded before the wake. After an unknown outcome (a crash, a timeout, a malformed receipt), ONE labelled `REPEAT (...)` is sent, across all restarts. After that the notice is `unresolved`: visible, never recorded as delivered. Its due marker is kept aside as `.unresolved-*.json`, and the director is told the settlement notice was not confirmed.
+  - A `/cancel` is never repeated after an unknown outcome.
+  - A definite refusal is retried: the first retry at once, then with backoff (1, 2, 4… s), at most 5 times.
+
+**Measured on the release binary 842e44d6** (`fair-handoff/new-*`; the old b70665f5 ran the same pre-registered workloads in `old-*`). 14 accepted due markers per run, 4 runs on the new binary. Empirical, this host; not a guarantee.
+
+| | new (842e44d6) | old (b70665f5) |
+|---|---|---|
+| a yield hands the lock to a waiting writer | 8 of 8 yields (next holder: dispatch) | 0 of 3 (next holder: run itself) |
+| longest run heartbeat age, stall end + 5 s, overload | 52.0 s | 135.5 s |
+| longest wait from admission to the lock | 46.2 s (dispatch), 44.5 s (run) | no admission (waited 124.8 s with no run hold) |
+| overload arrivals (a slow dispatch every 4 s) | 9 accepted, 14 refused `E_LEDGER_SATURATED` at once | 8 accepted, 14 `E_LEDGER_BUSY` after 60 s, 1 failed `E_SEAT_BINDING` (budget spent by due work before its own I/O) |
+| due markers settled | 14/14 in every run; max 67.3 s after the deadline | 14/14; max 82.6 s |
+| director notices for one incident, two crashes | 2 (original + 1 labelled repeat), then unresolved | 2 identical, unlabelled |
+| SATURATED after a refused send | not stamped; retried; accepted next (rc 3 / rc 0) | stamped as told; never retried |
+| local time inside a hold (not in subprocesses) | max 0.145 s over 305 holds | max 0.117 s |
