@@ -1,0 +1,18 @@
+# Raw snapshot behind Claude's wall-timer report to Tern (read-only commands, copied verbatim
+# from Claude's session output). Capture: `date -u +%T` printed 16:45:50 just before these commands.
+# Host timezone America/Los_Angeles. After this snapshot the driver's own cleanup stopped the wall timer
+# (driver.log 16:45:25.072Z "+ systemctl --user stop p11live-wallstop-p11live1.timer" rc=0; note that
+# this cleanup ran BEFORE the snapshot, so at 16:45:50 the unit had already been stopped).
+$ date -u +%T
+16:45:50
+$ systemctl --user show p11live-wallstop-p11live1.timer -p TimersMonotonic -p TimersCalendar -p NextElapseUSecRealtime -p NextElapseUSecMonotonic -p LastTriggerUSec
+NextElapseUSecRealtime=
+NextElapseUSecMonotonic=infinity
+LastTriggerUSec=
+$ systemctl --user show campaign4-p11-prep1-cleanup.timer -p TimersMonotonic -p TimersCalendar -p NextElapseUSecRealtime -p NextElapseUSecMonotonic -p LastTriggerUSec
+TimersMonotonic={ OnActiveUSec=1h 50min ; next_elapse=4d 11h 47min 4.951741s }
+NextElapseUSecRealtime=
+NextElapseUSecMonotonic=4d 11h 47min 4.951741s
+LastTriggerUSec=
+$ grep -c 'daemon-reload' live-p11live1/driver.log
+10
