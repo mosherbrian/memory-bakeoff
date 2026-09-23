@@ -83,9 +83,9 @@ all architecture checks, liveness, retirement receipts and remaining limitations
 ## Budget and terminal behavior
 Prospective minutes: admission15 + author45 + review25 + sole correction30 +
 recheck20 + prep15 + binding10 + live75 + live-review20 + cutover45 + postcutover10
-=410m total ceiling. No hidden/unallocated reserve. Each grant separately started
+=310m total ceiling. No hidden/unallocated reserve. Each grant separately started
 from host UTC with absolute deadline and relative one-shot enforcement. No reuse
-of P10 cancelled/spent grants (P10 allocated415/ceiling420 remains historical).
+of P10 cancelled/spent grants (P10 reported415/ceiling420; actual itemized315, reconciled in budget-correction.json).
 Actual elapsed is reported separately; unused time is not automatically a fresh
 attempt. Timeout/incomplete returns to Tern; no automatic reset, extension or
 package revision. On terminal failure declare NOT READY/owned rest and successor
