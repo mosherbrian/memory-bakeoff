@@ -1,0 +1,78 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-23T00:38:20.207831+00:00",
+  "authorization": "PREPARATION_ONLY",
+  "action_id": "P6r15-failed-prepare-1",
+  "owner": "cairn",
+  "allocation_seconds": 600,
+  "launch_before": "2026-09-23T00:46:20.207831+00:00",
+  "source_candidate_commit": "02ea693",
+  "plan": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-plan-failed-1.json",
+  "plan_sha256": "3820444deba2dde55d7b7710ba2fcfd30052555a22e87961c5711d51f2998542",
+  "preparation_tool_sha256": "462596ee721f651924ad03d24f6480b466b04a402768012a6736cbc44ce6ddd3",
+  "cleanup_tool_sha256": "57bb7e4e4d4cc938ae41c4532f0a98311e15d05e2cbed1246e10793a156cd8fa",
+  "working_root": "/tmp/p6r15-failed1-20260923T003820Z",
+  "manifest_path": "/tmp/p6r15-failed1-20260923T003820Z/launch-manifest.json",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4",
+    "ACP_TURN_SECS": "7200"
+  },
+  "commands_argv": [
+    [
+      "mkdir",
+      "-p",
+      "/tmp/p6r15-failed1-20260923T003820Z"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/prepare_live.py",
+      "--profile",
+      "campaign4",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-plan-failed-1.json",
+      "--manifest-out",
+      "/tmp/p6r15-failed1-20260923T003820Z/launch-manifest.json",
+      "--workdir-base",
+      "/tmp/p6r15-failed1-20260923T003820Z/workdirs",
+      "--worker-name",
+      "p6-fixture-worker-r15f1",
+      "--verifier-name",
+      "p6-fixture-verifier-r15f1",
+      "--idle-timeout",
+      "45m"
+    ]
+  ],
+  "cleanup_unit": "campaign4-p6r15-failed1-cleanup",
+  "cleanup_arm_argv": [
+    "systemd-run",
+    "--user",
+    "--unit=campaign4-p6r15-failed1-cleanup",
+    "--on-active=40m",
+    "--timer-property=AccuracySec=1s",
+    "--setenv=AGENTDECK_PROFILE=campaign4",
+    "/usr/bin/timeout",
+    "180",
+    "/bin/bash",
+    "-c",
+    "if [ -f \"$1\" ]; then m=\"$1\"; else m=\"$1.partial\"; fi; exec python3 \"$2\" --manifest \"$m\" --archive-dir \"$3\" --profile campaign4",
+    "p6-cleanup",
+    "/tmp/p6r15-failed1-20260923T003820Z/launch-manifest.json",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P6-r6-live-preparation/src/cleanup_live.py",
+    "/tmp/p6r15-failed1-20260923T003820Z/automatic-cleanup-archive"
+  ],
+  "cleanup_verify_argv": [
+    "systemctl",
+    "--user",
+    "is-active",
+    "campaign4-p6r15-failed1-cleanup.timer"
+  ],
+  "conditions": [
+    "Before launch verify hashes, no name collision, record main-seat registry; arm cleanup and require active timer proof. No timer proof => no launch. Cleanup40m is safety ceiling, not additional work grant.",
+    "One prepare invocation only. Capture actual rc/stdout/stderr and all partial files. Socket race is reconcile-only, no retry/relaunch. Preserve raw stdout session_id/lane/workdir/profile and socket incarnation.",
+    "Cairn returns raw launch records + manifest immediately; Tern authors canonical binding from them, then corvid existing5m binding witness. No task wake, restart of main seats, or fabricated binding summary.",
+    "Archive prepared evidence into live-preparation-failed-1/ including cleanup timer proof and host-read start/deadline. Maintain automatic cleanup until actual cleanup verified or exact replacement signed. Stop/remove only exact owned p6-fixture IDs in full/partial manifest.",
+    "Reinventory hashes/paths of current agent-deck, acp-worker, worker/verifier lane wrappers, wake, systemd-run/systemctl; no credentials, no executing pause/watch/openwork/coax. Read-only host inventory goes in evidence.",
+    "Preparation consumes first existing10m cairn grant; no new allocation. Corvid first5m binding grant still held until director binding. Live20m separate and HELD for exact signature. Notify after bounded result, do not finish with an unqueued successor."
+  ],
+  "stage_c_signature": false
+}
