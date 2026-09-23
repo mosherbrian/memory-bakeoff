@@ -1,0 +1,63 @@
+{
+ "qid": "P10-plan-repair-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "source_pin": "agent-loop p10-liveness 1341f04 (unchanged)",
+ "binary_sha256_prefix": "c1c49a29 (unchanged, release /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba)",
+ "plans_dir": "/home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/plans",
+ "plan_files_sha256": {
+  "cutover-inputs.template.env": "65b14252935e770148f8104cc5ce7103de9b683e5b13cfd3248e6d9b65417841",
+  "cutover.sh": "c8227ac9ceeb01ffa5ff53f27e7d06dfbdb4f0a0a0e59621bc1d45f2600ce755",
+  "live-driver.sh": "912b55b2fb37402298e896331f43fae7cad33ad6ca0cbf51a147995c7c63ee2b",
+  "live-inputs.template.env": "538aea930d9023adda10456620757eba92fb0ba604f51da195a50e7451c1ea65",
+  "README.md": "6ee89c4e80f500fd2c218d31375f1339b4f140444f6d837ffceaa69760dab91c",
+  "tasks/ack.md": "1b0c0207145478b524812bb739cf18abc65cd3adeb7d9cc77592c7da1245c6d2",
+  "tasks/handoff-task.md": "194da6429a463b6026b0854f6d72cbb737c5a196ed31d2fd90eeab3729240ef3",
+  "tasks/handoff-verify.md": "df8a8aabca8781be72f91c0a855f029b498a8c716b21146d8ff76203c8fb303d",
+  "tasks/l-noclaim-worker.md": "2a9a9a9aac9111716cc4f6dd5b88202facae6f8fe1cf2a02c0b8a20cda8fa258",
+  "tasks/l-verify.md": "0ab057539338baa74f1c66b95ed5392b498bef2b6b34e170493cb821fb472025",
+  "tasks/l-worker.md": "2855e2bde2b971c8d3dc0a9a9064c8105475701c56dd5da63eb9f2a9828cf47e"
+ },
+ "rehearsal": {
+  "label": "OFFLINE DRY=1 with stub PATH; NOT systemd evidence",
+  "live_driver_rc": 0,
+  "cutover_rc": {
+   "capture": 0,
+   "switch": 0,
+   "handoff": 0,
+   "rollback": 0
+  },
+  "files_sha256": {
+   "rehearsal/cutover-dry-capture.txt": "f4f9b208347548222cd32548455f56abbccca018dae5ff67447c87a3e4fe9378",
+   "rehearsal/cutover-dry-evidence/cutover.log": "a5bccf5932e806da0039280602d12c99ad9cf7aff36284e696d52a5321fa1cdf",
+   "rehearsal/cutover-dry-evidence/pre/control-events.tsv": "81ff15a47b634405d7ec6f7949a3d4059544aac1fc86329149f3ef7e9ac5d73e",
+   "rehearsal/cutover-dry-evidence/pre/hashes.txt": "e5844ca995c0103b198c5a7449610022bee53b9f908d9dd4345cc26330ed1b12",
+   "rehearsal/cutover-dry-evidence/pre/registry.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "rehearsal/cutover-dry-evidence/pre/timers.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "rehearsal/cutover-dry-evidence/pre/units.txt": "d3c189bdbfc8649144ee764431884c27bf937dab688e7c96db07e09637ad4e8e",
+   "rehearsal/cutover-dry-evidence/pre/wake-send.txt": "20a0edc98fd9cbe7592160eacc16bf4c783b40c3f59ff67c4e22fdc796178dcd",
+   "rehearsal/cutover-dry-evidence/results.tsv": "7825443af9791ac3371c5ad5c5102a0649fef7648df0ca0448344e6a21b58a0f",
+   "rehearsal/cutover-dry-handoff.txt": "56e3279b4a18a6901dc71d447bd81f359de155e337b9d635961aad8911bcb0af",
+   "rehearsal/cutover-dry-rollback.txt": "4871c670f6e0894be46ab3fb27f50a6963c026e768f7677b2cbd25ef5e07bd51",
+   "rehearsal/cutover-dry-switch.txt": "41ddfef67bf2955575413a40a878b0c8f73b5b6fa3d5af844466b389e73a2f11",
+   "rehearsal/live-dry-evidence/driver.log": "d74b70af7950364cc9f003a6598006ad3f3ae02f85ee150afa143c43ab88ea97",
+   "rehearsal/live-dry-evidence/results.tsv": "a387fe625db4a5c34c17029b4edfecf9c81c2ab6ed238a093fab2ea1012b6231",
+   "rehearsal/live-dry-evidence/snapshots.txt": "218987609dea9ae1875559c99b2569e13e7e4fd094294ccbe7256c1c9a337523",
+   "rehearsal/live-dry-output.txt": "9279d06f1d80ce80ae1a7008f2236a93006405593fd0d489a977679ce5b68134",
+   "rehearsal/live-dry-stub-calls.txt": "06819d4467b42a6287adef46bb0e79a1753c2fc0aad54716cd18da9dcb1123fc"
+  }
+ },
+ "corrections_map": "plans/README.md",
+ "late_bound_inputs": [
+  "fixture seat IDs",
+  "private root",
+  "start deadline",
+  "cutover run id",
+  "production seat IDs"
+ ],
+ "residuals": [
+  "DRY mode prop() returns empty values; task texts not written into private root",
+  "no systemd, seat, main or install evidence: that is stage C",
+  "filled inputs must be materialized and hashed before Tern signs"
+ ]
+}

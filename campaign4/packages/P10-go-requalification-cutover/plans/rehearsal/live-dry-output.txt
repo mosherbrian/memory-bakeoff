@@ -1,0 +1,145 @@
+2026-09-23T14:24:30.452Z P10 live REHEARSAL1, inputs sha256 51f9570b6125fbf5229a9b00f2e87c650be990f4e536542c7d749dac03d60bf7
+2026-09-23T14:24:30.455Z + systemd-run --user --unit=p10live-wallstop-REHEARSAL1 --on-active=34530s /bin/bash /home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/plans/live-driver.sh /tmp/p10-plan-rehearsal-aFb1/live-inputs.env cleanup
+2026-09-23T14:24:30.456Z + mkdir -p /tmp/p10-plan-rehearsal-aFb1/root/bin /tmp/p10-plan-rehearsal-aFb1/root/art /tmp/p10-plan-rehearsal-aFb1/root/claims /tmp/p10-plan-rehearsal-aFb1/root/tasks
+2026-09-23T14:24:30.457Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/bin/agent-loop /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop
+2026-09-23T14:24:30.458Z + write config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json
+2026-09-23T14:24:30.459Z + sh -c sed 's#%h/.local/bin/agent-loop#/tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json#g; s#agent-loop %i#agent-loop fxREHEARSAL1#g; s#%i#fxREHEARSAL1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/examples/systemd-unqualified/agent-loop@.service' > '/home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service'
+2026-09-23T14:24:30.460Z + sh -c sed 's#%h/.local/bin/agent-loop#/tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json#g; s#agent-loop %i#agent-loop fxREHEARSAL1#g; s#%i#fxREHEARSAL1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/examples/systemd-unqualified/agent-loop-liveness@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxREHEARSAL1.service'
+2026-09-23T14:24:30.461Z + sh -c sed 's#%h/.local/bin/agent-loop#/tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json#g; s#agent-loop %i#agent-loop fxREHEARSAL1#g; s#%i#fxREHEARSAL1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-1341f0469fba/examples/systemd-unqualified/agent-loop-liveness@.timer' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxREHEARSAL1.timer'
+2026-09-23T14:24:30.462Z + grep -c /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxREHEARSAL1.service
+2026-09-23T14:24:30.462Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.463Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop check --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json
+2026-09-23T14:24:30.464Z + /home/bmosher/.config/agent-deck/wake stubD When a message starting "[agent-loop liveness]" reaches you during P10 live, run the exact
+liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P10 live witness: observed
+<state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+2026-09-23T14:24:30.466Z + /home/bmosher/.config/agent-deck/wake stubU When a message starting "[agent-loop liveness]" reaches you during P10 live, run the exact
+liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P10 live witness: observed
+<state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+2026-09-23T14:24:30.467Z + systemctl --user start agent-loop-fxREHEARSAL1.service agent-loop-liveness-fxREHEARSAL1.timer
+2026-09-23T14:24:30.468Z wait_for first pass 60s: state_is ok
+2026-09-23T14:24:30.473Z L1 onset
+./live-driver.sh: line 69: /tmp/p10-plan-rehearsal-aFb1/root/tasks/L1-REHEARSAL1-l-worker.md: No such file or directory
+./live-driver.sh: line 69: /tmp/p10-plan-rehearsal-aFb1/root/tasks/L1-REHEARSAL1-l-verify.md: No such file or directory
+2026-09-23T14:24:30.475Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop dispatch --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json --qid L1-REHEARSAL1 --worker p10-fixture-worker-R --verifier p10-fixture-verifier-R --task @/tmp/p10-plan-rehearsal-aFb1/root/tasks/L1-REHEARSAL1-l-worker.md --verify-task @/tmp/p10-plan-rehearsal-aFb1/root/tasks/L1-REHEARSAL1-l-verify.md --duration 10m --verify-window 10m
+2026-09-23T14:24:30.476Z wait_for L1 decision 600s: is_step L1-REHEARSAL1 decision
+2026-09-23T14:24:30.479Z + systemctl --user restart agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.480Z wait_for L1 restart pass 90s: new_invocation 
+2026-09-23T14:24:30.481Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop decide --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json --qid L1-REHEARSAL1 --kind question_answered --ref P10-live-REHEARSAL1-L1 --reason live witness
+L1	FAIL	2026-09-23T14:24:30.527Z	step ; worker wakes 0->0, verifier 0->0
+2026-09-23T14:24:30.534Z wait_for L1 settled 120s: state_is rest
+2026-09-23T14:24:30.535Z + sleep 185
+L5-rest	DRY	2026-09-23T14:24:30.537Z	3 min, >=3 checks, all rest
+./live-driver.sh: line 69: /tmp/p10-plan-rehearsal-aFb1/root/tasks/L2-REHEARSAL1-l-noclaim-worker.md: No such file or directory
+./live-driver.sh: line 69: /tmp/p10-plan-rehearsal-aFb1/root/tasks/L2-REHEARSAL1-l-verify.md: No such file or directory
+2026-09-23T14:24:30.539Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop dispatch --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json --qid L2-REHEARSAL1 --worker p10-fixture-worker-R --verifier p10-fixture-verifier-R --task @/tmp/p10-plan-rehearsal-aFb1/root/tasks/L2-REHEARSAL1-l-noclaim-worker.md --verify-task @/tmp/p10-plan-rehearsal-aFb1/root/tasks/L2-REHEARSAL1-l-verify.md --duration 15m --verify-window 5m
+2026-09-23T14:24:30.540Z wait_for L2 worker step 30s: is_step L2-REHEARSAL1 worker
+2026-09-23T14:24:30.544Z L2 onset: SIGKILL
+2026-09-23T14:24:30.545Z + systemctl --user kill -s KILL agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.547Z wait_for L2 restarted 30s: new_invocation 
+2026-09-23T14:24:30.548Z wait_for L2 pass 60s: state_is ok
+./live-driver.sh: line 143: [: : integer expected
+L2	FAIL	2026-09-23T14:24:30.552Z	restarts ->, worker wakes 0->0
+2026-09-23T14:24:30.558Z L3a onset: SIGSTOP main pid
+2026-09-23T14:24:30.561Z + kill -STOP 
+2026-09-23T14:24:30.562Z wait_for L3a watchdog restart 110s: new_invocation 
+L3a	FAIL	2026-09-23T14:24:30.564Z	restart without a watchdog line
+2026-09-23T14:24:30.565Z wait_for L3a pass 90s: state_is ok
+2026-09-23T14:24:30.569Z + mkdir -p /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d
+2026-09-23T14:24:30.570Z + sh -c printf '[Service]\nExecStart=\nExecStart=/bin/sh -c "sleep 40; exec /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop run --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json"\nTimeoutStartSec=120\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/delay.conf'
+2026-09-23T14:24:30.571Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.573Z L7c onset: restart with 40 s delay
+2026-09-23T14:24:30.574Z + systemctl --user restart --no-block agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.575Z wait_for L7c new invocation 20s: sh -c [ "$(systemctl --user show agent-loop-fxREHEARSAL1.service -p InvocationID --value)" != '' ]
+2026-09-23T14:24:30.576Z + systemctl --user start agent-loop-liveness-fxREHEARSAL1.service
+2026-09-23T14:24:30.624Z wait_for L7c first pass of the new run 90s: state_is ok
+2026-09-23T14:24:30.625Z + systemctl --user start agent-loop-liveness-fxREHEARSAL1.service
+L7c	FAIL	2026-09-23T14:24:30.648Z	window FAIL(), after 
+2026-09-23T14:24:30.649Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/delay.conf
+2026-09-23T14:24:30.650Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.656Z + sh -c printf '[Service]\nWatchdogSec=0\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/nowatchdog.conf'
+2026-09-23T14:24:30.656Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.657Z + systemctl --user restart agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.659Z wait_for L3b pass 90s: state_is ok
+2026-09-23T14:24:30.660Z L3b onset: SIGSTOP main pid, no watchdog
+2026-09-23T14:24:30.662Z + kill -STOP 
+2026-09-23T14:24:30.665Z wait_for L3b hung 180s: state_is hung
+L3b	FAIL	2026-09-23T14:24:30.666Z	hung but duty not woken
+2026-09-23T14:24:30.669Z + kill -CONT 
+2026-09-23T14:24:30.670Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/nowatchdog.conf
+2026-09-23T14:24:30.670Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.671Z + systemctl --user restart agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.673Z wait_for L3b recovered 150s: state_is ok
+2026-09-23T14:24:30.677Z + sh -c printf '[Service]\nExecStart=\nExecStart=/tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop run --config /nonexistent-REHEARSAL1.json\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/fail.conf'
+2026-09-23T14:24:30.678Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.679Z L4a onset: failing start
+2026-09-23T14:24:30.680Z + systemctl --user restart agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.681Z wait_for L4a start limit 120s: sh -c systemctl --user show agent-loop-fxREHEARSAL1.service -p Result --value | grep -q start-limit-hit
+2026-09-23T14:24:30.682Z wait_for L4a restart-loop verdict 60s: state_is restart-loop
+2026-09-23T14:24:30.683Z wait_for L4a duty ack recorded 300s: sh -c python3 -c 'import json;d=json.load(open("/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.liveness.json"));a=d["open"]["ack"];assert a["by"]=="p10-fixture-duty-R" and a["next_action"] and a["response_deadline"]'
+2026-09-23T14:24:30.684Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/fail.conf
+2026-09-23T14:24:30.685Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.686Z + systemctl --user reset-failed agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.687Z + systemctl --user start agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.688Z wait_for L4a recovered 150s: sh -c python3 -c 'import json;d=json.load(open("/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.liveness.json"));assert d.get("open") is None and d["history"][-1]["outcome"]=="recovered"'
+L4a	PASS	2026-09-23T14:24:30.689Z	restart-loop -> duty ack (owner/next/deadline) -> recovered on fresh pass
+2026-09-23T14:24:30.690Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/fail.conf
+2026-09-23T14:24:30.690Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.691Z + systemctl --user reset-failed agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.692Z + systemctl --user start agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.693Z wait_for L4a settled 90s: state_is rest
+2026-09-23T14:24:30.698Z + sh -c printf '{bad-REHEARSAL1' > '/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.liveness.json'
+2026-09-23T14:24:30.699Z wait_for L7a alarm 60s: sh -c ls /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.liveness.json.damaged-*.json
+2026-09-23T14:24:30.700Z + sleep 140
+L7a	PASS	2026-09-23T14:24:30.701Z	bytes preserved, duty woken once over >=3 checks
+2026-09-23T14:24:30.706Z wait_for L7a closed after ack 300s: sh -c python3 -c 'import json;d=json.load(open("/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.liveness.json"));assert d.get("open") is None'
+2026-09-23T14:24:30.708Z L7b onset: SIGSTOP run, write a pass 10 min in the future
+2026-09-23T14:24:30.709Z + kill -STOP 
+2026-09-23T14:24:30.710Z + python3 -c import sqlite3,json,datetime;c=sqlite3.connect('/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db');p=json.loads(c.execute("select value from driver_kv where key='loop-pass'").fetchone()[0]);p['at']=(datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=10)).strftime('%Y-%m-%dT%H:%M:%SZ');c.execute("update driver_kv set value=? where key='loop-pass'",(json.dumps(p),));c.commit()
+2026-09-23T14:24:30.710Z + systemctl --user start agent-loop-liveness-fxREHEARSAL1.service
+L7b	FAIL	2026-09-23T14:24:30.758Z	
+2026-09-23T14:24:30.759Z + kill -CONT 
+2026-09-23T14:24:30.760Z wait_for L7b recovered 150s: state_is rest
+./live-driver.sh: line 69: /tmp/p10-plan-rehearsal-aFb1/root/tasks/L6-REHEARSAL1-l-noclaim-worker.md: No such file or directory
+./live-driver.sh: line 69: /tmp/p10-plan-rehearsal-aFb1/root/tasks/L6-REHEARSAL1-l-verify.md: No such file or directory
+2026-09-23T14:24:30.767Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop dispatch --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json --qid L6-REHEARSAL1 --worker p10-fixture-worker-R --verifier p10-fixture-verifier-R --task @/tmp/p10-plan-rehearsal-aFb1/root/tasks/L6-REHEARSAL1-l-noclaim-worker.md --verify-task @/tmp/p10-plan-rehearsal-aFb1/root/tasks/L6-REHEARSAL1-l-verify.md --duration 2m --verify-window 5m
+2026-09-23T14:24:30.768Z wait_for L6 worker step 30s: is_step L6-REHEARSAL1 worker
+2026-09-23T14:24:30.770Z L5 onset: agent-loop stop
+2026-09-23T14:24:30.771Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop stop --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json
+2026-09-23T14:24:30.772Z wait_for L5 run exited 60s: sh -c systemctl --user show agent-loop-fxREHEARSAL1.service -p ExecMainStatus --value | grep -qx 64
+2026-09-23T14:24:30.774Z L5: stray start while the marker exists
+2026-09-23T14:24:30.775Z + systemctl --user start agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.776Z + sleep 20
+L5-stray	FAIL	2026-09-23T14:24:30.779Z	scheduled restarts 0, state , marker ls: cannot access '/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.stop': No such file or directory
+2026-09-23T14:24:30.780Z + sleep 185
+L5-stopped	DRY	2026-09-23T14:24:30.781Z	3 min, >=3 checks, all stopped
+2026-09-23T14:24:30.782Z + systemctl --user start agent-loop-fxREHEARSAL1-L6-REHEARSAL1-w1.service
+L6	PASS	2026-09-23T14:24:30.783Z	interrupted once while run was stopped: one /cancel, one director wake; replay already-handled
+2026-09-23T14:24:30.783Z + /tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop start --config /tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.json
+2026-09-23T14:24:30.784Z wait_for L5 resumed 90s: sh -c systemctl --user is-active agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.789Z + agent-deck session stop stubU
+2026-09-23T14:24:30.790Z + sh -c printf '[Service]\nExecStart=\nExecStart=/tmp/p10-plan-rehearsal-aFb1/root/bin/agent-loop run --config /nonexistent-REHEARSAL1.json\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/fail.conf'
+2026-09-23T14:24:30.790Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.791Z L4b onset: failing start, duty seat stopped
+2026-09-23T14:24:30.792Z + systemctl --user restart agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.793Z wait_for L4b restart-loop 180s: state_is restart-loop
+2026-09-23T14:24:30.794Z wait_for L4b director ack 300s: sh -c python3 -c 'import json;d=json.load(open("/tmp/p10-plan-rehearsal-aFb1/root/fxREHEARSAL1.db.liveness.json"));assert d["open"]["ack"]["by"]=="p10-fixture-director-R"'
+L4b	PASS	2026-09-23T14:24:30.795Z	duty wake failed -> director woken in the same check -> director ack recorded
+2026-09-23T14:24:30.796Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d/fail.conf
+2026-09-23T14:24:30.797Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.801Z all cases run; results in /home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover/live-REHEARSAL1/results.tsv
+2026-09-23T14:24:30.802Z cleanup (exact IDs)
+2026-09-23T14:24:30.803Z + systemctl --user stop agent-loop-liveness-fxREHEARSAL1.timer agent-loop-liveness-fxREHEARSAL1.service agent-loop-fxREHEARSAL1.service
+2026-09-23T14:24:30.805Z + systemctl --user reset-failed agent-loop-fxREHEARSAL1* agent-loop-liveness-fxREHEARSAL1*
+2026-09-23T14:24:30.806Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxREHEARSAL1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxREHEARSAL1.timer
+2026-09-23T14:24:30.807Z + rm -rf /home/bmosher/.config/systemd/user/agent-loop-fxREHEARSAL1.service.d
+2026-09-23T14:24:30.808Z + systemctl --user daemon-reload
+2026-09-23T14:24:30.809Z + agent-deck session stop stubW
+2026-09-23T14:24:30.810Z + agent-deck session remove stubW
+2026-09-23T14:24:30.810Z + agent-deck session stop stubV
+2026-09-23T14:24:30.811Z + agent-deck session remove stubV
+2026-09-23T14:24:30.812Z + agent-deck session stop stubD
+2026-09-23T14:24:30.813Z + agent-deck session remove stubD
+2026-09-23T14:24:30.814Z + agent-deck session stop stubU
+2026-09-23T14:24:30.815Z + agent-deck session remove stubU
+2026-09-23T14:24:30.815Z + systemctl --user stop p10live-wallstop-REHEARSAL1.timer
+2026-09-23T14:24:30.816Z cleanup done
