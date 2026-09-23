@@ -151,8 +151,11 @@ l6_timing() {
   tj=$($A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print(json.dumps([p.get('timeout') or {} for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0]))" 2>>"$EV/driver.log")
   printf '{"deadline": "%s", "callback_start": "%s", "timeout": %s}\n' "$l6dl" "$(systemctl --user show "agent-loop-$P-$Q-w1.service" -p ExecMainStartTimestamp --value 2>&1)" "${tj:-null}" > "$EV/l6-timing.json"
   local st ak
+  # P12-ack-capacity-1: detection is the EARLIEST trusted time (the due marker, deferred_callback, when the
+  # callback had to leave one; else the settlement "at"); the 60 s ack bound runs from it and never moves.
   st=$(printf '%s' "$tj" | python3 -c 'import json,sys
-try: print(json.load(sys.stdin).get("at", ""))
+try:
+    t = json.load(sys.stdin); print(min(x for x in (t.get("at"), t.get("deferred_callback")) if x))
 except Exception: print("")')
   ak=$(printf '%s' "$tj" | python3 -c 'import json,sys
 try: print((json.load(sys.stdin).get("ack") or {}).get("at", ""))

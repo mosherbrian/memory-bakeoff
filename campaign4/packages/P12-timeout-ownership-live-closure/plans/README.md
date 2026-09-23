@@ -155,3 +155,36 @@ Fixes the three defects P12-realprocess-1 found (`evidence/real-process/defects-
 | director notices for one incident, two crashes | 2 (original + 1 labelled repeat), then unresolved | 2 identical, unlabelled |
 | SATURATED after a refused send | not stamped; retried; accepted next (rc 3 / rc 0) | stamped as told; never retried |
 | local time inside a hold (not in subprocesses) | max 0.145 s over 305 holds | max 0.117 s |
+
+## P12-ack-capacity-1 (candidate dbcf5df, bin `77c46332…`; live and cutover templates now pin this release)
+
+Removes the live blocker from P12-fair-handoff-1: under a deadline burst, a timeout-ack or the outside check could be refused, and the admitted wait (66 s) did not fit the 60 s ack bound. Evidence: `evidence/ack-capacity/`.
+
+- **Reserved places.** `timeout-ack` is class `ack` (1 place) and `liveness` (the outside check) is class `check` (1 place). Callbacks keep `due` (3 places). Neither class is exempt from a cap.
+- **Grant order.** An ack goes first, then the check, then everyone else oldest first. But two ack/check grants never follow each other while another writer waits. So no class starves: a non-priority writer is passed by at most one ack/check per grant. Its worst-case wait is now 13 x 11 s = 143 s (`AdmittedWait`), which needs an ack or check before every grant.
+- **The 60 s arithmetic**, from DETECTION = the earliest trusted time (the due marker's time if the callback left one, else the settlement). Detection never moves on retry.
+  - An admitted ack waits for at most the current holder and one other writer: 2 x 10.5 s + about 1 s local commit (acks are committed before any due work). Declared worst case: **25 s**. A requester that waits is promised the bound only if it submits by **detection + 35 s**.
+  - If the requester exits before admission and run is stopped, the next drain is the outside check on its 30 s calendar timer: 31 s + 22 s, declared **55 s**. That path is promised the bound only if submitted by detection + 5 s.
+  - The loop settles a timeout before an ack can exist. Settlement latency after detection (up to about 40 s in the 40 s-stall burst run) comes out of the same 60 s. The command says up front when no timely promise is possible.
+- **Durable automatic retry.** `timeout-ack` first writes a request to `<db>.acks/` (one per qid, action and seat; at most 16 pending), then tries the lock.
+  - Every ledger holder commits pending requests first (inside `ProcessDue`): run, callbacks, dispatches and the outside check, which also runs while run is stopped. Each request is revalidated on a fresh ledger through `AckTimeout`: principal, authority, action, next action and response deadline.
+  - Outcomes go to `done/` (the last 64 are kept).
+  - PENDING (exit 3) is NOT an acknowledgement.
+  - An identical request is a replay; a different one conflicts (`E_ACK_CONFLICT`).
+  - A spent hold budget leaves a request pending (`E_BUDGET_EXHAUSTED`, no longer mislabelled `E_SEAT_BINDING`).
+  - A commit after 60 s from detection is recorded `late` and escalated once to the director.
+- **Live plans.** `l6_timing` measures detection as min(due marker, settlement). `tasks/ack.md` explains PENDING and replay.
+
+**Measured on 77c46332** (`ack-capacity/ack-burst`: 14 accepted due markers, a 40 s outside stall, slow ordinary dispatches; `ack-quiet`: no stall). Empirical, this host.
+
+| | burst | quiet |
+|---|---|---|
+| commit after submission, every committed request | max 10 s (stopped-run path); 0-4 s otherwise | max 1 s |
+| timely ack (earliest submission after settlement) | submitted det+30 s, committed det+34 s | det+5 s -> det+6 s |
+| near the latest feasible submission (det+34 s) | committed det+34 s | committed det+34 s |
+| late request (det+62 s) | committed det+63 s, `late`, director told once | det+62 s, `late`, told |
+| requester killed after PENDING | committed by another holder, det+34 s | det+3 s |
+| run stopped, requester killed | the outside check committed it 10 s later | 6 s later |
+| duplicate / conflicting / forged / expired | 1 ack / `E_ACK_CONFLICT` / rejected / rejected | 1 ack / conflict / rejected / committed in time (drained before its 1 s deadline) |
+| outside check, admission to lock | max 19.9 s with the callback places full | max 0.1 s |
+| run restarted after the stop | yes | yes |
