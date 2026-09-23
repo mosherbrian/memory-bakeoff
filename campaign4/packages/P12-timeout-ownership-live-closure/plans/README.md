@@ -99,3 +99,33 @@ Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. T
   - Every lock holder runs `ProcessDue` when it takes the lock and again before it releases it. Each marker is checked against the ledger through the core's own callback identity checks under the lock, then settled once, or rejected and kept as `.rejected-<time>.json` with the reason.
   - Real processes (`race-busy-callback.txt`): the callback deferred after 5.1 s; the holder settled it at release (one cancel; `deferred_callback` recorded).
 - **Not met (INCOMPLETE)**: an end-to-end bound under contention. Settlement after a busy callback happens when the current holder releases the lock. A run pass's hold time is not bounded by a constant: it is the pass work plus the number of wake sends × the transport timeout (30 s each). So detection ≤ 30 s is guaranteed only when holders release within about 25 s. No fixed aggregate bound is claimed.
+
+## P12-lock-budget-1 (candidate 487cb92, bin `b70665f5…`; templates now pin this release)
+
+**Mechanism**
+
+- Every ledger-lock hold gets a monotonic budget B = 10 s:
+  - Each subprocess inside the hold (wake, systemd, registry) runs with min(its timeout, time left).
+  - A subprocess is not started with less than 1.5 s left (`ErrBudget`; the transport records no send it never made).
+  - `ExecRunner.WaitDelay` = 0.5 s, so a killed process whose child still holds the pipes cannot stretch the hold.
+- A run pass yields between units when under 6 s remain. The heartbeat records `yielded`, and run continues at once. run no longer exits on a busy ledger.
+- Due markers are processed first when the lock is taken:
+  - oldest first, and only within the budget; leftovers go to the next holder;
+  - markers unsettled for more than 20 s are reported to duty as SATURATED (once a minute).
+- The deadline callback waits 8 s for the lock, then writes its marker (the durable detection evidence). It keeps trying until 22 s and settles due work itself if it gets the lock.
+
+**Arithmetic for a known deadline D** (calendar timer, AccuracySec=1s)
+
+- Detection evidence: the marker is written by D + 1 + 8 = D + 9 s, or the callback settles directly by D + 1 + 8 + 10.5 = D + 19.5 s.
+- Settlement of a marker at the head of the due queue: by D + 9 + 10.5 (the current hold ends) + 10.5 (the next holder, which settles due work first) ≈ D + 30 s.
+- Capacity: at least one due settlement per hold, so a backlog of k markers needs about k holds. Beyond that, markers age and SATURATED is reported to duty. No finite latency is claimed for unbounded arrivals.
+- An acknowledgement within 60 s of detection is a human action; only the live run can show it.
+
+**Measured** (`evidence/lock-budget/`)
+
+- `hold-scaling.txt`: the old build's hold grows with the send, 20.0 s and 40.0 s (its 30 s transport timeout did not bound it); the new build's is 10.5 s in both cases.
+- `contention-*`: real processes, slow 20 s dispatch wakes, three deadlines.
+  - New build, a dispatch every 15 s: max hold 10.51 s; settlements at 0, 1 and 17 s after the deadline.
+  - New build, overloaded (a dispatch every 4 s): max hold 10.51 s; settlements at 17 and 18 s.
+  - Old build, a dispatch every 15 s: 2 of the 3 deadlines were never even armed within the window.
+- Overload (release run, a dispatch every 4 s = about 250% of the lock capacity with 10 s holds): new dispatches are refused with `E_LEDGER_BUSY` after 60 s, and the caller sees the error; nothing is silently accepted. The due deadline that was armed still settled at 17 s.

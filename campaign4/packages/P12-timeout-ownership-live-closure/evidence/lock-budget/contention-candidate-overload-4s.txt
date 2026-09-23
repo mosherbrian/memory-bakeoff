@@ -1,0 +1,13 @@
+== 8ec5c12e4199f207 slow=20s arrivals=60s workdir /tmp/p12-cont-ZyI6
+-- callbacks:
+   T1 deadline=1790190290 callback_start=1790190290.079800905 callback_end=1790190312.095679193 rc=0
+   T3 deadline=1790190331 callback_start=1790190331.022972606 callback_end=1790190353.052333280 rc=0
+   T1 out: {"decision": "deferred", "due_marker": "/tmp/p12-cont-ZyI6/fx.db.due/T1-w1.json", "reason": "E_LEDGER_BUSY: ledger /tmp/p12-cont-ZyI6/fx.db held by another writer for more than 8s"} still busy after 2
+/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cont-frozen.sh: line 43: /tmp/p12-cont-ZyI6/cb-T2.out: No such file or directory
+   T2 out: 
+   T3 out: {"decision": "deferred", "due_marker": "/tmp/p12-cont-ZyI6/fx.db.due/T3-w1.json", "reason": "E_LEDGER_BUSY: ledger /tmp/p12-cont-ZyI6/fx.db held by another writer for more than 8s"} still busy after 2
+SETTLE T1 step=timed-out settled_after_deadline=17.0 lateness=17s deferred=2026-09-23T19:04:58Z
+SETTLE T3 step=timed-out settled_after_deadline=18.0 lateness=18s deferred=2026-09-23T19:05:39Z
+arrivals dispatched: 15
+LOCK holds: 13; MAX_HOLD=10.51s; by command: {'run': (3, 0.0), 'dispatch': (10, 10.51)}
+run output yields: 0

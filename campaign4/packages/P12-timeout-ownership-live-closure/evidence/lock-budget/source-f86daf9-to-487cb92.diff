@@ -1,0 +1,558 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index d937b07..1ae3b53 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -308,7 +308,14 @@ func runRun(args []string) int {
+ 		// The whole pass holds the ledger lock (bounded 60 s wait).
+ 		k, err := loop.LockLedger(cfg, 60*time.Second)
+ 		if err != nil {
+-			return fail(err)
++			// Busy for a whole minute: other writers hold the ledger in turn
++			// (each hold is budgeted and settles due deadlines first). Report
++			// it in the heartbeat's absence and try again; do not exit.
++			fmt.Fprintln(os.Stderr, "agent-loop: pass skipped:", err)
++			if stopped() {
++				return loop.ExitStopped
++			}
++			continue
+ 		}
+ 		for _, m := range loop.ProcessDue(cfg) { // due deadlines before ordinary work
+ 			fmt.Println(time.Now().UTC().Format(time.RFC3339), m)
+@@ -327,6 +334,7 @@ func runRun(args []string) int {
+ 		}
+ 		pass++
+ 		msgs, tickErr := l.Tick()
++		yielded := l.Yielded
+ 		cursors = l.Cursors()
+ 		if err := l.RecordPass(pass, len(msgs), tickErr); err != nil {
+ 			fmt.Fprintln(os.Stderr, "agent-loop: pass record:", err)
+@@ -353,6 +361,9 @@ func runRun(args []string) int {
+ 			fmt.Println("stop requested; exiting", loop.ExitStopped)
+ 			return loop.ExitStopped
+ 		}
++		if yielded {
++			continue // the pass stopped at the lock budget: continue at once
++		}
+ 		// The wait between passes ends at a turn event, the pass interval or
+ 		// SIGTERM/SIGINT, whichever is first: a stop must not wait out the
+ 		// interval (P11: TimeoutStopSec 20 s < every 30 s -> SIGABRT).
+@@ -437,15 +448,24 @@ func runTimerCallback(args []string) int {
+ 	if err != nil {
+ 		return fail(err)
+ 	}
++	started := time.Now()
+ 	k, err := loop.LockLedger(cfg, loop.DueWait)
+ 	if err != nil {
+-		// Busy: leave a durable due marker; the current holder settles it
+-		// before it releases the lock (and every holder does so first).
++		// Busy: leave a durable due marker (detection evidence), then keep
++		// trying; every holder settles due markers first, and so do we.
+ 		path, werr := loop.WriteDue(cfg, *qid, *action, *execution, time.Now().UTC())
+ 		if werr != nil {
+ 			return fail(fmt.Errorf("ledger busy (%v) and no due marker: %v", err, werr))
+ 		}
+ 		fmt.Println(py.Dumps(py.D("decision", "deferred", "due_marker", path, "reason", err.Error())))
++		if k, err = loop.LockLedger(cfg, loop.DueWindow-time.Since(started)); err != nil {
++			fmt.Println("still busy after", loop.DueWindow, "- the marker stays for the next holder:", err)
++			return 0
++		}
++		defer k.Unlock()
++		for _, m := range loop.ProcessDue(cfg) {
++			fmt.Println(m)
++		}
+ 		return 0
+ 	}
+ 	defer k.Unlock()
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 4eec6b3..b1bb88b 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -78,6 +78,7 @@ HOST_MUTANTS = [
+      'fmt.Sprintf("--on-active=%ds", int64(delayS+1))', "timer delay off by one second"),
+     (H + "host.go", 'if r, ok := t.KV.Get("timer-rearm:" + canon); ok && r == py.ISO(at) {',
+      'if r, ok := t.KV.Get("timer-rearm:" + canon); ok && r == py.ISO(at) && false {', "a replayed early callback arms a second timer"),
++    (H + "host.go", "	cmd.WaitDelay = 500 * time.Millisecond", "", "a grandchild holding the pipes defeats the I/O timeout"),
+     # P12: explicit-UTC calendar deadlines and exact /cancel receipts
+     (H + "host.go", 'at.Format("2006-01-02 15:04:05") + " UTC"', 'at.Format("2006-01-02 15:04:05")',
+      "calendar deadline without an explicit zone"),
+@@ -127,6 +128,14 @@ HOST_MUTANTS = [
+ # reference exists for it).
+ LP = "internal/loop/"
+ LOOP_MUTANTS = [
++    # P12-lock-budget-1: every hold is budgeted
++    (LP + "timeout.go", "				if rem < MinIO {", "				if false {", "an I/O is started with too little of the hold budget left"),
++    (LP + "timeout.go", "				if timeout > rem {", "				if false {", "an I/O timeout is not capped to the hold budget"),
++    (LP + "timeout.go", "func (l *Loop) OutOfBudget() bool { return budgetShort(l.Cfg) }", "func (l *Loop) OutOfBudget() bool { return false }",
++     "a run pass never yields at the lock budget"),
++    (LP + "due.go", "		if budgetShort(cfg) {", "		if false {", "due markers are processed past the hold budget"),
++    (LP + "due.go", "			return written[names[i]] < written[names[j]]", "			return written[names[i]] > written[names[j]]", "due markers newest first"),
++    (LP + "due.go", "ok && now.Sub(at) > SaturationAge {", "ok && false {", "a saturated due backlog is not reported"),
+     # P12-bounded-deadline-1: due markers are hints checked against the ledger
+     (LP + "due.go", 'var dueName = regexp.MustCompile(`^[A-Za-z0-9._-]{1,200}$`)', 'var dueName = regexp.MustCompile(`^.*$`)',
+      "an unsafe (path-traversing) due marker identity is accepted"),
+@@ -154,7 +163,7 @@ LOOP_MUTANTS = [
+      'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', "a timeout recorded for an action that is not the core's current one"),
+     (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" ||\n\t\tpy.S(py.AsDict', 'if rec == nil || false ||\n\t\tpy.S(py.AsDict',
+      "a step recorded as timed out without a core interrupt"),
+-    (LP + "timeout.go", "		if err == nil {\n			return &LedgerLock{f}, nil", "		if true {\n			return &LedgerLock{f}, nil",
++    (LP + "timeout.go", "LOCK_EX|syscall.LOCK_NB)\n		if err == nil {", "LOCK_EX|syscall.LOCK_NB)\n		if true {",
+      "the ledger lock does not exclude a second writer"),
+     (LP + "timeout.go", "	if _, err := l.authority(p, role); err != nil {\n\t\treturn nil, err", "	if _, err := l.authority(p, role); false && err != nil {\n\t\treturn nil, err",
+      "an ack from a changed principal accepted"),
+diff --git a/internal/host/host.go b/internal/host/host.go
+index df9de75..58ef455 100644
+--- a/internal/host/host.go
++++ b/internal/host/host.go
+@@ -48,6 +48,10 @@ type Proc struct {
+ // failure to spawn.
+ var ErrTimeout = errors.New("timeout")
+ 
++// ErrBudget: the subprocess was NOT started because the current ledger-lock
++// hold has too little time left (the loop's budgeted Runner returns it).
++var ErrBudget = errors.New("lock budget exhausted")
++
+ // Runner runs argv with extra environment and a timeout.
+ type Runner func(argv []string, env []string, timeout time.Duration) (Proc, error)
+ 
+@@ -57,6 +61,10 @@ func ExecRunner(argv []string, env []string, timeout time.Duration) (Proc, error
+ 	defer cancel()
+ 	cmd := exec.CommandContext(ctx, argv[0], argv[1:]...)
+ 	cmd.Env = append(os.Environ(), env...)
++	// A child that outlives the killed process (e.g. a script's sleep) can
++	// hold the output pipes open; without WaitDelay, Wait would block until
++	// it exits and the timeout would not bound the call (P12-lock-budget-1).
++	cmd.WaitDelay = 500 * time.Millisecond
+ 	var out, errb strings.Builder
+ 	cmd.Stdout, cmd.Stderr = &out, &errb
+ 	err := cmd.Run()
+@@ -185,6 +193,9 @@ func (t *WakeTransport) Send(seat, text, kind string, action, execution any) (st
+ 		profile = "campaign4"
+ 	}
+ 	proc, err := run([]string{t.WakePath, seat, text}, []string{"AGENTDECK_PROFILE=" + profile}, timeout)
++	if errors.Is(err, ErrBudget) {
++		return "", fault("E_BUDGET_EXHAUSTED", "wake to "+seat+" not started: the ledger-lock hold's budget is spent")
++	}
+ 	if errors.Is(err, ErrTimeout) {
+ 		return t.record(seat, kind, action, execution, "ambiguous", "timeout", "")
+ 	}
+diff --git a/internal/host/runner_p12_test.go b/internal/host/runner_p12_test.go
+new file mode 100644
+index 0000000..3aec8e0
+--- /dev/null
++++ b/internal/host/runner_p12_test.go
+@@ -0,0 +1,15 @@
++package host
++
++import (
++	"testing"
++	"time"
++)
++
++// The timeout bounds the call even when a grandchild holds the pipes open.
++func TestExecRunnerTimeoutBoundsAGrandchildHoldingThePipes(t *testing.T) {
++	start := time.Now()
++	_, err := ExecRunner([]string{"/bin/sh", "-c", "sleep 5; echo late"}, nil, 500*time.Millisecond)
++	if el := time.Since(start); el > 2*time.Second || err != ErrTimeout {
++		t.Fatalf("took %s, err %v", el, err)
++	}
++}
+diff --git a/internal/loop/budget_p12_test.go b/internal/loop/budget_p12_test.go
+new file mode 100644
+index 0000000..00d2a63
+--- /dev/null
++++ b/internal/loop/budget_p12_test.go
+@@ -0,0 +1,110 @@
++package loop
++
++import (
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/host"
++)
++
++// P12-lock-budget-1: every lock hold is bounded; work yields, I/O is capped.
++
++func shortBudget(t *testing.T, hold, reserve, minio time.Duration) {
++	h, u, m := HoldBudget, UnitReserve, MinIO
++	HoldBudget, UnitReserve, MinIO = hold, reserve, minio
++	t.Cleanup(func() { HoldBudget, UnitReserve, MinIO = h, u, m })
++}
++
++func TestTheBudgetedRunnerCapsAndRefusesIO(t *testing.T) {
++	r := newRig(t)
++	var got []time.Duration
++	r.cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++		got = append(got, timeout)
++		return host.Proc{}, nil
++	}
++	shortBudget(t, 2*time.Second, time.Second, 500*time.Millisecond)
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	r.cfg.Run([]string{"x"}, nil, 30*time.Second)
++	if len(got) != 1 || got[0] > 2*time.Second {
++		t.Fatalf("a 30 s I/O was not capped to the hold budget: %v", got)
++	}
++	time.Sleep(1600 * time.Millisecond) // < MinIO left
++	if _, err := r.cfg.Run([]string{"x"}, nil, 30*time.Second); err != host.ErrBudget || len(got) != 1 {
++		t.Fatalf("an I/O started with too little budget left: %v %v", err, got)
++	}
++	k.Unlock()
++	if !r.cfg.HoldDeadline.IsZero() {
++		t.Fatal("the hold deadline outlived the lock")
++	}
++	if _, err := r.cfg.Run([]string{"x"}, nil, 30*time.Second); err != nil || got[len(got)-1] != 30*time.Second {
++		t.Fatalf("the unlocked runner is still budgeted: %v %v", err, got)
++	}
++}
++
++func TestAPassYieldsWhenTheBudgetIsShortAndSaysSo(t *testing.T) {
++	r := newRig(t)
++	l := r.open()
++	_, err := l.Dispatch(Request{QID: "Q", Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 600, VerifyS: 600})
++	must(t, err)
++	l.Close()
++	shortBudget(t, 3*time.Second, 5*time.Second, 500*time.Millisecond) // reserve > budget: no unit fits
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	defer k.Unlock()
++	l = r.open()
++	defer l.Close()
++	msgs, err := l.Tick()
++	must(t, err)
++	if !l.Yielded || !strings.Contains(strings.Join(msgs, "|"), "yield") {
++		t.Fatalf("no yield: %v", msgs)
++	}
++	must(t, l.RecordPass(1, len(msgs), nil))
++	p, _ := ReadPass(r.cfg.DB)
++	if p == nil || !p.Yielded {
++		t.Fatalf("the heartbeat hides the yield: %+v", p)
++	}
++}
++
++func TestDueMarkersAreBudgetedOldestFirstAndSaturationIsReported(t *testing.T) {
++	r := newRig(t)
++	for _, q := range []string{"A", "B"} {
++		l := r.open()
++		_, err := l.Dispatch(Request{QID: q, Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 60, VerifyS: 60})
++		must(t, err)
++		l.Close()
++	}
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	old := time.Now().UTC().Add(-time.Minute)
++	WriteDue(r.cfg, "B", "B-w1", "ex-B-w1", old)                  // older
++	WriteDue(r.cfg, "A", "A-w1", "ex-A-w1", old.Add(time.Second)) // newer
++	shortBudget(t, 2*time.Second, 5*time.Second, 500*time.Millisecond)
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	msgs := ProcessDue(r.cfg) // no unit fits: nothing settled, both kept, saturation told to duty
++	k.Unlock()
++	j := strings.Join(msgs, "|")
++	if !strings.Contains(j, "lock budget spent") || !strings.Contains(j, "SATURATED: 2") || r.fresh("A") != nil || r.fresh("B") != nil {
++		t.Fatalf("budget/saturation: %v", msgs)
++	}
++	sat := 0
++	for _, w := range r.wakesTo("T") {
++		if strings.Contains(w, "SATURATED") {
++			sat++
++		}
++	}
++	order := ProcessDue(r.cfg) // unlocked (no budget): settles both, oldest first; saturation not re-sent within a minute
++	if sat != 1 || r.fresh("A") == nil || r.fresh("B") == nil {
++		t.Fatalf("saturation wakes %d; A %+v B %+v", sat, r.fresh("A"), r.fresh("B"))
++	}
++	j2 := strings.Join(order, "|")
++	if strings.Index(j2, "due B-w1.json: settled") < 0 || strings.Index(j2, "due B-w1.json: settled") > strings.Index(j2, "due A-w1.json: settled") {
++		t.Fatalf("not oldest first: %v", order)
++	}
++	if _, err := os.Stat(filepath.Join(r.cfg.DB+".due", "A-w1.json")); err == nil {
++		t.Fatal("settled marker left")
++	}
++}
+diff --git a/internal/loop/due.go b/internal/loop/due.go
+index 7bd464d..83db8d0 100644
+--- a/internal/loop/due.go
++++ b/internal/loop/due.go
+@@ -14,9 +14,17 @@ import (
+ 	"agent-loop/internal/py"
+ )
+ 
+-// DueWait is how long a deadline callback waits for the ledger lock before
+-// it leaves a due marker instead (P12-bounded-deadline-1).
+-const DueWait = 5 * time.Second
++// A deadline callback waits DueWait for the ledger lock; if it is still
++// busy it writes a due marker (durable detection evidence) and keeps trying
++// until DueWindow after it started, settling the marker itself if it gets the
++// lock first. Every other holder settles due markers first, oldest first,
++// within its hold budget (P12-lock-budget-1). A marker still unsettled after
++// SaturationAge is reported to duty as an owned overload (once a minute).
++const (
++	DueWait       = 8 * time.Second
++	DueWindow     = 22 * time.Second
++	SaturationAge = 20 * time.Second
++)
+ 
+ // DueHint is a deadline callback that could not take the ledger lock. It is
+ // only a hint: it names an action, and whoever holds the lock next checks it
+@@ -81,9 +89,26 @@ func ProcessDue(cfg *Config) []string {
+ 			names = append(names, n)
+ 		}
+ 	}
+-	sort.Strings(names)
++	// Oldest first (by the marker's written_at), so a backlog drains in order.
++	written := map[string]string{}
++	for _, n := range names {
++		var h DueHint
++		if b, err := os.ReadFile(filepath.Join(dueDir(cfg), n)); err == nil && json.Unmarshal(b, &h) == nil {
++			written[n] = h.WrittenAt
++		}
++	}
++	sort.Slice(names, func(i, j int) bool {
++		if written[names[i]] != written[names[j]] {
++			return written[names[i]] < written[names[j]]
++		}
++		return names[i] < names[j]
++	})
+ 	var out []string
+ 	for _, n := range names {
++		if budgetShort(cfg) {
++			out = append(out, "due: lock budget spent; remaining markers go to the next holder")
++			break
++		}
+ 		path := filepath.Join(dueDir(cfg), n)
+ 		reject := func(why string) {
+ 			os.Rename(path, strings.TrimSuffix(path, ".json")+".rejected-"+time.Now().UTC().Format("20060102T150405Z")+".json")
+@@ -117,7 +142,7 @@ func ProcessDue(cfg *Config) []string {
+ 			out = append(out, fmt.Sprintf("due %s: kept for the next holder: %s %v", n, decision, err))
+ 		}
+ 	}
+-	return out
++	return append(out, reportSaturation(cfg)...)
+ }
+ 
+ func isIdentityFault(code string) bool {
+@@ -176,3 +201,48 @@ func (l *Loop) noteDeferred(qid, action, at string) {
+ 		l.save(p)
+ 	}
+ }
++
++// reportSaturation tells duty (at most once a minute) when due markers have
++// waited longer than SaturationAge: the deadline load exceeds what the
++// holders settle within their budgets. It is reported, never dropped.
++func reportSaturation(cfg *Config) []string {
++	ents, err := os.ReadDir(dueDir(cfg))
++	if err != nil {
++		return nil
++	}
++	now := time.Now().UTC()
++	n, oldest := 0, time.Duration(0)
++	for _, e := range ents {
++		if !strings.HasSuffix(e.Name(), ".json") || strings.Contains(e.Name(), ".rejected-") {
++			continue
++		}
++		var h DueHint
++		b, err := os.ReadFile(filepath.Join(dueDir(cfg), e.Name()))
++		if err != nil || json.Unmarshal(b, &h) != nil {
++			continue
++		}
++		if at, ok := py.Instant(h.WrittenAt); ok && now.Sub(at) > SaturationAge {
++			n++
++			if now.Sub(at) > oldest {
++				oldest = now.Sub(at)
++			}
++		}
++	}
++	if n == 0 {
++		return nil
++	}
++	msg := fmt.Sprintf("due backlog SATURATED: %d deadline marker(s) unsettled for more than %s (oldest %s)", n, SaturationAge, oldest.Round(time.Second))
++	stamp := filepath.Join(dueDir(cfg), ".saturation-reported")
++	if fi, err := os.Stat(stamp); err == nil && now.Sub(fi.ModTime()) < time.Minute {
++		return []string{msg + " (duty told within the last minute)"}
++	}
++	run := cfg.Run
++	if run == nil {
++		run = host.ExecRunner
++	}
++	if _, err := run([]string{cfg.Wake, cfg.Seats[cfg.Duty], "[agent-loop] " + msg + ". See: agent-loop status --config " + cfg.Path},
++		[]string{"AGENTDECK_PROFILE=" + cfg.Profile}, 10*time.Second); err == nil {
++		os.WriteFile(stamp, []byte(py.ISO(now)), 0o644)
++	}
++	return []string{msg}
++}
+diff --git a/internal/loop/liveness.go b/internal/loop/liveness.go
+index 28943f3..15cecf8 100644
+--- a/internal/loop/liveness.go
++++ b/internal/loop/liveness.go
+@@ -75,13 +75,14 @@ type Pass struct {
+ 	Open        int    `json:"open_packages"`
+ 	LastError   string `json:"last_error,omitempty"`
+ 	ErrorStreak int    `json:"error_streak"`
++	Yielded     bool   `json:"yielded,omitempty"` // the pass stopped at the lock budget; work remains
+ }
+ 
+ // RecordPass writes the pass record (run's goroutine, after Tick).
+ func (l *Loop) RecordPass(n int64, advanced int, tickErr error) error {
+ 	prev := Pass{}
+ 	json.Unmarshal([]byte(l.D.KV["loop-pass"]), &prev)
+-	p := Pass{At: py.ISO(l.now()), PID: os.Getpid(), Invocation: os.Getenv("INVOCATION_ID"), N: n, Advanced: advanced}
++	p := Pass{At: py.ISO(l.now()), PID: os.Getpid(), Invocation: os.Getenv("INVOCATION_ID"), N: n, Advanced: advanced, Yielded: l.Yielded}
+ 	for _, x := range l.Pkgs() {
+ 		switch x.Step {
+ 		case "held", "worker", "verify":
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index c5574e8..8135c56 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -57,6 +57,10 @@ type Config struct {
+ 
+ 	Path string      `json:"-"`
+ 	Run  host.Runner `json:"-"` // tests inject; nil = real subprocesses
++	// HoldDeadline is the current ledger-lock hold's budget end (zero when
++	// not holding): every subprocess is capped to it, and work units that
++	// cannot fit are not started (P12-lock-budget-1).
++	HoldDeadline time.Time `json:"-"`
+ }
+ 
+ func expand(p string) string {
+@@ -165,6 +169,7 @@ type Loop struct {
+ 	D       *core.Driver
+ 	watcher *host.TurnWatcher
+ 	cursors *py.Dict
++	Yielded bool // this pass stopped early at the lock budget; run continues at once
+ }
+ 
+ // Open opens the ledger. clock nil = host clock.
+@@ -627,8 +632,15 @@ func itemTime(item any) (time.Time, bool) {
+ func (l *Loop) Tick() ([]string, error) {
+ 	var done []string
+ 	active := map[string][]*Pkg{} // stream key -> packages waiting on it
++	yield := func() ([]string, error) {
++		l.Yielded = true
++		return append(done, "yield: ledger-lock budget spent; the rest continues in the next pass"), nil
++	}
+ 	for _, p := range l.Pkgs() {
+ 		if p.Step == "held" {
++			if l.OutOfBudget() {
++				return yield()
++			}
+ 			msg, err := l.releaseIfReady(p)
+ 			if err != nil {
+ 				return done, err
+@@ -690,6 +702,9 @@ func (l *Loop) Tick() ([]string, error) {
+ 	}
+ 	for _, ps := range active {
+ 		for _, p := range ps {
++			if l.OutOfBudget() {
++				return yield()
++			}
+ 			msg, err := l.advance(p)
+ 			if err != nil {
+ 				return done, err
+@@ -699,9 +714,15 @@ func (l *Loop) Tick() ([]string, error) {
+ 			}
+ 		}
+ 	}
++	if l.OutOfBudget() {
++		return yield()
++	}
+ 	if _, err := l.Adapter.DrainOutboxSettled(""); err != nil {
+ 		return done, err
+ 	}
++	if l.OutOfBudget() {
++		return yield()
++	}
+ 	// run holds the ledger lock for the whole pass: this view is fresh.
+ 	done = append(done, l.unacked()...)
+ 	return append(done, l.expiredAcks()...), nil
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 0b04680..84d123c 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -268,7 +268,27 @@ func (l *Loop) ackTimeout(qid, action, by, next string, within time.Duration) (*
+ // and effects), so no writer acts on a stale view. There is no nesting (each
+ // process takes it once per operation). Waits are bounded: a timeout is the
+ // owned fault E_LEDGER_BUSY, never a silent skip.
+-type LedgerLock struct{ f *os.File }
++type LedgerLock struct {
++	f   *os.File
++	cfg *Config
++	run host.Runner
++}
++
++// HoldBudget bounds every ledger-lock hold; MinIO is the least time left in
++// which a subprocess is still started; UnitReserve is the least time left in
++// which a new unit of work (one package step, one due marker) is started.
++var (
++	HoldBudget  = 10 * time.Second
++	MinIO       = 1500 * time.Millisecond
++	UnitReserve = 6 * time.Second
++)
++
++// OutOfBudget reports that the current hold cannot start another unit.
++func (l *Loop) OutOfBudget() bool { return budgetShort(l.Cfg) }
++
++func budgetShort(cfg *Config) bool {
++	return !cfg.HoldDeadline.IsZero() && time.Until(cfg.HoldDeadline) < UnitReserve
++}
+ 
+ func LockLedger(cfg *Config, wait time.Duration) (*LedgerLock, error) {
+ 	f, err := os.OpenFile(cfg.DB+".lock", os.O_CREATE|os.O_RDWR, 0o644)
+@@ -279,7 +299,25 @@ func LockLedger(cfg *Config, wait time.Duration) (*LedgerLock, error) {
+ 	for {
+ 		err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
+ 		if err == nil {
+-			return &LedgerLock{f}, nil
++			k := &LedgerLock{f: f, cfg: cfg, run: cfg.Run}
++			dl := time.Now().Add(HoldBudget)
++			inner := cfg.Run
++			if inner == nil {
++				inner = host.ExecRunner
++			}
++			cfg.HoldDeadline = dl
++			lockLog("acquire")
++			cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++				rem := time.Until(dl)
++				if rem < MinIO {
++					return host.Proc{}, host.ErrBudget
++				}
++				if timeout > rem {
++					timeout = rem
++				}
++				return inner(argv, env, timeout)
++			}
++			return k, nil
+ 		}
+ 		if err != syscall.EWOULDBLOCK {
+ 			f.Close()
+@@ -293,8 +331,27 @@ func LockLedger(cfg *Config, wait time.Duration) (*LedgerLock, error) {
+ 	}
+ }
+ 
++// lockLog appends "<unix-nanos> <pid> <event> <cmd>" to $AGENT_LOOP_LOCK_LOG
++// when set: measurement for contention tests, off in production.
++func lockLog(ev string) {
++	path := os.Getenv("AGENT_LOOP_LOCK_LOG")
++	if path == "" {
++		return
++	}
++	cmd := ""
++	if len(os.Args) > 1 {
++		cmd = os.Args[1]
++	}
++	if f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644); err == nil {
++		fmt.Fprintf(f, "%d %d %s %s\n", time.Now().UnixNano(), os.Getpid(), ev, cmd)
++		f.Close()
++	}
++}
++
+ // Unlock releases the lock (process exit releases it too).
+ func (k *LedgerLock) Unlock() {
++	lockLog("release")
++	k.cfg.Run, k.cfg.HoldDeadline = k.run, time.Time{}
+ 	syscall.Flock(int(k.f.Fd()), syscall.LOCK_UN)
+ 	k.f.Close()
+ }

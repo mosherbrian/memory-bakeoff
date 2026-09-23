@@ -1,0 +1,13 @@
+== b70665f513b086ec cancel reply: idle
+armed: --user --unit=agent-loop-fx-L2-w1.timer --timer-property=AccuracySec=1s --on-calendar=2026-09-23 19:19:44 UTC /home/bmosher/projects/agent-l
+callback rc=0 stdout={"decision": "interrupted", "note": "{\"decision\": \"interrupted\", \"dedup\": false, \"timer\": \"deadline:L2-w1\"}"} stderr=
+STEP=timed-out DIRECTOR_WAKES=1 DUTY_WAKES=0
+director notice: D1 [agent-loop] deadline-expired:L2. See: agent-loop status --config /tmp/p12-a-jc3k/fx.json. Acknowledge ownership with: /home/bmosher/projects/agent-loop-releases/agent-loop-487cb92ce9d3/bin/agent-loop timeout-ack --config /tmp/p12-a-jc3k/fx.json --qid L2 --action L2-w1 --by SEAT --next 'NEXT ACTI
+TIMEOUT {"id": "T-L2-w1", "action": "L2-w1", "at": "2026-09-23T19:19:46Z", "cancel": "idle (msg-L2-w1-2)", "director": "told", "callback_lateness": "2s"}
+-- replay
+replay rc=0 {"decision": "already-handled", "note": "{\"decision\": \"already-handled\", \"dedup\": true, \"timer\": \"deadline:L2-w1\"}"}; director wakes now 1
+-- ack
+   wrong actor: agent-loop: fx-worker is neither the director (fx-director) nor duty (fx-duty)
+   director: timeout T-L2-w1 of L2 acknowledged by fx-director at 2026-09-23T19:19:46Z; respond by 2026-09-23T19:29:46Z: re-dispatch. This does not resume or close the package.
+   conflicting: agent-loop: T-L2-w1 is already acknowledged by fx-director until 2026-09-23T19:29:46Z (re-dispatch)
+ACK {"by": "fx-director", "next_action": "re-dispatch", "response_deadline": "2026-09-23T19:29:46Z", "at": "2026-09-23T19:19:46Z"} STEP timed-out

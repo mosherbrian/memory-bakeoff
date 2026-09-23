@@ -1,0 +1,108 @@
+{
+ "qid": "P12-lock-budget-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "decision": {
+  "lock-budget-allocation.json": "9eda0470187e6a66033928a1a2f3239cfcb2122af7ac23baa70e2ecb11f790f2",
+  "lock-budget-receipt.json": "36a46ef382b5651a7598408637e3ddb958ebc0aa4faabe103162e148a53af5bd"
+ },
+ "base": "f86daf91be5821c9deea707d4decf0ac33625c89 (bounded-deadline partial, untouched)",
+ "candidate": {
+  "commit": "487cb92ce9d333c61ec163719d4583b6cbb71041",
+  "branch": "p12-lockbudget (new worktree agent-loop-p12l, pushed)",
+  "release": "/home/bmosher/projects/agent-loop-releases/agent-loop-487cb92ce9d3",
+  "binary_sha256": "b70665f513b086ec63b0fc36d99390d78993c0a5f1657d3f51ed02a80914538d",
+  "manifest_sha256": "e8a1cfb51f63849ce93567ea33ea8029423073237e358c4e84ee9e5c509c0a48",
+  "diff": "evidence/lock-budget/source-f86daf9-to-487cb92.diff",
+  "frozen_unchanged": "internal/core, internal/py, conformance/cases; calendar template unchanged from f86daf9 (502745ac); main and installed preview untouched"
+ },
+ "mechanism": {
+  "hold_budget": "LockLedger installs a budgeted Runner for every holder (run pass, callback, outside check, timeout-ack, decide, dispatch, claim): each subprocess gets min(timeout, time left), none starts with < 1.5 s left (ErrBudget, no receipt recorded for an unsent wake); ExecRunner.WaitDelay 0.5 s so a killed process's lingering child cannot stretch it. B = 10 s.",
+  "yield": "Tick starts a unit (held release, package advance, outbox drain, escalations) only with >= 6 s left, else yields between units (never mid-transition); pass record 'yielded'; run continues at once; run retries on E_LEDGER_BUSY instead of exiting",
+  "due": "ProcessDue on acquire (and before release): oldest first, only within the budget, leftovers to the next holder; unsettled > 20 s -> SATURATED report to duty (once a minute); callback waits 8 s, writes the marker, keeps trying to 22 s and settles due work itself"
+ },
+ "arithmetic": {
+  "per_hold": "<= 10 s + 0.5 s WaitDelay + local SQLite/CPU; measured max 10.51 s",
+  "detection": "marker (trusted durable evidence) by D + 1 (AccuracySec) + 8 = D + 9 s; direct settlement by D + 19.5 s",
+  "settlement_head_of_queue": "<= D + 9 + 10.5 (current hold) + 10.5 (next holder settles due first) ~= D + 30 s; measured <= 18 s",
+  "ack": "authenticated ack within 60 s of detection is human; proved only live",
+  "capacity": ">= 1 due settlement per hold; a backlog of k markers needs about k holds; beyond that SATURATED is reported; new dispatches under overload get E_LEDGER_BUSY (visible); no finite latency for unbounded arrivals"
+ },
+ "evidence": {
+  "hold_scaling": "evidence/lock-budget/hold-scaling.txt: old build hold 20.0 s / 40.0 s with 20 s / 40 s sends (its 30 s transport timeout did not bound it); new build 10.5 s / 10.5 s",
+  "contention": [
+   "evidence/lock-budget/contention-release-capacity-15s.txt (release bytes: max hold 10.51 s; settlements 17/1/7 s after deadline; 27 holds)",
+   "evidence/lock-budget/contention-release-overload-4s.txt (release bytes: max hold 10.51 s; T1 settled 17 s; T2/T3 dispatch refused E_LEDGER_BUSY; 5 of 15 arrivals refused)",
+   "evidence/lock-budget/contention-candidate-capacity-15s.txt",
+   "evidence/lock-budget/contention-candidate-overload-4s.txt",
+   "evidence/lock-budget/contention-baseline-capacity-15s.txt (old build: only T2 armed in the window)",
+   "evidence/lock-budget/contention-baseline-f86daf9.txt"
+  ],
+  "unit_tests": "evidence/lock-budget/tests.txt (budgeted runner caps/refuses, pass yield + heartbeat, budgeted oldest-first markers + saturation, WaitDelay, plus retained writer/due/stopped tests)",
+  "go_test": "evidence/lock-budget/go-test.txt all ok",
+  "mutation": "evidence/lock-budget/mutate-go.txt 123/123 (7 new; lock-exclusion mutant re-anchored)",
+  "conformance_release_binary": {
+   "rc": "0",
+   "stderr": "conformance: 125/125 cases ok, 1751 steps"
+  },
+  "host_parity": "evidence/lock-budget/host-parity.txt 316/321 + 5",
+  "regressions_release": [
+   "evidence/lock-budget/race-busy-callback.txt",
+   "evidence/lock-budget/race-callback-vs-run-changed.txt",
+   "evidence/lock-budget/cli-stopped-noack.txt",
+   "evidence/lock-budget/a-cli-timeout-idle.txt",
+   "evidence/lock-budget/a-cli-timeout-refused.txt",
+   "evidence/lock-budget/c-stop.txt"
+  ]
+ },
+ "evidence_sha256": {
+  "evidence/lock-budget/a-cli-timeout-idle.txt": "f54bbb5c1fc5b7da4d3ea8ec36f28c9a2aa8debf0dfa9b49ef9e6f8b40f38171",
+  "evidence/lock-budget/a-cli-timeout-refused.txt": "c14d57f13a30760d882bc1c35d191dbe43c6da30dda8502694e311913ed2366b",
+  "evidence/lock-budget/c-stop.txt": "2fbbabee307a99d6ba350ecadba45a6ca2377d3a131678f52319430dcac1c51e",
+  "evidence/lock-budget/cli-stopped-noack.txt": "32399f9997bbc39569e618ef68f1c1f1a1f20b6b1bce72cbc341170c9aa1fbca",
+  "evidence/lock-budget/conformance-release-binary/README.txt": "508d13c3979d32368e0ae1fabd6e04bd4b7bb53556e6353dac437e091d21fe9f",
+  "evidence/lock-budget/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/lock-budget/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/lock-budget/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/lock-budget/contention-baseline-capacity-15s.txt": "933e9bd66ab1fc4b1a1e43f9c4b0efd777422e5a3d6c8c1c9d12ca7f2f215de2",
+  "evidence/lock-budget/contention-baseline-f86daf9.txt": "6c0c12cdecde15b805041e4077c2f40ee970b36a8b53a398c8195667e232f837",
+  "evidence/lock-budget/contention-candidate-capacity-15s.txt": "917213093b6096e06a4a3e6f2414719d71ee5ba004195f6388ea8449efff1911",
+  "evidence/lock-budget/contention-candidate-overload-4s.txt": "2fbc1bcfeb84c86dc8b40d3e5d350fe828f54227899f058e8068f4b62a970389",
+  "evidence/lock-budget/contention-release-capacity-15s.txt": "5f650d124e0bd9eb3ca097209d2c5e262d30a958bf7e0602ea97a9526f9f4a4f",
+  "evidence/lock-budget/contention-release-overload-4s.txt": "722d771317b8db05ef42100f9ace59f340831fa6a62ed62a28af072d8624e47f",
+  "evidence/lock-budget/contention.sh": "e5053bd1224cd6f5dc2db9ec79bf820d049c545c58c3fa593d0a30dbbf81634a",
+  "evidence/lock-budget/go-test.txt": "ed4daf41ae63ebcabe1710992b2c82d8122c13432e78c2005635bd21c3847228",
+  "evidence/lock-budget/hold-scaling.sh": "dbd933ffd23e5372cb33098d423dc8a1737b09b099bb9a54d8aaabc5ed8848d6",
+  "evidence/lock-budget/hold-scaling.txt": "6923fd1e783619a1ad5aad0cc072e8c967de65ba38f086d0f87e80683e3b5d5a",
+  "evidence/lock-budget/host-parity.txt": "aa2ba8cfe17ee1a631e3c154966041c17db14f8e395f14c8f77f0a6e7804fc1b",
+  "evidence/lock-budget/mutate-go.txt": "a32cec226f6274025be1574634816a51d7b9b0648bdf21a1733942b7095b93c3",
+  "evidence/lock-budget/race-busy-callback.txt": "a3f0f7a32a0e59428ec4862236feacf32dfceeb4001ab6cd3adfd7d2adafada8",
+  "evidence/lock-budget/race-callback-vs-run-changed.txt": "d655bb924256f98cd8436d6e69d20a321f4582208ec64dac0862f42c55faac66",
+  "evidence/lock-budget/source-f86daf9-to-487cb92.diff": "369ec85a42349fda258466752aa6db375807dbf3f69ec882a87c4ef86fe2d651",
+  "evidence/lock-budget/tests.txt": "81af7c2eccf0d34ed2f326968d3db34f888052a1e25bbac40412dd6d3744209e"
+ },
+ "plans_sha256": {
+  "plans/README.md": "da0860d8a573a047d81004f5f1e3a8b2638fc2dce28c79d892db28b1dd809c1d",
+  "plans/cutover-inputs.template.env": "29592ad6f636b92f16a25fe357200e89dff46bfa128ab753672b254b725ea26a",
+  "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+  "plans/live-driver.sh": "dbdb0723303d5162dd20a347fcbc86996e3bd1ad32382be4a615aaffd95aefab",
+  "plans/live-inputs.template.env": "c6a7a8f29b23024aee2c569730d907f866dd23981d7857a86dc5aede797a5d72",
+  "plans/tasks/ack.md": "95e37529a32ba67fb7df3ad48ce039d609e4da8952942e8a4839340b5b751d0a",
+  "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+  "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+  "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+  "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+  "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+ },
+ "host_effects": [
+  "transient p12test-stop-lb-* units created and removed; no daemon-reload in this round; no seats, main, install or clock change"
+ ],
+ "residuals": [
+  "Local SQLite and file operations inside a hold are not budgeted (only subprocesses); measured holds include them (max 10.51 s).",
+  "A unit started with >= 6 s left can still have its later I/O refused (ErrBudget) if an earlier I/O used most of the remainder; e.g. a verifier timer create refused -> the package goes blocked (owned, visible), not lost.",
+  "The yield path is shown by unit test; the real-process runs never needed a yield (run passes were short).",
+  "Crash/reopen under contention is not rerun in this round (marker durability and replay were shown in bounded-deadline evidence).",
+  "Settlement bound ~D+30 s holds for the marker at the head of the due queue; deeper backlog -> SATURATED report (capacity statement above).",
+  "Checker own-supervision, continuous UTC, unlocked status/expose, L4a/L4b and live ack latency: unchanged / live only."
+ ]
+}

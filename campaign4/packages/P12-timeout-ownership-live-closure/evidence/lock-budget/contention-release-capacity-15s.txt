@@ -1,0 +1,14 @@
+== b70665f513b086ec slow=20s arrivals=60s workdir /tmp/p12-cont-oK81
+-- callbacks:
+   T1 deadline=1790190789 callback_start=1790190789.046358653 callback_end=1790190806.621350285 rc=0
+   T2 deadline=1790190826 callback_start=1790190826.061363924 callback_end=1790190827.677168549 rc=0
+   T3 deadline=1790190789 callback_start=1790190789.046595998 callback_end=1790190796.082680068 rc=0
+   T1 out: {"decision": "deferred", "due_marker": "/tmp/p12-cont-oK81/fx.db.due/T1-w1.json", "reason": "E_LEDGER_BUSY: ledger /tmp/p12-cont-oK81/fx.db held by another writer for more than 8s"} due T1-w1.json: se
+   T2 out: {"decision": "interrupted", "note": "{\"decision\": \"interrupted\", \"dedup\": false, \"timer\": \"deadline:T2-w1\"}"} 
+   T3 out: {"decision": "interrupted", "note": "{\"decision\": \"interrupted\", \"dedup\": false, \"timer\": \"deadline:T3-w1\"}"} 
+SETTLE T1 step=timed-out settled_after_deadline=17.0 lateness=17s deferred=2026-09-23T19:13:17Z
+SETTLE T2 step=timed-out settled_after_deadline=1.0 lateness=1s deferred=None
+SETTLE T3 step=timed-out settled_after_deadline=7.0 lateness=7s deferred=None
+arrivals dispatched: 4
+LOCK holds: 27; MAX_HOLD=10.51s; by command: {'dispatch': (7, 10.51), 'run': (17, 0.01), 'timer-callback': (3, 0.01)}
+run output yields: 0
