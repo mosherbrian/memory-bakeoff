@@ -1,0 +1,12 @@
+== a41e7b71de050199 mode changed workdir /tmp/p12-race-myfH
+dispatch rc=0 L: worker (ex-L-w1); verifier fx-verifier
+A (run pass) frozen on the input pipe after loading the ledger at 20:41:02.467
+B (callback) still WAITING after 3 s while A holds the ledger
+A rc=0 2026-09-23T20:41:05Z yield: ledger-lock budget spent; the rest continues in the next pass
+B rc=0 {"decision": "interrupted", "note": "{\"decision\": \"interrupted\", \"dedup\": false, \"timer\": \"deadline:L-w1\"}"}
+FINAL step=timed-out phase=BLOCKED timeout={"id": "T-L-w1", "action": "L-w1", "at": "2026-09-23T20:41:05Z", "cancel": "idle (msg-L-w1-3)", "director": "told", "callback_lateness": "6s"}
+cancels=1 verifier_dispatches=0 director_notices=2
+   wake 20:40:54.953 W1 {"kind": "dispatch", "package": "L", "action": "L-w1", "execution": "ex-L-w1", "text": "w\
+   wake 20:41:05.470 D1 [agent-loop] L is BLOCKED: E_INPUT_CHANGED: gate.fifo changed during the work; verifier no
+   wake 20:41:05.475 W1 /cancel 
+   wake 20:41:05.477 D1 [agent-loop] deadline-expired:L. See: agent-loop status --config /tmp/p12-race-myfH/fx.jso

@@ -1,0 +1,134 @@
+== env
+== binary b70665f513b086ec mode=crash2 workdir=/var/tmp/p12-rp-7Uqh
+7.0.14-101.fc43.x86_64
+model name	: AMD RYZEN AI MAX+ 395 w/ Radeon 8060S
+32
+overlay        overlay 731906048 637631308  91297268  88% /
+armed deadlines: 14 first=1790196079 last=1790196080 accepted_at=1790196035.234968274
+stall_start=1790196076 stall_end=1790196116 stop_at=1790196266
+
+== backlog: 14 distinct accepted due markers observed (pre-registered N=14, required >= 12)
+callbacks: 14 processes, rc {'0': 14}
+settled (marker gone) within the finite window: 14 of 14; never settled: []
+drain order: 0 pairwise inversions against first-seen order (0.5 s sample resolution; ties by name)
+  B01-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+38.2s after deadline (marker age at settlement 29.8s)
+  B02-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+39.2s after deadline (marker age at settlement 30.9s)
+  B03-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+40.3s after deadline (marker age at settlement 31.9s)
+  B04-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+41.3s after deadline (marker age at settlement 32.9s)
+  B05-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+43.4s after deadline (marker age at settlement 35.0s)
+  B06-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+44.4s after deadline (marker age at settlement 36.0s)
+  B07-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+45.4s after deadline (marker age at settlement 37.1s)
+  B08-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+46.4s after deadline (marker age at settlement 38.1s)
+  B09-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+47.5s after deadline (marker age at settlement 39.1s)
+  B10-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+48.5s after deadline (marker age at settlement 40.1s)
+  B11-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+49.5s after deadline (marker age at settlement 41.2s)
+  B12-w1.json  deadline=1790196079 marker_seen=+8.4s settled=+50.6s after deadline (marker age at settlement 42.2s)
+  B13-w1.json  deadline=1790196080 marker_seen=+8.4s settled=+50.6s after deadline (marker age at settlement 42.2s)
+  B14-w1.json  deadline=1790196080 marker_seen=+8.4s settled=+51.6s after deadline (marker age at settlement 43.2s)
+MAX settlement latency after deadline: 51.6s (B14-w1.json); MAX marker age: 43.2s; n=14 (empirical, this host, this workload)
+final due dir: total 8 | drwxr-xr-x. 1 bmosher bmosher   40 Sep 23 13:42 . | drwx------. 1 bmosher bmosher 1156 Sep 23 13:44 .. | -rw-r--r--. 1 bmosher bmosher   20 Sep 23 13:42 .saturation-reported
+
+== final status (status --json after the window)
+  B01 step=timed-out cancel=idle (msg-B01-w1-15) director=told duty=None at=2026-09-23T20:41:57Z deferred=2026-09-23T20:41:27Z
+  B02 step=timed-out cancel=idle (msg-B02-w1-17) director=told duty=None at=2026-09-23T20:41:58Z deferred=2026-09-23T20:41:27Z
+  B03 step=timed-out cancel=idle (msg-B03-w1-19) director=told duty=None at=2026-09-23T20:41:59Z deferred=2026-09-23T20:41:27Z
+  B04 step=timed-out cancel=idle (msg-B04-w1-21) director=told duty=None at=2026-09-23T20:42:00Z deferred=2026-09-23T20:41:27Z
+  B05 step=timed-out cancel=idle (msg-B05-w1-23) director=told duty=None at=2026-09-23T20:42:02Z deferred=2026-09-23T20:41:27Z
+  B06 step=timed-out cancel=idle (msg-B06-w1-25) director=told duty=None at=2026-09-23T20:42:03Z deferred=2026-09-23T20:41:27Z
+  B07 step=timed-out cancel=idle (msg-B07-w1-27) director=told duty=None at=2026-09-23T20:42:04Z deferred=2026-09-23T20:41:27Z
+  B08 step=timed-out cancel=idle (msg-B08-w1-29) director=told duty=None at=2026-09-23T20:42:05Z deferred=2026-09-23T20:41:27Z
+  B09 step=timed-out cancel=idle (msg-B09-w1-31) director=told duty=None at=2026-09-23T20:42:06Z deferred=2026-09-23T20:41:27Z
+  B10 step=timed-out cancel=idle (msg-B10-w1-33) director=told duty=None at=2026-09-23T20:42:07Z deferred=2026-09-23T20:41:27Z
+  B11 step=timed-out cancel=idle (msg-B11-w1-35) director=told duty=None at=2026-09-23T20:42:08Z deferred=2026-09-23T20:41:27Z
+  B12 step=timed-out cancel=idle (msg-B12-w1-37) director=told duty=None at=2026-09-23T20:42:09Z deferred=2026-09-23T20:41:27Z
+  B13 step=timed-out cancel=idle (msg-B13-w1-39) director=told duty=None at=2026-09-23T20:42:10Z deferred=2026-09-23T20:41:28Z
+  B14 step=timed-out cancel=idle (msg-B14-w1-41) director=told duty=None at=2026-09-23T20:42:11Z deferred=2026-09-23T20:41:28Z
+  B timed-out: 14 of 14; outbox_pending=25
+  ordinary packages registered: 11
+ordinary arrivals: 18 attempted, rc {'rc=137': 1, 'rc=0': 11, 'rc=3': 6}
+
+== lock: 53 completed holds; unreleased at end (a killed holder shows here): {'3099162': 'dispatch'}
+notice attempts started: 34; with no outcome line (cut off by the budget or a kill): 0
+  hold dispatch        n=25   max=10.51s median=0.018s
+  hold fixture         n=1    max=40.00s median=40.001s
+  hold run             n=27   max=9.09s median=0.007s
+
+== local (non-subprocess) time inside holds = hold - union of stub wake intervals of the holder
+  dispatch        n=25   max=0.022s p50=0.015s p95=0.016s
+  run             n=27   max=0.083s p50=0.007s p95=0.075s
+  ALL holders n=52 MAX local=0.083s (includes fork/exec of stubs, SQLite, file I/O, CPU; empirical, not a guarantee)
+
+== yield: 3 yield lines in run output; 20 heartbeat samples with yielded=true
+   2026-09-23T20:42:01Z yield: ledger-lock budget spent; the rest continues in the next pass
+   2026-09-23T20:42:05Z yield: ledger-lock budget spent; the rest continues in the next pass
+   2026-09-23T20:42:09Z yield: ledger-lock budget spent; the rest continues in the next pass
+   heartbeat sample: pass={"at":"2026-09-23T20:42:01Z","pid":2995725,"pass":22,"advanced":1,"open_packages":10,"error_streak":0,"yielded":true}
+  longest gap between run holds: 94.6s (from 55.5 s after the stall start); run pass skips (E_LEDGER_BUSY): 1
+  hand-offs after a run hold (next holder): {'run->run': 23, 'run->fixture': 1, 'run->dispatch': 2}
+  run holds >= 4s (budget spent on due work): 5; longest run hold 9.09s
+
+== transport: attempts (lines) vs effects (ok|landed) vs failures
+  by kind/outcome: {('dispatch', 'ok'): 14, ('cancel', 'ok'): 14, ('notice', 'ok'): 34, ('dispatch', 'landed'): 11}
+  SATURATED notices to duty: 1 attempts, outcomes {'ok': 1}; first: [agent-loop] due backlog SATURATED: 10 deadline marker(s) unsettled for more than 20s (oldest 33s). See: agent-loop status --config /var/tmp
+  identical notice EFFECTS delivered more than once: 1 [('D1', '[agent-loop] deadline-expired:B01. See: agent-loop status --config /var/tmp/p12-rp-7Uqh/fx', 2)]
+  B01 notices {'D1:ok': 3, 'U1:ok': 1}
+  B02 notices {'D1:ok': 2, 'U1:ok': 1}
+  B03 notices {'D1:ok': 2, 'U1:ok': 1}
+  B04 notices {'D1:ok': 2, 'U1:ok': 1}
+  B05 notices {'D1:ok': 2, 'U1:ok': 1}
+  B06 notices {'D1:ok': 2, 'U1:ok': 1}
+  B07 notices {'D1:ok': 2, 'U1:ok': 1}
+  B08 notices {'D1:ok': 2, 'U1:ok': 1}
+  B09 notices {'D1:ok': 2, 'U1:ok': 1}
+  B10 notices {'D1:ok': 1}
+  B11 notices {'D1:ok': 1}
+  B12 notices {'D1:ok': 1}
+  B13 notices {'D1:ok': 1}
+  B14 notices {'D1:ok': 1}
+  slow ordinary dispatches: 11 landed (effect) / 0 replied before the sender stopped waiting -> 11 ambiguous deliveries (effect landed, sender saw no receipt)
+
+== queue events (lock.log): {}
+  yield boundaries (3 yields): next holder {'next=run': 3}
+  heartbeat: max age of the last pass record 104.2s (at +159.2s after the stall start; 1 s resolution; includes the 40 s stall)
+  heartbeat after the stall end +5 s: max age 104.2s
+  ordinary arrivals by outcome: {'other:rc=137': 1, 'rc=0': 11, 'BUSY': 6}
+
+== D3: director deadline-expired notices per incident (effects = ok|queued|late-ok|landed)
+  B01 {'ok': 2}
+  B02 {'ok': 1}
+  B03 {'ok': 1}
+  B04 {'ok': 1}
+  B05 {'ok': 1}
+  B06 {'ok': 1}
+  B07 {'ok': 1}
+  B08 {'ok': 1}
+  B09 {'ok': 1}
+  B10 {'ok': 1}
+  B11 {'ok': 1}
+  B12 {'ok': 1}
+  B13 {'ok': 1}
+  B14 {'ok': 1}
+  max effects for one incident: 2; incidents with > 1 effect: {'B01': 2}
+  durable notice records: 0, states {}; repeats used 0
+
+== crash2
+kill1_at=1790196116.130782078 holder_pid=3099162 holder_args=/home/bmosher/projects/agent-loop-releases/agent-loop-487cb92ce9d3/bin/agent-loo incident=deadline-expired:B01
+-- in flight: 3099225 3099162 /bin/sh /var/tmp/p12-rp-7Uqh/stubs/wake D1 [agent-loop] deadline-expired:B01. See: agent-loop status --config /var/tmp/p12-rp-7Uqh/fx.json. Acknowledge ownership with: /h
+B01-w1.json
+B02-w1.json
+B03-w1.json
+B04-w1.json
+B05-w1.json
+B06-w1.json
+B07-w1.json
+B08-w1.json
+B09-w1.json
+B10-w1.json
+B11-w1.json
+B12-w1.json
+B13-w1.json
+B14-w1.json
+incident=B01 kill1=3099162 kill2= killed_waiter= stopped_waiter=
+
+== SATURATED attempts: none
+analysis rc=0

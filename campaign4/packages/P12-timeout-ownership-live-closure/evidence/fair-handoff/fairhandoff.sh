@@ -105,12 +105,13 @@ if [ "$MODE" = crash2 ]; then
   ws() { ps -eo pid,ppid,args | awk -v s="$S/wake" '$3=="/bin/sh" && $4==s {print}'; }
   Q=""; k1=""; k2=""; kw=""; ks=""; r2=""
   while [ $(date +%s) -lt $stop_at ] && { [ -z "$k2" ] || [ -z "$kw" ] || [ -z "$ks" ]; }; do
-    if [ -n "$k1" ] && ! kill -0 $PR 2>/dev/null && [ -z "$r2" ]; then r2=1; wait $PR 2>/dev/null; echo "run1 pid=$PR was killed; restarting in 3 s" >> $OUT/crash2.txt; sleep 3; $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo "run2 pid=$PR started=$(ts)" >> $OUT/crash2.txt; fi
+    # restart run only after the second crash (or 20 s after the first): a restart pause must not blind the watcher
+    if [ -n "$k1" ] && { [ -n "$k2" ] || [ $(date +%s) -ge $((${k1at%.*} + 20)) ]; } && ! kill -0 $PR 2>/dev/null && [ -z "$r2" ]; then r2=1; wait $PR 2>/dev/null; echo "run1 pid=$PR was killed; restarting in 3 s" >> $OUT/crash2.txt; sleep 3; $A_ run $C --every 2s > $X/run2.out 2>&1 & PR=$!; echo "run2 pid=$PR started=$(ts)" >> $OUT/crash2.txt; fi
     if [ -z "$k1" ] && [ $(date +%s) -ge $stall_end ]; then
       l=$(ws | grep ' D1 \[agent-loop\] deadline-expired:B' | head -1)
       if [ -n "$l" ]; then hp=$(echo "$l" | awk '{print $2}'); Q=$(echo "$l" | grep -o 'deadline-expired:B[0-9]*' | cut -d: -f2)
         { echo "kill1_at=$(ts) holder_pid=$hp holder_args=$(tr '\0' ' ' < /proc/$hp/cmdline | cut -c1-80) incident=deadline-expired:$Q"; echo "-- in flight: $l" | cut -c1-200; ls $X/fx.db.due; } >> $OUT/crash2.txt
-        kill -9 $hp; k1=$hp; fi
+        kill -9 $hp; k1=$hp; k1at=$(ts); fi
     fi
     if [ -n "$k1" ] && [ -z "$k2" ]; then
       l=$(ws | grep " D1 REPEAT (.*deadline-expired:$Q\." | head -1)

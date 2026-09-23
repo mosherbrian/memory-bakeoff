@@ -14,3 +14,5 @@ B) run old-overload  $OLD drain ARRIVE_FROM=stall SLOW_ORDINARY=1 ARRIVE_EVERY=4
    run old-crash2    $OLD crash2 ARRIVE_FROM=end SLOW_ORDINARY=1 FAIL_EVERY=100000 ;;
 esac
 wait
+# C: re-run of new-crash2 only, after the harness fix (run2 restart no longer pauses the crash watcher).
+[ "$1" = C ] && { run new-crash2 $NEW crash2 ARRIVE_FROM=end SLOW_ORDINARY=1 FAIL_EVERY=100000; wait; }

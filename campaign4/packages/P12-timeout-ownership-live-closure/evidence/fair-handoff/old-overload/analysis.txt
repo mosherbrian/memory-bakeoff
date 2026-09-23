@@ -1,0 +1,111 @@
+== env
+== binary b70665f513b086ec mode=drain workdir=/var/tmp/p12-rp-QQJ8
+7.0.14-101.fc43.x86_64
+model name	: AMD RYZEN AI MAX+ 395 w/ Radeon 8060S
+32
+overlay        overlay 731906048 637631308  91297268  88% /
+armed deadlines: 14 first=1790196077 last=1790196078 accepted_at=1790196033.237155290
+stall_start=1790196074 stall_end=1790196114 stop_at=1790196264
+
+== backlog: 14 distinct accepted due markers observed (pre-registered N=14, required >= 12)
+callbacks: 14 processes, rc {'0': 14}
+settled (marker gone) within the finite window: 14 of 14; never settled: []
+drain order: 0 pairwise inversions against first-seen order (0.5 s sample resolution; ties by name)
+  B01-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+38.3s after deadline (marker age at settlement 29.9s)
+  B02-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+39.3s after deadline (marker age at settlement 30.9s)
+  B03-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+40.4s after deadline (marker age at settlement 31.9s)
+  B04-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+41.4s after deadline (marker age at settlement 33.0s)
+  B05-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+49.1s after deadline (marker age at settlement 40.7s)
+  B06-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+50.1s after deadline (marker age at settlement 41.7s)
+  B07-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+59.4s after deadline (marker age at settlement 51.0s)
+  B08-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+60.5s after deadline (marker age at settlement 52.0s)
+  B09-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+69.7s after deadline (marker age at settlement 61.3s)
+  B10-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+70.8s after deadline (marker age at settlement 62.3s)
+  B11-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+80.5s after deadline (marker age at settlement 72.1s)
+  B14-w1.json  deadline=1790196077 marker_seen=+8.4s settled=+81.6s after deadline (marker age at settlement 73.1s)
+  B12-w1.json  deadline=1790196078 marker_seen=+8.5s settled=+81.6s after deadline (marker age at settlement 73.1s)
+  B13-w1.json  deadline=1790196078 marker_seen=+8.5s settled=+82.6s after deadline (marker age at settlement 74.2s)
+MAX settlement latency after deadline: 82.6s (B13-w1.json); MAX marker age: 74.2s; n=14 (empirical, this host, this workload)
+final due dir: total 8 | drwxr-xr-x. 1 bmosher bmosher   40 Sep 23 13:42 . | drwx------. 1 bmosher bmosher 1220 Sep 23 13:44 .. | -rw-r--r--. 1 bmosher bmosher   20 Sep 23 13:41 .saturation-reported
+
+== final status (status --json after the window)
+  B01 step=timed-out cancel=idle (msg-B01-w1-15) director=told duty=None at=2026-09-23T20:41:55Z deferred=2026-09-23T20:41:25Z
+  B02 step=timed-out cancel=idle (msg-B02-w1-17) director=told duty=None at=2026-09-23T20:41:56Z deferred=2026-09-23T20:41:25Z
+  B03 step=timed-out cancel=idle (msg-B03-w1-19) director=told duty=None at=2026-09-23T20:41:57Z deferred=2026-09-23T20:41:25Z
+  B04 step=timed-out cancel=idle (msg-B04-w1-21) director=told duty=None at=2026-09-23T20:41:58Z deferred=2026-09-23T20:41:25Z
+  B05 step=timed-out cancel=idle (msg-B05-w1-24) director=told duty=None at=2026-09-23T20:42:05Z deferred=2026-09-23T20:41:25Z
+  B06 step=timed-out cancel=idle (msg-B06-w1-26) director=told duty=None at=2026-09-23T20:42:06Z deferred=2026-09-23T20:41:25Z
+  B07 step=timed-out cancel=failed: receipt msg-B07-w1-28 state "idle": wake to D1: failed (receipt msg-na-29) director=told duty=None at=2026-09-23T20:42:07Z deferred=2026-09-23T20:41:25Z
+  B08 step=timed-out cancel=idle (msg-B08-w1-33) director=told duty=None at=2026-09-23T20:42:17Z deferred=2026-09-23T20:41:25Z
+  B09 step=timed-out cancel=failed: receipt msg-B09-w1-35 state "idle": wake to D1: ambiguous (receipt msg-na-36) director=failed: E_BUDGET_EXHAUSTED: wake to D1 not started: the ledger-lock hold's budget is spent; duty failed: E_BUDGET_EXHAUSTED: wake to U1 not started: the ledger-lock hold's budget is spent duty=None at=2026-09-23T20:42:25Z deferred=2026-09-23T20:41:25Z
+  B10 step=timed-out cancel=idle (msg-B10-w1-38) director=told duty=None at=2026-09-23T20:42:27Z deferred=2026-09-23T20:41:25Z
+  B11 step=timed-out cancel=failed: receipt msg-B11-w1-40 state "idle": wake to D1: failed (receipt msg-na-41) director=told duty=None at=2026-09-23T20:42:28Z deferred=2026-09-23T20:41:25Z
+  B12 step=timed-out cancel=idle (msg-B12-w1-47) director=told duty=None at=2026-09-23T20:42:39Z deferred=2026-09-23T20:41:26Z
+  B13 step=timed-out cancel=idle (msg-B13-w1-49) director=told duty=None at=2026-09-23T20:42:40Z deferred=2026-09-23T20:41:26Z
+  B14 step=timed-out cancel=idle (msg-B14-w1-45) director=told duty=None at=2026-09-23T20:42:38Z deferred=2026-09-23T20:41:25Z
+  B timed-out: 14 of 14; outbox_pending=22
+  ordinary packages registered: 8
+ordinary arrivals: 23 attempted, rc {'rc=0': 8, 'rc=3': 15}
+
+== lock: 50 completed holds; unreleased at end (a killed holder shows here): {}
+notice attempts started: 45; with no outcome line (cut off by the budget or a kill): 4
+  hold dispatch        n=23   max=10.52s median=0.018s
+  hold fixture         n=1    max=40.00s median=40.001s
+  hold run             n=26   max=10.51s median=0.007s
+
+== local (non-subprocess) time inside holds = hold - union of stub wake intervals of the holder
+  dispatch        n=23   max=0.117s p50=0.015s p95=0.074s
+  run             n=26   max=0.027s p50=0.006s p95=0.015s
+  ALL holders n=49 MAX local=0.117s (includes fork/exec of stubs, SQLite, file I/O, CPU; empirical, not a guarantee)
+
+== yield: 0 yield lines in run output; 0 heartbeat samples with yielded=true
+  longest gap between run holds: 124.8s (from -0.5 s after the stall start); run pass skips (E_LEDGER_BUSY): 2
+  hand-offs after a run hold (next holder): {'run->run': 23, 'run->fixture': 1, 'run->dispatch': 1}
+  run holds >= 4s (budget spent on due work): 5; longest run hold 10.51s
+
+== transport: attempts (lines) vs effects (ok|landed) vs failures
+  by kind/outcome: {('dispatch', 'ok'): 14, ('cancel', 'ok'): 14, ('notice', 'ok'): 27, ('notice', 'fail'): 6, ('dispatch', 'landed'): 8, ('notice', 'queued'): 8}
+  SATURATED notices to duty: 1 attempts, outcomes {'fail': 1}; first: [agent-loop] due backlog SATURATED: 10 deadline marker(s) unsettled for more than 20s (oldest 33s). See: agent-loop status --config /var/tmp
+  identical notice EFFECTS delivered more than once: 0 []
+  B01 notices {'D1:ok': 2, 'U1:queued': 1}
+  B02 notices {'D1:ok': 1, 'U1:fail': 1, 'U1:ok': 1, 'D1:queued': 1}
+  B03 notices {'D1:ok': 2, 'U1:ok': 1}
+  B04 notices {'D1:ok': 2, 'U1:queued': 1}
+  B05 notices {'D1:queued': 1, 'U1:ok': 1, 'D1:ok': 1}
+  B06 notices {'D1:ok': 1, 'U1:ok': 1}
+  B07 notices {'D1:fail': 1, 'D1:ok': 3, 'U1:fail': 1, 'U1:ok': 1}
+  B08 notices {'D1:queued': 1, 'U1:queued': 1}
+  B09 notices {'D1:ok': 1, 'U1:ok': 1}
+  B10 notices {'D1:ok': 1, 'U1:ok': 1}
+  B11 notices {'D1:fail': 1, 'D1:queued': 1, 'D1:ok': 1, 'U1:ok': 1}
+  B12 notices {'D1:ok': 1, 'U1:queued': 1}
+  B13 notices {'D1:ok': 1, 'U1:ok': 1}
+  B14 notices {'D1:ok': 1, 'U1:fail': 1}
+  slow ordinary dispatches: 8 landed (effect) / 0 replied before the sender stopped waiting -> 8 ambiguous deliveries (effect landed, sender saw no receipt)
+
+== queue events (lock.log): {}
+  yield boundaries (0 yields): next holder {}
+  heartbeat: max age of the last pass record 135.5s (at +134.5s after the stall start; 1 s resolution; includes the 40 s stall)
+  heartbeat after the stall end +5 s: max age 135.5s
+  ordinary arrivals by outcome: {'rc=0': 8, 'BUSY': 14, 'other:rc=3': 1}
+
+== D3: director deadline-expired notices per incident (effects = ok|queued|late-ok|landed)
+  B01 {'ok': 1}
+  B02 {'ok': 1}
+  B03 {'ok': 1}
+  B04 {'ok': 1}
+  B05 {'queued': 1}
+  B06 {'ok': 1}
+  B07 {'fail': 1, 'ok': 1}
+  B08 {'queued': 1}
+  B09 {'ok': 1}
+  B10 {'ok': 1}
+  B11 {'fail': 1, 'ok': 1}
+  B12 {'ok': 1}
+  B13 {'ok': 1}
+  B14 {'ok': 1}
+  max effects for one incident: 1; incidents with > 1 effect: {}
+  durable notice records: 0, states {}; repeats used 0
+
+== SATURATED attempts: none
+analysis rc=0
