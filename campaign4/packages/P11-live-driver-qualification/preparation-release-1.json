@@ -1,0 +1,98 @@
+{
+  "signer": "tern",
+  "recorded_at": "2026-09-23T15:48:54.716229+00:00",
+  "stage": "PREPARATION_ONLY",
+  "profile": "campaign4",
+  "root": "/tmp/p11-prep-20260923T154854Z",
+  "roles": [
+    {
+      "role": "worker",
+      "name": "p11-fixture-worker-20260923T154854Z",
+      "workdir": "/tmp/p11-prep-20260923T154854Z/workdirs/worker",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/tmp/p11-prep-20260923T154854Z/workdirs/worker",
+        "-t",
+        "p11-fixture-worker-20260923T154854Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go",
+        "--idle-timeout=120m",
+        "-json"
+      ],
+      "raw_path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/live-preparation-1/worker.json"
+    },
+    {
+      "role": "verifier",
+      "name": "p11-fixture-verifier-20260923T154854Z",
+      "workdir": "/tmp/p11-prep-20260923T154854Z/workdirs/verifier",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/tmp/p11-prep-20260923T154854Z/workdirs/verifier",
+        "-t",
+        "p11-fixture-verifier-20260923T154854Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+        "--idle-timeout=120m",
+        "-json"
+      ],
+      "raw_path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/live-preparation-1/verifier.json"
+    },
+    {
+      "role": "director",
+      "name": "p11-fixture-director-20260923T154854Z",
+      "workdir": "/tmp/p11-prep-20260923T154854Z/workdirs/director",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/tmp/p11-prep-20260923T154854Z/workdirs/director",
+        "-t",
+        "p11-fixture-director-20260923T154854Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go",
+        "--idle-timeout=120m",
+        "-json"
+      ],
+      "raw_path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/live-preparation-1/director.json"
+    },
+    {
+      "role": "duty",
+      "name": "p11-fixture-duty-20260923T154854Z",
+      "workdir": "/tmp/p11-prep-20260923T154854Z/workdirs/duty",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go-controller",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/tmp/p11-prep-20260923T154854Z/workdirs/duty",
+        "-t",
+        "p11-fixture-duty-20260923T154854Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go-controller",
+        "--idle-timeout=120m",
+        "-json"
+      ],
+      "raw_path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/live-preparation-1/duty.json"
+    }
+  ],
+  "launch_environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "unset_environment": [
+    "ACP_SOURCE_TEST_NOW",
+    "FIXTURE_LAUNCH_EXEC",
+    "PINNED_MODEL_OVERRIDE",
+    "ACP_GO_MODEL",
+    "ACP_MODEL"
+  ],
+  "candidate_binary_sha256": "c1c49a293ed9434c1f6e1f539fd5d9ebf89a0fab220580cf69ddd821547afac8",
+  "source_commit": "1341f0469fba84787112a705b0d107e096644085",
+  "tasks_authorized": false,
+  "grant": "cairn15m prep; corvid10m binding",
+  "cleanup_after": "110m from actual prep start, arm+verify BEFORE launch; live deadline must not exceed this cleanup deadline; idle120m fallback",
+  "timer_unit": "campaign4-p11-prep1-cleanup",
+  "on_partial": "Preserve raw rc/stdout/stderr, reconcile registry, no blind retries; return Tern. No tasks until signed live."
+}
