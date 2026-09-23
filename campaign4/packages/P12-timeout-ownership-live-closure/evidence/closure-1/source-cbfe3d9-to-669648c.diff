@@ -1,0 +1,638 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index 5d3ce9d..e88f1f5 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -417,6 +417,19 @@ func runTimerCallback(args []string) int {
+ 		return fail(err)
+ 	}
+ 	fmt.Println(py.Dumps(out))
++	if py.S(out.Get("decision")) == "no-op-early" {
++		l, err := loop.Open(cfg, nil)
++		if err != nil {
++			return fail(err)
++		}
++		defer l.Close()
++		note, err := l.RearmEarly(*qid, *action, *execution)
++		fmt.Println(note)
++		if err != nil {
++			return fail(err)
++		}
++		return 0
++	}
+ 	// already-handled too: a callback that crashed after the core's effects
+ 	// but before this record is completed by the timer's replay.
+ 	if d := py.S(out.Get("decision")); d == "interrupted" || d == "recovered" || d == "already-handled" {
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 1842c04..2a52935 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -76,6 +76,8 @@ HOST_MUTANTS = [
+      "timer due exactly at its deadline treated as early"),
+     (H + "host.go", 'fmt.Sprintf("--on-active=%ds", int64(delayS))',
+      'fmt.Sprintf("--on-active=%ds", int64(delayS+1))', "timer delay off by one second"),
++    (H + "host.go", 'if r, ok := t.KV.Get("timer-rearm:" + canon); ok && r == py.ISO(at) {',
++     'if r, ok := t.KV.Get("timer-rearm:" + canon); ok && r == py.ISO(at) && false {', "a replayed early callback arms a second timer"),
+     # P12: explicit-UTC calendar deadlines and exact /cancel receipts
+     (H + "host.go", 'at.Format("2006-01-02 15:04:05") + " UTC"', 'at.Format("2006-01-02 15:04:05")',
+      "calendar deadline without an explicit zone"),
+@@ -125,6 +127,14 @@ HOST_MUTANTS = [
+ # reference exists for it).
+ LP = "internal/loop/"
+ LOOP_MUTANTS = [
++    # P12-closure-1: never-acked escalation and early-callback re-arm
++    (LP + "timeout.go", "if !ok || now.Sub(at) < NoAckAfter {", "if !ok || now.Sub(at) < 2*NoAckAfter {", "no-ack duty escalation late"),
++    (LP + "timeout.go", 'if !strings.HasPrefix(t.NoAckDuty, "sent") {', 'if t.NoAckDuty == "" {', "a failed no-ack send is never retried"),
++    (LP + "timeout.go", ' || strings.HasPrefix(t.NoAckDuty, "failed")) {', ") {", "director not told when duty is unreachable"),
++    (LP + "timeout.go", 'if p.Step != "timed-out" || t == nil || t.Ack != nil {', 'if p.Step != "timed-out" || t == nil {',
++     "an acknowledged timeout is still escalated"),
++    (LP + "timeout.go", '	if cur != action || rec == nil || py.S(rec.Get("phase")) != "RUNNING" {', '	if cur == "" || rec == nil || py.S(rec.Get("phase")) != "RUNNING" {',
++     "an early callback re-arms a stale or settled action"),
+     # P12: timeout settlement and acknowledgement
+     (LP + "loop.go", 'case kind == "stop" && (st == "cancelled" || st == "idle"):', 'case kind == "stop" && st == "cancelled":',
+      "an idle worker's /cancel aborts the timeout (P11 L2/L6)"),
+@@ -133,7 +143,7 @@ LOOP_MUTANTS = [
+     (LP + "timeout.go", "		if inForce {", "		if false {", "a conflicting ack replaces one in force"),
+     (LP + "timeout.go", '	if cur != action || rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', "	if cur != action || rec == nil {",
+      "a step recorded as timed out without a core interrupt"),
+-    (LP + "timeout.go", "	if _, err := l.authority(p, role); err != nil {", "	if _, err := l.authority(p, role); false && err != nil {",
++    (LP + "timeout.go", "	if _, err := l.authority(p, role); err != nil {\n\t\treturn nil, err", "	if _, err := l.authority(p, role); false && err != nil {\n\t\treturn nil, err",
+      "an ack from a changed principal accepted"),
+     (LP + "timeout.go", "	if within <= 0 || within > MaxAckWithin {", "	if within < 0 {", "an unbounded or zero ack deadline accepted"),
+     (LP + "timeout.go", "		t.AckExpiredAt = py.ISO(l.now())", "		_ = t", "an expired ack escalated on every pass"),
+diff --git a/internal/host/host.go b/internal/host/host.go
+index 3c3439f..df9de75 100644
+--- a/internal/host/host.go
++++ b/internal/host/host.go
+@@ -443,6 +443,42 @@ func (t *Timers) CreateHost(id string, deadline any, delayS float64, cb []string
+ 	return py.T("armed-host", false), nil
+ }
+ 
++// RearmHost re-arms a deadline whose callback ran before it (the host clock
++// stepped back between the firing and the callback's read): the SAME unit, at
++// the ORIGINAL ledger instant, never a new duration. If that unit is already
++// waiting for the same instant (a replay or reopen), it is reused: one due
++// timer. The spent unit is stopped and reset first.
++func (t *Timers) RearmHost(id string, at time.Time, cb []string) (py.Tuple, error) {
++	canon := CanonicalTimerID(id)
++	if err := t.guard(canon); err != nil {
++		return nil, err
++	}
++	raw, _ := t.KV.Get("timer-arm:" + canon)
++	if ex := loadDict(raw); ex != nil {
++		if dl, ok := py.Instant(ex.Get("deadline")); !ok || !dl.Equal(at) {
++			return nil, fault("E_TIMER_CONFLICT", "re-arm instant is not the armed deadline; refusing to move a deadline")
++		}
++	}
++	if st, err := t.QueryHost(canon); err == nil && py.S(st.Get("ActiveState")) == "active" && py.S(st.Get("SubState")) == "waiting" {
++		if r, ok := t.KV.Get("timer-rearm:" + canon); ok && r == py.ISO(at) {
++			return py.T("rearmed-reused", true), nil
++		}
++	}
++	for _, verb := range []string{"stop", "reset-failed"} {
++		if _, err := t.run("rearm", []string{t.Systemctl, "--user", verb, CanonicalUnit(canon)}); err != nil {
++			return nil, err
++		}
++	}
++	proc, err := t.run("create", t.CommandAt(canon, at, cb))
++	if err != nil {
++		return nil, err
++	}
++	if proc.RC != 0 {
++		return nil, fault("E_TIMER_CREATE", "re-arm refused: "+firstRunes(proc.Stderr, 200))
++	}
++	return py.T("rearmed", false), t.KV.Put("timer-rearm:"+canon, py.ISO(at))
++}
++
+ // CancelHost stops the unit by the same identity, then cancels durably.
+ func (t *Timers) CancelHost(id string) (py.Tuple, error) {
+ 	canon := CanonicalTimerID(id)
+diff --git a/internal/host/timer_p12_test.go b/internal/host/timer_p12_test.go
+index 9dfc7d5..2243683 100644
+--- a/internal/host/timer_p12_test.go
++++ b/internal/host/timer_p12_test.go
+@@ -66,3 +66,42 @@ type mapKV map[string]string
+ 
+ func (m mapKV) Get(k string) (string, bool) { v, ok := m[k]; return v, ok }
+ func (m mapKV) Put(k, v string) error       { m[k] = v; return nil }
++
++// An early callback's re-arm: the same unit at the armed instant; a replay
++// while that unit waits reuses it (one due timer); another instant is refused.
++func TestRearmHostReusesTheWaitingUnitAndNeverMovesTheDeadline(t *testing.T) {
++	kv := mapKV{}
++	var calls [][]string
++	state := "ActiveState=inactive\nSubState=dead\n"
++	tm := NewTimers(kv)
++	tm.Host, tm.Enabled, tm.SystemdRun, tm.Systemctl, tm.Allowlist = true, true, "systemd-run", "systemctl", []string{"u"}
++	tm.Run = func(argv []string, env []string, timeout time.Duration) (Proc, error) {
++		calls = append(calls, argv)
++		if argv[0] == "systemctl" && argv[2] == "show" {
++			return Proc{Stdout: state}, nil
++		}
++		return Proc{}, nil
++	}
++	at := time.Date(2026, 9, 21, 12, 30, 0, 0, time.UTC)
++	if _, err := tm.CreateHost("u", "2026-09-21T12:30:00Z", 60, []string{"cb"}); err != nil {
++		t.Fatal(err)
++	}
++	out, err := tm.RearmHost("u", at, []string{"cb"})
++	if err != nil || out[0] != "rearmed" || calls[len(calls)-1][2] != "--unit=u.timer" {
++		t.Fatalf("re-arm %v %v %v", out, err, calls[len(calls)-1])
++	}
++	n := len(calls)
++	state = "ActiveState=active\nSubState=waiting\n"
++	out, err = tm.RearmHost("u", at, []string{"cb"})
++	for _, c := range calls[n:] {
++		if c[0] == "systemd-run" {
++			t.Fatalf("a replay armed a second timer: %v", calls[n:])
++		}
++	}
++	if err != nil || out[0] != "rearmed-reused" {
++		t.Fatalf("replay %v %v", out, err)
++	}
++	if _, err := tm.RearmHost("u", at.Add(time.Minute), []string{"cb"}); err == nil {
++		t.Fatal("a re-arm moved the deadline")
++	}
++}
+diff --git a/internal/loop/closure_p12_test.go b/internal/loop/closure_p12_test.go
+new file mode 100644
+index 0000000..b593c50
+--- /dev/null
++++ b/internal/loop/closure_p12_test.go
+@@ -0,0 +1,299 @@
++package loop
++
++import (
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// P12-closure-1: never-acked escalation, clock discontinuity, and the one
++// allowed duplicate director notice.
++
++func (r *rig) wakesTo(seat string) []string {
++	var out []string
++	for _, c := range r.calls {
++		if filepath.Base(c[0]) == "wake" && c[1] == seat {
++			out = append(out, c[2])
++		}
++	}
++	return out
++}
++
++// settledAt settles Q's worker deadline, then puts the fake clock at the
++// settlement time recorded by the loop (the callback used the host clock).
++func settledAt(t *testing.T, r *rig) *Loop {
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	l := r.open()
++	at, _ := py.Instant(l.Pkg("Q").Timeout.At)
++	now, _ := py.Instant(r.clock.Now())
++	r.clock.Advance(at.Sub(now).Seconds())
++	return l
++}
++
++func TestNeverAckedTimeoutEscalatesDutyThenDirector(t *testing.T) {
++	r := newRig(t)
++	r.cfg.Duty, r.cfg.Seats["corvid"] = "tern", "C" // rig: duty and director are both tern
++	l := settledAt(t, r)
++	defer l.Close()
++	n := len(r.wakesTo("T"))
++	r.clock.Advance(59)
++	r.tick(l)
++	if len(r.wakesTo("T")) != n {
++		t.Fatal("escalated before NoAckAfter")
++	}
++	r.clock.Advance(1)
++	r.tick(l)
++	r.tick(l)
++	w := r.wakesTo("T")[n:]
++	if len(w) != 1 || !strings.Contains(w[0], "NO acknowledgement") || !strings.Contains(w[0], "You are duty") ||
++		!strings.Contains(w[0], "timeout-ack --config") {
++		t.Fatalf("duty escalation at 60 s: %v", w)
++	}
++	r.clock.Advance(59)
++	r.tick(l)
++	if len(r.wakesTo("T")) != n+1 {
++		t.Fatal("director escalated before 2*NoAckAfter")
++	}
++	r.clock.Advance(1)
++	r.tick(l)
++	r.tick(l)
++	w = r.wakesTo("T")[n:]
++	if len(w) != 2 || !strings.Contains(w[1], "You are director") {
++		t.Fatalf("director escalation at 120 s: %v", w)
++	}
++	// Durable across a reopen: no repeat.
++	l.Close()
++	l = r.open()
++	r.tick(l)
++	if len(r.wakesTo("T")) != n+2 {
++		t.Fatalf("repeated after reopen: %v", r.wakesTo("T")[n:])
++	}
++	// Escalation is not an acknowledgement; a later valid ack is still accepted.
++	if l.Pkg("Q").Timeout.Ack != nil {
++		t.Fatal("escalation recorded as an ack")
++	}
++	if _, err := l.AckTimeout("Q", "Q-w1", "tern", "take it", 10*time.Minute); err != nil {
++		t.Fatal(err)
++	}
++}
++
++func TestAnAckStopsTheNoAckEscalation(t *testing.T) {
++	r := newRig(t)
++	l := settledAt(t, r)
++	defer l.Close()
++	n := len(r.wakesTo("T"))
++	r.clock.Advance(30)
++	must(t, func() error { _, err := l.AckTimeout("Q", "Q-w1", "tern", "on it", 10*time.Minute); return err }())
++	r.clock.Advance(120)
++	r.tick(l)
++	if len(r.wakesTo("T")) != n {
++		t.Fatalf("escalated an acknowledged timeout: %v", r.wakesTo("T")[n:])
++	}
++}
++
++func TestFailedNoAckSendIsRetriedNotRecordedDelivered(t *testing.T) {
++	r := newRig(t)
++	l := settledAt(t, r)
++	defer l.Close()
++	r.clock.Advance(60)
++	r.fail["wake"] = true
++	r.tick(l)
++	to := l.Pkg("Q").Timeout
++	if !strings.HasPrefix(to.NoAckDuty, "failed") || !strings.HasPrefix(to.NoAckDirector, "failed") {
++		t.Fatalf("failed sends recorded as %q / %q", to.NoAckDuty, to.NoAckDirector)
++	}
++	r.fail["wake"] = false
++	n := len(r.wakesTo("T"))
++	r.tick(l) // duty retried and reached; the director waits for 2*NoAckAfter again
++	to = l.Pkg("Q").Timeout
++	if !strings.HasPrefix(to.NoAckDuty, "sent") || !strings.HasPrefix(to.NoAckDirector, "failed") || len(r.wakesTo("T")) != n+1 {
++		t.Fatalf("retry: %q / %q, %d new wakes", to.NoAckDuty, to.NoAckDirector, len(r.wakesTo("T"))-n)
++	}
++	r.clock.Advance(60)
++	r.tick(l)
++	r.tick(l)
++	if to = l.Pkg("Q").Timeout; !strings.HasPrefix(to.NoAckDirector, "sent") || len(r.wakesTo("T")) != n+2 {
++		t.Fatalf("director at 120 s: %q, %d new wakes", to.NoAckDirector, len(r.wakesTo("T"))-n)
++	}
++}
++
++func TestNoAckEscalationRefusesAChangedPrincipal(t *testing.T) {
++	r := newRig(t)
++	l := settledAt(t, r)
++	l.Close()
++	// duty was tern at dispatch; the config now names corvid: not the same principal.
++	r.cfg.Duty = "corvid"
++	l = r.open()
++	defer l.Close()
++	n := len(r.wakesTo("C"))
++	r.clock.Advance(60)
++	r.tick(l)
++	to := l.Pkg("Q").Timeout
++	if !strings.Contains(to.NoAckDuty, "E_AUTHORITY") || len(r.wakesTo("C")) != n {
++		t.Fatalf("changed duty: %q, corvid wakes %d", to.NoAckDuty, len(r.wakesTo("C"))-n)
++	}
++	if !strings.HasPrefix(to.NoAckDirector, "sent") {
++		t.Fatalf("director not told when duty could not be: %q", to.NoAckDirector)
++	}
++}
++
++// timerState makes the rig's systemctl report the deadline unit's state.
++func (r *rig) timerState(active, sub string) {
++	run := r.cfg.Run
++	r.cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++		if argv[0] == "systemctl" && len(argv) > 2 && argv[2] == "show" {
++			r.calls = append(r.calls, argv)
++			return host.Proc{RC: 0, Stdout: "ActiveState=" + active + "\nSubState=" + sub + "\n"}, nil
++		}
++		return run(argv, env, timeout)
++	}
++}
++
++func (r *rig) count(argv0 string, from int) int {
++	n := 0
++	for _, c := range r.calls[from:] {
++		if c[0] == argv0 {
++			n++
++		}
++	}
++	return n
++}
++
++// Injected clock (core.FakeClock) for the loop side of a clock discontinuity:
++// the timer fired, then the callback read a clock earlier than the deadline.
++// Real systemd delivery after a host clock rollback is NOT shown by this.
++func TestEarlyCallbackRearmsTheSameUnitAndIsDueExactlyOnce(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	l := r.open()
++	defer func() { l.Close() }()
++	dl, _ := l.deadlineOf("Q")
++	out, err := l.D.OnDeadline("Q-w1", "Q") // fake clock is before the deadline
++	must(t, err)
++	if py.S(out[0]) != "no-op-early" {
++		t.Fatalf("early callback: %v", out)
++	}
++	from, duty := len(r.calls), len(r.wakesTo("T"))
++	note, err := l.RearmEarly("Q", "Q-w1", "ex-Q-w1")
++	must(t, err)
++	var rearm []string
++	for _, c := range r.calls[from:] {
++		if c[0] == "systemd-run" {
++			rearm = c
++		}
++	}
++	want := "--on-calendar=" + dl.UTC().Add(time.Second-1).Truncate(time.Second).Format("2006-01-02 15:04:05") + " UTC"
++	if rearm == nil || rearm[2] != "--unit="+l.unit("Q-w1")+".timer" || rearm[4] != want || rearm[len(rearm)-1] != "ex-Q-w1" {
++		t.Fatalf("re-arm argv %v, want the same unit at %s", rearm, want)
++	}
++	if r.count("systemctl", from) < 2 { // the spent unit is stopped and reset first
++		t.Fatalf("spent unit not stopped: %v", r.calls[from:])
++	}
++	if l.Pkg("Q").Step != "worker" || len(r.wakesTo("K")) != 1 || !strings.Contains(note, "discontinuity") {
++		t.Fatalf("early callback settled, cancelled or dispatched: step %s, worker wakes %v", l.Pkg("Q").Step, r.wakesTo("K"))
++	}
++	if d := r.wakesTo("T"); len(d) != duty+1 || !strings.Contains(d[len(d)-1], "discontinuity") {
++		t.Fatalf("duty not told once: %v", d[duty:])
++	}
++	// A replay while the re-armed unit waits: reused, no second timer, no second notice.
++	r.timerState("active", "waiting")
++	l.Close()
++	l = r.open() // the replay is a fresh callback process
++	from = len(r.calls)
++	_, err = l.RearmEarly("Q", "Q-w1", "ex-Q-w1")
++	must(t, err)
++	if r.count("systemd-run", from) != 0 || len(r.wakesTo("T")) != duty+1 {
++		t.Fatal("a replay armed a second timer or told duty again")
++	}
++	// The due callback: settled once, with its lateness; a replay adds nothing.
++	now, _ := py.Instant(r.clock.Now())
++	r.clock.Advance(dl.Sub(now).Seconds() + 45)
++	out, err = l.D.OnDeadline("Q-w1", "Q")
++	must(t, err)
++	must(t, l.MarkTimedOut("Q", "Q-w1"))
++	out2, err := l.D.OnDeadline("Q-w1", "Q")
++	must(t, err)
++	if py.S(out[0]) != "interrupted" || py.S(out2[0]) != "already-handled" || l.Pkg("Q").Timeout.Lateness != "45s" {
++		t.Fatalf("due: %v then %v, lateness %q", out, out2, l.Pkg("Q").Timeout.Lateness)
++	}
++	cancels := 0
++	for _, c := range r.calls {
++		if filepath.Base(c[0]) == "wake" && c[2] == "/cancel" {
++			cancels++
++		}
++	}
++	if cancels != 1 {
++		t.Fatalf("%d cancels, want exactly 1", cancels)
++	}
++	// Stale/terminal: the step is settled now; a late early-callback re-arms nothing.
++	if _, err := l.RearmEarly("Q", "Q-w1", "ex-Q-w1"); err == nil {
++		t.Fatal("re-armed a settled step")
++	}
++}
++
++func TestRearmRefusesWrongActionAndOwnsAFailedTimer(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	l := r.open()
++	defer l.Close()
++	from, duty0 := len(r.calls), len(r.wakesTo("T"))
++	if _, err := l.RearmEarly("Q", "Q-v1", "ex-Q-v1"); err == nil || r.count("systemctl", from)+r.count("systemd-run", from) != 0 || len(r.wakesTo("T")) != duty0 {
++		t.Fatalf("an action that is not the running step's reached the timers or duty: %v", r.calls[from:])
++	}
++	r.fail["systemd-run"] = true
++	duty := len(r.wakesTo("T"))
++	note, err := l.RearmEarly("Q", "Q-w1", "ex-Q-w1")
++	if err == nil || !strings.Contains(note, "RE-ARM FAILED") {
++		t.Fatalf("failed re-arm not owned: %q %v", note, err)
++	}
++	if d := r.wakesTo("T"); len(d) != duty+1 || !strings.Contains(d[len(d)-1], "RE-ARM FAILED") {
++		t.Fatalf("duty not told of the failed re-arm: %v", d[duty:])
++	}
++}
++
++// The one allowed duplicate: a failed-cancel settlement tells the director,
++// then the timer's replay delivers the cancel and the core's own wake tells
++// the director again. Same incident, same ownership and deadline, one ack,
++// no further notices, one delivered cancel.
++func TestTheOnlyDuplicateNoticeIsBounded(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "", "wake: could not reach K")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	l := r.open()
++	first := *l.Pkg("Q").Timeout
++	l.Close()
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1") // replay: cancel now delivered
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1") // further replays add nothing
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	l = r.open()
++	defer l.Close()
++	to := l.Pkg("Q").Timeout
++	if to.ID != first.ID || to.At != first.At || to.Action != first.Action {
++		t.Fatalf("incident changed: %+v -> %+v", first, *to)
++	}
++	dir := 0
++	for _, w := range r.wakesTo("T") {
++		if strings.Contains(w, "Q") {
++			dir++
++		}
++	}
++	cancels := 0
++	for _, c := range r.calls {
++		if filepath.Base(c[0]) == "wake" && c[1] == "K" && c[2] == "/cancel" {
++			cancels++
++		}
++	}
++	dispatches := len(r.wakesTo("K")) - cancels
++	if dir != 2 || cancels != 2 || dispatches != 1 {
++		t.Fatalf("director notices %d (want 2), cancel attempts %d (1 failed + 1 delivered), dispatches %d", dir, cancels, dispatches)
++	}
++	_ = host.Proc{}
++}
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 0fa962c..c17d2b8 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -702,6 +702,7 @@ func (l *Loop) Tick() ([]string, error) {
+ 	if _, err := l.Adapter.DrainOutboxSettled(""); err != nil {
+ 		return done, err
+ 	}
++	done = append(done, l.unacked()...)
+ 	return append(done, l.expiredAcks()...), nil
+ }
+ 
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 7c07034..a87e6be 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -22,8 +22,22 @@ type StepTimeout struct {
+ 	Director     string   `json:"director"` // told | failed: <why>
+ 	Ack          *StepAck `json:"ack,omitempty"`
+ 	AckExpiredAt string   `json:"ack_expired_escalated_at,omitempty"`
++	// Never-acked escalation (P12-closure-1): duty first, then the director.
++	// Each is "sent <time>" or "failed <time>: <why>" (a failed send is retried
++	// on the next pass; it is never recorded as delivered). An escalation is
++	// not an acknowledgement and not a recovery.
++	NoAckDuty     string `json:"no_ack_duty,omitempty"`
++	NoAckDirector string `json:"no_ack_director,omitempty"`
++	Lateness      string `json:"callback_lateness,omitempty"` // settlement time minus the ledger deadline
+ }
+ 
++// NoAckAfter is how long a settled timeout may stay unacknowledged before
++// duty is told; the director is told NoAckAfter later (or at once if duty
++// cannot be reached). The check runs on run's passes, so the actual bound is
++// NoAckAfter + the pass interval (--every, 30 s) + the pass time, and no
++// escalation happens while run is stopped (the liveness check owns that).
++const NoAckAfter = 60 * time.Second
++
+ // StepAck is an acknowledgement of a step timeout by the director or duty.
+ type StepAck struct {
+ 	By         string `json:"by"`
+@@ -78,11 +92,73 @@ func (l *Loop) MarkTimedOut(qid, action string) error {
+ 	if p.Timeout == nil || p.Timeout.Action != action {
+ 		mid, st := l.lastReceipt(action, "stop")
+ 		p.Timeout = &StepTimeout{ID: "T-" + action, Action: action, At: py.ISO(l.now()),
+-			Cancel: st + " (" + mid + ")", Director: "told"}
++			Cancel: st + " (" + mid + ")", Director: "told", Lateness: l.lateness(qid)}
+ 	}
+ 	return l.setStep(p, "timed-out", "deadline passed for "+action+"; cancel "+p.Timeout.Cancel+", director told")
+ }
+ 
++// deadlineOf is the ledger's authoritative deadline for qid's current flight.
++func (l *Loop) deadlineOf(qid string) (time.Time, bool) {
++	rec := l.D.Store.Revs.Get(core.RevKey{Q: qid, Rev: int64(1)})
++	if rec == nil {
++		return time.Time{}, false
++	}
++	return py.Instant(py.AsDict(rec.GetOr("flight", py.NewDict())).Get("deadline"))
++}
++
++// RearmEarly handles a deadline callback that ran before the ledger's
++// deadline (possible only after a host clock step back, since the timer and
++// the ledger read the same UTC clock). Only for the current action of a
++// running step, with the recorded duty principal: the same unit is re-armed
++// at the original ledger instant and duty is told. Nothing is cancelled,
++// dispatched or settled. A failed re-arm is an owned failure, told to duty.
++func (l *Loop) RearmEarly(qid, action, execution string) (string, error) {
++	p := l.Pkg(qid)
++	if p == nil {
++		return "", fmt.Errorf("no package %s", qid)
++	}
++	cur := map[string]string{"worker": p.WorkAction, "verify": p.VerifyAction}[p.Step]
++	rec := l.D.Store.Revs.Get(core.RevKey{Q: qid, Rev: int64(1)})
++	if cur != action || rec == nil || py.S(rec.Get("phase")) != "RUNNING" {
++		return "", fmt.Errorf("%s: %s is not the running step's action (step %s): not re-armed", qid, action, p.Step)
++	}
++	if _, err := l.authority(p, "duty"); err != nil {
++		return "", err
++	}
++	dl, ok := l.deadlineOf(qid)
++	if !ok {
++		return "", fmt.Errorf("no ledger deadline for %s", qid)
++	}
++	cb := []string{l.Cfg.Bin, "timer-callback", "--config", l.Cfg.Path, "--qid", qid, "--action", action, "--execution", execution}
++	out, err := l.Adapter.Timers.RearmHost(l.unit(action), dl, cb)
++	note := fmt.Sprintf("%s deadline callback for %s ran %s before its deadline %s (host clock discontinuity)",
++		py.ISO(l.now()), action, dl.Sub(l.now()).Round(time.Second), py.ISO(dl))
++	if err != nil {
++		note += "; RE-ARM FAILED, the deadline has no timer: " + err.Error()
++	} else {
++		note += "; " + py.S(out[0]) + " " + l.unit(action) + ".timer at the original deadline"
++	}
++	if err == nil && py.Truthy(out[1]) {
++		return note, nil // a replay of an already re-armed timer: nothing new to tell
++	}
++	p.Notes = append(p.Notes, note)
++	if serr := l.save(p); serr != nil {
++		return note, serr
++	}
++	if werr := l.send(l.Cfg.Duty, "[agent-loop] "+qid+": "+note+". See: agent-loop status --config "+l.Cfg.Path, "escalation", qid); werr != nil && err == nil {
++		err = werr
++	}
++	return note, err
++}
++
++// lateness is the settlement time minus the ledger deadline.
++func (l *Loop) lateness(qid string) string {
++	if dl, ok := l.deadlineOf(qid); ok {
++		return l.now().Sub(dl).Round(time.Millisecond).String()
++	}
++	return "unknown (no ledger deadline)"
++}
++
+ // SettleTimeoutFailure owns a timeout whose effects failed after the core
+ // recorded the interrupt (e.g. the /cancel did not arrive): the step is
+ // settled as timed-out with the truthful failure, and the director (else
+@@ -106,7 +182,7 @@ func (l *Loop) SettleTimeoutFailure(qid, action string, cause error) (string, er
+ 	}
+ 	mid, st := l.lastReceipt(action, "stop")
+ 	if p.Timeout == nil || p.Timeout.Action != action {
+-		p.Timeout = &StepTimeout{ID: "T-" + action, Action: action, At: py.ISO(l.now())}
++		p.Timeout = &StepTimeout{ID: "T-" + action, Action: action, At: py.ISO(l.now()), Lateness: l.lateness(qid)}
+ 	}
+ 	p.Timeout.Cancel = fmt.Sprintf("failed: receipt %s state %q: %v", mid, st, cause)
+ 	text := fmt.Sprintf("[agent-loop] %s: step %s passed its deadline and the cancel was NOT confirmed (%s). "+
+@@ -171,6 +247,54 @@ func (l *Loop) AckTimeout(qid, action, by, next string, within time.Duration) (*
+ 	return p.Timeout.Ack, l.save(p)
+ }
+ 
++// unacked escalates timeouts nobody acknowledged: duty at NoAckAfter, the
++// director at 2*NoAckAfter or as soon as duty cannot be reached. Bound to the
++// same incident (T-<action>), action and recorded principals.
++func (l *Loop) unacked() []string {
++	var out []string
++	pk := l.Pkgs()
++	sort.Slice(pk, func(i, j int) bool { return pk[i].QID < pk[j].QID })
++	now := l.now()
++	for _, p := range pk {
++		t := p.Timeout
++		if p.Step != "timed-out" || t == nil || t.Ack != nil {
++			continue
++		}
++		at, ok := py.Instant(t.At)
++		if !ok || now.Sub(at) < NoAckAfter {
++			continue
++		}
++		text := func(to string) string {
++			return fmt.Sprintf("[agent-loop] %s: timeout %s (step %s) has had NO acknowledgement for %s (settled %s; cancel %s). You are %s. Acknowledge ownership with: %s",
++				p.QID, t.ID, t.Action, now.Sub(at).Round(time.Second), t.At, t.Cancel, to, l.AckCommand(p.QID, t.Action))
++		}
++		send := func(role, seat string) string {
++			if _, err := l.authority(p, role); err != nil {
++				return "failed " + py.ISO(now) + ": " + err.Error()
++			}
++			if err := l.send(seat, text(role), "escalation", p.QID); err != nil {
++				return "failed " + py.ISO(now) + ": " + err.Error()
++			}
++			return "sent " + py.ISO(now)
++		}
++		changed := false
++		if !strings.HasPrefix(t.NoAckDuty, "sent") {
++			t.NoAckDuty, changed = send("duty", l.Cfg.Duty), true
++			out = append(out, p.QID+": no ack, duty "+t.NoAckDuty)
++		}
++		if !strings.HasPrefix(t.NoAckDirector, "sent") && (now.Sub(at) >= 2*NoAckAfter || strings.HasPrefix(t.NoAckDuty, "failed")) {
++			t.NoAckDirector, changed = send("director", l.Cfg.Director), true
++			out = append(out, p.QID+": no ack, director "+t.NoAckDirector)
++		}
++		if changed {
++			if err := l.save(p); err != nil {
++				out = append(out, p.QID+": no-ack record not saved: "+err.Error())
++			}
++		}
++	}
++	return out
++}
++
+ // expiredAcks escalates, once, every timeout whose acknowledged response
+ // deadline passed while the package is still timed out.
+ func (l *Loop) expiredAcks() []string {

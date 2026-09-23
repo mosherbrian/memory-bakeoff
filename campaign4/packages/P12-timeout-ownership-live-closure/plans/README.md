@@ -29,3 +29,22 @@ Clock discontinuity: calendar timers follow the realtime clock. A forward step m
 deadlines fire early (the wall fails safe). A backward step postpones them by the size of the step.
 The driver's deadline guard reads the same clock. No real clock step was made (that would be a global host
 change); this is a declared residual.
+
+## P12-closure-1 (candidate 669648c, bin `3916950a…`; templates now pin this release)
+
+Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. The core, py and cases are unchanged.
+
+- **Never-acked timeout escalation**:
+  - `unacked()` runs on every `run` pass. A `timed-out` step with no ack for `NoAckAfter` (60 s) after settlement is escalated to duty. The director follows at 120 s, or at once if duty cannot be reached.
+  - Each send is checked against the principals recorded at dispatch.
+  - The record is `timeout.no_ack_duty` / `no_ack_director`: `sent <t>` or `failed <t>: <why>`. A failed send is retried on the next pass and is never recorded as delivered.
+  - Achievable bound: duty gets it at most 60 s + the pass interval (`--every`, 30 s) + the pass time after settlement, so about 90–95 s; the director gets it about 30 s + one pass later still. While `run` is stopped, nothing escalates; the liveness check owns that state.
+  - An escalation is not an acknowledgement and not a recovery. L6 still needs an ack within 60 s of detection.
+- **Clock discontinuity**:
+  - A deadline callback that runs before the ledger deadline (`no-op-early`) re-arms the **same** unit at the **original** ledger instant. The spent unit is stopped and reset first. A replay while the re-armed unit waits reuses it, so one timer is due.
+  - Anything other than the running step's current action (stale, settled, other action) is refused before any timer call.
+  - A failed re-arm, and every re-arm, is told to duty as a clock discontinuity (an owned state, not green).
+  - `timeout.callback_lateness` records settlement time minus the ledger deadline. A late callback beyond 30 s fails L6 detection.
+  - Evidence comes from injected-clock tests (core.FakeClock). They do NOT show how systemd delivers a calendar timer after a real host clock rollback. Qualification assumes a continuous host UTC clock, and a real discontinuity invalidates the timing sample.
+- **Duplicate notice (the only allowed one)**: a failed-cancel settlement tells the director, then the timer's replay delivers the cancel and the core's own wake tells the director again. It is the same `T-<action>` incident with the same settlement time, so there is no per-pass flood and no second cancel or dispatch. Tested in `TestTheOnlyDuplicateNoticeIsBounded`.
+- Tests: `evidence/closure-1/closure-tests.txt`. Mutation 110/110 (`evidence/closure-1/mutate-go.txt`). Conformance on the release binary: `evidence/closure-1/conformance-release-binary/` (rc 0, 125/125).

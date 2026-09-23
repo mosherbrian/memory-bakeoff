@@ -1,0 +1,81 @@
+{
+ "qid": "P12-closure-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "decision": {
+  "closure-allocation-1.json": "cbfdb09bf3e9ddfd2fa226310f3426e3183e13f6fac7f1934f779f0239463868",
+  "closure-1-receipt.json": "e3bc2dbebe5edeeda0cae39c49733d60da2155dbf03245a1bb0321746484f7ad",
+  "closure-early-callback-correction.json": "5348a3f10f6e48c41cc0015c0452c15505cbca763036250a7efa95214f26204b"
+ },
+ "base": "cbfe3d91d02c86942e7640cbd0fe41027bfcbad0 (binary cf54a94a, reviewed; preserved)",
+ "candidate": {
+  "commit": "669648cb66b771a147a6ce8197e6654461abe7fc",
+  "branch": "p12-timeout (pushed)",
+  "release": "/home/bmosher/projects/agent-loop-releases/agent-loop-669648cb66b7",
+  "binary_sha256": "3916950aa9648b5929b07c9251e9582e8788aa0e30ea420374953b462f6b8b13",
+  "manifest_sha256": "2f3061a471fd5ed27ae97e559753a8c80ac5277daa5bbf7a1e726f229ef9baee",
+  "diff": "evidence/closure-1/source-cbfe3d9-to-669648c.diff",
+  "frozen_unchanged": "internal/core, internal/py, conformance/cases (git diff cbfe3d9..669648c empty for these); main and installed preview untouched"
+ },
+ "changed_behaviour": {
+  "never_acked_escalation": "Tick -> unacked(): timed-out + no ack for 60 s -> duty (principal checked); director at 120 s or at once if duty unreachable; failed send recorded 'failed <t>: <why>' and retried each pass, never 'sent'; not an ack or a recovery.",
+  "achievable_bound": "duty: <= 60 s + pass interval (--every, 30 s) + pass time after settlement (about 90-95 s); director: <= 120 s + 30 s + pass time; NO escalation while run is stopped (liveness check owns that); L6 still needs a real ack <= 60 s after detection.",
+  "early_callback": "no-op-early -> RearmEarly: only the running step's current action (phase RUNNING, duty principal bound); same unit, original ledger instant (never now+duration); spent unit stopped+reset; replay while waiting reuses it (one due timer); failed re-arm and every re-arm told to duty; nothing cancelled, dispatched or settled.",
+  "lateness": "timeout.callback_lateness = settlement time - ledger deadline",
+  "duplicate_notice": "only: failed-cancel settlement notice + the later replay's core wake, same T-<action> incident; no per-pass flood, no second cancel/dispatch; any other duplicate is a defect"
+ },
+ "evidence": {
+  "tests": "evidence/closure-1/closure-tests.txt (8 new tests pass)",
+  "go_test": "evidence/closure-1/go-test.txt all ok",
+  "conformance_release_binary": {
+   "dir": "evidence/closure-1/conformance-release-binary/",
+   "rc": "0",
+   "stderr": "conformance: 125/125 cases ok, 1751 steps"
+  },
+  "host_parity": "evidence/closure-1/host-parity.txt 316/321 + 5 existing corrections (the cbfe3d9 timer adjudication unchanged)",
+  "mutation": "evidence/closure-1/mutate-go.txt 110/110 (6 new closure mutants; one earlier mutant re-anchored because its text is no longer unique)",
+  "regressions_on_new_binary": [
+   "evidence/closure-1/a-cli-timeout-idle.txt",
+   "evidence/closure-1/a-cli-timeout-refused.txt",
+   "evidence/closure-1/c-stop-669648c.txt (0.009/0.007 s stop, marker 1.029 s exit 64 no restart)"
+  ],
+  "plans": "live/cutover templates pin 669648c/3916950a; driver unchanged since repair-1 (9a2a1795)"
+ },
+ "evidence_sha256": {
+  "evidence/closure-1/a-cli-timeout-idle.txt": "65c52e751250bc9c3f348fbbe7d1ac1dcd8c0d879febc48da27ce7f0287dcb73",
+  "evidence/closure-1/a-cli-timeout-refused.txt": "bc004f30b59219bcc8b801f073a7161d59ef8cbb0bb2973ac54b0a6ee8775a5c",
+  "evidence/closure-1/c-stop-669648c.txt": "a2d764857cf248495e64519d6efc6b6304a69b41b9120a7f07ccd892e1014d2c",
+  "evidence/closure-1/closure-tests.txt": "95d8865f506f8ad1fb2c39ee076e997c4f6280a745dc1cc6cc43c53cf62e8fd8",
+  "evidence/closure-1/conformance-release-binary/README.txt": "af336f75c1ef66f565cd4f9f8a0251daa120c15eccb718c33d3356537557715d",
+  "evidence/closure-1/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/closure-1/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/closure-1/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/closure-1/go-test.txt": "8c49b47d94bcab2aeb1aaf01e47a3f89ff6523ea5b659f6a666066ee7eb542ac",
+  "evidence/closure-1/host-parity.txt": "aa2ba8cfe17ee1a631e3c154966041c17db14f8e395f14c8f77f0a6e7804fc1b",
+  "evidence/closure-1/mutate-go.txt": "1bad9293eb464d4da9925e29fc486c9d5b09daa39c9f293d73ac9cdda5895520",
+  "evidence/closure-1/source-cbfe3d9-to-669648c.diff": "ece6b9a085e85ec13d8c8a873f642d5eac1318d89ad3d733981d9459569d5454"
+ },
+ "plans_sha256": {
+  "plans/README.md": "0ebf5d05ca9b74dc2d1124f8fa397527ee571386ed708fa5f40d58d5c37593c4",
+  "plans/cutover-inputs.template.env": "751068105dd44457c599cef62feaaaed2a0a7f459e5816a203d9c1705a700594",
+  "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+  "plans/live-driver.sh": "9a2a1795f2772a1b4041c7b118d236c87652dc0301e7344ac3749840fd8dc1cd",
+  "plans/live-inputs.template.env": "86e400d41f09c3ccec4f742c977ea8ac60e91d20371ed0b781abff093a8c815f",
+  "plans/tasks/ack.md": "10e817fa48203f665034f4009a4d6b26c5067f6b92b8a56fcc540119ec0556a3",
+  "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+  "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+  "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+  "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+  "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+ },
+ "host_effects": [
+  "transient p12test-stop-closure-* units (3) created and removed; no daemon-reload in this closure; no seats, main, install or clock change"
+ ],
+ "residuals": [
+  "Injected-clock (core.FakeClock) tests prove the loop side only; systemd's calendar delivery after a real host clock rollback is NOT established. Qualification assumes continuous host UTC; a real discontinuity invalidates the timing sample and needs reconciliation.",
+  "A re-arm happens only if the early callback runs; if systemd never fires the unit (e.g. a large backward step before firing), nothing in the loop sees it until the liveness check; that is not changed here.",
+  "No escalation of an unacked timeout while run is stopped.",
+  "A re-armed unit is not in the stop path of disarm (same unit name, so disarm's stop of <unit>.timer does cover it) -- covered because the name is unchanged.",
+  "L4a/L4b, live ack latency and step-timer precision on real seats: proved only in the signed live run."
+ ]
+}
