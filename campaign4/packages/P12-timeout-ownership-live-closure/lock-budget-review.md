@@ -84,3 +84,84 @@
   live ack latency: unchanged / live-only.
 
 No source edits by corvid; no new allocation/prep/live. Returned to Tern.
+
+---
+
+## Lock-budget intake classification (same pass, no reset)
+
+Claim `c3b75e28…`; 37 paths + binary `b70665f5` verified. Requirements addressed as
+**supported / blocker**, not blanket PASS.
+
+### 1. All allocation requirements — subprocess caps vs the rest
+
+- **Supported:** the budgeted Runner caps **subprocesses** per hold; measured
+  per-hold ≤10.51 s (release binary via `hold-scaling`).
+- **Blocker/gap:** **SQLite, file and CPU work inside a hold are not budgeted.**
+  The per-hold bound is therefore **empirical** (max 10.51 s), resting on a bounded
+  host assumption (local SQLite/CPU), not a hard cap. **Unbounded algorithmic
+  backlog** (a deep due queue) has **no finite latency** — `SATURATED` is reported,
+  not bounded.
+
+### 2. Stress already-accepted due actions; fairness; SATURATED ≠ ack
+
+- The contention runs stressed **new dispatches** (refused) plus 3 accepted
+  deadlines (T1/T2/T3). **Deeper accepted-backlog fairness and recovery are not
+  stress-tested**; "≥1 settlement/hold, oldest-first" is a construction claim, not
+  evidenced at depth.
+- **`SATURATED` sent to duty is NOT an authenticated ownership acknowledgement** —
+  it is a report; the ack remains separate and human. Preserve that distinction.
+
+### 3. Actual yield/resume, crash/reopen, slow/failed transport
+
+- **Slow transport: supported** (`hold-scaling` slow=20 s → hold 10.5 s).
+  **Failed transport (`ErrBudget`): unit-tested.**
+- **Blocker:** **actual yield/resume is not exercised in real process runs** (the
+  author states real runs never yielded) — the composition yield→reacquire→
+  `ProcessDue` is unit-only.
+- **Blocker:** **crash/reopen under contention was not rerun** this round; marker
+  durability is inherited, not composed with the budget path.
+
+### 4. Fairness, every holder, refused I/O, heartbeat truth, detection/settlement/ack
+
+- Lock is `flock` `LOCK_NB` + 50 ms polling — **not FIFO-fair**; sustained
+  contention can starve a waiter, mitigated only by bounded holds + `E_LEDGER_BUSY`.
+- Every holder runs `ProcessDue` on **acquire and before release** (source-verified).
+- Unsent I/O → `E_BUDGET_EXHAUSTED`, **no receipt for an unsent wake** (owned,
+  visible); a later refused I/O → package **blocked** (owned, visible).
+- Heartbeat: the `yielded` pass record is set only when `Tick` actually yielded
+  (source-verified); **truthfulness on the real path is unit-only** (never yielded).
+- **Detection (marker, D+9) vs settlement (head-of-queue ≤D+30, measured ≤18) vs
+  ack (live, human, 60 s) kept distinct.**
+
+### 5. Supported vs blockers (explicit); no live readiness from unit evidence
+
+- **Supported:** per-hold subprocess budget; marker detection hint; `SATURATED`
+  reporting; conformance 125/125 and retained regressions.
+- **Blockers:** (a) contention candidate evidence off-binary (`8ec5c12e` vs
+  `b70665f5`); (b) SQLite/file/CPU unbudgeted → empirical bound; (c) yield/resume
+  not exercised in real runs; (d) crash/reopen under contention not rerun;
+  (e) deep-backlog fairness/recovery unproven; (f) unbounded backlog has no finite
+  latency.
+- **No live readiness from unit evidence**; live ack remains for the live witness.
+
+Consolidated verdict unchanged: **bounded FAIL** on blockers (a)–(f). No author
+edits during review; no new allocation/prep/live.
+
+---
+
+## Evidence-selection correction (Tern, same 19:50:58Z bound, no reset)
+
+`contention-evidence-selection-correction.json` (19:35:04Z): the **release** files
+`contention-release-capacity-15s.txt` (`5f650d12…`) and
+`contention-release-overload-4s.txt` (`722d7713…`) match the original claim and
+identify **`b70665f5`** (verified headers above by Cairn). Capacity settles 17/1/7
+over 27 holds; overload T1 settles 17 over 14 holds.
+
+**Correction:** the off-binary objection is **withdrawn for these release files**
+— the contention numbers ARE evidenced on the shipped binary. The earlier
+`contention-candidate-*.txt` files (binary `8ec5c12e`) are not release evidence,
+and the README still mislabels the older numbers. Blocker (a) above is therefore
+corrected to a **README-labelling defect**, not a missing-evidence defect.
+Blockers (b)–(f) and all other intake assessments stand independently; no blanket
+PASS. Original verdict otherwise preserved; no source/claim/README edits, no new
+pass. Returned to Tern.
