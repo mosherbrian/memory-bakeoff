@@ -1,0 +1,117 @@
+{
+ "qid": "P12-initial-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "contract": {
+  "package.md": "6391857222e07851fdcdec0893be660d04fcecfe6c13290e7b84c76349d5a46f",
+  "acceptance-checklist.md": "c9106b57da5acfbf392096e64a9abda46353fe50e29e851126dc39fdc9dde26d",
+  "shutdown-causal-evidence.json": "293b08af66e19eb14c7db9dd6b4068e1d29c7a7ebcd8b9c764a5a44eb43fd6d7"
+ },
+ "source": {
+  "repo": "agent-loop",
+  "branch": "p12-timeout (pushed)",
+  "base": "1341f0469fba84787112a705b0d107e096644085",
+  "commit": "cbfe3d91d02c86942e7640cbd0fe41027bfcbad0",
+  "diff": "evidence/source-1341f04-to-cbfe3d9.diff",
+  "frozen_unchanged": "internal/core, internal/py, conformance/cases, Python tools (git diff 1341f04..cbfe3d9 empty for these); main and installed preview untouched"
+ },
+ "release": {
+  "dir": "/home/bmosher/projects/agent-loop-releases/agent-loop-cbfe3d91d02c",
+  "binary_sha256": "cf54a94a4fc79429fa9ea853e325833312899584ffbca73d0c8a794b592d681a",
+  "manifest_sha256": "8c32be500fcfd3a2ff4fe84334d6c18e7eede43463e5c5937f8c01fa1278941b",
+  "build": "CGO_ENABLED=0 go build -trimpath ./cmd/agent-loop, go1.27.1"
+ },
+ "plans": {
+  "dir": "plans/",
+  "sha256": {
+   "plans/README.md": "34d29f3f6ef3835318da7d078410257230b55a1c47ca136b1fd47d509c2286a2",
+   "plans/cutover-inputs.template.env": "4d291cedda0f353a8bc9da5f9aa3aef52f3bcd5bbe988928c7a62b3477826d62",
+   "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+   "plans/live-driver.sh": "c2f80e2fe129e0363ca7a454f29a1c142ac9dc4e0980fb062140ef19553461ae",
+   "plans/live-inputs.template.env": "ec58d2716b62f027eade4d6d1f62e5eea5e8115a6c97f62a208f19267316daf3",
+   "plans/tasks/ack.md": "10e817fa48203f665034f4009a4d6b26c5067f6b92b8a56fcc540119ec0556a3",
+   "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+   "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+   "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+   "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+   "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+  },
+  "driver_sha256": "c2f80e2fe129e0363ca7a454f29a1c142ac9dc4e0980fb062140ef19553461ae",
+  "diffs": [
+   "evidence/live-driver-p11-to-p12.diff",
+   "evidence/plans-p11-to-p12-other.diff"
+  ],
+  "map": "plans/README.md"
+ },
+ "baseline_reproductions_on_1341f04": {
+  "A": "evidence/a-cli-timeout.txt: callback rc 1, step stays worker, 0 director wakes for idle, cancelled AND refused replies",
+  "C": "evidence/c-stop-baseline-1341f04.txt: real systemd idle stop 20.136 s / 20.161 s, Result=timeout, SIGABRT, notifier and fallback",
+  "E": "evidence/e-reload-timers-run1.txt (--on-active moved +5.2 s per real reload, not fired by target+15 s) and evidence/e-wall-reload-p11-baseline.txt (P11 wall drifted about 10 s per reload; driver alive after the deadline)"
+ },
+ "candidate_results": {
+  "A": "evidence/a-cli-timeout.txt on cf54a94a: timed-out + 1 director wake for idle/cancelled/refused; refused recorded as failed with the receipt; replay adds no effect; timeout-ack wrong actor refused, director accepted, conflict refused",
+  "B": "Go tests internal/loop/timeout_p12_test.go (settlement 6 reply shapes, no repeat, no settlement without core interrupt, ack negatives, replay, reopen, expiry escalation once, changed principal, crash then replay completes)",
+  "C": "evidence/c-stop-final-cbfe3d9.txt: SIGTERM 0.031/0.010 s, SIGINT 0.007/0.008 s, restart 0.036/0.035 s, all Result=success; agent-loop stop 1.024/1.032 s 'exiting 64', no restart after 7 s",
+  "D": "evidence/f1-helpers-p12.txt 29/0; evidence/r1-repair-tests-p12.txt 53/0 (P12 L6 rule: no ack = FAIL; ack at 90 s PASS, 91 s FAIL)",
+  "E": "evidence/e-wall-reload-p12.txt: 3 real daemon-reloads, calendar schedule unchanged @deadline, WALLSTOP at deadline+0.396 s, driver and children gone, LATE_FROM_DEADLINE=0, 1 cleanup, second cleanup 0 effects. Step timers: explicit-UTC --on-calendar + AccuracySec=1s (TestStepTimersAreArmedAtAnExplicitUTCInstant, TestCommandAtIsAnExplicitUTCInstant)"
+ },
+ "retained": {
+  "conformance": "125/125 (evidence/conformance-cbfe3d9.txt)",
+  "go_test": "evidence/go-test-cbfe3d9.txt all ok",
+  "host_parity": "316/321 identical, 5 existing corrections; 1 NEW named final-state adjudication (timer argv), evidence/host-parity-cbfe3d9.txt",
+  "mutation": "104/104 caught (13 new P12 mutants), evidence/mutate-go.txt; Go sources identical to the mutated tree (evidence/mutate-go-applies-to.txt)"
+ },
+ "adjudications": [
+  {
+   "file": "conformance/host/adjudicated.json",
+   "entry": "final_corrected: host timers ... runner_calls",
+   "why": "explicit-UTC --on-calendar with AccuracySec=1s instead of Python's --on-active (reload restarts countdowns; default accuracy 1 min)"
+  }
+ ],
+ "tests_are_author_tests": "every test and witness here is the author's; independent checks belong to corvid",
+ "evidence_sha256": {
+  "evidence/a-cli-timeout.sh": "7ce9abec3b512b195956b133e9a9769120bf3797f9ccd10ee62a17909a8d22de",
+  "evidence/a-cli-timeout.txt": "1ada7b6cb69c01f6ed0f1a6d71d722ecd4438362dc0a22b957ab187cbb6950ce",
+  "evidence/c-stop-baseline-1341f04.txt": "f8c186654aaa16d794ce4f08e89ee282d4d1d48641b0b1d58dd965f5330e652e",
+  "evidence/c-stop-experiment.sh": "ef5ba283600fc68fb558185d607aecc684cb7238b47d42b03bf930ef131b65ed",
+  "evidence/c-stop-final-cbfe3d9.txt": "dbe04b17d3d1211e555b0c728621892492d34cfef534ab23ca3637c6ee74b4c5",
+  "evidence/conformance-cbfe3d9.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/construction-dry/cut-capture.txt": "45920d52c6a289fbe4fa99b37ff5605bdfc1fefa653b7a1bcc91b7ac2cd745a5",
+  "evidence/construction-dry/cut-handoff.txt": "24cd55dc9e880aac87431db45f5947d85a9beb19b147b2e98042b75f2e48bc35",
+  "evidence/construction-dry/cut-rollback.txt": "64ab1375d09cd9ba9b36118aa55c30525b27b90415b6e22531f2ac4bbf4245e0",
+  "evidence/construction-dry/cut-switch.txt": "df3fc20e861ef8c78e23f1c6cd24b625028b5add5011d577dc895500b93de0ff",
+  "evidence/construction-dry/live-dry-results.tsv": "b8eb390d2e3aca0bfd1274c6a20fbc5c6c0e178311dd5092fd7074c2f55686ed",
+  "evidence/construction-dry/live-dry.txt": "26eac96cc53eed8c5812d925e0db6bea063c4f07343eb6173361b540cf8906cc",
+  "evidence/e-reload-timers-run1.txt": "7cc0a2a482035e55936fe4e71791244b72165d4993ee9c11e995ee29b92c2ea2",
+  "evidence/e-reload-timers.sh": "f5ca01166fafbd1ddb261a6dad490e5f06793a055b7aa047970a2d9b337aa3a9",
+  "evidence/e-wall-reload-p11-baseline.txt": "d04275f073ca52441142be649092d2f2669173bc86e48b83faa6c38c4ea37889",
+  "evidence/e-wall-reload-p12-attempt1-wallnext-bug.txt": "656e42efe47859020c5035e4b7a4970ecd2f24307f757499653e0bde77965b7d",
+  "evidence/e-wall-reload-p12.txt": "8542ea9960726956488630d21eba60ee1e09a1d368165e732bbdb5a970c1a66f",
+  "evidence/e-wall-reload-witness.sh": "c73096dcd8e60523ac736bcba66af003a8fa60e018420910f9bc55ee74724a97",
+  "evidence/f1-helpers-p12.txt": "c7382054091053e12c24925b5b9b1fad73ac9dfe26d7dc44adb4928a20f47ac5",
+  "evidence/f1-helpers.sh": "9cf061a6c21eaee1e55eb5efadbe2d7a603ccb7c29b0151a1ba8bbe0fe8d07b1",
+  "evidence/go-test-cbfe3d9.txt": "addeec0e645f2ecfbab33f9c09a45f4792734c91a83e3ce8345c2c436e8f324c",
+  "evidence/host-parity-cbfe3d9.txt": "3d27fbc08c28d8159034f312057764347dd567317bcb9656189b269ea8d1e02d",
+  "evidence/live-driver-p11-to-p12.diff": "e06cbd6222842d414596c7e08b04d8993573b02467ab532580342fdb5615b9ce",
+  "evidence/mutate-go-applies-to.txt": "f87be10324c386019982bdafcc615a75444e002d7e31970ecbb654d1660c7cb2",
+  "evidence/mutate-go.txt": "9d2de28c0566c4f0b08c0401fd3e06708240cd9bc97032b69d6a0cc7efd0453f",
+  "evidence/plans-p11-to-p12-other.diff": "75ec7ef2d68ae08b70f16d02d97af136adaac392f3dc147379b4174d2f35a31c",
+  "evidence/r1-repair-tests-p12.txt": "e9a6db57e48d7c39e0323e6ec45a7e25af15db3905909c929db607c16780a8be",
+  "evidence/r1-repair-tests.sh": "c394d5a9059203fd256872b0183f014c58acd96b6978b304055427615520d864",
+  "evidence/source-1341f04-to-cbfe3d9.diff": "2ad7875fc119fd745be2a31f67d166fd2cb75c8424a8c6b0f8d5c95cffdc5d03"
+ },
+ "host_effects": [
+  "12 real `systemctl --user daemon-reload` (310 user unit files, 453 loaded units re-read): e-reload-timers 3, wall witness attempt1 3, P11-baseline witness 3, P12 witness 3",
+  "transient units created and removed: p12test-stop-* (21), p12test-mono/cal (2), p12live-/p11live- driver scopes and wall timers (3 runs); 0 left (list-units checked)",
+  "no real seat, task, main, install or global config change; witnesses use stub wake/agent-deck/agent-loop; the P11 baseline ran the P11 driver copy contained (PKG/SD/PLANS redirected), not the uncontained P10 baseline"
+ ],
+ "residuals": [
+  "Clock discontinuity: calendar timers follow realtime; a backward clock step postpones the wall and deadlines by the step (forward fires early, fail-safe for the wall). Not exercised (a clock step is a global host change).",
+  "A failed-cancel settlement tells the director; if a later replay then delivers the cancel, the core's own wake tells the director again (a duplicate notice, never a duplicate cancel or dispatch).",
+  "A timeout that is never acknowledged stays timed-out with waiting_on=director in status; only an acknowledged response deadline has an automatic expiry escalation.",
+  "The independent fallback cleanup timer is cairn's: it must be an explicit-UTC calendar timer (command in plans/README.md); the P11 one was --on-active.",
+  "L4a/L4b fixes rest on C (a clean stop lets systemctl restart start the failing unit); proved only in the live run.",
+  "Step-timer precision and ack latency on real seats are proved only in the signed live run; the live director fixture must run timeout-ack within 90 s of the deadline (tasks/ack.md).",
+  "e-wall-reload-p12-attempt1-wallnext-bug.txt is kept: the first driver read NextElapseUSecRealtime, which prints a local date even with --timestamp=unix; it failed closed (SETUP FAIL before any effect); fixed to TimersCalendar next_elapse=@N."
+ ]
+}
