@@ -904,8 +904,14 @@ def _read_onset(onsets_dir, item):
         rec = json.load(open(path))
     except ValueError:
         return None
-    if not isinstance(rec, dict) or rec.get("item", item) != item:
-        return None  # sidecar content does not assert this identity
+    if not isinstance(rec, dict):
+        return None
+    # D1: the sidecar must carry an explicit nonempty item matching the
+    # requested bound identity. A missing/null/empty/wrong item is never
+    # defaulted to the filename — it fails closed as no source.
+    claimed = rec.get("item")
+    if not isinstance(claimed, str) or not claimed or claimed != item:
+        return None
     return rec
 
 

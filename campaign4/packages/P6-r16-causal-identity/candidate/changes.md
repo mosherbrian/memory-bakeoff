@@ -47,3 +47,20 @@ with copies of R15 evidence (no historical edit).
 Late-recorded-work, shadow-time reconciliation, lost/queued live controls;
 no `occurred_at` invention. Live stays held. R15 replay is diagnostic, not
 a retroactive live PASS.
+
+## Repair-1 (D1 explicit item + D2 authority proof; case_entry.py only)
+- D1: `_read_onset` now requires an explicit nonempty `item` in sidecar
+  content exactly matching the requested bound identity. Missing/null/
+  empty/wrong item fails closed as no source (old code defaulted a
+  missing key to the filename and accepted). Genuine producer sidecars
+  stamp explicit `item` (fixture_worker), so legitimate paths pass.
+- D2: traced fresh and resumed paths; upstream checks dominate and are
+  enforced, so behavior unchanged: `turn_handoff.run_handoff`
+  E_UNBOUND_TURN/E_STALE_TURN (binding must match launch
+  action/execution/step + current execution) and claim/artifact
+  validation (E_FORGED_ROUTE/E_CLAIM_MISMATCH or authenticated
+  rejection, never adoption); `case_entry` E_UNDELIVERED (produced end
+  without a delivery record for its seat/execution, incl. pre-planted
+  ends). Empty carried is normal on fresh runs and is not required.
+  Executable proof: pre-planted verifier end + plausible EXPLICIT-item
+  sidecar under held verifier text → E_UNDELIVERED at exact CLI.

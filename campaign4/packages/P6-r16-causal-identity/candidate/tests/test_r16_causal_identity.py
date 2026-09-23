@@ -255,3 +255,106 @@ def test_cli_failed_verification_causal_pairs_joined():
                 s.close()
             except Exception:
                 pass
+
+
+def _parent_ce():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "parent_case_entry_d1",
+        os.path.join(PARENT_SRC, "case_entry.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _d1_dir(tmp, rec):
+    odir = os.path.join(tmp, "onsets")
+    os.makedirs(odir, exist_ok=True)
+    json.dump(rec, open(os.path.join(odir, "w1.json"), "w"))
+    return odir
+
+
+def test_D1_missing_item_old_accepts_new_rejects():
+    # Sidecar WITHOUT any item field: old defaults to the filename and
+    # accepts; new requires explicit matching identity.
+    for rec in ({"onset_at": "2026-09-23T10:00:05Z", "provenance": "p",
+                 "uncertainty_s": 1},
+                {"item": None, "onset_at": "2026-09-23T10:00:05Z",
+                 "provenance": "p", "uncertainty_s": 1},
+                {"item": "", "onset_at": "2026-09-23T10:00:05Z",
+                 "provenance": "p", "uncertainty_s": 1},
+                {"item": "other", "onset_at": "2026-09-23T10:00:05Z",
+                 "provenance": "p", "uncertainty_s": 1}):
+        tmp = tempfile.mkdtemp(prefix="p6r16-d1-")
+        odir = _d1_dir(tmp, rec)
+        det = {WA: "2026-09-23T10:00:06Z"}
+        arm = {"armed_at": "2026-09-23T10:00:00Z"}
+        parent = _parent_ce()
+        old_out = parent._check_causal(dict(arm), odir, det, WA)
+        assert old_out["onset_at"] == "2026-09-23T10:00:05Z"  # old accepts
+        try:
+            CE._check_causal(dict(arm), odir, det, WA, {WA: "w1"})
+            raise AssertionError("missing-item sidecar accepted: %r"
+                                 % (rec.get("item"),))
+        except CE.StageCFault as e:
+            assert e.code == "E_NO_ONSET", e.code
+    # Genuine explicit matching item still passes on new code.
+    tmp = tempfile.mkdtemp(prefix="p6r16-d1-ok-")
+    odir = _d1_dir(tmp, {"item": "w1", "onset_at": "2026-09-23T10:00:05Z",
+                         "provenance": "p", "uncertainty_s": 1})
+    out = CE._check_causal(dict(arm), odir, det, WA, {WA: "w1"})
+    assert out["pairs"]["worker"]["onset_at"] == "2026-09-23T10:00:05Z"
+
+
+def test_D2_adversarial_plant_with_plausible_sidecar_rejected_cli():
+    # Exact CLI: pre-planted verifier end + plausible EXPLICIT-item
+    # sidecar on the same stream, verifier text held so only the plant
+    # is present. E_UNDELIVERED dominates: the plant can never become
+    # current-action causal evidence, even well-formed. (Complements the
+    # inherited r1f probe, whose forged sidecar lacks explicit item.)
+    import time as _t
+    tce = _tce()
+    env = tce.make_suite()
+    try:
+        r = tce.cli("fault", "arm", "--case", "positive-handoff",
+                    "--run-root", env["tmp"], "--control",
+                    "hold-verifier-texts", "--actor", "cairn")
+        assert r.returncode == 0, r.stdout
+        os.makedirs(os.path.join(env["tmp"], "sim", "stream"),
+                    exist_ok=True)
+        os.makedirs(os.path.join(env["tmp"], "positive-handoff", "onsets"),
+                    exist_ok=True)
+        with open(os.path.join(env["tmp"], "sim", "stream",
+                               env["vsid"] + ".jsonl"), "w") as fh:
+            fh.write('{"t":"end","item":"z9-old-1"}\n')
+        json.dump({"item": "z9-old-1",
+                   "onset_at": _t.strftime("%Y-%m-%dT%H:%M:%SZ",
+                                           _t.gmtime()),
+                   "provenance": "plausible-adversarial",
+                   "uncertainty_s": 1},
+                  open(os.path.join(env["tmp"], "positive-handoff",
+                                    "onsets", "z9-old-1.json"), "w"))
+        procs = tce.emulators(env, "positive-handoff")
+        try:
+            r = tce.cli("run-case", "--config", env["cfg"], "--plan",
+                        env["plan"], "--signatures", env["sig"], "--case",
+                        "positive-handoff", "--suite-root", env["tmp"],
+                        "--simulated", "--registry-file", env["reg"],
+                        "--out", os.path.join(
+                            env["tmp"], "positive-handoff", "receipt.json"),
+                        env_extra={"FAULT_CASE": "positive-handoff",
+                                   "FAULT_ROOT": os.path.join(
+                                       env["tmp"], "faults")})
+        finally:
+            for p in procs:
+                try:
+                    p.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    p.kill()
+        assert r.returncode == 3 and "E_UNDELIVERED" in r.stdout, r.stdout
+    finally:
+        for s in env["socks"]:
+            try:
+                s.close()
+            except Exception:
+                pass
