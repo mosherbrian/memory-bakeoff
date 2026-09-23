@@ -64,3 +64,17 @@ records stay unmeasurable.
   paths, no escaping/symlink aliases, no self-cycle, no omitted executed
   helper/wrapper. Executable closure smoke-checked (case_entry, harness,
   srcemit, driver/ingress/store/lifecycle import from canonical tree).
+
+## Launch closure-1 (fixture-only lane wrappers; no behavior change)
+- New `candidate/runtime/launch-acp-go` + `launch-acp-go-deepseek`:
+  same lane semantics as pinned `inputs/acp-go` (+model env,
+  approval/stall/promise settings, credential gate for real launches),
+  retargeted at the candidate-local runtime/helper with absolute paths.
+  No shared-runtime fallback on any branch (missing local = hard fail).
+  `P6_SOURCE_MODE=runtime` exported; `ACP_SOURCE_TEST_NOW` present →
+  exit 1 (test clocks never leak into launch paths). Fixture-only
+  capture hook `FIXTURE_LAUNCH_EXEC` verifies selection on the shipped
+  branch without models/credentials.
+- `fixture-launch-plan.json`: exact argv/environment/paths + wrapper
+  hashes (launch_closure block). All existing production/tests frozen;
+  90+83+59 carried on unchanged executable bytes.

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Fixture-only DeepSeek V4.1 Flash lane wrapper (P6-r18 launch closure).
+#
+# Same lane semantics as pinned inputs/acp-go-deepseek (off-meter model
+# selection), retargeted at the candidate-local go wrapper, which in turn
+# targets the candidate-local instrumented runtime. No shared-runtime
+# fallback on any path. Fixture scope only.
+set -u
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCAL_GO="$HERE/launch-acp-go"
+
+# Live rejects inherited test clock injection.
+if [ -n "${ACP_SOURCE_TEST_NOW:-}" ]; then
+    echo "launch-acp-go-deepseek: ACP_SOURCE_TEST_NOW must not leak into launch paths" >&2
+    exit 1
+fi
+
+export P6_SOURCE_MODE=runtime
+
+if [ ! -x "$LOCAL_GO" ]; then
+    echo "launch-acp-go-deepseek: candidate-local go wrapper missing: $LOCAL_GO" >&2
+    exit 1
+fi
+
+# Preserved model selection from pinned inputs/acp-go-deepseek.
+export ACP_GO_MODEL=opencode-go/deepseek-v4.1-flash
+
+exec "$LOCAL_GO" "$@"

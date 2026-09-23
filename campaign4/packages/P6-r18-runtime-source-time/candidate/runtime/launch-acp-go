@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Fixture-only acp-go lane wrapper (P6-r18 launch closure).
+#
+# Same lane semantics as pinned inputs/acp-go, retargeted at the
+# CANDIDATE-LOCAL instrumented runtime. No fallback to any shared
+# fleet runtime path exists on any branch below: a missing local
+# runtime is a hard failure, never a silent substitution.
+#
+# Fixture scope only: future actual preparation still needs a fresh
+# binding and Tern signature. No credentials are read here; the lane's
+# own credential gate below still applies to real launches.
+set -u
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RUNTIME="$HERE/acp-worker"
+HELPER="$HERE/srcemit.py"
+
+# Live rejects inherited test clock injection: a fixture test clock must
+# never leak into a launch path. Fail closed before anything else.
+if [ -n "${ACP_SOURCE_TEST_NOW:-}" ]; then
+    echo "launch-acp-go: ACP_SOURCE_TEST_NOW must not leak into launch paths" >&2
+    exit 1
+fi
+
+# Explicit runtime source mode for fixture lanes.
+export P6_SOURCE_MODE=runtime
+
+# Local launch closure: both artifacts must exist and be executable/
+# readable. No shared-runtime fallback on any branch.
+if [ ! -x "$RUNTIME" ]; then
+    echo "launch-acp-go: candidate-local runtime missing: $RUNTIME" >&2
+    exit 1
+fi
+if [ ! -f "$HELPER" ]; then
+    echo "launch-acp-go: candidate-local source helper missing: $HELPER" >&2
+    exit 1
+fi
+
+# Lane configuration preserved from pinned inputs/acp-go (byte-exact
+# semantics): stored-credential lane, never the Zen key workspace.
+unset OPENCODE_API_KEY
+export ACP_MODEL="${ACP_GO_MODEL:-opencode-go/muse-spark-1.3-contributor}"
+if [ -z "${ACP_AUTO_APPROVE:-}" ]; then
+    export ACP_AUTO_APPROVE=1
+fi
+export ACP_STALL_SECS=1800
+export ACP_PROMISE_CHECK=1
+
+# Fixture-only capture: verify launch selection without models or
+# credentials on the same shipped branch (argument capture instead of
+# exec). Unset in any real launch.
+if [ -n "${FIXTURE_LAUNCH_EXEC:-}" ]; then
+    exec "$FIXTURE_LAUNCH_EXEC" "$RUNTIME" muse-engine acp "$@"
+fi
+
+# Lane credential gate (unchanged behavior; needs a real stored
+# credential, never exercised by fixture verification).
+if [ ! -s "$HOME/.local/share/opencode/auth.json" ]; then
+    echo "launch-acp-go: no opencode credential stored. Run: opencode providers login" >&2
+    exit 1
+fi
+
+exec "$RUNTIME" muse-engine acp "$@"

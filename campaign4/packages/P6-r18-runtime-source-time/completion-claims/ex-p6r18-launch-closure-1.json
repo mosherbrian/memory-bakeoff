@@ -1,0 +1,26 @@
+{
+ "action_id": "P6r18-launch-closure-1",
+ "evidence": {
+  "carry": "90+83+59 carried on unchanged executable bytes (diff vs reviewed correction: 2 wrappers + 1 test + plan/manifests only)",
+  "closure": "no .config/agent-deck path in wrappers; credential gate preserved for real launches (unexercised, no creds read)",
+  "launch_tests": "4 passed rc0 (both lanes resolve local runtime + settings; no shared path/leak; missing-local fails; test-clock rejected; syntax+exec bits; plan binds hashes; inputs untouched)",
+  "manifests": {
+   "composition": "74 refreshed, no self-ref",
+   "outer": "86 zero-drift, no self-entry"
+  }
+ },
+ "outcome": "COMPLETE-launch-closure",
+ "package_id": "P6-r18-runtime-source-time",
+ "plan": "fixture-launch-plan.json launch_closure block: exact argv/environment/paths + wrapper hashes; future prep needs fresh binding + Tern signature",
+ "scope": "fixture-only lane launch wrappers + plan/docs/tests/manifests; all other production/tests frozen",
+ "timestamp": "2026-09-23T03:30Z",
+ "unresolved": [
+  "corvid 15m independent verification pending"
+ ],
+ "wrappers": {
+  "deepseek": "candidate/runtime/launch-acp-go-deepseek",
+  "env": "P6_SOURCE_MODE=runtime; test-clock presence exits 1; FIXTURE_LAUNCH_EXEC fixture-only capture on shipped branch",
+  "go": "candidate/runtime/launch-acp-go",
+  "semantics": "pinned lane config preserved; absolute candidate-local runtime/helper; no shared fallback (missing=hard fail)"
+ }
+}

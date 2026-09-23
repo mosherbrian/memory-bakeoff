@@ -1,0 +1,28 @@
+{
+  "recorded_at": "2026-09-23T03:25:12.765143+00:00",
+  "review_sha256": "2baf3e86e57eb91317550f88419244859317edc0c28cf6a2660a069c237ff4d5",
+  "decision": "WITHHOLD_ACCEPTANCE",
+  "probe": "same shipped capture branch, no credentials/models/live effects",
+  "results": {
+    "deepseek": {
+      "argv": [
+        "/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r18-runtime-source-time/candidate/runtime/launch-acp-go-deepseek",
+        "muse-engine",
+        "acp"
+      ],
+      "rc": 0,
+      "captured": "/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r18-runtime-source-time/candidate/runtime/acp-worker muse-engine acp muse-engine acp"
+    },
+    "go": {
+      "argv": [
+        "/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r18-runtime-source-time/candidate/runtime/launch-acp-go",
+        "muse-engine",
+        "acp"
+      ],
+      "rc": 0,
+      "captured": "/var/home/bmosher/memory-bake-off/campaign4/packages/P6-r18-runtime-source-time/candidate/runtime/acp-worker muse-engine acp muse-engine acp"
+    }
+  },
+  "finding": "Plan exact_argv supplies muse-engine acp, wrapper supplies them again; runtime receives muse-engine acp muse-engine acp. Tests use different argv and only assert first plan argv element.",
+  "environment_ruling": "Fresh worker launch must explicitly select Muse; verifier DeepSeek. Ambient ACP_GO_MODEL must not choose worker model. Test clock/capture hook absent on live launch."
+}
