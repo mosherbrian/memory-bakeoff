@@ -1,0 +1,41 @@
+{
+ "action_id": "P6r18-candidate-1",
+ "descriptors": {
+  "composition": "74 refreshed, no self-ref",
+  "outer": "162 zero-drift, no self-entry",
+  "r3": "drift-free"
+ },
+ "disclosures": [
+  "quiet-rest window correction still owed, not folded in",
+  "candidate PASS never certifies live timing or runtime adoption; R15/R17 replays diagnostic only"
+ ],
+ "evidence": {
+  "cli": "run-fixture success + verifier-rejection with matched src rows, gates-hold (rejection in denominator)",
+  "emit_schema": "pinned emit has no time + swallows (byte-verified)",
+  "full_gate": "90 passed in 665.74s rc0 (PYTHONPATH=candidate/src pytest candidate/tests)",
+  "hook": "subprocess producer->consumer on same bytes; injected clock; discontinuity flagged; write failure raises",
+  "negatives": "missing/empty/wrong/previous/malformed/nonfinite/discontinuous/conflict/late/arm-after",
+  "r17_repro": "onsets empty + timestamp-less ends -> INCOMPLETE (missing-src-version)",
+  "retained": {
+   "p3r3": "59 passed rc0 (18+9+5+5+22)",
+   "p5r2": "83 passed rc0"
+  }
+ },
+ "fix": "trusted runtime source receipt (same-record versioned fields, one append) via local runtime + shipped hook; consumer joins receipt to own detection in declared source_mode; failures truthful, telemetry never kills work",
+ "new_bytes": {
+  "case_entry": "a07f82e4ef69",
+  "harness": "d44e61030360",
+  "other_production": "byte-identical (verified per-file)",
+  "runtime/acp-worker": "local instrumented copy (38-line confined diff)",
+  "runtime/srcemit.py": "new stdlib hook",
+  "shared_agent_deck": "untouched 6871ceb1, never executed"
+ },
+ "outcome": "COMPLETE-candidate",
+ "package_id": "P6-r18-runtime-source-time",
+ "parent": "R16 c8e99cf manifest 3862a0a2",
+ "scope": "local runtime copy + stdlib helper only; no shared changes/live",
+ "timestamp": "2026-09-23T02:58Z",
+ "unresolved": [
+  "corvid 40m verification pending (incl. unshared source/identity mutation)"
+ ]
+}

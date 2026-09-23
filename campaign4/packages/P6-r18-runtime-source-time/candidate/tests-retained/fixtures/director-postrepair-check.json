@@ -1,0 +1,102 @@
+[
+  {
+    "name": "invented_decision_reference",
+    "snapshot": {
+      "schema_version": 1,
+      "ledger_revision": 1,
+      "in_flight": [],
+      "terminal": {
+        "p": {
+          "state": "COMPLETE",
+          "decided_by": "tern",
+          "decision_ref": "invented-decision",
+          "reason": "done",
+          "disposition": {
+            "kind": "question_answered",
+            "reason": "done",
+            "evidence_refs": [
+              "proof"
+            ]
+          }
+        }
+      }
+    },
+    "ledger": {
+      "revision": 1,
+      "packages": {
+        "p": {
+          "phase": "COMPLETE",
+          "disposition": {
+            "kind": "question_answered",
+            "reason": "done",
+            "evidence_refs": [
+              "proof"
+            ]
+          }
+        }
+      }
+    },
+    "now": "2026-09-21T19:00:00Z",
+    "observed": {
+      "verdict": "REST",
+      "detail": "all chains end in legitimate rest"
+    }
+  },
+  {
+    "name": "forged_handoff_ack_satisfies_successor",
+    "snapshot": {
+      "schema_version": 1,
+      "ledger_revision": 1,
+      "terminal": {
+        "old": {
+          "state": "COMPLETE",
+          "disposition": {
+            "kind": "successor_opened",
+            "successor_id": "work",
+            "reason": "continue",
+            "decision_ref": "d"
+          },
+          "decided_by": "tern",
+          "decision_ref": "d",
+          "reason": "continue"
+        }
+      },
+      "in_flight": [
+        {
+          "package_id": "work",
+          "phase": "CHECKING",
+          "action_id": null,
+          "owner": "duty",
+          "deadline": "2026-09-21T20:00:00Z",
+          "dispatch_receipt": "acknowledged"
+        }
+      ]
+    },
+    "ledger": {
+      "revision": 1,
+      "packages": {
+        "old": {
+          "phase": "COMPLETE",
+          "disposition": {
+            "kind": "successor_opened",
+            "successor_id": "work",
+            "reason": "continue",
+            "decision_ref": "d"
+          }
+        },
+        "work": {
+          "phase": "CHECKING",
+          "handoff": {
+            "owner": "duty",
+            "deadline": "2026-09-21T20:00:00Z"
+          }
+        }
+      }
+    },
+    "now": "2026-09-21T19:00:00Z",
+    "observed": {
+      "verdict": "ACTIVE",
+      "detail": "1 acknowledged bounded action(s) in flight"
+    }
+  }
+]
