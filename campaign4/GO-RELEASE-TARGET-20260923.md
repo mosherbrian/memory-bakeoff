@@ -65,3 +65,9 @@ Brian's requirement: qualify what ships. Known reference defects remain findings
 no historical Python witness is transferred to Go. No release/adoption/cutover,
 script retirement, new live fixture, fleet allocation or budget expansion follows
 from this target decision. P8/P9 remain unallocated pending concrete contracts.
+
+Known reference deviations adjudicated: see HOST-PORT-RULING-20260923.md.
+Missing recovery bound must return E_NO_ESCALATION_BOUND; terminal-close retries
+must not report rest without authoritative disposition. Go intentionally corrects
+both, with versioned regression expectations rather than false identical-parity
+claims. P8 retains these within its existing safety checks; no fleet allocation.

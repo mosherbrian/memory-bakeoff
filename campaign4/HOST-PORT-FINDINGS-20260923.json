@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-09-23T04:41:28.870997+00:00",
+  "source": "campaign4/packages/P6-r18-runtime-source-time/candidate/src/r3harness/turn_handoff.py",
+  "source_sha256": "2b6aa7efe8af30a2baf0165460e059e305946102b1a7f51fad46495f8cd6f6da",
+  "reported_go_commit": "c9ecbaa",
+  "probes": {
+    "missing_bound": {
+      "exception": "NameError",
+      "message": "name 'OwnedFault' is not defined"
+    },
+    "retry_without_ledger_check": {
+      "result": {
+        "decision": "terminal-rest",
+        "durable": true,
+        "recovered": true
+      },
+      "writes": [
+        [
+          "done",
+          "{\"closed\": \"recovered\"}"
+        ]
+      ],
+      "scope": "Isolated Python branch probe with stub KV, not full conformance scenario replay; no ledger supplied or checked"
+    }
+  }
+}
