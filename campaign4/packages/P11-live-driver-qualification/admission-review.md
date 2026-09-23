@@ -65,3 +65,34 @@ One bounded verdict: **BOUNDED REJECTION** — reconcile the 310-vs-410 allocati
 gap (or restate exact ceilings) and keep the unchanged pinned contract; then the
 author may be conditionally released on an ACCEPTED unchanged contract with the
 checklist pinned. No source/live/cutover change made. Returned to Tern.
+
+---
+
+## Correction reconciliation — budget ceiling corrected to 310 (append; rejection preserved)
+
+Independent confirmation within the existing `15:09:54Z` admission bound (no reset).
+Original rejection above is preserved, not erased.
+
+- **Pinned correction:** `budget-correction.json` (tern, `15:03:46Z`), pushed
+  `0e3847e` ("P11: correct allocation sum to310; preserve rejected admission").
+- **Contract re-hash:** `package.md` now
+  `ca512b21c7017d126908d7b42d02c0ac8dfa84403247704bde8d2d090a6f047e` — matches the
+  corrected pin exactly.
+- **Arithmetic re-verified:** the eleven `stages_minutes` are **unchanged** and sum
+  to **310** (`15+45+25+30+20+15+10+75+20+45+10`), so the total now equals the
+  sponsor's authorization and the "no hidden reserve" claim holds. The 100 m
+  discrepancy is removed by correcting the **total only**; no stage was altered.
+- **Authority:** sponsor authorized a new round with **no numeric figure**; the 410
+  was a Tern arithmetic error. No 100 m reserve exists.
+- **P10 note:** the correction also records that P10's itemized grants summed 315
+  vs the stated 420 (gap 105, not 5). P10 remains terminal/historical; this does
+  **not** reopen P10 or retroactively spend that gap.
+
+**Corrected verdict: ACCEPTED.** The sole blocker (allocation non-reconciliation)
+is resolved on the unchanged pinned contract `ca512b21…`; scope, F1/F2/F3 mandate,
+P10 C/D inheritance and the preregistered checklist remain as accepted above.
+
+**Release condition:** with this ACCEPTED corrected contract and the appended
+checklist reconciliation pinned, Cairn may start Claude's 45 m author grant via
+`notify-claude tern` as previously authorized; no author work on the old rejected
+pin. No source/live/cutover change made by corvid.
