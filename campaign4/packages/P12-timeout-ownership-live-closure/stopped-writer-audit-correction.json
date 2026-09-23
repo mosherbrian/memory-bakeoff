@@ -1,0 +1,9 @@
+{
+  "at": "2026-09-23T17:54:05.065966+00:00",
+  "candidate": "53c97191c8c89cca7b84de93f0c3b263fbb61e6a",
+  "source": "Claude writer audit, no edits, race not reproduced",
+  "correction": "Shared timeout flock covers escalation versus ack only; MarkTimedOut, SettleTimeoutFailure, RearmEarly and ordinary setStep/save/Decide writers are outside it. Do not interpret claim as all package-writer serialization.",
+  "hypothesis": "Stale run pass loaded worker before timer settles timed-out; finishWorker core rejects BLOCKED, stale blocked()->setStep overwrites package and drops Timeout including acknowledgement/escalation.",
+  "independent_review": "Reproduce with deterministic barriers/two connections or processes against immutable candidate. Assert durable timeout/ack survives competing stale write, not just one escalation count. If not reproduced within existing bound state unverified coverage, never PASS concurrency by sequential helper tests. Core phase consistency and legitimate concurrent completion outcomes must be checked.",
+  "disposition": "Existing25m review only, no reset/source edit/live release/new allocation."
+}
