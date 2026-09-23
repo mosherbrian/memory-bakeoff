@@ -1,5 +1,5 @@
-binary /home/bmosher/projects/agent-loop-releases/agent-loop-1d63b77517e0/bin/agent-loop
-binary_sha256 a41e7b71de050199f6544a5ce71a24a282ba5a78e9b0f6b4aeefa325919d977f
-checkout 1d63b77517e01530c07cdb7acb5494687ef016a2 (clean)
-command /home/bmosher/projects/agent-loop-releases/agent-loop-1d63b77517e0/bin/agent-loop conformance conformance/cases
-at 2026-09-23T20:40:30Z
+binary /home/bmosher/projects/agent-loop-releases/agent-loop-5da2b36f87f7/bin/agent-loop
+binary_sha256 842e44d67646c3857031cf30b49836fff3cba2328881115b4018dd4685f2ec71
+checkout 5da2b36f87f79e5f80d2c0d7b234c1cef903aaea (clean)
+command /home/bmosher/projects/agent-loop-releases/agent-loop-5da2b36f87f7/bin/agent-loop conformance conformance/cases
+at 2026-09-23T20:52:42Z

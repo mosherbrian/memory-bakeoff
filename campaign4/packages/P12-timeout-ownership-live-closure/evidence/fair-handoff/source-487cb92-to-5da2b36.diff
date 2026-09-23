@@ -1,0 +1,1051 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index 1ae3b53..10efc09 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -46,7 +46,7 @@ func openLoop(path string) (*loop.Loop, error) {
+ 	return loop.Open(cfg, nil)
+ }
+ 
+-// openLocked opens the ledger after taking the ledger lock (bounded 60 s);
++// openLocked opens the ledger after taking the ledger lock (bounded AdmittedWait);
+ // done() closes the ledger, then releases the lock.
+ func openLocked(path string) (*loop.Loop, func(), error) {
+ 	if path == "" {
+@@ -56,11 +56,20 @@ func openLocked(path string) (*loop.Loop, func(), error) {
+ 	if err != nil {
+ 		return nil, nil, err
+ 	}
+-	k, err := loop.LockLedger(cfg, 60*time.Second)
+-	if err != nil {
+-		return nil, nil, err
++	// Due deadlines before ordinary work. If they spend this hold's budget,
++	// release and queue again (at the back) rather than start the work with
++	// too little budget left for its own I/O.
++	var k *loop.LedgerLock
++	for tries := 0; ; tries++ {
++		if k, err = loop.LockLedger(cfg, loop.AdmittedWait()); err != nil {
++			return nil, nil, err
++		}
++		loop.ProcessDue(cfg)
++		if !loop.BudgetShort(cfg) || tries >= 3 {
++			break
++		}
++		k.Unlock()
+ 	}
+-	loop.ProcessDue(cfg) // due deadlines before ordinary work
+ 	l, err := loop.Open(cfg, nil)
+ 	if err != nil {
+ 		k.Unlock()
+@@ -305,8 +314,8 @@ func runRun(args []string) int {
+ 	watcher, cursors := host.NewTurnWatcher(cfg.StreamDir), py.NewDict()
+ 	var pass int64
+ 	for {
+-		// The whole pass holds the ledger lock (bounded 60 s wait).
+-		k, err := loop.LockLedger(cfg, 60*time.Second)
++		// The whole pass holds the ledger lock (bounded AdmittedWait).
++		k, err := loop.LockLedger(cfg, loop.AdmittedWait())
+ 		if err != nil {
+ 			// Busy for a whole minute: other writers hold the ledger in turn
+ 			// (each hold is budgeted and settles due deadlines first). Report
+@@ -496,7 +505,7 @@ func runTimeoutAck(args []string) int {
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	k, err := loop.LockLedger(cfg, 60*time.Second)
++	k, err := loop.LockLedger(cfg, loop.AdmittedWait())
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index b1bb88b..f1c1316 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -154,7 +154,7 @@ LOOP_MUTANTS = [
+     (LP + "timeout.go", '	if cur != action || rec == nil || py.S(rec.Get("phase")) != "RUNNING" {', '	if cur == "" || rec == nil || py.S(rec.Get("phase")) != "RUNNING" {',
+      "an early callback re-arms a stale or settled action"),
+     # P12: timeout settlement and acknowledgement
+-    (LP + "loop.go", 'case kind == "stop" && (st == "cancelled" || st == "idle"):', 'case kind == "stop" && st == "cancelled":',
++    (LP + "notice.go", 'case st == "sent" || st == "queued", kind == "stop" && (st == "cancelled" || st == "idle"):', 'case st == "sent" || st == "queued", kind == "stop" && st == "cancelled":',
+      "an idle worker's /cancel aborts the timeout (P11 L2/L6)"),
+     (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', 'if rec == nil {',
+      "a timeout settled without a core interrupt"),
+@@ -163,12 +163,13 @@ LOOP_MUTANTS = [
+      'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" {', "a timeout recorded for an action that is not the core's current one"),
+     (LP + "timeout.go", 'if rec == nil || py.S(rec.Get("phase")) != "BLOCKED" ||\n\t\tpy.S(py.AsDict', 'if rec == nil || false ||\n\t\tpy.S(py.AsDict',
+      "a step recorded as timed out without a core interrupt"),
+-    (LP + "timeout.go", "LOCK_EX|syscall.LOCK_NB)\n		if err == nil {", "LOCK_EX|syscall.LOCK_NB)\n		if true {",
++    (LP + "timeout.go", "LOCK_EX|syscall.LOCK_NB)\n			if err == nil {", "LOCK_EX|syscall.LOCK_NB)\n			if true {",
+      "the ledger lock does not exclude a second writer"),
+     (LP + "timeout.go", "	if _, err := l.authority(p, role); err != nil {\n\t\treturn nil, err", "	if _, err := l.authority(p, role); false && err != nil {\n\t\treturn nil, err",
+      "an ack from a changed principal accepted"),
+     (LP + "timeout.go", "	if within <= 0 || within > MaxAckWithin {", "	if within < 0 {", "an unbounded or zero ack deadline accepted"),
+-    (LP + "timeout.go", "		t.AckExpiredAt = py.ISO(l.now())", "		_ = t", "an expired ack escalated on every pass"),
++    # P12-fair-handoff-1: "an expired ack escalated on every pass" (t.AckExpiredAt -> _ = t) is now EQUIVALENT:
++    # the ack-expiry notice's incident key (ackexpiry|qid|id|deadline) also stops the repeat. Removed, recorded.
+     (LP + "loop.go", "ok && it.Before(at.Add(-2*time.Second)) {", "ok && it.Before(at.Add(-2*time.Second)) && false {",
+      "a turn from before the dispatch moves the package"),
+     (LP + "loop.go", "\tif err := l.arm(qid, p.WorkAction, p.WorkExec, deadline); err != nil {",
+@@ -176,7 +177,7 @@ LOOP_MUTANTS = [
+      "work is sent with no deadline timer"),
+     (LP + "loop.go", 'if py.Eq(outcome, "completed") && p.OnPass != nil {', "if p.OnPass != nil {",
+      "a verifier FAIL closes on the PASS disposition"),
+-    (LP + "loop.go", 'return l.sendID(id, "/cancel", "stop", action)', "_ = id\n\t\treturn nil",
++    (LP + "loop.go", 'return l.sendIncident("stop|"+action, id, "/cancel", "stop", action)', "_ = id\n\t\treturn nil",
+      "a due deadline does not cancel the turn"),
+     (LP + "loop.go", "\tif _, err := os.Stat(host.ClaimPathFor(l.Cfg.ClaimsDir, exec)); err != nil {",
+      "\tif _, err := os.Stat(host.ClaimPathFor(l.Cfg.ClaimsDir, exec)); err != nil && false {",
+@@ -185,6 +186,22 @@ LOOP_MUTANTS = [
+      "a second, different decision is swallowed"),
+     (LP + "loop.go", "if r.Worker == r.Verifier || r.Worker == l.Cfg.Director || r.Verifier == l.Cfg.Director {",
+      "if false {", "the worker may verify its own work"),
++    # P12-fair-handoff-1: D2 arrival-order grant, D1 accepted-only stamp, D3 one labelled repeat
++    (LP + "queue.go", "isHead, exists = i == 0, true", "isHead, exists = i >= 0, true", "any queued writer may take the lock (no hand-off)"),
++    (LP + "queue.go", "if n >= QueueCap[class] {", "if false {", "admission is not capped"),
++    (LP + "queue.go", "if v, err := strconv.ParseUint(x, 10, 64); err == nil && v > seq {", "if v, err := strconv.ParseUint(x, 10, 64); err == nil && false && v > seq {", "a lost counter reuses a live entry's name"),
++    (LP + "queue.go", "case syscall.Kill(qe.PID, 0) == syscall.ESRCH, procStart(qe.PID) != qe.Start,", "case false, false,", "a dead or reused-pid waiter wedges the queue"),
++    (LP + "queue.go", "serr == nil && time.Since(fi.ModTime()) > QueueStale:", "serr == nil && time.Since(fi.ModTime()) > 1000*QueueStale:", "a stuck waiter wedges the queue"),
++    (LP + "queue.go", "json.Unmarshal(b, &qe) != nil || qe.PID <= 0 {", "false && json.Unmarshal(b, &qe) != nil || false {", "a malformed entry is not kept aside"),
++    (LP + "timeout.go", "		if ent != \"\" {\n			q.remove(ent)", "		if false {\n			q.remove(ent)", "a holder or a waiter that gives up keeps its queue entry"),
++    (LP + "due.go", "accepted := err == nil && (p.RC == host.WakeRCSent || p.RC == host.WakeRCQueued)", "accepted := err == nil", "a refused SATURATED report is stamped as told (D1)"),
++    (LP + "notice.go", 'if kind == "stop" || r.Repeats >= 1 {', "if r.Repeats >= 1 {", "a cancel is repeated after an unknown outcome"),
++    (LP + "notice.go", 'if kind == "stop" || r.Repeats >= 1 {', 'if kind == "stop" {', "every crash buys another repeat"),
++    (LP + "notice.go", "		return nil // this incident's notice was accepted by the transport already", "		_ = 0", "an accepted notice is sent again"),
++    (LP + "notice.go", "if r.Failures >= MaxFailedSends {", "if false {", "refused sends are retried without bound"),
++    (LP + "notice.go", '		text = "REPEAT (" + kv + "): an earlier send of this notice may or may not have arrived. " + text', "		_ = kv", "the repeat is not labelled"),
++    (LP + "due.go", 'case decision == "interrupted-effect-failed" && err != nil && strings.Contains(err.Error(), "E_DELIVERY_UNRESOLVED"):', "case false:", "an unresolved notice keeps its marker retried forever"),
++    (LP + "timeout.go", '	if st == "idle" || st == "cancelled" {\n		// The cancel was confirmed', '	if false {\n		// The cancel was confirmed', "a confirmed cancel is reported as not confirmed"),
+     # P9 read-only view (internal/expose, checked by its own tests)
+     ("internal/expose/expose.go", "\t\t\t\tcase age < -5*time.Second:", "\t\t\t\tcase false:", "a future pass time reads as fresh"),
+     ("internal/expose/expose.go", "\t\treturn \"UNKNOWN: \" + r.Source + \" unreadable\"", "\t\treturn \"OK\"", "a missing source reads OK"),
+diff --git a/internal/loop/due.go b/internal/loop/due.go
+index 83db8d0..c312957 100644
+--- a/internal/loop/due.go
++++ b/internal/loop/due.go
+@@ -85,7 +85,7 @@ func ProcessDue(cfg *Config) []string {
+ 	}
+ 	var names []string
+ 	for _, e := range ents {
+-		if n := e.Name(); strings.HasSuffix(n, ".json") && !strings.Contains(n, ".rejected-") {
++		if n := e.Name(); strings.HasSuffix(n, ".json") && !strings.Contains(n, ".rejected-") && !strings.Contains(n, ".unresolved-") {
+ 			names = append(names, n)
+ 		}
+ 	}
+@@ -134,6 +134,12 @@ func ProcessDue(cfg *Config) []string {
+ 		case err == nil && decision == "no-op-early":
+ 			os.Remove(path) // re-armed at the original deadline by RunDeadline
+ 			out = append(out, "due "+n+": early, re-armed: "+note)
++		case decision == "interrupted-effect-failed" && err != nil && strings.Contains(err.Error(), "E_DELIVERY_UNRESOLVED"):
++			// Settled with an owned failure (the director/duty notice of the
++			// failed settlement was attempted): the notice's delivery stays
++			// unknown and visible; the marker is kept aside, not retried forever.
++			os.Rename(path, strings.TrimSuffix(path, ".json")+".unresolved-"+time.Now().UTC().Format("20060102T150405Z")+".json")
++			out = append(out, fmt.Sprintf("due %s: settled with an owned delivery failure: %s (%v)", n, note, err))
+ 		default:
+ 			if f, ok := host.IsFault(err); ok && strings.HasPrefix(f.Code, "E_") && f.Code != "E_LEDGER_BUSY" && isIdentityFault(f.Code) {
+ 				reject(f.Code + ": " + f.Detail)
+@@ -213,7 +219,7 @@ func reportSaturation(cfg *Config) []string {
+ 	now := time.Now().UTC()
+ 	n, oldest := 0, time.Duration(0)
+ 	for _, e := range ents {
+-		if !strings.HasSuffix(e.Name(), ".json") || strings.Contains(e.Name(), ".rejected-") {
++		if !strings.HasSuffix(e.Name(), ".json") || strings.Contains(e.Name(), ".rejected-") || strings.Contains(e.Name(), ".unresolved-") {
+ 			continue
+ 		}
+ 		var h DueHint
+@@ -234,15 +240,34 @@ func reportSaturation(cfg *Config) []string {
+ 	msg := fmt.Sprintf("due backlog SATURATED: %d deadline marker(s) unsettled for more than %s (oldest %s)", n, SaturationAge, oldest.Round(time.Second))
+ 	stamp := filepath.Join(dueDir(cfg), ".saturation-reported")
+ 	if fi, err := os.Stat(stamp); err == nil && now.Sub(fi.ModTime()) < time.Minute {
+-		return []string{msg + " (duty told within the last minute)"}
++		return []string{msg + " (duty's wake accepted within the last minute)"}
+ 	}
+ 	run := cfg.Run
+ 	if run == nil {
+ 		run = host.ExecRunner
+ 	}
+-	if _, err := run([]string{cfg.Wake, cfg.Seats[cfg.Duty], "[agent-loop] " + msg + ". See: agent-loop status --config " + cfg.Path},
+-		[]string{"AGENTDECK_PROFILE=" + cfg.Profile}, 10*time.Second); err == nil {
+-		os.WriteFile(stamp, []byte(py.ISO(now)), 0o644)
++	// Only the wake's own "started" (rc 0) or "queued" (rc 3) is an accepted
++	// send (P12-realprocess-1 D1: a nil runner error with rc 1 is a refusal).
++	// Accepted is transport only, never an acknowledgement. A refused, failed
++	// or not-started send is kept in .saturation-attempts and retried by the
++	// next holder; the stamp that suppresses reports for a minute is written
++	// only after an accepted send, and a stamp that cannot be written says so.
++	p, err := run([]string{cfg.Wake, cfg.Seats[cfg.Duty], "[agent-loop] " + msg + ". See: agent-loop status --config " + cfg.Path},
++		[]string{"AGENTDECK_PROFILE=" + cfg.Profile}, 10*time.Second)
++	outcome := fmt.Sprintf("rc %d", p.RC)
++	if err != nil {
++		outcome = "error: " + err.Error()
++	}
++	accepted := err == nil && (p.RC == host.WakeRCSent || p.RC == host.WakeRCQueued)
++	if f, ferr := os.OpenFile(filepath.Join(dueDir(cfg), ".saturation-attempts"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644); ferr == nil {
++		fmt.Fprintf(f, "%s accepted=%t %s\n", py.ISO(now), accepted, outcome)
++		f.Close()
++	}
++	if !accepted {
++		return []string{msg + " (report to duty NOT accepted: " + outcome + "; the next holder retries)"}
++	}
++	if err := os.WriteFile(stamp, []byte(py.ISO(now)), 0o644); err != nil {
++		return []string{msg + " (duty's wake accepted; the suppression stamp was NOT written: " + err.Error() + "; the next holder reports again)"}
+ 	}
+-	return []string{msg}
++	return []string{msg + " (duty's wake accepted, transport only: not an acknowledgement)"}
+ }
+diff --git a/internal/loop/handoff_p12_test.go b/internal/loop/handoff_p12_test.go
+new file mode 100644
+index 0000000..09276cb
+--- /dev/null
++++ b/internal/loop/handoff_p12_test.go
+@@ -0,0 +1,277 @@
++package loop
++
++import (
++	"encoding/json"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/host"
++)
++
++// P12-fair-handoff-1: arrival-order lock grant (D2), accepted-only SATURATED
++// stamping (D1), one labelled repeat per notice incident (D3).
++
++func TestAHolderThatLocksAgainGoesBehindAWaiter(t *testing.T) {
++	r := newRig(t)
++	poll := queuePoll
++	queuePoll = 300 * time.Millisecond // the waiter polls slowly: only the queue order can put it first
++	t.Cleanup(func() { queuePoll = poll })
++	a, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	got := make(chan string, 2)
++	go func() {
++		b, err := LockLedger(r.cfg, 5*time.Second)
++		if err == nil {
++			got <- "waiter"
++			time.Sleep(100 * time.Millisecond)
++			b.Unlock()
++		}
++	}()
++	time.Sleep(450 * time.Millisecond) // the waiter is queued and between polls
++	a.Unlock()
++	a2, err := LockLedger(r.cfg, 5*time.Second) // the yielding holder, at once
++	must(t, err)
++	got <- "relocker"
++	a2.Unlock()
++	if first := <-got; first != "waiter" {
++		t.Fatalf("the re-locking holder went first (%s): no hand-off", first)
++	}
++}
++
++func TestHoldersAndGivenUpWaitersLeaveNoQueueEntry(t *testing.T) {
++	r := newRig(t)
++	a, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	if _, err := LockLedger(r.cfg, 100*time.Millisecond); err == nil {
++		t.Fatal("a second writer got a held lock")
++	}
++	a.Unlock()
++	ents, _ := os.ReadDir(r.cfg.DB + ".queue")
++	for _, e := range ents {
++		if !strings.HasPrefix(e.Name(), ".") {
++			t.Fatalf("an entry outlived its holder or its waiter: %s", e.Name())
++		}
++	}
++}
++
++func TestAdmissionIsCappedAndRefusalIsVisible(t *testing.T) {
++	r := newRig(t)
++	old := QueueCap["ordinary"]
++	QueueCap["ordinary"] = 1
++	t.Cleanup(func() { QueueCap["ordinary"] = old })
++	a, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	defer a.Unlock()
++	go LockLedger(r.cfg, 2*time.Second) // takes the one place
++	time.Sleep(100 * time.Millisecond)
++	_, err = LockLedger(r.cfg, 300*time.Millisecond)
++	if f, ok := host.IsFault(err); !ok || f.Code != "E_LEDGER_SATURATED" {
++		t.Fatalf("a full class was not refused visibly: %v", err)
++	}
++}
++
++func TestDeadReusedStaleAndMalformedEntriesCannotWedgeTheQueue(t *testing.T) {
++	r := newRig(t)
++	q := newQueue(r.cfg)
++	os.MkdirAll(q.dir, 0o755)
++	put := func(name string, e queueEntry) {
++		b, _ := json.Marshal(e)
++		os.WriteFile(filepath.Join(q.dir, name), b, 0o644)
++	}
++	put("00000000000000000001", queueEntry{PID: 1 << 22, Class: "ordinary"})                                    // dead
++	put("00000000000000000002", queueEntry{PID: os.Getpid(), Start: "reused", Class: "ordinary"})               // pid reused
++	put("00000000000000000003", queueEntry{PID: os.Getpid(), Start: procStart(os.Getpid()), Class: "ordinary"}) // stale
++	old := time.Now().Add(-time.Minute)
++	os.Chtimes(filepath.Join(q.dir, "00000000000000000003"), old, old)
++	os.WriteFile(filepath.Join(q.dir, "00000000000000000004"), []byte("{not json"), 0o644) // malformed
++	k, err := LockLedger(r.cfg, 2*time.Second)
++	if err != nil {
++		t.Fatalf("wedged by dead/reused/stale/malformed entries: %v", err)
++	}
++	k.Unlock()
++	if ents, _ := os.ReadDir(filepath.Join(q.dir, "rejected")); len(ents) != 1 {
++		t.Fatalf("the malformed entry was not kept aside: %v", ents)
++	}
++}
++
++func saturate(t *testing.T, r *rig) {
++	WriteDue(r.cfg, "Q", "Q-w1", "ex-Q-w1", time.Now().UTC().Add(-time.Minute))
++}
++
++func TestSaturationIsStampedOnlyOnAnAcceptedWake(t *testing.T) {
++	for _, c := range []struct {
++		name    string
++		proc    host.Proc
++		err     error
++		stamped bool
++	}{
++		{"rc 1 refused", host.Proc{RC: 1, Stderr: "could not reach"}, nil, false},
++		{"runner error", host.Proc{}, host.ErrTimeout, false},
++		{"budget refusal", host.Proc{}, host.ErrBudget, false},
++		{"rc 0 started", host.Proc{RC: 0, Stdout: "wake: T -> started"}, nil, true},
++		{"rc 3 queued", host.Proc{RC: 3, Stdout: "wake: T -> queued"}, nil, true},
++	} {
++		t.Run(c.name, func(t *testing.T) {
++			r := newRig(t)
++			saturate(t, r)
++			sends := 0
++			r.cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++				sends++
++				return c.proc, c.err
++			}
++			msgs := reportSaturation(r.cfg)
++			_, serr := os.Stat(filepath.Join(dueDir(r.cfg), ".saturation-reported"))
++			if (serr == nil) != c.stamped {
++				t.Fatalf("stamped=%v, want %v: %v", serr == nil, c.stamped, msgs)
++			}
++			if log, _ := os.ReadFile(filepath.Join(dueDir(r.cfg), ".saturation-attempts")); !strings.Contains(string(log), "accepted=") {
++				t.Fatal("the attempt was not kept")
++			}
++			if !c.stamped && !strings.Contains(msgs[0], "NOT accepted") {
++				t.Fatalf("a failed report claims success: %v", msgs)
++			}
++			reportSaturation(r.cfg) // the next holder
++			if want := map[bool]int{true: 1, false: 2}[c.stamped]; sends != want {
++				t.Fatalf("sends %d, want %d (failed reports are retried, accepted ones suppressed)", sends, want)
++			}
++		})
++	}
++}
++
++// crashMidSend leaves the durable record a SIGKILL during the wake leaves.
++func crashMidSend(t *testing.T, l *Loop, incident, id, kind string) {
++	key := id + "|" + kind + "|" + incident
++	b, _ := json.Marshal(noticeRec{Key: key, State: "attempting", Attempts: 1})
++	must(t, l.D.KVPut(noticeKey(key), string(b)))
++}
++
++func TestOneLabelledRepeatPerIncidentAcrossCrashes(t *testing.T) {
++	r := newRig(t)
++	l := r.open()
++	crashMidSend(t, l, "wake|x", "T", "wake")
++	l.Close()
++	l = r.open() // restart
++	must(t, l.sendIncident("wake|x", "T", "hello", "wake", ""))
++	if w := r.wakesTo("T"); len(w) != 1 || !strings.HasPrefix(w[0], "REPEAT (") {
++		t.Fatalf("no single labelled repeat: %v", w)
++	}
++	must(t, l.sendIncident("wake|x", "T", "hello", "wake", "")) // replay after the repeat was accepted
++	if len(r.wakesTo("T")) != 1 {
++		t.Fatal("an accepted notice was sent again")
++	}
++	// A second crash during the repeat: no third send, visible, never delivered.
++	crashMidSend(t, l, "wake|y", "T", "wake")
++	must(t, l.sendIncident("wake|y", "T", "hi", "wake", "")) // repeat 1
++	var rec noticeRec
++	k := noticeKey("T|wake|wake|y")
++	json.Unmarshal([]byte(l.D.KV[k]), &rec)
++	rec.State = "attempting" // crash during the repeat
++	b, _ := json.Marshal(rec)
++	l.D.KVPut(k, string(b))
++	l.Close()
++	l = r.open()
++	defer l.Close()
++	n := len(r.wakesTo("T"))
++	err := l.sendIncident("wake|y", "T", "hi", "wake", "")
++	if f, ok := host.IsFault(err); !ok || f.Code != "E_DELIVERY_UNRESOLVED" || len(r.wakesTo("T")) != n {
++		t.Fatalf("a second crash bought another repeat: %v, %d sends", err, len(r.wakesTo("T"))-n)
++	}
++	json.Unmarshal([]byte(l.D.KV[k]), &rec)
++	if rec.State != "unresolved" || rec.Repeats != 1 {
++		t.Fatalf("record %+v", rec)
++	}
++}
++
++func TestACancelIsNeverRepeatedAfterAnUnknownOutcome(t *testing.T) {
++	r := newRig(t)
++	l := r.open()
++	defer l.Close()
++	crashMidSend(t, l, "stop|Q-w1", "K", "stop")
++	err := l.sendIncident("stop|Q-w1", "K", "/cancel", "stop", "Q-w1")
++	if f, ok := host.IsFault(err); !ok || f.Code != "E_DELIVERY_UNRESOLVED" || len(r.wakesTo("K")) != 0 {
++		t.Fatalf("an extra cancel: %v %v", err, r.wakesTo("K"))
++	}
++}
++
++func TestDefinitiveFailuresRetryWithBoundedBackoff(t *testing.T) {
++	r := newRig(t)
++	l := r.open()
++	defer l.Close()
++	r.fail["wake"] = true
++	var codes []string
++	for i := 0; i < 20; i++ {
++		err := l.sendIncident("esc|z", "T", "x", "escalation", "")
++		if f, ok := host.IsFault(err); ok {
++			codes = append(codes, f.Code)
++		} else {
++			codes = append(codes, "failed")
++		}
++		r.clock.Advance(40)
++	}
++	if n := len(r.wakesTo("T")); n != MaxFailedSends {
++		t.Fatalf("%d sends, want %d: %v", n, MaxFailedSends, codes)
++	}
++	if codes[len(codes)-1] != "E_DELIVERY_UNRESOLVED" {
++		t.Fatalf("exhausted failures not unresolved: %v", codes)
++	}
++	r.fail["wake"] = false
++	l2 := r.open()
++	defer l2.Close()
++	r.clock.Advance(1)
++	if err := l2.sendIncident("esc|w", "T", "x", "escalation", ""); err != nil {
++		t.Fatal(err)
++	}
++	r.fail["wake"] = true
++	if err := l2.sendIncident("esc|v", "T", "x", "escalation", ""); err == nil {
++		t.Fatal("refused send reported delivered")
++	}
++	if err := l2.sendIncident("esc|v", "T", "x", "escalation", ""); err == nil || strings.Contains(err.Error(), "BACKOFF") {
++		t.Fatalf("the first retry is not immediate: %v", err)
++	}
++	if err := l2.sendIncident("esc|v", "T", "x", "escalation", ""); err == nil || !strings.Contains(err.Error(), "BACKOFF") {
++		t.Fatalf("no backoff after the second failure: %v", err)
++	}
++}
++
++func TestAnUnresolvedNoticeClosesItsDueMarkerAsAnOwnedFailure(t *testing.T) {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	l := r.open()
++	key := "T|wake|wake|deadline-expired:Q|Q-w1"
++	b, _ := json.Marshal(noticeRec{Key: key, State: "unresolved", Repeats: 1})
++	must(t, l.D.KVPut(noticeKey(key), string(b)))
++	l.Close()
++	WriteDue(r.cfg, "Q", "Q-w1", "ex-Q-w1", time.Now().UTC())
++	msgs := strings.Join(ProcessDue(r.cfg), "|")
++	if !strings.Contains(msgs, "owned delivery failure") {
++		t.Fatalf("not closed as an owned failure: %s", msgs)
++	}
++	ents, _ := os.ReadDir(dueDir(r.cfg))
++	var kept []string
++	for _, e := range ents {
++		kept = append(kept, e.Name())
++	}
++	if j := strings.Join(kept, ","); !strings.Contains(j, ".unresolved-") || strings.Contains(j, "Q-w1.json,") {
++		t.Fatalf("marker not kept aside visibly: %v", kept)
++	}
++	l = r.open()
++	defer l.Close()
++	if p := l.Pkg("Q"); p.Step != "timed-out" || p.Timeout == nil {
++		t.Fatalf("not settled: %s %+v", p.Step, p.Timeout)
++	}
++	if c := p0(l).Timeout.Cancel; !strings.HasPrefix(c, "idle") {
++		t.Fatalf("a confirmed cancel recorded as failed: %q", c)
++	}
++	if w := r.wakesTo("T"); !strings.Contains(w[len(w)-1], "the cancel was confirmed") {
++		t.Fatalf("the director is told the cancel failed: %q", w[len(w)-1])
++	}
++	if again := ProcessDue(r.cfg); strings.Contains(strings.Join(again, "|"), "Q-w1") {
++		t.Fatalf("an unresolved marker is retried forever: %v", again)
++	}
++}
++
++func p0(l *Loop) *Pkg { return l.Pkg("Q") }
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 8135c56..702b70f 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -273,19 +273,21 @@ func (l *Loop) wire() {
+ 		if err != nil {
+ 			return err
+ 		}
+-		return l.sendID(id, "/cancel", "stop", action)
++		return l.sendIncident("stop|"+action, id, "/cancel", "stop", action)
+ 	}
+ 	l.D.Ext.OnWake = func(seat, reason string) error {
+ 		// The core wakes its director by role name.
+ 		text := "[agent-loop] " + reason + ". See: agent-loop status --config " + l.Cfg.Path
++		incident := "wake|" + reason
+ 		if qid, ok := strings.CutPrefix(reason, "deadline-expired:"); ok {
+ 			if p := l.Pkg(qid); p != nil {
+ 				if a := map[string]string{"worker": p.WorkAction, "verify": p.VerifyAction}[p.Step]; a != "" {
+ 					text += ". Acknowledge ownership with: " + l.AckCommand(qid, a)
++					incident += "|" + a
+ 				}
+ 			}
+ 		}
+-		return l.send(l.Cfg.Director, text, "wake", "")
++		return l.sendSeat(incident, l.Cfg.Director, text, "wake", "")
+ 	}
+ }
+ 
+@@ -309,22 +311,12 @@ func (l *Loop) send(seat, text, kind, action string) error {
+ }
+ 
+ func (l *Loop) sendID(id, text, kind, action string) error {
+-	var act any
+-	if action != "" {
+-		act = action
+-	}
+-	mid, err := l.Adapter.Transport.Send(id, text, kind, act, nil)
+-	if err != nil {
+-		return err
+-	}
+-	switch st := l.Adapter.Transport.State(mid); {
+-	case st == "sent" || st == "queued":
+-	case kind == "stop" && (st == "cancelled" || st == "idle"):
+-		// A /cancel that the worker confirmed, or that found no running turn.
+-	default:
+-		return fmt.Errorf("wake to %s: %s (receipt %s)", id, st, mid)
+-	}
+-	return nil
++	return l.sendIncident("text|"+action+"|"+text, id, text, kind, action)
++}
++
++// sendSeat sends one incident's notice to a named seat.
++func (l *Loop) sendSeat(incident, seat, text, kind, action string) error {
++	return l.sendIncident(incident, l.Cfg.Seats[seat], text, kind, action)
+ }
+ 
+ // Pkgs returns every package record, sorted.
+diff --git a/internal/loop/notice.go b/internal/loop/notice.go
+new file mode 100644
+index 0000000..abf59a9
+--- /dev/null
++++ b/internal/loop/notice.go
+@@ -0,0 +1,136 @@
++package loop
++
++import (
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// P12-fair-handoff-1 D3: a person cannot be told exactly once when the sender
++// dies mid-send, so the loop does not claim it. Every send has a stable
++// incident identity. Its attempt is recorded durably BEFORE the wake runs. A
++// replay that finds an attempt with no known outcome (a crash, a timeout, a
++// malformed receipt) sends ONE labelled repeat for that incident, across all
++// restarts. After that the notice is "unresolved": visible, never recorded as
++// delivered or acknowledged. A definitive failure (the wake refused) is
++// retried with backoff, at most MaxFailedSends times. A /cancel is never
++// repeated after an unknown outcome (no extra cancel).
++const MaxFailedSends = 5
++
++type noticeRec struct {
++	Key       string `json:"key"`
++	State     string `json:"state"` // attempting | accepted | ambiguous | failed | not-started | unresolved
++	Attempts  int    `json:"attempts"`
++	Repeats   int    `json:"repeats"`
++	Failures  int    `json:"failures"`
++	NextRetry string `json:"next_retry,omitempty"`
++	LastMID   string `json:"last_mid,omitempty"`
++	LastState string `json:"last_state,omitempty"`
++	Updated   string `json:"updated"`
++}
++
++func noticeKey(key string) string {
++	h := sha256.Sum256([]byte(key))
++	return "notice:" + hex.EncodeToString(h[:12])
++}
++
++func deliveryFault(code, detail string) error {
++	return &host.Fault{Code: code, Detail: detail, Owner: "cairn"}
++}
++
++// sendIncident delivers text to session id once per incident key (see above).
++func (l *Loop) sendIncident(incident, id, text, kind, action string) error {
++	key := id + "|" + kind + "|" + incident
++	kv := noticeKey(key)
++	var r noticeRec
++	if raw, ok := l.D.KV[kv]; ok && json.Unmarshal([]byte(raw), &r) != nil {
++		r = noticeRec{State: "unresolved"} // an unreadable record is never read as "not sent"
++	}
++	now := l.now()
++	save := func() error {
++		r.Key, r.Updated = key, py.ISO(now)
++		b, _ := json.Marshal(r)
++		return l.D.KVPut(kv, string(b))
++	}
++	switch r.State {
++	case "accepted":
++		return nil // this incident's notice was accepted by the transport already
++	case "unresolved":
++		return deliveryFault("E_DELIVERY_UNRESOLVED", fmt.Sprintf("notice %s to %s: delivery unknown after its one labelled repeat, or failed %d times; reconcile by hand", kv, id, r.Failures))
++	case "attempting", "ambiguous":
++		if kind == "stop" || r.Repeats >= 1 {
++			r.State = "unresolved"
++			if err := save(); err != nil {
++				return err
++			}
++			return deliveryFault("E_DELIVERY_UNRESOLVED", fmt.Sprintf("notice %s to %s: the outcome of an earlier send is unknown (%s)", kv, id, r.LastState))
++		}
++		r.Repeats = 1
++	case "failed":
++		if r.Failures >= MaxFailedSends {
++			r.State = "unresolved"
++			if err := save(); err != nil {
++				return err
++			}
++			return deliveryFault("E_DELIVERY_UNRESOLVED", fmt.Sprintf("notice %s to %s: refused %d times", kv, id, r.Failures))
++		}
++		if t, ok := py.Instant(r.NextRetry); ok && now.Before(t) {
++			return deliveryFault("E_DELIVERY_BACKOFF", fmt.Sprintf("notice %s to %s: refused %d time(s); next retry at %s", kv, id, r.Failures, r.NextRetry))
++		}
++	}
++	if r.Repeats >= 1 && kind != "stop" {
++		text = "REPEAT (" + kv + "): an earlier send of this notice may or may not have arrived. " + text
++	}
++	prev := r.State
++	r.State = "attempting"
++	r.Attempts++
++	if err := save(); err != nil { // durable before the wake runs
++		return err
++	}
++	var act any
++	if action != "" {
++		act = action
++	}
++	mid, err := l.Adapter.Transport.Send(id, text, kind, act, nil)
++	if err != nil {
++		if f, ok := host.IsFault(err); ok && f.Code == "E_BUDGET_EXHAUSTED" {
++			r.State, r.Attempts = "not-started", r.Attempts-1 // never started: no attempt, no repeat used
++			if prev == "failed" {
++				r.State = "failed"
++			}
++		} else {
++			r.State, r.LastState = "ambiguous", err.Error()
++		}
++		if serr := save(); serr != nil {
++			return serr
++		}
++		return err
++	}
++	st := l.Adapter.Transport.State(mid)
++	r.LastMID, r.LastState = mid, st
++	switch {
++	case st == "sent" || st == "queued", kind == "stop" && (st == "cancelled" || st == "idle"):
++		r.State = "accepted"
++	case st == "failed":
++		r.State = "failed"
++		r.Failures++
++		// The first retry is immediate (the next pass or replay); then 1, 2, 4... s, at most 32 s.
++		if r.Failures > 1 {
++			r.NextRetry = py.ISO(now.Add(time.Duration(1<<min(r.Failures-2, 5)) * time.Second))
++		}
++	default:
++		r.State = "ambiguous"
++	}
++	if err := save(); err != nil {
++		return err
++	}
++	if r.State != "accepted" {
++		return fmt.Errorf("wake to %s: %s (receipt %s)", id, st, mid)
++	}
++	return nil
++}
+diff --git a/internal/loop/queue.go b/internal/loop/queue.go
+new file mode 100644
+index 0000000..692457e
+--- /dev/null
++++ b/internal/loop/queue.go
+@@ -0,0 +1,211 @@
++package loop
++
++import (
++	"encoding/json"
++	"errors"
++	"fmt"
++	"os"
++	"path/filepath"
++	"sort"
++	"strconv"
++	"strings"
++	"syscall"
++	"time"
++)
++
++// P12-fair-handoff-1: the ledger lock is granted in arrival order.
++//
++// flock alone has no order: a holder that locks again at once (run after a
++// yield) wins every time, and polling waiters can starve run (P12-realprocess-1
++// D2: 114 s). Every writer therefore first takes a numbered place in
++// <db>.queue/ and may try the flock only while it is the oldest live entry.
++// The entry is removed when the lock is taken, so a holder that wants the lock
++// again goes to the back. Admission is capped per class (QueueCap): a full
++// class is refused at once (E_LEDGER_SATURATED), never queued without bound.
++// An entry whose process is gone (dead pid, or pid reused: different start
++// time), that has not been refreshed for QueueStale (a stuck waiter), or that
++// cannot be read is removed by whoever sees it, so no waiter can wedge the
++// queue. No daemon: a short flock on <db>.queue/.mutex makes every
++// admission, scan and removal atomic.
++var (
++	QueueCap   = map[string]int{"run": 1, "due": 3, "ordinary": 2}
++	QueueStale = 3 * time.Second
++	queuePoll  = 25 * time.Millisecond
++)
++
++// AdmittedWait is how long an admitted writer waits at most: every entry
++// ahead of it holds at most HoldBudget (+ the 0.5 s WaitDelay and hand-off).
++func AdmittedWait() time.Duration {
++	n := 0
++	for _, c := range QueueCap {
++		n += c
++	}
++	return time.Duration(n) * (HoldBudget + time.Second)
++}
++
++// lockClass is the queue class of this process's command.
++func lockClass() string {
++	cmd := ""
++	if len(os.Args) > 1 {
++		cmd = os.Args[1]
++	}
++	switch cmd {
++	case "run":
++		return "run"
++	case "timer-callback", "check", "timeout-ack":
++		return "due"
++	}
++	return "ordinary"
++}
++
++var errQueueFull = errors.New("queue class full")
++
++type queueEntry struct {
++	PID   int    `json:"pid"`
++	Start string `json:"start"` // /proc/<pid>/stat starttime: tells a reused pid apart
++	Class string `json:"class"`
++	Cmd   string `json:"cmd"`
++	At    string `json:"at"`
++}
++
++type lockQueue struct{ dir string }
++
++func newQueue(cfg *Config) *lockQueue { return &lockQueue{dir: cfg.DB + ".queue"} }
++
++// procStart is field 22 of /proc/<pid>/stat ("" when unreadable).
++func procStart(pid int) string {
++	b, err := os.ReadFile(fmt.Sprintf("/proc/%d/stat", pid))
++	if err != nil {
++		return ""
++	}
++	s := string(b)
++	i := strings.LastIndexByte(s, ')')
++	if i < 0 {
++		return ""
++	}
++	f := strings.Fields(s[i+1:])
++	if len(f) < 20 {
++		return ""
++	}
++	return f[19]
++}
++
++// locked runs fn under the queue mutex.
++func (q *lockQueue) locked(fn func() error) error {
++	if err := os.MkdirAll(q.dir, 0o755); err != nil {
++		return err
++	}
++	m, err := os.OpenFile(filepath.Join(q.dir, ".mutex"), os.O_CREATE|os.O_RDWR, 0o644)
++	if err != nil {
++		return err
++	}
++	defer m.Close()
++	if err := syscall.Flock(int(m.Fd()), syscall.LOCK_EX); err != nil {
++		return err
++	}
++	defer syscall.Flock(int(m.Fd()), syscall.LOCK_UN)
++	return fn()
++}
++
++// live lists the live entries oldest first, removing dead, reused, stale and
++// malformed ones (malformed ones are kept aside in rejected/, visible).
++// The caller holds the mutex.
++func (q *lockQueue) live() ([]string, map[string]queueEntry) {
++	ents, _ := os.ReadDir(q.dir)
++	var names []string
++	got := map[string]queueEntry{}
++	for _, e := range ents {
++		n := e.Name()
++		if strings.HasPrefix(n, ".") || e.IsDir() || strings.HasSuffix(n, ".tmp") {
++			continue
++		}
++		p := filepath.Join(q.dir, n)
++		var qe queueEntry
++		b, err := os.ReadFile(p)
++		if _, perr := strconv.ParseUint(n, 10, 64); err != nil || perr != nil || json.Unmarshal(b, &qe) != nil || qe.PID <= 0 {
++			os.MkdirAll(filepath.Join(q.dir, "rejected"), 0o755)
++			os.Rename(p, filepath.Join(q.dir, "rejected", n+"."+time.Now().UTC().Format("20060102T150405.000Z")))
++			lockLog("queue-rejected-malformed")
++			continue
++		}
++		fi, serr := os.Stat(p)
++		switch {
++		case syscall.Kill(qe.PID, 0) == syscall.ESRCH, procStart(qe.PID) != qe.Start,
++			serr == nil && time.Since(fi.ModTime()) > QueueStale:
++			os.Remove(p)
++			lockLog(fmt.Sprintf("queue-reaped:%d", qe.PID))
++			continue
++		}
++		names = append(names, n)
++		got[n] = qe
++	}
++	sort.Strings(names)
++	return names, got
++}
++
++// admit takes a place at the back of the queue, or errQueueFull.
++func (q *lockQueue) admit(class string) (string, error) {
++	var name string
++	err := q.locked(func() error {
++		names, got := q.live()
++		n := 0
++		for _, x := range names {
++			if got[x].Class == class {
++				n++
++			}
++		}
++		if n >= QueueCap[class] {
++			return errQueueFull
++		}
++		// The next number is above both the counter and every entry present,
++		// so a lost or damaged counter can never reuse a live entry's name.
++		seqPath := filepath.Join(q.dir, ".seq")
++		b, _ := os.ReadFile(seqPath)
++		seq, _ := strconv.ParseUint(strings.TrimSpace(string(b)), 10, 64)
++		for _, x := range names {
++			if v, err := strconv.ParseUint(x, 10, 64); err == nil && v > seq {
++				seq = v
++			}
++		}
++		seq++
++		if err := os.WriteFile(seqPath, []byte(strconv.FormatUint(seq, 10)), 0o644); err != nil {
++			return err
++		}
++		name = fmt.Sprintf("%020d", seq)
++		cmd := ""
++		if len(os.Args) > 1 {
++			cmd = os.Args[1]
++		}
++		eb, _ := json.Marshal(queueEntry{PID: os.Getpid(), Start: procStart(os.Getpid()), Class: class, Cmd: cmd,
++			At: time.Now().UTC().Format(time.RFC3339Nano)})
++		tmp := filepath.Join(q.dir, name+".tmp")
++		if err := os.WriteFile(tmp, eb, 0o644); err != nil {
++			return err
++		}
++		return os.Rename(tmp, filepath.Join(q.dir, name))
++	})
++	return name, err
++}
++
++// head reports whether name is the oldest live entry, and whether it still exists.
++func (q *lockQueue) head(name string) (isHead, exists bool) {
++	q.locked(func() error {
++		names, got := q.live()
++		for i, n := range names {
++			if n == name && got[n].PID == os.Getpid() { // a reaped name is never taken for ours
++				isHead, exists = i == 0, true
++			}
++		}
++		return nil
++	})
++	return
++}
++
++func (q *lockQueue) touch(name string) {
++	now := time.Now()
++	os.Chtimes(filepath.Join(q.dir, name), now, now)
++}
++
++func (q *lockQueue) remove(name string) {
++	q.locked(func() error { return os.Remove(filepath.Join(q.dir, name)) })
++}
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 84d123c..1bbfc64 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -195,10 +195,17 @@ func (l *Loop) SettleTimeoutFailure(qid, action string, cause error) (string, er
+ 	p.Timeout.Cancel = fmt.Sprintf("failed: receipt %s state %q: %v", mid, st, cause)
+ 	text := fmt.Sprintf("[agent-loop] %s: step %s passed its deadline and the cancel was NOT confirmed (%s). "+
+ 		"The turn may still be running. Acknowledge ownership with: %s", qid, action, p.Timeout.Cancel, l.AckCommand(qid, action))
++	if st == "idle" || st == "cancelled" {
++		// The cancel was confirmed; what failed is the core's notice to the
++		// director (refused, or delivery unknown after its labelled repeat).
++		p.Timeout.Cancel = fmt.Sprintf("%s (%s); settlement notice: %v", st, mid, cause)
++		text = fmt.Sprintf("[agent-loop] %s: step %s passed its deadline; the cancel was confirmed (%s (%s)) but the settlement notice to the director was not confirmed (%v). "+
++			"Acknowledge ownership with: %s", qid, action, st, mid, cause, l.AckCommand(qid, action))
++	}
+ 	p.Timeout.Director = "told"
+-	if err := l.send(l.Cfg.Director, text, "escalation", qid); err != nil {
++	if err := l.sendSeat("settlefail|"+qid+"|"+action, l.Cfg.Director, text, "escalation", qid); err != nil {
+ 		p.Timeout.Director = "failed: " + err.Error()
+-		if derr := l.send(l.Cfg.Duty, text, "escalation", qid); derr != nil {
++		if derr := l.sendSeat("settlefail|"+qid+"|"+action, l.Cfg.Duty, text, "escalation", qid); derr != nil {
+ 			p.Timeout.Director += "; duty failed: " + derr.Error()
+ 		} else {
+ 			p.Timeout.Director += "; duty told"
+@@ -286,6 +293,10 @@ var (
+ // OutOfBudget reports that the current hold cannot start another unit.
+ func (l *Loop) OutOfBudget() bool { return budgetShort(l.Cfg) }
+ 
++// BudgetShort reports that the current hold has too little budget left for
++// another unit of work (the holder should release and queue again).
++func BudgetShort(cfg *Config) bool { return budgetShort(cfg) }
++
+ func budgetShort(cfg *Config) bool {
+ 	return !cfg.HoldDeadline.IsZero() && time.Until(cfg.HoldDeadline) < UnitReserve
+ }
+@@ -295,39 +306,83 @@ func LockLedger(cfg *Config, wait time.Duration) (*LedgerLock, error) {
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	q, class := newQueue(cfg), lockClass()
+ 	deadline := time.Now().Add(wait)
++	ent, admitted, refused := "", false, 0
++	defer func() {
++		if ent != "" {
++			q.remove(ent)
++		}
++	}()
+ 	for {
+-		err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
+-		if err == nil {
+-			k := &LedgerLock{f: f, cfg: cfg, run: cfg.Run}
+-			dl := time.Now().Add(HoldBudget)
+-			inner := cfg.Run
+-			if inner == nil {
+-				inner = host.ExecRunner
++		isHead, exists := false, false
++		if ent != "" {
++			q.touch(ent)
++			if isHead, exists = q.head(ent); !exists {
++				lockLog("queue-lost-place") // reaped (stale): back to the end of the queue
++				ent = ""
+ 			}
+-			cfg.HoldDeadline = dl
+-			lockLog("acquire")
+-			cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
+-				rem := time.Until(dl)
+-				if rem < MinIO {
+-					return host.Proc{}, host.ErrBudget
++		}
++		if ent == "" {
++			switch name, err := q.admit(class); {
++			case err == errQueueFull:
++				if refused == 0 {
++					lockLog("queue-refused")
+ 				}
+-				if timeout > rem {
+-					timeout = rem
++				refused++
++			case err != nil:
++				f.Close()
++				return nil, err
++			default:
++				if !admitted && wait >= AdmittedWait() {
++					// Bounded progress: an admitted writer is granted within
++					// AdmittedWait of its admission; time spent refused
++					// before admission does not count against it.
++					deadline = time.Now().Add(AdmittedWait())
+ 				}
+-				return inner(argv, env, timeout)
++				ent, admitted = name, true
++				lockLog("queue-admitted")
++				isHead, _ = q.head(ent)
+ 			}
+-			return k, nil
+ 		}
+-		if err != syscall.EWOULDBLOCK {
+-			f.Close()
+-			return nil, err
++		if isHead {
++			err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
++			if err == nil {
++				// The deferred removal drops this entry: a holder that wants the
++				// lock again queues at the back.
++				k := &LedgerLock{f: f, cfg: cfg, run: cfg.Run}
++				dl := time.Now().Add(HoldBudget)
++				inner := cfg.Run
++				if inner == nil {
++					inner = host.ExecRunner
++				}
++				cfg.HoldDeadline = dl
++				lockLog("acquire")
++				cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++					rem := time.Until(dl)
++					if rem < MinIO {
++						return host.Proc{}, host.ErrBudget
++					}
++					if timeout > rem {
++						timeout = rem
++					}
++					return inner(argv, env, timeout)
++				}
++				return k, nil
++			}
++			if err != syscall.EWOULDBLOCK {
++				f.Close()
++				return nil, err
++			}
+ 		}
+ 		if time.Now().After(deadline) {
+ 			f.Close()
++			if !admitted {
++				return nil, &host.Fault{Code: "E_LEDGER_SATURATED", Detail: fmt.Sprintf("ledger %s: the %s admission queue (cap %d) stayed full for %s; not admitted", cfg.DB, class, QueueCap[class], wait), Owner: "cairn"}
++			}
+ 			return nil, &host.Fault{Code: "E_LEDGER_BUSY", Detail: fmt.Sprintf("ledger %s held by another writer for more than %s", cfg.DB, wait), Owner: "cairn"}
+ 		}
+-		time.Sleep(50 * time.Millisecond)
++		time.Sleep(queuePoll)
+ 	}
+ }
+ 
+@@ -413,7 +468,7 @@ func (l *Loop) unacked() []string {
+ 			if _, err := l.authority(p, role); err != nil {
+ 				return "failed " + py.ISO(now) + ": " + err.Error()
+ 			}
+-			if err := l.send(seat, text(role), "escalation", p.QID); err != nil {
++			if err := l.sendSeat("noack|"+p.QID+"|"+role+"|"+t.ID+"|"+t.At, seat, text(role), "escalation", p.QID); err != nil {
+ 				return "failed " + py.ISO(now) + ": " + err.Error()
+ 			}
+ 			return "sent " + py.ISO(now)
+@@ -453,7 +508,7 @@ func (l *Loop) expiredAcks() []string {
+ 		}
+ 		msg := fmt.Sprintf("[agent-loop] %s: the acknowledgement of %s by %s expired at %s (next action was: %s). Re-acknowledge with: %s",
+ 			p.QID, t.ID, t.Ack.By, t.Ack.Deadline, t.Ack.NextAction, l.AckCommand(p.QID, t.Action))
+-		if err := l.send(l.Cfg.Director, msg, "escalation", p.QID); err != nil {
++		if err := l.sendSeat("ackexpiry|"+p.QID+"|"+t.ID+"|"+t.Ack.Deadline, l.Cfg.Director, msg, "escalation", p.QID); err != nil {
+ 			out = append(out, p.QID+": ack expiry escalation failed: "+err.Error())
+ 			continue
+ 		}
