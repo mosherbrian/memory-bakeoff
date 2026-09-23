@@ -1,0 +1,4 @@
+systemd-run --user --unit=agent-loop-p8e2-Q1-w1.timer --on-active=1s /home/bmosher/.local/bin/agent-loop timer-callback --config /tmp/p8e2-due/cfg.json --qid Q1 --action Q1-w1 --execution ex-Q1-w1
+wake K {"kind": "dispatch", "package": "Q1", "action": "Q1-w1", "execution": "ex-Q1-w1", "text": "w\n\n---\nagent-loop package Q1, worker step.\nWhen you are done, file your claim with this exact command (PATH is relative to /tmp/p8e2-due/art; list every file you produced or reviewed):\n  /home/bmosher/.local/bin/agent-loop claim --config /tmp/p8e2-due/cfg.json --qid Q1 --step worker --outcome completed|failed --artifact NAME=PATH [--artifact ...]\nThen end your turn. The loop sees the end of your turn and the claim; do not wake anyone."}
+wake K /cancel
+wake T [agent-loop] deadline-expired:Q1. See: agent-loop status --config /tmp/p8e2-due/cfg.json

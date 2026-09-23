@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo "wake $*" >> /tmp/p8e2-due/calls.log
+if [ "$2" = "/cancel" ]; then echo "wake: $1 -> cancel-acked"; else echo "wake: $1 -> started"; fi
+exit 0
