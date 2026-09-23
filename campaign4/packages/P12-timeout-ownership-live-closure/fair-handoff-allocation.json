@@ -1,0 +1,29 @@
+{
+  "at": "2026-09-23T20:23:38.533200+00:00",
+  "signer": "tern",
+  "action": "P12-fair-handoff-1",
+  "predecessor": "P12-realprocess-1 INCOMPLETE retained; no retrospective PASS",
+  "predecessor_claim_sha256": "bba340921775d0736d644d703a3a8fc06781d6a9f1481c077d2b225b4b8fe81f",
+  "intake_hash_mismatches": [],
+  "authority": "Brian funded real-process round and minimal successor for exposed defects; standing ordinary allocation authority",
+  "prior_ceiling_minutes": 785,
+  "implementation_minutes": 75,
+  "author_real_process_evidence_minutes": 45,
+  "independent_review_minutes": 30,
+  "new_ceiling_minutes": 935,
+  "execution": "Single author attempt120m including implementation75/evidence45; report source freeze at implementation checkpoint, no deadline reset. No automatic repair. Prior unused review grant cancelled without subtracting historical ceilings.",
+  "base": "487cb92ce9d333c61ec163719d4583b6cbb71041",
+  "requirements": [
+    "D1: saturation stamps only accepted transport rc0/3, not nil error alone; rc1/error/budget refusal retry, accepted is not human ack. Preserve failed attempts and stamp-write errors.",
+    "D2: smallest bounded handoff design; explicit numeric admission cap and bounded progress for run, callbacks/checker AND ordinary admitted writers. A60s give-up is not a cardinality cap absent an enforced rate limit. Do not assume strict priority is fair. No hardcoded supported arrival assumption masquerading as enforcement.",
+    "Queue registration/arbitration must be atomic and bounded, scoped to database, robust to crash, PID reuse, malformed entries and restart. No daemon required. Dead or expired waiters cannot wedge progress; unauthorized new arrivals cannot bypass older eligible waiters; saturation/refusal visible. Keep ledger lock before fresh load and10s work budget.",
+    "D3 narrow semantic amendment: exactly-once person notification is not asserted after ambiguous delivery. Persist stable action/notice/attempt identity before send. Allow at most ONE durable labelled repeat for that notice incident across restarts, not one new allowance per crash. Unknown after that stays visible for reconciliation, never falsely marked acknowledged/delivered. Explicit definitive failed sends remain separately retryable with bounded attempts/backoff. No extra cancel, dispatch, settlement or ownership reset.",
+    "Real-process evidence on exact new release: reproduce old D1/D2/D3; actual yield hands to waiting writer and resumes; kill holder and waiter, PID incarnation/restart; at least14 accepted due markers plus ordinary traffic; measure max gaps by writer class, deadline detection/settlement, heartbeat and local overhead, supported-capacity plus overload. Prove all admitted work settles or returns explicit owned failure; no invisible loss.",
+    "Injected transport must include rc1/error/queued/budget refusal and crash before/during/after notice delivery. Verify durable repeat count across TWO successive crashes, no extra work effects, no false transport receipts or ack.",
+    "Independent verifier uses unshared arrival/crash variation. Finite observed drain is not a universal latency guarantee; local I/O maxima empirical. Detection/recovery/ack live criteria unchanged. Any supported-capacity restriction affecting those returns Tern explicitly.",
+    "Core/py/conformance cases frozen; new isolated worktree/release; main/install untouched. Retain calendar templates, writer races, original-deadline rearm, stopped escalation,125 exact binary conformance and relevant mutations. Bind scripts, manifests and raw evidence; no private harness dependencies.",
+    "README correction must match final hash-bound release evidence, preserve previous claim. No fleet/live/cutover or host-clock changes. COMPLETE only if requirements met; else precise INCOMPLETE."
+  ],
+  "claim_path": "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/fair-handoff-claim.json",
+  "review": "Fresh corvid30m on bound claim, no overlap, return Tern. Live75/cutover45 remain held."
+}
