@@ -148,3 +148,50 @@ released by corvid.
 7. **Hygiene:** real argv used; isolated real stop/reload witnessed; no leftover
    `p12test-*`/`p12live-*`/`p11live-*` units; installed preview `221bb3aa…`
    unchanged (main stays preview).
+
+---
+
+## Consolidation — author-confirmed defects (same pass, no reset/edit/repair)
+
+Read `author-defects-intake.json` (`17:16:36Z`); initial claim preserved.
+
+### P12-CONFORMANCE-EVIDENCE — explained, independently re-captured
+
+The empty artifact is a **stdout-only capture**: the shipped binary writes its
+summary to **stderr**. Exact release binary (`cf54a94a…`) against pinned cases,
+cwd `agent-loop-p12`, **no checkout/rebuild**:
+
+- `rc=0`; **stdout 0 bytes** (`sha256 e3b0c442…` = empty); **stderr** =
+  `conformance: 125/125 cases ok, 1751 steps`
+  (`sha256 46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b`).
+- Preserved as `conformance-replay-evidence.txt`.
+- So 125/125 **is** established by the shipped binary; the bound artifact must be
+  re-captured with **stdout+stderr+rc**.
+
+### P12-L6-INTERVAL — confirmed
+
+`l6_eval` (`plans/live-driver.sh:133-145`) passes on
+`0 <= det <= 30 and det <= own <= 90`; the separate `ack - detection <= 60`
+predicate is **absent**. Counterexample (author-confirmed, and matching the
+author's own "ack at 90 s PASS, detection 10 s" test):
+
+- detection = 25 s, ack = 88 s → **ack − detection = 63 s**, expected **FAIL**;
+  the implemented predicate returns **PASS** (`det=25<=30`, `own=88<=90`).
+
+Required independent limits: **detection ≤ 30**, **ack − detection ≤ 60**,
+**total (ack − deadline) ≤ 90**, with nonnegative ordered trusted instants and
+exact-boundary tests.
+
+### Consolidated verdict
+
+- **Substantive A–E corrections: PASS** (independently reproduced earlier).
+- **Bounded FAIL (1):** L6 acknowledgement gate omits the ack−detection ≤ 60 s
+  predicate.
+- **Bounded FAIL (2), now explained:** empty conformance artifact was a
+  stdout-only capture; shipped-binary replay is `rc=0`, 125/125 on stderr —
+  re-capture the artifact with stdout+stderr+rc.
+- **Carry:** missing-ack no-escalation liveness gap; calendar backward-clock not
+  exercised (not auto-accepted).
+
+No reset, no source/plan edits, no repair released by corvid. Returned to Tern for
+the sole-repair decision.
