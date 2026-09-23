@@ -1,0 +1,62 @@
+{
+  "at": "2026-09-23T14:33:16.378644+00:00",
+  "results": [
+    {
+      "argv": [
+        "systemctl",
+        "--user",
+        "stop",
+        "campaign4-watch.timer",
+        "campaign4-watch.service"
+      ],
+      "rc": 5,
+      "stdout": "",
+      "stderr": "Failed to stop campaign4-watch.service: Unit campaign4-watch.service not loaded.\n"
+    },
+    {
+      "argv": [
+        "systemctl",
+        "--user",
+        "show",
+        "campaign4-watch.timer",
+        "campaign4-watch.service",
+        "-p",
+        "Id,ActiveState,SubState"
+      ],
+      "rc": 0,
+      "stdout": "Id=campaign4-watch.timer\nActiveState=inactive\nSubState=dead\n\nId=campaign4-watch.service\nActiveState=inactive\nSubState=dead\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "systemctl",
+        "--user",
+        "list-timers",
+        "--all",
+        "--no-pager",
+        "campaign4-p10*"
+      ],
+      "rc": 0,
+      "stdout": "NEXT LEFT LAST PASSED UNIT ACTIVATES\n\n0 timers listed.\n",
+      "stderr": ""
+    },
+    {
+      "seat": "56513e0e-1790000758",
+      "rc": 0,
+      "stdout": "wake: 56513e0e-1790000758 -> started\n",
+      "stderr": ""
+    },
+    {
+      "seat": "493c0317-1790000758",
+      "rc": 0,
+      "stdout": "wake: 493c0317-1790000758 -> started\n",
+      "stderr": ""
+    },
+    {
+      "seat": "claude",
+      "rc": 0,
+      "stdout": "notify-claude: delivered to 1 channel listener(s) (kind=tern id=fleet-tern-20260923T1433)\n",
+      "stderr": ""
+    }
+  ]
+}
