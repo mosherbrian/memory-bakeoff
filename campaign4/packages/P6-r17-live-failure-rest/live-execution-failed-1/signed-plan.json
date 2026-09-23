@@ -1,0 +1,126 @@
+{
+  "actions_note": "per-case worker/verifier actions and timer units below; executions derive per case via production plan hash (fixture_id includes case)",
+  "cases": {
+    "failed-verification": {
+      "timer_unit": "p6r17-f1-failed-verification.timer",
+      "verifier_action": "p6r17-f1-failed-verification-v",
+      "worker_action": "p6r17-f1-failed-verification-w"
+    },
+    "lost-completion": {
+      "expectation": "first bounded wait expires owned-failure no-end; reattach recovers the late completion to commit with no second send",
+      "timer_unit": "p6r17-f1-lost-completion.timer",
+      "verifier_action": "p6r17-f1-lost-completion-v",
+      "worker_action": "p6r17-f1-lost-completion-w"
+    },
+    "positive-handoff": {
+      "timer_unit": "p6r17-f1-positive-handoff.timer",
+      "verifier_action": "p6r17-f1-positive-handoff-v",
+      "worker_action": "p6r17-f1-positive-handoff-w"
+    },
+    "queued-ambiguous-restart": {
+      "timer_unit": "p6r17-f1-queued-ambiguous-restart.timer",
+      "verifier_action": "p6r17-f1-queued-ambiguous-restart-v",
+      "worker_action": "p6r17-f1-queued-ambiguous-restart-w"
+    },
+    "quiet-rest": {
+      "timer_unit": "p6r17-f1-quiet-rest.timer",
+      "verifier_action": "p6r17-f1-quiet-rest-v",
+      "worker_action": "p6r17-f1-quiet-rest-w"
+    }
+  },
+  "fault_controls": {
+    "failed-verification": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/failed-verification.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case failed-verification --run-root /tmp/p6r17-failed1-20260923T020709Z --control corrupt-after-worker --actor cairn",
+      "control": "corrupt-after-worker"
+    },
+    "lost-completion": {
+      "actor": "cairn",
+      "applied_by": "worker seat acts late (external timing step, --delay-s past the bounded wait); run-case observes owned-failure no-end, then applies bounded R3 reattach recovery consuming the late end exactly once with zero resends; applied receipt faults/lost-completion.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case lost-completion --run-root /tmp/p6r17-failed1-20260923T020709Z --control delay-worker-completion --actor cairn",
+      "control": "delay-worker-completion"
+    },
+    "positive-handoff": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/positive-handoff.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case positive-handoff --run-root /tmp/p6r17-failed1-20260923T020709Z --control none-declared --actor cairn",
+      "control": "none-declared"
+    },
+    "queued-ambiguous-restart": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/queued-ambiguous-restart.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case queued-ambiguous-restart --run-root /tmp/p6r17-failed1-20260923T020709Z --control transport-queued-first --actor cairn",
+      "control": "transport-queued-first"
+    },
+    "quiet-rest": {
+      "actor": "cairn",
+      "applied_by": "run-case deliver loop (hold/delay/tamper with before/after evidence) + applied receipt faults/quiet-rest.applied.json",
+      "command": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case quiet-rest --run-root /tmp/p6r17-failed1-20260923T020709Z --control none-declared --actor cairn",
+      "control": "none-declared"
+    }
+  },
+  "forbidden": [
+    "modifying/restarting/reusing accepted bindings or expired incarnations",
+    "case-specific runtime files, stream truncation, suffix-inferred identity",
+    "cross-case authority or rewritten earlier evidence",
+    "standalone signature check plus hand-written wake sequence",
+    "production without delivery record (E_UNDELIVERED fail-closed)",
+    "copying candidate detection time into an independent-source label",
+    "fixture launches/restarts/service/timer mutations under this grant"
+  ],
+  "host_commands": {
+    "deposit_wake": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/fixture-wake-deposit",
+    "systemctl": "/usr/bin/systemctl",
+    "systemd_run": "/usr/bin/systemd-run",
+    "wake": "/home/bmosher/.config/agent-deck/wake"
+  },
+  "host_commands_note": "All host_commands values are literal executable paths; descriptive text lives in this note and in seat_operation, never in the path fields. Read-only inventoried 2026-09-22.",
+  "injected_test_section": {
+    "note": "Not authorized in this real fixture; no emulator or synthetic producer."
+  },
+  "onset_protocol": "producer sidecar (seat append time, host clock, uncertainty 1s) else operator marker via fault_onset.py mark (injection time, provenance, explicit uncertainty); limitations in fault_onset.py; missing/unbounded onset INCOMPLETE",
+  "pending_stage_c_only": [
+    "fresh idle preparation + independent binding witness (all prior incarnations expired/historical)",
+    "fresh Tern signatures (purpose stagec-task) with code hashes",
+    "real model seats; live socket re-witness at execution"
+  ],
+  "phases": {
+    "10_fault_quiet-rest": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case quiet-rest --run-root /tmp/p6r17-failed1-20260923T020709Z --control none-declared --actor cairn",
+    "11_run_quiet-rest": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py run-case --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r17-live-failure-rest/live-plan-failed-1.json --signatures /tmp/p6r17-failed1-20260923T020709Z/signatures.json --case quiet-rest --suite-root /tmp/p6r17-failed1-20260923T020709Z --out /tmp/p6r17-failed1-20260923T020709Z/quiet-rest/receipt.json",
+    "12_aggregate": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py verify-suite --suite-root /tmp/p6r17-failed1-20260923T020709Z --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json",
+    "13_rollback": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py rollback --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json --suite-root /tmp/p6r17-failed1-20260923T020709Z --archive-dir /tmp/p6r17-failed1-20260923T020709Z/archive",
+    "1_derive": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py derive-config --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r17-live-failure-rest/live-plan-failed-1.json --binding ACCEPTED_BINDING --signatures /tmp/p6r17-failed1-20260923T020709Z/signatures.json --out /tmp/p6r17-failed1-20260923T020709Z/execution-config.json",
+    "2_fault_positive-handoff": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case positive-handoff --run-root /tmp/p6r17-failed1-20260923T020709Z --control none-declared --actor cairn",
+    "3_run_positive-handoff": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py run-case --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r17-live-failure-rest/live-plan-failed-1.json --signatures /tmp/p6r17-failed1-20260923T020709Z/signatures.json --case positive-handoff --suite-root /tmp/p6r17-failed1-20260923T020709Z --out /tmp/p6r17-failed1-20260923T020709Z/positive-handoff/receipt.json",
+    "4_fault_lost-completion": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case lost-completion --run-root /tmp/p6r17-failed1-20260923T020709Z --control hold-verifier-texts --actor cairn",
+    "5_run_lost-completion": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py run-case --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r17-live-failure-rest/live-plan-failed-1.json --signatures /tmp/p6r17-failed1-20260923T020709Z/signatures.json --case lost-completion --suite-root /tmp/p6r17-failed1-20260923T020709Z --out /tmp/p6r17-failed1-20260923T020709Z/lost-completion/receipt.json",
+    "6_fault_failed-verification": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case failed-verification --run-root /tmp/p6r17-failed1-20260923T020709Z --control corrupt-after-worker --actor cairn",
+    "7_run_failed-verification": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py run-case --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r17-live-failure-rest/live-plan-failed-1.json --signatures /tmp/p6r17-failed1-20260923T020709Z/signatures.json --case failed-verification --suite-root /tmp/p6r17-failed1-20260923T020709Z --out /tmp/p6r17-failed1-20260923T020709Z/failed-verification/receipt.json",
+    "8_fault_queued-ambiguous-restart": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py fault arm --case queued-ambiguous-restart --run-root /tmp/p6r17-failed1-20260923T020709Z --control transport-queued-first --actor cairn",
+    "9_run_queued-ambiguous-restart": "python3 /home/bmosher/memory-bake-off/campaign4/packages/P6-r16-causal-identity/candidate/src/case_entry.py run-case --config /tmp/p6r17-failed1-20260923T020709Z/execution-config.json --plan /home/bmosher/memory-bake-off/campaign4/packages/P6-r17-live-failure-rest/live-plan-failed-1.json --signatures /tmp/p6r17-failed1-20260923T020709Z/signatures.json --case queued-ambiguous-restart --suite-root /tmp/p6r17-failed1-20260923T020709Z --out /tmp/p6r17-failed1-20260923T020709Z/queued-ambiguous-restart/receipt.json"
+  },
+  "plan_id": "P6R17-failed-1",
+  "seat_operation": "REAL model seats perform worker/verifier work: the candidate transport wakes seats via the signed deposit path; the tool deliver loop (fixture_control, executed inside run-case) moves texts to seats per the armed intervention with applied receipts. No emulator appears in this live procedure. Injected runs substitute named external seat-emulator commands (test section below); substitution never counts as live evidence.",
+  "status": "TERN SIGNED one failed-verification real case; other cases forbidden",
+  "substitutions": {
+    "binding_manifest": "Absolute path to the Tern-accepted live binding manifest, supplied explicitly at preparation via derive-config --binding. Historical manifests (including any ACCEPTED token or path appearing in older plans) are evidence only and confer no permission; they can never satisfy a live signature.",
+    "signatures": "Absolute path to the Tern-authored signatures file (purpose stagec-task) covering this substituted plan hash.",
+    "suite_root": "Absolute path to the suite root created at execution."
+  },
+  "timing_bounds": {
+    "detect_s": 30.0,
+    "recover_s": 60.0,
+    "suspicion_detect_s": 180.0,
+    "suspicion_recover_s": 60.0,
+    "suspicion_total_s": 240.0,
+    "total_s": 90.0
+  },
+  "authorized_case": "failed-verification",
+  "bounds": {
+    "duration_s": 300,
+    "verify_window_s": 300,
+    "escalation_window_s": 120
+  },
+  "live_stop_utc": "2026-09-23T02:30:05Z"
+}
