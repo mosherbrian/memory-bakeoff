@@ -1,0 +1,743 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index 10efc09..e6a5135 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -505,24 +505,50 @@ func runTimeoutAck(args []string) int {
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	k, err := loop.LockLedger(cfg, loop.AdmittedWait())
++	if *within <= 0 || *within > loop.MaxAckWithin {
++		return fail(fmt.Errorf("--within must be between 1s and %s", loop.MaxAckWithin))
++	}
++	// P12-ack-capacity-1: the request is durable BEFORE the lock is tried; any
++	// ledger holder commits it (revalidated on a fresh ledger). Pending is not
++	// an acknowledgement.
++	now := time.Now().UTC()
++	r, err := loop.SubmitAck(cfg, loop.AckRequest{QID: *qid, Action: *action, By: *by, Next: *next,
++		Deadline: py.ISO(now.Add(*within)), Submitted: py.ISO(now), PID: os.Getpid()})
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+-	defer k.Unlock()
+-	loop.ProcessDue(cfg)
+-	defer loop.ProcessDue(cfg)
+-	l, err := loop.Open(cfg, nil)
+-	if err != nil {
+-		return fail(err)
++	wait := loop.AckWorstCase
++	if d, ok := py.Instant(loop.ReadDetection(cfg.DB, *qid)); ok {
++		slack := d.Add(loop.AckBound).Sub(now)
++		if slack >= loop.AckWorstCase {
++			fmt.Printf("request recorded %s, %s after detection %s: while this command waits, it commits by detection + %s.\n",
++				r.Submitted, now.Sub(d).Round(time.Second), py.ISO(d), loop.AckBound)
++			wait = slack
++		} else {
++			fmt.Printf("request recorded %s, %s after detection %s: NO TIMELY PROMISE (the latest feasible submission was detection + %s); it is still committed, late commits are escalated.\n",
++				r.Submitted, now.Sub(d).Round(time.Second), py.ISO(d), loop.AckBound-loop.AckWorstCase)
++		}
+ 	}
+-	defer l.Close()
+-	a, err := l.AckTimeout(*qid, *action, *by, *next, *within)
+-	if err != nil {
+-		return fail(err)
++	if k, err := loop.LockLedger(cfg, wait); err == nil {
++		loop.ProcessDue(cfg) // pending acknowledgements first, then due work
++		k.Unlock()
++	} else {
++		fmt.Fprintln(os.Stderr, "agent-loop: lock not taken:", err)
++	}
++	res := loop.AckResult(cfg, r)
++	if res == nil {
++		fmt.Printf("PENDING: request %s/%s by %s is durable and NOT an acknowledgement yet; the next ledger holder (run, a callback, a dispatch, or the outside liveness check every 30 s) commits it.\n", *qid, *action, *by)
++		return 3
++	}
++	if res.Outcome != "committed" {
++		return fail(fmt.Errorf("acknowledgement rejected: %s", res.Reason))
++	}
++	late := ""
++	if res.Late {
++		late = " LATE: committed after the 60 s bound; the director was told."
+ 	}
+-	fmt.Printf("timeout T-%s of %s acknowledged by %s at %s; respond by %s: %s. This does not resume or close the package.\n",
+-		*action, *qid, a.By, a.At, a.Deadline, a.NextAction)
++	fmt.Printf("timeout T-%s of %s acknowledged by %s at %s (detection %s); respond by %s: %s. This does not resume or close the package.%s\n",
++		*action, *qid, res.By, res.CommittedAt, res.Detection, res.Deadline, res.Next, late)
+ 	return 0
+ }
+ 
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index f1c1316..506fc89 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -202,6 +202,17 @@ LOOP_MUTANTS = [
+     (LP + "notice.go", '		text = "REPEAT (" + kv + "): an earlier send of this notice may or may not have arrived. " + text', "		_ = kv", "the repeat is not labelled"),
+     (LP + "due.go", 'case decision == "interrupted-effect-failed" && err != nil && strings.Contains(err.Error(), "E_DELIVERY_UNRESOLVED"):', "case false:", "an unresolved notice keeps its marker retried forever"),
+     (LP + "timeout.go", '	if st == "idle" || st == "cancelled" {\n		// The cancel was confirmed', '	if false {\n		// The cancel was confirmed', "a confirmed cancel is reported as not confirmed"),
++    # P12-ack-capacity-1: reserved ack/check grant order, durable ack requests, earliest detection
++    (LP + "queue.go", "if prio(string(last)) && other != \"\" {", "if false {", "two priority grants in a row starve waiting writers"),
++    (LP + "queue.go", 'if a := oldest(func(c string) bool { return c == "ack" }); a != "" {', "if a := \"\"; a != \"\" {", "an ack is not granted before other writers"),
++    (LP + "queue.go", '	case "timeout-ack":\n		return "ack"', '	case "timeout-ack":\n		return "due"', "timeout-ack shares the callbacks' places"),
++    (LP + "ack.go", "if json.Unmarshal(b, &old) == nil && old.Next == r.Next {", "if json.Unmarshal(b, &old) == nil {", "a conflicting request replaces nothing and reads as a replay"),
++    (LP + "ack.go", "if n := len(pendingAcks(cfg)); n >= MaxPendingAcks {", "if n := len(pendingAcks(cfg)); false && n >= MaxPendingAcks {", "the request store is unbounded"),
++    (LP + "ack.go", "			case !ok || !now.Before(dl):", "			case false:", "an expired request is committed"),
++    (LP + "ack.go", "ok && at.Sub(det) > AckBound {", "ok && false && at.Sub(det) > AckBound {", "a late commit is not recorded or escalated"),
++    (LP + "ack.go", "if ok2 && (!ok1 || d.Before(at)) {", "if false {", "detection moves to the later settlement time"),
++    (LP + "due.go", "	acks := processAcks(cfg) // pending acknowledgements first", "	acks := []string(nil) // pending acknowledgements first", "pending ack requests are never drained"),
++    (LP + "ack.go", 'if f, ok := host.IsFault(err); ok && f.Code == "E_BUDGET_EXHAUSTED" {', "if f, ok := host.IsFault(err); false && ok && f == nil {", "a spent hold budget rejects an ack request"),
+     # P9 read-only view (internal/expose, checked by its own tests)
+     ("internal/expose/expose.go", "\t\t\t\tcase age < -5*time.Second:", "\t\t\t\tcase false:", "a future pass time reads as fresh"),
+     ("internal/expose/expose.go", "\t\treturn \"UNKNOWN: \" + r.Source + \" unreadable\"", "\t\treturn \"OK\"", "a missing source reads OK"),
+diff --git a/internal/loop/ack.go b/internal/loop/ack.go
+new file mode 100644
+index 0000000..1ed1b91
+--- /dev/null
++++ b/internal/loop/ack.go
+@@ -0,0 +1,267 @@
++package loop
++
++import (
++	"crypto/sha256"
++	"database/sql"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"os"
++	"path/filepath"
++	"sort"
++	"strings"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// P12-ack-capacity-1: a timeout acknowledgement must commit within AckBound
++// of the authoritative detection: the EARLIEST trusted time the loop knew the
++// deadline had passed (the due marker's written time when the callback had
++// to leave one, else the settlement time). Detection never moves on retry.
++//
++// Scheduling bound (see lockQueue.pick). timeout-ack (class "ack", one
++// place) is granted before every other writer, except that it may have to
++// let ONE non-priority writer go first when the previous grant was a
++// priority one. So an admitted ack waits at most for the current holder and
++// one other writer (each HoldBudget + 0.5 s WaitDelay), then commits locally
++// before any due work (measured under 0.2 s): 2 x 10.5 s + 1 s = 22 s,
++// declared AckWorstCase = 25 s. A request refused at admission (the one ack
++// place is taken) is drained by that ack's holder, which commits every
++// pending request first: the same bound. So a requester that waits can be
++// promised the bound if it submits by detection + 60 s - 25 s = detection +
++// 35 s. If the requester exits before it is admitted, and run is stopped,
++// the next drain is the outside liveness check on its own 30 s calendar timer
++// (AccuracySec 1 s): 31 s + the same 22 s = 53 s, declared AckStoppedWorst =
++// 55 s, so the promise for that path needs submission by detection + 5 s.
++// Later requests are still committed, but are told up front that no timely
++// promise is made; a commit after the bound is recorded late and escalated.
++//
++// Durable retry. Every request is written to <db>.acks/ BEFORE the lock is
++// tried, so it survives the requester's exit and any restart. Every ledger
++// holder drains pending requests before its due work (ProcessDue): run,
++// callbacks, dispatch, and, when run is stopped, the outside liveness check on
++// its own timer. A pending request is NOT an acknowledgement: only a commit
++// through AckTimeout on a fresh ledger (principal, authority, action, next
++// action, response deadline revalidated) records one.
++const (
++	AckBound        = 60 * time.Second
++	AckWorstCase    = 25 * time.Second
++	AckStoppedWorst = 55 * time.Second
++	MaxPendingAcks  = 16
++	KeepAckResults  = 64
++)
++
++// AckRequest is a durable timeout-ack request.
++type AckRequest struct {
++	QID       string `json:"qid"`
++	Action    string `json:"action"`
++	By        string `json:"by"`
++	Next      string `json:"next"`
++	Deadline  string `json:"response_deadline"` // absolute: submitted + --within
++	Submitted string `json:"submitted_at"`
++	PID       int    `json:"pid"`
++	// Outcome fields (in done/ only).
++	Outcome     string `json:"outcome,omitempty"` // committed | rejected
++	Reason      string `json:"reason,omitempty"`
++	CommittedAt string `json:"committed_at,omitempty"`
++	Detection   string `json:"detection,omitempty"`
++	Late        bool   `json:"late,omitempty"`
++	LateNotice  string `json:"late_notice,omitempty"`
++}
++
++func ackDir(cfg *Config) string { return cfg.DB + ".acks" }
++
++func ackName(r AckRequest) string {
++	h := sha256.Sum256([]byte(r.QID + "|" + r.Action + "|" + r.By))
++	return hex.EncodeToString(h[:12]) + ".json"
++}
++
++// SubmitAck records a request durably. An identical pending request is a
++// replay; a different one from the same principal for the same action is a
++// conflict; more than MaxPendingAcks pending is refused (E_ACK_QUEUE_FULL).
++func SubmitAck(cfg *Config, r AckRequest) (AckRequest, error) {
++	if err := os.MkdirAll(ackDir(cfg), 0o755); err != nil {
++		return r, err
++	}
++	var path string
++	err := newQueue(cfg).locked(func() error { // the queue mutex also guards the request store
++		path = filepath.Join(ackDir(cfg), ackName(r))
++		if b, err := os.ReadFile(path); err == nil {
++			var old AckRequest
++			if json.Unmarshal(b, &old) == nil && old.Next == r.Next {
++				r = old // replay of a pending request: the first one stands
++				return nil
++			}
++			return fmt.Errorf("E_ACK_CONFLICT: a different pending request by %s for %s exists (%s)", r.By, r.Action, path)
++		}
++		if n := len(pendingAcks(cfg)); n >= MaxPendingAcks {
++			return fmt.Errorf("E_ACK_QUEUE_FULL: %d requests already pending in %s; nothing recorded", n, ackDir(cfg))
++		}
++		b, _ := json.Marshal(r)
++		tmp := path + ".tmp"
++		if err := os.WriteFile(tmp, b, 0o644); err != nil {
++			return err
++		}
++		return os.Rename(tmp, path)
++	})
++	return r, err
++}
++
++func pendingAcks(cfg *Config) []string {
++	ents, _ := os.ReadDir(ackDir(cfg))
++	var out []string
++	for _, e := range ents {
++		if n := e.Name(); strings.HasSuffix(n, ".json") && !e.IsDir() {
++			out = append(out, n)
++		}
++	}
++	return out
++}
++
++// AckResult reads a request's outcome (nil while pending).
++func AckResult(cfg *Config, r AckRequest) *AckRequest {
++	b, err := os.ReadFile(filepath.Join(ackDir(cfg), "done", ackName(r)))
++	if err != nil {
++		return nil
++	}
++	var d AckRequest
++	if json.Unmarshal(b, &d) != nil || d.Submitted != r.Submitted || d.Next != r.Next {
++		return nil // an older request's outcome, not this one's
++	}
++	return &d
++}
++
++// processAcks commits or rejects every pending request, oldest first. The
++// caller holds the ledger lock. It escalates, once, a commit after the bound
++// and a request still pending past it.
++func processAcks(cfg *Config) []string {
++	names := pendingAcks(cfg)
++	if len(names) == 0 {
++		return nil
++	}
++	reqs := map[string]AckRequest{}
++	for _, n := range names {
++		var r AckRequest
++		b, err := os.ReadFile(filepath.Join(ackDir(cfg), n))
++		if err != nil || json.Unmarshal(b, &r) != nil {
++			r = AckRequest{Outcome: "rejected", Reason: "unreadable request"}
++		}
++		reqs[n] = r
++	}
++	sort.Slice(names, func(i, j int) bool { return reqs[names[i]].Submitted < reqs[names[j]].Submitted })
++	l, err := Open(cfg, nil)
++	if err != nil {
++		return []string{"acks: ledger not opened, requests stay pending: " + err.Error()}
++	}
++	defer l.Close()
++	var out []string
++	for i, n := range names {
++		if budgetShort(cfg) {
++			out = append(out, fmt.Sprintf("acks: lock budget short; %d request(s) stay pending for the next holder", len(names)-i))
++			break
++		}
++		r := reqs[n]
++		now := l.now()
++		if r.Outcome == "" {
++			if p := l.Pkg(r.QID); p != nil && p.Timeout != nil {
++				r.Detection = Detection(p.Timeout)
++			}
++			dl, ok := py.Instant(r.Deadline)
++			switch {
++			case !ok || !now.Before(dl):
++				r.Outcome, r.Reason = "rejected", "the requested response deadline "+r.Deadline+" has passed"
++			default:
++				a, err := l.AckTimeout(r.QID, r.Action, r.By, r.Next, dl.Sub(now).Round(time.Second))
++				if f, ok := host.IsFault(err); ok && f.Code == "E_BUDGET_EXHAUSTED" {
++					out = append(out, "ack "+n+": not checked (lock budget spent); stays pending for the next holder")
++					continue // transient: never a rejection
++				}
++				if err != nil {
++					r.Outcome, r.Reason = "rejected", err.Error()
++				} else {
++					r.Outcome, r.CommittedAt = "committed", a.At
++				}
++			}
++		}
++		if det, ok := py.Instant(r.Detection); ok && r.Outcome == "committed" {
++			if at, ok := py.Instant(r.CommittedAt); ok && at.Sub(det) > AckBound {
++				r.Late = true
++				msg := fmt.Sprintf("[agent-loop] %s: the acknowledgement of T-%s by %s committed %s after detection (bound %s). It is recorded; the bound was missed.",
++					r.QID, r.Action, r.By, at.Sub(det).Round(time.Second), AckBound)
++				if err := l.sendSeat("acklate|"+r.QID+"|"+r.Action, l.Cfg.Director, msg, "escalation", r.QID); err != nil {
++					r.LateNotice = "failed: " + err.Error()
++				} else {
++					r.LateNotice = "sent"
++				}
++			}
++		}
++		if err := finishAck(cfg, n, r); err != nil {
++			out = append(out, "ack "+n+": outcome not recorded, stays pending: "+err.Error())
++			continue
++		}
++		out = append(out, fmt.Sprintf("ack %s/%s by %s: %s %s", r.QID, r.Action, r.By, r.Outcome, r.Reason))
++	}
++	return out
++}
++
++func finishAck(cfg *Config, n string, r AckRequest) error {
++	done := filepath.Join(ackDir(cfg), "done")
++	if err := os.MkdirAll(done, 0o755); err != nil {
++		return err
++	}
++	b, _ := json.Marshal(r)
++	if err := os.WriteFile(filepath.Join(done, n+".tmp"), b, 0o644); err != nil {
++		return err
++	}
++	if err := os.Rename(filepath.Join(done, n+".tmp"), filepath.Join(done, n)); err != nil {
++		return err
++	}
++	if err := os.Remove(filepath.Join(ackDir(cfg), n)); err != nil {
++		return err
++	}
++	// Keep the newest KeepAckResults outcomes.
++	ents, _ := os.ReadDir(done)
++	if len(ents) > KeepAckResults {
++		sort.Slice(ents, func(i, j int) bool {
++			a, _ := ents[i].Info()
++			b, _ := ents[j].Info()
++			return a.ModTime().Before(b.ModTime())
++		})
++		for _, e := range ents[:len(ents)-KeepAckResults] {
++			os.Remove(filepath.Join(done, e.Name()))
++		}
++	}
++	return nil
++}
++
++// ReadDetection reads a package's settlement time read-only (no lock, no
++// write): the requester's up-front promise check. "" when not settled.
++func ReadDetection(dbPath, qid string) string {
++	db, err := sql.Open("sqlite", "file:"+dbPath+"?mode=ro&_pragma=busy_timeout(1000)")
++	if err != nil {
++		return ""
++	}
++	defer db.Close()
++	var raw string
++	if db.QueryRow("SELECT value FROM driver_kv WHERE key=?", "loop-pkg:"+qid).Scan(&raw) != nil {
++		return ""
++	}
++	var p Pkg
++	if json.Unmarshal([]byte(raw), &p) != nil || p.Timeout == nil {
++		return ""
++	}
++	return Detection(p.Timeout)
++}
++
++// Detection is the earliest trusted detection time of a step timeout: the
++// due marker's written time if the callback left one, else the settlement.
++func Detection(t *StepTimeout) string {
++	at, ok1 := py.Instant(t.At)
++	d, ok2 := py.Instant(t.Deferred)
++	if ok2 && (!ok1 || d.Before(at)) {
++		return t.Deferred
++	}
++	return t.At
++}
+diff --git a/internal/loop/ack_p12_test.go b/internal/loop/ack_p12_test.go
+new file mode 100644
+index 0000000..026269f
+--- /dev/null
++++ b/internal/loop/ack_p12_test.go
+@@ -0,0 +1,196 @@
++package loop
++
++import (
++	"encoding/json"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// P12-ack-capacity-1: reserved ack/check admission, durable ack requests.
++
++func settledQ(t *testing.T) *rig {
++	r := newRig(t)
++	r.timedOut(t, "Q")
++	r.cancelReply(1, "wake: K -> nothing running\n", "")
++	r.settle(t, "Q", "Q-w1", "ex-Q-w1")
++	return r
++}
++
++func req(by, next string, within time.Duration) AckRequest {
++	now := time.Now().UTC()
++	return AckRequest{QID: "Q", Action: "Q-w1", By: by, Next: next, Deadline: py.ISO(now.Add(within)), Submitted: py.ISO(now), PID: os.Getpid()}
++}
++
++func TestPriorityOrderAndNoTwoPriorityGrantsInARow(t *testing.T) {
++	r := newRig(t)
++	q := newQueue(r.cfg)
++	os.MkdirAll(q.dir, 0o755)
++	names := []string{"1", "2", "3", "4"}
++	got := map[string]queueEntry{"1": {Class: "ordinary"}, "2": {Class: "run"}, "3": {Class: "check"}, "4": {Class: "ack"}}
++	if h := q.pick(names, got); h != "4" {
++		t.Fatalf("an ack is not granted first: %s", h)
++	}
++	q.granted("ack")
++	if h := q.pick(names[:3], got); h != "1" {
++		t.Fatalf("a second priority grant in a row starves the oldest writer: %s", h)
++	}
++	q.granted("ordinary")
++	if h := q.pick([]string{"2", "3"}, got); h != "3" {
++		t.Fatalf("the check is not granted after a non-priority grant: %s", h)
++	}
++	q.granted("check")
++	if h := q.pick([]string{"3"}, map[string]queueEntry{"3": {Class: "check"}}); h != "3" {
++		t.Fatalf("a lone priority writer is blocked: %s", h)
++	}
++}
++
++func TestClassesOfTheAckAndTheOutsideCheck(t *testing.T) {
++	old := os.Args
++	t.Cleanup(func() { os.Args = old })
++	for cmd, want := range map[string]string{"timeout-ack": "ack", "liveness": "check", "timer-callback": "due", "run": "run", "dispatch": "ordinary"} {
++		os.Args = []string{"agent-loop", cmd}
++		if c := lockClass(); c != want {
++			t.Errorf("%s is class %s, want %s", cmd, c, want)
++		}
++	}
++}
++
++func TestDetectionIsTheEarliestTrustedTime(t *testing.T) {
++	st := &StepTimeout{At: "2026-09-23T20:00:30Z", Deferred: "2026-09-23T20:00:08Z"}
++	if d := Detection(st); d != st.Deferred {
++		t.Fatalf("detection moved to the settlement: %s", d)
++	}
++	st.Deferred = ""
++	if d := Detection(st); d != st.At {
++		t.Fatalf("no marker: %s", d)
++	}
++}
++
++func TestAPendingRequestIsNotAnAckUntilAHolderCommitsIt(t *testing.T) {
++	r := settledQ(t)
++	rq, err := SubmitAck(r.cfg, req("tern", "look", 10*time.Minute))
++	must(t, err)
++	l := r.open()
++	if l.Pkg("Q").Timeout.Ack != nil || AckResult(r.cfg, rq) != nil {
++		t.Fatal("a pending request reads as an acknowledgement")
++	}
++	l.Close()
++	// the requester has exited; the next holder (any process) commits it
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	ProcessDue(r.cfg)
++	k.Unlock()
++	res := AckResult(r.cfg, rq)
++	if res == nil || res.Outcome != "committed" || res.Detection == "" {
++		t.Fatalf("not committed by the next holder: %+v", res)
++	}
++	l = r.open()
++	defer l.Close()
++	if a := l.Pkg("Q").Timeout.Ack; a == nil || a.By != "tern" || a.NextAction != "look" {
++		t.Fatalf("ledger ack %+v", a)
++	}
++}
++
++func TestReplayConflictAndQueueBound(t *testing.T) {
++	r := settledQ(t)
++	a, err := SubmitAck(r.cfg, req("tern", "look", 10*time.Minute))
++	must(t, err)
++	time.Sleep(1100 * time.Millisecond)
++	b, err := SubmitAck(r.cfg, req("tern", "look", 10*time.Minute))
++	if err != nil || b.Submitted != a.Submitted {
++		t.Fatalf("a replay is not the first request: %v %+v", err, b)
++	}
++	if _, err := SubmitAck(r.cfg, req("tern", "other", 10*time.Minute)); err == nil || !strings.Contains(err.Error(), "E_ACK_CONFLICT") {
++		t.Fatalf("a conflicting request was recorded: %v", err)
++	}
++	for i := 1; i < MaxPendingAcks; i++ {
++		x := req("tern", "look", 10*time.Minute)
++		x.QID = "P" + string(rune('a'+i))
++		_, err := SubmitAck(r.cfg, x)
++		must(t, err)
++	}
++	x := req("tern", "look", 10*time.Minute)
++	x.QID = "overflow"
++	if _, err := SubmitAck(r.cfg, x); err == nil || !strings.Contains(err.Error(), "E_ACK_QUEUE_FULL") {
++		t.Fatalf("an unbounded request store: %v", err)
++	}
++}
++
++func TestForgedExpiredAndLateRequests(t *testing.T) {
++	r := settledQ(t)
++	forged, _ := SubmitAck(r.cfg, req("kiln", "look", 10*time.Minute))
++	expired := req("tern", "gone", time.Second)
++	must(t, putPending(r.cfg, expired, "zzx.json")) // a second request by one principal: its own file
++	time.Sleep(1100 * time.Millisecond)
++	k, err := LockLedger(r.cfg, time.Second)
++	must(t, err)
++	ProcessDue(r.cfg)
++	k.Unlock()
++	if f := AckResult(r.cfg, forged); f == nil || f.Outcome != "rejected" {
++		t.Fatalf("a forged principal's request: %+v", f)
++	}
++	var e *AckRequest
++	if b, err := os.ReadFile(filepath.Join(ackDir(r.cfg), "done", "zzx.json")); err == nil {
++		json.Unmarshal(b, &e)
++	}
++	if e == nil || e.Outcome != "rejected" || !strings.Contains(e.Reason, "passed") {
++		t.Fatalf("an expired request: %+v", e)
++	}
++	l := r.open()
++	if l.Pkg("Q").Timeout.Ack != nil {
++		t.Fatal("a rejected request left an ack")
++	}
++	// A late commit: detection more than AckBound ago.
++	p := l.Pkg("Q")
++	p.Timeout.At = py.ISO(time.Now().UTC().Add(-2 * AckBound))
++	must(t, l.save(p))
++	l.Close()
++	late, _ := SubmitAck(r.cfg, req("tern", "look", 10*time.Minute))
++	n := len(r.wakesTo("T"))
++	k, err = LockLedger(r.cfg, time.Second)
++	must(t, err)
++	ProcessDue(r.cfg)
++	k.Unlock()
++	res := AckResult(r.cfg, late)
++	if res == nil || res.Outcome != "committed" || !res.Late || res.LateNotice != "sent" {
++		t.Fatalf("a late commit is not recorded and escalated: %+v", res)
++	}
++	if w := r.wakesTo("T")[n:]; len(w) != 1 || !strings.Contains(w[0], "the bound was missed") {
++		t.Fatalf("late escalation: %v", w)
++	}
++}
++
++// putPending writes a pending request file directly (test helper).
++func putPending(cfg *Config, r AckRequest, name string) error {
++	b, _ := json.Marshal(r)
++	os.MkdirAll(ackDir(cfg), 0o755)
++	return os.WriteFile(filepath.Join(ackDir(cfg), name), b, 0o644)
++}
++
++func TestASpentBudgetLeavesTheRequestPendingNotRejected(t *testing.T) {
++	r := settledQ(t)
++	rq, err := SubmitAck(r.cfg, req("tern", "look", 10*time.Minute))
++	must(t, err)
++	run := r.cfg.Run
++	r.cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++		if argv[0] == "agent-deck" {
++			return host.Proc{}, host.ErrBudget
++		}
++		return run(argv, env, timeout)
++	}
++	processAcks(r.cfg)
++	if AckResult(r.cfg, rq) != nil || len(pendingAcks(r.cfg)) != 1 {
++		t.Fatal("a transient budget refusal rejected the request")
++	}
++	r.cfg.Run = run
++	processAcks(r.cfg)
++	if res := AckResult(r.cfg, rq); res == nil || res.Outcome != "committed" {
++		t.Fatalf("not committed on the next drain: %+v", res)
++	}
++}
+diff --git a/internal/loop/due.go b/internal/loop/due.go
+index c312957..d225aab 100644
+--- a/internal/loop/due.go
++++ b/internal/loop/due.go
+@@ -79,9 +79,10 @@ func WriteDue(cfg *Config, qid, action, execution string, now time.Time) (string
+ // is settled or explicitly rejected (kept as <name>.rejected-<time>.json
+ // with the reason); any other failure keeps it for the next holder.
+ func ProcessDue(cfg *Config) []string {
++	acks := processAcks(cfg) // pending acknowledgements first: they are local and bounded
+ 	ents, err := os.ReadDir(dueDir(cfg))
+ 	if err != nil {
+-		return nil
++		return acks
+ 	}
+ 	var names []string
+ 	for _, e := range ents {
+@@ -148,7 +149,7 @@ func ProcessDue(cfg *Config) []string {
+ 			out = append(out, fmt.Sprintf("due %s: kept for the next holder: %s %v", n, decision, err))
+ 		}
+ 	}
+-	return append(out, reportSaturation(cfg)...)
++	return append(append(acks, out...), reportSaturation(cfg)...)
+ }
+ 
+ func isIdentityFault(code string) bool {
+diff --git a/internal/loop/handoff_p12_test.go b/internal/loop/handoff_p12_test.go
+index 09276cb..dfc79eb 100644
+--- a/internal/loop/handoff_p12_test.go
++++ b/internal/loop/handoff_p12_test.go
+@@ -275,3 +275,16 @@ func TestAnUnresolvedNoticeClosesItsDueMarkerAsAnOwnedFailure(t *testing.T) {
+ }
+ 
+ func p0(l *Loop) *Pkg { return l.Pkg("Q") }
++
++func TestALostCounterNeverReusesALiveEntrysName(t *testing.T) {
++	r := newRig(t)
++	q := newQueue(r.cfg)
++	os.MkdirAll(q.dir, 0o755)
++	b, _ := json.Marshal(queueEntry{PID: os.Getpid(), Start: procStart(os.Getpid()), Class: "run"})
++	os.WriteFile(filepath.Join(q.dir, "00000000000000000005"), b, 0o644) // live; no .seq counter
++	name, err := q.admit("ordinary")
++	must(t, err)
++	if name != "00000000000000000006" {
++		t.Fatalf("admitted as %s: a lost counter reused or undercut a live entry", name)
++	}
++}
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 702b70f..7c6475c 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -233,6 +233,10 @@ func (c *Config) VerifySeats(names ...string) error {
+ 	}
+ 	proc, err := run([]string{l.Cfg.AgentDeck, "list", "--json"}, []string{"AGENTDECK_PROFILE=" + l.Cfg.Profile}, 30*time.Second)
+ 	if err != nil || proc.RC != 0 {
++		if errors.Is(err, host.ErrBudget) {
++			// Not a binding fault: the lock hold's budget is spent; retry in a later hold.
++			return &host.Fault{Code: "E_BUDGET_EXHAUSTED", Detail: "the agent-deck registry was not read: the ledger-lock hold's budget is spent", Owner: "cairn"}
++		}
+ 		return &host.Fault{Code: "E_SEAT_BINDING", Detail: fmt.Sprintf("cannot read the agent-deck registry: %v %s", err, proc.Stderr), Owner: "cairn"}
+ 	}
+ 	var rows []struct{ ID, Title string }
+diff --git a/internal/loop/queue.go b/internal/loop/queue.go
+index 692457e..0ed194a 100644
+--- a/internal/loop/queue.go
++++ b/internal/loop/queue.go
+@@ -28,19 +28,25 @@ import (
+ // queue. No daemon: a short flock on <db>.queue/.mutex makes every
+ // admission, scan and removal atomic.
+ var (
+-	QueueCap   = map[string]int{"run": 1, "due": 3, "ordinary": 2}
++	QueueCap   = map[string]int{"run": 1, "due": 3, "ordinary": 2, "ack": 1, "check": 1}
+ 	QueueStale = 3 * time.Second
+ 	queuePoll  = 25 * time.Millisecond
+ )
+ 
+-// AdmittedWait is how long an admitted writer waits at most: every entry
+-// ahead of it holds at most HoldBudget (+ the 0.5 s WaitDelay and hand-off).
++// AdmittedWait is how long an admitted non-priority writer waits at most:
++// the current holder, then every non-priority entry ahead, each of which may
++// be preceded by one priority (ack/check) grant; every hold is at most
++// HoldBudget (+ the 0.5 s WaitDelay and hand-off, rounded to 1 s):
++// (1 + 2 x (run + due + ordinary)) x 11 s = 13 x 11 s = 143 s. This is the
++// arithmetic worst case; it needs an ack or check arriving before every grant.
+ func AdmittedWait() time.Duration {
+ 	n := 0
+-	for _, c := range QueueCap {
+-		n += c
++	for c, v := range QueueCap {
++		if c != "ack" && c != "check" {
++			n += v
++		}
+ 	}
+-	return time.Duration(n) * (HoldBudget + time.Second)
++	return time.Duration(1+2*n) * (HoldBudget + time.Second)
+ }
+ 
+ // lockClass is the queue class of this process's command.
+@@ -52,8 +58,12 @@ func lockClass() string {
+ 	switch cmd {
+ 	case "run":
+ 		return "run"
+-	case "timer-callback", "check", "timeout-ack":
++	case "timer-callback":
+ 		return "due"
++	case "timeout-ack":
++		return "ack"
++	case "liveness":
++		return "check"
+ 	}
+ 	return "ordinary"
+ }
+@@ -191,9 +201,10 @@ func (q *lockQueue) admit(class string) (string, error) {
+ func (q *lockQueue) head(name string) (isHead, exists bool) {
+ 	q.locked(func() error {
+ 		names, got := q.live()
+-		for i, n := range names {
++		head := q.pick(names, got)
++		for _, n := range names {
+ 			if n == name && got[n].PID == os.Getpid() { // a reaped name is never taken for ours
+-				isHead, exists = i == 0, true
++				isHead, exists = n == head, true
+ 			}
+ 		}
+ 		return nil
+@@ -201,6 +212,41 @@ func (q *lockQueue) head(name string) (isHead, exists bool) {
+ 	return
+ }
+ 
++// pick is the grant order (P12-ack-capacity-1). timeout-ack goes first, then
++// the outside check, then everyone else oldest first, EXCEPT that two
++// priority grants never follow each other while a non-priority writer waits:
++// so an ack waits at most for the current holder and one other writer, and a
++// non-priority writer is overtaken by at most one priority grant per
++// non-priority grant. The last grant's class is in .last (under the mutex).
++func (q *lockQueue) pick(names []string, got map[string]queueEntry) string {
++	prio := func(c string) bool { return c == "ack" || c == "check" }
++	last, _ := os.ReadFile(filepath.Join(q.dir, ".last"))
++	oldest := func(want func(string) bool) string {
++		for _, n := range names {
++			if want(got[n].Class) {
++				return n
++			}
++		}
++		return ""
++	}
++	other := oldest(func(c string) bool { return !prio(c) })
++	if prio(string(last)) && other != "" {
++		return other
++	}
++	if a := oldest(func(c string) bool { return c == "ack" }); a != "" {
++		return a
++	}
++	if c := oldest(func(c string) bool { return c == "check" }); c != "" {
++		return c
++	}
++	return other
++}
++
++// granted records the class of the writer that just took the lock.
++func (q *lockQueue) granted(class string) {
++	q.locked(func() error { return os.WriteFile(filepath.Join(q.dir, ".last"), []byte(class), 0o644) })
++}
++
+ func (q *lockQueue) touch(name string) {
+ 	now := time.Now()
+ 	os.Chtimes(filepath.Join(q.dir, name), now, now)
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 1bbfc64..2fbaa7b 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -350,6 +350,7 @@ func LockLedger(cfg *Config, wait time.Duration) (*LedgerLock, error) {
+ 			if err == nil {
+ 				// The deferred removal drops this entry: a holder that wants the
+ 				// lock again queues at the back.
++				q.granted(class)
+ 				k := &LedgerLock{f: f, cfg: cfg, run: cfg.Run}
+ 				dl := time.Now().Add(HoldBudget)
+ 				inner := cfg.Run

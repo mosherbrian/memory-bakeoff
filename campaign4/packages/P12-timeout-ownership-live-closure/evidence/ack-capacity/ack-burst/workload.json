@@ -1,0 +1,10 @@
+{"mode": "acks", "binary_sha256": "77c46332c2e8dcb966a9dc6c38a9dd4554f3986ba9a6ea335700b274714ba408", "workdir": "/var/tmp/p12-rp-P37J",
+ "backlog": {"packages": 14, "qids": "B01..B14", "worker": "fx-worker", "verifiers": ["fx-v1", "fx-v2", "fx-v3"], "duration_s": 45,
+   "accepted_by": "dispatch with fast transport before any contention; all 14 registered before the first deadline"},
+ "stalled_holder_fixture": {"what": "flock(1) holds <db>.lock (an external writer that does not release)", "starts": "first deadline - 3s", "holds_s": 40,
+   "why": "every deadline callback must wait DueWait 8 s, write its marker and give up at DueWindow 22 s, so all 14 deadlines become accepted due markers"},
+ "ordinary_arrivals": {"every_s": 5, "for_s": 90, "from": "end", "slow_dispatch_transport": 1, "duration": "10m (never due in the window)"},
+ "transport": {"cancel": "fast, rc 1 'nothing running'", "notice_s": 1.0, "notice_fail_every": 100000, "notice_queued_rc3_every": 0, "notice_hang_every": 0, "fail_first_duty_notice": 0, "notice_start_lines": "every notice logs a 'started' line at entry (attempt; interval for the local-time measure)", "hang_s": 15, "hang_effect": "lands after the sleep (a capped send whose effect still arrives: ambiguous)",
+   "dispatch_s": 20, "dispatch_effect": "logged BEFORE the slow reply, so a capped/killed send has landed (ambiguous delivery)"},
+ "run": "run --every 2s, its own process", "callbacks": "each armed deadline fired at its calendar instant in its own process",
+ "finite_duration": "stall end + 240s", "crash": "crash mode only: SIGKILL run at its first hold after the stall in which due markers exist and a send started by run is in flight; restart 3 s later", "crash2": "crash2 mode only: see the header"}

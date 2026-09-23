@@ -1,0 +1,16 @@
+== 77c46332c2e8dcb9 cancel reply: idle
+armed: --user --unit=agent-loop-fx-L2-w1.timer --timer-property=AccuracySec=1s --on-calendar=2026-09-23 21:56:39 UTC /home/bmosher/projects/agent-l
+callback rc=0 stdout={"decision": "interrupted", "note": "{\"decision\": \"interrupted\", \"dedup\": false, \"timer\": \"deadline:L2-w1\"}"} stderr=
+STEP=timed-out DIRECTOR_WAKES=1 DUTY_WAKES=0
+director notice: D1 [agent-loop] deadline-expired:L2. See: agent-loop status --config /tmp/p12-a-2XG4/fx.json. Acknowledge ownership with: /home/bmosher/projects/agent-loop-releases/agent-loop-dbcf5df1ff0d/bin/agent-loop timeout-ack --config /tmp/p12-a-2XG4/fx.json --qid L2 --action L2-w1 --by SEAT --next 'NEXT ACTI
+TIMEOUT {"id": "T-L2-w1", "action": "L2-w1", "at": "2026-09-23T21:56:41Z", "cancel": "idle (msg-L2-w1-2)", "director": "told", "callback_lateness": "2s"}
+-- replay
+replay rc=0 {"decision": "already-handled", "note": "{\"decision\": \"already-handled\", \"dedup\": true, \"timer\": \"deadline:L2-w1\"}"}; director wakes now 1
+-- ack
+   wrong actor: request recorded 2026-09-23T21:56:41Z, 0s after detection 2026-09-23T21:56:41Z: while this command waits, it commits by detection + 1m0s.
+   wrong actor: agent-loop: acknowledgement rejected: fx-worker is neither the director (fx-director) nor duty (fx-duty)
+   director: request recorded 2026-09-23T21:56:41Z, 0s after detection 2026-09-23T21:56:41Z: while this command waits, it commits by detection + 1m0s.
+   director: timeout T-L2-w1 of L2 acknowledged by fx-director at 2026-09-23T21:56:41Z (detection 2026-09-23T21:56:41Z); respond by 2026-09-23T22:06:41Z: re-dispatch. This does not resume or close the package.
+   conflicting: request recorded 2026-09-23T21:56:41Z, 0s after detection 2026-09-23T21:56:41Z: while this command waits, it commits by detection + 1m0s.
+   conflicting: agent-loop: acknowledgement rejected: T-L2-w1 is already acknowledged by fx-director until 2026-09-23T22:06:41Z (re-dispatch)
+ACK {"by": "fx-director", "next_action": "re-dispatch", "response_deadline": "2026-09-23T22:06:41Z", "at": "2026-09-23T21:56:41Z"} STEP timed-out
