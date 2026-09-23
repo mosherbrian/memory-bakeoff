@@ -75,7 +75,7 @@
   "Injected-clock (core.FakeClock) tests prove the loop side only; systemd's calendar delivery after a real host clock rollback is NOT established. Qualification assumes continuous host UTC; a real discontinuity invalidates the timing sample and needs reconciliation.",
   "A re-arm happens only if the early callback runs; if systemd never fires the unit (e.g. a large backward step before firing), nothing in the loop sees it until the liveness check; that is not changed here.",
   "No escalation of an unacked timeout while run is stopped.",
-  "A re-armed unit is not in the stop path of disarm (same unit name, so disarm's stop of <unit>.timer does cover it) -- covered because the name is unchanged.",
+  "A re-armed unit keeps the original unit name, so disarm's stop of <unit>.timer (when the step finishes) also stops it.",
   "L4a/L4b, live ack latency and step-timer precision on real seats: proved only in the signed live run."
  ]
 }
