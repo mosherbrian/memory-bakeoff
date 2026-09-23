@@ -1,0 +1,35 @@
+{
+  "at": "2026-09-23T21:40:25.412159+00:00",
+  "signer": "tern",
+  "action": "P12-ack-capacity-1",
+  "sponsor": "Brian: Yes, proceed. I want to get to live testing. Smallest remedy round funded.",
+  "predecessor": "fair-handoff code/evidence PASS retained; live capacity blocker open",
+  "review_sha256": "c8342635946b10392d60e06424b18285918040c7e1de968e25659b2132ad77be",
+  "base": "5da2b36f87f79e5f80d2c0d7b234c1cef903aaea",
+  "base_binary_sha256": "842e44d67646c3857031cf30b49836fff3cba2328881115b4018dd4685f2ec71",
+  "prior_ceiling_minutes": 935,
+  "author_minutes": 90,
+  "independent_review_minutes": 30,
+  "new_ceiling_minutes": 1055,
+  "sizing": "Author includes implementation and real-process evidence, one90m attempt; independent30m. No repair/reserve or automatic extension.",
+  "requirements": [
+    "Reserved numeric bounded admission for timeout-ack AND outside check; neither shares all capacity with callbacks nor is exempt from caps. Preserve bounded progress of run/ordinary/callback classes,10s hold budget, truthful heartbeat and stopped-mode ownership.",
+    "Give concrete worst-case admission+wait+hold/retry scheduling arithmetic using REMAINING60s from authoritative detection. Include current holder, admitted predecessors, ProcessDue, transport and persistence. Reject unfulfillable timely-success promises. Reserved slot alone not sufficient; no resetting detection on retry or claiming60s from command submission.",
+    "Automatic durable retry for ack/check refused at admission, survives requester exit and process restart, bounded storage/dedup and deterministic overload reporting. Identify which independently running component drains it, including intentional stop. Pending ack request is NOT recorded acknowledgement. Revalidate bound principal/action, authorization, next action and response deadline against fresh ledger before commit. Never manufacture human acknowledgement.",
+    "If request arrives too late, can no longer meet budget, or transport/host cannot progress: preserve request/outcome, show missed bound and owned escalation, not silent drop, spin or synthetic PASS. Record supported host assumptions and latest feasible submission slack explicitly; no universal timely human-response claim.",
+    "Real separate-process on exact release under >=14 accepted deadline markers+ordinary load: timely supplied authorized ack commits within60s of original detection, check progresses despite full callback capacity; refusal->durable retry, requester exit, stopped run, restart, duplicate/conflicting/forged/expired requests, and outside check progress. Trusted timestamps original detection/submission/admission/commit; test near-budget boundary and late request expected failure. Independent unshared burst/crash variation.",
+    "Preserve D1 successful transport stamping, D2 FIFO+numeric cap/dead-waiter identity, D3 durable bounded repeats/no extra cancel-dispatch-settlement, counter-loss fix. Core/py/conformance cases frozen. New isolated worktree/private release. Include predecessor test-only lost-counter test as test input with explicit provenance; do not imply it was in5da2b36.",
+    "125 exact shipped conformance, retained relevant loop/host/regressions+changed-path mutations; hash-bound runnable tests/evidence, source manifests. Main/install unchanged. No fleet work/live/clock changes; isolated test units cleanup recorded.",
+    "Update live/cutover template binary/source/unit pins to final release and document exact ack retry use in L6 and check cases. Do not broaden live matrix except exercising this remedy within existing cases/bounds. All late-bound placeholders filled only during fresh prep and signed afterward.",
+    "COMPLETE only if full obligations met; otherwise INCOMPLETE with exact gap. No hidden scope growth. Claim includes all residuals and live-readiness distinction."
+  ],
+  "D3_scope_reconciliation": "Reviewed broader incident-key application recorded as a scope deviation; accept retained behavior for this successor only insofar as no repeated cancel/dispatch/settlement, no false ack/delivery and no suppression of fresh incidents. Preserve review and evidence; no retrospective narrower-scope claim.",
+  "claim_path": "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/ack-capacity-claim.json",
+  "after_pass": [
+    "Tern checks independent verdict and exact final plan/pins against existing P12 matrix; no new exploratory engineering round unless a concrete blocker appears.",
+    "Release existing fresh isolated prep15m and binding10m; verify4 exact registry identities/socket incarnations, release bytes, cleanup calendar timer.",
+    "Fill late-bound inputs, sign exact plan+inputs+candidate+binding and absolute75m live bound; cairn executes existing live cases including L6 ack/L6b stopped escalation.",
+    "Independent live review25m; only PASS permits separately signed existing45m cutover/first real package then10m review. NOT READY preserves old control."
+  ],
+  "review": "Fresh corvid30m on claim, no overlap; no automatic prep until Tern checks PASS. Existing live/cutover grants unchanged held."
+}
