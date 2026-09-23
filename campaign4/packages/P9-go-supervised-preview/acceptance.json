@@ -1,0 +1,101 @@
+{
+  "signer": "tern",
+  "recorded_at": "2026-09-23T06:30:46.449618+00:00",
+  "package_id": "P9-go-supervised-preview",
+  "state": "COMPLETE",
+  "outcome": "ACCEPTED_SUPERVISED_PREVIEW",
+  "source": {
+    "repo": "github.com/mosherbrian/agent-loop",
+    "branch": "p9-preview",
+    "commit": "c124d82cd26ae4966f3e6a935cb24d971347ec8c",
+    "base": "71318c4e7a0ed142acd61d4553f31e5bad0fb474",
+    "worktree": "/var/home/bmosher/projects/agent-loop-p9",
+    "frozen_control": "git diff 71318c4 HEAD -- internal/core internal/host internal/py internal/loop is empty; cmd/agent-loop changes are additions only (the expose command and usage lines; no removed line)",
+    "changed_vs_base": [
+      "A\tLICENSES/THIRD-PARTY.md",
+      "M\tREADME.md",
+      "M\tTRACKING.md",
+      "M\tcmd/agent-loop/loop.go",
+      "M\tcmd/agent-loop/main.go",
+      "M\tconformance/tools/mutate_go.py",
+      "A\tdocs/SUPERVISED-PREVIEW.md",
+      "D\texamples/campaign4.json",
+      "A\texamples/inventory.template.json",
+      "A\texamples/project.template.json",
+      "R058\tdeploy/systemd/agent-loop-liveness@.service\texamples/systemd-unqualified/agent-loop-liveness@.service",
+      "R051\tdeploy/systemd/agent-loop-liveness@.timer\texamples/systemd-unqualified/agent-loop-liveness@.timer",
+      "R073\tdeploy/systemd/agent-loop@.service\texamples/systemd-unqualified/agent-loop@.service",
+      "A\tinternal/expose/expose.go",
+      "A\tinternal/expose/expose_test.go",
+      "A\ttools/release.sh"
+    ],
+    "commits": [
+      "c124d82 expose: a package without recorded principals shows no loop command (E_AUTHORITY_MISSING) and an UNKNOWN owner; 81/81",
+      "2fc210f expose: flag a pending decision with no owner/question/next action; UNKNOWN principal on steps; template shows recorded rulings",
+      "ae350a9 expose: read a private copy of the ledger (opening it read-only still creates -wal/-shm); test that rendering creates or changes no file; 80/80",
+      "4451e54 release.sh: no host path in BUILD.json",
+      "4b168c0 P9 supervised preview: read-only Expose view (P7 requirements + ledger overhead counts) and packaging"
+    ]
+  },
+  "binary": {
+    "path": "/home/bmosher/projects/agent-loop-releases/agent-loop-c124d82cd26a/bin/agent-loop",
+    "sha256": "221bb3aaaf68ddf98d8317b06b8cf22ee51fe785ac1f61b23b561a0b57fd7fd5",
+    "bytes": 13546440,
+    "build": "tools/release.sh: CGO_ENABLED=0 go build -trimpath ./cmd/agent-loop, go1.27.1 linux/amd64, vcs.revision embedded, vcs.modified=false (full go version -m in BUILD.json)",
+    "installed": false,
+    "note": "private; main branch and ~/.local/bin/agent-loop (8cc149bf) unchanged"
+  },
+  "release": {
+    "dir": "/home/bmosher/projects/agent-loop-releases/agent-loop-c124d82cd26a",
+    "archive": "/home/bmosher/projects/agent-loop-releases/agent-loop-c124d82cd26a.tar.gz",
+    "archive_sha256": "e559ad175c3a21e99c3bf763a4366a4143ccafc5c1dcf0071250132ade4a8934",
+    "manifest": "/home/bmosher/projects/agent-loop-releases/agent-loop-c124d82cd26a/MANIFEST.sha256",
+    "manifest_sha256": "d9c55765699ce8db16ab6e633a5df3932ffbeeda39c315525e6d445fccbeff3f",
+    "contents": [
+      "5dc21122ff19fa373a5d4653338975ce7b0931eafa1a8e24697810baf88367b0  ./agent-loop-c124d82cd26a-src.tar.gz",
+      "221bb3aaaf68ddf98d8317b06b8cf22ee51fe785ac1f61b23b561a0b57fd7fd5  ./bin/agent-loop",
+      "3b4ac4371675e832339c031045f36f14b9da15a5d5ce61a72aee1e13cafec5b4  ./BUILD.json",
+      "d5fbf1aae0d388f380961ebbf9d9f90ec951abd9741e53b4e84283a3e1e8249e  ./docs/SUPERVISED-PREVIEW.md",
+      "79eaba4f03c9e3bccb1b8704cdaf181dd79bcefb06a8a9b4c91ae0078a171fb4  ./examples/inventory.template.json",
+      "50af671f5d82afba36fd5be7fef30052396d8fa268fb4acb44484364608eb50a  ./examples/project.template.json",
+      "cd28d396e5e5fd4d11c640a27f9f35dace66512b9ab4c525ee91e94d157860ed  ./examples/systemd-unqualified/agent-loop-liveness@.service",
+      "cd4db5e8129c5cdb1e359009a8cffc15aba906267ab05f5b2598d0c950b3bd52  ./examples/systemd-unqualified/agent-loop-liveness@.timer",
+      "7f70ee5790df63c156af60c32c71d2c87bb814cfb58ae910ac20b908a1768bbf  ./examples/systemd-unqualified/agent-loop@.service",
+      "4168b4ec8f9e48b828e70c1d52ec1961ee7c03bd25fcb584777800b7e030921f  ./LICENSES/THIRD-PARTY.md",
+      "f7fe5e1f1f0469e66e69e9754f58b2d73a1ecf58b2726ad118422785620bc478  ./provenance/adjudicated.json",
+      "dd9f38548cb781e6835e975118a291624d2deed361d0829d84c5b950efc7c913  ./provenance/PROVENANCE.json",
+      "09e03df014d68ba63ee2b514186206f30fbd028e92cf3750ea11c568e833c607  ./README.md",
+      "f9786b4a9d3a19d30754323dba952799b71d71e7d880276e94729753e2cbe048  ./TRACKING.md"
+    ],
+    "superseded_private_builds": "earlier archives in the same directory (4b168c07ff21, 4451e54070b4, ae350a950d50, 2fc210f8c8eb) are superseded working builds, not claimed",
+    "published": false
+  },
+  "claim_sha256": "916f386f5b13e85d0fe713e5ff15cb9ba45d4508f08e8222181e374d40b713da",
+  "verification_completion_sha256": "cd7adc39c2ce20ed5c77346dffa9909ce6c30bbbd46ead3f2b3f95a758dfdc32",
+  "current_verification_sha256": "6e16f658035e3c6a59ba60e09f6ec10e6d643d13c58cbcd25c7e84107fdce396",
+  "independent_rehearsal_sha256": "ef90c7b1ecc4b2aadecc0df4f062cac1478b9d849ea6f73e4a933474cd99ba45",
+  "release_manifest_files_checked": 14,
+  "manifest_mismatch": [],
+  "acceptance_scope": "read-only Expose and private Go supervised-preview packaging; offline/injected tests plus preserved real-ledger view; no unattended/service qualification",
+  "supported_view_evidence": "quiescent ledger or preserved snapshot; concurrent DB/WAL-copy consistency remains unqualified and may omit or show stale state; generated-at is not transaction-consistent source time",
+  "known_limits": [
+    "P8 NOT_READY with damaged incident/no alarm, future heartbeat false freshness and missing process incarnation",
+    "actual systemd supervision and repaired current live handoff remain unobserved",
+    "trusted-host CLI, no multiuser authentication",
+    "no continuation of old packages lacking recorded principals",
+    "inventory status is an assertion with hashed source, not semantic verification",
+    "counts/durations only cover recorded ledger events and receipt times",
+    "parity/mutation full sweeps author-reported; independent suite and125 conformance reproduced"
+  ],
+  "unused_allocations": "P9 repair20m+recheck10m cancelled; no further implementation/review automatically allocated",
+  "disposition": {
+    "kind": "question_answered",
+    "decision_ref": "campaign4/packages/P9-go-supervised-preview/acceptance.json",
+    "reason": "fixed roadmap delivered supervised-preview artifact and Expose; no further machinery successor warranted at this boundary",
+    "owner": "tern"
+  },
+  "unattended_ready": false,
+  "installed": false,
+  "published_release": false,
+  "fleet_adopted": false
+}

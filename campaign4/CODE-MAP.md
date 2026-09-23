@@ -1,5 +1,17 @@
 # Where the harness code is
 
+## Current deliverable — 2026-09-23
+
+[Accepted Go supervised preview](packages/P9-go-supervised-preview/acceptance.json):
+[agent-loop source c124d82](https://github.com/mosherbrian/agent-loop/tree/c124d82cd26ae4966f3e6a935cb24d971347ec8c),
+normal `cmd/`, `internal/`, tests, docs and config templates; new `expose` view.
+Private artifact `/home/bmosher/projects/agent-loop-releases/agent-loop-c124d82cd26a.tar.gz`.
+[Outcome and exact limits](HARNESS-OUTCOME-20260923.md). **P8 NOT READY; no adopted
+production harness, no main/installed promotion.** Concurrent-ledger view accuracy
+is unqualified; supported evidence uses a quiescent ledger or preserved snapshot.
+Older entries below are historical provenance, not alternative current installs.
+
+
 Director-maintained map, 2026-09-22. Acceptance is scoped evidence, not deployment.
 There is no adopted production harness yet. Package number alone never selects code.
 
