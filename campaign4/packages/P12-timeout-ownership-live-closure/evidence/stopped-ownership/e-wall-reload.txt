@@ -1,0 +1,58 @@
+   redirect: < PKG=/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure
+   redirect: < PLANS=$PKG/plans
+   redirect: > PKG=/tmp/p12-e-cahE/pkg
+   redirect: > PLANS=/tmp/p12-e-cahE/plans
+   redirect: < SD=/home/bmosher/.config/systemd/user
+   redirect: > SD=/tmp/p12-e-cahE/sd
+== driver fb1ce0607a5385d4 run W104911 wall at 2026-09-23T17:49:51Z, workdir /tmp/p12-e-cahE
+-- wall unit p12live-wallstop-W104911.timer (deadline 2026-09-23T17:49:51Z = @1790185791)
+   before reloads 17:49:17.896: TimersCalendar={ OnCalendar=2026-09-23 17:49:51 UTC ; next_elapse=@1790185791 } NextElapseUSecRealtime=Wed 2026-09-23 10:49:51 PDT NextElapseUSecMonotonic=0 
+   REAL daemon-reload 1 rc=0 at 17:49:28.102
+   after reload 1 17:49:28.103: TimersCalendar={ OnCalendar=2026-09-23 17:49:51 UTC ; next_elapse=@1790185791 } NextElapseUSecRealtime=Wed 2026-09-23 10:49:51 PDT NextElapseUSecMonotonic=0 
+   REAL daemon-reload 2 rc=0 at 17:49:38.309
+   after reload 2 17:49:38.310: TimersCalendar={ OnCalendar=2026-09-23 17:49:51 UTC ; next_elapse=@1790185791 } NextElapseUSecRealtime=Wed 2026-09-23 10:49:51 PDT NextElapseUSecMonotonic=0 
+   REAL daemon-reload 3 rc=0 at 17:49:48.517
+   after reload 3 17:49:48.518: TimersCalendar={ OnCalendar=2026-09-23 17:49:51 UTC ; next_elapse=@1790185791 } NextElapseUSecRealtime=Wed 2026-09-23 10:49:51 PDT NextElapseUSecMonotonic=0 
+-- bound used: 2026-09-23T17:49:51.393Z
+-- after 60s: driver pid 1380619 alive=no
+-- results.tsv:
+   WALLSTOP	INCOMPLETE	2026-09-23T17:49:51.393Z	live deadline 2026-09-23T17:49:51Z reached; driver scope stopped before cleanup
+-- effects by the driver's cgroup after the bound (deadline 2026-09-23T17:49:51Z):
+-- every effect, by cgroup:
+         2 15m. Then
+         8 agent-deck cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p12live-wallstop-W104911.service
+        11 agent-loop cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p12live-driver-W104911.scope
+         2 a message
+         2 command it
+         2 happens when
+         2 investigating", and
+         1 journalctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p12live-driver-W104911.scope
+         2 name and
+         2 never acknowledge
+         2 ownership with:",
+         3 systemctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p12live-driver-W104911.scope
+         8 systemctl cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p12live-wallstop-W104911.service
+         2 wake cg=/user.slice/user-1000.slice/user@1000.service/app.slice/p12live-driver-W104911.scope
+      none
+LATE_FROM_DEADLINE=0 (driver-scope effects at or after the authorized deadline 2026-09-23T17:49:51Z)
+-- cleanup runs: 1
+-- scope: inactive; wall timer: inactive inactive 
+-- sleep children of the driver left: 0
+LATE_EFFECTS=0 WALLSTOP_ROWS=1 CLEANUPS=1 DRIVER_ALIVE=0
+SECOND_CLEANUP_EFFECTS=0 msg="cleanup already ran"
+-- wall-side agent-deck calls and their profile:
+   prof=fxprof :: session stop W1
+   prof=fxprof :: session remove W1
+   prof=fxprof :: session stop V1
+   prof=fxprof :: session remove V1
+   prof=fxprof :: session stop D1
+   prof=fxprof :: session remove D1
+   prof=fxprof :: session stop U1
+   prof=fxprof :: session remove U1
+WALL_AGENTDECK_PROFILES=prof=fxprof 
+-- driver.log tail:
+   2026-09-23T17:49:51.553Z + systemctl --user stop p12live-wallstop-W104911.timer
+   2026-09-23T17:49:51.558Z   rc=0
+   2026-09-23T17:49:51.641Z cleanup done
+   2026-09-23T17:50:11.655Z cleanup already ran (lock /tmp/p12-e-cahE/ev/cleanup.lock)
+WORKDIR=/tmp/p12-e-cahE

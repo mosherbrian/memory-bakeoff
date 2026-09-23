@@ -48,3 +48,23 @@ Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. T
   - Evidence comes from injected-clock tests (core.FakeClock). They do NOT show how systemd delivers a calendar timer after a real host clock rollback. Qualification assumes a continuous host UTC clock, and a real discontinuity invalidates the timing sample.
 - **Duplicate notice (the only allowed one)**: a failed-cancel settlement tells the director, then the timer's replay delivers the cancel and the core's own wake tells the director again. It is the same `T-<action>` incident with the same settlement time, so there is no per-pass flood and no second cancel or dispatch. Tested in `TestTheOnlyDuplicateNoticeIsBounded`.
 - Tests: `evidence/closure-1/closure-tests.txt`. Mutation 110/110 (`evidence/closure-1/mutate-go.txt`). Conformance on the release binary: `evidence/closure-1/conformance-release-binary/` (rc 0, 125/125).
+
+## P12-stopped-ownership-1 (candidate 53c9719, bin `ec184be9…`; templates now pin this release)
+
+- **What changed**: the outside liveness check (its own timer, 45 s, AccuracySec=1s) now also runs the never-acked and ack-expiry escalation, so a timeout is escalated while `run` is stopped. The escalation is reported apart from the liveness verdict and opens no incident, so an intentional stop stays quiet.
+- **Concurrency**: `run` (after every pass), the liveness check and `timeout-ack` each write timeout records from a freshly opened ledger under one file lock (`<db>.timeouts.lock`). This prevents a double escalation from a stale view and prevents an ack being overwritten.
+- **Bounds from settlement**:
+  - While stopped: duty at most 60 + 45 s + check time; the director at most 120 + 45 s + check time.
+  - While running: the same, or 30 s (the pass interval) in place of 45 s.
+- **New live case L6b** (after L5/L6, before L4b): stop `run`, let a 1 min deadline pass, and nobody acknowledges (`tasks/ack.md` tells the fixtures to leave L6b alone).
+  - PASS needs duty 60..110 s and the director 120..170 s after settlement, no ack, and the liveness verdict still `stopped`.
+  - `l6b_eval` is a helper with boundary tests (`evidence/stopped-ownership/l6b-eval-tests.txt`).
+- **Evidence**: `evidence/stopped-ownership/`:
+  - `cli-stopped-noack.txt`, a real CLI run in real time with the stop marker in force: verdict `stopped`, no alarm, no incident; duty at +60 s, director at +120 s;
+  - `tests.txt`;
+  - mutation 112/112;
+  - conformance on the release binary (rc 0, 125/125);
+  - parity 316/321 + 5;
+  - `f1-helpers.txt` 29/0 and `r1-repair-tests.txt` 58/0 on the new driver;
+  - `e-wall-reload.txt` (WALLSTOP, LATE 0);
+  - construction dry run.

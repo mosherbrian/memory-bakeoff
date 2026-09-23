@@ -1,0 +1,89 @@
+{
+ "qid": "P12-stopped-ownership-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "decision": {
+  "stopped-ownership-allocation.json": "b2e120fe4678e20488da3deb49835df6d42cb4eac226b9f73ad04a01e98e1adb",
+  "stopped-ownership-receipt.json": "d25aa3860d0aa351e453e9dcf040f33b067bc158a1dc079a981e42dffea552b2"
+ },
+ "base": "669648cb66b771a147a6ce8197e6654461abe7fc (closure candidate, reviewed; its worktree and release untouched)",
+ "candidate": {
+  "commit": "53c97191c8c89cca7b84de93f0c3b263fbb61e6a",
+  "branch": "p12-stopped (new worktree agent-loop-p12s, pushed)",
+  "release": "/home/bmosher/projects/agent-loop-releases/agent-loop-53c97191c8c8",
+  "binary_sha256": "ec184be99d15905fb096f53d4ec1703f43c229449621df36cfb3467971dafb39",
+  "manifest_sha256": "e32b115c45c80d3efe06477884ea1902e62e07620769837c397114718f53f539",
+  "diff": "evidence/stopped-ownership/source-669648c-to-53c9719.diff",
+  "frozen_unchanged": "internal/core, internal/py, conformance/cases; main and installed preview untouched"
+ },
+ "changed_behaviour": {
+  "stopped_escalation": "liveness Check() -> EscalateTimeouts(): same never-acked (duty 60 s, director 120 s) and ack-expiry escalation as run, on every outside check, also while the stop marker exists; reported as 'timeout: ...' actions, separate from the verdict; no liveness incident; the stop stays quiet",
+  "concurrency": "run (after each pass), the liveness check and timeout-ack write timeout records via withTimeouts(): flock <db>.timeouts.lock + a freshly opened ledger; tested: run+check at the same moment -> one duty escalation; ack taken between them is kept",
+  "failed_send": "unchanged from closure: recorded 'failed <t>: <why>', retried by the next run pass or outside check",
+  "bounds": "while stopped: duty <= 60 s + 45 s + check time, director <= 120 s + 45 s + check time after settlement; while running: 30 s pass interval instead of 45 s (whichever runs first)"
+ },
+ "live_case_L6b": {
+  "driver_sha256": "fb1ce0607a5385d4a82550ec7014b2c611f37d9d2aaed9ad5224ebe099a8536b",
+  "diff": "evidence/stopped-ownership/driver-repair1-to-stopped.diff",
+  "case": "after L5/L6: dispatch L6b (1 min), agent-loop stop, no ack (fixtures told to leave L6b alone in tasks/ack.md); PASS needs duty 60..110 s and director 120..170 s after settlement, no ack, liveness verdict still 'stopped'; then agent-loop start",
+  "eval_tests": "evidence/stopped-ownership/l6b-eval-tests.txt 7/7"
+ },
+ "evidence": {
+  "real_cli_stopped": "evidence/stopped-ownership/cli-stopped-noack.txt: stop marker in force, verdict stopped alarm=False on every check, duty sent at +60 s, director at +120 s, no open incident",
+  "go_tests": "evidence/stopped-ownership/tests.txt (10 timeout/closure/stopped tests) + evidence/stopped-ownership/go-test.txt all ok",
+  "mutation": "evidence/stopped-ownership/mutate-go.txt 112/112 (2 new)",
+  "conformance_release_binary": {
+   "rc": "0",
+   "stderr": "conformance: 125/125 cases ok, 1751 steps"
+  },
+  "host_parity": "evidence/stopped-ownership/host-parity.txt 316/321 + 5",
+  "driver_regressions": [
+   "evidence/stopped-ownership/f1-helpers.txt 29/0",
+   "evidence/stopped-ownership/r1-repair-tests.txt 58/0",
+   "evidence/stopped-ownership/e-wall-reload.txt (3 real reloads, WALLSTOP 1, LATE 0)",
+   "evidence/stopped-ownership/construction-dry/ (16 DRY rows incl. L6b)"
+  ]
+ },
+ "plans_sha256": {
+  "plans/README.md": "4525fe639ee87001626ec026a1df17a4c1ba9e151537084941959f16c7cebb4d",
+  "plans/cutover-inputs.template.env": "1d284a80236fcb5d4719b90e0cca9c128225449ce356f01954f457bd7cd3bd36",
+  "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+  "plans/live-driver.sh": "fb1ce0607a5385d4a82550ec7014b2c611f37d9d2aaed9ad5224ebe099a8536b",
+  "plans/live-inputs.template.env": "fc633aad9d187db0144edb3d9f726ec1c5b4a5e4fa28c9e3c4951f8a48421f9c",
+  "plans/tasks/ack.md": "95e37529a32ba67fb7df3ad48ce039d609e4da8952942e8a4839340b5b751d0a",
+  "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+  "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+  "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+  "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+  "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+ },
+ "evidence_sha256": {
+  "evidence/stopped-ownership/cli-stopped-noack.sh": "94713cc0083825277509f3fbbdb76c42d2e0cdb639d1159fc5bf4b19191faf82",
+  "evidence/stopped-ownership/cli-stopped-noack.txt": "94c2aac9b4864842c1a29a3a9a83d17be41175d0dd50c395f44862accf7a0545",
+  "evidence/stopped-ownership/conformance-release-binary/README.txt": "c409689b593355580570fb45b0ed1543a9a7655e2c1349209859fb060df17c6c",
+  "evidence/stopped-ownership/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/stopped-ownership/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/stopped-ownership/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/stopped-ownership/construction-dry/live-dry-results.tsv": "643d3ec1c53da31ae2ea44568f442d29d38a080910bedef0a105191459af526d",
+  "evidence/stopped-ownership/construction-dry/live-dry.txt": "fa8715680901f7558a0e277fe6ce2b934c0cb2680fa4a4e29dbe59a46cb720f1",
+  "evidence/stopped-ownership/driver-repair1-to-stopped.diff": "938a3f559e62aa0abacc235248b51d5431057995bb7e4df6a53d12fbbe892608",
+  "evidence/stopped-ownership/e-wall-reload.txt": "27d9f7384dc76d120b086fd523a053ddf9b9b1ac957340c5689ba5d9d2d89f9a",
+  "evidence/stopped-ownership/f1-helpers.txt": "f1b71cb0a9e8e946c1fa82bf767c310e7c6aa3535367a0b03b0e1cdee2619421",
+  "evidence/stopped-ownership/go-test.txt": "5bb40e60249279c06fc1453b3136a987349ae52bc4a670bad64ebbf1711d4dcf",
+  "evidence/stopped-ownership/host-parity.txt": "aa2ba8cfe17ee1a631e3c154966041c17db14f8e395f14c8f77f0a6e7804fc1b",
+  "evidence/stopped-ownership/l6b-eval-tests.txt": "21e333138c8195315c17ac389514bd1dd5444147a3186903a084f3949f12a402",
+  "evidence/stopped-ownership/mutate-go.txt": "128c95cf11760f8a636e950b2185136d3cf47f3f5691fba04775d686ded94dfe",
+  "evidence/stopped-ownership/r1-repair-tests.txt": "8be3371f51a0b674aef57d01571de42b7d7dbb0d888ab77f956041d5bc812a6b",
+  "evidence/stopped-ownership/source-669648c-to-53c9719.diff": "5487255bc300ea7b651b1c2e6708bded2a2fd508afdd5bbea9e3fb0a629c237c",
+  "evidence/stopped-ownership/tests.txt": "92a52d3acefc0458b661ec55df5631ffe4dfcf939a7ddf02969bdb653f52393a"
+ },
+ "host_effects": [
+  "3 real daemon-reloads (wall witness); transient p12live- scope and wall timer created and removed; no seats, main, install or clock change"
+ ],
+ "residuals": [
+  "The outside check's cadence comes from agent-loop-liveness@.timer (OnUnitActiveSec=45s, a unit-file monotonic timer). The reload restart shown for transient --on-active timers was not measured for this unit-file timer; a reload storm could stretch the cadence. The live L6b bounds measure it.",
+  "If both run and the liveness timer are down, nothing escalates (the liveness timer's own supervision is out of scope).",
+  "Clock rollback: unchanged from closure (FakeClock loop side only; continuous UTC assumed).",
+  "L4a/L4b, live ack latency, L6b cadence on real seats: proved only in the signed live run."
+ ]
+}

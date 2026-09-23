@@ -1,0 +1,291 @@
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 2a52935..4e8f095 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -127,6 +127,11 @@ HOST_MUTANTS = [
+ # reference exists for it).
+ LP = "internal/loop/"
+ LOOP_MUTANTS = [
++    # P12-stopped-ownership-1: the outside check escalates while run is stopped; fresh locked view
++    (LP + "liveness.go", "if _, serr := os.Stat(c.Cfg.DB); serr == nil {", "if _, serr := os.Stat(c.Cfg.DB); serr == nil && false {",
++     "the outside check never escalates a timeout while run is stopped"),
++    (LP + "loop.go", "msgs, err := EscalateTimeouts(l.Cfg, l.D.Clock)", "msgs, err := append(l.unacked(), l.expiredAcks()...), error(nil)",
++     "run escalates from its stale in-memory view (double escalation)"),
+     # P12-closure-1: never-acked escalation and early-callback re-arm
+     (LP + "timeout.go", "if !ok || now.Sub(at) < NoAckAfter {", "if !ok || now.Sub(at) < 2*NoAckAfter {", "no-ack duty escalation late"),
+     (LP + "timeout.go", 'if !strings.HasPrefix(t.NoAckDuty, "sent") {', 'if t.NoAckDuty == "" {', "a failed no-ack send is never retried"),
+diff --git a/internal/loop/closure_p12_test.go b/internal/loop/closure_p12_test.go
+index b593c50..3549a9d 100644
+--- a/internal/loop/closure_p12_test.go
++++ b/internal/loop/closure_p12_test.go
+@@ -1,6 +1,7 @@
+ package loop
+ 
+ import (
++	"os"
+ 	"path/filepath"
+ 	"strings"
+ 	"testing"
+@@ -104,21 +105,21 @@ func TestFailedNoAckSendIsRetriedNotRecordedDelivered(t *testing.T) {
+ 	r.clock.Advance(60)
+ 	r.fail["wake"] = true
+ 	r.tick(l)
+-	to := l.Pkg("Q").Timeout
++	to := r.fresh("Q")
+ 	if !strings.HasPrefix(to.NoAckDuty, "failed") || !strings.HasPrefix(to.NoAckDirector, "failed") {
+ 		t.Fatalf("failed sends recorded as %q / %q", to.NoAckDuty, to.NoAckDirector)
+ 	}
+ 	r.fail["wake"] = false
+ 	n := len(r.wakesTo("T"))
+ 	r.tick(l) // duty retried and reached; the director waits for 2*NoAckAfter again
+-	to = l.Pkg("Q").Timeout
++	to = r.fresh("Q")
+ 	if !strings.HasPrefix(to.NoAckDuty, "sent") || !strings.HasPrefix(to.NoAckDirector, "failed") || len(r.wakesTo("T")) != n+1 {
+ 		t.Fatalf("retry: %q / %q, %d new wakes", to.NoAckDuty, to.NoAckDirector, len(r.wakesTo("T"))-n)
+ 	}
+ 	r.clock.Advance(60)
+ 	r.tick(l)
+ 	r.tick(l)
+-	if to = l.Pkg("Q").Timeout; !strings.HasPrefix(to.NoAckDirector, "sent") || len(r.wakesTo("T")) != n+2 {
++	if to = r.fresh("Q"); !strings.HasPrefix(to.NoAckDirector, "sent") || len(r.wakesTo("T")) != n+2 {
+ 		t.Fatalf("director at 120 s: %q, %d new wakes", to.NoAckDirector, len(r.wakesTo("T"))-n)
+ 	}
+ }
+@@ -134,7 +135,7 @@ func TestNoAckEscalationRefusesAChangedPrincipal(t *testing.T) {
+ 	n := len(r.wakesTo("C"))
+ 	r.clock.Advance(60)
+ 	r.tick(l)
+-	to := l.Pkg("Q").Timeout
++	to := r.fresh("Q")
+ 	if !strings.Contains(to.NoAckDuty, "E_AUTHORITY") || len(r.wakesTo("C")) != n {
+ 		t.Fatalf("changed duty: %q, corvid wakes %d", to.NoAckDuty, len(r.wakesTo("C"))-n)
+ 	}
+@@ -297,3 +298,86 @@ func TestTheOnlyDuplicateNoticeIsBounded(t *testing.T) {
+ 	}
+ 	_ = host.Proc{}
+ }
++
++// fresh reads a package's timeout record from a newly opened ledger.
++func (r *rig) fresh(qid string) *StepTimeout {
++	f := r.open()
++	defer f.Close()
++	return f.Pkg(qid).Timeout
++}
++
++// P12-stopped-ownership-1: the outside liveness check escalates an
++// unacknowledged timeout while run is stopped; the stop itself stays quiet.
++func TestStoppedRunTimeoutIsEscalatedByTheOutsideCheck(t *testing.T) {
++	r := newRig(t)
++	l := settledAt(t, r)
++	l.Close()
++	os.WriteFile(r.cfg.StopMarker(), []byte("x"), 0o644) // agent-loop stop: run passes no longer happen
++	r.timerState("inactive", "dead")
++	n := len(r.wakesTo("T"))
++	at, _ := py.Instant(r.fresh("Q").At)
++	check := func(after time.Duration) (Verdict, []string) {
++		v, did, err := (&Checker{Cfg: r.cfg, Now: at.Add(after)}).Check()
++		must(t, err)
++		return v, did
++	}
++	v, did := check(59 * time.Second)
++	if len(r.wakesTo("T")) != n || v.Alarm {
++		t.Fatalf("escalated before 60 s or alarmed: %v %v", v, did)
++	}
++	v, did = check(60 * time.Second)
++	if v.State != "stopped" || v.Alarm || len(r.wakesTo("T")) != n+1 || !strings.Contains(strings.Join(did, "|"), "timeout: Q: no ack, duty sent") {
++		t.Fatalf("stopped check at 60 s: verdict %v, did %v, wakes %v", v, did, r.wakesTo("T")[n:])
++	}
++	check(90 * time.Second)
++	if len(r.wakesTo("T")) != n+1 {
++		t.Fatal("duty escalated twice")
++	}
++	check(120 * time.Second)
++	to := r.fresh("Q")
++	if len(r.wakesTo("T")) != n+2 || !strings.HasPrefix(to.NoAckDirector, "sent") || to.Ack != nil {
++		t.Fatalf("director at 120 s: %+v", to)
++	}
++	st, _ := loadState(r.cfg.stateFile())
++	if st.Open != nil {
++		t.Fatalf("the timeout opened a liveness incident: %+v", st.Open)
++	}
++}
++
++// run's pass and the outside check at the same moment: one escalation; an
++// ack taken between them is never overwritten by a stale view.
++func TestRunAndCheckerNeverDoubleEscalateOrLoseAnAck(t *testing.T) {
++	r := newRig(t)
++	l := settledAt(t, r) // l's view is from before any escalation
++	defer l.Close()
++	at, _ := py.Instant(r.fresh("Q").At)
++	r.clock.Advance(60)
++	n := r.noAckWakes()
++	(&Checker{Cfg: r.cfg, Now: at.Add(60 * time.Second)}).Check()
++	r.tick(l) // same moment, stale in-memory view
++	if r.noAckWakes() != n+1 {
++		t.Fatalf("double duty escalation: %v", r.wakesTo("T"))
++	}
++	f := r.open()
++	_, err := f.AckTimeout("Q", "Q-w1", "tern", "on it", 10*time.Minute)
++	f.Close()
++	must(t, err)
++	r.clock.Advance(60)
++	r.tick(l) // stale view still has no ack
++	(&Checker{Cfg: r.cfg, Now: at.Add(120 * time.Second)}).Check()
++	to := r.fresh("Q")
++	if to.Ack == nil || to.Ack.By != "tern" || r.noAckWakes() != n+1 {
++		t.Fatalf("ack lost or escalated after ack: %+v, wakes %v", to, r.wakesTo("T"))
++	}
++}
++
++// noAckWakes counts never-acked escalations (not liveness incidents).
++func (r *rig) noAckWakes() int {
++	n := 0
++	for _, w := range r.wakesTo("T") {
++		if strings.Contains(w, "NO acknowledgement") {
++			n++
++		}
++	}
++	return n
++}
+diff --git a/internal/loop/liveness.go b/internal/loop/liveness.go
+index f4b3b8a..28943f3 100644
+--- a/internal/loop/liveness.go
++++ b/internal/loop/liveness.go
+@@ -16,6 +16,7 @@ package loop
+ // of their own and keep enforcing granted bounds while `run` is stopped.
+ 
+ import (
++	"agent-loop/internal/core"
+ 	"crypto/sha256"
+ 	"database/sql"
+ 	"encoding/hex"
+@@ -461,6 +462,23 @@ func (c *Checker) ackCommand(id string) string {
+ 
+ // Check assesses and acts. It returns the verdict and what it did.
+ func (c *Checker) Check() (Verdict, []string, error) {
++	v, did, err := c.check()
++	// Outstanding step timeouts are escalated here too, so an intentional
++	// stop (quiet for the loop itself) never leaves one waiting on nobody.
++	// This is reported separately and opens no liveness incident.
++	if _, serr := os.Stat(c.Cfg.DB); serr == nil {
++		msgs, eerr := EscalateTimeouts(c.Cfg, core.NewFakeClock(py.ISO(c.Now)))
++		for _, m := range msgs {
++			did = append(did, "timeout: "+m)
++		}
++		if eerr != nil {
++			did = append(did, "timeout escalation failed: "+eerr.Error())
++		}
++	}
++	return v, did, err
++}
++
++func (c *Checker) check() (Verdict, []string, error) {
+ 	cfg := c.Cfg
+ 	st, statePath, damage := resolveState(cfg.stateFile(), c.Now)
+ 	var markerAt time.Time
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index c17d2b8..fcecbc8 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -702,8 +702,11 @@ func (l *Loop) Tick() ([]string, error) {
+ 	if _, err := l.Adapter.DrainOutboxSettled(""); err != nil {
+ 		return done, err
+ 	}
+-	done = append(done, l.unacked()...)
+-	return append(done, l.expiredAcks()...), nil
++	msgs, err := EscalateTimeouts(l.Cfg, l.D.Clock)
++	if err != nil {
++		done = append(done, "timeout escalation failed: "+err.Error())
++	}
++	return append(done, msgs...), nil
+ }
+ 
+ func (l *Loop) lastEnd(p *Pkg) *py.Dict {
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index a87e6be..c20cd13 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -2,9 +2,11 @@ package loop
+ 
+ import (
+ 	"fmt"
++	"os"
+ 	"sort"
+ 	"strconv"
+ 	"strings"
++	"syscall"
+ 	"time"
+ 
+ 	"agent-loop/internal/core"
+@@ -33,9 +35,11 @@ type StepTimeout struct {
+ 
+ // NoAckAfter is how long a settled timeout may stay unacknowledged before
+ // duty is told; the director is told NoAckAfter later (or at once if duty
+-// cannot be reached). The check runs on run's passes, so the actual bound is
+-// NoAckAfter + the pass interval (--every, 30 s) + the pass time, and no
+-// escalation happens while run is stopped (the liveness check owns that).
++// cannot be reached). Both run (after every pass, --every 30 s) and the
++// outside liveness check (its timer, 45 s, also while run is stopped) run
++// the escalation, so the bound is NoAckAfter + the shorter of the two
++// intervals that is running + the check time: at most 60 s + 45 s + check
++// time while run is stopped, 60 s + 30 s + pass time while it runs.
+ const NoAckAfter = 60 * time.Second
+ 
+ // StepAck is an acknowledgement of a step timeout by the director or duty.
+@@ -207,6 +211,15 @@ func (l *Loop) SettleTimeoutFailure(qid, action string, cause error) (string, er
+ // different ack while one is in force is refused. It never resumes or
+ // closes the package.
+ func (l *Loop) AckTimeout(qid, action, by, next string, within time.Duration) (*StepAck, error) {
++	var a *StepAck
++	err := withTimeouts(l.Cfg, l.D.Clock, func(f *Loop) (e error) {
++		a, e = f.ackTimeout(qid, action, by, next, within)
++		return e
++	})
++	return a, err
++}
++
++func (l *Loop) ackTimeout(qid, action, by, next string, within time.Duration) (*StepAck, error) {
+ 	p := l.Pkg(qid)
+ 	if p == nil {
+ 		return nil, fmt.Errorf("no package %s", qid)
+@@ -247,6 +260,40 @@ func (l *Loop) AckTimeout(qid, action, by, next string, within time.Duration) (*
+ 	return p.Timeout.Ack, l.save(p)
+ }
+ 
++// withTimeouts runs fn on a freshly opened ledger while holding the timeout
++// lock (<db>.timeouts.lock). The run loop, the outside liveness check and
++// timeout-ack all write timeout records this way, so none of them writes
++// from a stale view: no double escalation and no lost acknowledgement.
++func withTimeouts(cfg *Config, clock core.DriverClock, fn func(f *Loop) error) error {
++	fh, err := os.OpenFile(cfg.DB+".timeouts.lock", os.O_CREATE|os.O_RDWR, 0o644)
++	if err != nil {
++		return err
++	}
++	defer fh.Close()
++	if err := syscall.Flock(int(fh.Fd()), syscall.LOCK_EX); err != nil {
++		return err
++	}
++	defer syscall.Flock(int(fh.Fd()), syscall.LOCK_UN)
++	f, err := Open(cfg, clock)
++	if err != nil {
++		return err
++	}
++	defer f.Close()
++	return fn(f)
++}
++
++// EscalateTimeouts runs the never-acked and expired-ack escalations under
++// the timeout lock. run calls it after every pass; the outside liveness
++// check calls it on every check, also while run is stopped.
++func EscalateTimeouts(cfg *Config, clock core.DriverClock) ([]string, error) {
++	var out []string
++	err := withTimeouts(cfg, clock, func(f *Loop) error {
++		out = append(f.unacked(), f.expiredAcks()...)
++		return nil
++	})
++	return out, err
++}
++
+ // unacked escalates timeouts nobody acknowledged: duty at NoAckAfter, the
+ // director at 2*NoAckAfter or as soon as duty cannot be reached. Bound to the
+ // same incident (T-<action>), action and recorded principals.

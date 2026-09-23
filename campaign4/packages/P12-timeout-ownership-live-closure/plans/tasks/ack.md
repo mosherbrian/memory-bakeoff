@@ -5,3 +5,5 @@ When a message starting "[agent-loop]" says a step passed its deadline and conta
 "Acknowledge ownership with:", run that exact timeout-ack command, replacing SEAT with your own
 seat name and 'NEXT ACTION' with 'P12 live witness: will review the timed-out step', and keep
 --within 15m. Then end your turn. Nothing else.
+EXCEPTION: never acknowledge anything about a package whose name starts with "L6b-". That case tests
+what happens when nobody acknowledges. For such a message, end your turn at once without running any command.

@@ -192,6 +192,18 @@ cleanup() {
 wall_next() { systemctl --user show "$WALL.timer" -p TimersCalendar --timestamp=unix --value 2>/dev/null | grep -o 'next_elapse=@[0-9]*' | cut -d= -f2; }
 wall_ok() { [ "$(wall_next)" = "@$DL_EPOCH" ]; }
 reload() { run systemctl --user daemon-reload || return 1; [ "$DRY" = 1 ] || wall_ok || { result WALL FAIL "after daemon-reload the wall reads '$(wall_next)', not @$DL_EPOCH"; exit 3; }; }
+# L6b (no ack while run is stopped): timeout JSON on stdin -> "PASS|FAIL detail". Bounds from
+# settlement: duty 60..110 s, director 120..170 s, and no acknowledgement recorded.
+l6b_eval() { python3 -c '
+import json, sys, datetime as D
+try:
+    t = json.load(sys.stdin)
+    def at(s): return D.datetime.fromisoformat(s.split()[-1].replace("Z", "+00:00"))
+    st = at(t["at"]); du = (at(t["no_ack_duty"]) - st).total_seconds(); di = (at(t["no_ack_director"]) - st).total_seconds()
+except Exception as e:
+    print("FAIL unreadable timeout record:", e); sys.exit()
+ok = 60 <= du <= 110 and 120 <= di <= 170 and not t.get("ack")
+print("%s duty %.0fs after settlement (60..110), director %.0fs (120..170), ack %s" % ("PASS" if ok else "FAIL", du, di, t.get("ack")))'; }
 # end of helpers
 if [ "$MODE" = cleanup ]; then
   TEARDOWN=1
@@ -375,6 +387,24 @@ if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && [ "$(wakes "$
   else result L6 FAIL "replay repeated effects"; fi
 else result L6 FAIL "cancel/director wakes $c1->$(wakes "$W_ID") $dd1->$(wakes "$D_ID")"; fi
 run "$A" start $C; wait_for "L5 resumed" 90 sh -c "systemctl --user is-active $U"; snap L5-L6
+
+# ---------------------------------------------------------------- L6b no acknowledgement while run is stopped
+# The outside liveness check (its own 45 s timer, AccuracySec=1s) escalates an unacknowledged timeout
+# while run is stopped: duty at >= 60 s after settlement, the director at >= 120 s. Declared bounds from
+# settlement: duty <= 110 s (60 + 45 + check time), director <= 170 s (120 + 45 + check time). The
+# fixtures are told NOT to acknowledge L6b (tasks/ack.md). The stop itself must stay quiet (no alarm).
+Q=L6b-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 1m --verify-window 5m
+wait_for "L6b worker step" 30 is_step "$Q" worker
+log "L6b onset: agent-loop stop, then no acknowledgement"; run "$A" stop $C
+wait_for "L6b run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
+l6bq() { $A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print(json.dumps([p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0].get('timeout') or {}))"; }
+if wait_for "L6b duty and director escalated" 300 sh -c "$A status $C --json | python3 -c \"import json,sys; t=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0].get('timeout') or {}; assert t.get('no_ack_duty','').startswith('sent') and t.get('no_ack_director','').startswith('sent')\""; then
+  r=$(l6bq | l6b_eval)
+  v=$(verdict | cut -d' ' -f1)
+  [ "$DRY" = 1 ] || [ "$v" = stopped ] || r="FAIL liveness verdict $v while stopped (must stay stopped, quiet); $r"
+  result L6b "${r%% *}" "${r#* }"
+else result L6b FAIL "no duty+director escalation within 300 s while stopped: $(l6bq)"; fi
+run "$A" start $C; wait_for "L6b resumed" 90 sh -c "systemctl --user is-active $U"; snap L6b
 
 # ---------------------------------------------------------------- L4b duty unavailable (last: it stops the duty seat)
 if ! stop_seat "$U_ID"; then
