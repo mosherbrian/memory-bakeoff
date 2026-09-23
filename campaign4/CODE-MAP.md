@@ -13,7 +13,7 @@ Further live releases are held for the [ten-finding review disposition](CODE-REV
 | [P6-r9 fixture support](packages/P6-r9-observer-lifetime/src/) | Fault controls, delivery wrapper, source-time tools; `seat_emulator.py` is test-only | Same manifest. Presence of test helpers is not permission to substitute them into live evidence. |
 | [P6-r11 candidate source](packages/P6-r11-case-observer-continuation/candidate/src/) | Earlier accepted candidate: failed/quiet continuation, authenticated rejection, routing-error propagation | Source `924d21ab0884946393d614c015c9b70fc669f260`; [acceptance](packages/P6-r11-case-observer-continuation/acceptance.json), 42-test gate. Injected only; supersedes R9 for candidate development, not its historical live witness. |
 
-Latest accepted candidate: [R13 source](packages/P6-r13-core-record-integrity/candidate/src/) at `5410332b1d614823ca29d343b051ab471c4bacb3`, [acceptance](packages/P6-r13-core-record-integrity/acceptance.json). Record-integrity and producer/verifier repairs; 59 composed +83+59 retained tests. Injected only. R14 host-timing work is unaccepted; host findings1/3/4/8/9 and live hold remain. Finding5 was not reproduced on the tested public path.
+Latest accepted candidate: [R13 source](packages/P6-r13-core-record-integrity/candidate/src/) at `5410332b1d614823ca29d343b051ab471c4bacb3`, [acceptance](packages/P6-r13-core-record-integrity/acceptance.json). Record-integrity and producer/verifier repairs; 59 composed +83+59 retained tests. Injected only. R14 host-timing candidate is now accepted as described below; historical live evidence is unchanged. Finding5 was not reproduced on the tested public path.
 
 The executable surface is not yet standalone. `case_entry.py` directly references
 [P6-r5 source](packages/P6-r5-launch-binding/src/) and
@@ -37,3 +37,5 @@ Do not edit/delete frozen packages to clean up navigation.
 normal source tree after current P6 live-path work, preserving every existing pin.
 Tern updates this map at source acceptance/promotion boundaries; ordinary receipts
 and dispatches do not require updates. This file is navigation, not execution authority.
+
+Latest accepted composed surface: [R14 candidate](packages/P6-r14-host-timing/candidate/src/) at `02ea693e48cce93deace64e7e1e545f831506d8d`, [acceptance](packages/P6-r14-host-timing/acceptance.json). Timer authority, separate verifier grants, owned observation continuation and honest metrics; 70+83+59 injected tests. R13 core unchanged. R15 is the pending fresh live failure/rest witness, not deployment. Lost-completion proof and queued/ambiguous controls still unresolved.
