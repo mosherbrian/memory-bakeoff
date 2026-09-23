@@ -1,11 +1,16 @@
 {
-  "state": "LEGITIMATE_REST",
-  "recorded_at": "2026-09-23T14:32:44.368288+00:00",
+  "state": "ACTIVE",
+  "prior_rest_ended_at": "2026-09-23T14:53:38.547110+00:00",
   "owner": "tern",
-  "in_flight": [],
-  "decision_ref": "packages/P10-go-requalification-cutover/terminal-disposition.json",
-  "reason": "P10 NOT READY; sole repair exhausted. No successor authorized. Research remains paused.",
-  "watchdog": "campaign4-watch timer/service verified inactive/dead; P10 timers none. Stop returned rc5 for absent service, subsequent show confirms both inactive. Rearm before new work.",
-  "note": "Operational declaration, not production ledger adoption.",
-  "runtime_receipt": "packages/P10-go-requalification-cutover/terminal-delivery-runtime.json"
+  "in_flight": [
+    {
+      "package": "P11-live-driver-qualification",
+      "phase": "ADMISSION_AUTHORIZED",
+      "owner": "corvid",
+      "controller": "cairn"
+    }
+  ],
+  "decision_ref": "campaign4/packages/P11-live-driver-qualification/sponsor-authorization.json",
+  "watchdog": "campaign4-watch.timer rearmed and verified active before dispatch",
+  "note": "Operational declaration, not production ledger adoption"
 }
