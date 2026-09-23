@@ -1,0 +1,14 @@
+diff --git a/campaign4/packages/P12-timeout-ownership-live-closure/plans/README.md b/campaign4/packages/P12-timeout-ownership-live-closure/plans/README.md
+index bdf95f7a..415d8040 100644
+--- a/campaign4/packages/P12-timeout-ownership-live-closure/plans/README.md
++++ b/campaign4/packages/P12-timeout-ownership-live-closure/plans/README.md
+@@ -125,7 +125,7 @@ Source diff from cbfe3d9: `evidence/closure-1/source-cbfe3d9-to-669648c.diff`. T
+ 
+ - `hold-scaling.txt`: the old build's hold grows with the send, 20.0 s and 40.0 s (its 30 s transport timeout did not bound it); the new build's is 10.5 s in both cases.
+ - `contention-*`: real processes, slow 20 s dispatch wakes, three deadlines.
+-  - New build, a dispatch every 15 s: max hold 10.51 s; settlements at 0, 1 and 17 s after the deadline.
+-  - New build, overloaded (a dispatch every 4 s): max hold 10.51 s; settlements at 17 and 18 s.
++  - Release binary b70665f5, a dispatch every 15 s: max hold 10.51 s; settlements at 17 s (T1, via its due marker), 1 s (T2) and 7 s (T3) after the deadline (`contention-release-capacity-15s.txt`).
++  - Release binary b70665f5, overloaded (a dispatch every 4 s): max hold 10.51 s; the one armed deadline (T1) settled at 17 s. T2 and T3 were refused at dispatch (`E_LEDGER_BUSY`) and never armed (`contention-release-overload-4s.txt`). (Corrected in P12-realprocess-1; the earlier figures were from the pre-release candidate run.)
+   - Old build, a dispatch every 15 s: 2 of the 3 deadlines were never even armed within the window.
+ - Overload (release run, a dispatch every 4 s = about 250% of the lock capacity with 10 s holds): new dispatches are refused with `E_LEDGER_BUSY` after 60 s, and the caller sees the error; nothing is silently accepted. The due deadline that was armed still settled at 17 s.

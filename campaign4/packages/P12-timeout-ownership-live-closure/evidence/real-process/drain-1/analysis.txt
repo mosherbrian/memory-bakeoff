@@ -1,0 +1,83 @@
+== env
+== binary b70665f513b086ec mode=drain workdir=/var/tmp/p12-rp-QvWV
+7.0.14-101.fc43.x86_64
+model name	: AMD RYZEN AI MAX+ 395 w/ Radeon 8060S
+32
+overlay        overlay 731906048 637213636  91708092  88% /
+armed deadlines: 14 first=1790194062 last=1790194062 accepted_at=1790194018.009136660
+stall_start=1790194059 stall_end=1790194099 stop_at=1790194249
+
+== backlog: 14 distinct accepted due markers observed (pre-registered N=14, required >= 12)
+callbacks: 14 processes, rc {'0': 14}
+settled (marker gone) within the finite window: 14 of 14; never settled: []
+drain order: 3 pairwise inversions against first-seen order (0.5 s sample resolution; ties by name)
+  B01-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+38.2s after deadline (marker age at settlement 29.9s)
+  B02-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+39.2s after deadline (marker age at settlement 30.9s)
+  B03-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+40.3s after deadline (marker age at settlement 31.9s)
+  B04-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+41.3s after deadline (marker age at settlement 33.0s)
+  B05-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+49.0s after deadline (marker age at settlement 40.7s)
+  B06-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+50.1s after deadline (marker age at settlement 41.7s)
+  B07-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+51.1s after deadline (marker age at settlement 42.7s)
+  B08-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+52.1s after deadline (marker age at settlement 43.8s)
+  B10-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+61.4s after deadline (marker age at settlement 53.1s)
+  B11-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+62.4s after deadline (marker age at settlement 54.1s)
+  B09-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+69.6s after deadline (marker age at settlement 61.3s)
+  B13-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+72.7s after deadline (marker age at settlement 64.4s)
+  B12-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+80.4s after deadline (marker age at settlement 72.1s)
+  B14-w1.json  deadline=1790194062 marker_seen=+8.3s settled=+81.5s after deadline (marker age at settlement 73.1s)
+MAX settlement latency after deadline: 81.5s (B14-w1.json); MAX marker age: 73.1s; n=14 (empirical, this host, this workload)
+final due dir: total 8 | drwxr-xr-x. 1 bmosher bmosher   40 Sep 23 13:09 . | drwx------. 1 bmosher bmosher 1156 Sep 23 13:10 .. | -rw-r--r--. 1 bmosher bmosher   20 Sep 23 13:08 .saturation-reported
+
+== final status (status --json after the window)
+  B01 step=timed-out cancel=idle (msg-B01-w1-15) director=told duty=None at=2026-09-23T20:08:20Z deferred=2026-09-23T20:07:50Z
+  B02 step=timed-out cancel=idle (msg-B02-w1-17) director=told duty=None at=2026-09-23T20:08:21Z deferred=2026-09-23T20:07:50Z
+  B03 step=timed-out cancel=idle (msg-B03-w1-19) director=told duty=None at=2026-09-23T20:08:22Z deferred=2026-09-23T20:07:50Z
+  B04 step=timed-out cancel=idle (msg-B04-w1-21) director=told duty=None at=2026-09-23T20:08:23Z deferred=2026-09-23T20:07:50Z
+  B05 step=timed-out cancel=idle (msg-B05-w1-24) director=told duty=None at=2026-09-23T20:08:30Z deferred=2026-09-23T20:07:50Z
+  B06 step=timed-out cancel=idle (msg-B06-w1-26) director=told duty=None at=2026-09-23T20:08:31Z deferred=2026-09-23T20:07:50Z
+  B07 step=timed-out cancel=idle (msg-B07-w1-28) director=told duty=None at=2026-09-23T20:08:32Z deferred=2026-09-23T20:07:50Z
+  B08 step=timed-out cancel=idle (msg-B08-w1-30) director=told duty=None at=2026-09-23T20:08:33Z deferred=2026-09-23T20:07:50Z
+  B09 step=timed-out cancel=failed: receipt msg-B09-w1-33 state "idle": wake to D1: failed (receipt msg-na-34) director=told duty=None at=2026-09-23T20:08:41Z deferred=2026-09-23T20:07:50Z
+  B10 step=timed-out cancel=idle (msg-B10-w1-36) director=told duty=None at=2026-09-23T20:08:43Z deferred=2026-09-23T20:07:50Z
+  B11 step=timed-out cancel=idle (msg-B11-w1-38) director=told duty=None at=2026-09-23T20:08:44Z deferred=2026-09-23T20:07:50Z
+  B12 step=timed-out cancel=failed: receipt msg-B12-w1-42 state "idle": wake to D1: failed (receipt msg-na-43) director=told duty=None at=2026-09-23T20:08:52Z deferred=2026-09-23T20:07:50Z
+  B13 step=timed-out cancel=idle (msg-B13-w1-45) director=told duty=None at=2026-09-23T20:08:54Z deferred=2026-09-23T20:07:50Z
+  B14 step=timed-out cancel=idle (msg-B14-w1-49) director=told duty=None at=2026-09-23T20:09:03Z deferred=2026-09-23T20:07:50Z
+  B timed-out: 14 of 14; outbox_pending=22
+  ordinary packages registered: 8
+ordinary arrivals: 18 attempted, rc {'rc=0': 8, 'rc=3': 10}
+
+== lock: 61 completed holds; unreleased at end (a killed holder shows here): {}
+  hold dispatch        n=22   max=10.52s median=0.016s
+  hold fixture         n=1    max=40.00s median=40.002s
+  hold run             n=38   max=9.10s median=0.007s
+
+== local (non-subprocess) time inside holds = hold - union of stub wake intervals of the holder
+  dispatch        n=22   max=0.091s p50=0.014s p95=0.067s
+  run             n=38   max=0.052s p50=0.007s p95=0.029s
+  ALL holders n=60 MAX local=0.091s (includes fork/exec of stubs, SQLite, file I/O, CPU; empirical, not a guarantee)
+
+== yield: 0 yield lines in run output; 0 heartbeat samples with yielded=true
+  hand-offs after a run hold (next holder): {'run->run': 35, 'run->fixture': 1, 'run->dispatch': 1}
+  run holds >= 4s (budget spent on due work): 2; longest run hold 9.10s
+
+== transport: attempts (lines) vs effects (ok|landed) vs failures
+  by kind/outcome: {('dispatch', 'ok'): 14, ('cancel', 'ok'): 14, ('notice', 'ok'): 43, ('notice', 'fail'): 10, ('dispatch', 'landed'): 8}
+  SATURATED notices to duty: 1 attempts, outcomes {'fail': 1}; first: [agent-loop] due backlog SATURATED: 10 deadline marker(s) unsettled for more than 20s (oldest 33s). See: agent-loop status --config /var/tmp
+  identical notice EFFECTS delivered more than once: 0 []
+  B01 notices {'U1:fail': 1, 'D1:ok': 1, 'U1:ok': 1}
+  B02 notices {'U1:ok': 1, 'D1:ok': 1}
+  B03 notices {'U1:ok': 1, 'D1:ok': 1}
+  B04 notices {'U1:ok': 1, 'D1:fail': 1, 'D1:ok': 1}
+  B05 notices {'U1:fail': 2, 'D1:ok': 1, 'U1:ok': 1}
+  B06 notices {'U1:ok': 1, 'D1:ok': 1}
+  B07 notices {'U1:ok': 1, 'D1:ok': 1}
+  B08 notices {'U1:ok': 1, 'D1:ok': 1}
+  B09 notices {'D1:ok': 2, 'U1:ok': 1, 'D1:fail': 1}
+  B10 notices {'U1:ok': 1, 'D1:ok': 1}
+  B11 notices {'U1:ok': 1, 'D1:ok': 1}
+  B12 notices {'D1:ok': 2, 'U1:fail': 1, 'U1:ok': 1}
+  B13 notices {'U1:ok': 1}
+  B14 notices {'U1:fail': 1, 'D1:ok': 1, 'U1:ok': 1}
+  slow ordinary dispatches: 8 landed (effect) / 0 replied before the sender stopped waiting -> 8 ambiguous deliveries (effect landed, sender saw no receipt)
+analysis rc=0
