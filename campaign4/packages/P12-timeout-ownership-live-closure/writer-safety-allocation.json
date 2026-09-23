@@ -1,0 +1,21 @@
+{
+  "signer": "tern",
+  "at": "2026-09-23T17:59:08.559067+00:00",
+  "action": "P12-writer-safety-1",
+  "authorization": "Explicit prospective director allocation, previous failures/grants retained",
+  "prior_ceiling_minutes": 475,
+  "author_minutes": 40,
+  "review_minutes": 25,
+  "new_ceiling_minutes": 540,
+  "base": "53c97191c8c89cca7b84de93f0c3b263fbb61e6a",
+  "requirements": [
+    "Cover ALL competing package/timeout writers: run step changes, timer settlement/failure/rearm, checker escalation, ack, director decide. Choose shared fresh-state serialization or true per-record revision/atomic comparison; timestamp step_at alone is not a version because timeout/ack changes may not change it and clock precision collides. Same-step/same-time stale writes must be refused or safely serialized.",
+    "Consistency boundary includes core transition and durable package record/effect intent, not just final save. E_STALE_PACKAGE after core mutation or external send is not by itself a correct rollback. Prove no lost timeout/ack, no stale terminal state resurrection, duplicate cancellation/dispatch/escalation, or stranded half-transition. Use existing stable intent/reconciliation semantics; core/py frozen.",
+    "Avoid recursive flock/deadlock and indefinite lock waits while transport is stalled. Bounded failure must remain owned. Failed stale view is reread/reconciled, not blindly retried with original mutation; no log-only loss of required action.",
+    "Deterministic real separate-process callback/checker/run races on one ledger, barriers where stale read occurs; stale-view negative per writer family incl same timestamp and unchanged step; late ack/concurrent expiry, completed step vs obsolete callback. Reproduce baseline before corrected pass. Assert persisted core and package state, effects, reopen, not only helper counters.",
+    "Controlled real unit-file OnUnitActiveSec45/AccuracySec1 timer experiment with candidate checker across repeated daemon reloads. Capture actual completed-check instants and expected schedule; bounded isolated units/no seats, cleanup, no transient timer analogy.",
+    "New isolated worktree/release/manifest; retained conformance125 on exact shipped binary, host/loop/plan regressions and relevant mutation cases. No main/install/live/host clock changes. Scope must not silently add features. COMPLETE or explicit INCOMPLETE by bound."
+  ],
+  "review": "Fresh corvid25m with independent process-race and timer evidence. Report precise remaining unsupported obligations. No automatic further attempt/live release; PASS returns Tern for qualification decision.",
+  "limits": "Checker-own-supervision/systemwide failure and clock assumptions remain explicit qualification limits, not silently solved by this allocation."
+}
