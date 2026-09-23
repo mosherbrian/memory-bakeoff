@@ -71,3 +71,9 @@ Missing recovery bound must return E_NO_ESCALATION_BOUND; terminal-close retries
 must not report rest without authoritative disposition. Go intentionally corrects
 both, with versioned regression expectations rather than false identical-parity
 claims. P8 retains these within its existing safety checks; no fleet allocation.
+
+Sponsor overnight update: Go Expose after frozen P8, P7 checks plus ledger-derived
+overhead counts; costs external. Supervisor service restart/outside staleness is a
+P8 unattended-safety requirement, shipped by P9. See
+OVERNIGHT-EXPOSE-LIVENESS-RULING-20260923.md for ownership, stop semantics,
+existing repair-cap sequencing, direct Claude routing and targeted requalification.
