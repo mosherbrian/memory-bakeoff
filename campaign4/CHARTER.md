@@ -175,10 +175,13 @@ runtime dependency absent an explicit director amendment and recorded rationale.
 A convenience library is not an automatic exception. Reuse accepted components
 before adding mechanisms; portability does not authorize speculative ports.
 
-Implementation decision: Python is the intended deliverable implementation,
-subject to the remaining acceptance gates; no Go rewrite is scheduled. See
-[the language decision](IMPLEMENTATION-LANGUAGE-DECISION-20260922.md), which
-resolves the architecture's conditional Go sentence without rewriting frozen inputs.
+Release target (Brian, 2026-09-23): a single Go binary, `agent-loop`, in
+`mosherbrian/agent-loop`. Accepted Python remains the behavioral/conformance
+reference. This supersedes the earlier Python language decision for the deliverable
+only; frozen inputs and historical verdicts remain unchanged. P8 qualifies the
+shipping Go binary; P9 packages it. See
+[the sponsor release-target decision](GO-RELEASE-TARGET-20260923.md). No new fleet
+allocation or live release follows from this target change.
 
 At the next package boundary, Tern must assess the next machinery step against
 research priority and the smallest useful reliable harness. Unit-test success

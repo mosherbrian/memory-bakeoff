@@ -91,3 +91,14 @@ is enough to demonstrate available capability and stop expanding Connect. I shou
 have applied this boundary earlier. Close Connect now; move to Expose. Retain the
 actual unattended blockers, but remove non-safety proof refinement from its critical
 path. The fixed allocations above cannot silently renew themselves.
+
+## Sponsor release-target amendment, 2026-09-23
+Brian selected agent-loop (mosherbrian/agent-loop), one Go binary, as the release.
+See GO-RELEASE-TARGET-20260923.md. This supersedes the Python extraction wording
+above for the deliverable without changing the fixed stage list or budgets.
+P8 qualifies the exact built Go binary (or both, including Go), with commit/binary/
+configuration pins. P9 packages Go: docs, config, install/run/status/stop/restore,
+known limits and provenance. Python remains the conformance reference and proof
+tooling. No fleet port package or allocation now; Claude owns the sponsor-directed
+port. P7 remains EXHAUSTED; porting its view does not grant acceptance. P8/P9 are
+still roadmap, not released execution. No further Connect work is authorized.
