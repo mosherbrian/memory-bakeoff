@@ -73,3 +73,106 @@ unshared negative per family passes, and the Go source/binary are unchanged.
 **PASS** on F1/F2/F3 for `P11-initial-1`; candidate may proceed to Tern's live
 signature. Residual 1 (L6 timer margin) should be acknowledged before the live run.
 No source/live/cutover change made by corvid. Returned to Tern.
+
+---
+
+## Steering addendum (director-candidate-intake, same 25m pass, no reset)
+
+Claim re-pinned: `completion-claim.json` = `24d3bc6c…`; 30/30 bound files match.
+Additional independent checks below. **Verdict on F1/F2/F3 remains PASS**; two items
+are recorded as **signature preconditions**, not waived.
+
+### F2 measured from the authorized deadline (not only the wall row)
+
+Re-ran the private scope/timer witness narrowly (stubs for all agent-deck/global
+systemctl; real systemd only for the driver's own `p11live-driver-*.scope` and
+`p11live-wallstop-*.timer`, which were removed after). Deadline `15:28:58Z`, wall
+row `15:28:59.023Z` (AccuracySec=1s). **Effects after the deadline: 0; effects
+after the wall row: 0.** Onset was not shifted: both origins agree. Scope inactive,
+timer inactive, 0 descendants, second cleanup 0 effects. Baseline deviation
+preserved (see below).
+
+### L2 failed-settlement containment (offline, frozen binary)
+
+Unresolved L2 = `ok` (not rest). With L2 left open, a later case (L6) settles
+independently to `timed-out`, and liveness **stays `ok`** — unresolved L2 work is
+not masked by later settlement; `rest` is reachable only after L2 resolves
+(`rest`). 6/6 PASS. This is the containment the intake asked for: later stages do
+not proceed to a false REST over a failed L2 settlement.
+
+### Host-effect deviation (preserved, not repeated uncontained)
+
+My earlier baseline reproduction of the P10 wall ran the pinned driver with the
+host's real PATH: it issued a real `systemctl --user daemon-reload` and
+`agent-deck stop/remove` lookups for nonexistent fx units/seats (all "not found").
+No real unit/seat was affected; no leftover `p10live-*`/`p11live-*` units remain
+(checked). Per the intake I did **not** repeat that baseline uncontained; the
+corrected P11 witness was run only in the allowed narrow scope.
+
+### Signature preconditions (unresolved; no speculative acceptance)
+
+1. **Cleanup profile resolution.** `cleanup()` calls `agent-deck session stop/
+   remove "$id"` with **no `-p`/`--profile`**, and the driver never exports
+   `AGENTDECK_PROFILE`; it only writes `PROFILE` into the agent-loop JSON. agent-deck
+   default is `default`; the live fixtures are `campaign4`. A missing/incorrect
+   inherited profile makes stop/remove return "not found" (rc 2, logged, **not
+   fatal**) and leaks the four seats. **Must be established before signature:**
+   pin `AGENTDECK_PROFILE=campaign4` (or pass `-p "$PROFILE"`) and add a pre-live
+   check that `agent-deck list` resolves the four fixture IDs; do not accept on the
+   ambient environment alone.
+2. **Real step-timer accuracy.** Frozen Go deadline timers set no `AccuracySec`
+   (`internal/host/host.go:370`); systemd may fire up to ~60 s late. L6's 2 min
+   deadline inside the 185 s quiet window leaves ~5 s margin. This is a **live
+   timing risk, not waived and not assumed**; the signer must accept it explicitly
+   or widen the window. No Go change is authorized.
+3. `plans/README.md` changed beyond the four renames and is not listed in
+   `rename.diff`/`rename-only-check.txt` (descriptive only; no behavior).
+
+No source/live/cutover change made by corvid. Verdict unchanged: **PASS on
+F1/F2/F3**, candidate may proceed to live signature only with preconditions 1–2
+explicitly accepted.
+
+### Steer closure (7 focus points, same pass)
+
+1. F1/F2/F3 old-vs-corrected, non-DRY: F1 10/19 P10 vs 29/0 P11; F2 P10
+   `DRIVER_ALIVE=1/CLEANUPS=0` vs P11 `LATE_EFFECTS=0/WALLSTOP=1/DRIVER_ALIVE=0`;
+   F3 15/0. DRY rows are DRY, never PASS.
+2. Host-effect deviation preserved (see above); leftover `p10live-*`/`p11live-*`
+   units checked: none.
+3. Narrow private scope/timer witness was safe (stubbed globals/seats, exact
+   cleanup); not INCOMPLETE.
+4. No-effects measured from **both** the authorized deadline and the wall row: 0/0.
+5. Go frozen; `AccuracySec` gap recorded as a live timing risk, not waived.
+6. L2: restart/no-resend retained (worker woken once across SIGKILL), one /cancel +
+   one director wake reconciled at settle, unresolved L2 never counted as REST
+   (6/6 containment).
+7. Cleanup profile resolution recorded as an unresolved **signature precondition**
+   (pin `AGENTDECK_PROFILE=campaign4`/`-p` + pre-live exact-ID resolve check).
+
+### Deadline-origin evidence assessment (read-only)
+
+Read both preserved witnesses under `deadline-origin-evidence/`; all **11/11 file
+hashes** match `manifest.json`. Onset is measured against the true authorized
+deadline, not shifted to the wall row.
+
+- **C535** (deadline `15:20:55Z`): driver-scope commands after the deadline — **0**.
+  Last driver command `expose` at `15:20:51.137Z`; wall row `15:20:56.033Z`;
+  driver terminated by signal.
+- **TzQQ** (deadline `15:12:29Z`): driver-scope commands after the deadline — **1**,
+  a read-only `agent-loop … expose … --json` at `15:12:29.807Z` (+0.807 s), then the
+  wall row at `15:12:30.025Z`; the driver was in `sleep 5` and killed by the wall
+  ("driver terminated by signal (wall stop)"). The late command is a read-only poll,
+  **not** a mutating dispatch/wake/decide/systemctl.
+
+**Assessment — no general effect-exclusion, gate not weakened.** The driver has **no
+internal deadline guard**: its wait loop keeps polling `expose` (and would keep
+issuing whatever step it is in) until the external wall stops `$SCOPE.scope`. The
+bound is enforced only by the wall scope kill, so a command can land in the
+~`AccuracySec` (1 s) overshoot window — TzQQ proves this. C535's zero is a
+timing artifact of the 5 s poll cadence, **not** a demonstrated invariant. The gate
+is honest: `LATE_EFFECTS` counts driver-scope commands after the bound and did catch
+TzQQ's one, so it is not silently weakened; but "zero effects after bound" must be
+reported as observed-for-that-run, never as guaranteed. The same absence of
+exclusion applies to mutating steps if a deadline lands inside one. For a general
+guarantee the signer would need a driver-side deadline check or a wider wall margin;
+no edit is made here. Preserved both, did not rerun the leaked baseline.
