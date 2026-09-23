@@ -1,0 +1,34 @@
+== baseline: fresh pass from the current incarnation
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 1a damaged incident state: malformed JSON
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"incident state malformed (invalid character 'n' looking for beginning of object key string); loop itself: rest: no open pac
+   rc=0 wakes=1 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+fx.db.liveness.json fx.db.liveness.json.damaged-20260923T141240Z.json 
+== 1b truncated state holding an open incident with an ack
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"incident state malformed (unexpected end of JSON input); loop itself: rest: no open packages; passes continue"}}
+fx.db.liveness.json fx.db.liveness.json.damaged-20260923T141240Z.json 
+== 1c partially populated: open incident without an id
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"incident state invalid (open incident without id or opened_at); loop itself: rest: no open packages; passes continue"}}
+== 1d unreadable state file
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"incident state unreadable (open /tmp/p10-cases-Fn2y/fx.db.liveness.json: permission denied); loop itself: rest: no open pac
+   rc=0 wakes=1 {"actions":null,"verdict":{"state":"unknown","alarm":true,"why":"incident state unreadable (open /tmp/p10-cases-Fn2y/fx.db.liveness.json: permission denied); loop itself: rest: no open packages; passes continue"}}
+fx.db.liveness.json fx.db.liveness.json.alt.json 
+== 2a pass time 6 s in the future
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"pass time 2026-09-23T14:12:46Z is 5s in the future (clock stepped back?)"}}
+== 2b pass time exactly 5 s in the future (tolerance boundary)
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 2c clock stepped back 10 min after the pass
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"pass time 2026-09-23T14:22:40Z is 9m59s in the future (clock stepped back?)"}}
+== 3a fresh pass from a previous incarnation, unit started 10 min ago
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"hung","alarm":true,"why":"no completed pass from the current run (invocation 0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f, started 2026-09-23T13:12:40Z); last pass 
+== 3b same, restart 20 s ago, before its first pass (startup grace)
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"starting","alarm":false,"why":"run started 21s ago and has not completed a pass yet; last pass is from a previous run (invocation aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) (not recovered)"}}
+== 3c PID reuse: same PID, previous invocation
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"hung","alarm":true,"why":"no completed pass from the current run (invocation 0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f, started 2026-09-23T13:12:40Z); last pass 
+== 3d pass without any incarnation identity
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"hung","alarm":true,"why":"no completed pass from the current run (invocation 0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f, started 2026-09-23T13:12:40Z); last pass 
+== 3e unit identity unreadable (no InvocationID)
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"the unit's current incarnation is unreadable (no InvocationID)"}}
+== 3f pass from this invocation but another PID
+   rc=0 wakes=1 {"actions":["opened L20260923T141240Z, duty woken: sent"],"verdict":{"state":"unknown","alarm":true,"why":"pass from this invocation but pid 999, while the unit's main pid is 4242"}}
+(workdir /tmp/p10-cases-Fn2y)

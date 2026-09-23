@@ -1,0 +1,34 @@
+== baseline: fresh pass from the current incarnation
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 1a damaged incident state: malformed JSON
+   rc=1 wakes=0 agent-loop: invalid character 'n' looking for beginning of object key string
+   rc=1 wakes=0 agent-loop: invalid character 'n' looking for beginning of object key string
+fx.db.liveness.json 
+== 1b truncated state holding an open incident with an ack
+   rc=1 wakes=0 agent-loop: unexpected end of JSON input
+fx.db.liveness.json 
+== 1c partially populated: open incident without an id
+   rc=0 wakes=0 {"actions":["closed : recovered"],"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 1d unreadable state file
+   rc=1 wakes=0 agent-loop: open /tmp/p10-cases-ue5l/fx.db.liveness.json: permission denied
+   rc=1 wakes=0 agent-loop: open /tmp/p10-cases-ue5l/fx.db.liveness.json: permission denied
+fx.db.liveness.json 
+== 2a pass time 6 s in the future
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 2b pass time exactly 5 s in the future (tolerance boundary)
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 2c clock stepped back 10 min after the pass
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 3a fresh pass from a previous incarnation, unit started 10 min ago
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 3b same, restart 20 s ago, before its first pass (startup grace)
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 3c PID reuse: same PID, previous invocation
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 3d pass without any incarnation identity
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 3e unit identity unreadable (no InvocationID)
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+== 3f pass from this invocation but another PID
+   rc=0 wakes=0 {"actions":null,"verdict":{"state":"rest","alarm":false,"why":"no open packages; passes continue"}}
+(workdir /tmp/p10-cases-ue5l)
