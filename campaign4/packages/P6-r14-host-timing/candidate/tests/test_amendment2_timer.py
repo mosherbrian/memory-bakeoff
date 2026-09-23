@@ -116,6 +116,15 @@ def test_callback_argv_has_db_and_exact_parser_two_dbs(tmp_path):
     d2 = _D(db2, _HC())
     d2.admit_authorize("P6F")
     d2.start_dispatch("P6F", "p6c-h1w", duration_s=900)
+    # T1 repair: persisted execution authority exists on both DBs, so
+    # identity checks pass and the genuine/early branches are reached.
+    from host_adapter import HostAdapter as _HA
+    _HA(d1).register_execution("p6c-h1w", "ex-test-h1", "t",
+                               "2026-09-22T15:00:00Z")
+    _HA(d2).register_execution("p6c-h1w", "ex-test-h1", "t",
+                               "2026-09-22T15:00:00Z")
+    d1.close()
+    d2.close()
 
     runner = RejectingRunner()
     svc = HostTimerService(g, p, enabled=True,

@@ -83,3 +83,14 @@ specified; no blanket deletion)
 Late-recorded-work recognition, shadow-time action reconciliation,
 lost/queued live controls; no `occurred_at` invention; ingress
 recorded-time untouched. Live remains held.
+
+## Repair-1 (callback identity guard; harness.py only)
+- `timer_callback`: absent/null/empty/malformed `exec-current` now rejects
+  `E_NO_EXECUTION_AUTHORITY`; `SUPERSEDED->` marker rejects
+  `E_SUPERSEDED_ACTION`. Guard never recovers authority from argv and never
+  creates registration. Old fail-open (comparison skipped when None) closed.
+- Tests: new `test_T1R_absent_execution_authority_rejects_no_effects_
+  reopen_agrees` (due action, missing fact NOT pre-registered; empty/
+  malformed/superseded controls; genuine registered execution still
+  interrupts once + dedup); timer + T1-two-qid fixtures now register
+  execution authority.

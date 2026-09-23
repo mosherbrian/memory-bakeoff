@@ -202,6 +202,15 @@ def ledger_via_cli(tmp, qids_actions):
 def test_T1_two_qids_one_db_isolation_and_early_noop():
     tmp = mktree()
     db = ledger_via_cli(tmp, {"QA": [("a-A", 1)], "QB": [("a-B", 900)]})
+    from driver import Driver
+    from ingress import HostClock
+    from host_adapter import HostAdapter
+    d = Driver(db, HostClock())
+    HostAdapter(d).register_execution("a-A", "ex-A", "t",
+                                      "2026-09-23T00:00:00Z")
+    HostAdapter(d).register_execution("a-B", "ex-B", "t",
+                                      "2026-09-23T00:00:00Z")
+    d.close()
     time.sleep(2.0)  # QA genuinely overdue; QB still valid
     r = run_cb(cb_args(db, qid="QA", action="a-A", execution="ex-A"))
     out = json.loads(r.stdout)
@@ -432,3 +441,48 @@ def test_T4_missing_onset_is_incomplete_not_zero():
     r = r3cli("--manifest", manifest, "check-latency")
     assert r.returncode == 3, r.stdout
     assert "unmeasurable-incomplete" in r.stdout, r.stdout
+
+
+def test_T1R_absent_execution_authority_rejects_no_effects_reopen_agrees():
+    # Repair repro: otherwise-valid due current action but ABSENT
+    # exec-current (missing fact NOT pre-registered) fails closed.
+    tmp = mktree()
+    db = ledger_via_cli(tmp, {"P6R": [("a-W", 1)]})
+    time.sleep(2.0)  # genuinely overdue
+    before = stable(db)
+    r = run_cb(cb_args(db, qid="P6R", action="a-W", execution="ex-claim"))
+    assert r.returncode == 3, r.stdout
+    assert json.loads(r.stdout)["error"] == "E_NO_EXECUTION_AUTHORITY"
+    assert stable(db) == before  # no stop/wake, no ledger/KV mutation
+    # Empty and malformed persisted identities also reject.
+    from driver import Driver
+    from ingress import HostClock
+    for bad in ("", "   "):
+        d = Driver(db, HostClock())
+        d._kv_put("exec-current:a-W", bad)
+        d.close()
+        r = run_cb(cb_args(db, qid="P6R", action="a-W",
+                           execution="ex-claim"))
+        assert json.loads(r.stdout)["error"] == "E_NO_EXECUTION_AUTHORITY"
+    d = Driver(db, HostClock())
+    d._kv_put("exec-current:a-W", "SUPERSEDED->a-N")
+    d.close()
+    r = run_cb(cb_args(db, qid="P6R", action="a-W", execution="ex-claim"))
+    assert json.loads(r.stdout)["error"] == "E_SUPERSEDED_ACTION"
+    # Reopen agrees: still rejects, still no effects.
+    r = run_cb(cb_args(db, qid="P6R", action="a-W", execution="ex-claim"))
+    assert r.returncode == 3, r.stdout
+    # Genuine registered due execution still interrupts exactly once.
+    d = Driver(db, HostClock())
+    from host_adapter import HostAdapter
+    HostAdapter(d).register_execution("a-W", "ex-real", "t",
+                                      "2026-09-23T00:00:00Z")
+    d.close()
+    r = run_cb(cb_args(db, qid="P6R", action="a-W", execution="ex-real"))
+    out = json.loads(r.stdout)
+    assert out["decision"] in ("interrupted", "recovered"), out
+    assert out.get("dedup") is False
+    r = run_cb(cb_args(db, qid="P6R", action="a-W", execution="ex-real"))
+    out = json.loads(r.stdout)
+    assert out["decision"] == "already-handled" \
+        and out.get("dedup") is True

@@ -119,7 +119,19 @@ def timer_callback(db_path, timer_id, qid=None, action_id=None,
                          "callback action %s is not the persisted current "
                          "action %s" % (action_id, fl.get("action_id")))
     current_exec = driver.kv.get("exec-current:" + action_id)
-    if current_exec is not None and current_exec != execution:
+    # T1 completion: persisted execution authority is required, never
+    # callback self-assertion. Missing/null/empty/malformed/superseded
+    # identity deterministically rejects here: the guard never recovers
+    # authority from argv alone and never creates a registration.
+    if not isinstance(current_exec, str) or not current_exec.strip():
+        raise OwnedFault("E_NO_EXECUTION_AUTHORITY",
+                         "no persisted current execution for action "
+                         + str(action_id))
+    if current_exec.startswith("SUPERSEDED->"):
+        raise OwnedFault("E_SUPERSEDED_ACTION",
+                         "action %s is superseded; callback refused"
+                         % action_id)
+    if current_exec != execution:
         raise OwnedFault("E_EXECUTION_MISMATCH",
                          "callback execution %s is not the persisted "
                          "current execution %s"

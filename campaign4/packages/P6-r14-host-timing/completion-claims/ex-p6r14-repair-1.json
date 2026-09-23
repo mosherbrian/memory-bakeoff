@@ -1,0 +1,24 @@
+{
+ "action_id": "P6r14-repair-1",
+ "base": "7509caf",
+ "evidence": {
+  "descriptors": "R3_REVISION drift-free; composition 74 refreshed; outer 77 zero-drift no-self-hash",
+  "focused": "23 passed rc0 in 200.45s (r14 11 + timer 3 + r3_lifetimes 5 + reconcile 4)",
+  "new_reject": "T1R: E_NO_EXECUTION_AUTHORITY, zero ledger/KV writes, reopen agrees; empty/malformed/SUPERSEDED controls; genuine registered due execution interrupts once + dedup",
+  "old_fail_open": "pinned 7509caf bytes: due action, absent exec-current -> interrupted (executed)"
+ },
+ "fix": {
+  "guard": "absent/null/empty/malformed exec-current -> E_NO_EXECUTION_AUTHORITY; SUPERSEDED-> -> E_SUPERSEDED_ACTION; never recovers authority from argv, never creates registration",
+  "harness": "50f15cdf3dba"
+ },
+ "outcome": "COMPLETE-repair",
+ "package_id": "P6-r14-host-timing",
+ "prior_claims_preserved": [
+  "ex-p6r14-candidate-1.json"
+ ],
+ "scope": "harness.py callback identity guard only; core/adapter/case-entry frozen",
+ "timestamp": "2026-09-23T00:21Z",
+ "unresolved": [
+  "corvid 40m independent verification pending (old-fails/new-rejects repro + full 69+83+59 gate)"
+ ]
+}
