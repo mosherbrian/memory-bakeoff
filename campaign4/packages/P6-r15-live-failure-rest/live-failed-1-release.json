@@ -1,0 +1,81 @@
+{
+  "signer": "tern",
+  "signed_at": "2026-09-23T00:49:06.225570+00:00",
+  "authorization": "ONE_LIVE_FAILED_VERIFICATION",
+  "action_id": "P6r15-live-failed-1",
+  "owner": "cairn",
+  "start_not_after": "2026-09-23T00:52:06.225570+00:00",
+  "stop_by": "2026-09-23T01:06:06.225570+00:00",
+  "allocation": "Existing first cairn20m live grant including cleanup; corvid15m independent review afterwards. No new budget.",
+  "working_root": "/tmp/p6r15-live-failed-1",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "binding_sha256": "f4cff9d66c12bb107f10ecb5b098467e4a5bfa27d9c8356d10cc7b57c688b455",
+  "binding_review_sha256": "48aeb023071ccc98f4ba6529a0aaed7a2ec0240fedea81b1d402e2956cfc785d",
+  "plan_sha256": "92cd69a799434d9e8df324254b58ebfdc92fb0c19b9402d2d8567c265a96221f",
+  "config_sha256": "01724afca9cb5febb3b104a6de90f3f14eef9a4e4fff25d24ca2ce78431a8101",
+  "signatures_sha256": "c117f9b640b5983ed448c374a2c88ba5410d15e3ba7126e495eff068f5dbc3cc",
+  "source_candidate_commit": "02ea693",
+  "commands_argv": [
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r14-host-timing/candidate/src/case_entry.py",
+      "gate",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-execution-failed-1/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-execution-failed-1/signed-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-execution-failed-1/signatures.json"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r14-host-timing/candidate/src/case_entry.py",
+      "fault",
+      "arm",
+      "--case",
+      "failed-verification",
+      "--run-root",
+      "/tmp/p6r15-live-failed-1",
+      "--control",
+      "corrupt-after-worker",
+      "--actor",
+      "cairn"
+    ],
+    [
+      "python3",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r14-host-timing/candidate/src/case_entry.py",
+      "run-case",
+      "--config",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-execution-failed-1/execution-config.json",
+      "--plan",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-execution-failed-1/signed-plan.json",
+      "--signatures",
+      "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-execution-failed-1/signatures.json",
+      "--case",
+      "failed-verification",
+      "--suite-root",
+      "/tmp/p6r15-live-failed-1",
+      "--out",
+      "/tmp/p6r15-live-failed-1/failed-verification/receipt.json"
+    ]
+  ],
+  "cleanup_manifest": "/tmp/p6r15-failed1-20260923T003820Z/launch-manifest.json.partial",
+  "cleanup_unit": "campaign4-p6r15-failed1-cleanup.timer",
+  "cleanup_ids": [
+    "d7a32519-1790123959",
+    "9c645264-1790123959"
+  ],
+  "conditions": [
+    "Only current bound pair and failed-verification actions p6r15-f1-failed-verification-w/v and their owned timer/service. No other live case. No source changes, emulator, overlay or injected registry.",
+    "Before effects rehash signed plan/config/signatures, R14 outer manifest and all files, plus host inventory; gate must PASS current registry/sockets. Check automatic cleanup ACTIVE with remaining time exceeding stop_by. If not, do not start.",
+    "Host-read start and arm one-shot runner stop at stop_by before executing once. Work300s, verifier300s from its dispatch, recovery120s; absolute outer stop stricter. No retry/resend/reset/extension on error or incomplete.",
+    "Use accepted run-case applied corrupt-after-worker control. Preserve applied hashes, authentic verifier result and independently produced onset sidecars. Never invent source time from detection or silently invoke synthetic fixture producer; missing onset remains INCOMPLETE.",
+    "Capture actual rc/stdout/stderr per command, full claims/artifacts/DB+WAL/runtime streams/delivery/outbox/fault/onset/witness/latency evidence and hashes in live-failed-1/. Archive before cleanup. No retrospective retiming or deleting real failures.",
+    "After result or outer stop, stop only owned runner/children and case units, archive and run pinned R6 cleanup against exact partial manifest; verify two IDs absent/stopped. Automatic cleanup remains armed until actual cleanup verified, never canceled just on run completion. No main-seat effects.",
+    "Immediately bind evidence and dispatch corvid existing15m live review with exact completion-notification command. Reviewer checks true rejection/not COMPLETE,1+1 transport/no duplicate, timing with honest limits, and cleanup. No stopping at COMPLETED row.",
+    "Return any failed/incomplete result to Tern without repair. This releases current case past prior generic live hold under Brian durable authority; not adoption, research, shadow or script retirement."
+  ],
+  "notify_command": "AGENTDECK_PROFILE=campaign4 /home/bmosher/.config/agent-deck/wake 0c933c75-1790000758 'R15 live failed-case result evidence=/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-failed-1/'"
+}

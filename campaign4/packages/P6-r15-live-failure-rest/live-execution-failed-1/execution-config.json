@@ -1,0 +1,77 @@
+{
+ "binding_path": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r15-live-failure-rest/live-preparation-failed-1/execution-binding.json",
+ "candidate_src": "/home/bmosher/memory-bake-off/campaign4/packages/P6-r5-launch-binding/src",
+ "cases": {
+  "failed-verification": {
+   "timer_unit": "p6r15-f1-failed-verification.timer",
+   "verifier_action": "p6r15-f1-failed-verification-v",
+   "worker_action": "p6r15-f1-failed-verification-w"
+  },
+  "lost-completion": {
+   "expectation": "first bounded wait expires owned-failure no-end; reattach recovers the late completion to commit with no second send",
+   "timer_unit": "p6r15-f1-lost-completion.timer",
+   "verifier_action": "p6r15-f1-lost-completion-v",
+   "worker_action": "p6r15-f1-lost-completion-w"
+  },
+  "positive-handoff": {
+   "timer_unit": "p6r15-f1-positive-handoff.timer",
+   "verifier_action": "p6r15-f1-positive-handoff-v",
+   "worker_action": "p6r15-f1-positive-handoff-w"
+  },
+  "queued-ambiguous-restart": {
+   "timer_unit": "p6r15-f1-queued-ambiguous-restart.timer",
+   "verifier_action": "p6r15-f1-queued-ambiguous-restart-v",
+   "worker_action": "p6r15-f1-queued-ambiguous-restart-w"
+  },
+  "quiet-rest": {
+   "timer_unit": "p6r15-f1-quiet-rest.timer",
+   "verifier_action": "p6r15-f1-quiet-rest-v",
+   "worker_action": "p6r15-f1-quiet-rest-w"
+  }
+ },
+ "launcher_source": "live-agent-deck",
+ "parent_binding_sha256": "f4cff9d66c12bb107f10ecb5b098467e4a5bfa27d9c8356d10cc7b57c688b455",
+ "profile": "campaign4",
+ "resign_required": [
+  "any config/plan/tool byte change",
+  "any binding ID/socket/stream change",
+  "socket expiry re-witness at execution"
+ ],
+ "stagec_plan_sha256": "92cd69a799434d9e8df324254b58ebfdc92fb0c19b9402d2d8567c265a96221f",
+ "timing_bounds": {
+  "detect_s": 30.0,
+  "recover_s": 60.0,
+  "suspicion_detect_s": 180.0,
+  "suspicion_recover_s": 60.0,
+  "suspicion_total_s": 240.0,
+  "total_s": 90.0
+ },
+ "verifier": {
+  "incarnation": {
+   "ino": 23765758,
+   "mtime": 1790123960.8445816
+  },
+  "launch_command": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+  "producer_root": "/home/bmosher/.config/agent-deck/acp-stream",
+  "role_lane": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+  "session_id": "9c645264-1790123959",
+  "socket": "/home/bmosher/.config/agent-deck/acp-sock/9c645264-1790123959.sock",
+  "stream_path": "/home/bmosher/.config/agent-deck/acp-stream/9c645264-1790123959.jsonl",
+  "title": "p6-fixture-verifier-r15f1",
+  "workdir": "/tmp/p6r15-failed1-20260922T165825Z/workdirs/p6-fixture-verifier-r15f1"
+ },
+ "worker": {
+  "incarnation": {
+   "ino": 23765753,
+   "mtime": 1790123960.8012323
+  },
+  "launch_command": "/home/bmosher/.config/agent-deck/acp-go",
+  "producer_root": "/home/bmosher/.config/agent-deck/acp-stream",
+  "role_lane": "/home/bmosher/.config/agent-deck/acp-go",
+  "session_id": "d7a32519-1790123959",
+  "socket": "/home/bmosher/.config/agent-deck/acp-sock/d7a32519-1790123959.sock",
+  "stream_path": "/home/bmosher/.config/agent-deck/acp-stream/d7a32519-1790123959.jsonl",
+  "title": "p6-fixture-worker-r15f1",
+  "workdir": "/tmp/p6r15-failed1-20260922T165825Z/workdirs/p6-fixture-worker-r15f1"
+ }
+}
