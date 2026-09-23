@@ -45,3 +45,14 @@ R15 live failure case demonstrated genuine rejection/no-COMPLETE/1+1 sends, but 
 Latest accepted composed candidate: [R16](packages/P6-r16-causal-identity/candidate/src/) at `c8e99cf966b3f10ea5a5c22704ba8af087038246`, [acceptance](packages/P6-r16-causal-identity/acceptance.json). Causal evidence joins by bound item/action; explicit sidecar item required; 78+83+59 injected tests, all other production Python unchanged from R14. R17 is fresh live witness work, not adoption.
 
 R17 live failure again proved authenticated rejection but remained INCOMPLETE: required onset sidecars were absent and never specified in task text. R18 is pending explicit runtime source-time instrumentation, isolated from shared fleet runtime. R16 remains the accepted candidate; no timing/adoption PASS.
+
+## Release target clarification — 2026-09-23
+Latest accepted Python candidate is R18 at `7857c0ce86fda44f1f245365c47c4e6ba93f5ff2`
+([acceptance](packages/P6-r18-runtime-source-time/acceptance.json)); it is not an
+adopted production harness. `harness.py` is the P6 fixture runner. Connect is
+closed; R19 was terminated at the stage boundary. P7 is an unaccepted preview.
+Brian selected [agent-loop](https://github.com/mosherbrian/agent-loop), one Go
+binary, as the release. Claude ports reusable core/host building blocks and
+builds NEW `run/status/stop` entrypoints. The fixture runner/P6 timing gates stay
+Python. Component conformance is not whole-product parity; P8 must qualify the
+shipping binary. See [release decision](GO-RELEASE-TARGET-20260923.md).

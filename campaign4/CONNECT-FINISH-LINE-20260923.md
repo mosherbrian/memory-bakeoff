@@ -102,3 +102,10 @@ known limits and provenance. Python remains the conformance reference and proof
 tooling. No fleet port package or allocation now; Claude owns the sponsor-directed
 port. P7 remains EXHAUSTED; porting its view does not grant acceptance. P8/P9 are
 still roadmap, not released execution. No further Connect work is authorized.
+
+Sponsor clarification: Claude ports reusable host building blocks with parity
+tests and authors agent-loop run/status/stop as NEW Go product code. There is no
+standalone Python product entrypoint; harness.py and P6 timing gates are fixture/
+proof tooling and are not ported. P8 qualifies public Go commands and their actual
+composition through predeclared checks and corvid review. Parity supports the
+ported components only. No new fleet allocation; P8/P9 remain unallocated.

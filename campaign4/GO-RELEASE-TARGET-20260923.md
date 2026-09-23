@@ -10,12 +10,20 @@ Python remains the behavioral reference and source of the conformance suite.
 Every Go/Python difference is a finding for Tern, not automatically a Go defect or
 permission to bless a known Python defect. Adjudicate and version corrections.
 
-Claude ports release host components: host_adapter, harness timers/callback,
-turn_handoff, notify, and the P7 status view. Fixture/proof tools (case_entry,
-seat emulator, fault injection, evidence preparation) remain Python and are not
-part of the single-binary runtime deliverable. No new fleet package, allocation,
-Go implementation task for kiln, or operations in the target repository is
-requested or released by this record.
+Clarification from Brian, 2026-09-23: no standalone loop product exists in Python
+either. Python harness.py is the P6 fixture runner, not a production entrypoint.
+Claude ports reusable host BUILDING BLOCKS: transport and receipts, outbox,
+systemd timers and callback guard, execution identity, turn watcher, route-free
+claims, handoff and inotify, with Python/Go parity tests. Claude builds the NEW
+product entrypoint agent-loop run/status/stop in Go on top of those components.
+The fixture runner and P6 timing gates are NOT ported. Other Python fixture/proof
+tools remain development evidence, not shipped runtime requirements.
+
+Python is the reference where equivalent core/component behavior exists. There is
+NO Python reference for the new product entrypoint and no claim of whole-product
+parity. P7 is an unaccepted view prototype, not an accepted status implementation.
+No new fleet package, allocation, kiln implementation task or operations in the
+target repository is requested or released by this record.
 
 Brian/Claude report current Go core parity on125 R13 recorded cases (core
 unchanged throughR18) and25/25 planted faults. Preserve as reported evidence;
@@ -29,6 +37,14 @@ platform and runtime configuration to results. Python-only success cannot pass a
 Go release. Retain the fixed five open adoption checks and existing package cap;
 no new Connect chain. Python proof tooling may drive the binary but must exercise
 its real production paths; no substituted Python controller behind a Go command.
+For run/status/stop and component composition, P8's predeclared acceptance checks
+and corvid's independent review are the proof, not conformance to a nonexistent
+Python program. Test those public commands against the same persisted state and
+effects: launch/handoff, restart/uncertain delivery, enforced stop, input and
+judgment gates, truthful status and evidence recovery. Retain the eight overall
+architecture checks; prior Python results do not exempt new Go orchestration.
+Component parity and product acceptance are separate evidence in the verdict.
+This clarification changes the qualification target, not the fixed scope/cap.
 
 P9 packages that Go binary, with docs/config/install/run/status/stop/restore and
 known limits. Normal source and tests live in agent-loop; preserve provenance to
