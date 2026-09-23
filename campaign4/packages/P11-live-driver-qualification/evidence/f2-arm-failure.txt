@@ -1,28 +1,32 @@
    redirect: < PKG=/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification
    redirect: < PLANS=$PKG/plans
-   redirect: > PKG=/tmp/p11-f2-O1M2/pkg
-   redirect: > PLANS=/tmp/p11-f2-O1M2/plans
+   redirect: > PKG=/tmp/p11-f2-RPuR/pkg
+   redirect: > PLANS=/tmp/p11-f2-RPuR/plans
    redirect: < SD=/home/bmosher/.config/systemd/user
-   redirect: > SD=/tmp/p11-f2-O1M2/sd
-== driver 1f4bc4d44eab4e70 run W082130 wall at 2026-09-23T15:22:00Z, workdir /tmp/p11-f2-O1M2
--- bound used: 2026-09-23T15:22:00Z (no WALLSTOP row)
--- after 15s: driver pid 252000 alive=no
+   redirect: > SD=/tmp/p11-f2-RPuR/sd
+== driver 2eb4ffbe8f23783a run W083948 wall at 2026-09-23T15:40:18Z, workdir /tmp/p11-f2-RPuR
+-- bound used: 2026-09-23T15:40:18Z (no WALLSTOP row)
+-- after 15s: driver pid 364397 alive=no
 -- results.tsv:
-   SETUP	FAIL	2026-09-23T15:21:30.126Z	wall-stop not armed: no effect started
--- effects by the driver's cgroup after the bound (deadline 2026-09-23T15:22:00Z):
-awk: fatal: cannot open file `/tmp/p11-f2-O1M2/effects.log' for reading: No such file or directory
+   SETUP	FAIL	2026-09-23T15:39:48.126Z	wall-stop not armed: no effect started
+-- effects by the driver's cgroup after the bound (deadline 2026-09-23T15:40:18Z):
+awk: fatal: cannot open file `/tmp/p11-f2-RPuR/effects.log' for reading: No such file or directory
 -- every effect, by cgroup:
-awk: fatal: cannot open file `/tmp/p11-f2-O1M2/effects.log' for reading: No such file or directory
+awk: fatal: cannot open file `/tmp/p11-f2-RPuR/effects.log' for reading: No such file or directory
       none
+awk: fatal: cannot open file `/tmp/p11-f2-RPuR/effects.log' for reading: No such file or directory
+LATE_FROM_DEADLINE=0 (driver-scope effects at or after the authorized deadline 2026-09-23T15:40:18Z)
 -- cleanup runs: 0
 -- scope: inactive; wall timer: inactive inactive 
 -- sleep children of the driver left: 0
 LATE_EFFECTS=0 WALLSTOP_ROWS=0 CLEANUPS=0 DRIVER_ALIVE=0
-evidence/f2-arm-failure.sh: line 71: /tmp/p11-f2-O1M2/effects.log: No such file or directory
-SECOND_CLEANUP_EFFECTS=12 msg=""
+evidence/f2-arm-failure.sh: line 84: /tmp/p11-f2-RPuR/effects.log: No such file or directory
+SECOND_CLEANUP_EFFECTS=16 msg=""
+-- wall-side agent-deck calls and their profile:
+WALL_AGENTDECK_PROFILES=
 -- driver.log tail:
-   2026-09-23T15:21:45.188Z + systemctl --user stop p11live-wallstop-W082130.timer
-   Failed to stop p11live-wallstop-W082130.timer: Unit p11live-wallstop-W082130.timer not loaded.
-   2026-09-23T15:21:45.192Z   rc=5
-   2026-09-23T15:21:45.192Z cleanup done
-WORKDIR=/tmp/p11-f2-O1M2
+   2026-09-23T15:40:03.246Z + systemctl --user stop p11live-wallstop-W083948.timer
+   Failed to stop p11live-wallstop-W083948.timer: Unit p11live-wallstop-W083948.timer not loaded.
+   2026-09-23T15:40:03.252Z   rc=5
+   2026-09-23T15:40:03.329Z cleanup done
+WORKDIR=/tmp/p11-f2-RPuR

@@ -1,0 +1,92 @@
+{
+ "qid": "P11-repair-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "decision": {
+  "repair-1-decision.json": "ab4fad7e7bacbe674c7af810d0cadf534ddf36ea66f8014bf3d1a3501c545ac8",
+  "repair-1-deadline-guard-addendum.json": "10416df102759d1e672fef04da145d062ac53f0d98d3aee8d7453625ac2bec05"
+ },
+ "frozen": {
+  "source": "1341f0469fba84787112a705b0d107e096644085 (unchanged)",
+  "binary_sha256": "c1c49a293ed9434c1f6e1f539fd5d9ebf89a0fab220580cf69ddd821547afac8"
+ },
+ "initial_archive": "attempt-history/initial (preserved)",
+ "diffs": {
+  "P10 -> P11 driver": "evidence/live-driver.diff",
+  "initial -> repair-1 driver": "evidence/repair-1-driver.diff",
+  "README (new, no P10 counterpart)": "evidence/readme.diff",
+  "other plan files (rename only)": "evidence/rename.diff + evidence/rename-only-check.txt"
+ },
+ "requirements_map": "plans/README.md (table + mutating-path audit)",
+ "plan_files_sha256": {
+  "plans/README.md": "debba2265777a0ada5090cf0638dc4e01a46ee9f009fb5b2cc9ccd1a3ec3fbfa",
+  "plans/cutover-inputs.template.env": "6cf21d6b858ea44dd0e6add3d02e76a640ec7e301597a4a3ab089a9da3d14f2b",
+  "plans/cutover.sh": "2f0815eb95c0846c9d5d79e2c6b3ac4c278d1f7d08986dd94208a7cb0660d6ab",
+  "plans/live-driver.sh": "2eb4ffbe8f23783a0d0eb7bd6bfc292a85b6ba07e14e5170bc3143c4355cbb1e",
+  "plans/live-inputs.template.env": "bb2f088f378181bf427d964c3ff85787c3eebbe8ffe38e3b0c98f02874dae56f",
+  "plans/tasks/ack.md": "4b803148d5744e988b65506425ce92d955dd1cb5c595d49cd3fa2d0165847877",
+  "plans/tasks/handoff-task.md": "57f556aa2aca1306de6e405a57ea0c637a4399f44da19d325f56d1da9b92bdf0",
+  "plans/tasks/handoff-verify.md": "2709dc9cb907f74a119e55877c0168a9f1f19589be6e2d89e3d2c2b3e2535ed5",
+  "plans/tasks/l-noclaim-worker.md": "6ff2afd09742d8c2fa60156ab6b56dca8e2f938345285071b845188561fe1485",
+  "plans/tasks/l-verify.md": "5084a002685a2aa6a63970f5d7c263c5ea9d21f0c5459d29ac9e8de422058a94",
+  "plans/tasks/l-worker.md": "b2bb58ad51cc728482df83fa5900446c257a93e16d9ba470aef49fc60838e5ef"
+ },
+ "evidence_sha256": {
+  "evidence/construction-dry/cut-capture.txt": "70ba7b153988cdb867b3fad1465633ab923e876069d22aa357556cee5219a0d1",
+  "evidence/construction-dry/cut-handoff.txt": "ff2a175fb2cce6fc6da12bb6bd4d3bd31d4cc50d8252e001cf6cdea4d320d340",
+  "evidence/construction-dry/cut-rollback.txt": "cc0129be2517a621e102a6e1a2ad59aa2b65a2d4a5e626fcb36c3914af75153e",
+  "evidence/construction-dry/cut-switch.txt": "af8e714de6873f4e4fcf1744c4f6e9df1d96062168f83bda2831c715049d7e93",
+  "evidence/construction-dry/live-dry-results.tsv": "915591a2d8f705ccbe8f9a0c5144cf260c6f81054528dc082f6827c40b7a1428",
+  "evidence/construction-dry/live-dry.txt": "d74e497c40dd5bf1d5b93b35c457dbcc98e9c308b7e22dcd68f54306af8ca9d7",
+  "evidence/f1-helpers.sh": "9cf061a6c21eaee1e55eb5efadbe2d7a603ccb7c29b0151a1ba8bbe0fe8d07b1",
+  "evidence/f1-helpers.txt": "789c1c8387d9c8054ac1fe450ba9390b99a32a5ace47dbf2bf27009f149e8999",
+  "evidence/f2-arm-failure.sh": "5f4b6f7dda54dbbb85f07cfb681031e2d4ad3b45d018726edad777cae40dac2a",
+  "evidence/f2-arm-failure.txt": "45e07b5767384fe5f60c6fb12b486417660e814430d970bd39778f01205700cf",
+  "evidence/f2-wallstop-p10.txt": "b6f1d98cefb9e7ce0579a08730b7f4f02be4496b7fa7ef49974b91e2df886916",
+  "evidence/f2-wallstop-p11.txt": "ba676bd657138be095dc6f3752f65f8134cfe112eb0e8e4d3194e9716bd6cc4b",
+  "evidence/f2-wallstop-witness.sh": "9b3ac312e695422144ac6fb73e676edb332c0dd161c3a2a76460af198fe4d423",
+  "evidence/f3-go-settlement.sh": "4d33c527ff9749ebf424f099f83b4cbffa81414ef789005da07c155709385ddd",
+  "evidence/f3-go-settlement.txt": "7a0e3b90b1c29536724e5db672452a1e765b44d756ac69886079def5491f66a4",
+  "evidence/live-driver.diff": "ebd5071d5455b0c35af77ee3f6bd0793ce1b540b5abf980b00468fc55cfb12c7",
+  "evidence/plan-hashes.txt": "85a072972314f306d027ef6efbf5fb1ac00ad7c7f7b4087034b44cc7fbab3512",
+  "evidence/r1-repair-tests.sh": "990e7ac5924f75abcdfedb5155d84f103a64199c42eb543dd2707bd902e866d2",
+  "evidence/r1-repair-tests.txt": "3691e219ade92773569f1eb235ed80f18bd1a054f75857de7f7b54049daba756",
+  "evidence/readme.diff": "c3d7ac6e526b8c61d4400a50eef8472ce39ec382c0f2892b0db5fc55e6dc984d",
+  "evidence/rename-only-check.txt": "1ba2df9be611246a73685773314ac193b65a48562e48104b1314cb6d5afb6855",
+  "evidence/rename.diff": "0e915ddbee4f55ebe4cb2d447a24674e7fc366818b73903770da5720640fcd29",
+  "evidence/repair-1-driver.diff": "9f65613ab8ff867b948192604c42e6d5260f9279cc65682caf969995f7aebf3c"
+ },
+ "executable_results": {
+  "repair tests (R1 profile/registry, R2 stop/cleanup, R4 L6 timing, deadline guard, whole-driver preflight)": [
+   "== driver 2eb4ffbe8f23783a workdir /tmp/p11-r1-JoUE",
+   "== 51 PASS, 0 FAIL"
+  ],
+  "F1 helpers (P10 then P11)": [
+   "== driver 912b55b2fb374022",
+   "== 10 PASS, 19 FAIL",
+   "rc=1",
+   "== driver 2eb4ffbe8f23783a",
+   "== 29 PASS, 0 FAIL",
+   "rc=0"
+  ],
+  "F2 witness P11 (registry stub, profile logged)": [
+   "== driver 2eb4ffbe8f23783a run W083819 wall at 2026-09-23T15:38:49Z, workdir /tmp/p11-f2-eZNd",
+   "LATE_FROM_DEADLINE=1 (driver-scope effects at or after the authorized deadline 2026-09-23T15:38:49Z)",
+   "LATE_EFFECTS=0 WALLSTOP_ROWS=1 CLEANUPS=1 DRIVER_ALIVE=0",
+   "SECOND_CLEANUP_EFFECTS=0 msg=\"cleanup already ran\"",
+   "WALL_AGENTDECK_PROFILES=prof=fxprof "
+  ],
+  "F2 arm failure": "evidence/f2-arm-failure.txt: SETUP FAIL 'wall-stop not armed: no effect started'; 0 driver-scope effects",
+  "F3 (Go-only, unchanged by this repair)": "evidence/f3-go-settlement.txt 15/0 (from initial; the driver change does not touch the Go CLI)",
+  "F2 P10 baseline": "evidence/f2-wallstop-p10.txt kept unchanged, with its host-effect deviation (real daemon-reload, agent-deck lookups of nonexistent W1..U1)"
+ },
+ "deadline_guard_guarantee": "The guard refuses new work (run/task/config) when the host clock is at or past LIVE_DEADLINE. It is not a zero-late-effects theorem: work admitted before expiry can end after it, and the check and the command start race. The owned-scope wall stops in-flight work. Measured: final witness has 1 driver-scope call at deadline+0.985 s, a read-only 'agent-loop expose' poll (reads allowed), 0 mutating calls after the deadline, 0 calls after the WALLSTOP row.",
+ "found_during_repair": "The initial driver ended SILENTLY with rc 0 if systemd-run could not create the scope (it used exec). Now: no exec, a scope-entered marker, SETUP FAIL 'owned scope ... not created'. The past-deadline check also moved before the scope. Both have whole-driver tests.",
+ "construction_only": "evidence/construction-dry/: DRY=1, 15 DRY rows (includes L6-timing). Not behavioural evidence.",
+ "residuals": [
+  "Go step timers (frozen, internal/host/host.go:370) set no AccuracySec: up to 60 s late. L6 detection bound is 30 s from the authorized deadline, so a late timer FAILS L6-timing (not reclassified). Live timing risk, not waived.",
+  "L6 'owned' is the sent /cancel and director wake (send log) plus the ledger's timed-out owner. The frozen Go has no acknowledgement command for a step timeout (decide is refused in BLOCKED), so no human acknowledgement timestamp exists for L6; l6-timing.json records duty wakes in the window for review.",
+  "Witnesses use stub registry/agent-deck/systemctl/agent-loop; real systemd was used only for the driver's own transient scope and wall timer (all gone afterwards).",
+  "registry_check trusts agent-deck's 'profile' field when present; if the field is absent, it relies on the profile filter of 'agent-deck list'."
+ ]
+}

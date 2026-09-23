@@ -1,23 +1,5 @@
---- ../P10-go-requalification-cutover/plans/live-driver.sh	2026-09-23 07:24:47.652465608 -0700
+--- attempt-history/initial/plans/live-driver.sh	2026-09-23 08:16:49.636781305 -0700
 +++ plans/live-driver.sh	2026-09-23 08:37:02.186516728 -0700
-@@ -1,6 +1,6 @@
- #!/bin/bash
--# P10 live qualification driver: one shot, L1-L7, evidence per case, cleanup in
--# a trap. Plan for Tern's signature; nothing here ran on real systemd yet.
-+# P11 live qualification driver (P10 driver with F1/F2/F3 corrected): one shot, L1-L7,
-+# evidence per case, cleanup in a trap. Plan for Tern's signature; nothing here ran on real systemd yet.
- #
- #   live-driver.sh INPUTS.env            run (only after Tern signs the inputs hash)
- #   DRY=1 live-driver.sh INPUTS.env      print every command, run none (rehearsal)
-@@ -11,7 +11,7 @@
- # A case whose evidence is missing is INCOMPLETE, never PASS.
- set -uo pipefail
- INPUTS=$(readlink -f "$1"); MODE=${2:-run}; DRY=${DRY:-0}
--PKG=/home/bmosher/memory-bake-off/campaign4/packages/P10-go-requalification-cutover
-+PKG=/home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification
- PLANS=$PKG/plans
- # shellcheck disable=SC1090
- . "$INPUTS"
 @@ -23,6 +23,12 @@
  for id in $W_ID $V_ID $D_ID $U_ID; do
    case " $MAIN_IDS " in *" $id "*) echo "main seat $id is forbidden" >&2; exit 2;; esac
@@ -31,20 +13,11 @@
  P=fx$RUN                                   # project name: units agent-loop-$P*, ledger $ROOT/$P.db
  A=$ROOT/bin/agent-loop
  CFG=$ROOT/$P.json
-@@ -31,18 +37,38 @@
- LU=agent-loop-liveness-$P
- SD=/home/bmosher/.config/systemd/user
- EV=${EV_DIR:-$PKG/live-$RUN}   # EV_DIR only for offline rehearsal
--WALL=p10live-wallstop-$RUN
-+WALL=p11live-wallstop-$RUN
-+SCOPE=p11live-driver-$RUN   # F2: the driver and every child run in this owned scope
- mkdir -p "$EV"
+@@ -37,7 +43,16 @@
  
  ts() { date -u +%Y-%m-%dT%H:%M:%S.%3NZ; }
  log() { echo "$(ts) $*" | tee -a "$EV/driver.log"; }
 -run() { log "+ $*"; if [ "$DRY" = 1 ]; then return 0; fi; "$@" >>"$EV/driver.log" 2>&1; local rc=$?; log "  rc=$rc"; return $rc; }
--out() { log "+ $* (captured)"; if [ "$DRY" = 1 ]; then echo "DRY"; return 0; fi; "$@" 2>>"$EV/driver.log"; }
--result() { printf '%s\t%s\t%s\t%s\n' "$1" "$2" "$(ts)" "$3" | tee -a "$EV/results.tsv"; }
 +_now() { date +%s; }
 +# Deadline guard. Every path that starts new work calls it: run(), task(), the config write.
 +# At or past the deadline (host clock) it refuses the work, writes DEADLINE INCOMPLETE and exits
@@ -55,33 +28,10 @@
 +  echo "$(ts) DEADLINE: refused new work (deadline $LIVE_DEADLINE): $*" >>"$EV/driver.log"
 +  result DEADLINE INCOMPLETE "refused at $(ts), deadline $LIVE_DEADLINE: $*"; exit 3; }
 +run() { guard "$@"; log "+ $*"; if [ "$DRY" = 1 ]; then return 0; fi; "$@" >>"$EV/driver.log" 2>&1; local rc=$?; log "  rc=$rc"; return $rc; }
-+out() { echo "$(ts) + $* (captured)" >>"$EV/driver.log"; if [ "$DRY" = 1 ]; then echo "DRY"; return 0; fi; "$@" 2>>"$EV/driver.log"; }
-+# F1: a DRY (construction) run never records PASS or FAIL: every row is DRY.
-+result() { local st=$2; [ "$DRY" = 1 ] && st=DRY; printf '%s\t%s\t%s\t%s\n' "$1" "$st" "$(ts)" "$3" | tee -a "$EV/results.tsv"; }
- show() { out systemctl --user show "$U" --timestamp=unix -p ActiveState,SubState,Result,NRestarts,InvocationID,MainPID,ExecMainStartTimestamp; }
- prop() { show | sed -n "s/^$1=//p"; }
- state() { out cat "$ROOT/$P.db.liveness.json"; }
--verdict() { state | python3 -c 'import json,sys; d=json.load(sys.stdin); print((d.get("last_verdict") or {}).get("state",""), d.get("last_check_at",""), (d.get("open") or {}).get("id",""))' 2>/dev/null; }
-+# verdict: "STATE CHECKED_AT INCIDENT" from the state file; unreadable or malformed state
-+# prints "PARSE-ERROR ..." (the reason also goes to driver.log) and returns 1: never a state.
-+verdict() { state | python3 -c '
-+import json,sys
-+try:
-+    d = json.load(sys.stdin); s = (d.get("last_verdict") or {}).get("state", "")
-+    assert isinstance(s, str) and s, "no last_verdict.state"
-+except Exception as e:
-+    print("PARSE-ERROR", type(e).__name__); print("verdict: state file unusable:", e, file=sys.stderr); sys.exit(1)
-+print(s, d.get("last_check_at", ""), (d.get("open") or {}).get("id", ""))' 2>>"$EV/driver.log"; }
- wakes() { if [ "$DRY" = 1 ]; then echo 0; return; fi; grep -c "$1" /home/bmosher/.local/share/agent-deck/wake-send.log; }
- snap() { # case label: everything a reviewer needs, before and after
-   { echo "## $1 $(ts)"; show; state; $A expose $C --json; tail -n 20 /home/bmosher/.local/share/agent-deck/wake-send.log;
-@@ -51,30 +77,83 @@
- wait_for() { local label=$1 limit=$2; shift 2; local t0; t0=$(date +%s)
-   if [ "$DRY" = 1 ]; then log "wait_for $label ${limit}s: $*"; return 0; fi
-   while ! "$@" >/dev/null 2>&1; do
--    if [ $(( $(date +%s) - t0 )) -ge "$limit" ]; then log "timeout waiting for $label"; return 1; fi; sleep 5; done
-+    if [ $(( $(date +%s) - t0 )) -ge "$limit" ]; then log "timeout waiting for $label"; result "wait:$label" INCOMPLETE "not reached in ${limit}s"; return 1; fi; sleep 5; done
-   log "reached $label after $(( $(date +%s) - t0 ))s"; }
+ out() { echo "$(ts) + $* (captured)" >>"$EV/driver.log"; if [ "$DRY" = 1 ]; then echo "DRY"; return 0; fi; "$@" 2>>"$EV/driver.log"; }
+ # F1: a DRY (construction) run never records PASS or FAIL: every row is DRY.
+ result() { local st=$2; [ "$DRY" = 1 ] && st=DRY; printf '%s\t%s\t%s\t%s\n' "$1" "$st" "$(ts)" "$3" | tee -a "$EV/results.tsv"; }
+@@ -67,25 +82,77 @@
  checks_since() { # count completed liveness runs since UTC time $1
    if [ "$DRY" = 1 ]; then echo 3; return; fi
    journalctl --user -u "$LU.service" --since "$1" -o cat --no-pager | grep -c '"verdict"'; }
@@ -163,11 +113,10 @@
  cleanup() {
 -  trap - EXIT
 +  trap - EXIT; TEARDOWN=1
-+  if ! mkdir "$EV/cleanup.lock" 2>/dev/null; then log "cleanup already ran (lock $EV/cleanup.lock)"; return 0; fi
+   if ! mkdir "$EV/cleanup.lock" 2>/dev/null; then log "cleanup already ran (lock $EV/cleanup.lock)"; return 0; fi
    log "cleanup (exact IDs)"
    mkdir -p "$EV/archive"
-   [ "$DRY" = 1 ] || cp -a "$ROOT"/. "$EV/archive/" 2>/dev/null
-@@ -86,22 +165,59 @@
+@@ -98,9 +165,19 @@
    run systemctl --user daemon-reload
    for id in $W_ID $V_ID $D_ID $U_ID; do run agent-deck session stop "$id"; run agent-deck session remove "$id"; done
    run systemctl --user stop "$WALL.timer"
@@ -181,49 +130,45 @@
 +  if [ -n "$left" ]; then result CLEANUP FAIL "unresolved:$left"; log "cleanup INCOMPLETE:$left"; return 1; fi
    log "cleanup done"
  }
--if [ "$MODE" = cleanup ]; then cleanup; exit 0; fi
--trap cleanup EXIT
 +# end of helpers
-+if [ "$MODE" = cleanup ]; then
+ if [ "$MODE" = cleanup ]; then
 +  TEARDOWN=1
-+  # The wall (or an operator): first stop the driver's owned scope, which ends the driver and
-+  # every child it started (systemd kills the whole cgroup), and only then clean up.
-+  if [ "$(systemctl --user is-active "$SCOPE.scope" 2>/dev/null)" = active ]; then
-+    log "WALLSTOP: stopping $SCOPE.scope (driver and children)"; systemctl --user stop "$SCOPE.scope"
-+    result WALLSTOP INCOMPLETE "live deadline $LIVE_DEADLINE reached; driver scope stopped before cleanup"
-+  fi
-+  cleanup; exit 0
-+fi
+   # The wall (or an operator): first stop the driver's owned scope, which ends the driver and
+   # every child it started (systemd kills the whole cgroup), and only then clean up.
+   if [ "$(systemctl --user is-active "$SCOPE.scope" 2>/dev/null)" = active ]; then
+@@ -109,11 +186,21 @@
+   fi
+   cleanup; exit 0
+ fi
 +# R1: registry preflight before any unit or seat effect (read-only).
 +if [ "$DRY" != 1 ]; then
 +  why=$(registry_check) || { result SETUP FAIL "fixture registry check in profile $PROFILE: $why"; exit 3; }
 +  log "registry: four fixtures confirmed in profile $PROFILE"
 +fi
-+# F2: run inside an owned scope (validated below by cgroup membership, never a PID file).
-+if [ "$DRY" != 1 ] && [ "${P11_IN_SCOPE:-}" != "$SCOPE" ]; then
+ # F2: run inside an owned scope (validated below by cgroup membership, never a PID file).
+ if [ "$DRY" != 1 ] && [ "${P11_IN_SCOPE:-}" != "$SCOPE" ]; then
+-  exec env P11_IN_SCOPE="$SCOPE" systemd-run --user --scope --quiet --unit="$SCOPE" -- /bin/bash "$0" "$@"
 +  [ "$(_now)" -lt "$DL_EPOCH" ] || { result SETUP INCOMPLETE "live deadline $LIVE_DEADLINE already passed: no effect started"; exit 3; }
 +  # Not exec: if systemd-run cannot create the scope, say so instead of ending silently.
 +  env P11_IN_SCOPE="$SCOPE" systemd-run --user --scope --quiet --unit="$SCOPE" -- /bin/bash "$0" "$@"; rc=$?
 +  [ -e "$EV/scope-entered.$SCOPE" ] || { result SETUP FAIL "owned scope $SCOPE not created (systemd-run rc=$rc): no effect started"; exit 3; }
 +  exit $rc
-+fi
-+if [ "$DRY" != 1 ] && ! grep -q "/$SCOPE.scope\$" /proc/$$/cgroup; then result SETUP FAIL "driver is not in $SCOPE.scope"; exit 3; fi
+ fi
+ if [ "$DRY" != 1 ] && ! grep -q "/$SCOPE.scope\$" /proc/$$/cgroup; then result SETUP FAIL "driver is not in $SCOPE.scope"; exit 3; fi
 +[ "$DRY" = 1 ] || touch "$EV/scope-entered.$SCOPE"
-+# A stop of the scope (the wall) must not start a second cleanup from inside it.
-+trap 'trap - EXIT; log "driver terminated by signal (wall stop)"; exit 143' TERM
+ # A stop of the scope (the wall) must not start a second cleanup from inside it.
+ trap 'trap - EXIT; log "driver terminated by signal (wall stop)"; exit 143' TERM
  
- # ---------------------------------------------------------------- setup
--log "P10 live $RUN, inputs sha256 $(sha256sum "$INPUTS" | cut -d' ' -f1)"
-+log "P11 live $RUN, inputs sha256 $(sha256sum "$INPUTS" | cut -d' ' -f1)"
+@@ -122,7 +209,7 @@
  now=$(date +%s); dl=$(date -d "$LIVE_DEADLINE" +%s)
  if [ "$dl" -le "$now" ]; then log "live deadline $LIVE_DEADLINE already passed"; result SETUP INCOMPLETE "deadline passed"; exit 3; fi
  # Bounded wall stop, armed before any task: cleanup runs at the live deadline even if this shell dies.
--run systemd-run --user --unit="$WALL" --on-active=$(( dl - now ))s /bin/bash "$PLANS/live-driver.sh" "$INPUTS" cleanup
+-run systemd-run --user --unit="$WALL" --timer-property=AccuracySec=1s --setenv=PATH="$PATH" ${EV_DIR:+--setenv=EV_DIR="$EV_DIR"} --on-active=$(( dl - now ))s /bin/bash "$PLANS/live-driver.sh" "$INPUTS" cleanup \
 +run systemd-run --user --unit="$WALL" --timer-property=AccuracySec=1s --setenv=PATH="$PATH" --setenv=AGENTDECK_PROFILE="$PROFILE" ${EV_DIR:+--setenv=EV_DIR="$EV_DIR"} --on-active=$(( dl - now ))s /bin/bash "$PLANS/live-driver.sh" "$INPUTS" cleanup \
-+  || { result SETUP FAIL "wall-stop not armed: no effect started"; exit 3; }
-+if [ "$DRY" != 1 ] && [ "$(systemctl --user is-active "$WALL.timer")" != active ]; then result SETUP FAIL "wall-stop timer $WALL.timer not active: no effect started"; exit 3; fi
-+trap cleanup EXIT   # armed and verified: from here every exit cleans up exact IDs once
- if [ -e "$ROOT" ] && [ "$DRY" != 1 ]; then result SETUP INCOMPLETE "private root $ROOT exists"; exit 3; fi
+   || { result SETUP FAIL "wall-stop not armed: no effect started"; exit 3; }
+ if [ "$DRY" != 1 ] && [ "$(systemctl --user is-active "$WALL.timer")" != active ]; then result SETUP FAIL "wall-stop timer $WALL.timer not active: no effect started"; exit 3; fi
+ trap cleanup EXIT   # armed and verified: from here every exit cleans up exact IDs once
+@@ -130,7 +217,7 @@
  run mkdir -p "$ROOT/bin" "$ROOT/art" "$ROOT/claims" "$ROOT/tasks"
  run install -m 755 "$BIN_SRC" "$A"
  if [ "$DRY" != 1 ] && [ "$(sha256sum "$A" | cut -d' ' -f1)" != "$BIN_SHA" ]; then result SETUP FAIL "binary hash mismatch"; exit 3; fi
@@ -232,43 +177,7 @@
  import json, sys
  json.dump({"project": "$P", "profile": "$PROFILE", "wake": "$WAKE", "db": "$ROOT/$P.db", "stream_dir": "$STREAMS",
    "claims_dir": "$ROOT/claims", "artifacts_dir": "$ROOT/art", "director": "$D_NAME", "duty": "$U_NAME",
-@@ -126,7 +242,7 @@
- if wait_for "L1 decision" 600 is_step "$Q" decision; then
-   w1=$(wakes "$W_ID"); v1=$(wakes "$V_ID")
-   inv=$(prop InvocationID); run systemctl --user restart "$U"; wait_for "L1 restart pass" 90 new_invocation "$inv"
--  run "$A" decide $C --qid "$Q" --kind question_answered --ref "P10-live-$RUN-L1" --reason "live witness"
-+  run "$A" decide $C --qid "$Q" --kind question_answered --ref "P11-live-$RUN-L1" --reason "live witness"
-   if is_step "$Q" closed && [ "$(wakes "$W_ID")" = "$w1" ] && [ "$(wakes "$V_ID")" = "$v1" ]; then result L1 PASS "closed; one dispatch per seat across restart"
-   else result L1 FAIL "step $(step "$Q"); worker wakes $w1->$(wakes "$W_ID"), verifier $v1->$(wakes "$V_ID")"; fi
- else result L1 INCOMPLETE "no verdict within 600 s (step $(step "$Q"))"; fi
-@@ -135,7 +251,7 @@
- quiet_window L5-rest rest
- 
- # ---------------------------------------------------------------- L2 kill during work
--Q=L2-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 15m --verify-window 5m
-+Q=L2-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 3m --verify-window 5m
- wait_for "L2 worker step" 30 is_step "$Q" worker
- w1=$(wakes "$W_ID"); r1=$(prop NRestarts); inv=$(prop InvocationID)
- log "L2 onset: SIGKILL"; run systemctl --user kill -s KILL "$U"
-@@ -145,6 +261,17 @@
-   else result L2 FAIL "restarts $r1->$(prop NRestarts), worker wakes $w1->$(wakes "$W_ID")"; fi
- else result L2 FAIL "no restart/pass within bounds"; fi
- snap L2
-+# F3: L2 settles through its own deadline timer: interrupted -> step timed-out (not open), one
-+# /cancel to the worker, one director wake. decide is not valid here (the core refuses it before a
-+# verdict: evidence/f3-go-settlement.txt). Later cases start only after this is reconciled.
-+w2=$(wakes "$W_ID"); d2=$(wakes "$D_ID")
-+if wait_for "L2 settled by its deadline" 240 is_step "$Q" timed-out; then
-+  run sleep 10   # the callback's wakes are sent before the step is written; let the send log settle
-+  if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( w2 + 1 )) ] && [ "$(wakes "$D_ID")" -eq $(( d2 + 1 )) ]; }; then
-+    result L2-settle PASS "timed-out by its deadline: one /cancel, one director wake; no open work"
-+  else result L2-settle FAIL "worker wakes $w2->$(wakes "$W_ID"), director $d2->$(wakes "$D_ID")"; fi
-+else result L2-settle FAIL "L2 not settled (step $(step "$Q"))"; fi
-+wait_for "L2 rest (no open work)" 120 state_is rest
- 
- # ---------------------------------------------------------------- L3a hang: watchdog
- inv=$(prop InvocationID); log "L3a onset: SIGSTOP main pid"; run kill -STOP "$(prop MainPID)"
-@@ -208,6 +335,9 @@
+@@ -248,6 +335,9 @@
  # ---------------------------------------------------------------- L6 timeout while run is down + L5 stopped quiet
  Q=L6-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 2m --verify-window 5m
  wait_for "L6 worker step" 30 is_step "$Q" worker
@@ -278,7 +187,7 @@
  c1=$(wakes "$W_ID"); dd1=$(wakes "$D_ID"); tstop=$(date -u '+%Y-%m-%d %H:%M:%S')
  log "L5 onset: agent-loop stop"; run "$A" stop $C
  wait_for "L5 run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
-@@ -218,7 +348,8 @@
+@@ -258,7 +348,8 @@
  [ "$sched" -eq 0 ] && [ -e "$ROOT/$P.db.stop" ] && [ "$(prop ActiveState)" != active ] \
    && result L5-stray PASS "exit 64 (state $st); stray start rc=$src (recorded, not assumed 0); marker kept; no scheduled restart" \
    || result L5-stray FAIL "scheduled restarts $sched, state $(prop ActiveState), marker $(ls "$ROOT/$P.db.stop" 2>&1)"
@@ -288,7 +197,7 @@
  if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && [ "$(wakes "$D_ID")" -eq $(( dd1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | grep -q interrupted; }; then
    run systemctl --user start "agent-loop-$P-$Q-w1.service"   # replay the callback
    if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | tail -n 3 | grep -q already-handled; }; then
-@@ -228,14 +359,19 @@
+@@ -268,14 +359,18 @@
  run "$A" start $C; wait_for "L5 resumed" 90 sh -c "systemctl --user is-active $U"; snap L5-L6
  
  # ---------------------------------------------------------------- L4b duty unavailable (last: it stops the duty seat)
@@ -309,5 +218,4 @@
 +snap L4b
  
  log "all cases run; results in $EV/results.tsv"
-+if grep -qP '\t(FAIL|INCOMPLETE)\t' "$EV/results.tsv"; then log "NOT ALL PASS: $(grep -cP '\t(FAIL|INCOMPLETE)\t' "$EV/results.tsv") FAIL/INCOMPLETE rows"; exit 1; fi
- # cleanup runs from the trap
+ if grep -qP '\t(FAIL|INCOMPLETE)\t' "$EV/results.tsv"; then log "NOT ALL PASS: $(grep -cP '\t(FAIL|INCOMPLETE)\t' "$EV/results.tsv") FAIL/INCOMPLETE rows"; exit 1; fi

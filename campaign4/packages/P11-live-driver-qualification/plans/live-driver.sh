@@ -23,6 +23,12 @@ MAIN_IDS="0c933c75-1790000758 493c0317-1790000758 a79067ca-1790000758 56513e0e-1
 for id in $W_ID $V_ID $D_ID $U_ID; do
   case " $MAIN_IDS " in *" $id "*) echo "main seat $id is forbidden" >&2; exit 2;; esac
 done
+# Deadline guard: a missing or unparseable deadline fails closed before any effect.
+DL_EPOCH=$(date -u -d "$LIVE_DEADLINE" +%s 2>/dev/null) || { echo "LIVE_DEADLINE '$LIVE_DEADLINE' is not a valid time" >&2; exit 2; }
+# R1: every agent-deck call (driver, children, detached wall) uses the declared profile.
+export AGENTDECK_PROFILE="$PROFILE"
+if [ "$(printf '%s\n' "$W_ID" "$V_ID" "$D_ID" "$U_ID" | sort -u | wc -l)" -ne 4 ] || [ "$(printf '%s\n' "$W_NAME" "$V_NAME" "$D_NAME" "$U_NAME" | sort -u | wc -l)" -ne 4 ]; then
+  echo "fixture IDs and names must be four distinct pairs" >&2; exit 2; fi
 P=fx$RUN                                   # project name: units agent-loop-$P*, ledger $ROOT/$P.db
 A=$ROOT/bin/agent-loop
 CFG=$ROOT/$P.json
@@ -37,7 +43,16 @@ mkdir -p "$EV"
 
 ts() { date -u +%Y-%m-%dT%H:%M:%S.%3NZ; }
 log() { echo "$(ts) $*" | tee -a "$EV/driver.log"; }
-run() { log "+ $*"; if [ "$DRY" = 1 ]; then return 0; fi; "$@" >>"$EV/driver.log" 2>&1; local rc=$?; log "  rc=$rc"; return $rc; }
+_now() { date +%s; }
+# Deadline guard. Every path that starts new work calls it: run(), task(), the config write.
+# At or past the deadline (host clock) it refuses the work, writes DEADLINE INCOMPLETE and exits
+# (the EXIT trap then tears down). Teardown (cleanup, the wall) sets TEARDOWN=1 and is not refused.
+# It refuses new work when it sees expiry; work admitted just before may still end after it
+# (the owned-scope wall stops that). out() is read-only: only show() and state() use it.
+guard() { [ -n "${TEARDOWN:-}" ] || [ "$DRY" = 1 ] || [ "$(_now)" -lt "$DL_EPOCH" ] && return 0
+  echo "$(ts) DEADLINE: refused new work (deadline $LIVE_DEADLINE): $*" >>"$EV/driver.log"
+  result DEADLINE INCOMPLETE "refused at $(ts), deadline $LIVE_DEADLINE: $*"; exit 3; }
+run() { guard "$@"; log "+ $*"; if [ "$DRY" = 1 ]; then return 0; fi; "$@" >>"$EV/driver.log" 2>&1; local rc=$?; log "  rc=$rc"; return $rc; }
 out() { echo "$(ts) + $* (captured)" >>"$EV/driver.log"; if [ "$DRY" = 1 ]; then echo "DRY"; return 0; fi; "$@" 2>>"$EV/driver.log"; }
 # F1: a DRY (construction) run never records PASS or FAIL: every row is DRY.
 result() { local st=$2; [ "$DRY" = 1 ] && st=DRY; printf '%s\t%s\t%s\t%s\n' "$1" "$st" "$(ts)" "$3" | tee -a "$EV/results.tsv"; }
@@ -67,25 +82,77 @@ wait_for() { local label=$1 limit=$2; shift 2; local t0; t0=$(date +%s)
 checks_since() { # count completed liveness runs since UTC time $1
   if [ "$DRY" = 1 ]; then echo 3; return; fi
   journalctl --user -u "$LU.service" --since "$1" -o cat --no-pager | grep -c '"verdict"'; }
-quiet_window() { # LABEL EXPECTED_STATE: 3 min and at least 3 checks, all EXPECTED_STATE, no liveness wake
-  local label=$1 want=$2 since w0; since=$(date -u '+%Y-%m-%d %H:%M:%S'); w0=$(wakes '\[agent-loop liveness\]')
-  run sleep 185
+quiet_window() { # LABEL EXPECTED_STATE [SECONDS=185]: >=3 checks, all EXPECTED_STATE, no liveness wake
+  local label=$1 want=$2 secs=${3:-185} since w0; since=$(date -u '+%Y-%m-%d %H:%M:%S'); w0=$(wakes '\[agent-loop liveness\]')
+  run sleep "$secs"
   local n bad; n=$(checks_since "$since")
   bad=$( [ "$DRY" = 1 ] || journalctl --user -u "$LU.service" --since "$since" -o cat --no-pager | grep '"verdict"' | grep -vc "\"state\":\"$want\"" )
-  if [ "$DRY" = 1 ]; then result "$label" DRY "3 min, >=3 checks, all $want"; return; fi
+  if [ "$DRY" = 1 ]; then result "$label" DRY "${secs} s, >=3 checks, all $want"; return; fi
   if [ "$n" -ge 3 ] && [ "${bad:-0}" -eq 0 ] && [ "$(wakes '\[agent-loop liveness\]')" -eq "$w0" ]; then
-    result "$label" PASS "$n checks in 185 s, all $want, no liveness wake"
+    result "$label" PASS "$n checks in $secs s, all $want, no liveness wake"
   else result "$label" FAIL "$n checks, $bad not $want, liveness wakes $w0 -> $(wakes '\[agent-loop liveness\]')"; fi; }
 task() { # template qid -> materialized file
-  sed -e "s#{QID}#$2#g" -e "s#{ARTIFACTS}#$ROOT/art#g" -e "s#{BIN}#$A#g" -e "s#{CONFIG}#$CFG#g" "$PLANS/tasks/$1" > "$ROOT/tasks/$2-$1"; echo "$ROOT/tasks/$2-$1"; }
+  guard "task $1 $2"; sed -e "s#{QID}#$2#g" -e "s#{ARTIFACTS}#$ROOT/art#g" -e "s#{BIN}#$A#g" -e "s#{CONFIG}#$CFG#g" "$PLANS/tasks/$1" > "$ROOT/tasks/$2-$1"; echo "$ROOT/tasks/$2-$1"; }
 step() { $A expose $C --json 2>/dev/null | python3 -c "import json,sys; print([p['step'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$1'][0])" 2>/dev/null; }
 is_step() { [ "$(step "$1")" = "$2" ]; }
 unit_is() { [ "$(prop ActiveState)" = "$1" ]; }
 new_invocation() { [ "$(prop InvocationID)" != "$1" ] && unit_is active; }
 state_is() { verdict | grep -q "^$1 "; }
+# R1: the registry (agent-deck list, declared profile) must hold exactly these four fixtures:
+# each ID once, with its declared title, in $PROFILE, not archived. Prints the problems; rc 1 if any.
+registry_check() { agent-deck list --json 2>>"$EV/driver.log" | python3 -c '
+import json, sys
+want = dict(zip(sys.argv[2::2], sys.argv[3::2])); prof = sys.argv[1]; bad = []
+try:
+    d = json.load(sys.stdin); d = d if isinstance(d, list) else d.get("sessions", [])
+except Exception as e:
+    print("registry unreadable:", e); sys.exit(1)
+for i, name in want.items():
+    rows = [r for r in d if r.get("id") == i]
+    if len(rows) != 1: bad.append("%s: %d registry rows" % (i, len(rows))); continue
+    r = rows[0]
+    if r.get("title") != name: bad.append("%s: title %r, declared %r" % (i, r.get("title"), name))
+    if r.get("profile", prof) != prof: bad.append("%s: profile %r, declared %r" % (i, r.get("profile"), prof))
+    if r.get("archived"): bad.append("%s: archived" % i)
+print("; ".join(bad) or "ok"); sys.exit(1 if bad else 0)' "$PROFILE" "$W_ID" "$W_NAME" "$V_ID" "$V_NAME" "$D_ID" "$D_NAME" "$U_ID" "$U_NAME"; }
+seat_status() { # ID -> registry status, or "absent"
+  agent-deck list --json 2>>"$EV/driver.log" | python3 -c '
+import json, sys
+try:
+    d = json.load(sys.stdin); d = d if isinstance(d, list) else d.get("sessions", [])
+except Exception:
+    print("unreadable"); sys.exit()
+print(next((r.get("status", "") for r in d if r.get("id") == sys.argv[1]), "absent"))' "$1"; }
+# R2: a seat counts as stopped only when the registry says so after the stop command succeeded.
+# R4 L6 timing, predeclared class: EXPLICIT (the deadline is known). Detection = ledger interrupt time
+# minus the authorized deadline, bound 30 s. Owned = the later of the worker /cancel and director wake
+# send times minus the deadline, bound 90 s (30 + 60). Timer lateness counts against detection; it is
+# never reclassified as suspicion. Any missing timestamp: INCOMPLETE.
+l6_eval() { # DEADLINE INTERRUPT CANCEL_SENT DIRECTOR_SENT -> "PASS|FAIL|INCOMPLETE detail"
+  python3 -c '
+import sys, datetime as D
+def t(x):
+    try: return D.datetime.fromisoformat(x.replace("Z", "+00:00"))
+    except Exception: return None
+dl, it, cs, ds = (t(a) for a in sys.argv[1:5])
+if None in (dl, it, cs, ds): print("INCOMPLETE missing timestamp(s): deadline=%s interrupt=%s cancel=%s director=%s" % tuple(sys.argv[1:5])); sys.exit()
+det = (it - dl).total_seconds(); own = (max(cs, ds) - dl).total_seconds()
+ok = det <= 30 and own <= 90 and det >= 0
+print("%s explicit: detection %.1fs (bound 30), owned %.1fs (bound 90) from deadline %s" % ("PASS" if ok else "FAIL", det, own, sys.argv[1]))' "$@"; }
+l6_timing() {
+  if [ "$DRY" = 1 ]; then result L6-timing DRY "deadline/interrupt/cancel/director timestamps"; return; fi
+  local it cs ds cbt r
+  it=$($A expose $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print([p['since'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q' and p['step']=='timed-out'][0])" 2>>"$EV/driver.log")
+  cs=$(tail -n +$(( nl0 + 1 )) /home/bmosher/.local/share/agent-deck/wake-send.log | awk -F'\t' -v id="$W_ID" '$3==id {print $1; exit}')
+  ds=$(tail -n +$(( nl0 + 1 )) /home/bmosher/.local/share/agent-deck/wake-send.log | awk -F'\t' -v id="$D_ID" '$3==id {print $1; exit}')
+  cbt=$(systemctl --user show "agent-loop-$P-$Q-w1.service" -p ExecMainStartTimestamp --value 2>&1)
+  printf '{"deadline": "%s", "callback_start": "%s", "interrupt": "%s", "cancel_sent": "%s", "director_sent": "%s", "duty_wakes_in_window": %s}\n' \
+    "$l6dl" "$cbt" "$it" "$cs" "$ds" "$(tail -n +$(( nl0 + 1 )) /home/bmosher/.local/share/agent-deck/wake-send.log | awk -F'\t' -v id="$U_ID" '$3==id' | wc -l)" > "$EV/l6-timing.json"
+  r=$(l6_eval "$l6dl" "$it" "$cs" "$ds"); result L6-timing "${r%% *}" "${r#* } (callback start $cbt; $EV/l6-timing.json)"; }
+stop_seat() { run agent-deck session stop "$1" || return 1; [ "$DRY" = 1 ] && return 0; [ "$(seat_status "$1")" = stopped ]; }
 
 cleanup() {
-  trap - EXIT
+  trap - EXIT; TEARDOWN=1
   if ! mkdir "$EV/cleanup.lock" 2>/dev/null; then log "cleanup already ran (lock $EV/cleanup.lock)"; return 0; fi
   log "cleanup (exact IDs)"
   mkdir -p "$EV/archive"
@@ -98,9 +165,19 @@ cleanup() {
   run systemctl --user daemon-reload
   for id in $W_ID $V_ID $D_ID $U_ID; do run agent-deck session stop "$id"; run agent-deck session remove "$id"; done
   run systemctl --user stop "$WALL.timer"
+  # R2: outcomes are checked, not assumed: every fixture gone from the registry, no unit of this run active.
+  local left="" id u
+  if [ "$DRY" != 1 ]; then
+    for id in $W_ID $V_ID $D_ID $U_ID; do st=$(seat_status "$id"); [ "$st" = absent ] || left="$left seat $id ($st);"; done
+    for u in "$LU.timer" "$LU.service" "$U" $(systemctl --user list-units --all --plain --no-legend "agent-loop-$P-*" 2>/dev/null | awk '{print $1}'); do
+      [ "$(systemctl --user is-active "$u" 2>/dev/null)" = active ] && left="$left unit $u active;"; done
+  fi
+  if [ -n "$left" ]; then result CLEANUP FAIL "unresolved:$left"; log "cleanup INCOMPLETE:$left"; return 1; fi
   log "cleanup done"
 }
+# end of helpers
 if [ "$MODE" = cleanup ]; then
+  TEARDOWN=1
   # The wall (or an operator): first stop the driver's owned scope, which ends the driver and
   # every child it started (systemd kills the whole cgroup), and only then clean up.
   if [ "$(systemctl --user is-active "$SCOPE.scope" 2>/dev/null)" = active ]; then
@@ -109,11 +186,21 @@ if [ "$MODE" = cleanup ]; then
   fi
   cleanup; exit 0
 fi
+# R1: registry preflight before any unit or seat effect (read-only).
+if [ "$DRY" != 1 ]; then
+  why=$(registry_check) || { result SETUP FAIL "fixture registry check in profile $PROFILE: $why"; exit 3; }
+  log "registry: four fixtures confirmed in profile $PROFILE"
+fi
 # F2: run inside an owned scope (validated below by cgroup membership, never a PID file).
 if [ "$DRY" != 1 ] && [ "${P11_IN_SCOPE:-}" != "$SCOPE" ]; then
-  exec env P11_IN_SCOPE="$SCOPE" systemd-run --user --scope --quiet --unit="$SCOPE" -- /bin/bash "$0" "$@"
+  [ "$(_now)" -lt "$DL_EPOCH" ] || { result SETUP INCOMPLETE "live deadline $LIVE_DEADLINE already passed: no effect started"; exit 3; }
+  # Not exec: if systemd-run cannot create the scope, say so instead of ending silently.
+  env P11_IN_SCOPE="$SCOPE" systemd-run --user --scope --quiet --unit="$SCOPE" -- /bin/bash "$0" "$@"; rc=$?
+  [ -e "$EV/scope-entered.$SCOPE" ] || { result SETUP FAIL "owned scope $SCOPE not created (systemd-run rc=$rc): no effect started"; exit 3; }
+  exit $rc
 fi
 if [ "$DRY" != 1 ] && ! grep -q "/$SCOPE.scope\$" /proc/$$/cgroup; then result SETUP FAIL "driver is not in $SCOPE.scope"; exit 3; fi
+[ "$DRY" = 1 ] || touch "$EV/scope-entered.$SCOPE"
 # A stop of the scope (the wall) must not start a second cleanup from inside it.
 trap 'trap - EXIT; log "driver terminated by signal (wall stop)"; exit 143' TERM
 
@@ -122,7 +209,7 @@ log "P11 live $RUN, inputs sha256 $(sha256sum "$INPUTS" | cut -d' ' -f1)"
 now=$(date +%s); dl=$(date -d "$LIVE_DEADLINE" +%s)
 if [ "$dl" -le "$now" ]; then log "live deadline $LIVE_DEADLINE already passed"; result SETUP INCOMPLETE "deadline passed"; exit 3; fi
 # Bounded wall stop, armed before any task: cleanup runs at the live deadline even if this shell dies.
-run systemd-run --user --unit="$WALL" --timer-property=AccuracySec=1s --setenv=PATH="$PATH" ${EV_DIR:+--setenv=EV_DIR="$EV_DIR"} --on-active=$(( dl - now ))s /bin/bash "$PLANS/live-driver.sh" "$INPUTS" cleanup \
+run systemd-run --user --unit="$WALL" --timer-property=AccuracySec=1s --setenv=PATH="$PATH" --setenv=AGENTDECK_PROFILE="$PROFILE" ${EV_DIR:+--setenv=EV_DIR="$EV_DIR"} --on-active=$(( dl - now ))s /bin/bash "$PLANS/live-driver.sh" "$INPUTS" cleanup \
   || { result SETUP FAIL "wall-stop not armed: no effect started"; exit 3; }
 if [ "$DRY" != 1 ] && [ "$(systemctl --user is-active "$WALL.timer")" != active ]; then result SETUP FAIL "wall-stop timer $WALL.timer not active: no effect started"; exit 3; fi
 trap cleanup EXIT   # armed and verified: from here every exit cleans up exact IDs once
@@ -130,7 +217,7 @@ if [ -e "$ROOT" ] && [ "$DRY" != 1 ]; then result SETUP INCOMPLETE "private root
 run mkdir -p "$ROOT/bin" "$ROOT/art" "$ROOT/claims" "$ROOT/tasks"
 run install -m 755 "$BIN_SRC" "$A"
 if [ "$DRY" != 1 ] && [ "$(sha256sum "$A" | cut -d' ' -f1)" != "$BIN_SHA" ]; then result SETUP FAIL "binary hash mismatch"; exit 3; fi
-[ "$DRY" = 1 ] && log "+ write config $CFG" || python3 - "$CFG" <<PY
+guard "write config $CFG"; [ "$DRY" = 1 ] && log "+ write config $CFG" || python3 - "$CFG" <<PY
 import json, sys
 json.dump({"project": "$P", "profile": "$PROFILE", "wake": "$WAKE", "db": "$ROOT/$P.db", "stream_dir": "$STREAMS",
   "claims_dir": "$ROOT/claims", "artifacts_dir": "$ROOT/art", "director": "$D_NAME", "duty": "$U_NAME",
@@ -248,6 +335,9 @@ run kill -CONT "$mp"; wait_for "L7b recovered" 150 state_is rest; snap L7b
 # ---------------------------------------------------------------- L6 timeout while run is down + L5 stopped quiet
 Q=L6-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 2m --verify-window 5m
 wait_for "L6 worker step" 30 is_step "$Q" worker
+# R4: the authorized deadline, from the ledger, before the fault; the send log's size, to read L6's wakes later.
+l6dl=$( [ "$DRY" = 1 ] && echo DRY || $A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print([p['deadline'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0])" 2>>"$EV/driver.log" )
+nl0=$( [ "$DRY" = 1 ] && echo 0 || wc -l < /home/bmosher/.local/share/agent-deck/wake-send.log )
 c1=$(wakes "$W_ID"); dd1=$(wakes "$D_ID"); tstop=$(date -u '+%Y-%m-%d %H:%M:%S')
 log "L5 onset: agent-loop stop"; run "$A" stop $C
 wait_for "L5 run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
@@ -258,7 +348,8 @@ sched=$( [ "$DRY" = 1 ] && echo 0 || journalctl --user -u "$U" --since "$tstop" 
 [ "$sched" -eq 0 ] && [ -e "$ROOT/$P.db.stop" ] && [ "$(prop ActiveState)" != active ] \
   && result L5-stray PASS "exit 64 (state $st); stray start rc=$src (recorded, not assumed 0); marker kept; no scheduled restart" \
   || result L5-stray FAIL "scheduled restarts $sched, state $(prop ActiveState), marker $(ls "$ROOT/$P.db.stop" 2>&1)"
-quiet_window L5-stopped stopped    # the L6 deadline (2 min) falls inside this window
+quiet_window L5-stopped stopped 245    # R3: 245 s collection; the L6 deadline (2 min) falls inside it
+l6_timing
 if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && [ "$(wakes "$D_ID")" -eq $(( dd1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | grep -q interrupted; }; then
   run systemctl --user start "agent-loop-$P-$Q-w1.service"   # replay the callback
   if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | tail -n 3 | grep -q already-handled; }; then
@@ -268,14 +359,18 @@ else result L6 FAIL "cancel/director wakes $c1->$(wakes "$W_ID") $dd1->$(wakes "
 run "$A" start $C; wait_for "L5 resumed" 90 sh -c "systemctl --user is-active $U"; snap L5-L6
 
 # ---------------------------------------------------------------- L4b duty unavailable (last: it stops the duty seat)
-run agent-deck session stop "$U_ID"
+if ! stop_seat "$U_ID"; then
+  result L4b INCOMPLETE "duty fixture $U_ID not confirmed stopped (registry: $(seat_status "$U_ID")): no onset injected"
+else
 run sh -c "printf '[Service]\nExecStart=\nExecStart=$A run --config /nonexistent-$RUN.json\n' > '$SD/$U.d/fail.conf'"; run systemctl --user daemon-reload
-d1=$(wakes "$D_ID"); log "L4b onset: failing start, duty seat stopped"; run systemctl --user restart "$U"
+d1=$(wakes "$D_ID"); log "L4b onset: failing start, duty seat $U_ID confirmed stopped"; run systemctl --user restart "$U"
 if wait_for "L4b restart-loop" 180 state_is restart-loop && [ "$DRY" = 1 -o "$(wakes "$D_ID")" -gt "$d1" ]; then
   wait_for "L4b director ack" 300 sh -c "python3 -c 'import json;d=json.load(open(\"$ROOT/$P.db.liveness.json\"));assert d[\"open\"][\"ack\"][\"by\"]==\"$D_NAME\"'" \
     && result L4b PASS "duty wake failed -> director woken in the same check -> director ack recorded" || result L4b FAIL "no director ack"
 else result L4b FAIL "director not woken"; fi
-run rm -f "$SD/$U.d/fail.conf"; run systemctl --user daemon-reload; snap L4b
+run rm -f "$SD/$U.d/fail.conf"; run systemctl --user daemon-reload
+fi
+snap L4b
 
 log "all cases run; results in $EV/results.tsv"
 if grep -qP '\t(FAIL|INCOMPLETE)\t' "$EV/results.tsv"; then log "NOT ALL PASS: $(grep -cP '\t(FAIL|INCOMPLETE)\t' "$EV/results.tsv") FAIL/INCOMPLETE rows"; exit 1; fi
