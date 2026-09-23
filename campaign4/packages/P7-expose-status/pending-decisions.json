@@ -1,0 +1,152 @@
+{
+ "acceptance_vs_terminal": {
+  "r18": {
+   "owner": "tern",
+   "source_commit": "7857c0ce86fda44f1f245365c47c4e6ba93f5ff2",
+   "state": "COMPLETE",
+   "status": "ACCEPTED_SCOPED_CANDIDATE"
+  },
+  "r19": {
+   "live_executed": false,
+   "owner": "tern",
+   "reason": "Director engineering boundary: close Connect, move to Expose; not a technical failure",
+   "status": "TERMINATED"
+  }
+ },
+ "activity": {
+  "by_owner": {
+   "cairn": 152,
+   "corvid": 228,
+   "kiln": 124,
+   "tern": 39
+  },
+  "note": "edited activity log, not immutable truth; counts are activity, not cost",
+  "rows_total": 543
+ },
+ "as_of": "2026-09-23T03:47:22Z",
+ "costs": "unknown (allocations are ceilings, not costs)",
+ "eight_checks": [
+  {
+   "check": "Restart cannot duplicate execution",
+   "disposition": "Test-proven, deployed-host restart qualification open. P8.",
+   "evidence": "retained P5 test_rehearsal.py crash-before/after-ack, ambiguous-delivery-holds; test_durable_events.py reopen effects. R9 live-review-3 saw 1+1 sends and duplicate timer no-op, NOT live crash during uncertain delivery.",
+   "owner": "P8 (Tern to allocate)",
+   "status": "partial"
+  },
+  {
+   "check": "Hung attempt gets enforced owned disposition",
+   "disposition": "Test-proven; current host stop+owned escalation witness open. P8.",
+   "evidence": "R14 candidate-review-repair.md due registered callback interrupts once, missing authority rejects; retained due-worker/verifier/handoff tests. Manual Cairn stops aren't software proof.",
+   "owner": "P8 (Tern to allocate)",
+   "status": "partial"
+  },
+  {
+   "check": "Worker cannot self-verify",
+   "disposition": "Proven for trusted runtime/ingress authority boundary; no new package required.",
+   "evidence": "R13 candidate-review-repair.md public-ingress same-principal PASS/FAIL with atomic decide reject E_SELF_VERIFY with zero changes; unknown producer rejects, reopen preserves identity. Final full gate candidate-review-completion-3.md; unchanged through R18.",
+   "owner": "provenance in row",
+   "status": "met-at-stated-boundary"
+  },
+  {
+   "check": "Changed inputs invalidate affected registrations",
+   "disposition": "Partial. P8 must prove or implement revalidation before dispatch for every declared input; no automatic amended input reuse.",
+   "evidence": "P6 signature gate rejects changed tool/plan/config/binding; test_host_composition.py drift negative. This is NOT general dependency-registration invalidation; core AUTHORIZE merely registers phase.",
+   "owner": "P8 (Tern to allocate)",
+   "status": "partial"
+  },
+  {
+   "check": "Repair exhaustion stops automatic attempts",
+   "disposition": "Proven at core allocation boundary. Freeze policy in P8 smoke, no new repair mechanism.",
+   "evidence": "retained P3 test_lifecycle.py repair_then_exhausted_no_allocation and fail_without_repair_budget_exhausts_directly; terminal execution rejects; independent full retained gates. Later rounds were new director allocations, not autonomous retries.",
+   "owner": "provenance in row",
+   "status": "met-at-stated-boundary"
+  },
+  {
+   "check": "Pending judgments visibly block dependents",
+   "disposition": "Partial. P7 owns visibility; P8 owns no-dispatch enforcement, together explicitly qualified by P8.",
+   "evidence": "core decision_task and authoritative validator tests establish owned pending decision; no unified exposed view and no demonstrated general dependent scheduling gate.",
+   "owner": "P8 (Tern to allocate)",
+   "status": "partial"
+  },
+  {
+   "check": "Evidence recoverable after interruption",
+   "disposition": "Core recovery proven; current deployed ledger+artifact interrupted recovery drill open. P8. No claim of historically immutable TSV.",
+   "evidence": "R13 rollback/seen-event tests, retained SQLite reopen/atomic and outbox tests; preserved real failed runs/claims/reviews. Historical TSV in-place edits and late archives remain limitations.",
+   "owner": "P8 (Tern to allocate)",
+   "status": "partial"
+  },
+  {
+   "check": "Routine handoffs don't need Brian",
+   "disposition": "Proven for bounded happy handoff/rejection paths, not all host faults or broad adoption.",
+   "evidence": "R9 live-review-3 independently confirmed real automatic worker->verifier->terminal-rest, 1+1 sends; R17 live-review-failed-1 confirmed genuine rejection/no COMPLETE (timing INCOMPLETE).",
+   "owner": "provenance in row",
+   "status": "met-at-stated-boundary"
+  }
+ ],
+ "inputs": {
+  "architecture": {
+   "observed_at": "2026-09-21T14:45:09Z",
+   "path": "campaign4/ACCEPTED-ARCHITECTURE.md",
+   "sha256": "cf390ce0d79bf404c166c59ca0b2548a57e6f239b5e380d88aec569ad11c2b5c",
+   "stale": true
+  },
+  "charter": {
+   "observed_at": "2026-09-22T13:52:30Z",
+   "path": "campaign4/CHARTER.md",
+   "sha256": "468365c68f664aec6f51a7f2e99bd4962b3e80a2e7a61878866f849f2956ec89",
+   "stale": false
+  },
+  "connect_finish": {
+   "observed_at": "2026-09-23T03:41:11Z",
+   "path": "campaign4/CONNECT-FINISH-LINE-20260923.md",
+   "sha256": "0e92d85cf0634690743a7996d710d6184576e9073b87d0b3619b4f19f3f7bd92",
+   "stale": false
+  },
+  "control_tsv": {
+   "observed_at": "2026-09-23T03:43:31Z",
+   "path": "campaign4/control-events.tsv",
+   "sha256": "c466b1b0c254f387a0bfe1cdaa1d14a5c96ef4d462be7c4560be9c9509a4ebaa",
+   "stale": false
+  },
+  "pending_decisions": {
+   "observed_at": "2026-09-22T08:17:07Z",
+   "path": "campaign4/pending-decisions.md",
+   "sha256": "63e1b056e5b5084afb478990e23f83bc3d59f4d79a9f279e5135ee4934312ec9",
+   "stale": false
+  },
+  "r18_acceptance": {
+   "observed_at": "2026-09-23T03:37:49Z",
+   "path": "campaign4/packages/P6-r18-runtime-source-time/acceptance.json",
+   "sha256": "d5c5c5529e8143a5e9d42c2c5d55b2464b1d8597864e5632292f9c7df1a09b39",
+   "stale": false
+  },
+  "r19_terminal": {
+   "observed_at": "2026-09-23T03:41:11Z",
+   "path": "campaign4/packages/P6-r19-live-runtime-witness/terminal-disposition.json",
+   "sha256": "60241425fdf26ac660d2c2e47545a2e6b71046c836007cd8a4d3712134a39c11",
+   "stale": false
+  }
+ },
+ "pending": [
+  {
+   "affected": "S13-1 verdict",
+   "next_action": "owner decision required; dependents blocked (see affected)",
+   "options": "(a) amend to positional, supersede the revision, keep both results; (b) amend to pooled and state the limitation; (c) leave it open and report the range 10\u201313",
+   "owner": "tern",
+   "question": "S13-1: the pre-registration says \"the corpus is the records inscribed by that stream\", which is ambiguous between pooling the whole stream and building it at each probe's position. corvid's reproduction used positional; the author used pooled. Which is the registered meaning?",
+   "raised": "2026-09-20",
+   "source": "campaign4/pending-decisions.md"
+  }
+ ],
+ "resolved_not_pending": [
+  {
+   "affected": "",
+   "options": "",
+   "owner": "unknown",
+   "question": "Campaign 4 has been silent for 135 minutes. Cairn did not recover after being woken and Tern did not either. Options: (a) you restart it yourself, (b) it waits for you, (c) you stop campaign 4 for today. Affected: every open package.",
+   "raised": "2026-09-21 07:36",
+   "resolution": "**RETRACTED 07:38 \u2014 FALSE ALARM.** Raised by Claude testing campaign4-watch with a DRY guard that did not apply to rung 3. The fleet was healthy and working; it was stopped by the test, not by a stall. No decision is required.",
+   "source": "campaign4/pending-decisions.md"
+  }
+ ]
+}
