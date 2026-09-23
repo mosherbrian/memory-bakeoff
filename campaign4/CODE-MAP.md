@@ -43,3 +43,5 @@ Latest accepted composed surface: [R14 candidate](packages/P6-r14-host-timing/ca
 R15 live failure case demonstrated genuine rejection/no-COMPLETE/1+1 sends, but causal timing was INCOMPLETE: onset selected by filename order. [R15 disposition](packages/P6-r15-live-failure-rest/terminal-disposition.json) preserves it; R16 is the pending narrow identity-join correction. R14 remains accepted injected candidate, not live recovery acceptance.
 
 Latest accepted composed candidate: [R16](packages/P6-r16-causal-identity/candidate/src/) at `c8e99cf966b3f10ea5a5c22704ba8af087038246`, [acceptance](packages/P6-r16-causal-identity/acceptance.json). Causal evidence joins by bound item/action; explicit sidecar item required; 78+83+59 injected tests, all other production Python unchanged from R14. R17 is fresh live witness work, not adoption.
+
+R17 live failure again proved authenticated rejection but remained INCOMPLETE: required onset sidecars were absent and never specified in task text. R18 is pending explicit runtime source-time instrumentation, isolated from shared fleet runtime. R16 remains the accepted candidate; no timing/adoption PASS.

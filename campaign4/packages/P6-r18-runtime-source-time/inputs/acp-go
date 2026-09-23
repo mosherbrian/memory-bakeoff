@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# THE OpenCode Go wrapper. Brian's $10/month subscription, 2026-09-14.
+#
+# WHY THIS REPLACED acp-muse. The old wrapper exported OPENCODE_API_KEY - a
+# ZEN api key on a workspace with no balance - so every lane authenticated as
+# the broke workspace and got the FREE tier. That free tier has an
+# undocumented allowance we exhausted in about ninety minutes (920 turns,
+# 16.06M tokens), and its refusals arrive as a stream error INSIDE opencode:
+# nothing reaches ACP, so a refused turn hangs instead of failing. That is the
+# whole of today's fleet outage.
+#
+# Go is a different provider (opencode-go/*) authenticated by a STORED
+# credential in ~/.local/share/opencode/auth.json. So this wrapper must NOT
+# export the Zen key, or the lane routes back to the empty workspace.
+# Verified 2026-09-14 with the key unset: muse-spark-1.3-contributor answered
+# in 1.6 s.
+#
+# LIMITS, from the docs: dollar-based, not request counts. Muse Contributor is
+# $60/month with a 5-hour bucket of $12 (20%) and a weekly of $30 (50%), at
+# $0.10/M in and $0.20/M out. Today's entire fleet burn - the one that killed
+# the free tier - was 16.06M tokens, about $1.60. Roughly seven times headroom
+# in the tightest window. No concurrency limit is documented and 16 concurrent
+# turns measured clean, so no gate here; the machinery still exists in
+# acp-worker if one is ever needed.
+#
+# THE TRADE, on the record: "contributor" is the tier that TRAINS on what you
+# send. Brian's ruling covers research, the memory bake-off and the fleet's own
+# code. Credentials, customer and personal data do not go here.
+set -u
+
+if [ ! -s "$HOME/.local/share/opencode/auth.json" ]; then
+    echo "acp-go: no opencode credential stored. Run: opencode providers login" >&2
+    exit 1
+fi
+
+# Deliberately NOT exported: OPENCODE_API_KEY. See above.
+unset OPENCODE_API_KEY
+
+export ACP_MODEL="${ACP_GO_MODEL:-opencode-go/muse-spark-1.3-contributor}"
+# A LITERAL assignment, not a quoted expansion. fleet-gates matches
+# (ACP_AUTO_APPROVE)=([^\s"']+) against the wrapper file, so a quoted
+# ${VAR:-1} is invisible to it and every lane read as merely "unattended"
+# while actually being permanently ungated - a pre-flight that understates
+# permissiveness. Same mistake was made and fixed in acp-muse earlier today.
+if [ -z "${ACP_AUTO_APPROVE:-}" ]; then
+    export ACP_AUTO_APPROVE=1
+fi
+
+# A dead turn ends in ten minutes. acp-worker's watchdog measures time since
+# the last session/update and on_update refreshes that on EVERY update, tool
+# calls included, so a working turn normally keeps it alive.
+#
+# RAISED 120 -> 600 on 2026-09-22, by measurement. The 120s reasoning assumed a
+# working turn always emits updates. It does not: corvid now hashes bound
+# artifacts, runs a 59-test core suite and re-derives live evidence from disk,
+# and can spend minutes inside one tool call with no update between. Measured
+# corvid turns that day:
+#     n=17  median 60.8s  p90 386.1s  p95 434.0s  max 1423.2s
+#     5 of 17 turns (29.4%) exceeded the 120s limit
+# The threshold sat below its own p75. 600s clears p95 with headroom.
+#
+# The cost of cutting early is not one lost turn: the stall rebuilds the session
+# and RESETS THE CONVERSATION, so a verifier killed mid-review loses the review.
+# That is what happened to corvid's live-evidence review on P6-r9.
+#
+# RAISED AGAIN 600 -> 1800, same day, because 600 was outlived within two hours.
+# Measured 2026-09-22 16:04Z: corvid's full retained gate ran 840s - it only
+# completed because the 600s stall rebuilt the session and the rerun happened to
+# fit. The suites grow with each package (118, 130, 149 tests), so any number
+# picked against today's longest run is a number that expires.
+#
+# 1800 is 2.1x the longest observed run. It also deliberately exceeds cairn's
+# per-action deadline windows (median 20 min, max 45), which makes the OWNED
+# deadline the primary backstop rather than this generic watchdog - the right
+# ordering, since the deadline knows what the action was and this does not.
+# A genuinely hung engine now holds its slot up to 30 min; that is the price,
+# and it is bounded by the deadline firing first in the common case.
+#
+# THE REAL DEFECT IS NOT THE NUMBER. The watchdog measures SILENCE and already
+# exempts silences it knows are legitimate - see acp-worker's `self.pending`
+# check for approval waits, and the two comments there about queue time and
+# post-retry clock resets. An in-flight TOOL CALL is the one legitimate silence
+# it does not exempt: the adapter emits an update when a tool starts and another
+# when it ends, and nothing in between, so a 200s pytest is indistinguishable
+# from a hung engine. Exempting in-flight tool calls the way approvals are
+# exempted would make this number irrelevant. Until then it will keep expiring.
+#
+# Brian chose 600, then 1800. Same lesson as cairn's 300 -> 900 the day before,
+# the 10-minute repair budget that could not fit a test run, and openwork's 90s
+# grace: a threshold argued from plausibility rather than measured, then
+# outlived by the work.
+export ACP_STALL_SECS=1800
+
+# Deferred-promise check. Fires only on turns a PERSON prompted, and only on
+# the first sentence that reads as an obligation for later; the reply is asked
+# to queue it or dismiss it in one line. Measured 2026-09-15 over 24h of real
+# transcripts: 2.9 firings/hour fleet-wide, 68 of 70 of them on conductor-glm
+# and ledger-claude, which are the two seats Brian actually converses with.
+# Literal assignment, not "${VAR:-1}" - fleet-gates cannot read a quoted
+# expansion and reports the lane as merely window-gated. That bug has been
+# made twice in this file already.
+export ACP_PROMISE_CHECK=1
+
+exec "$HOME/.config/agent-deck/acp-worker" muse-engine acp "$@"

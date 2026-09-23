@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# DeepSeek V4.1 Flash on OpenCode Go, for the three dsh lanes.
+#
+# This takes them OFF the metered pay-as-you-go card, which was charging
+# against Brian's $25 cap. Go runs a 4x limit multiplier on this model until
+# 2026-09-20; off-peak is $0.15/M in and $0.60/M out, peak is 01:00-04:00 and
+# 06:00-10:00 UTC Mon-Fri.
+set -u
+export ACP_GO_MODEL=opencode-go/deepseek-v4.1-flash
+exec "$HOME/.config/agent-deck/acp-go" "$@"
