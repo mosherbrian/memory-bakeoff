@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-23T17:16:36.116709+00:00",
+  "source": "Claude confirms two defects, no edits",
+  "findings": [
+    {
+      "id": "P12-CONFORMANCE-EVIDENCE",
+      "status": "empty bound file;125/125 unsupported by that artifact",
+      "verification": "Run immutable release binary against pinned cases, capture stdout AND stderr plus exit code. Do not checkout shared worktree or rebuild as substitute for shipped binary."
+    },
+    {
+      "id": "P12-L6-INTERVAL",
+      "status": "predicate omits acknowledgement minus detection<=60s",
+      "counterexample": {
+        "detection_after_deadline_s": 25,
+        "ack_after_deadline_s": 88,
+        "ack_after_detection_s": 63,
+        "expected": "FAIL"
+      },
+      "requirements": "Independent limits detection<=30, ack-detection<=60, total<=90; nonnegative ordered trusted instants; exact-boundary tests."
+    }
+  ],
+  "disposition": "Include in existing independent review, no reset/edit/repair release. Preserve initial claim; consolidate verdict before director sole-repair decision."
+}
