@@ -71,3 +71,80 @@ A–E, baseline reproduction, retained conformance/parity/mutation. **Bounded FA
 on the single empty `conformance-cbfe3d9.txt` evidence artifact — re-capture it (or
 amend the citation) before live signature. No source/live/cutover change made by
 corvid. Returned to Tern.
+
+---
+
+## Candidate-intake addendum (same 30 m pass, no reset)
+
+Claim `2f597065…`; 43/43 bound files + binary `cf54a94a…` match.
+
+### NEW bounded FAIL — L6 ack bound is total-only, not ack-from-detection
+
+`plans/live-driver.sh:133-145` `l6_eval` computes `det = settled - deadline`,
+`own = ack - deadline`, and passes on `0 <= det <= 30 and det <= own <= 90`. It
+**never checks `ack - detection <= 60`**. The contract requires the acknowledged
+ownership/recovery bound of **60 s from detection** *and* **90 s total**. The
+author's own test proves the gap: `r1-repair-tests-p12.txt` line 47-48 —
+"L6 ack at 90 s exactly: PASS (detection 10.0s, acknowledged ownership 90.0s)" —
+i.e. an **80 s detection→ack latency PASSes**. Correct rule:
+`det <= 30 and 0 <= ack-det <= 60 and ack-deadline <= 90`. This must be fixed
+before the live gate can certify acknowledged ownership. (Delivery-only still
+correctly FAILs.)
+
+### Conformance evidence — independently established, artifact still empty
+
+`evidence/conformance-cbfe3d9.txt` is empty (0 bytes, `e3b0c442…`). Per the intake
+I ran the **shipped binary**: `agent-loop-cbfe3d9…/bin/agent-loop conformance
+conformance/cases` → **exit 0, `conformance: 125/125 cases ok, 1751 steps`**. So the
+retained conformance is real and independently replayed; the empty file remains a
+citation defect to re-capture. (My earlier `go test ./internal/conform` also
+126 PASS / 0 FAIL.)
+
+### Other intake checks
+
+- **Principal/session authority:** `timeout_p12_test.go` rejects a changed-principal
+  (forged) ack and a conflicting ack, and requires delivery≠ack; my CLI run refused
+  wrong actor and wrong action. OK.
+- **Missing-ack / no notification:** `l6_eval` FAILs when no ack is recorded (not a
+  pass). Product residual: an unacknowledged timeout stays `timed-out` with
+  `waiting_on=director`; only an **acknowledged** response deadline auto-expires, so
+  a never-acknowledged timeout has no bounded escalation — a **liveness gap** to
+  carry into live (must not be called acknowledgement/recovery).
+- **Replay vs dispatch identity:** replay of the same callback is `already-handled`
+  with no new wake (A), stable `T-<action>` incident identity; the disclosed
+  duplicate is a director **notice** only, never a duplicate cancel/dispatch.
+- **Calendar backward-clock:** not exercised; the claim discloses a backward step
+  postpones the wall. Per the intake this is **not** automatically accepted — it
+  needs controlled injected-clock/schedule evidence (without changing the host
+  clock) before the calendar-timer exception is signed.
+
+### Reconciled verdict
+
+Substantive A–E corrections remain **PASS**; conformance is independently
+established. **Bounded FAIL** stands on the L6 ack-from-detection rule (and the
+empty conformance artifact should be re-captured). No live/main/install or repair
+released by corvid.
+
+### Steer closure (7 points, same pass)
+
+1. **Ack bound:** bounded FAIL as above — `l6_eval` enforces total ≤90 but not
+   ack−detection ≤60; the author test accepts ack-at-90 with detection-at-10
+   (80 s). Interval boundaries must be tested separately.
+2. **Missing-ack liveness:** `l6_eval` FAILs without ack (not a pass); the product
+   has no escalation for a never-acknowledged timeout — `waiting_on=director` is
+   neither acknowledgement nor recovery; flagged as a bounded-progress gap.
+3. **Authority:** changed-principal (forged) and conflicting acks rejected;
+   wrong-actor/wrong-action refused; CLI by-name does not defeat the binding.
+4. **Replay:** stable `T-<action>` identity; replay `already-handled` with no new
+   wake; the disclosed duplicate is a director **notice**, never a duplicate
+   cancel/dispatch — at-most-once on effects holds.
+5. **Calendar backward-clock:** not exercised; disclosed risk is **not** accepted —
+   needs controlled injected clock/schedule evidence without touching the host
+   clock.
+6. **Conformance:** shipped binary `conformance conformance/cases` → exit 0,
+   **125/125 cases, 1751 steps**; release `MANIFEST.sha256` 8/8 verified; parity
+   adjudication `final_corrected` (host timers → explicit-UTC `--on-calendar`
+   `AccuracySec=1s`) inspected and named. Empty artifact to re-capture.
+7. **Hygiene:** real argv used; isolated real stop/reload witnessed; no leftover
+   `p12test-*`/`p12live-*`/`p11live-*` units; installed preview `221bb3aa…`
+   unchanged (main stays preview).
