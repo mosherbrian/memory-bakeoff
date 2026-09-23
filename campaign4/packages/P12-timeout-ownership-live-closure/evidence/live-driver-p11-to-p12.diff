@@ -1,5 +1,5 @@
 --- /home/bmosher/memory-bake-off/campaign4/packages/P11-live-driver-qualification/plans/live-driver.sh	2026-09-23 08:37:02.186516728 -0700
-+++ plans/live-driver.sh	2026-09-23 10:03:30.807889957 -0700
++++ plans/live-driver.sh	2026-09-23 10:22:09.332695129 -0700
 @@ -1,5 +1,5 @@
  #!/bin/bash
 -# P11 live qualification driver (P10 driver with F1/F2/F3 corrected): one shot, L1-L7,
@@ -49,7 +49,7 @@
  # R1: the registry (agent-deck list, declared profile) must hold exactly these four fixtures:
  # each ID once, with its declared title, in $PROFILE, not archived. Prints the problems; rc 1 if any.
  registry_check() { agent-deck list --json 2>>"$EV/driver.log" | python3 -c '
-@@ -124,31 +125,39 @@
+@@ -124,31 +125,40 @@
      print("unreadable"); sys.exit()
  print(next((r.get("status", "") for r in d if r.get("id") == sys.argv[1]), "absent"))' "$1"; }
  # R2: a seat counts as stopped only when the registry says so after the stop command succeeded.
@@ -60,8 +60,9 @@
 -l6_eval() { # DEADLINE INTERRUPT CANCEL_SENT DIRECTOR_SENT -> "PASS|FAIL|INCOMPLETE detail"
 +# L6 timing, predeclared class: EXPLICIT (the deadline is known). Detection = the settled timeout's
 +# host time (status timeout.at) minus the authorized deadline, bound 30 s. Ownership = the recorded
-+# acknowledgement's host time (status timeout.ack.at, by the director or duty) minus the deadline, bound
-+# 90 s (30 + 60). A sent wake is never ownership. Timer lateness counts against detection; it is never
++# acknowledgement's host time (status timeout.ack.at, by the director or duty): at most 60 s after
++# detection AND at most 90 s after the deadline, in order deadline <= detection <= ack (P12-review-1:
++# a total-only bound let detection 10 s + ack 90 s through). A sent wake is never ownership. Timer lateness counts against detection; it is never
 +# reclassified as suspicion. No settled timeout or no deadline: INCOMPLETE; no acknowledgement: FAIL.
 +l6_eval() { # DEADLINE SETTLED_AT ACK_AT -> "PASS|FAIL|INCOMPLETE detail"
    python3 -c '
@@ -78,9 +79,9 @@
 +if dl is None or it is None: print("INCOMPLETE missing timestamp(s): deadline=%s settled=%s" % tuple(sys.argv[1:3])); sys.exit()
 +det = (it - dl).total_seconds()
 +if ak is None: print("FAIL explicit: detection %.1fs (bound 30); NO acknowledgement recorded (ownership bound 90)" % det); sys.exit()
-+own = (ak - dl).total_seconds()
-+ok = 0 <= det <= 30 and det <= own <= 90
-+print("%s explicit: detection %.1fs (bound 30), acknowledged ownership %.1fs (bound 90) from deadline %s" % ("PASS" if ok else "FAIL", det, own, sys.argv[1]))' "$@"; }
++own = (ak - dl).total_seconds(); gap = (ak - it).total_seconds()
++ok = 0 <= det <= 30 and 0 <= gap <= 60 and own <= 90
++print("%s explicit: detection %.1fs (bound 30), ack %.1fs after detection (bound 60), %.1fs after deadline (bound 90), deadline %s" % ("PASS" if ok else "FAIL", det, gap, own, sys.argv[1]))' "$@"; }
  l6_timing() {
 -  if [ "$DRY" = 1 ]; then result L6-timing DRY "deadline/interrupt/cancel/director timestamps"; return; fi
 -  local it cs ds cbt r
@@ -108,7 +109,7 @@
  stop_seat() { run agent-deck session stop "$1" || return 1; [ "$DRY" = 1 ] && return 0; [ "$(seat_status "$1")" = stopped ]; }
  
  cleanup() {
-@@ -175,6 +184,13 @@
+@@ -175,6 +185,13 @@
    if [ -n "$left" ]; then result CLEANUP FAIL "unresolved:$left"; log "cleanup INCOMPLETE:$left"; return 1; fi
    log "cleanup done"
  }
@@ -122,7 +123,7 @@
  # end of helpers
  if [ "$MODE" = cleanup ]; then
    TEARDOWN=1
-@@ -192,10 +208,10 @@
+@@ -192,10 +209,10 @@
    log "registry: four fixtures confirmed in profile $PROFILE"
  fi
  # F2: run inside an owned scope (validated below by cgroup membership, never a PID file).
@@ -135,7 +136,7 @@
    [ -e "$EV/scope-entered.$SCOPE" ] || { result SETUP FAIL "owned scope $SCOPE not created (systemd-run rc=$rc): no effect started"; exit 3; }
    exit $rc
  fi
-@@ -205,13 +221,13 @@
+@@ -205,13 +222,13 @@
  trap 'trap - EXIT; log "driver terminated by signal (wall stop)"; exit 143' TERM
  
  # ---------------------------------------------------------------- setup
@@ -152,7 +153,7 @@
  trap cleanup EXIT   # armed and verified: from here every exit cleans up exact IDs once
  if [ -e "$ROOT" ] && [ "$DRY" != 1 ]; then result SETUP INCOMPLETE "private root $ROOT exists"; exit 3; fi
  run mkdir -p "$ROOT/bin" "$ROOT/art" "$ROOT/claims" "$ROOT/tasks"
-@@ -229,11 +245,11 @@
+@@ -229,11 +246,11 @@
  run sh -c "sed '$sub' '$UNITS_SRC/agent-loop-liveness@.service' > '$SD/$LU.service'"
  run sh -c "sed '$sub' '$UNITS_SRC/agent-loop-liveness@.timer' > '$SD/$LU.timer'"
  run grep -c "$A" "$SD/$U" "$SD/$LU.service"
@@ -166,7 +167,7 @@
  snap SETUP
  
  # ---------------------------------------------------------------- L1 positive handoff, restart, decide
-@@ -242,7 +258,7 @@
+@@ -242,7 +259,7 @@
  if wait_for "L1 decision" 600 is_step "$Q" decision; then
    w1=$(wakes "$W_ID"); v1=$(wakes "$V_ID")
    inv=$(prop InvocationID); run systemctl --user restart "$U"; wait_for "L1 restart pass" 90 new_invocation "$inv"
@@ -175,7 +176,7 @@
    if is_step "$Q" closed && [ "$(wakes "$W_ID")" = "$w1" ] && [ "$(wakes "$V_ID")" = "$v1" ]; then result L1 PASS "closed; one dispatch per seat across restart"
    else result L1 FAIL "step $(step "$Q"); worker wakes $w1->$(wakes "$W_ID"), verifier $v1->$(wakes "$V_ID")"; fi
  else result L1 INCOMPLETE "no verdict within 600 s (step $(step "$Q"))"; fi
-@@ -285,41 +301,42 @@
+@@ -285,41 +302,42 @@
  # (same PID, same InvocationID), so the window before the first pass is controlled, not raced.
  run mkdir -p "$SD/$U.d"
  run sh -c "printf '[Service]\nExecStart=\nExecStart=/bin/sh -c \"sleep 40; exec $A run --config $CFG\"\nTimeoutStartSec=120\n' > '$SD/$U.d/delay.conf'"
@@ -226,7 +227,7 @@
  if [ "$DRY" = 1 ] || { grep -q "{bad-$RUN" "$ROOT"/$P.db.liveness.json.damaged-*.json && [ "$(wakes "$U_ID")" -eq $(( u1 + 1 )) ] && [ "$(checks_since "$since")" -ge 3 ]; }; then result L7a PASS "bytes preserved, duty woken once over >=3 checks"; else result L7a FAIL "copy/wakes $u1->$(wakes "$U_ID")"; fi
  snap L7a
  # L7a's incident needs an ack before it can close: the duty seat has the standing ack instruction.
-@@ -338,7 +355,7 @@
+@@ -338,7 +356,7 @@
  # R4: the authorized deadline, from the ledger, before the fault; the send log's size, to read L6's wakes later.
  l6dl=$( [ "$DRY" = 1 ] && echo DRY || $A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print([p['deadline'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0])" 2>>"$EV/driver.log" )
  nl0=$( [ "$DRY" = 1 ] && echo 0 || wc -l < /home/bmosher/.local/share/agent-deck/wake-send.log )
@@ -235,7 +236,7 @@
  log "L5 onset: agent-loop stop"; run "$A" stop $C
  wait_for "L5 run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
  st=$(prop ActiveState)
-@@ -362,13 +379,13 @@
+@@ -362,13 +380,13 @@
  if ! stop_seat "$U_ID"; then
    result L4b INCOMPLETE "duty fixture $U_ID not confirmed stopped (registry: $(seat_status "$U_ID")): no onset injected"
  else

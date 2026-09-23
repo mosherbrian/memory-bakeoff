@@ -127,8 +127,9 @@ print(next((r.get("status", "") for r in d if r.get("id") == sys.argv[1]), "abse
 # R2: a seat counts as stopped only when the registry says so after the stop command succeeded.
 # L6 timing, predeclared class: EXPLICIT (the deadline is known). Detection = the settled timeout's
 # host time (status timeout.at) minus the authorized deadline, bound 30 s. Ownership = the recorded
-# acknowledgement's host time (status timeout.ack.at, by the director or duty) minus the deadline, bound
-# 90 s (30 + 60). A sent wake is never ownership. Timer lateness counts against detection; it is never
+# acknowledgement's host time (status timeout.ack.at, by the director or duty): at most 60 s after
+# detection AND at most 90 s after the deadline, in order deadline <= detection <= ack (P12-review-1:
+# a total-only bound let detection 10 s + ack 90 s through). A sent wake is never ownership. Timer lateness counts against detection; it is never
 # reclassified as suspicion. No settled timeout or no deadline: INCOMPLETE; no acknowledgement: FAIL.
 l6_eval() { # DEADLINE SETTLED_AT ACK_AT -> "PASS|FAIL|INCOMPLETE detail"
   python3 -c '
@@ -140,9 +141,9 @@ dl, it, ak = (t(a) for a in sys.argv[1:4])
 if dl is None or it is None: print("INCOMPLETE missing timestamp(s): deadline=%s settled=%s" % tuple(sys.argv[1:3])); sys.exit()
 det = (it - dl).total_seconds()
 if ak is None: print("FAIL explicit: detection %.1fs (bound 30); NO acknowledgement recorded (ownership bound 90)" % det); sys.exit()
-own = (ak - dl).total_seconds()
-ok = 0 <= det <= 30 and det <= own <= 90
-print("%s explicit: detection %.1fs (bound 30), acknowledged ownership %.1fs (bound 90) from deadline %s" % ("PASS" if ok else "FAIL", det, own, sys.argv[1]))' "$@"; }
+own = (ak - dl).total_seconds(); gap = (ak - it).total_seconds()
+ok = 0 <= det <= 30 and 0 <= gap <= 60 and own <= 90
+print("%s explicit: detection %.1fs (bound 30), ack %.1fs after detection (bound 60), %.1fs after deadline (bound 90), deadline %s" % ("PASS" if ok else "FAIL", det, gap, own, sys.argv[1]))' "$@"; }
 l6_timing() {
   if [ "$DRY" = 1 ]; then result L6-timing DRY "deadline/settled/ack timestamps"; return; fi
   local tj r

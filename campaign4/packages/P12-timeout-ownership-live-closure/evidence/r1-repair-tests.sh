@@ -69,8 +69,13 @@ for c in "on time, acked|2026-09-23T16:00:00Z|2026-09-23T16:00:20Z|2026-09-23T16
          "timer 45 s late|2026-09-23T16:00:00Z|2026-09-23T16:00:45Z|2026-09-23T16:00:50Z|FAIL" \
          "detection 30 s exactly|2026-09-23T16:00:00Z|2026-09-23T16:00:30Z|2026-09-23T16:01:00Z|PASS" \
          "detection 31 s|2026-09-23T16:00:00Z|2026-09-23T16:00:31Z|2026-09-23T16:01:00Z|FAIL" \
-         "ack at 90 s exactly|2026-09-23T16:00:00Z|2026-09-23T16:00:10Z|2026-09-23T16:01:30Z|PASS" \
-         "ack at 91 s|2026-09-23T16:00:00Z|2026-09-23T16:00:10Z|2026-09-23T16:01:31Z|FAIL" \
+         "ack 60 s after detection exactly|2026-09-23T16:00:00Z|2026-09-23T16:00:10Z|2026-09-23T16:01:10Z|PASS" \
+         "ack 61 s after detection|2026-09-23T16:00:00Z|2026-09-23T16:00:10Z|2026-09-23T16:01:11Z|FAIL" \
+         "review case: detection 25 s, ack 88 s (63 s gap)|2026-09-23T16:00:00Z|2026-09-23T16:00:25Z|2026-09-23T16:01:28Z|FAIL" \
+         "old author case: detection 10 s, ack 90 s (80 s gap)|2026-09-23T16:00:00Z|2026-09-23T16:00:10Z|2026-09-23T16:01:30Z|FAIL" \
+         "all bounds exactly: detection 30, gap 60, total 90|2026-09-23T16:00:00Z|2026-09-23T16:00:30Z|2026-09-23T16:01:30Z|PASS" \
+         "total 91 s (detection 31)|2026-09-23T16:00:00Z|2026-09-23T16:00:31Z|2026-09-23T16:01:31Z|FAIL" \
+         "ack before detection|2026-09-23T16:00:00Z|2026-09-23T16:00:20Z|2026-09-23T16:00:15Z|FAIL" \
          "settled before deadline|2026-09-23T16:00:00Z|2026-09-23T15:59:50Z|2026-09-23T16:00:30Z|FAIL" \
          "no acknowledgement (delivery only)|2026-09-23T16:00:00Z|2026-09-23T16:00:10Z||FAIL" \
          "no settled timeout|2026-09-23T16:00:00Z||2026-09-23T16:00:30Z|INCOMPLETE" \

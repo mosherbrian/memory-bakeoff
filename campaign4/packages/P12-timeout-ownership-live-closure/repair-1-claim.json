@@ -1,0 +1,94 @@
+{
+ "qid": "P12-repair-1",
+ "status": "COMPLETE",
+ "author": "claude",
+ "decision": {
+  "repair-1-decision.json": "8da4185179621c171c310544a4bb31ae21d1d28ff29a5af1673a25a6a5a3626d",
+  "repair-1-receipt.json": "d4d4a29d50ce283b2c0ea3abf14b0ef63a86cc4d339287728adf8a1e4468ab1f"
+ },
+ "scope_kept": "only the conformance capture and the L6 detection-to-ack bound, with tests, claim, diffs and docs; Go cbfe3d9 and binary cf54a94a unchanged (no source repair, no rebuild)",
+ "frozen": {
+  "commit": "cbfe3d91d02c86942e7640cbd0fe41027bfcbad0",
+  "binary_sha256": "cf54a94a4fc79429fa9ea853e325833312899584ffbca73d0c8a794b592d681a"
+ },
+ "initial_claim_preserved": {
+  "completion-claim.json": "2f59706578a9d1a4c1ee0564e17e17f6d3626fa7c7cefb30939388cdabf92ecd"
+ },
+ "fix_1_conformance": {
+  "dir": "evidence/conformance-release-binary/",
+  "rc": "0",
+  "stderr": "conformance: 125/125 cases ok, 1751 steps",
+  "stdout_bytes": 0,
+  "why_initial_was_empty": "the summary is written to stderr; the initial capture kept stdout only. The empty file is kept at attempt-history/initial-evidence-superseded/conformance-cbfe3d9-EMPTY-stdout-only.txt"
+ },
+ "fix_2_l6": {
+  "rule": "deadline <= detection <= ack; detection - deadline <= 30 s; ack - detection <= 60 s; ack - deadline <= 90 s; no ack = FAIL; no deadline or settled time = INCOMPLETE",
+  "diff": "evidence/repair-1-driver.diff",
+  "driver_sha256": "9a2a1795f2772a1b4041c7b118d236c87652dc0301e7344ac3749840fd8dc1cd",
+  "tests": "evidence/r1-repair-tests-p12.txt 58/0 on the repaired driver",
+  "defect_reproduced_on_initial_driver": "evidence/r1-repair-tests-initial-driver.txt: 55/3, the 3 failures are ack 61 s after detection, detection 25 + ack 88, detection 10 + ack 90 (all accepted by the initial rule)",
+  "note": "with detection <= 30 and gap <= 60, the 90 s total bound is implied; it is kept explicit"
+ },
+ "regressions_on_repaired_driver": {
+  "f1": "evidence/f1-helpers-p12.txt 29/0",
+  "wall_real_reload": "evidence/e-wall-reload-p12.txt: 3 real reloads, schedule unchanged, LATE_FROM_DEADLINE=0, WALLSTOP 1, cleanup 1, driver gone (previous run on driver c2f80e2f moved to attempt-history/initial-evidence-superseded/)"
+ },
+ "plans_sha256": {
+  "plans/README.md": "eb2fdb1246bafae918f54410334bec75c5e8a4a05a9f14d0c78866c855d19dd6",
+  "plans/cutover-inputs.template.env": "4d291cedda0f353a8bc9da5f9aa3aef52f3bcd5bbe988928c7a62b3477826d62",
+  "plans/cutover.sh": "2b63ec856a5117043b8fc2ff510dfb51a709866b3563a9a368b752ae8bd80bbc",
+  "plans/live-driver.sh": "9a2a1795f2772a1b4041c7b118d236c87652dc0301e7344ac3749840fd8dc1cd",
+  "plans/live-inputs.template.env": "ec58d2716b62f027eade4d6d1f62e5eea5e8115a6c97f62a208f19267316daf3",
+  "plans/tasks/ack.md": "10e817fa48203f665034f4009a4d6b26c5067f6b92b8a56fcc540119ec0556a3",
+  "plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+  "plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+  "plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+  "plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+  "plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+ },
+ "evidence_sha256": {
+  "evidence/a-cli-timeout.sh": "7ce9abec3b512b195956b133e9a9769120bf3797f9ccd10ee62a17909a8d22de",
+  "evidence/a-cli-timeout.txt": "1ada7b6cb69c01f6ed0f1a6d71d722ecd4438362dc0a22b957ab187cbb6950ce",
+  "evidence/c-stop-baseline-1341f04.txt": "f8c186654aaa16d794ce4f08e89ee282d4d1d48641b0b1d58dd965f5330e652e",
+  "evidence/c-stop-experiment.sh": "ef5ba283600fc68fb558185d607aecc684cb7238b47d42b03bf930ef131b65ed",
+  "evidence/c-stop-final-cbfe3d9.txt": "dbe04b17d3d1211e555b0c728621892492d34cfef534ab23ca3637c6ee74b4c5",
+  "evidence/conformance-release-binary/README.txt": "09155760dcb268328a71db6c621b144e8a54a7ceb3be5431ed6a5260338e102e",
+  "evidence/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/construction-dry/cut-capture.txt": "45920d52c6a289fbe4fa99b37ff5605bdfc1fefa653b7a1bcc91b7ac2cd745a5",
+  "evidence/construction-dry/cut-handoff.txt": "24cd55dc9e880aac87431db45f5947d85a9beb19b147b2e98042b75f2e48bc35",
+  "evidence/construction-dry/cut-rollback.txt": "64ab1375d09cd9ba9b36118aa55c30525b27b90415b6e22531f2ac4bbf4245e0",
+  "evidence/construction-dry/cut-switch.txt": "df3fc20e861ef8c78e23f1c6cd24b625028b5add5011d577dc895500b93de0ff",
+  "evidence/construction-dry/live-dry-results.tsv": "b8eb390d2e3aca0bfd1274c6a20fbc5c6c0e178311dd5092fd7074c2f55686ed",
+  "evidence/construction-dry/live-dry.txt": "26eac96cc53eed8c5812d925e0db6bea063c4f07343eb6173361b540cf8906cc",
+  "evidence/e-reload-timers-run1.txt": "7cc0a2a482035e55936fe4e71791244b72165d4993ee9c11e995ee29b92c2ea2",
+  "evidence/e-reload-timers.sh": "f5ca01166fafbd1ddb261a6dad490e5f06793a055b7aa047970a2d9b337aa3a9",
+  "evidence/e-wall-reload-p11-baseline.txt": "d04275f073ca52441142be649092d2f2669173bc86e48b83faa6c38c4ea37889",
+  "evidence/e-wall-reload-p12-attempt1-wallnext-bug.txt": "656e42efe47859020c5035e4b7a4970ecd2f24307f757499653e0bde77965b7d",
+  "evidence/e-wall-reload-p12.txt": "52a6f6a50512dd8df1655ef4a84169be4f699c8ea8ecf0b2f8a44d07a62005d0",
+  "evidence/e-wall-reload-witness.sh": "c73096dcd8e60523ac736bcba66af003a8fa60e018420910f9bc55ee74724a97",
+  "evidence/f1-helpers-p12.txt": "50df5afd8233b94879af9ba387d614465e88995a2d0642e6057e8186f81cef5d",
+  "evidence/f1-helpers.sh": "9cf061a6c21eaee1e55eb5efadbe2d7a603ccb7c29b0151a1ba8bbe0fe8d07b1",
+  "evidence/go-test-cbfe3d9.txt": "addeec0e645f2ecfbab33f9c09a45f4792734c91a83e3ce8345c2c436e8f324c",
+  "evidence/host-parity-cbfe3d9.txt": "3d27fbc08c28d8159034f312057764347dd567317bcb9656189b269ea8d1e02d",
+  "evidence/live-driver-p11-to-p12.diff": "8a99c3c71b2ad2d41f6cecdc0abd78936e916eb9e16b6d9fb5f7f896482ab5cc",
+  "evidence/mutate-go-applies-to.txt": "f87be10324c386019982bdafcc615a75444e002d7e31970ecbb654d1660c7cb2",
+  "evidence/mutate-go.txt": "9d2de28c0566c4f0b08c0401fd3e06708240cd9bc97032b69d6a0cc7efd0453f",
+  "evidence/plans-p11-to-p12-other.diff": "75ec7ef2d68ae08b70f16d02d97af136adaac392f3dc147379b4174d2f35a31c",
+  "evidence/r1-repair-tests-initial-driver.txt": "ca810c393113cfc5b018e7269894776f83255276fd8a9b9ffde454e2d31010df",
+  "evidence/r1-repair-tests-p12.txt": "307589aaab8ad2d0ef104110a44acedb74aefe68a47e03357ab777cb7827dfbe",
+  "evidence/r1-repair-tests.sh": "53b1c8c1e1db59357d5c3168636b38212aeded38cca82ab483a4af7efe12c095",
+  "evidence/repair-1-driver.diff": "d9152e0907e5b77c65bb3466dc234ae7823249db05ce22091ccf6b77f7da96c9",
+  "evidence/source-1341f04-to-cbfe3d9.diff": "2ad7875fc119fd745be2a31f67d166fd2cb75c8424a8c6b0f8d5c95cffdc5d03"
+ },
+ "host_effects": [
+  "3 more real daemon-reloads (wall witness rerun); transient p12live- scope and wall timer created and removed"
+ ],
+ "residuals_carried": [
+  "missing-ack: a timeout nobody acknowledges is never escalated by the product (l6_eval FAILs it; product liveness gap, outside this repair)",
+  "calendar timers under a backward clock step: not exercised; needs injected-clock evidence (outside this repair)",
+  "duplicate director notice possible after a failed-cancel settlement and a later successful replay (never a duplicate cancel or dispatch)",
+  "L4a/L4b and live ack latency: proved only in the signed live run"
+ ]
+}
