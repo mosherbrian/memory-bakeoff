@@ -22,7 +22,7 @@ for id in $D $U; do
   ( sleep 1500 | AGENTDECK_INSTANCE_ID=$id "$PKG/plans/acp-passive-lane" > "$INJ/passive-$id.out" 2>&1 ) &
 done
 if [ "$MODE" = neg-early-decide ]; then   # another actor decides as soon as the decision opens
-  ( for i in $(seq 1 300); do c=$(ls "$INJ"/root/fx*.json 2>/dev/null | head -1); if [ -n "$c" ]; then q=D${c##*/fx}; q=${q%.json}; if "$INJ/root/bin/agent-loop" status --config "$c" --json 2>/dev/null | grep -q '"step":"decision"'; then "$INJ/root/bin/agent-loop" decide --config "$c" --qid "$q" --kind question_answered --ref early --reason early >> "$INJ/early.log" 2>&1; echo "EARLY-DECIDE rc=$?" >> "$INJ/seat-runtime.log"; break; fi; fi; sleep 1; done ) &
+  ( for i in $(seq 1 300); do c=$(ls "$INJ"/root/fx*.json 2>/dev/null | grep -v '\.db\.' | head -1); if [ -n "$c" ]; then q=D${c##*/fx}; q=${q%.json}; st=$("$INJ/root/bin/agent-loop" status --config "$c" --json 2>/dev/null); if printf '%s' "$st" | grep -Eq '"step": ?"decision"'; then "$INJ/root/bin/agent-loop" decide --config "$c" --qid "$q" --kind question_answered --ref early --reason early >> "$INJ/early.log" 2>&1; echo "EARLY-DECIDE rc=$?" >> "$INJ/seat-runtime.log"; break; fi; fi; sleep 1; done ) &
 fi
 sleep 1
 SHW=/var/home/bmosher/.local/share/agent-deck/wake-send.log; SHE=/var/home/bmosher/.local/share/agent-deck/escalations.jsonl
