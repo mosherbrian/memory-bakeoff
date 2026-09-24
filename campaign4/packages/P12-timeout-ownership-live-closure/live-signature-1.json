@@ -1,0 +1,46 @@
+{
+  "signer": "tern",
+  "at": "2026-09-24T01:13:25.234564+00:00",
+  "action": "P12-live-1",
+  "decision": "Prospective replacement of missed window; no backdating. Director failed to dispatch after00:16 binding PASS; no engineering blocker. Reuse independently verified and presently unchanged idle fixture incarnations.",
+  "authorized_start_not_before": "2026-09-24T01:15:00Z",
+  "latest_start": "2026-09-24T01:18:00Z",
+  "absolute_end": "2026-09-24T02:30:00Z",
+  "grant": "Existing75m live allocation from01:15; late start loses elapsed time, end never moves. Existing live review25m after archive. No new engineering allocation.",
+  "binary_sha256": "97a57db11aa8a4a87d89fd912804d42ce899bb35b3790742d790d424184a948f",
+  "source": "8ad12b86fa82",
+  "signed_files": {
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/live-driver.sh": "9a5025233520794dbcc2b553d76f8816a47a404cb7317fab3f1b3bf1c3e8f309",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-inputs-1.env": "c06497796cb2c3e3921abdcb3d60cdd1c82f0d99b6641f3b340f06d4d033f610",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/binding-revalidation-1.json": "400f11c5b00b3c26a7c973e4ce08e55f36a413d35dd90d9f1df9aeae6d5d4ee4",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/binding-verdict.md": "3827729eb1d70929714b44d76f6ae5eb457195529f134a91c27326c0b00a480a",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/checker-ownership-review.md": "02572ce314d94617012e72ea56cc4a5ecc810dd5a7e8b04548a7349377617411",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/ack.md": "c451608b97b7cd53da080164f20a080b729d8296aaefa741cd5c87f5c041210e",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/handoff-task.md": "4c464b1272420e166a7480daa42ab7bf35ec03ec59ec27e602d06188e7c3ecba",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/handoff-verify.md": "f24c4cfa720497d9707ecaa8e8bc4577dc437f51fcab154f0321343236712f68",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/l-noclaim-worker.md": "724e1e3eeb3ef89820ff9e3bbcce27f703fb089428e4b3a0d686fc3b73541282",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/l-verify.md": "d1aa4805f64443d1c999e7e993496b130eb3b2752c27e7ce8f07b39acad3c631",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/l-worker.md": "5b471e925b8ba0f14122da7699a31de4d231b94b35ff82f6c78dc83eb82e9232"
+  },
+  "argv": [
+    "/bin/bash",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/live-driver.sh",
+    "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-inputs-1.env"
+  ],
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4",
+    "PATH": "/home/bmosher/.local/bin:/home/bmosher/.config/agent-deck:/usr/local/bin:/usr/bin:/bin"
+  },
+  "cleanup": {
+    "new_timer": "campaign4-p12-live1-cleanup-renewed.timer",
+    "verified": "ActiveState=active\nTimersCalendar={ OnCalendar=2026-09-24 02:40:00 UTC ; next_elapse=@1790217600 }\n",
+    "old_timer": "stopped only after new timer active",
+    "deadline": "2026-09-24T02:40:00Z",
+    "idle_expiry": "150m launch timeout approx02:45Z; live ends earlier"
+  },
+  "conditions": [
+    "Cairn rechecks signed hashes/registry before execution. Driver arms verified02:30 calendar wall+scope itself; no effects if gate fails.",
+    "Run exact signed argv once in durable background, capture host start/end/stdout/stderr/pid. No repairs/retries or changes mid-run. At wall cleanup exact fixtures/units, preserve evidence.",
+    "On completion/failure archive and route existing corvid25m live review. No automatic cutover. Report starts immediately to Tern."
+  ]
+}
