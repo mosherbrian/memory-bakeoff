@@ -1,0 +1,30 @@
+{
+ "action": "P13-promotion-closure-1",
+ "author": "claude",
+ "status": "INCOMPLETE",
+ "filed_at": "2026-09-24T20:08:35Z",
+ "reason": "plans/promotion-plan.sh v2 is written and syntax-checked, but the sandbox tests the release requires (absent-resolver positive, failure rollback, partial install failure, exact state restore, stale-pass rejection) were NOT built or run inside the 15 min bound. It must not be signed on this claim.",
+ "read_only_baseline": "20:07Z: agent-loop@campaign4.service active/enabled; agent-loop-liveness@campaign4.timer active/enabled; agent-loop-liveness@campaign4.service inactive/static; agent-loop-liveness-failed@campaign4.service inactive/static; escalation-watch.timer active/enabled; escalation-watch.service inactive/static; ~/.config/agent-deck/escalation-resolve ABSENT; unit fragment ~/.config/systemd/user/agent-loop@.service.",
+ "v2_design": {
+  "guards_no_mutation": "candidate/adapter hashes; the CANDIDATE binary loads the prospective config (required 0/300/600 policy is enforced by the product's own validation); no package at step decision.",
+  "snapshot": "each of binary/config/escalation-watch/escalation-resolve: present (bytes, sha256, mode) or ABSENT; each timer/service: is-active and is-enabled; the old run InvocationID.",
+  "stop": "timers first (liveness timer, watch timer), then the loop, checker, checker-failed handler and watch service, each `timeout 30 systemctl stop` (no waiting for the loop to stop itself); verified inactive.",
+  "install": "exact pins; bytes verified against pins; daemon-reload.",
+  "start_verify": "start only units the snapshot had active; a NEW run InvocationID; a ledger loop-pass by that invocation and MainPID at/after the start (P12 pass_eval: stale pass rejected); one checker run whose verdict is ok|rest at/after the start (P12 healthy_eval); installed config loads.",
+  "restore": "on any failure after the first mutation: stop units, put back present files by bytes and verify sha+mode, REMOVE files that were absent (never fabricated), daemon-reload, start units that were active; then compare every file and unit state with the snapshot -> ROLLBACK PASS or FAIL.",
+  "bound": "600 s checked at every step."
+ },
+ "known_gaps": [
+  "Sandbox tests not built or run (see reason).",
+  "The prospective config's db path is the production ledger, so the guard's `candidate status --config PROSPECTIVE` reads the production ledger (read-only intent; the product may take its lock briefly).",
+  "is-enabled state is captured but restore restores active state only; enablement is not changed by the plan (no enable/disable calls), so it cannot drift from the snapshot."
+ ],
+ "archive": "attempt-history/pre-promotion-closure/promotion-plan.sh",
+ "no_changes": "No product/source/adapter/host changes; only read-only inspection.",
+ "files_sha256": {
+  "plans/promotion-plan.sh": "5271f53dfd7370074f7b6be6f68a553385003d534d8d880d352b442ea91941e7",
+  "plans/MANIFEST.sha256": "71f3c22ad9c580c616cb4107db67322dc932e63232352f1968bc5e0e0aa41232",
+  "attempt-history/pre-promotion-closure/promotion-plan.sh": "22c46bd238c745169fd96ead16ecda64516ba9241d75b9d4196d0c28fc505069",
+  "promotion-closure-release.json": "b2ef35f50d91f27c07c45364d17ddf886cff534ff67b89cdf49707436a351463"
+ }
+}

@@ -1,0 +1,99 @@
+2026-09-24T19:59:12.720Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T19:59:12.813Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T19:59:12.816Z P13 live p13l4, inputs sha256 93107e46b48f44480066c08c169ed2524d9c976a48db91ce9130a02d3d1388ed
+2026-09-24T19:59:12.819Z + systemd-run --user --unit=p13live-wallstop-p13l4 --timer-property=AccuracySec=1s --on-calendar=2026-09-24 20:19:00 UTC --setenv=PATH=/home/bmosher/.bun/bin:/home/bmosher/.local/bin:/home/bmosher/.local/bin:/home/bmosher/.local/bin:/home/bmosher/.bun/bin:/home/bmosher/.local/bin:/home/bmosher/.nvm/versions/node/v22.22.1/bin:/home/bmosher/.local/bin:/home/bmosher/.local/bin:/home/bmosher/.local/bin:/home/bmosher/bin:/usr/local/bin:/usr/bin:/home/bmosher/.claude/plugins/cache/thedotmack/claude-mem/13.25.2/bin:/home/bmosher/.claude/plugins/cache/claude-plugins-official/fakechat/0.0.1/bin:/usr/local/sbin --setenv=AGENTDECK_PROFILE=campaign4 /bin/bash /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/live-p13-driver.sh /var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/live-inputs-4.env cleanup
+2026-09-24T19:59:12.825Z   rc=0
+2026-09-24T19:59:12.834Z + mkdir -p /home/bmosher/p13live-p13l4/bin /home/bmosher/p13live-p13l4/art /home/bmosher/p13live-p13l4/claims /home/bmosher/p13live-p13l4/tasks /home/bmosher/p13live-p13l4/home/.config/agent-deck /home/bmosher/p13live-p13l4/home/.local/share/agent-deck
+2026-09-24T19:59:12.836Z   rc=0
+2026-09-24T19:59:12.837Z + install -m 755 /home/bmosher/.config/agent-deck/notify-claude /home/bmosher/p13live-p13l4/home/.config/agent-deck/notify-claude
+2026-09-24T19:59:12.840Z   rc=0
+2026-09-24T19:59:12.844Z + install -m 755 /home/bmosher/.config/agent-deck/escalations /home/bmosher/p13live-p13l4/home/.config/agent-deck/escalations
+2026-09-24T19:59:12.847Z   rc=0
+2026-09-24T19:59:12.850Z + install -m 755 /home/bmosher/projects/agent-loop-p13/adapters/escalation-watch /home/bmosher/p13live-p13l4/home/.config/agent-deck/escalation-watch
+2026-09-24T19:59:12.852Z   rc=0
+2026-09-24T19:59:12.854Z + install -m 755 /home/bmosher/projects/agent-loop-p13/adapters/escalation-resolve /home/bmosher/p13live-p13l4/home/.config/agent-deck/escalation-resolve
+2026-09-24T19:59:12.857Z   rc=0
+2026-09-24T19:59:12.859Z + install -m 755 /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/ticket-page-stub.sh /home/bmosher/p13live-p13l4/home/.config/agent-deck/ticket
+2026-09-24T19:59:12.862Z   rc=0
+2026-09-24T19:59:12.863Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/bin/agent-loop /home/bmosher/p13live-p13l4/bin/agent-loop
+2026-09-24T19:59:12.866Z   rc=0
+2026-09-24T19:59:12.893Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp13l4.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp13l4.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p13live-p13l4/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p13live-p13l4/fxp13l4.json#g; s#agent-loop %i#agent-loop fxp13l4#g; s#%i#fxp13l4#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop@.service' > '/home/bmosher/.config/systemd/user/agent-loop-fxp13l4.service'
+2026-09-24T19:59:12.897Z   rc=0
+2026-09-24T19:59:12.898Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp13l4.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp13l4.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p13live-p13l4/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p13live-p13l4/fxp13l4.json#g; s#agent-loop %i#agent-loop fxp13l4#g; s#%i#fxp13l4#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxp13l4.service'
+2026-09-24T19:59:12.901Z   rc=0
+2026-09-24T19:59:12.903Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp13l4.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp13l4.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p13live-p13l4/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p13live-p13l4/fxp13l4.json#g; s#agent-loop %i#agent-loop fxp13l4#g; s#%i#fxp13l4#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness@.timer' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxp13l4.timer'
+2026-09-24T19:59:12.905Z   rc=0
+2026-09-24T19:59:12.907Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp13l4.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp13l4.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p13live-p13l4/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p13live-p13l4/fxp13l4.json#g; s#agent-loop %i#agent-loop fxp13l4#g; s#%i#fxp13l4#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness-failed@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxp13l4.service'
+2026-09-24T19:59:12.909Z   rc=0
+2026-09-24T19:59:12.911Z + grep -c /home/bmosher/p13live-p13l4/bin/agent-loop /home/bmosher/.config/systemd/user/agent-loop-fxp13l4.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp13l4.service /home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxp13l4.service
+2026-09-24T19:59:12.912Z   rc=0
+2026-09-24T19:59:12.913Z + grep -q ^OnFailure=agent-loop-liveness-failed-fxp13l4.service$ /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp13l4.service
+2026-09-24T19:59:12.915Z   rc=0
+2026-09-24T19:59:12.916Z + systemctl --user daemon-reload
+2026-09-24T19:59:13.111Z   rc=0
+2026-09-24T19:59:13.117Z + /home/bmosher/p13live-p13l4/bin/agent-loop check --config /home/bmosher/p13live-p13l4/fxp13l4.json
+2026-09-24T19:59:13.169Z   rc=0
+2026-09-24T19:59:13.171Z + systemctl --user start agent-loop-fxp13l4.service agent-loop-liveness-fxp13l4.timer
+2026-09-24T19:59:13.212Z   rc=0
+2026-09-24T19:59:33.307Z reached first pass (ok or rest) after 20s
+2026-09-24T19:59:33.336Z + /home/bmosher/.config/agent-deck/wake 6f0fa7a4-1790279702 <passive-receiver probe for run p13l4>
+2026-09-24T19:59:33.416Z + /home/bmosher/.config/agent-deck/wake 3c98816d-1790279702 <passive-receiver probe for run p13l4>
+2026-09-24T19:59:33.517Z reached both passive receivers recorded their probe after 0s
+INDUCTION	PASS	2026-09-24T19:59:33.518Z	director and duty are passive receivers (pinned bytes, probe recorded through the real wake)
+2026-09-24T19:59:33.522Z + /home/bmosher/p13live-p13l4/bin/agent-loop dispatch --config /home/bmosher/p13live-p13l4/fxp13l4.json --qid Dp13l4 --worker p13-fixture-worker-p13l4 --verifier p13-fixture-verifier-p13l4 --task @/home/bmosher/p13live-p13l4/tasks/Dp13l4-decision-worker-live.md --verify-task @/home/bmosher/p13live-p13l4/tasks/Dp13l4-decision-verify-live.md --duration 8m --verify-window 8m
+2026-09-24T19:59:33.665Z   rc=0
+2026-09-24T19:59:53.751Z reached decision step (real worker + verifier claims) after 20s
+DECISION	PASS	2026-09-24T19:59:53.814Z	incident D-Dp13l4-Dp13l4-v1, deadline 2026-09-24T20:00:50Z
+2026-09-24T19:59:53.818Z + /home/bmosher/p13live-p13l4/bin/agent-loop stop --config /home/bmosher/p13live-p13l4/fxp13l4.json
+2026-09-24T19:59:53.820Z   rc=0
+2026-09-24T19:59:58.854Z reached run exited 64 on the stop marker after 5s
+STOP	PASS	2026-09-24T19:59:58.875Z	intentional stop marker after the authentic decision; timer + outside check own the ladder
+2026-09-24T20:00:54.327Z reached director rung 0 (DB + transport, incident-bound) after 56s
+2026-09-24T20:01:34.648Z reached duty rung 1 (DB + transport, incident-bound) after 40s
+2026-09-24T20:01:34.652Z reached Claude rung 2 (DB + private ledger) after 0s
+RUNGS	PASS	2026-09-24T20:01:34.683Z	director, duty (real wakes), Claude (private ledger + real labelled notify-claude) while stopped
+2026-09-24T20:01:34.700Z + /home/bmosher/p13live-p13l4/bin/agent-loop decision-ack --config /home/bmosher/p13live-p13l4/fxp13l4.json --qid Dp13l4 --by claude --cap-file /home/bmosher/p13live-p13l4/fxp13l4.db.caps/D-Dp13l4-Dp13l4-v1.claude --next fixture: chase the director --within 60s
+2026-09-24T20:01:34.706Z   rc=0
+ACK	PASS	2026-09-24T20:01:34.707Z	literal refused; capability ack recorded (60 s)
+2026-09-24T20:03:05.264Z reached expiry re-raise after 91s
+RECUR	PASS	2026-09-24T20:03:05.279Z	same key c2bb65c5915a
+2026-09-24T20:03:05.295Z + /home/bmosher/p13live-p13l4/bin/agent-loop decide --config /home/bmosher/p13live-p13l4/fxp13l4.json --qid Dp13l4 --kind question_answered --ref P13-live-p13l4 --reason fixture decision
+2026-09-24T20:03:05.322Z   rc=0
+DECIDE	PASS	2026-09-24T20:03:05.353Z	resolved; private watcher quiet
+2026-09-24T20:03:05.355Z + /home/bmosher/p13live-p13l4/bin/agent-loop start --config /home/bmosher/p13live-p13l4/fxp13l4.json
+2026-09-24T20:03:05.395Z   rc=0
+2026-09-24T20:03:30.658Z reached restart: fresh pass after 25s
+LIVE	PASS	2026-09-24T20:03:30.663Z	authentic decision, stop marker, ladder, capability ack/expiry/same-key recurrence, decide + quiet watcher, restart without duplicates
+2026-09-24T20:03:30.664Z all cases run; results in /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/live-p13l4/results.tsv
+2026-09-24T20:03:30.668Z cleanup (exact IDs)
+2026-09-24T20:03:30.682Z + rm -rf /home/bmosher/p13live-p13l4/fxp13l4.db.caps
+2026-09-24T20:03:30.684Z   rc=0
+2026-09-24T20:03:30.685Z + systemctl --user stop agent-loop-liveness-fxp13l4.timer agent-loop-liveness-fxp13l4.service agent-loop-liveness-failed-fxp13l4.service agent-loop-fxp13l4.service
+2026-09-24T20:03:30.702Z   rc=0
+2026-09-24T20:03:30.708Z + systemctl --user reset-failed agent-loop-fxp13l4* agent-loop-liveness-fxp13l4* agent-loop-liveness-failed-fxp13l4*
+2026-09-24T20:03:30.712Z   rc=0
+2026-09-24T20:03:30.713Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxp13l4.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp13l4.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp13l4.timer /home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxp13l4.service
+2026-09-24T20:03:30.715Z   rc=0
+2026-09-24T20:03:30.716Z + rm -rf /home/bmosher/.config/systemd/user/agent-loop-fxp13l4.service.d
+2026-09-24T20:03:30.717Z   rc=0
+2026-09-24T20:03:30.718Z + systemctl --user daemon-reload
+2026-09-24T20:03:30.915Z   rc=0
+2026-09-24T20:03:30.917Z + agent-deck session stop 42eee9c4-1790279701
+2026-09-24T20:03:34.043Z   rc=0
+2026-09-24T20:03:34.044Z + agent-deck session remove 42eee9c4-1790279701
+2026-09-24T20:03:34.059Z   rc=0
+2026-09-24T20:03:34.060Z + agent-deck session stop 7935b4fc-1790279702
+2026-09-24T20:03:37.183Z   rc=0
+2026-09-24T20:03:37.184Z + agent-deck session remove 7935b4fc-1790279702
+2026-09-24T20:03:37.200Z   rc=0
+2026-09-24T20:03:37.201Z + agent-deck session stop 6f0fa7a4-1790279702
+2026-09-24T20:03:40.317Z   rc=0
+2026-09-24T20:03:40.318Z + agent-deck session remove 6f0fa7a4-1790279702
+2026-09-24T20:03:40.333Z   rc=0
+2026-09-24T20:03:40.335Z + agent-deck session stop 3c98816d-1790279702
+2026-09-24T20:03:43.470Z   rc=0
+2026-09-24T20:03:43.471Z + agent-deck session remove 3c98816d-1790279702
+2026-09-24T20:03:43.486Z   rc=0
+2026-09-24T20:03:43.487Z + systemctl --user stop p13live-wallstop-p13l4.timer
+2026-09-24T20:03:43.492Z   rc=0
+2026-09-24T20:03:43.697Z cleanup done
