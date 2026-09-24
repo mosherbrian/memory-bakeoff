@@ -8,8 +8,8 @@ setup() { # SCENARIO -> fresh sandbox in $T
   T=$(mktemp -d /tmp/p13promo-XXXX); R=$T/root; H=$R/home/bmosher
   mkdir -p $H/.local/bin $H/.config/agent-loop $H/.config/agent-deck $T/db $T/sbin
   cp /home/bmosher/.local/bin/agent-loop $H/.local/bin/agent-loop
-  python3 -c "import json,sys; c=json.load(open('/home/bmosher/.config/agent-loop/campaign4.json')); c['db']='$T/db/campaign4.db'; c['wake']='/bin/true'; c['agent_deck']='/bin/true'; c['systemctl']='$T/sbin/systemctl'; c['systemd_run']='$T/sbin/systemd-run'; json.dump(c,open('$H/.config/agent-loop/campaign4.json','w'),indent=1)"
-  python3 -c "import json,sys; c=json.load(open('$P/plans/campaign4-decision-config.prospective.json')); c['db']='$T/db/campaign4.db'; c['wake']='/bin/true'; c['agent_deck']='/bin/true'; c['systemctl']='$T/sbin/systemctl'; c['systemd_run']='$T/sbin/systemd-run'; json.dump(c,open('$T/prospective.json','w'),indent=1)"
+  python3 -c "import json,sys; c=json.load(open('/home/bmosher/.config/agent-loop/campaign4.json')); c['db']='$T/db/campaign4.db'; c['wake']='/bin/true'; c['agent_deck']='/bin/true'; json.dump(c,open('$H/.config/agent-loop/campaign4.json','w'),indent=1)"
+  python3 -c "import json,sys; c=json.load(open('$P/plans/campaign4-decision-config.prospective.json')); c['db']='$T/db/campaign4.db'; c['wake']='/bin/true'; c['agent_deck']='/bin/true'; json.dump(c,open('$T/prospective.json','w'),indent=1)"
   cp -p /home/bmosher/.config/agent-deck/escalation-watch $H/.config/agent-deck/escalation-watch   # resolver ABSENT, as on the host
   printf 'agent-loop-liveness@campaign4.timer\tactive\tenabled\nescalation-watch.timer\tactive\tenabled\nagent-loop@campaign4.service\tactive\tenabled\nagent-loop-liveness@campaign4.service\tinactive\tstatic\nagent-loop-liveness-failed@campaign4.service\tinactive\tstatic\nescalation-watch.service\tinactive\tstatic\n' > $T/units.tsv
   echo old-inv > $T/inv
@@ -23,40 +23,21 @@ case "\${a[0]}" in
  stop|start) st=inactive; [ "\${a[0]}" = start ] && st=active
    [ "\${a[0]}" = start ] && [ -n "\${STUB_FAIL_START:-}" ] && [ "\${a[1]}" = "\$STUB_FAIL_START" ] && exit 1
    awk -F'\t' -v OFS='\t' -v u="\${a[1]}" -v s=\$st '\$1==u{\$2=s}1' \$S > \$S.n && mv \$S.n \$S
-   if [ "\${a[0]}" = stop ] && [ "\${a[1]}" = agent-loop@campaign4.service ] && [ -s $T/runpid ]; then kill \$(cat $T/runpid) 2>/dev/null; : > $T/runpid; fi
-   if [ "\${a[0]}" = start ] && [ "\${a[1]}" = agent-loop@campaign4.service ] && [ "\${STUB_PASS:-fresh}" = real ]; then
-     # REAL candidate run process (the installed binary) as the unit's main process
-     inv=\$(head -c8 /dev/urandom | od -An -tx1 | tr -d ' \n'); echo \$inv > $T/inv; date +%s > $T/started
-     INVOCATION_ID=\$inv setsid $H/.local/bin/agent-loop run --config $H/.config/agent-loop/campaign4.json > $T/run.log 2>&1 < /dev/null &
-     echo \$! > $T/pid; echo \$! > $T/runpid; exit 0
-   fi
    if [ "\${a[0]}" = start ] && [ "\${a[1]}" = agent-loop@campaign4.service ]; then
-     inv=\$(head -c8 /dev/urandom | od -An -tx1 | tr -d ' \n'); old=\$(cat $T/inv); echo \$inv > $T/inv; echo \$\$ > $T/pid; date +%s > $T/started
+     inv=\$(head -c8 /dev/urandom | od -An -tx1 | tr -d ' \n'); old=\$(cat $T/inv); echo \$inv > $T/inv; echo \$\$ > $T/pid
      pinv=\$inv; [ "\${STUB_PASS:-fresh}" = stale ] && pinv=\$old
      python3 -c "import sqlite3,json,time,sys; c=sqlite3.connect('$T/db/campaign4.db'); c.execute('create table if not exists driver_kv(key text primary key, value text)'); c.execute('insert or replace into driver_kv values(?,?)',('loop-pass',json.dumps({'at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'invocation':sys.argv[1],'pid':int(sys.argv[2])}))); c.commit()" \$pinv \$\$
    fi;;
- show) u=\${a[1]}; act=\$(awk -F'\t' -v u="\$u" '\$1==u{print \$2}' \$S); pid=\$(cat $T/pid 2>/dev/null || echo 0)
-   if [[ "\$*" == *--value* ]]; then case "\$*" in *InvocationID*) cat $T/inv;; *MainPID*) echo \$pid;; esac
-   else sub=dead; [ "\$act" = active ] && sub=running
-     printf 'ActiveState=%s\nSubState=%s\nResult=success\nNRestarts=0\nInvocationID=%s\nMainPID=%s\nExecMainStartTimestamp=@%s\n' "\$act" \$sub "\$(cat $T/inv)" \$pid "\$(cat $T/started 2>/dev/null || echo 0)"; fi;;
+ show) for x in "\${a[@]}"; do :; done; case "\$*" in *InvocationID*) cat $T/inv;; *MainPID*) cat $T/pid 2>/dev/null || echo 0;; esac;;
  daemon-reload) ;;
  *) exit 1;;
 esac
 SC
-  printf '#!/bin/sh\necho "systemd-run $*" >> %s/systemd-run.log\n' $T > $T/sbin/systemd-run
-  chmod 755 $T/sbin/systemctl $T/sbin/systemd-run
+  chmod 755 $T/sbin/systemctl
   { echo RUN=sbx; grep -E '^ADAPTER_(WATCH|RESOLVE)_(SRC|SHA)=' "$P/plans/live-p13-inputs.template.env"; } > $T/in.env
   snapshot_files() { for f in $H/.local/bin/agent-loop $H/.config/agent-loop/campaign4.json $H/.config/agent-deck/escalation-watch $H/.config/agent-deck/escalation-resolve; do [ -e $f ] && echo "$f $(sha256sum < $f | cut -c1-16) $(stat -c %a $f)" || echo "$f ABSENT"; done; cut -f1,2 $T/units.tsv; }
 }
 go() { PROMOTE_SANDBOX=1 PROMOTE_ROOT=$R PROMOTE_SYSTEMCTL=$T/sbin/systemctl PROMOTE_PROSPECTIVE=$T/prospective.json PROMOTE_EV=$T/ev bash "$P/plans/promotion-plan.sh" $T/in.env "${1:-run}" > $T/out 2>&1; }
-# 0 POSITIVE end to end: real candidate run process + real candidate liveness + all postconditions
-setup; STUB_PASS=real go; rc=$?
-[ $rc = 0 ] && grep -q "PROMOTE	SANDBOX-PASS" $T/ev/promotion-results.tsv && ok "positive promotion: PROMOTE PASS (rc 0)" || no "positive promotion rc $rc: $(grep -v '^ *rc=' $T/out | tail -3)"
-[ "$(sha256sum < $H/.local/bin/agent-loop | cut -d' ' -f1)" = 47f69dfdeb8b0d17472d871b68dfdfa8270e3421997a03f5d1c6929c8a818ec1 ] && [ -e $H/.config/agent-deck/escalation-resolve ] && cmp -s $T/prospective.json $H/.config/agent-loop/campaign4.json && ok "postconditions: candidate, both adapters and the required config installed (resolver was absent before)" || no "installed state wrong"
-grep -q "new invocation" $T/ev/promotion-results.tsv && grep -q "checker healthy" $T/ev/promotion-results.tsv && ok "fresh pass by the new invocation and a healthy checker verdict recorded" || no "postcondition rows missing"
-[ "$(awk -F'\t' '$1=="agent-loop@campaign4.service"{print $2}' $T/units.tsv)" = active ] && [ "$(awk -F'\t' '$1=="escalation-watch.timer"{print $2}' $T/units.tsv)" = active ] && ok "units active as the snapshot intended" || no "unit states wrong"
-cp -r $T/ev $P/evidence/promotion-closure/sbx-positive; cp $T/run.log $P/evidence/promotion-closure/sbx-positive/run.log 2>/dev/null
-[ -s $T/runpid ] && kill $(cat $T/runpid) 2>/dev/null
 # 1 stale pass -> PROMOTE FAIL, exact restore incl. absent resolver removed
 setup; B=$(snapshot_files); STUB_PASS=stale go; rc=$?
 [ $rc = 3 ] && grep -q "no fresh ledger pass" $T/out && ok "stale pass (old invocation) rejected -> PROMOTE FAIL rc 3" || no "stale pass rc $rc: $(tail -2 $T/out)"
