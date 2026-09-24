@@ -230,3 +230,12 @@ instruction and its application. Earlier records remain historical, not a veto
 on a new director release. Tern remains responsible for bounded execution,
 identity/integrity checks, independent evidence and cleanup. The two charter
 hard stops and campaign scope are unchanged.
+
+
+## Proportional proof amendment — 2026-09-24
+
+At Brian's request, Tern adopts the five consequence-based proof tiers and eight
+operating rules in [PROCESS-POSTMORTEM-DISPOSITION-20260924.md](PROCESS-POSTMORTEM-DISPOSITION-20260924.md), after one corvid review and kiln/cairn responses. That disposition is authoritative for proof/review weight, delegated acceptance and prospective bounded extensions, superseding conflicting blanket process rules above. Author/verifier independence is mandatory for tiers 1–3; tier 4 has a reader review and ordinary tier 5 has no compulsory reviewer. Normative documents inherit their governed consequences.
+
+This does not alter sponsor scope or budget, either hard stop, production authorization,
+existing grants, frozen evidence or append-only history. The research pause is not lifted by this process amendment. Cairn's manual controller role remains retired after P12; duty ownership remains. The historical OnActive-only timer instruction above is superseded by the accepted P12 calendar-timer policy: absolute UTC calendar deadlines with verified next firing, preserving bounds through daemon-reload. No new timer implementation is authorized here.
