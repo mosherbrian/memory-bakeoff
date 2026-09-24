@@ -32,7 +32,7 @@ if [ "${MODE#neg-}" != "$MODE" ]; then
   want=PRECONDITION; [ "$MODE" = neg-early-decide ] || want=INDUCTION
   [ $DRC -eq 4 ] && grep -q "^$want	INJECTED-INVALID" "$EV/driver/results.tsv" && ! grep -q "^LIVE	" "$EV/driver/results.tsv" && ! grep -q "^DECISION	" <([ "$want" = INDUCTION ] && cat "$EV/driver/results.tsv") && ok "NEG $MODE -> $want INVALID, rc 4, no LIVE row" || no "NEG $MODE not classified $want INVALID (rc $DRC)"
   case "$MODE" in neg-early-decide) grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" && ok "NEG the injected director really decided early" || no "NEG director double did not decide";;
-    *) grep -q "PRIMING .* mode=${MODE#neg-}" "$INJ/seat-runtime.log" && ! grep -q "dispatch --config" "$EV/driver/driver.log" && ok "NEG priming ${MODE#neg-}: no dispatch happened" || no "NEG priming case dispatched or not exercised";; esac
+    *) pm=${MODE#neg-}; pm=${pm%-priming}; grep -q "PRIMING .* mode=$pm" "$INJ/seat-runtime.log" && ! grep -q "dispatch --config" "$EV/driver/driver.log" && ok "NEG priming ${MODE#neg-}: no dispatch happened" || no "NEG priming case dispatched or not exercised";; esac
   python3 -c "import json; assert not json.load(open('$INJ/registry.json'))" && ok "NEG fixtures removed after INVALID" || no "NEG fixtures remain"
   kill $SEATPID 2>/dev/null; for p in $(ps -eo pid,args | grep -F "$INJ" | grep -v -e "grep -F" | awk '{print $1}'); do kill "$p" 2>/dev/null; done
   echo "inject-test($MODE): $pass passed, $fail failed (INJECTED)" | tee -a "$EV/test.log"; [ $fail -eq 0 ]; exit

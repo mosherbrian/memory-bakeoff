@@ -1,0 +1,77 @@
+2026-09-24T19:04:33.417Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T19:04:33.453Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T19:04:33.455Z P13 live inj120432, inputs sha256 18d5e2c345f638cd8ede1fe386da77141e650c91f1f58a7b309c1159d2b5098d
+2026-09-24T19:04:33.458Z + systemd-run --user --unit=p13live-wallstop-inj120432 --timer-property=AccuracySec=1s --on-calendar=2026-09-24 19:24:00 UTC --setenv=PATH=/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/evidence/live-composition/stubs:/usr/bin:/bin --setenv=AGENTDECK_PROFILE=campaign4 --setenv=EV_DIR=/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/evidence/live-composition/run-neg-wrong-priming/driver /bin/bash /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/live-p13-driver.sh /var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/evidence/live-composition/run-neg-wrong-priming/inputs.env cleanup
+2026-09-24T19:04:33.477Z   rc=0
+2026-09-24T19:04:33.515Z + mkdir -p /tmp/p13inj-z7PkwX/root/bin /tmp/p13inj-z7PkwX/root/art /tmp/p13inj-z7PkwX/root/claims /tmp/p13inj-z7PkwX/root/tasks /tmp/p13inj-z7PkwX/root/home/.config/agent-deck /tmp/p13inj-z7PkwX/root/home/.local/share/agent-deck
+2026-09-24T19:04:33.517Z   rc=0
+2026-09-24T19:04:33.519Z + install -m 755 /home/bmosher/.config/agent-deck/notify-claude /tmp/p13inj-z7PkwX/root/home/.config/agent-deck/notify-claude
+2026-09-24T19:04:33.520Z   rc=0
+2026-09-24T19:04:33.523Z + install -m 755 /home/bmosher/.config/agent-deck/escalations /tmp/p13inj-z7PkwX/root/home/.config/agent-deck/escalations
+2026-09-24T19:04:33.524Z   rc=0
+2026-09-24T19:04:33.527Z + install -m 755 /home/bmosher/projects/agent-loop-p13/adapters/escalation-watch /tmp/p13inj-z7PkwX/root/home/.config/agent-deck/escalation-watch
+2026-09-24T19:04:33.528Z   rc=0
+2026-09-24T19:04:33.531Z + install -m 755 /home/bmosher/projects/agent-loop-p13/adapters/escalation-resolve /tmp/p13inj-z7PkwX/root/home/.config/agent-deck/escalation-resolve
+2026-09-24T19:04:33.533Z   rc=0
+2026-09-24T19:04:33.535Z + install -m 755 /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/ticket-page-stub.sh /tmp/p13inj-z7PkwX/root/home/.config/agent-deck/ticket
+2026-09-24T19:04:33.537Z   rc=0
+2026-09-24T19:04:33.538Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/bin/agent-loop /tmp/p13inj-z7PkwX/root/bin/agent-loop
+2026-09-24T19:04:33.544Z   rc=0
+2026-09-24T19:04:33.566Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj120432.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj120432.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-z7PkwX/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-z7PkwX/root/fxinj120432.json#g; s#agent-loop %i#agent-loop fxinj120432#g; s#%i#fxinj120432#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop@.service' > '/tmp/p13inj-z7PkwX/sd/agent-loop-fxinj120432.service'
+2026-09-24T19:04:33.569Z   rc=0
+2026-09-24T19:04:33.570Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj120432.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj120432.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-z7PkwX/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-z7PkwX/root/fxinj120432.json#g; s#agent-loop %i#agent-loop fxinj120432#g; s#%i#fxinj120432#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness@.service' > '/tmp/p13inj-z7PkwX/sd/agent-loop-liveness-fxinj120432.service'
+2026-09-24T19:04:33.572Z   rc=0
+2026-09-24T19:04:33.574Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj120432.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj120432.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-z7PkwX/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-z7PkwX/root/fxinj120432.json#g; s#agent-loop %i#agent-loop fxinj120432#g; s#%i#fxinj120432#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness@.timer' > '/tmp/p13inj-z7PkwX/sd/agent-loop-liveness-fxinj120432.timer'
+2026-09-24T19:04:33.576Z   rc=0
+2026-09-24T19:04:33.577Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj120432.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj120432.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-z7PkwX/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-z7PkwX/root/fxinj120432.json#g; s#agent-loop %i#agent-loop fxinj120432#g; s#%i#fxinj120432#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness-failed@.service' > '/tmp/p13inj-z7PkwX/sd/agent-loop-liveness-failed-fxinj120432.service'
+2026-09-24T19:04:33.579Z   rc=0
+2026-09-24T19:04:33.580Z + grep -c /tmp/p13inj-z7PkwX/root/bin/agent-loop /tmp/p13inj-z7PkwX/sd/agent-loop-fxinj120432.service /tmp/p13inj-z7PkwX/sd/agent-loop-liveness-fxinj120432.service /tmp/p13inj-z7PkwX/sd/agent-loop-liveness-failed-fxinj120432.service
+2026-09-24T19:04:33.581Z   rc=0
+2026-09-24T19:04:33.583Z + grep -q ^OnFailure=agent-loop-liveness-failed-fxinj120432.service$ /tmp/p13inj-z7PkwX/sd/agent-loop-liveness-fxinj120432.service
+2026-09-24T19:04:33.585Z   rc=0
+2026-09-24T19:04:33.586Z + systemctl --user daemon-reload
+2026-09-24T19:04:33.602Z   rc=0
+2026-09-24T19:04:33.620Z + /tmp/p13inj-z7PkwX/root/bin/agent-loop check --config /tmp/p13inj-z7PkwX/root/fxinj120432.json
+2026-09-24T19:04:33.634Z   rc=0
+2026-09-24T19:04:33.635Z + systemctl --user start agent-loop-fxinj120432.service agent-loop-liveness-fxinj120432.timer
+2026-09-24T19:04:33.652Z   rc=0
+2026-09-24T19:04:38.680Z reached first pass (ok or rest) after 5s
+2026-09-24T19:04:38.710Z + mkdir -p /tmp/p13inj-z7PkwX/root/priming
+2026-09-24T19:04:38.712Z   rc=0
+2026-09-24T19:04:38.714Z + /home/bmosher/.config/agent-deck/wake inj120432-d-id <priming for run inj120432>
+2026-09-24T19:04:38.758Z + /home/bmosher/.config/agent-deck/wake inj120432-u-id <priming for run inj120432>
+2026-09-24T19:06:38.923Z timeout waiting for both fixtures confirmed the priming
+wait:both fixtures confirmed the priming	INJECTED-INCOMPLETE	2026-09-24T19:06:38.924Z	not reached in 120s
+INDUCTION	INJECTED-INVALID	2026-09-24T19:06:38.927Z	confirmation missing or wrong: director '00000000000000000000000000000000', duty '00000000000000000000000000000000'
+2026-09-24T19:06:38.929Z cleanup (exact IDs)
+2026-09-24T19:06:38.940Z + rm -rf /tmp/p13inj-z7PkwX/root/fxinj120432.db.caps
+2026-09-24T19:06:38.941Z   rc=0
+2026-09-24T19:06:38.942Z + systemctl --user stop agent-loop-liveness-fxinj120432.timer agent-loop-liveness-fxinj120432.service agent-loop-liveness-failed-fxinj120432.service agent-loop-fxinj120432.service
+2026-09-24T19:06:38.962Z   rc=0
+2026-09-24T19:06:38.981Z + systemctl --user reset-failed agent-loop-fxinj120432* agent-loop-liveness-fxinj120432* agent-loop-liveness-failed-fxinj120432*
+2026-09-24T19:06:38.998Z   rc=0
+2026-09-24T19:06:39.000Z + rm -f /tmp/p13inj-z7PkwX/sd/agent-loop-fxinj120432.service /tmp/p13inj-z7PkwX/sd/agent-loop-liveness-fxinj120432.service /tmp/p13inj-z7PkwX/sd/agent-loop-liveness-fxinj120432.timer /tmp/p13inj-z7PkwX/sd/agent-loop-liveness-failed-fxinj120432.service
+2026-09-24T19:06:39.002Z   rc=0
+2026-09-24T19:06:39.003Z + rm -rf /tmp/p13inj-z7PkwX/sd/agent-loop-fxinj120432.service.d
+2026-09-24T19:06:39.005Z   rc=0
+2026-09-24T19:06:39.006Z + systemctl --user daemon-reload
+2026-09-24T19:06:39.025Z   rc=0
+2026-09-24T19:06:39.026Z + agent-deck session stop inj120432-w-id
+2026-09-24T19:06:39.040Z   rc=0
+2026-09-24T19:06:39.041Z + agent-deck session remove inj120432-w-id
+2026-09-24T19:06:39.055Z   rc=0
+2026-09-24T19:06:39.057Z + agent-deck session stop inj120432-v-id
+2026-09-24T19:06:39.070Z   rc=0
+2026-09-24T19:06:39.071Z + agent-deck session remove inj120432-v-id
+2026-09-24T19:06:39.085Z   rc=0
+2026-09-24T19:06:39.086Z + agent-deck session stop inj120432-d-id
+2026-09-24T19:06:39.100Z   rc=0
+2026-09-24T19:06:39.101Z + agent-deck session remove inj120432-d-id
+2026-09-24T19:06:39.114Z   rc=0
+2026-09-24T19:06:39.115Z + agent-deck session stop inj120432-u-id
+2026-09-24T19:06:39.128Z   rc=0
+2026-09-24T19:06:39.130Z + agent-deck session remove inj120432-u-id
+2026-09-24T19:06:39.143Z   rc=0
+2026-09-24T19:06:39.144Z + systemctl --user stop p13live-wallstop-inj120432.timer
+2026-09-24T19:06:39.163Z   rc=0
+2026-09-24T19:06:39.297Z cleanup done

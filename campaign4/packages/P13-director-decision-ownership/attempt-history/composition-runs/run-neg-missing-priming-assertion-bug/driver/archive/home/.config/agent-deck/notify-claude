@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# Push one fleet escalation into a running Claude Code session.
+#
+# WHY THIS EXISTS. Brian, 2026-09-18: "it shouldn't be paging me first, the
+# escalation path should go through you first!" This is that rung. The poller
+# calls it after its own REMEDY attempts are exhausted and BEFORE the Signal
+# page to Brian.
+#
+# HOW IT GETS IN. Claude Code "channels" - an MCP server that pushes events
+# into a live session, which is the same mechanism as the Signal bridge
+# (~/.claude/plugins/local/signal). Rather than a custom channel, this uses
+# `fakechat`, which is on Anthropic's approved allowlist, so the session does
+# NOT need --dangerously-load-development-channels. Its POST /upload route is
+# the same injection path its browser UI uses: multipart `id` and `text`, and
+# the handler calls deliver() -> notifications/claude/channel. Read from the
+# installed source, not guessed.
+#
+# It binds 127.0.0.1 only (hostname is pinned in its Bun.serve call), so the
+# gate on this endpoint is "a process on this machine" - which is a stronger
+# check than the Signal channel's UUID allowlist, and it needs no secret.
+#
+# WHAT A ZERO EXIT DOES NOT MEAN. 204 means fakechat accepted the event and
+# wrote the notification to the transport. Claude Code does not acknowledge
+# channel notifications, and drops them silently if no session loaded the
+# channel. So this is NOT a receipt, and the caller MUST keep its own clock
+# running to Brian regardless. The real receipt is the condition clearing.
+#
+# THE SESSION MUST BE STARTED FOR IT. Events only arrive while a session is
+# open AND was launched naming the channel:
+#     claude --continue --channels plugin:fakechat@claude-plugins-official
+# Being in .mcp.json is not enough. If no such session is running, this script
+# exits non-zero on connection refused and the caller falls through to Brian.
+set -u
+
+PORT=${FAKECHAT_PORT:-8787}
+KIND=${1:-fleet}
+shift || true
+BODY=$(cat)
+
+if [ -z "${BODY//[[:space:]]/}" ]; then
+    echo "notify-claude: nothing on stdin" >&2
+    exit 2
+fi
+
+# A stable-ish id per (kind, minute) so a retry inside the same minute does not
+# read as two separate escalations in the transcript.
+ID="fleet-${KIND}-$(date -u +%Y%m%dT%H%M)"
+
+# THE LEDGER FIRST, THE PORT SECOND. Measured 2026-09-20: the channel had been
+# delivering into session pid 2239928 (up 1d07h, last escalation 09:35 the day
+# before) because that session grabbed 8787 first, while the session Brian was
+# typing in could not load the channel at all - its fakechat MCP died
+# CONNECTION_CLOSED on the taken port. So a 204 here proves a socket accepted
+# bytes, not that anyone able to act was listening.
+#
+# Appending to the ledger before the curl means an escalation survives every
+# outcome of the transport: wrong session, no session, refused connection. Any
+# session picks the backlog up at start via `escalations --hook`. This CANNOT
+# fail the notify - the ledger is the durable path, but a broken ledger must
+# not also break the fast one.
+"$HOME/.config/agent-deck/escalations" --add "$KIND" --source "${ESCALATION_SOURCE:-notify-claude}" <<<"$BODY" >/dev/null 2>&1 || true
+
+# EVERY LISTENER, NOT ONE PORT. The plugin reads FAKECHAT_PORT (server.ts:20),
+# so a second session can hold a channel on another port instead of dying on
+# the taken one - which is what had been happening: the first session to claim
+# 8787 became the only session that could ever hear an escalation, and it was
+# not the session anyone was reading.
+#
+# Sending to every live fakechat listener removes "which session" from the fast
+# path entirely. A session that is not listening simply is not in the list. If
+# NONE are listening that is not a failure any more, because the ledger above
+# already holds the escalation and every session reads it at start and on each
+# prompt - so the exit code reports the fast path only, and callers keep their
+# own clock to Brian exactly as before.
+ports() {
+    # LISTED BY THE SOCKET'S OWNER, NOT THE PLUGIN'S PID. The bun process that
+    # HOLDS the socket is not the one whose argv names the plugin - measured:
+    # argv matched pid 2240125, the listener was 2240146 - so matching on the
+    # plugin path found nothing and this silently fell back to one port, which
+    # is the bug it exists to fix. Take every bun-owned listening port instead
+    # and let the POST decide: fakechat answers 204, anything else does not.
+    { ss -lntpH 2>/dev/null | awk '/"bun"/ {split($4,a,":"); print a[length(a)]}'
+      echo "$PORT"; } | sort -un
+}
+
+sent=0
+tried=""
+for port in $(ports); do
+    tried="$tried $port"
+    code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 \
+        --form "id=${ID}" --form-string "text=${BODY}" \
+        "http://127.0.0.1:${port}/upload" 2>/dev/null) || code=000
+    [ "$code" = "204" ] && sent=$((sent + 1))
+done
+
+if [ "$sent" -gt 0 ]; then
+    echo "notify-claude: delivered to $sent channel listener(s) (kind=$KIND id=$ID)"
+    exit 0
+fi
+echo "notify-claude: no channel answered on${tried:- none} - the ledger has it; any session picks it up at start or on the next prompt" >&2
+exit 1
