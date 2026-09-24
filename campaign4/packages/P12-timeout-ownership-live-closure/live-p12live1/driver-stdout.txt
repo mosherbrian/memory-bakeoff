@@ -1,0 +1,261 @@
+2026-09-24T01:15:18.354Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T01:15:18.436Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T01:15:18.439Z P12 live p12live1, inputs sha256 c06497796cb2c3e3921abdcb3d60cdd1c82f0d99b6641f3b340f06d4d033f610
+2026-09-24T01:15:18.442Z + systemd-run --user --unit=p12live-wallstop-p12live1 --timer-property=AccuracySec=1s --on-calendar=2026-09-24 02:30:00 UTC --setenv=PATH=/home/bmosher/.local/bin:/home/bmosher/.config/agent-deck:/usr/local/bin:/usr/bin:/bin --setenv=AGENTDECK_PROFILE=campaign4 /bin/bash /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/live-driver.sh /var/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-inputs-1.env cleanup
+2026-09-24T01:15:18.448Z   rc=0
+2026-09-24T01:15:18.456Z + mkdir -p /home/bmosher/p12live-p12live1/bin /home/bmosher/p12live-p12live1/art /home/bmosher/p12live-p12live1/claims /home/bmosher/p12live-p12live1/tasks
+2026-09-24T01:15:18.457Z   rc=0
+2026-09-24T01:15:18.459Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/agent-loop /home/bmosher/p12live-p12live1/bin/agent-loop
+2026-09-24T01:15:18.461Z   rc=0
+2026-09-24T01:15:18.489Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp12live1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp12live1.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p12live-p12live1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p12live-p12live1/fxp12live1.json#g; s#agent-loop %i#agent-loop fxp12live1#g; s#%i#fxp12live1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop@.service' > '/home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service'
+2026-09-24T01:15:18.491Z   rc=0
+2026-09-24T01:15:18.493Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp12live1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp12live1.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p12live-p12live1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p12live-p12live1/fxp12live1.json#g; s#agent-loop %i#agent-loop fxp12live1#g; s#%i#fxp12live1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop-liveness@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxp12live1.service'
+2026-09-24T01:15:18.495Z   rc=0
+2026-09-24T01:15:18.497Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp12live1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp12live1.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p12live-p12live1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p12live-p12live1/fxp12live1.json#g; s#agent-loop %i#agent-loop fxp12live1#g; s#%i#fxp12live1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop-liveness@.timer' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxp12live1.timer'
+2026-09-24T01:15:18.499Z   rc=0
+2026-09-24T01:15:18.501Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxp12live1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxp12live1.service#g; s#%h/.local/bin/agent-loop#/home/bmosher/p12live-p12live1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/home/bmosher/p12live-p12live1/fxp12live1.json#g; s#agent-loop %i#agent-loop fxp12live1#g; s#%i#fxp12live1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop-liveness-failed@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxp12live1.service'
+2026-09-24T01:15:18.503Z   rc=0
+2026-09-24T01:15:18.504Z + grep -c /home/bmosher/p12live-p12live1/bin/agent-loop /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp12live1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxp12live1.service
+2026-09-24T01:15:18.506Z   rc=0
+2026-09-24T01:15:18.507Z + grep -q ^OnFailure=agent-loop-liveness-failed-fxp12live1.service$ /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp12live1.service
+2026-09-24T01:15:18.509Z   rc=0
+2026-09-24T01:15:18.510Z + systemctl --user daemon-reload
+2026-09-24T01:15:18.706Z   rc=0
+2026-09-24T01:15:18.713Z + /home/bmosher/p12live-p12live1/bin/agent-loop check --config /home/bmosher/p12live-p12live1/fxp12live1.json
+2026-09-24T01:15:18.765Z   rc=0
+2026-09-24T01:15:18.767Z + /home/bmosher/.config/agent-deck/wake ad541ba6-1790208905 When a message starting "[agent-loop liveness]" reaches you during P12 live, run the exact
+liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P12 live witness: observed
+<state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+When a message starting "[agent-loop]" says a step passed its deadline and contains
+"Acknowledge ownership with:", run that exact timeout-ack command, replacing SEAT with your own
+seat name and 'NEXT ACTION' with 'P12 live witness: will review the timed-out step', and keep
+--within 15m. Then end your turn. Nothing else.
+EXCEPTION: never acknowledge anything about a package whose name starts with "L6b-". That case tests
+what happens when nobody acknowledges. For such a message, end your turn at once without running any command.
+If the command prints PENDING and exits 3, your request is already recorded durably and the loop commits it by itself
+(any ledger holder, or the outside check every 30 s). It is not an acknowledgement until committed. Do not run it again
+with different words: a different request from you for the same step is refused as a conflict. Running the exact same
+command again is safe (a replay).
+2026-09-24T01:15:18.842Z   rc=0
+2026-09-24T01:15:18.844Z + /home/bmosher/.config/agent-deck/wake 0e586486-1790208905 When a message starting "[agent-loop liveness]" reaches you during P12 live, run the exact
+liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P12 live witness: observed
+<state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+When a message starting "[agent-loop]" says a step passed its deadline and contains
+"Acknowledge ownership with:", run that exact timeout-ack command, replacing SEAT with your own
+seat name and 'NEXT ACTION' with 'P12 live witness: will review the timed-out step', and keep
+--within 15m. Then end your turn. Nothing else.
+EXCEPTION: never acknowledge anything about a package whose name starts with "L6b-". That case tests
+what happens when nobody acknowledges. For such a message, end your turn at once without running any command.
+If the command prints PENDING and exits 3, your request is already recorded durably and the loop commits it by itself
+(any ledger holder, or the outside check every 30 s). It is not an acknowledgement until committed. Do not run it again
+with different words: a different request from you for the same step is refused as a conflict. Running the exact same
+command again is safe (a replay).
+2026-09-24T01:15:18.915Z   rc=0
+2026-09-24T01:15:18.917Z + systemctl --user start agent-loop-fxp12live1.service agent-loop-liveness-fxp12live1.timer
+2026-09-24T01:15:18.958Z   rc=0
+2026-09-24T01:15:34.026Z reached first pass (ok or rest) after 16s
+2026-09-24T01:15:34.049Z L1 onset
+2026-09-24T01:15:34.054Z + /home/bmosher/p12live-p12live1/bin/agent-loop dispatch --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L1-p12live1 --worker p12-fixture-worker-20260924T001400Z --verifier p12-fixture-verifier-20260924T001400Z --task @/home/bmosher/p12live-p12live1/tasks/L1-p12live1-l-worker.md --verify-task @/home/bmosher/p12live-p12live1/tasks/L1-p12live1-l-verify.md --duration 10m --verify-window 10m
+2026-09-24T01:15:34.197Z   rc=0
+2026-09-24T01:15:59.300Z reached L1 decision after 25s
+2026-09-24T01:15:59.311Z + systemctl --user restart agent-loop-fxp12live1.service
+2026-09-24T01:15:59.348Z   rc=0
+2026-09-24T01:15:59.362Z reached L1 restart pass after 0s
+2026-09-24T01:15:59.363Z + /home/bmosher/p12live-p12live1/bin/agent-loop decide --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L1-p12live1 --kind question_answered --ref P12-live-p12live1-L1 --reason live witness
+2026-09-24T01:15:59.370Z   rc=0
+L1	PASS	2026-09-24T01:15:59.386Z	closed; one dispatch per seat across restart
+2026-09-24T01:15:59.422Z reached L1 settled after 0s
+2026-09-24T01:15:59.424Z + sleep 185
+2026-09-24T01:19:04.427Z   rc=0
+L5-rest	PASS	2026-09-24T01:19:04.450Z	7 checks in 185 s, all rest, no liveness wake
+2026-09-24T01:19:04.456Z + /home/bmosher/p12live-p12live1/bin/agent-loop dispatch --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L2-p12live1 --worker p12-fixture-worker-20260924T001400Z --verifier p12-fixture-verifier-20260924T001400Z --task @/home/bmosher/p12live-p12live1/tasks/L2-p12live1-l-noclaim-worker.md --verify-task @/home/bmosher/p12live-p12live1/tasks/L2-p12live1-l-verify.md --duration 3m --verify-window 5m
+2026-09-24T01:19:04.604Z   rc=0
+2026-09-24T01:19:04.621Z reached L2 worker step after 0s
+2026-09-24T01:19:04.637Z L2 onset: SIGKILL
+2026-09-24T01:19:04.638Z + systemctl --user kill -s KILL agent-loop-fxp12live1.service
+2026-09-24T01:19:04.643Z   rc=0
+2026-09-24T01:19:14.687Z reached L2 restarted after 10s
+2026-09-24T01:19:34.774Z reached L2 pass after 20s
+L2	PASS	2026-09-24T01:19:34.793Z	restarted by systemd, outbox held, no resend
+2026-09-24T01:22:05.336Z reached L2 settled by its deadline after 151s
+2026-09-24T01:22:05.338Z + sleep 10
+2026-09-24T01:22:15.341Z   rc=0
+L2-settle	PASS	2026-09-24T01:22:15.345Z	timed-out by its deadline: one /cancel, one director wake; no open work
+2026-09-24T01:22:30.414Z reached L2 rest (no open work) after 15s
+2026-09-24T01:22:30.421Z L3a onset: SIGSTOP main pid
+2026-09-24T01:22:30.428Z + kill -STOP 1805150
+2026-09-24T01:22:30.428Z   rc=0
+2026-09-24T01:23:50.624Z reached L3a watchdog restart after 80s
+L3a	FAIL	2026-09-24T01:23:50.635Z	restart without a watchdog line
+2026-09-24T01:25:20.971Z timeout waiting for L3a pass
+wait:L3a pass	INCOMPLETE	2026-09-24T01:25:20.973Z	not reached in 90s
+2026-09-24T01:25:20.999Z + mkdir -p /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d
+2026-09-24T01:25:21.001Z   rc=0
+2026-09-24T01:25:21.002Z + sh -c printf '[Service]\nExecStart=\nExecStart=/bin/sh -c "sleep 40; exec /home/bmosher/p12live-p12live1/bin/agent-loop run --config /home/bmosher/p12live-p12live1/fxp12live1.json"\nTimeoutStartSec=120\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/delay.conf'
+2026-09-24T01:25:21.004Z   rc=0
+2026-09-24T01:25:21.006Z + systemctl --user daemon-reload
+2026-09-24T01:25:21.192Z   rc=0
+2026-09-24T01:25:21.204Z L7c onset: restart with 40 s delay
+2026-09-24T01:25:21.205Z + systemctl --user restart --no-block agent-loop-fxp12live1.service
+2026-09-24T01:25:21.210Z   rc=0
+2026-09-24T01:25:21.216Z reached L7c new invocation after 0s
+2026-09-24T01:25:21.217Z + systemctl --user start agent-loop-liveness-fxp12live1.service
+2026-09-24T01:25:21.260Z   rc=0
+2026-09-24T01:26:51.605Z timeout waiting for L7c first pass of the new run
+wait:L7c first pass of the new run	INCOMPLETE	2026-09-24T01:26:51.607Z	not reached in 90s
+2026-09-24T01:26:51.609Z + systemctl --user start agent-loop-liveness-fxp12live1.service
+2026-09-24T01:26:51.650Z   rc=0
+L7c	FAIL	2026-09-24T01:26:51.680Z	window PASS, after rest 2026-09-24T01:26:51Z 
+2026-09-24T01:26:51.681Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/delay.conf
+2026-09-24T01:26:51.683Z   rc=0
+2026-09-24T01:26:51.685Z + systemctl --user daemon-reload
+2026-09-24T01:26:51.882Z   rc=0
+2026-09-24T01:26:51.912Z + sh -c printf '[Service]\nWatchdogSec=0\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/nowatchdog.conf'
+2026-09-24T01:26:51.913Z   rc=0
+2026-09-24T01:26:51.914Z + systemctl --user daemon-reload
+2026-09-24T01:26:52.101Z   rc=0
+2026-09-24T01:26:52.109Z + systemctl --user restart agent-loop-fxp12live1.service
+2026-09-24T01:26:52.150Z   rc=0
+2026-09-24T01:28:22.486Z timeout waiting for L3b pass
+wait:L3b pass	INCOMPLETE	2026-09-24T01:28:22.487Z	not reached in 90s
+2026-09-24T01:28:22.488Z L3b onset: SIGSTOP main pid, no watchdog
+2026-09-24T01:28:22.496Z + kill -STOP 1872391
+2026-09-24T01:28:22.497Z   rc=0
+2026-09-24T01:30:32.969Z reached L3b hung after 130s
+L3b	PASS	2026-09-24T01:30:32.973Z	hung after 130s (bound 180), duty woken
+2026-09-24T01:30:32.983Z + kill -CONT 1872391
+2026-09-24T01:30:32.984Z   rc=0
+2026-09-24T01:30:32.986Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/nowatchdog.conf
+2026-09-24T01:30:32.987Z   rc=0
+2026-09-24T01:30:32.988Z + systemctl --user daemon-reload
+2026-09-24T01:30:33.185Z   rc=0
+2026-09-24T01:30:33.191Z + systemctl --user restart agent-loop-fxp12live1.service
+2026-09-24T01:30:33.228Z   rc=0
+2026-09-24T01:33:03.773Z timeout waiting for L3b recovered
+wait:L3b recovered	INCOMPLETE	2026-09-24T01:33:03.774Z	not reached in 150s
+2026-09-24T01:33:03.803Z + sh -c printf '[Service]\nExecStart=\nExecStart=/home/bmosher/p12live-p12live1/bin/agent-loop run --config /nonexistent-p12live1.json\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/fail.conf'
+2026-09-24T01:33:03.804Z   rc=0
+2026-09-24T01:33:03.806Z + systemctl --user daemon-reload
+2026-09-24T01:33:03.999Z   rc=0
+2026-09-24T01:33:04.006Z L4a onset: failing start
+2026-09-24T01:33:04.008Z + systemctl --user restart agent-loop-fxp12live1.service
+2026-09-24T01:33:04.037Z   rc=1
+2026-09-24T01:35:04.295Z timeout waiting for L4a start limit
+wait:L4a start limit	INCOMPLETE	2026-09-24T01:35:04.296Z	not reached in 120s
+L4a	FAIL	2026-09-24T01:35:04.298Z	no start-limit/restart-loop within bounds
+2026-09-24T01:35:04.299Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/fail.conf
+2026-09-24T01:35:04.301Z   rc=0
+2026-09-24T01:35:04.303Z + systemctl --user daemon-reload
+2026-09-24T01:35:04.492Z   rc=0
+2026-09-24T01:35:04.500Z + systemctl --user reset-failed agent-loop-fxp12live1.service
+2026-09-24T01:35:04.504Z   rc=0
+2026-09-24T01:35:04.506Z + systemctl --user start agent-loop-fxp12live1.service
+2026-09-24T01:35:04.533Z   rc=0
+2026-09-24T01:35:34.655Z reached L4a settled after 30s
+2026-09-24T01:36:14.921Z reached L7 checker incident after 40s
+2026-09-24T01:36:34.784Z reached L7 checker recovered after 15s
+L7-checker	PASS	2026-09-24T01:36:34.787Z	handler told duty 40s after the hold; recovered 15s after release (/home/bmosher/p12live-p12live1/fxp12live1.db.checker-incident.json)
+2026-09-24T01:36:34.790Z + sh -c printf '{bad-p12live1' > '/home/bmosher/p12live-p12live1/fxp12live1.db.liveness.json'
+2026-09-24T01:36:34.792Z   rc=0
+2026-09-24T01:37:04.820Z reached L7a alarm after 30s
+2026-09-24T01:37:04.822Z + sleep 140
+2026-09-24T01:39:24.825Z   rc=0
+L7a	PASS	2026-09-24T01:39:24.838Z	bytes preserved, duty woken once over >=3 checks
+2026-09-24T01:39:24.875Z reached L7a closed after ack after 0s
+2026-09-24T01:39:24.882Z L7b onset: SIGSTOP run, write a pass 10 min in the future
+2026-09-24T01:39:24.884Z + kill -STOP 1942308
+2026-09-24T01:39:24.885Z   rc=0
+2026-09-24T01:39:24.887Z + python3 -c import sqlite3,json,datetime;c=sqlite3.connect('/home/bmosher/p12live-p12live1/fxp12live1.db');p=json.loads(c.execute("select value from driver_kv where key='loop-pass'").fetchone()[0]);p['at']=(datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=10)).strftime('%Y-%m-%dT%H:%M:%SZ');c.execute("update driver_kv set value=? where key='loop-pass'",(json.dumps(p),));c.commit()
+2026-09-24T01:39:24.906Z   rc=0
+2026-09-24T01:39:24.908Z + systemctl --user start agent-loop-liveness-fxp12live1.service
+2026-09-24T01:39:25.022Z   rc=0
+L7b	PASS	2026-09-24T01:39:25.040Z	future pass -> unknown alarm
+2026-09-24T01:39:25.042Z + kill -CONT 1942308
+2026-09-24T01:39:25.042Z   rc=0
+2026-09-24T01:39:35.098Z reached L7b recovered after 10s
+2026-09-24T01:39:35.127Z + /home/bmosher/p12live-p12live1/bin/agent-loop dispatch --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L6-p12live1 --worker p12-fixture-worker-20260924T001400Z --verifier p12-fixture-verifier-20260924T001400Z --task @/home/bmosher/p12live-p12live1/tasks/L6-p12live1-l-noclaim-worker.md --verify-task @/home/bmosher/p12live-p12live1/tasks/L6-p12live1-l-verify.md --duration 2m --verify-window 5m
+2026-09-24T01:39:35.274Z   rc=0
+2026-09-24T01:39:35.292Z reached L6 worker step after 0s
+2026-09-24T01:39:35.310Z L5 onset: agent-loop stop
+2026-09-24T01:39:35.311Z + /home/bmosher/p12live-p12live1/bin/agent-loop stop --config /home/bmosher/p12live-p12live1/fxp12live1.json
+2026-09-24T01:39:35.314Z   rc=0
+2026-09-24T01:40:35.452Z timeout waiting for L5 run exited
+wait:L5 run exited	INCOMPLETE	2026-09-24T01:40:35.453Z	not reached in 60s
+2026-09-24T01:40:35.461Z L5: stray start while the marker exists
+2026-09-24T01:40:35.462Z + systemctl --user start agent-loop-fxp12live1.service
+2026-09-24T01:40:35.494Z   rc=1
+2026-09-24T01:40:35.496Z + sleep 20
+2026-09-24T01:40:55.500Z   rc=0
+L5-stray	PASS	2026-09-24T01:40:55.521Z	exit 64 (state inactive); stray start rc=1 (recorded, not assumed 0); marker kept; no scheduled restart
+2026-09-24T01:40:55.525Z + sleep 245
+2026-09-24T01:45:00.528Z   rc=0
+L5-stopped	PASS	2026-09-24T01:45:00.549Z	9 checks in 245 s, all stopped, no liveness wake
+2026-09-24T01:45:00.566Z reached L6 acknowledged after 0s
+L6-timing	PASS	2026-09-24T01:45:00.624Z	explicit: detection 0.0s (bound 30), ack 3.0s after detection (bound 60), 3.0s after deadline (bound 90), deadline 2026-09-24T01:41:35Z (/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-p12live1/l6-timing.json)
+2026-09-24T01:45:00.634Z + systemctl --user start agent-loop-fxp12live1-L6-p12live1-w1.service
+2026-09-24T01:45:00.640Z   rc=5
+L6	FAIL	2026-09-24T01:45:00.646Z	replay repeated effects
+2026-09-24T01:45:00.648Z + /home/bmosher/p12live-p12live1/bin/agent-loop start --config /home/bmosher/p12live-p12live1/fxp12live1.json
+2026-09-24T01:45:00.691Z   rc=0
+2026-09-24T01:45:00.698Z reached L5 resumed after 0s
+2026-09-24T01:45:00.724Z + /home/bmosher/p12live-p12live1/bin/agent-loop dispatch --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L6b-p12live1 --worker p12-fixture-worker-20260924T001400Z --verifier p12-fixture-verifier-20260924T001400Z --task @/home/bmosher/p12live-p12live1/tasks/L6b-p12live1-l-noclaim-worker.md --verify-task @/home/bmosher/p12live-p12live1/tasks/L6b-p12live1-l-verify.md --duration 1m --verify-window 5m
+2026-09-24T01:45:00.865Z   rc=0
+2026-09-24T01:45:00.882Z reached L6b worker step after 0s
+2026-09-24T01:45:00.883Z L6b onset: agent-loop stop, then no acknowledgement
+2026-09-24T01:45:00.885Z + /home/bmosher/p12live-p12live1/bin/agent-loop stop --config /home/bmosher/p12live-p12live1/fxp12live1.json
+2026-09-24T01:45:00.887Z   rc=0
+2026-09-24T01:46:01.044Z timeout waiting for L6b run exited
+wait:L6b run exited	INCOMPLETE	2026-09-24T01:46:01.045Z	not reached in 60s
+2026-09-24T01:48:01.729Z reached L6b duty and director escalated after 120s
+L6b	PASS	2026-09-24T01:48:01.762Z	duty 60s after settlement (60..95), director 120s (120..155), ack None
+2026-09-24T01:48:01.763Z + /home/bmosher/p12live-p12live1/bin/agent-loop start --config /home/bmosher/p12live-p12live1/fxp12live1.json
+2026-09-24T01:48:01.804Z   rc=0
+2026-09-24T01:48:01.811Z reached L6b resumed after 0s
+2026-09-24T01:48:01.833Z + agent-deck session stop 0e586486-1790208905
+2026-09-24T01:48:04.963Z   rc=0
+2026-09-24T01:48:05.019Z + sh -c printf '[Service]\nExecStart=\nExecStart=/home/bmosher/p12live-p12live1/bin/agent-loop run --config /nonexistent-p12live1.json\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/fail.conf'
+2026-09-24T01:48:05.020Z   rc=0
+2026-09-24T01:48:05.022Z + systemctl --user daemon-reload
+2026-09-24T01:48:05.213Z   rc=0
+2026-09-24T01:48:05.220Z L4b onset: failing start, duty seat 0e586486-1790208905 confirmed stopped
+2026-09-24T01:48:05.222Z + systemctl --user restart agent-loop-fxp12live1.service
+2026-09-24T01:48:05.246Z   rc=1
+2026-09-24T01:51:05.899Z timeout waiting for L4b restart-loop
+wait:L4b restart-loop	INCOMPLETE	2026-09-24T01:51:05.900Z	not reached in 180s
+L4b	FAIL	2026-09-24T01:51:05.919Z	observed crashed (required restart-loop); director wakes 8 -> 9
+2026-09-24T01:51:05.921Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d/fail.conf
+2026-09-24T01:51:05.922Z   rc=0
+2026-09-24T01:51:05.924Z + systemctl --user daemon-reload
+2026-09-24T01:51:06.134Z   rc=0
+2026-09-24T01:51:06.161Z all cases run; results in /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-p12live1/results.tsv
+2026-09-24T01:51:06.164Z NOT ALL PASS: 13 FAIL/INCOMPLETE rows
+2026-09-24T01:51:06.165Z cleanup (exact IDs)
+2026-09-24T01:51:06.168Z + systemctl --user stop agent-loop-liveness-fxp12live1.timer agent-loop-liveness-fxp12live1.service agent-loop-liveness-failed-fxp12live1.service agent-loop-fxp12live1.service
+2026-09-24T01:51:06.183Z   rc=0
+2026-09-24T01:51:06.188Z + systemctl --user reset-failed agent-loop-fxp12live1* agent-loop-liveness-fxp12live1* agent-loop-liveness-failed-fxp12live1*
+2026-09-24T01:51:06.193Z   rc=0
+2026-09-24T01:51:06.194Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp12live1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxp12live1.timer /home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxp12live1.service
+2026-09-24T01:51:06.196Z   rc=0
+2026-09-24T01:51:06.197Z + rm -rf /home/bmosher/.config/systemd/user/agent-loop-fxp12live1.service.d
+2026-09-24T01:51:06.199Z   rc=0
+2026-09-24T01:51:06.200Z + systemctl --user daemon-reload
+2026-09-24T01:51:06.392Z   rc=0
+2026-09-24T01:51:06.393Z + agent-deck session stop f26eb77b-1790208904
+2026-09-24T01:51:09.524Z   rc=0
+2026-09-24T01:51:09.525Z + agent-deck session remove f26eb77b-1790208904
+2026-09-24T01:51:09.538Z   rc=0
+2026-09-24T01:51:09.539Z + agent-deck session stop 084c0658-1790208905
+2026-09-24T01:51:12.652Z   rc=0
+2026-09-24T01:51:12.653Z + agent-deck session remove 084c0658-1790208905
+2026-09-24T01:51:12.667Z   rc=0
+2026-09-24T01:51:12.668Z + agent-deck session stop ad541ba6-1790208905
+2026-09-24T01:51:15.794Z   rc=0
+2026-09-24T01:51:15.795Z + agent-deck session remove ad541ba6-1790208905
+2026-09-24T01:51:15.808Z   rc=0
+2026-09-24T01:51:15.809Z + agent-deck session stop 0e586486-1790208905
+2026-09-24T01:51:15.817Z   rc=1
+2026-09-24T01:51:15.818Z + agent-deck session remove 0e586486-1790208905
+2026-09-24T01:51:15.829Z   rc=0
+2026-09-24T01:51:15.830Z + systemctl --user stop p12live-wallstop-p12live1.timer
+2026-09-24T01:51:15.835Z   rc=0
+2026-09-24T01:51:16.023Z cleanup done

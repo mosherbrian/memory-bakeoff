@@ -1,0 +1,25 @@
+L1	PASS	2026-09-24T01:15:59.386Z	closed; one dispatch per seat across restart
+L5-rest	PASS	2026-09-24T01:19:04.450Z	7 checks in 185 s, all rest, no liveness wake
+L2	PASS	2026-09-24T01:19:34.793Z	restarted by systemd, outbox held, no resend
+L2-settle	PASS	2026-09-24T01:22:15.345Z	timed-out by its deadline: one /cancel, one director wake; no open work
+L3a	FAIL	2026-09-24T01:23:50.635Z	restart without a watchdog line
+wait:L3a pass	INCOMPLETE	2026-09-24T01:25:20.973Z	not reached in 90s
+wait:L7c first pass of the new run	INCOMPLETE	2026-09-24T01:26:51.607Z	not reached in 90s
+L7c	FAIL	2026-09-24T01:26:51.680Z	window PASS, after rest 2026-09-24T01:26:51Z 
+wait:L3b pass	INCOMPLETE	2026-09-24T01:28:22.487Z	not reached in 90s
+L3b	PASS	2026-09-24T01:30:32.973Z	hung after 130s (bound 180), duty woken
+wait:L3b recovered	INCOMPLETE	2026-09-24T01:33:03.774Z	not reached in 150s
+wait:L4a start limit	INCOMPLETE	2026-09-24T01:35:04.296Z	not reached in 120s
+L4a	FAIL	2026-09-24T01:35:04.298Z	no start-limit/restart-loop within bounds
+L7-checker	PASS	2026-09-24T01:36:34.787Z	handler told duty 40s after the hold; recovered 15s after release (/home/bmosher/p12live-p12live1/fxp12live1.db.checker-incident.json)
+L7a	PASS	2026-09-24T01:39:24.838Z	bytes preserved, duty woken once over >=3 checks
+L7b	PASS	2026-09-24T01:39:25.040Z	future pass -> unknown alarm
+wait:L5 run exited	INCOMPLETE	2026-09-24T01:40:35.453Z	not reached in 60s
+L5-stray	PASS	2026-09-24T01:40:55.521Z	exit 64 (state inactive); stray start rc=1 (recorded, not assumed 0); marker kept; no scheduled restart
+L5-stopped	PASS	2026-09-24T01:45:00.549Z	9 checks in 245 s, all stopped, no liveness wake
+L6-timing	PASS	2026-09-24T01:45:00.624Z	explicit: detection 0.0s (bound 30), ack 3.0s after detection (bound 60), 3.0s after deadline (bound 90), deadline 2026-09-24T01:41:35Z (/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-p12live1/l6-timing.json)
+L6	FAIL	2026-09-24T01:45:00.646Z	replay repeated effects
+wait:L6b run exited	INCOMPLETE	2026-09-24T01:46:01.045Z	not reached in 60s
+L6b	PASS	2026-09-24T01:48:01.762Z	duty 60s after settlement (60..95), director 120s (120..155), ack None
+wait:L4b restart-loop	INCOMPLETE	2026-09-24T01:51:05.900Z	not reached in 180s
+L4b	FAIL	2026-09-24T01:51:05.919Z	observed crashed (required restart-loop); director wakes 8 -> 9
