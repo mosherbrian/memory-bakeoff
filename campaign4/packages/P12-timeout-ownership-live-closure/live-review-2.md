@@ -75,3 +75,37 @@
 No edits/retry/live/cutover by corvid. **PASS** returned to Tern and cairn
 immediately; the held 45 m cutover + 10 m post-review remain Tern's signed
 decision, not automatic adoption.
+
+---
+
+## Reconciliation addendum (append; live2 verdict preserved)
+
+Read `live2-reconciliation-addendum.json` (`3ac5eed0…`).
+
+### host-end is an observation, not a proven process exit
+
+`host-end.txt` = `03:40:00Z` is the **controller reconciliation time**, not the
+driver's process exit; the driver's own `cleanup done` is `03:03:48.355Z`
+(preserved, `driver.log`). Treat `03:40:00Z` as an **observation/reconciliation
+timestamp** unless a process-exit capture proves otherwise. **No backdating or
+rewriting** of the original; the live2 verdict is unchanged (PASS on the live
+evidence).
+
+### Cutover preflight blocker (separate from live2; not authorized)
+
+Confirmed in `plans/cutover.sh:97`: `switch` copies only
+`agent-loop@.service`, `agent-loop-liveness@.service`,
+`agent-loop-liveness@.timer` — it **omits `agent-loop-liveness-failed@.service`**,
+which the reviewed `agent-loop-liveness@.service` requires via
+`OnFailure=agent-loop-liveness-failed@%i.service`. A cutover as written would
+install a check unit whose failure owner is **missing**, so the checker-ownership
+escalation (the very gap this package closed) would not run in production.
+Rollback likewise omits an explicit handler drain.
+
+- **Required before any cutover signature:** install the handler unit in `switch`
+  (and reconcile/stop it in `rollback`), and preflight the other switch/rollback
+  predicates against the exact release. This is a **plan/deployment fix**, not a
+  source/product change; the product stays frozen `97a57db1`.
+- **No cutover is authorized** by this note.
+
+No edits/retry/live by corvid; live2 PASS preserved.
