@@ -1,0 +1,17 @@
+L1	PASS	2026-09-24T02:37:51.770Z	closed; one dispatch per seat across restart
+L5-rest	PASS	2026-09-24T02:40:56.832Z	6 checks in 185 s, all rest, no liveness wake
+L2	PASS	2026-09-24T02:41:32.182Z	restarted by systemd, outbox held, no resend
+L2-settle	PASS	2026-09-24T02:44:07.745Z	timed-out by its deadline: one /cancel, one director wake; no open work
+L3a	PASS	2026-09-24T02:45:43.024Z	watchdog timeout and result watchdog inside the onset..restart window (onset 1790217847, restart 1790217943)
+L7c	PASS	2026-09-24T02:47:04.235Z	starting (quiet, not recovered) inside the window; rest after the new run's pass
+L3b	PASS	2026-09-24T02:49:05.234Z	hung after 121s (bound 180), duty woken
+L4a	PASS	2026-09-24T02:50:31.679Z	restart-loop -> duty ack (owner/next/deadline) -> recovered on fresh pass
+L7-checker	PASS	2026-09-24T02:51:32.061Z	handler told duty 41s after the hold; recovered 16s after release (/home/bmosher/p12live-p12live2/fxp12live2.db.checker-incident.json)
+L7a	PASS	2026-09-24T02:54:22.111Z	bytes preserved, duty woken once over >=3 checks
+L7b	PASS	2026-09-24T02:54:22.318Z	future pass -> unknown alarm
+L5-stray	PASS	2026-09-24T02:54:57.702Z	exit 64 (state inactive); stray start rc=1 (recorded, not assumed 0); marker kept; no scheduled restart
+L5-stopped	PASS	2026-09-24T02:59:02.726Z	9 checks in 245 s, all stopped, no liveness wake
+L6-timing	PASS	2026-09-24T02:59:02.802Z	explicit: detection 0.0s (bound 30), ack 4.0s after detection (bound 60), 4.0s after deadline (bound 90), deadline 2026-09-24T02:56:32Z (/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-p12live2/l6-timing.json)
+L6	PASS	2026-09-24T02:59:07.848Z	interrupted once while run was stopped: one /cancel, one director wake; replay ran (rc 0): already-handled, no new /cancel or director wake
+L6b	PASS	2026-09-24T03:02:34.409Z	duty 83s after settlement (60..95), director 143s (120..155), ack None
+L4b	PASS	2026-09-24T03:03:38.240Z	duty wake failed -> director woken in the same check -> director ack recorded

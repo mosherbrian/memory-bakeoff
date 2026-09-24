@@ -1,0 +1,106 @@
+{
+ "open": {
+  "id": "L20260924T030330Z",
+  "state": "crashed",
+  "why": "unit failed: exit-code",
+  "opened_at": "2026-09-24T03:03:30Z",
+  "duty_wake": {
+   "at": "2026-09-24T03:03:30Z",
+   "to": "p12-fixture2-duty-20260924T023000Z",
+   "status": "failed"
+  },
+  "director_wakes": [
+   {
+    "at": "2026-09-24T03:03:30Z",
+    "to": "p12-fixture2-director-20260924T023000Z",
+    "status": "sent"
+   }
+  ],
+  "ack": {
+   "by": "p12-fixture2-director-20260924T023000Z",
+   "next_action": "P12 live witness: observed crashed, investigating",
+   "response_deadline": "2026-09-24T03:13:35Z",
+   "at": "2026-09-24T03:03:35Z"
+  },
+  "closing_evidence": {
+   "state": "",
+   "alarm": false,
+   "why": ""
+  },
+  "escalated": true
+ },
+ "history": [
+  {
+   "id": "L20260924T025200Z",
+   "state": "unknown",
+   "why": "incident state malformed (invalid character 'b' looking for beginning of object key string); loop itself: rest: no open packages; passes continue",
+   "opened_at": "2026-09-24T02:52:00Z",
+   "duty_wake": {
+    "at": "2026-09-24T02:52:00Z",
+    "to": "p12-fixture2-duty-20260924T023000Z",
+    "status": "sent"
+   },
+   "ack": {
+    "by": "p12-fixture2-duty-20260924T023000Z",
+    "next_action": "P12 live witness: observed unknown incident state malformed, investigating",
+    "response_deadline": "2026-09-24T03:02:02Z",
+    "at": "2026-09-24T02:52:02Z"
+   },
+   "closed_at": "2026-09-24T02:52:30Z",
+   "outcome": "recovered",
+   "closing_evidence": {
+    "state": "rest",
+    "alarm": false,
+    "why": "no open packages; passes continue"
+   },
+   "escalated": false,
+   "state_damage": {
+    "at": "2026-09-24T02:52:00Z",
+    "kind": "malformed",
+    "detail": "invalid character 'b' looking for beginning of object key string",
+    "original": "/home/bmosher/p12live-p12live2/fxp12live2.db.liveness.json",
+    "quarantine": "/home/bmosher/p12live-p12live2/fxp12live2.db.liveness.json.damaged-20260924T025200Z.json",
+    "sha256": "05c3fd04eb0ee2be458e1bef1a02600e13e9bf82c2f34ee665e771620e3e3f04",
+    "bytes": 13
+   }
+  },
+  {
+   "id": "L20260924T025422Z",
+   "state": "unknown",
+   "why": "pass time 2026-09-24T03:04:22Z is 10m0s in the future (clock stepped back?)",
+   "opened_at": "2026-09-24T02:54:22Z",
+   "duty_wake": {
+    "at": "2026-09-24T02:54:22Z",
+    "to": "p12-fixture2-duty-20260924T023000Z",
+    "status": "sent"
+   },
+   "ack": {
+    "by": "p12-fixture2-duty-20260924T023000Z",
+    "next_action": "P12 live witness: observed unknown pass time 10m0s in future, investigating",
+    "response_deadline": "2026-09-24T03:04:25Z",
+    "at": "2026-09-24T02:54:25Z"
+   },
+   "closed_at": "2026-09-24T02:54:30Z",
+   "outcome": "recovered",
+   "closing_evidence": {
+    "state": "rest",
+    "alarm": false,
+    "why": "no open packages; passes continue"
+   },
+   "escalated": false
+  }
+ ],
+ "wake_receipts": {
+  "msg-counter": "4",
+  "msg:msg-liveness-1": "{\"action\": \"liveness\", \"execution\": null, \"kind\": \"liveness\", \"rc\": 0, \"receipt\": \"wake: 43e44829-1790217074 -\u003e started\", \"seat\": \"43e44829-1790217074\", \"state\": \"sent\"}",
+  "msg:msg-liveness-2": "{\"action\": \"liveness\", \"execution\": null, \"kind\": \"liveness\", \"rc\": 0, \"receipt\": \"wake: 43e44829-1790217074 -\u003e started\", \"seat\": \"43e44829-1790217074\", \"state\": \"sent\"}",
+  "msg:msg-liveness-3": "{\"action\": \"liveness\", \"execution\": null, \"kind\": \"liveness\", \"rc\": 1, \"receipt\": \"\", \"seat\": \"43e44829-1790217074\", \"state\": \"failed\"}",
+  "msg:msg-liveness-4": "{\"action\": \"liveness\", \"execution\": null, \"kind\": \"liveness\", \"rc\": 0, \"receipt\": \"wake: 9187fe7b-1790217074 -\u003e started\", \"seat\": \"9187fe7b-1790217074\", \"state\": \"sent\"}"
+ },
+ "last_verdict": {
+  "state": "crashed",
+  "alarm": true,
+  "why": "unit failed: exit-code"
+ },
+ "last_check_at": "2026-09-24T03:03:30Z"
+}
