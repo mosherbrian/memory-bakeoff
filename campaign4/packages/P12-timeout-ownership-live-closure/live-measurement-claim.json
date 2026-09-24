@@ -1,0 +1,56 @@
+{
+ "action": "P12-live-measurement-1",
+ "author": "claude",
+ "status": "COMPLETE",
+ "filed_at": "2026-09-24T02:23:15Z",
+ "allocation": "live-measurement-allocation.json (7d77df95); ruling restart-classification-ruling.json applied",
+ "product": "FROZEN 8ad12b86fa82 / 97a57db1; no source, unit template or binary change; templates still pin it",
+ "live1": "stays NOT READY; no retro-PASS (live-review-1.md preserved; raws untouched)",
+ "corrections": {
+  "L3a": "Old: `journalctl -o cat | grep -qi watchdog` under set -o pipefail; grep -q exits at the first match, journalctl gets SIGPIPE, rc 141 = FAIL on a real match (reproduced on the real journal: checks-test L3a OLD = 141). New: l3a_eval reads the whole journal; it requires 'Watchdog timeout' AND \"Failed with result 'watchdog'\" between the onset and the observed restart (+5 s); stale or unrelated lines fail.",
+  "L7c_and_recovery_waits": "healthy_after EPOCH = verdict ok or rest, checked at/after the event; applied to L7c (both waits), L3a pass, L3b pass, L3b recovered. starting/unknown/hung/crashed/restart-loop/parse errors never count. The L7c window assertion (starting) is unchanged.",
+  "L4a_L4b": "Per ruling: crashed OR restart-loop is the owned alarm ONLY with a proven restart loop of this exact unit since the onset (start_limit_eval: >= BURST-1 scheduled restarts, >= BURST-1 failed starts, then 'Start request repeated too quickly'; BURST is read from the unit). reset-failed gives each onset a fresh window. Duty ack owner/next/deadline, director routing, recovery and bounds are unchanged. Known diagnostic limit: on this host, systemd 258 keeps Result=exit-code after the start limit, so the frozen product reads crashed; no claim is made for all systemd versions.",
+  "L6": "The deadline unit's exact callback argv is captured right after dispatch (l6_argv_eval: this binary, timer-callback, this qid, --action). The replay runs it as a process with AGENTDECK_PROFILE; l6_replay_eval requires rc 0, decision already-handled, and no new /cancel or director wake. An uncaptured argv is INCOMPLETE, never PASS.",
+  "stop_waits": "L5 and L6b wait for run's own 'stop requested; exiting 64' journal line since the stop onset, plus the unit not active (stop_exited), instead of polling ExecMainStatus."
+ },
+ "evidence": {
+  "tests": "evidence/live-measurement/checks-test.sh -> checks-test.out: 40 checks, 0 wrong (rc 0). On the saved live1 raws (raw/*.journal exported from the host journal; onsets.env from driver.log): old vs new for L3a/L4a/L7c/L6 and new for L4b/L5/L6b, with negatives for each correction (stale, missing, wrong unit, single crash, too few restarts, no rate-limit, wrong result, wrong binary/qid, unit gone, rc 1, repeated decision, new effects, no output, unhealthy states, stale verdict).",
+  "l6_probe": "raw/transient-unit-execstart-probe.txt: an isolated systemd-run timer (2030) shows its service loaded with ExecStart before it fires, and gone after stop. The unit was removed. This probes construction only; it does not prove a live replay.",
+  "dry_run": "dry/: the full driver with DRY=1 and placeholder inputs: rc 0, 17 DRY rows (every case). The 2 JSONDecodeError tracebacks on stderr also occur with the archived live1 driver (dry/old-driver-dry-stderr.txt): an existing DRY-mode artifact from placeholder data, not new.",
+  "diff": "live-driver-live1-to-new.diff (107 lines vs attempt-history/live1-plans)",
+  "contradiction_report": "evidence/live-measurement/l4a-start-limit-journal.txt; reported to Tern at 02:18Z before any edit; Tern's ruling followed"
+ },
+ "unchanged": "UTC calendar timers, OnFailure checker handler and L7-checker, ack timing (L6-timing), L6b bounds, rest/ownership checks, 75 min wall/cleanup, pins.",
+ "residuals": [
+  "The corrected L3a/L4/L6/stop checks are proven on live1 raws and a dry run only; each still needs the signed live run.",
+  "The L4a/L4b restart-loop label depends on the frozen product; the owned alarm reads crashed on this host (declared diagnostic limit).",
+  "The L3a OLD reproduction uses the host journal of the live1 unit (the same bytes are saved in raw/ for the new checks)."
+ ],
+ "files_sha256": {
+  "evidence/live-measurement/checks-test.out": "531c8acee13881e2ba05548fb4a1f6cadd652b682675880fb70a2e6035bfb39d",
+  "evidence/live-measurement/checks-test.sh": "5624359f8ce285e3269c9bb5458dc4f9943ad2f987ec4f3d7a9523986f451061",
+  "evidence/live-measurement/dry/driver.log": "80867bfc4e7f3959fc376b434bfba22b0f39549ec2c67f8fc092a2239e32d62b",
+  "evidence/live-measurement/dry/dry-rc.txt": "93ff7811a209e2a8479230bbb9b6bc19f7f311d3af383ec350c1db2a7e7d5494",
+  "evidence/live-measurement/dry/dry-stderr.txt": "491e6ac4aa4515783ffc791ab7cb24376463f935a54ad68ad0f10f971cdef35c",
+  "evidence/live-measurement/dry/dry-stdout.txt": "dac6a342e01ba9a3701d695536985e55fda704f18fc428a7e79ebcec9333a312",
+  "evidence/live-measurement/dry/old-driver-dry-results.tsv": "c09caf942028a0c03eabef4985740163537d12c0e51053836e6d51dd05d9aa8c",
+  "evidence/live-measurement/dry/old-driver-dry-stderr.txt": "eeb68ad9ea5fe91e79e41c2160109e0788a444a81615b2b0c9a500c04f7466b5",
+  "evidence/live-measurement/dry/results.tsv": "6a83c6f74049efca29a50337138122719dc071b05939bdd762c08c9517a9573c",
+  "evidence/live-measurement/dry/snapshots.txt": "5b2631ff23404f63f3b482a3f7f1efc326e16963f23c6227f35761797afca262",
+  "evidence/live-measurement/l4a-start-limit-journal.txt": "7548eec6edeea2fd735fc36e97cba0145c112290bfeb488b6ac20e3bd9bbca7d",
+  "evidence/live-measurement/live-driver-live1-to-new.diff": "14c00117ed360e9c7e84dc69a61f215fd4ddbd4be5e545f381ad319470242200",
+  "evidence/live-measurement/raw/execstart-format-sample-coax-dry.txt": "d6454c8a7a624c91de64d9a8ea559ac4d8052d5f186d0c539e62837a1e9472a0",
+  "evidence/live-measurement/raw/l6-callback-argv-from-journal.txt": "39536579a505f9c91180f6e4500f734f18211b786d998c3089f8498207fceb2c",
+  "evidence/live-measurement/raw/l6-callback-unit-live1.cat.journal": "cb460a8890f6c5ddd7cd511277722d04eb5586635a9efe67940d5129fb69cb58",
+  "evidence/live-measurement/raw/onsets.env": "6308bbf3abc35c8ddbfa8f088515b2602ccb87be7cb59a47669850260fa07730",
+  "evidence/live-measurement/raw/run-unit-live1.cat.journal": "26555dbb2b548e41f7248fdc5db4417158d12b2608f0d5913fa0a2f436f9f12d",
+  "evidence/live-measurement/raw/run-unit-live1.short-unix.journal": "f4a8bbbd6d64aea15281bed085da2900c5a80c2f12d42be01f0a876f7626be5f",
+  "evidence/live-measurement/raw/transient-unit-execstart-probe.txt": "c698c0b846afb0260ffcb7bb04342245064df9520e71ec75889bdc6079a8a879",
+  "plans/live-driver.sh": "673814e42d5791e94d88b0444ee1e652d0147c21f180185965c068f318d66d51",
+  "plans/live-checks.sh": "99771eed4b9dae3320d91adf4766d0a797a08371a17a2be070392331245faaf1",
+  "plans/README.md": "f41cae7b5d86606eeb18ce07294c138ba51b128fb543f6ad905dd9dd8010d0d5",
+  "plans/live-inputs.template.env": "d373aff7e005bb9fa6fa46c4836eb35356f48f7c5d2702c486335658e60b9a6b",
+  "plans/cutover-inputs.template.env": "cb4873cb3763b43e86b178066bb15797ac673265c0bf550cef7718d03fdc4f27",
+  "attempt-history/live1-plans/plans/live-driver.sh": "9a5025233520794dbcc2b553d76f8816a47a404cb7317fab3f1b3bf1c3e8f309"
+ }
+}
