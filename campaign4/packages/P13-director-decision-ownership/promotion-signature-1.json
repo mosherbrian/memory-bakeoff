@@ -1,0 +1,49 @@
+{
+  "action": "P13-promotion-1",
+  "signer": "tern",
+  "operator": "tern",
+  "signed_at": "2026-09-24T20:26:29.693809+00:00",
+  "deadline": "2026-09-24T20:36:29Z",
+  "authorization": "Brian standing PASS-only promotion authority; independent live4 and promotion-plan PASS accepted",
+  "allocation": "held promotion10 now released; ceiling865 unchanged",
+  "argv": [
+    "/bin/bash",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/promotion-plan.sh",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/promotion-inputs-1.env"
+  ],
+  "environment": {
+    "PROMOTE_SANDBOX": "0",
+    "unset": [
+      "PROMOTE_ROOT",
+      "PROMOTE_SYSTEMCTL",
+      "PROMOTE_EV",
+      "PROMOTE_PROSPECTIVE"
+    ]
+  },
+  "pins": {
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/promotion-plan.sh": "528d11dbb63902ed80f3937806745d65a6aa66454283cf3e258f36ef1714c8dd",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/campaign4-decision-config.prospective.json": "899199cd85747ed1bb0410998c7cf9d479e8f576be38955d5f00be7c08d84236",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/live-checks.sh": "190858566b610a387e18d16834ab29b155356fec65d314dea161f793af958b51",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/promotion-inputs-1.env": "b0adaef0d0db24bff56c9710d099ee3bf4d3baaa92d0df687c106a3062ac1105",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/promotion-plan-review.md": "cd8e2cbd1a3668c0dd04bb656db89034a7f207c28848becd8da0b5e573af1ab2",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/live-review-4.md": "4cf89b2c4616942b5f8f59e10f3750a62bb407d2d7e99dadf53030decf860d33",
+    "/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/bin/agent-loop": "47f69dfdeb8b0d17472d871b68dfdfa8270e3421997a03f5d1c6929c8a818ec1",
+    "/home/bmosher/projects/agent-loop-p13/adapters/escalation-watch": "df51a1f45a2fe8ff614645bc2fe55e445e2f4281faa5b4a7cd2550f820b1356f",
+    "/home/bmosher/projects/agent-loop-p13/adapters/escalation-resolve": "fdf49d0b511ed6a225cd309b597eff2a597dee5b51bb2c614c97f1455e598ea0"
+  },
+  "baseline_binary_sha256": "97a57db11aa8a4a87d89fd912804d42ce899bb35b3790742d790d424184a948f",
+  "baseline_status": "promotion-before-status.json",
+  "effects": "snapshot existing/absent files and service state; bounded drain; install reviewed binary/config/adapters; restart owned services; require fresh invocation/pass+healthy checker; automatic exact rollback on failure",
+  "constraints": [
+    "No research dispatch or new package",
+    "No DB migration or decision/deadline reset",
+    "No synthetic Signal test",
+    "If bound reached, reconcile/restore exact snapshot; no silent retry"
+  ],
+  "rollback_argv": [
+    "/bin/bash",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/promotion-plan.sh",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/promotion-inputs-1.env",
+    "rollback"
+  ]
+}
