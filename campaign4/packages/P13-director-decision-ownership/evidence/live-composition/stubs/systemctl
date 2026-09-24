@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+# INJECTED systemctl (test only). Loads units ONLY from $INJECT_SD by exact name (like systemd's search
+# path), runs ExecStart as a real process with INVOCATION_ID, journals output per unit, records argv.
+import os, sys, json, re, signal, subprocess, uuid, time
+T = os.environ["INJ"]; SD = os.environ["INJECT_SD"]; ST = T + "/sysstate.json"; J = T + "/journal"
+os.makedirs(J, exist_ok=True)
+open(T + "/argv.log", "a").write("systemctl " + " ".join(sys.argv[1:]) + "\n")
+st = json.load(open(ST)) if os.path.exists(ST) else {}
+def save(): json.dump(st, open(ST, "w"))
+def alive(pid):
+    try: os.kill(pid, 0); return open("/proc/%d/stat" % pid).read().split()[2] != "Z"
+    except Exception: return False
+def execstart(unit):
+    p = os.path.join(SD, unit)
+    if not os.path.exists(p): return None
+    m = re.search(r"^ExecStart=(.*)$", open(p).read(), re.M); return m.group(1) if m else None
+def spawn(unit, loop=0):
+    cmd = execstart(unit)
+    if cmd is None: sys.stderr.write("Unit %s not found.\n" % unit); sys.exit(5)
+    inv = uuid.uuid4().hex; log = open(os.path.join(J, unit + ".log"), "a")
+    sh = cmd if not loop else "while :; do %s; sleep %d; done" % (cmd, loop)
+    pr = subprocess.Popen(["/bin/sh", "-c", "exec %s" % sh if not loop else sh], stdout=log, stderr=log,
+        env=dict(os.environ, INVOCATION_ID=inv), start_new_session=True)
+    st[unit] = {"pid": pr.pid, "inv": inv, "active": True, "restarts": st.get(unit, {}).get("restarts", 0)}
+a = [x for x in sys.argv[1:] if x != "--user"]; op = a[0] if a else ""
+units = [x for x in a[1:] if not x.startswith("-")]
+if op in ("start", "restart"):
+    for u in units:
+        if u in st and st[u].get("transient"): st[u]["active"] = True; continue
+        if u.endswith(".timer"):
+            svc = u[:-6] + ".service"
+            if not os.path.exists(os.path.join(SD, u)): sys.stderr.write("Unit %s not found.\n" % u); sys.exit(5)
+            spawn(svc, loop=30); st[u] = {"active": True, "driver": svc}
+        else:
+            if op == "restart" and u in st and st[u].get("pid"): 
+                try: os.killpg(st[u]["pid"], signal.SIGTERM)
+                except Exception: pass
+            spawn(u)
+elif op == "stop":
+    for u in units:
+        x = st.get(u) or {}
+        for k in ("pid",):
+            if x.get(k):
+                try: os.killpg(x[k], signal.SIGTERM)
+                except Exception: pass
+        if x.get("driver") and st.get(x["driver"], {}).get("pid"):
+            try: os.killpg(st[x["driver"]]["pid"], signal.SIGTERM)
+            except Exception: pass
+        if u in st: st[u]["active"] = False
+elif op == "is-active":
+    x = st.get(units[0]) or {}
+    act = x.get("active") and (alive(x["pid"]) if x.get("pid") else True)
+    print("active" if act else "inactive"); save(); sys.exit(0 if act else 3)
+elif op == "show":
+    u = units[0]; x = st.get(u) or {}
+    act = x.get("active") and (alive(x["pid"]) if x.get("pid") else True)
+    props = {"ActiveState": "active" if act else "inactive", "SubState": "running" if act else "dead", "Result": "success",
+             "NRestarts": str(x.get("restarts", 0)), "InvocationID": x.get("inv", ""), "MainPID": str(x.get("pid", 0) if act else 0),
+             "ExecMainStartTimestamp": "", "StartLimitBurst": "5",
+             "TimersCalendar": "{ OnCalendar=x ; next_elapse=@%s }" % x.get("next", "")}
+    want = [p for x2 in a if x2.startswith("-p") or False for p in []]
+    ps = []
+    for i, x2 in enumerate(a):
+        if x2 == "-p": ps += a[i + 1].split(",")
+        elif x2.startswith("-p") and len(x2) > 2: ps += x2[2:].split(",")
+    val = "--value" in a
+    for p in ps or props:
+        print(props.get(p, "") if val else "%s=%s" % (p, props.get(p, "")))
+elif op in ("list-units", "list-timers"):
+    pat = next((x for x in a[1:] if not x.startswith("-")), "*")
+    rx = re.compile("^" + re.escape(pat).replace("\\*", ".*") + "$")
+    for u, x in st.items():
+        if rx.match(u) and (x.get("active") or "--all" in a): print(u, "loaded", "active" if x.get("active") else "inactive")
+elif op in ("daemon-reload", "reset-failed", "enable", "disable", "kill", "cat"):
+    pass
+else:
+    sys.stderr.write("injected systemctl: unsupported %s\n" % a); sys.exit(1)
+save()

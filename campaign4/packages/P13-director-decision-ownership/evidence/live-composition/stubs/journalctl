@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+# INJECTED journalctl (test only): per-unit output captured by the injected systemctl.
+import os, sys, time
+T = os.environ["INJ"]; a = sys.argv[1:]; u = a[a.index("-u") + 1] if "-u" in a else ""
+p = os.path.join(T, "journal", u + ".log")
+if os.path.exists(p):
+    for l in open(p, errors="replace"):
+        print(("%.6f %s" % (time.time(), l.rstrip("\n"))) if "short-unix" in a else l.rstrip("\n"))

@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+# INJECTED agent-deck registry (test only): four idle campaign4 fixtures from $INJ/registry.json.
+import os, sys, json
+T = os.environ["INJ"]; R = T + "/registry.json"
+open(T + "/argv.log", "a").write("agent-deck " + " ".join(sys.argv[1:]) + "\n")
+a = [x for x in sys.argv[1:] if x not in ("-p", "campaign4")]
+r = json.load(open(R))
+if a[:1] == ["list"]: print(json.dumps(r))
+elif a[:2] == ["profile", "list"]: print("campaign4")
+elif a[:1] == ["session"] and a[1] in ("stop", "remove"):
+    if a[1] == "remove": r = [x for x in r if x["id"] != a[2]]
+    else:
+        for x in r:
+            if x["id"] == a[2]: x["status"] = "stopped"
+    json.dump(r, open(R, "w"))
+elif a[:1] == ["launch"]: sys.stderr.write("injected: launch is forbidden in the live driver\n"); sys.exit(9)
+else: sys.stderr.write("injected agent-deck: unsupported %s\n" % a); sys.exit(1)

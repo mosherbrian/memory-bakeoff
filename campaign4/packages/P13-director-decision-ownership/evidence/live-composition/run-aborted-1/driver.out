@@ -1,0 +1,42 @@
+2026-09-24T17:55:37.397Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T17:55:37.474Z registry: four fixtures confirmed in profile campaign4
+2026-09-24T17:55:37.480Z P13 live inj105536, inputs sha256 e11decf86621036a5020c24d70c35d9abb0aa35dd0dad15b2619e53916697ec8
+2026-09-24T17:55:37.486Z + systemd-run --user --unit=p13live-wallstop-inj105536 --timer-property=AccuracySec=1s --on-calendar=2026-09-24 18:32:00 UTC --setenv=PATH=/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/evidence/live-composition/stubs:/usr/bin:/bin --setenv=AGENTDECK_PROFILE=campaign4 --setenv=EV_DIR=/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/evidence/live-composition/run/driver /bin/bash /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/live-driver.sh /var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/evidence/live-composition/run/inputs.env cleanup
+2026-09-24T17:55:37.530Z   rc=0
+2026-09-24T17:55:37.609Z + mkdir -p /tmp/p13inj-FqrRlG/root/bin /tmp/p13inj-FqrRlG/root/art /tmp/p13inj-FqrRlG/root/claims /tmp/p13inj-FqrRlG/root/tasks /tmp/p13inj-FqrRlG/root/home/.config/agent-deck /tmp/p13inj-FqrRlG/root/home/.local/share/agent-deck
+2026-09-24T17:55:37.611Z   rc=0
+2026-09-24T17:55:37.614Z + install -m 755 /home/bmosher/.config/agent-deck/notify-claude /tmp/p13inj-FqrRlG/root/home/.config/agent-deck/notify-claude
+2026-09-24T17:55:37.617Z   rc=0
+2026-09-24T17:55:37.621Z + install -m 755 /home/bmosher/.config/agent-deck/escalations /tmp/p13inj-FqrRlG/root/home/.config/agent-deck/escalations
+2026-09-24T17:55:37.623Z   rc=0
+2026-09-24T17:55:37.627Z + install -m 755 /home/bmosher/projects/agent-loop-p13/adapters/escalation-watch /tmp/p13inj-FqrRlG/root/home/.config/agent-deck/escalation-watch
+2026-09-24T17:55:37.630Z   rc=0
+2026-09-24T17:55:37.634Z + install -m 755 /home/bmosher/projects/agent-loop-p13/adapters/escalation-resolve /tmp/p13inj-FqrRlG/root/home/.config/agent-deck/escalation-resolve
+2026-09-24T17:55:37.636Z   rc=0
+2026-09-24T17:55:37.640Z + install -m 755 /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/ticket-page-stub.sh /tmp/p13inj-FqrRlG/root/home/.config/agent-deck/ticket
+2026-09-24T17:55:37.642Z   rc=0
+2026-09-24T17:55:37.644Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/bin/agent-loop /tmp/p13inj-FqrRlG/root/bin/agent-loop
+2026-09-24T17:55:37.656Z   rc=0
+2026-09-24T17:55:37.702Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj105536.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj105536.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-FqrRlG/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-FqrRlG/root/fxinj105536.json#g; s#agent-loop %i#agent-loop fxinj105536#g; s#%i#fxinj105536#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop@.service' > '/tmp/p13inj-FqrRlG/sd/agent-loop-fxinj105536.service'
+2026-09-24T17:55:37.707Z   rc=0
+2026-09-24T17:55:37.709Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj105536.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj105536.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-FqrRlG/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-FqrRlG/root/fxinj105536.json#g; s#agent-loop %i#agent-loop fxinj105536#g; s#%i#fxinj105536#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness@.service' > '/tmp/p13inj-FqrRlG/sd/agent-loop-liveness-fxinj105536.service'
+2026-09-24T17:55:37.713Z   rc=0
+2026-09-24T17:55:37.715Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj105536.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj105536.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-FqrRlG/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-FqrRlG/root/fxinj105536.json#g; s#agent-loop %i#agent-loop fxinj105536#g; s#%i#fxinj105536#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness@.timer' > '/tmp/p13inj-FqrRlG/sd/agent-loop-liveness-fxinj105536.timer'
+2026-09-24T17:55:37.719Z   rc=0
+2026-09-24T17:55:37.721Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxinj105536.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxinj105536.service#g; s#%h/.local/bin/agent-loop#/tmp/p13inj-FqrRlG/root/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/p13inj-FqrRlG/root/fxinj105536.json#g; s#agent-loop %i#agent-loop fxinj105536#g; s#%i#fxinj105536#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/examples/systemd-unqualified/agent-loop-liveness-failed@.service' > '/tmp/p13inj-FqrRlG/sd/agent-loop-liveness-failed-fxinj105536.service'
+2026-09-24T17:55:37.726Z   rc=0
+2026-09-24T17:55:37.728Z + grep -c /tmp/p13inj-FqrRlG/root/bin/agent-loop /tmp/p13inj-FqrRlG/sd/agent-loop-fxinj105536.service /tmp/p13inj-FqrRlG/sd/agent-loop-liveness-fxinj105536.service /tmp/p13inj-FqrRlG/sd/agent-loop-liveness-failed-fxinj105536.service
+2026-09-24T17:55:37.730Z   rc=0
+2026-09-24T17:55:37.732Z + grep -q ^OnFailure=agent-loop-liveness-failed-fxinj105536.service$ /tmp/p13inj-FqrRlG/sd/agent-loop-liveness-fxinj105536.service
+2026-09-24T17:55:37.734Z   rc=0
+2026-09-24T17:55:37.736Z + systemctl --user daemon-reload
+2026-09-24T17:55:37.777Z   rc=0
+2026-09-24T17:55:37.821Z + /tmp/p13inj-FqrRlG/root/bin/agent-loop check --config /tmp/p13inj-FqrRlG/root/fxinj105536.json
+2026-09-24T17:55:37.851Z   rc=0
+2026-09-24T17:55:37.854Z + systemctl --user start agent-loop-fxinj105536.service agent-loop-liveness-fxinj105536.timer
+2026-09-24T17:55:37.895Z   rc=0
+2026-09-24T17:55:42.957Z reached first pass (ok or rest) after 5s
+2026-09-24T17:55:43.026Z + /tmp/p13inj-FqrRlG/root/bin/agent-loop dispatch --config /tmp/p13inj-FqrRlG/root/fxinj105536.json --qid Dinj105536 --worker fx-w-inj105536 --verifier fx-v-inj105536 --task @/tmp/p13inj-FqrRlG/root/tasks/Dinj105536-decision-worker-live.md --verify-task @/tmp/p13inj-FqrRlG/root/tasks/Dinj105536-decision-verify-live.md --duration 8m --verify-window 8m
+2026-09-24T17:55:43.200Z   rc=0
+Terminated                 sleep 5
+2026-09-24T17:56:46.185Z driver terminated by signal (wall stop)

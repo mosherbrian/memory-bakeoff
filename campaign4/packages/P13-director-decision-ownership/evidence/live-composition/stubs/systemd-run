@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+# INJECTED systemd-run (test only): records argv; --scope runs the command inline (the driver's owned
+# scope); a calendar timer is recorded as a transient active unit with its next_elapse (never fires).
+import os, sys, json, subprocess, calendar, time
+T = os.environ["INJ"]; ST = T + "/sysstate.json"
+open(T + "/argv.log", "a").write("systemd-run " + " ".join(sys.argv[1:]) + "\n")
+a = sys.argv[1:]; unit = None; cal = None; i = 0; rest = []
+while i < len(a):
+    x = a[i]
+    if x.startswith("--unit="): unit = x.split("=", 1)[1]
+    elif x == "--unit": unit = a[i + 1]; i += 1
+    elif x.startswith("--on-calendar="): cal = x.split("=", 1)[1]
+    elif x == "--": rest = a[i + 1:]; break
+    elif not x.startswith("-"): rest = a[i:]; break
+    i += 1
+if "--scope" in a:
+    env = dict(os.environ, P13_IN_SCOPE=unit or "")
+    sys.exit(subprocess.call(rest, env=env))
+st = json.load(open(ST)) if os.path.exists(ST) else {}
+nxt = ""
+if cal:
+    try: nxt = str(calendar.timegm(time.strptime(cal.replace(" UTC", ""), "%Y-%m-%d %H:%M:%S")))
+    except Exception: nxt = ""
+name = (unit or "run-x") + ("" if (unit or "").endswith((".timer", ".service")) else ".timer")
+st[name] = {"transient": True, "active": True, "next": nxt, "argv": rest}
+json.dump(st, open(ST, "w"))
