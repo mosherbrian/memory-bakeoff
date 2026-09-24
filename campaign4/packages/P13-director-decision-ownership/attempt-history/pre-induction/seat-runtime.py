@@ -12,11 +12,6 @@ def turn(sid, text):
     bad = [w for w in ("decision-turn", "<bound-stream>", ".jsonl") if w in text]
     log.write("%s RECV %s %d bytes anti-stub=%s\n" % (time.strftime("%H:%M:%S"), sid, len(text), bad or "clean"))
     open(os.environ["INJ"] + "/recv-" + sid + ".txt", "a").write(text + "\n----\n")
-    if os.environ.get("SEAT_DIRECTOR_DECIDES") == "1" and "verifier PASS" in text:
-        d = re.search(r"(/\S+/agent-loop) decide --config (\S+) --qid (\S+)", text)
-        if d:
-            r = subprocess.run([d.group(1), "decide", "--config", d.group(2), "--qid", d.group(3), "--kind", "question_answered", "--ref", "neg-early", "--reason", "injected early decision"], capture_output=True, text=True)
-            log.write("%s EARLY-DECIDE %s rc=%d\n" % (time.strftime("%H:%M:%S"), sid, r.returncode))
     m = re.search(r'Write the single line "(.+?)" to the file (\S+?)\.\n', text)
     if m: open(m.group(2), "w").write(m.group(1) + "\n")
     v = re.search(r'Check that (\S+) contains exactly "(.+?)"', text); o = re.search(r'Write one line to (\S+?): ', text)

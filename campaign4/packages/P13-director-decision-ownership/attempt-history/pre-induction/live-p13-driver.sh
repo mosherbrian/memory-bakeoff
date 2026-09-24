@@ -312,51 +312,31 @@ snap SETUP
 # Real worker/verifier: tasks run the candidate claim CLI and end their turn; the runtime writes the stream.
 Q=D$RUN
 st() { "$A" status $C --json | python3 -c "import json,sys; p=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0]; d=p.get('decision') or {}; print(eval(sys.argv[1]))" "$1"; }
-# INDUCTION (P13-live-induction-1): the ladder is only exercised by an OVERDUE decision, so the fixture
-# director and duty must NOT decide. Standing fixture rule to both, then a canary probe: the seat is told
-# not to run the command in the message; after 45 s the canary must not exist and no decide exists.
-for sid in "$D_ID" "$U_ID"; do
-  run "$WAKE" "$sid" "P13 fixture rule for this whole run (package $Q): you are a test fixture. Do NOT run any command for it, do NOT run agent-loop decide or decision-ack, do not wake anyone. Only reply with the word noted. Canary, do NOT run it: touch $ROOT/canary-$sid" || { result INDUCTION FAIL "fixture rule not delivered to $sid"; exit 3; }
-done
-sleep 45
-for sid in "$D_ID" "$U_ID"; do [ -e "$ROOT/canary-$sid" ] && { result INDUCTION INVALID "fixture $sid executed the canary: it would decide; not a valid ladder test"; exit 4; }; done
-result INDUCTION PASS "director and duty fixtures verified non-responding (canary not run in 45 s)"
-premature() { [ -n "$(st "d.get('resolved','')")" ] && { result PRECONDITION INVALID "incident resolved at $(st "d.get('resolved','')") before the plan's decide ($1): the ladder test is invalid, not a product result"; exit 4; }; return 0; }
 run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task decision-worker-live.md "$Q")" --verify-task "@$(task decision-verify-live.md "$Q")" --duration 8m --verify-window 8m \
   || { result DISPATCH FAIL "dispatch refused"; exit 3; }
-wait_for "decision step (real worker + verifier claims)" 600 sh -c "s=\$('$A' expose $C --json 2>/dev/null | python3 -c \"import json,sys; print([p['step'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0])\"); [ \"\$s\" = decision ] || [ \"\$s\" = closed ]" || { result DECISION FAIL "package never reached decision (step $(step "$Q"))"; exit 3; }
-premature "at decision entry"
+wait_for "decision step (real worker + verifier claims)" 600 is_step "$Q" decision || { result DECISION FAIL "package never reached decision (step $(step "$Q"))"; exit 3; }
 [ -n "$(st "d.get('deadline','')")" ] && systemctl --user list-units --all --plain --no-legend "agent-loop-$P-*" | grep -q -- "-decision" \
   || { result DECISION FAIL "no persisted deadline or no decision timer unit"; exit 3; }
 INC=$(st "d['incident']"); result DECISION PASS "incident $INC, deadline $(st "d['deadline']")"
 w0d=$(wakes "$D_ID"); w0u=$(wakes "$U_ID")
 t_stop=$(date +%s); run "$A" stop $C
 wait_for "run exited 64 on the stop marker" 60 stop_exited "$t_stop" || { result STOP FAIL "run did not stop on the marker"; exit 3; }
-premature "after stop"
 result STOP PASS "intentional stop marker after the authentic decision; timer + outside check own the ladder"
 E=$ROOT/home/.local/share/agent-deck/escalations.jsonl
-DL=$(st "d['deadline']"); DLE=$(date -u -d "$DL" +%s)
-rung_ok() { # K SID: product DB records rung K sent at/after the deadline AND the send log has a started wake to SID at/after the deadline whose text names this incident
-  premature "rung $1"
-  local rs; rs=$(st "d.get('rungs',{}).get('$1','')"); case "$rs" in sent*) ;; *) return 1;; esac
-  awk -F'\t' -v s="$2" -v inc="$INC" -v dl="$DLE" '$4==s && $5=="started" && index($0,"DECISION OVERDUE " inc) { cmd="date -u -d " $1 " +%s"; cmd | getline e; close(cmd); if (e>=dl) f=1 } END { exit !f }' "$HOME/.local/share/agent-deck/wake-send.log"; }
-wait_for "director rung 0 (DB + transport, incident-bound)" 150 rung_ok 0 "$D_ID" || { result RUNGS FAIL "rung 0: DB '$(st "d.get('rungs',{}).get('0','')")', no incident-bound director transport after $DL"; exit 3; }
-wait_for "duty rung 1 (DB + transport, incident-bound)" 90 rung_ok 1 "$U_ID" || { result RUNGS FAIL "rung 1: DB '$(st "d.get('rungs',{}).get('1','')")', no incident-bound duty transport"; exit 3; }
-wait_for "Claude rung 2 (DB + private ledger)" 90 sh -c "grep -q 'DECISION OVERDUE $INC' '$E'" || { result RUNGS FAIL "no private ledger record"; exit 3; }
-premature "rung 2"
+wait_for "director rung (real wake)" 150 sh -c "[ \$(grep -c '$D_ID' $HOME/.local/share/agent-deck/wake-send.log) -gt $w0d ]" || { result RUNGS FAIL "no director wake"; exit 3; }
+wait_for "duty rung (real wake)" 90 sh -c "[ \$(grep -c '$U_ID' $HOME/.local/share/agent-deck/wake-send.log) -gt $w0u ]" || { result RUNGS FAIL "no duty wake"; exit 3; }
+wait_for "Claude rung (private ledger + labelled chat)" 90 sh -c "grep -q 'DECISION OVERDUE $INC' '$E'" || { result RUNGS FAIL "no private ledger record"; exit 3; }
 [ "$(st "d['rungs'].get('2','')" | cut -c1-4)" = sent ] || { result RUNGS FAIL "Claude rung not recorded sent"; exit 3; }
 result RUNGS PASS "director, duty (real wakes), Claude (private ledger + real labelled notify-claude) while stopped"
 ACKF="$ROOT/$P.db.caps/$INC.claude"
 [ "$(stat -c %a "$ACKF" 2>/dev/null)" = 600 ] || { result ACK FAIL "no 0600 capability file"; exit 3; }
 "$A" decision-ack $C --qid "$Q" --by claude --next x --within 60s >>"$EV/driver.log" 2>&1 && { result ACK FAIL "literal ack accepted"; exit 3; }
-premature "before ack"
 run "$A" decision-ack $C --qid "$Q" --by claude --cap-file "$ACKF" --next "fixture: chase the director" --within 60s || { result ACK FAIL "capability ack refused"; exit 3; }
 result ACK PASS "literal refused; capability ack recorded (60 s)"
 wait_for "expiry re-raise" 150 sh -c "\"$A\" status $C --json | python3 -c \"import json,sys; p=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0]; assert (p.get('decision') or {}).get('reraised','').startswith('sent')\"" || { result RECUR FAIL "no re-raise"; exit 3; }
 KEYS=$(python3 -c "import json; print(' '.join(r['key'] for r in map(json.loads, filter(str.strip, open('$E'))) if 'id' in r and '$INC' in r.get('text','')))")
 set -- $KEYS; [ $# -eq 2 ] && [ "$1" = "$2" ] || { result RECUR FAIL "want 2 records, one key: $KEYS"; exit 3; }
 KEY1=$1; result RECUR PASS "same key $KEY1"
-premature "before the plan decide"
 run "$A" decide $C --qid "$Q" --kind question_answered --ref "P13-live-$RUN" --reason "fixture decision"
 [ -n "$(st "d.get('resolved','')")" ] && grep -q "\"resolve\": \"$KEY1\"" "$E" || { result DECIDE FAIL "not resolved / no resolution record"; exit 3; }
 HOME="$ROOT/home" ESCALATION_GRACE_MIN=0 FIXTURE_TICKET_LOG="$ROOT/ticket" python3 "$ROOT/home/.config/agent-deck/escalation-watch" >>"$EV/driver.log" 2>&1
@@ -368,4 +348,4 @@ nd=$(( $(wakes "$D_ID") - w0d )); nu=$(( $(wakes "$U_ID") - w0u )); nl=$(grep -c
 [ "$nd" = 1 ] && [ "$nu" = 1 ] && [ "$nl" = 2 ] || { result RESTART FAIL "director $nd, duty $nu (want 1 each), ledger $nl (want 2)"; exit 3; }
 result LIVE PASS "authentic decision, stop marker, ladder, capability ack/expiry/same-key recurrence, decide + quiet watcher, restart without duplicates"
 log "all cases run; results in $EV/results.tsv"
-if grep -qP '\t(INJECTED-)?(FAIL|INCOMPLETE|INVALID)\t' "$EV/results.tsv"; then log "NOT ALL PASS"; exit 1; fi
+if grep -qP '\t(INJECTED-)?(FAIL|INCOMPLETE)\t' "$EV/results.tsv"; then log "NOT ALL PASS"; exit 1; fi

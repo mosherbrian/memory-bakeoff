@@ -6,15 +6,14 @@
 # NOT live proof. Then anti-stub negatives for live mode. Usage: inject-test.sh DEADLINE_UTC
 set -uo pipefail
 PKG=/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership
-H=$PKG/evidence/live-composition; EV=$H/run${2:+-$2}; rm -rf "$EV"; mkdir -p "$EV"
-DL=$1; MODE=${2:-positive}; left=$(( $(date -u -d "$DL" +%s) - $(date +%s) )); [ "$left" -ge ${MIN_LEFT:-600} ] || { echo "REFUSED: ${left}s left"; exit 3; }
+H=$PKG/evidence/live-composition; EV=$H/run; rm -rf "$EV"; mkdir -p "$EV"
+DL=$1; left=$(( $(date -u -d "$DL" +%s) - $(date +%s) )); [ "$left" -ge 600 ] || { echo "REFUSED: ${left}s left"; exit 3; }
 export INJ=$(mktemp -d /tmp/p13inj-XXXXXX); REALHOME=$HOME
 export HOME=$INJ/home STREAMS=$INJ/streams INJECT=1 INJECT_SD=$INJ/sd; mkdir -p "$HOME/.local/share/agent-deck" "$INJECT_SD" "$STREAMS"
 export PATH="$H/stubs:/usr/bin:/bin"
 pass=0; fail=0; ok() { pass=$((pass+1)); echo "PASS $1" | tee -a "$EV/test.log"; }; no() { fail=$((fail+1)); echo "FAIL $1" | tee -a "$EV/test.log"; }
 R=inj$(date +%H%M%S); W=$R-w-id V=$R-v-id D=$R-d-id U=$R-u-id
 python3 -c "import json,sys; json.dump([{'id': i, 'title': t, 'profile': 'campaign4', 'status': 'idle'} for i, t in zip(sys.argv[1::2], sys.argv[2::2])], open('$INJ/registry.json','w'))" $W fx-w-$R $V fx-v-$R $D fx-d-$R $U fx-u-$R
-[ "$MODE" = neg-early-decide ] && export SEAT_DIRECTOR_DECIDES=1
 python3 "$H/seat-runtime.py" $W $V $D $U & SEATPID=$!
 sleep 1
 SHW=/var/home/bmosher/.local/share/agent-deck/wake-send.log; SHE=/var/home/bmosher/.local/share/agent-deck/escalations.jsonl
@@ -26,16 +25,7 @@ sed -e "s#<fresh run id, e.g. p13l1>#$R#" -e "s#<absolute private root, e.g. /ho
     "$PKG/plans/live-p13-inputs.template.env" > "$EV/inputs.env"
 grep -v '^#' "$EV/inputs.env" | grep -q '<' && no "inputs unfilled" || ok "inputs late-bound"
 EV_DIR=$EV/driver bash "$PKG/plans/live-p13-driver.sh" "$EV/inputs.env" run > "$EV/driver.out" 2>&1; DRC=$?
-if [ "$MODE" = neg-early-decide ]; then
-  [ $DRC -eq 4 ] && grep -q "^PRECONDITION	INJECTED-INVALID" "$EV/driver/results.tsv" && ! grep -q "^LIVE	" "$EV/driver/results.tsv" && ok "NEG early decision -> PRECONDITION INVALID, rc 4, no LIVE row" || no "NEG early decision not classified INVALID (rc $DRC)"
-  grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" && ok "NEG the injected director really decided early" || no "NEG director double did not decide"
-  python3 -c "import json; assert not json.load(open('$INJ/registry.json'))" && ok "NEG fixtures removed after INVALID" || no "NEG fixtures remain"
-  kill $SEATPID 2>/dev/null; for p in $(ps -eo pid,args | grep -F "$INJ" | grep -v -e "grep -F" | awk '{print $1}'); do kill "$p" 2>/dev/null; done
-  echo "inject-test($MODE): $pass passed, $fail failed (INJECTED)" | tee -a "$EV/test.log"; [ $fail -eq 0 ]; exit
-fi
 [ $DRC -eq 0 ] && ok "live branch rc 0 (injected)" || no "live branch rc $DRC"
-grep -q "^INDUCTION	INJECTED-PASS" "$EV/driver/results.tsv" && ok "induction: fixture non-response verified before dispatch" || no "no induction row"
-grep -q "DECISION OVERDUE" <(awk -F'\t' -v d="$D" '$4==d' "$HOME/.local/share/agent-deck/wake-send.log") && ok "incident-bound director rung in transport" || no "no incident-bound director transport"
 grep -q "^LIVE	INJECTED-PASS" "$EV/driver/results.tsv" 2>/dev/null && ok "LIVE INJECTED-PASS (labelled, not live)" || no "LIVE not passed"
 P=fx$R
 # (the unit files are removed by cleanup; the driver's own setup assertion is the record)

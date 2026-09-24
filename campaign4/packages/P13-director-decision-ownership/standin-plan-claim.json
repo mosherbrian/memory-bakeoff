@@ -1,0 +1,60 @@
+{
+ "action": "P13-liveplan-standin-1",
+ "author": "kiln (stand-in)",
+ "filed_at": "2026-09-24T05:55:40Z",
+ "fixture_policy": "generic ladder 0/20/40 + window 60s (declared deviation; production required 0/300/600 validated offline separately, NOT proven by fixture offsets)",
+ "late_bound_for_signature": [
+  "RUN",
+  "ROOT",
+  "LIVE_DEADLINE",
+  "PROFILE",
+  "WAKE",
+  "STREAMS",
+  "W_ID/W_NAME",
+  "V_ID/V_NAME",
+  "D_ID/D_NAME",
+  "U_ID/U_NAME",
+  "RUNG0_S/RUNG1_S/RUNG2_S",
+  "DECISION_WINDOW_S",
+  "ESC_LEDGER",
+  "NOTIFY_CLAUDE",
+  "RESOLVE_CMD",
+  "TICKET_STUB"
+ ],
+ "old_outline": "preserved untouched as input (live-plan-claim.json INCOMPLETE retained); this claim supersedes it as the executable basis",
+ "outputs": {
+  "evidence/plan-standin/rehearsal-1/rehearsal.log": "29 passed, 0 failed",
+  "evidence/plan-standin/rehearse.sh": "dc12fb2b062a8a0937e484892c527080215ebbe82e1085ebbc3585501b5e602e",
+  "plans/MANIFEST.sha256": "4feeacce4212b0f4dd7809cd4cd71e9808428098aa8079f6c7ae6a672b3de169",
+  "plans/decision-evaluators.sh": "ab4ea57f29fcccd234e73946e05b250e114fb4977381a55795855cb4470fba82",
+  "plans/live-inputs.template.env": "af6c2e61b98f1a01e272a2f0e32348e5adb93eb220cb6be3e574c586463ae001",
+  "plans/live20-plan.sh": "1dae5bd7a007b754a91ef39a302ec5468d550ba1e34bd791c4e59858653d6ad6",
+  "plans/promotion-plan.sh": "d781b35c6002a7197c685c6ca1ff557fc9e1b3e8324a9a90adb321da7b2eaf48",
+  "plans/tasks/decision-verify.md": "719921992c4be3bb5838bf64bd2882de7e7fab63dd7855f76ecaa5bd28ea2160",
+  "plans/tasks/decision-worker.md": "8e378ed0f554262e6ce8c16c9520df243c7a89250b4712c73f08637e80d4bc67"
+ },
+ "pins": {
+  "P12 cutover.sh": "2be6d13f89cc9d59d9548d05d903aa9c03b613e9e6788bdef774921ac9c2ed77",
+  "P12 live-checks.sh": "190858566b610a387e18d16834ab29b155356fec65d314dea161f793af958b51",
+  "P12 live-driver.sh": "f6afd9e08f84a0dff8d364a804dc04faa3fae48fb4ac687d3bd0bec78968f8dd",
+  "P12 tasks": "ack.md,handoff-task.md,handoff-verify.md,l-noclaim-worker.md,l-verify.md,l-worker.md (referenced, not copied)",
+  "P6 prepare_live.py": "fixture seat prep pattern reused (live execution needs signed prep release)",
+  "adapters": "escalation-watch df51a1f45a2f..., escalation-resolve fdf49d0b51...",
+  "candidate_binary": "47f69dfdeb8b0d17472d871b68dfdfa8270e3421997a03f5d1c6929c8a818ec1",
+  "installed_binary": "97a57db11aa8a4a87d89fd912804d42ce899bb35b3790742d790d424184a948f",
+  "product_source": "/home/bmosher/projects/agent-loop-p13 (read-only)",
+  "release": "/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8 (read-only)"
+ },
+ "rehearsal": {
+  "evidence": "evidence/plan-standin/rehearsal-1/",
+  "result": "29 passed, 0 failed, rc0",
+  "shared_state": "production ledger, wake log and shared escalation ledger byte-identical before/after; no stub executed; no secret material; no shared paths in driver log"
+ },
+ "residuals": [
+  "Prep/binding10, live20, live-review10, promotion10 still held for Tern signature; nothing launched/installed",
+  "Stopped-run stop-marker quiet path: covered by plan (exit-64 marker + quiet_window pattern) but only the kill path was independently witnessed in repair-1",
+  "Invalid-auth negatives reuse retained reviewed evidence per receipt (no new live invalid-auth runs in this offline round)"
+ ],
+ "scope": "offline plan-only; no live fixture launches, installs, service changes, wakes, Signal, shared ledger writes",
+ "status": "COMPLETE"
+}

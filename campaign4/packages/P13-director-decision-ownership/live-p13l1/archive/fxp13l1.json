@@ -1,0 +1,50 @@
+{
+ "project": "fxp13l1",
+ "profile": "campaign4",
+ "wake": "/home/bmosher/.config/agent-deck/wake",
+ "db": "/home/bmosher/p13live-p13l1/fxp13l1.db",
+ "stream_dir": "/home/bmosher/.config/agent-deck/acp-stream",
+ "claims_dir": "/home/bmosher/p13live-p13l1/claims",
+ "artifacts_dir": "/home/bmosher/p13live-p13l1/art",
+ "director": "p13-fixture-director-p13l1",
+ "duty": "p13-fixture-duty-p13l1",
+ "seats": {
+  "p13-fixture-worker-p13l1": "f2afc12a-1790273800",
+  "p13-fixture-verifier-p13l1": "7d079221-1790273800",
+  "p13-fixture-director-p13l1": "e570eee6-1790273800",
+  "p13-fixture-duty-p13l1": "19296a76-1790273801"
+ },
+ "bin": "/home/bmosher/p13live-p13l1/bin/agent-loop",
+ "unit": "agent-loop-fxp13l1.service",
+ "decision_deadline_s": 60,
+ "decision_policy": "",
+ "decision_ladder": [
+  {
+   "after_s": 0,
+   "seat": "p13-fixture-director-p13l1"
+  },
+  {
+   "after_s": 20,
+   "seat": "p13-fixture-duty-p13l1"
+  },
+  {
+   "after_s": 40,
+   "exec": [
+    "/usr/bin/env",
+    "HOME=/home/bmosher/p13live-p13l1/home",
+    "/home/bmosher/p13live-p13l1/home/.config/agent-deck/notify-claude",
+    "decision"
+   ],
+   "ledger": "/home/bmosher/p13live-p13l1/home/.local/share/agent-deck/escalations.jsonl",
+   "ledger_kind": "decision",
+   "resolve_cmd": [
+    "/usr/bin/env",
+    "HOME=/home/bmosher/p13live-p13l1/home",
+    "/home/bmosher/p13live-p13l1/home/.config/agent-deck/escalation-resolve"
+   ]
+  }
+ ],
+ "decision_responders": [
+  "claude"
+ ]
+}

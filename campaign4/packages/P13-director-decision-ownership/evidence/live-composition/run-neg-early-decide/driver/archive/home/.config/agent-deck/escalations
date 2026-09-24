@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+"""The durable half of the escalation path.
+
+WHY THIS EXISTS. Brian, 2026-09-18: "it shouldn't be paging me first, the
+escalation path should go through you first!" We built that rung as
+notify-claude -> fakechat -> a live Claude session. Measured 2026-09-20, it was
+delivering into the WRONG session and had been for 23 hours:
+
+    port 8787 held by  bun pid 2240125, child of session pid 2239928
+    that session       claude --continue --channels plugin:fakechat, up 1d07h
+    its transcript     4a2f4271..., last escalation fleet-swift-20260919T0935
+    Brian's session    pid 1847735, whose fakechat MCP died CONNECTION_CLOSED
+                       because 8787 was already taken
+
+So the channel does not address a session. It addresses WHOEVER GRABBED THE
+PORT FIRST, which was a window nobody was reading, and the session Brian was
+actually typing in could not even load the channel. notify-claude's own header
+already admitted 204 is not a receipt; this is the measurement of what that
+costs.
+
+WHAT THIS CHANGES. Delivery stops depending on a port. Every escalation is
+appended here first, and every Claude session reads the unacked backlog when it
+starts (hook: escalations --hook, wired into SessionStart). The channel stays as
+the FAST path - when a session does hold it, it hears immediately - but it is no
+longer the only path, so an escalation can no longer be dropped by being aimed
+at an idle window.
+
+APPEND-ONLY, for the reason the dispatch ledger is append-only: a record an
+agent can rewrite is not evidence about that agent. An ack is a new line, never
+an edit. Nothing in here deletes.
+
+    escalations --add KIND --source X       body on stdin -> prints the id
+    escalations --pending                   unacked, oldest first
+    escalations --ack E-12 "what was done"
+    escalations --age E-12                  seconds since first raised
+    escalations --hook                      SessionStart context; silent if none
+"""
+import argparse
+import hashlib
+import json
+import os
+import sys
+import time
+
+STORE = os.path.expanduser("~/.local/share/agent-deck/escalations.jsonl")
+
+# NOT IN THE LEDGER. "I showed this to a session at 15:58" is bookkeeping about
+# the display, not evidence about the fleet, and the ledger stays append-only
+# evidence. Mixing the two is how an append-only store quietly becomes a
+# mutable one.
+SHOWN = os.path.expanduser("~/.local/share/agent-deck/escalations-shown.json")
+
+
+def rows():
+    try:
+        with open(STORE) as fh:
+            return [json.loads(ln) for ln in fh if ln.strip()]
+    except FileNotFoundError:
+        return []
+    except Exception:
+        return []
+
+
+def append(rec):
+    os.makedirs(os.path.dirname(STORE), exist_ok=True)
+    with open(STORE, "a") as fh:
+        fh.write(json.dumps(rec, sort_keys=True) + "\n")
+
+
+def pending():
+    """Unacked escalations, grouped by key so a clock that fires every sweep
+    shows as one item with a repeat count instead of a hundred rows."""
+    acked = {r["ack"] for r in rows() if "ack" in r}
+    out = {}
+    for r in rows():
+        if "ack" in r or r.get("id") in acked:
+            continue
+        k = r["key"]
+        if k in out:
+            out[k]["repeats"] += 1
+            out[k]["last"] = r["t"]
+        else:
+            out[k] = dict(r, repeats=1, last=r["t"])
+    return sorted(out.values(), key=lambda r: r["t"])
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--add", metavar="KIND")
+    ap.add_argument("--source", default="")
+    ap.add_argument("--pending", action="store_true")
+    ap.add_argument("--ack", metavar="ID")
+    ap.add_argument("--note", default="")
+    ap.add_argument("--age", metavar="ID")
+    ap.add_argument("--hook", action="store_true")
+    ap.add_argument("--throttle", type=int, default=0, metavar="SECONDS",
+                    help="on --hook, skip an escalation shown again within this "
+                         "window; 0 shows everything unacked")
+    a = ap.parse_args()
+
+    if a.add:
+        text = sys.stdin.read().strip()
+        if not text:
+            print("escalations: nothing on stdin", file=sys.stderr)
+            return 2
+        key = hashlib.md5(f"{a.add}\n{text}".encode()).hexdigest()[:12]
+        n = sum(1 for r in rows() if "id" in r) + 1
+        rec = {"t": int(time.time()), "id": f"E-{n}", "kind": a.add,
+               "source": a.source or os.environ.get("AGENTDECK_INSTANCE_ID", ""),
+               "key": key, "text": text[:4000]}
+        append(rec)
+        print(rec["id"])
+        return 0
+
+    if a.ack:
+        append({"t": int(time.time()), "ack": a.ack, "note": a.note[:500],
+                "by": os.environ.get("AGENTDECK_INSTANCE_ID", "claude")})
+        print(f"acked {a.ack}")
+        return 0
+
+    if a.age:
+        for r in rows():
+            if r.get("id") == a.age:
+                print(int(time.time()) - r["t"])
+                return 0
+        print("no such escalation", file=sys.stderr)
+        return 1
+
+    pend = pending()
+
+    if a.hook:
+        # SILENT WHEN THERE IS NOTHING. A hook that prints every session start
+        # is a hook people stop reading, and then it has the same failure as
+        # the channel it replaces.
+        #
+        # THE THROTTLE IS WHY THIS CAN RUN ON EVERY PROMPT. SessionStart alone
+        # only reaches a session at its start, which leaves the mid-session gap
+        # the channel used to cover - and the channel is unreachable to any
+        # session that did not win port 8787. Running on UserPromptSubmit closes
+        # that gap without a port, and the throttle stops the same item being
+        # restated on every message. An UNACKED item does come back when the
+        # window rolls, on purpose: re-raising is the whole guarantee.
+        if a.throttle:
+            try:
+                with open(SHOWN) as fh:
+                    seen = json.load(fh)
+            except Exception:                           # noqa: BLE001
+                seen = {}
+            fresh = [r for r in pend
+                     if time.time() - seen.get(r["key"], 0) >= a.throttle]
+            if fresh:
+                seen.update({r["key"]: int(time.time()) for r in fresh})
+                try:
+                    os.makedirs(os.path.dirname(SHOWN), exist_ok=True)
+                    with open(SHOWN, "w") as fh:
+                        json.dump(seen, fh)
+                except Exception:                       # noqa: BLE001
+                    pass       # showing it twice beats not showing it at all
+            pend = fresh
+        if not pend:
+            return 0
+        print("## Fleet escalations waiting (nobody has acked these)")
+        print()
+        for r in pend:
+            mins = int((time.time() - r["t"]) / 60)
+            rep = f", seen {r['repeats']}x" if r["repeats"] > 1 else ""
+            print(f"- **{r['id']}** [{r['kind']}] raised {mins} min ago{rep}"
+                  f"{' by ' + r['source'] if r['source'] else ''}")
+            for ln in r["text"].splitlines()[:6]:
+                print(f"  {ln}")
+            print()
+        print("Act on these or explain why not, then "
+              "`escalations --ack <id> --note \"<what happened>\"`.")
+        return 0
+
+    for r in pend:
+        mins = int((time.time() - r["t"]) / 60)
+        rep = f"  x{r['repeats']}" if r["repeats"] > 1 else ""
+        print(f"{r['id']:6} {r['kind']:12} {mins:5}m{rep}  {r['text'].splitlines()[0][:70]}")
+    if not pend:
+        print("  no pending escalations")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
