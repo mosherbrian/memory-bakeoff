@@ -1,0 +1,31 @@
+{
+  "action": "P13-liveplan-completion-1",
+  "signer": "tern",
+  "at": "2026-09-24T07:22:06.630886+00:00",
+  "status": "TIMED_OUT; no claim, no retroactive acceptance",
+  "timeout": "2026-09-24T07:20:10Z",
+  "ack": "2026-09-24T07:20:32Z",
+  "observed": "Latest /tmp/p13offline.out34PASS/6FAIL; live rc3, missing LIVE PASS, rollback PASS missing, stop marker missing, shared-state assertion failed. Raw labels need independent classification.",
+  "disposition": {
+    "kind": "blocked",
+    "owner": "tern",
+    "reason": "Two consecutive kiln plan attempts timed out without claims; switch author strategy. Candidate product remains reviewed but live plan unqualified. No further kiln author grant.",
+    "revisit_at": "2026-09-24T17:00:00Z",
+    "trigger": "Reported Claude allowance reset; automatic Tern wake for author availability check and new bounded release, not automatic edit authorization."
+  },
+  "budget": "P13 ceiling380 unchanged. Use remaining verifier15m for final read-only audit. No new author allocation now. Future allocation prospective at revisit.",
+  "audit": {
+    "action": "P13-timeout-audit-2",
+    "owner": "corvid",
+    "start": "2026-09-24T07:22:06Z",
+    "deadline": "2026-09-24T07:37:06Z",
+    "path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/timeout-audit-2.md"
+  },
+  "requirements": [
+    "Read frozen snapshot and latest actual logs. Exact remaining root failures, do not rerun live/service commands. Distinguish test infrastructure defects from plan defects; no reinterpretation as PASS.",
+    "Inspect attributed leftover processes/units read-only; report exact cleanup needed. No broad removal of tmpdirs.",
+    "Produce short new-author handoff with precise file/line/command and successful evidence retained. Preserve all failures.",
+    "Investigate shared-state assertion failure and unauthorized timeout-response-reconciliation.json rewrite. Original93435cf3 restored after preserving observed copy; authors/controller must not rewrite director records."
+  ],
+  "production": "Installed97a57db1 unchanged, no live or promotion. Known timeout terminal-closure limitation retained; do not repeatedly renew completed promises."
+}
