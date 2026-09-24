@@ -78,7 +78,12 @@ STUBEOF
 chmod +x "$SBIN"/*
 echo '[]' > "$TMP/registry.json"
 export PATH="$SBIN:/usr/bin:/bin"
-export STUB_WALL_EPOCH=$(date -u -d "2030-01-01T02:00:00Z" +%s)
+# closure-3: the plan's LIVE_DEADLINE is the REAL enclosing bound of this test
+# process (OFFLINE_DEADLINE, required), and the whole test runs under it.
+: "${OFFLINE_DEADLINE:?set OFFLINE_DEADLINE (UTC) to the enclosing author bound}"
+left=$(( $(date -u -d "$OFFLINE_DEADLINE" +%s) - $(date +%s) ))
+[ "$left" -ge 720 ] || { echo "REFUSED: only ${left}s before $OFFLINE_DEADLINE; a full run needs 720s"; exit 3; }
+export STUB_WALL_EPOCH=$(date -u -d "$OFFLINE_DEADLINE" +%s)
 SLEDGER=/home/bmosher/.local/share/agent-loop/campaign4.db
 WAKELOG=/home/bmosher/.local/share/agent-deck/wake-send.log
 ESCLEDGER=/home/bmosher/.local/share/agent-deck/escalations.jsonl
@@ -116,7 +121,7 @@ cp $TMP/prev-sim-prev2 $TMP/prev-sim-bin2
 
 # ================= NEW PATH: filled inputs =================
 sed -e "s#<run-id, e.g. p13d1>#off1#" -e "s#<private root, e.g. /tmp/p13d1-root>#$TMP/root#" \
-  -e "s#<UTC, e.g. 2026-09-24T07:00:00Z>#2030-01-01T02:00:00Z#" \
+  -e "s#<UTC, e.g. 2026-09-24T07:00:00Z>#$OFFLINE_DEADLINE#" \
   -e "s#<agent-deck profile for fixture seats>#campaign4#" \
   -e "s#<private ROOT/bin/wake: installed by setup from versioned plans/fixture-wake.sh; never the shared wake>#$TMP/root/bin/wake#" \
   -e "s#<private stream dir>#$TMP/root/streams#" \
@@ -180,7 +185,7 @@ except Exception: print('none')"
 }
 do_turn() { # KIND(action suffix) EXECUTION STEP OUTCOME
   "$PLANS/tasks/decision-turn.sh" --artifacts "$ROOT/art" --claims "$ROOT/claims" \
-    --stream "$ROOT/streams/$1.jsonl" --item "it-$2" --action "$Q" --execution "$2" \
+    --stream "$ROOT/streams/$1.jsonl" --item "i$(date +%s%3N)" --package "$Q" --action "$Q-$5" --execution "$2" \
     --step "$3" --outcome "$4" >>"$EV/offline.log" 2>&1
 }
 for i in $(seq 1 150); do
@@ -202,7 +207,7 @@ for i in $(seq 1 150); do
   kill -0 $PLANPID 2>/dev/null || break
   sleep 2
 done
-do_turn W1 "ex-$Q-w1" worker-run completed \
+do_turn "$W_ID" "ex-$Q-w1" worker-run completed w1 \
   && ok "runnable worker turn produced artifacts+claim+end" || no "worker turn failed"
 for i in $(seq 1 150); do
   s=$(turn_for_step)
@@ -210,7 +215,7 @@ for i in $(seq 1 150); do
   kill -0 $PLANPID 2>/dev/null || break
   sleep 2
 done
-do_turn V1 "ex-$Q-v1" verify-run completed \
+do_turn "$V_ID" "ex-$Q-v1" verify-run completed v1 \
   && ok "runnable verifier turn produced artifacts+claim+end" || no "verifier turn failed"
 # Liveness ran for real with verdict schema.
 sleep 12
@@ -222,6 +227,8 @@ kill $RUNPID $CHKPID 2>/dev/null; wait 2>/dev/null
 [ $PLANRC -eq 0 ] && ok "exact top-level run path rc0 under stubs+real binary" || no "plan rc=$PLANRC"
 grep -qP '\tFAIL\t' "$EV/live/results.tsv" 2>/dev/null && no "FAIL rows in live results" || ok "no FAIL rows in live results"
 grep -q "LIVE	PASS" "$EV/live/results.tsv" 2>/dev/null && ok "LIVE PASS recorded" || no "LIVE PASS missing"
+grep -q "NOTIFY	PASS	.*mode offline" "$EV/live/results.tsv" && ok "notify mode asserted offline (offline success never proves real notification)" || no "notify mode not asserted"
+grep -q FIXTURE-NOTICE "$TICKET_STUB" 2>/dev/null && ok "labelled fixture notice in the stub" || no "no stub notice"
 # decision-ack negatives for real (literal/guessed/cross-incident refused).
 "$BIN_SRC" decision-ack --config "$ROOT/p13doff1.json" --qid "$Q" --by claude --next x --within 60s >/dev/null 2>&1
 [ $? -ne 0 ] && ok "literal ack without cap refused" || no "literal ack accepted"

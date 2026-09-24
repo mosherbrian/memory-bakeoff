@@ -60,11 +60,11 @@ cleanup() {
   # F4: NEVER archive secret contents. Caps are listed as redacted
   # hashes/permissions only; the actual db.caps tree is removed below.
   if [ -d "$ROOT/$P.db.caps" ]; then
-    { echo "# caps redaction record (hashes/permissions only, no contents)";
-      find "$ROOT/$P.db.caps" -type f -exec sha256sum {} \; ;
+    { echo "# caps redaction record (permissions/paths only)";
+      echo "# mode path only; no content and no content hash";
       find "$ROOT/$P.db.caps" -printf "%m %p\n"; } >"$EV/archive/caps-redacted.txt" 2>/dev/null
   fi
-  cp -a "$ROOT"/db* "$ROOT"/escalations.jsonl "$EV/archive/" 2>/dev/null
+  cp -a "$ROOT/$P.db" "$ROOT/wake.log" "$ROOT/home/.local/share/agent-deck/escalations.jsonl" "$EV/archive/" 2>/dev/null
   # Wall stops the ORIGINAL driver scope/process first (was missing in v1).
   if systemctl --user is-active "$SCOPE.scope" >/dev/null 2>&1; then
     log "WALLSTOP: stopping $SCOPE.scope"; run systemctl --user stop "$SCOPE.scope"
@@ -106,7 +106,16 @@ run install -m 755 "$PLANS/fixture-wake.sh" "$WAKE"
 PH="$ROOT/home"; ESC_LEDGER="$PH/.local/share/agent-deck/escalations.jsonl"
 run mkdir -p "$PH/.local/share/agent-deck" "$PH/.config/agent-deck"
 run install -m 755 /var/home/bmosher/.config/agent-deck/escalations "$ROOT/bin/escalations"
-run install -m 755 "$PLANS/ticket-notify.sh" "$NOTIFY_CLAUDE"
+NOTIFY_MODE=${NOTIFY_MODE:-offline}
+case "$NOTIFY_MODE" in
+  offline) run install -m 755 "$PLANS/ticket-notify.sh" "$NOTIFY_CLAUDE";;  # private ledger + stub notice; no chat, no Signal
+  live) # signed live only: the PINNED installed notify-claude, HOME=private (private ledger) + labelled chat notice
+    [ "$(sha256sum /var/home/bmosher/.config/agent-deck/notify-claude | cut -d' ' -f1)" = "${NOTIFY_CLAUDE_SHA:?}" ] || { result SETUP FAIL "notify-claude hash mismatch"; exit 3; }
+    run install -m 755 /var/home/bmosher/.config/agent-deck/notify-claude "$NOTIFY_CLAUDE"
+    run install -m 755 /var/home/bmosher/.config/agent-deck/escalations "$PH/.config/agent-deck/escalations";;
+  *) result SETUP FAIL "NOTIFY_MODE must be offline or live"; exit 3;;
+esac
+result NOTIFY PASS "mode $NOTIFY_MODE"
 run install -m 755 "$PLANS/ticket-page-stub.sh" "$PH/.config/agent-deck/ticket"
 export FIXTURE_WAKE_LOG="$ROOT/wake.log" FIXTURE_TICKET_LOG="$TICKET_STUB"
 run chmod 700 "$ROOT/caps"
@@ -228,7 +237,7 @@ ACKF=$(ls "$ROOT/$P.db.caps/$INC.claude" 2>/dev/null)
 "$A" decision-ack $C --qid "$Q" --by claude --next x --within 60s >>"$EV/driver.log" 2>&1 && { result ACK FAIL "literal ack without capability accepted"; exit 3; }
 run "$A" decision-ack $C --qid "$Q" --by claude --cap-file "$ACKF" --next "fixture: chase the director" --within 60s || { result ACK FAIL "capability ack refused"; exit 3; }
 [ "$(st "d['step'] if False else p['step']")" = decision ] || { result ACK FAIL "ack closed the decision"; exit 3; }
-wait_for "expiry re-raise" 150 sh -c "\"$A\" status $C --json | grep -q '\"reraised\": \"sent'" || { result RECUR FAIL "no re-raise after ack expiry"; exit 3; }
+wait_for "expiry re-raise" 150 sh -c "\"$A\" status $C --json | python3 -c \"import json,sys; p=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0]; assert (p.get('decision') or {}).get('reraised','').startswith('sent')\"" || { result RECUR FAIL "no re-raise after ack expiry"; exit 3; }
 KEYS=$(python3 -c "import json; print(' '.join(r['key'] for r in map(json.loads, filter(str.strip, open('$ESC_LEDGER'))) if 'id' in r and '$INC' in r.get('text','')))")
 set -- $KEYS; [ $# -eq 2 ] && [ "$1" = "$2" ] || { result RECUR FAIL "want 2 records with one key, got: $KEYS"; exit 3; }
 KEY1=$1; result RECUR PASS "ack expiry re-raised once with the same key $KEY1"
