@@ -1,0 +1,477 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index e6a5135..7d65d6a 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -620,3 +620,30 @@ func runExpose(args []string) int {
+ 	fmt.Print(expose.Text(v))
+ 	return 0
+ }
++
++// runCheckerFailed is the outside check's OnFailure handler. It needs neither
++// the ledger lock nor a healthy run or checker.
++func runCheckerFailed(args []string) int {
++	fs, cfgPath := loopFlags("checker-failed")
++	unit := fs.String("unit", "", "the failed check unit")
++	fs.Parse(args)
++	cfg, err := loop.LoadConfig(*cfgPath)
++	if err != nil {
++		return fail(err)
++	}
++	result := "result unknown"
++	sc := cfg.Systemctl
++	if sc == "" {
++		sc = "systemctl"
++	}
++	if p, err := host.ExecRunner([]string{sc, "--user", "show", *unit, "-p", "Result,ExecMainCode,ExecMainStatus", "--value"}, nil, 2*time.Second); err == nil {
++		result = strings.Join(strings.Fields(p.Stdout), " ")
++	}
++	in, err := loop.CheckerFailed(cfg, *unit, result, time.Now().UTC())
++	b, _ := json.Marshal(in)
++	fmt.Println(string(b))
++	if err != nil {
++		return fail(err)
++	}
++	return 0
++}
+diff --git a/cmd/agent-loop/main.go b/cmd/agent-loop/main.go
+index 03710ad..57a8720 100644
+--- a/cmd/agent-loop/main.go
++++ b/cmd/agent-loop/main.go
+@@ -52,6 +52,8 @@ func main() {
+ 		os.Exit(runExpose(os.Args[2:]))
+ 	case "liveness":
+ 		os.Exit(runLiveness(os.Args[2:]))
++	case "checker-failed":
++		os.Exit(runCheckerFailed(os.Args[2:]))
+ 	case "liveness-ack":
+ 		os.Exit(runLivenessAck(os.Args[2:]))
+ 	case "timeout-ack":
+@@ -78,6 +80,7 @@ The loop:
+   stop                                   stop the loop; it stays stopped until start (deadline timers still fire)
+   start                                  clear a stop and start the configured unit
+   liveness                               the outside check (its own timer): incidents to duty, then director
++  checker-failed --unit NAME             the check service's OnFailure handler (no ledger lock)
+   liveness-ack --incident ID --by SEAT --next TEXT [--within 15m]
+   check                                  confirm seat sessions against the registry, and paths
+   timer-callback --qid Q --action A --execution E   (run by the deadline timers)
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index 506fc89..ff4f685 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -187,7 +187,7 @@ LOOP_MUTANTS = [
+     (LP + "loop.go", "if r.Worker == r.Verifier || r.Worker == l.Cfg.Director || r.Verifier == l.Cfg.Director {",
+      "if false {", "the worker may verify its own work"),
+     # P12-fair-handoff-1: D2 arrival-order grant, D1 accepted-only stamp, D3 one labelled repeat
+-    (LP + "queue.go", "isHead, exists = i == 0, true", "isHead, exists = i >= 0, true", "any queued writer may take the lock (no hand-off)"),
++    (LP + "queue.go", "isHead, exists = n == head, true", "isHead, exists = n == head || true, true", "any queued writer may take the lock (no hand-off)"),
+     (LP + "queue.go", "if n >= QueueCap[class] {", "if false {", "admission is not capped"),
+     (LP + "queue.go", "if v, err := strconv.ParseUint(x, 10, 64); err == nil && v > seq {", "if v, err := strconv.ParseUint(x, 10, 64); err == nil && false && v > seq {", "a lost counter reuses a live entry's name"),
+     (LP + "queue.go", "case syscall.Kill(qe.PID, 0) == syscall.ESRCH, procStart(qe.PID) != qe.Start,", "case false, false,", "a dead or reused-pid waiter wedges the queue"),
+@@ -203,16 +203,23 @@ LOOP_MUTANTS = [
+     (LP + "due.go", 'case decision == "interrupted-effect-failed" && err != nil && strings.Contains(err.Error(), "E_DELIVERY_UNRESOLVED"):', "case false:", "an unresolved notice keeps its marker retried forever"),
+     (LP + "timeout.go", '	if st == "idle" || st == "cancelled" {\n		// The cancel was confirmed', '	if false {\n		// The cancel was confirmed', "a confirmed cancel is reported as not confirmed"),
+     # P12-ack-capacity-1: reserved ack/check grant order, durable ack requests, earliest detection
+-    (LP + "queue.go", "if prio(string(last)) && other != \"\" {", "if false {", "two priority grants in a row starve waiting writers"),
++    (LP + "queue.go", "if prio(string(last)) && other != \"\" {", "if false && prio(string(last)) && other != \"\" {", "two priority grants in a row starve waiting writers"),
+     (LP + "queue.go", 'if a := oldest(func(c string) bool { return c == "ack" }); a != "" {', "if a := \"\"; a != \"\" {", "an ack is not granted before other writers"),
+     (LP + "queue.go", '	case "timeout-ack":\n		return "ack"', '	case "timeout-ack":\n		return "due"', "timeout-ack shares the callbacks' places"),
+     (LP + "ack.go", "if json.Unmarshal(b, &old) == nil && old.Next == r.Next {", "if json.Unmarshal(b, &old) == nil {", "a conflicting request replaces nothing and reads as a replay"),
+     (LP + "ack.go", "if n := len(pendingAcks(cfg)); n >= MaxPendingAcks {", "if n := len(pendingAcks(cfg)); false && n >= MaxPendingAcks {", "the request store is unbounded"),
+-    (LP + "ack.go", "			case !ok || !now.Before(dl):", "			case false:", "an expired request is committed"),
++    (LP + "ack.go", "			case !ok || !now.Before(dl):", "			case false && (!ok || !now.Before(dl)):", "an expired request is committed"),
+     (LP + "ack.go", "ok && at.Sub(det) > AckBound {", "ok && false && at.Sub(det) > AckBound {", "a late commit is not recorded or escalated"),
+-    (LP + "ack.go", "if ok2 && (!ok1 || d.Before(at)) {", "if false {", "detection moves to the later settlement time"),
++    (LP + "ack.go", "if ok2 && (!ok1 || d.Before(at)) {", "if false && ok2 && (!ok1 || d.Before(at)) {", "detection moves to the later settlement time"),
+     (LP + "due.go", "	acks := processAcks(cfg) // pending acknowledgements first", "	acks := []string(nil) // pending acknowledgements first", "pending ack requests are never drained"),
+     (LP + "ack.go", 'if f, ok := host.IsFault(err); ok && f.Code == "E_BUDGET_EXHAUSTED" {', "if f, ok := host.IsFault(err); false && ok && f == nil {", "a spent hold budget rejects an ack request"),
++    # P12-checker-ownership-1: incomplete checks fail and are owned without the ledger lock
++    (LP + "liveness.go", "			if err == nil {\n				err = fmt.Errorf(\"check incomplete: %v\", eerr)\n			}", "			_ = 0", "an incomplete check reports success"),
++    (LP + "liveness.go", "			if perr := RecordPendingCheck(c.Cfg, c.Now, eerr.Error()); perr != nil {", "			if perr := error(nil); perr != nil {", "an incomplete check leaves no pending marker"),
++    (LP + "liveness.go", "	if err == nil {\n		did = append(did, ReconcileCheck(c.Cfg, c.Now)...)", "	if false {\n		did = append(did, ReconcileCheck(c.Cfg, c.Now)...)", "a completed check never clears the incident"),
++    (LP + "checkerfail.go", "	case p.RC == host.WakeRCSent || p.RC == host.WakeRCQueued:", "	case true:", "a refused wake counts as told"),
++    (LP + "checkerfail.go", "(!strings.HasPrefix(in.Duty, \"sent\") || now.Sub(dutySent) >= CheckerDirectorAfter) {", "(!strings.HasPrefix(in.Duty, \"sent\") || now.Sub(dutySent) >= 1000*CheckerDirectorAfter) {", "a lasting checker failure never reaches the director"),
++    (LP + "checkerfail.go", "		if !strings.HasPrefix(in.Duty, \"sent\") {\n			in.Duty = checkerSend", "		if true {\n			in.Duty = checkerSend", "duty is re-told on every failure (no dedup)"),
+     # P9 read-only view (internal/expose, checked by its own tests)
+     ("internal/expose/expose.go", "\t\t\t\tcase age < -5*time.Second:", "\t\t\t\tcase false:", "a future pass time reads as fresh"),
+     ("internal/expose/expose.go", "\t\treturn \"UNKNOWN: \" + r.Source + \" unreadable\"", "\t\treturn \"OK\"", "a missing source reads OK"),
+diff --git a/examples/systemd-unqualified/agent-loop-liveness-failed@.service b/examples/systemd-unqualified/agent-loop-liveness-failed@.service
+new file mode 100644
+index 0000000..950c55e
+--- /dev/null
++++ b/examples/systemd-unqualified/agent-loop-liveness-failed@.service
+@@ -0,0 +1,15 @@
++# UNQUALIFIED EXAMPLE - SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE.
++# Nothing installs or enables this file. Do not rely on it for unattended operation.
++# P12-checker-ownership-1: OnFailure handler of agent-loop-liveness@%i. It takes no ledger
++# lock: it reads the failed check's systemd result (2 s), records one checker incident
++# (<db>.checker-incident.json), tells duty at once (wake bounded 5 s), and tells the
++# director when duty's wake is not accepted or the incident still fails 60 s after duty
++# was told (5 s). Worst case 2 + 5 + 5 = 12 s < 20 s. It has no OnFailure of its own
++# (no recursion). Not covered: the timer not firing, or the user manager being down.
++[Unit]
++Description=agent-loop %i liveness check failure handler
++
++[Service]
++Type=oneshot
++ExecStart=%h/.local/bin/agent-loop checker-failed --config %h/.config/agent-loop/%i.json --unit agent-loop-liveness@%i.service
++TimeoutStartSec=20
+diff --git a/examples/systemd-unqualified/agent-loop-liveness@.service b/examples/systemd-unqualified/agent-loop-liveness@.service
+index b4d464b..972a683 100644
+--- a/examples/systemd-unqualified/agent-loop-liveness@.service
++++ b/examples/systemd-unqualified/agent-loop-liveness@.service
+@@ -4,10 +4,18 @@
+ # The outside liveness check for agent-loop@%i. A separate process and unit:
+ # it keeps running when run exits, hangs or restart-loops. Bounded: systemctl
+ # show 2 s, wake 2.5 s, ledger read 1 s.
++# P12-checker-ownership-1: the check's own failures are owned by a separate handler that
++# needs neither the ledger lock nor a healthy run or check: a nonzero exit (also a check
++# that could not take the ledger lock in 10 s: it records a pending check and fails),
++# a killed check, or a hung one (killed at TimeoutStartSec) starts
++# agent-loop-liveness-failed@%i. Worst case of one check: systemctl 2 s + alarms 2 x 2.5 s
++# + lock wait 10 s + hold 10.5 s + ledger read 1 s = 28.5 s < 35 s. A tick that finds the
++# check still running is skipped by the timer; the check never overlaps itself.
+ [Unit]
+ Description=agent-loop %i liveness check
++OnFailure=agent-loop-liveness-failed@%i.service
+ 
+ [Service]
+ Type=oneshot
+ ExecStart=%h/.local/bin/agent-loop liveness --config %h/.config/agent-loop/%i.json
+-TimeoutStartSec=10
++TimeoutStartSec=35
+diff --git a/internal/loop/checker_p12_test.go b/internal/loop/checker_p12_test.go
+new file mode 100644
+index 0000000..708f27a
+--- /dev/null
++++ b/internal/loop/checker_p12_test.go
+@@ -0,0 +1,80 @@
++package loop
++
++import (
++	"os"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/host"
++)
++
++// P12-checker-ownership-1: a check that cannot do its ledger work is never a
++// completed check; its failure is owned without the ledger lock.
++
++func TestACheckThatCannotTakeTheLedgerIsPendingAndFailed(t *testing.T) {
++	r := newLiveRig(t)
++	now := time.Now().UTC()
++	r.pass(now, 1)
++	k, err := LockLedger(r.cfg, time.Second) // another writer holds the ledger
++	must(t, err)
++	_, did, err := (&Checker{Cfg: r.cfg, Now: now}).Check()
++	k.Unlock()
++	var p PendingCheck
++	if err == nil || !readJSONInto(pendingCheckPath(r.cfg), &p) || p.Count != 1 {
++		t.Fatalf("an incomplete check passed or left no pending marker: %v %+v %v", err, p, did)
++	}
++	// The handler owns it without the ledger lock (held again here).
++	k, err = LockLedger(r.cfg, time.Second)
++	must(t, err)
++	in, err := CheckerFailed(r.cfg, "chk.service", "exit-code 1", now)
++	k.Unlock()
++	must(t, err)
++	if !strings.HasPrefix(in.Duty, "sent") || in.Director != "" || !strings.Contains(in.Pending, "1 check(s)") {
++		t.Fatalf("incident %+v", in)
++	}
++	// Only a completed check clears the marker and closes the incident.
++	if _, _, err := (&Checker{Cfg: r.cfg, Now: now.Add(30 * time.Second)}).Check(); err != nil {
++		t.Fatal(err)
++	}
++	if _, err := os.Stat(pendingCheckPath(r.cfg)); err == nil {
++		t.Fatal("the pending marker survived a completed check")
++	}
++	var c CheckerIncident
++	if !readJSONInto(checkerIncidentPath(r.cfg), &c) || c.ClosedAt == "" || !strings.HasPrefix(c.RecoveryMsg, "sent") {
++		t.Fatalf("not closed by the completed check: %+v", c)
++	}
++}
++
++func TestTheHandlerEscalatesToTheDirectorAndDedupes(t *testing.T) {
++	r := newLiveRig(t)
++	r.cfg.Duty = "corvid" // duty and director are different seats here
++	now := time.Now().UTC()
++	in, err := CheckerFailed(r.cfg, "chk.service", "timeout", now)
++	must(t, err)
++	if !strings.HasPrefix(in.Duty, "sent") || in.Director != "" {
++		t.Fatalf("first failure: %+v", in)
++	}
++	in2, _ := CheckerFailed(r.cfg, "chk.service", "timeout", now.Add(30*time.Second))
++	if in2.ID != in.ID || in2.Failures != 2 || in2.Director != "" {
++		t.Fatalf("not one incident, or director too early: %+v", in2)
++	}
++	in3, _ := CheckerFailed(r.cfg, "chk.service", "signal", now.Add(61*time.Second))
++	if !strings.HasPrefix(in3.Director, "sent") {
++		t.Fatalf("still failing after 60 s, director not told: %+v", in3)
++	}
++	// Duty unreachable: the director at once, and the failed send is not success.
++	r2 := newLiveRig(t)
++	r2.cfg.Duty = "corvid"
++	run := r2.cfg.Run
++	r2.cfg.Run = func(argv []string, env []string, timeout time.Duration) (host.Proc, error) {
++		if len(argv) > 1 && argv[1] == r2.cfg.Seats["corvid"] {
++			return host.Proc{RC: 1, Stderr: "could not reach"}, nil
++		}
++		return run(argv, env, timeout)
++	}
++	d, _ := CheckerFailed(r2.cfg, "chk.service", "exit-code 1", now)
++	if !strings.HasPrefix(d.Duty, "failed") || !strings.HasPrefix(d.Director, "sent") {
++		t.Fatalf("duty failure not escalated: %+v", d)
++	}
++}
+diff --git a/internal/loop/checkerfail.go b/internal/loop/checkerfail.go
+new file mode 100644
+index 0000000..6ccfd8f
+--- /dev/null
++++ b/internal/loop/checkerfail.go
+@@ -0,0 +1,182 @@
++package loop
++
++import (
++	"encoding/json"
++	"fmt"
++	"os"
++	"strings"
++	"syscall"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// P12-checker-ownership-1: the outside check's own failures have an owner
++// that needs neither the ledger lock nor a healthy run or checker.
++//
++//   - A check that cannot take the ledger lock within CheckLockWait (refused
++//     at admission, or the lock held) records a coalesced pending-check marker
++//     (<db>.check-pending.json, one file) WITHOUT the ledger lock and exits
++//     nonzero: it never reports a completed health check. The pending work is
++//     the ledger part of the check (timeout escalations, ack drain). It is
++//     retried by run after every pass (EscalateTimeouts) and by every ledger
++//     holder (ProcessDue drains acks), and, when run is stopped, by the next
++//     check on the 30 s calendar timer. Only a check that completes (verdict
++//     and ledger work) clears the marker and closes the incident.
++//   - The check service has a numeric TimeoutStartSec and OnFailure= a
++//     separate handler unit that runs `agent-loop checker-failed`. It covers a
++//     nonzero exit (including the refusal above), a killed checker (signal)
++//     and a hung one (killed at the timeout). The handler takes only its own
++//     small file lock (<db>.checker.lock), reads the failed unit's result,
++//     and keeps one incident (<db>.checker-incident.json): duty is told at
++//     once; the director when duty's wake is not accepted, or when the
++//     incident is still failing CheckerDirectorAfter after duty was told.
++//     Every send is bounded (CheckerSendTimeout); only wake rc 0 (started) or
++//     3 (queued) counts as told, and neither is an acknowledgement.
++//   - Not covered (host boundary): the timer itself not firing, and the
++//     systemd user manager being down. Those stop both the check and its
++//     handler; nothing in this process tree can report them.
++const (
++	CheckLockWait        = 10 * time.Second
++	CheckerSendTimeout   = 5 * time.Second
++	CheckerDirectorAfter = 60 * time.Second
++)
++
++// PendingCheck is the coalesced record of checks that did not complete.
++type PendingCheck struct {
++	FirstAt    string `json:"first_at"`
++	LastAt     string `json:"last_at"`
++	Count      int    `json:"count"`
++	LastReason string `json:"last_reason"`
++	LastPID    int    `json:"last_pid"`
++}
++
++// CheckerIncident is the handler's one open (or last closed) incident.
++type CheckerIncident struct {
++	ID          string `json:"id"`
++	OpenedAt    string `json:"opened_at"`
++	Failures    int    `json:"failures"`
++	LastAt      string `json:"last_at"`
++	LastResult  string `json:"last_result"`
++	Pending     string `json:"pending,omitempty"`
++	Duty        string `json:"duty,omitempty"`     // "sent <time>" | "failed <time>: why"
++	Director    string `json:"director,omitempty"` // same
++	ClosedAt    string `json:"closed_at,omitempty"`
++	ClosedBy    string `json:"closed_by,omitempty"`
++	RecoveryMsg string `json:"recovery_notice,omitempty"`
++}
++
++func pendingCheckPath(cfg *Config) string    { return cfg.DB + ".check-pending.json" }
++func checkerIncidentPath(cfg *Config) string { return cfg.DB + ".checker-incident.json" }
++
++// withCheckerLock runs fn under <db>.checker.lock, never the ledger lock.
++func withCheckerLock(cfg *Config, fn func() error) error {
++	f, err := os.OpenFile(cfg.DB+".checker.lock", os.O_CREATE|os.O_RDWR, 0o644)
++	if err != nil {
++		return err
++	}
++	defer f.Close()
++	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX); err != nil {
++		return err
++	}
++	defer syscall.Flock(int(f.Fd()), syscall.LOCK_UN)
++	return fn()
++}
++
++func readJSONInto(path string, v any) bool {
++	b, err := os.ReadFile(path)
++	return err == nil && json.Unmarshal(b, v) == nil
++}
++
++func writeJSON(path string, v any) error {
++	b, _ := json.MarshalIndent(v, "", " ")
++	if err := os.WriteFile(path+".tmp", b, 0o644); err != nil {
++		return err
++	}
++	return os.Rename(path+".tmp", path)
++}
++
++// RecordPendingCheck coalesces a check that did not complete.
++func RecordPendingCheck(cfg *Config, now time.Time, reason string) error {
++	return withCheckerLock(cfg, func() error {
++		var p PendingCheck
++		if !readJSONInto(pendingCheckPath(cfg), &p) {
++			p = PendingCheck{FirstAt: py.ISO(now)}
++		}
++		p.LastAt, p.Count, p.LastReason, p.LastPID = py.ISO(now), p.Count+1, reason, os.Getpid()
++		return writeJSON(pendingCheckPath(cfg), p)
++	})
++}
++
++// ReconcileCheck runs after a check COMPLETED: it clears the pending marker
++// and closes an open checker incident, telling duty once.
++func ReconcileCheck(cfg *Config, now time.Time) []string {
++	var out []string
++	withCheckerLock(cfg, func() error {
++		if os.Remove(pendingCheckPath(cfg)) == nil {
++			out = append(out, "pending check cleared by a completed check")
++		}
++		var in CheckerIncident
++		if !readJSONInto(checkerIncidentPath(cfg), &in) || in.ClosedAt != "" {
++			return nil
++		}
++		in.ClosedAt, in.ClosedBy = py.ISO(now), fmt.Sprintf("a completed check (pid %d)", os.Getpid())
++		in.RecoveryMsg = checkerSend(cfg, cfg.Duty, fmt.Sprintf("[agent-loop] checker incident %s RECOVERED at %s: the outside check completed again after %d failure(s) (last: %s).",
++			in.ID, in.ClosedAt, in.Failures, in.LastResult), now)
++		out = append(out, "checker incident "+in.ID+" closed; duty "+in.RecoveryMsg)
++		return writeJSON(checkerIncidentPath(cfg), in)
++	})
++	return out
++}
++
++// checkerSend is one bounded wake; "sent <time>" only on rc 0/3.
++func checkerSend(cfg *Config, seat, text string, now time.Time) string {
++	run := cfg.Run
++	if run == nil {
++		run = host.ExecRunner
++	}
++	p, err := run([]string{cfg.Wake, cfg.Seats[seat], text}, []string{"AGENTDECK_PROFILE=" + cfg.Profile}, CheckerSendTimeout)
++	switch {
++	case err != nil:
++		return "failed " + py.ISO(now) + ": " + err.Error()
++	case p.RC == host.WakeRCSent || p.RC == host.WakeRCQueued:
++		return "sent " + py.ISO(now)
++	default:
++		return fmt.Sprintf("failed %s: wake rc %d %s", py.ISO(now), p.RC, strings.TrimSpace(p.Stderr))
++	}
++}
++
++// CheckerFailed is the OnFailure handler: record the failed check and own it.
++// result describes the failed unit (systemd Result, exit code/status).
++func CheckerFailed(cfg *Config, unit, result string, now time.Time) (*CheckerIncident, error) {
++	var in CheckerIncident
++	err := withCheckerLock(cfg, func() error {
++		if !readJSONInto(checkerIncidentPath(cfg), &in) || in.ClosedAt != "" {
++			in = CheckerIncident{ID: fmt.Sprintf("C-%d", now.Unix()), OpenedAt: py.ISO(now)}
++		}
++		in.Failures++
++		in.LastAt, in.LastResult = py.ISO(now), unit+": "+result
++		var p PendingCheck
++		if readJSONInto(pendingCheckPath(cfg), &p) {
++			in.Pending = fmt.Sprintf("%d check(s) did not complete since %s (last: %s)", p.Count, p.FirstAt, p.LastReason)
++		}
++		if err := writeJSON(checkerIncidentPath(cfg), in); err != nil { // the failure is recorded before any send
++			return err
++		}
++		text := func(role string) string {
++			return fmt.Sprintf("[agent-loop] OUTSIDE CHECK FAILED (checker incident %s, %d failure(s) since %s): %s. %s You are %s. The loop's liveness and timeout escalations are not being checked until the check completes again. See: agent-loop status --config %s; journalctl --user -u %s",
++				in.ID, in.Failures, in.OpenedAt, in.LastResult, in.Pending, role, cfg.Path, unit)
++		}
++		if !strings.HasPrefix(in.Duty, "sent") {
++			in.Duty = checkerSend(cfg, cfg.Duty, text("duty"), now)
++		}
++		dutySent, _ := py.Instant(strings.TrimPrefix(in.Duty, "sent "))
++		if !strings.HasPrefix(in.Director, "sent") &&
++			(!strings.HasPrefix(in.Duty, "sent") || now.Sub(dutySent) >= CheckerDirectorAfter) {
++			in.Director = checkerSend(cfg, cfg.Director, text("director"), now)
++		}
++		return writeJSON(checkerIncidentPath(cfg), in)
++	})
++	return &in, err
++}
+diff --git a/internal/loop/handoff_p12_test.go b/internal/loop/handoff_p12_test.go
+index dfc79eb..66dbebf 100644
+--- a/internal/loop/handoff_p12_test.go
++++ b/internal/loop/handoff_p12_test.go
+@@ -65,9 +65,11 @@ func TestAdmissionIsCappedAndRefusalIsVisible(t *testing.T) {
+ 	a, err := LockLedger(r.cfg, time.Second)
+ 	must(t, err)
+ 	defer a.Unlock()
+-	go LockLedger(r.cfg, 2*time.Second) // takes the one place
++	done := make(chan struct{})
++	go func() { LockLedger(r.cfg, 800*time.Millisecond); close(done) }() // takes the one place
+ 	time.Sleep(100 * time.Millisecond)
+ 	_, err = LockLedger(r.cfg, 300*time.Millisecond)
++	<-done // the waiter gives up before the test's directory is removed
+ 	if f, ok := host.IsFault(err); !ok || f.Code != "E_LEDGER_SATURATED" {
+ 		t.Fatalf("a full class was not refused visibly: %v", err)
+ 	}
+diff --git a/internal/loop/liveness.go b/internal/loop/liveness.go
+index 15cecf8..6ffe74d 100644
+--- a/internal/loop/liveness.go
++++ b/internal/loop/liveness.go
+@@ -473,9 +473,21 @@ func (c *Checker) Check() (Verdict, []string, error) {
+ 			did = append(did, "timeout: "+m)
+ 		}
+ 		if eerr != nil {
++			// P12-checker-ownership-1: the ledger part did not run. Record it
++			// durably (no ledger lock) and fail the check: never a completed one.
+ 			did = append(did, "timeout escalation failed: "+eerr.Error())
++			if perr := RecordPendingCheck(c.Cfg, c.Now, eerr.Error()); perr != nil {
++				did = append(did, "pending check NOT recorded: "+perr.Error())
++			}
++			if err == nil {
++				err = fmt.Errorf("check incomplete: %v", eerr)
++			}
++			return v, did, err
+ 		}
+ 	}
++	if err == nil {
++		did = append(did, ReconcileCheck(c.Cfg, c.Now)...)
++	}
+ 	return v, did, err
+ }
+ 
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 2fbaa7b..547a284 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -412,10 +412,11 @@ func (k *LedgerLock) Unlock() {
+ 	k.f.Close()
+ }
+ 
+-// withTimeouts takes the ledger lock (bounded 30 s), opens the ledger fresh
+-// and runs fn: the outside check's entry point.
++// withTimeouts takes the ledger lock (bounded CheckLockWait, so the check
++// service's TimeoutStartSec holds), opens the ledger fresh and runs fn: the
++// outside check's entry point.
+ func withTimeouts(cfg *Config, clock core.DriverClock, fn func(f *Loop) error) error {
+-	k, err := LockLedger(cfg, 30*time.Second)
++	k, err := LockLedger(cfg, CheckLockWait)
+ 	if err != nil {
+ 		return err
+ 	}

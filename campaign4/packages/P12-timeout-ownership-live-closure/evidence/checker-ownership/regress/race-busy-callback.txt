@@ -1,0 +1,14 @@
+== 97a57db11aa8a4a8 mode same workdir /tmp/p12-race-aoq0
+dispatch rc=0 L: worker (ex-L-w1); verifier fx-verifier
+A (run pass) frozen on the input pipe after loading the ledger at 23:40:26.933
+B still running after 12s
+releasing A at 23:40:39.053 (A held the lock 12s after B started)
+A rc=0 agent-loop: E_DEADLINE_EXPIRED: publish after deadline
+B rc=0 {"decision": "deferred", "due_marker": "/tmp/p12-race-aoq0/fx.db.due/L-w1.json", "reason": "E_LEDGER_BUSY: ledger /tmp/p12-race-aoq0/fx.db held by ano
+A output: 2026-09-23T23:40:39Z due: lock budget spent; remaining markers go to the next holder
+FINAL step=timed-out phase=BLOCKED timeout={"id": "T-L-w1", "action": "L-w1", "at": "2026-09-23T23:40:39Z", "cancel": "idle (msg-L-w1-2)", "director": "told", "callback_lateness": "15s", "deferred_callback": "2026-09-23T23:40:34Z"}
+due dir: 
+cancels=1 verifier_dispatches=0 director_notices=1
+   wake 23:40:19.421 W1 {"kind": "dispatch", "package": "L", "action": "L-w1", "execution": "ex-L-w1", "text": "w\
+   wake 23:40:39.060 W1 /cancel 
+   wake 23:40:39.063 D1 [agent-loop] deadline-expired:L. See: agent-loop status --config /tmp/p12-race-aoq0/fx.jso

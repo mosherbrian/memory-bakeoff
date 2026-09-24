@@ -1,0 +1,581 @@
+?   	agent-loop/cmd/agent-loop	[no test files]
+=== RUN   TestCoax
+=== RUN   TestCoax/lost_completion:_turn_ended,_no_result_row
+=== RUN   TestCoax/result_recorded:_nothing_to_do
+=== RUN   TestCoax/a_long_turn_that_has_not_ended_is_work,_not_a_stall
+=== RUN   TestCoax/ended_inside_the_grace_period:_give_the_controller_time
+=== RUN   TestCoax/the_ended_turn_is_from_before_this_dispatch
+=== RUN   TestCoax/PREPARED_answers_a_prepare_dispatch
+=== RUN   TestCoax/only_a_CONFIRMED_row_since:_still_unanswered
+--- PASS: TestCoax (0.00s)
+    --- PASS: TestCoax/lost_completion:_turn_ended,_no_result_row (0.00s)
+    --- PASS: TestCoax/result_recorded:_nothing_to_do (0.00s)
+    --- PASS: TestCoax/a_long_turn_that_has_not_ended_is_work,_not_a_stall (0.00s)
+    --- PASS: TestCoax/ended_inside_the_grace_period:_give_the_controller_time (0.00s)
+    --- PASS: TestCoax/the_ended_turn_is_from_before_this_dispatch (0.00s)
+    --- PASS: TestCoax/PREPARED_answers_a_prepare_dispatch (0.00s)
+    --- PASS: TestCoax/only_a_CONFIRMED_row_since:_still_unanswered (0.00s)
+=== RUN   TestCoaxNamesClaimAndLastWords
+--- PASS: TestCoaxNamesClaimAndLastWords (0.00s)
+=== RUN   TestCoaxClassifies
+=== RUN   TestCoaxClassifies/never_sent
+=== RUN   TestCoaxClassifies/cut_off_with_no_text_(turn_limit)
+=== RUN   TestCoaxClassifies/killed_by_the_stall_watchdog
+=== RUN   TestCoaxClassifies/sent_and_failed
+=== RUN   TestCoaxClassifies/delivered,_not_acted_on
+=== RUN   TestCoaxClassifies/an_openwork_nudge_is_not_the_worker's_completion
+=== RUN   TestCoaxClassifies/a_coax's_own_wake_is_not_the_worker's_completion
+=== RUN   TestCoaxClassifies/a_wake_about_other_work_does_not_count
+--- PASS: TestCoaxClassifies (0.00s)
+    --- PASS: TestCoaxClassifies/never_sent (0.00s)
+    --- PASS: TestCoaxClassifies/cut_off_with_no_text_(turn_limit) (0.00s)
+    --- PASS: TestCoaxClassifies/killed_by_the_stall_watchdog (0.00s)
+    --- PASS: TestCoaxClassifies/sent_and_failed (0.00s)
+    --- PASS: TestCoaxClassifies/delivered,_not_acted_on (0.00s)
+    --- PASS: TestCoaxClassifies/an_openwork_nudge_is_not_the_worker's_completion (0.00s)
+    --- PASS: TestCoaxClassifies/a_coax's_own_wake_is_not_the_worker's_completion (0.00s)
+    --- PASS: TestCoaxClassifies/a_wake_about_other_work_does_not_count (0.00s)
+=== RUN   TestCoaxSkipsTheControllersOwnSteps
+--- PASS: TestCoaxSkipsTheControllersOwnSteps (0.00s)
+PASS
+ok  	agent-loop/internal/coax	0.006s
+=== RUN   TestCases
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_amend_supersedes_preserves_question.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_blocked_preserves_verifier_flight.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_blocked_verification_returns_to_checking_same_attempt.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_controller_recovery_deviation_rejected.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_decide_needs_enumerable_kind.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_expired_verification_needs_grant.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_fail_without_repair_budget_exhausts_directly.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_flight_rotates_on_publish.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_happy_path_completes.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_late_publish_is_leftover.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_publish_without_verifier_needs_bounded_handoff.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_repair_then_exhausted_no_allocation.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_start_without_deadline_rejected.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_terminal_has_no_execution_exit.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_unauthorized_role_fails_closed.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_valid_negative_completes_not_exhausts.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_verifier_spend_enforced.json
+=== RUN   TestCases/p3core/test_lifecycle/TestLifecycle.test_worker_cannot_self_verify.json
+=== RUN   TestCases/p5r2/test_atomic_authority/test_atomic_schema_variants_rejected.json
+=== RUN   TestCases/p5r2/test_atomic_authority/test_forged_sub_receipt_and_time_rejected.json
+=== RUN   TestCases/p5r2/test_atomic_authority/test_genuine_decide_forms_still_commit.json
+=== RUN   TestCases/p5r2/test_atomic_authority/test_genuine_hold_preserved_with_owned_task.json
+=== RUN   TestCases/p5r2/test_atomic_authority/test_mixed_both_orders_rejected_pre_mutation.json
+=== RUN   TestCases/p5r2/test_atomic_authority/test_mixed_forged_sub_rejected_no_rows.json
+=== RUN   TestCases/p5r2/test_durable_events/test_action_due_trigger_dedup_durable_across_reopen.json
+=== RUN   TestCases/p5r2/test_durable_events/test_crash_ambiguous_holds_no_exactly_once_claim.json
+=== RUN   TestCases/p5r2/test_durable_events/test_genuine_due_handoff_owned_path.json
+=== RUN   TestCases/p5r2/test_durable_events/test_genuine_due_verifier_after_rotation.json
+=== RUN   TestCases/p5r2/test_durable_events/test_genuine_due_worker_interrupts_once.json
+=== RUN   TestCases/p5r2/test_durable_events/test_interrupted_effect_acknowledged_in_world.json
+=== RUN   TestCases/p5r2/test_durable_events/test_output_hashes_and_status_simulated.json
+=== RUN   TestCases/p5r2/test_durable_events/test_probe1_stale_worker_deadline_noop_in_checking.json
+=== RUN   TestCases/p5r2/test_durable_events/test_probe2_early_current_deadline_noop_before_due.json
+=== RUN   TestCases/p5r2/test_durable_events/test_probe3_reopen_cannot_repeat_stop_wake.json
+=== RUN   TestCases/p5r2/test_durable_events/test_wrong_package_and_old_generation_noop.json
+=== RUN   TestCases/p5r2/test_ingress/test_backdated_retains_both_times_no_retro_auth.json
+=== RUN   TestCases/p5r2/test_ingress/test_caller_start_deadline_forged.json
+=== RUN   TestCases/p5r2/test_ingress/test_deadline_derived_from_trusted_start.json
+=== RUN   TestCases/p5r2/test_ingress/test_duplicate_append_idempotent.json
+=== RUN   TestCases/p5r2/test_ingress/test_duration_and_grant_phase_mismatch.json
+=== RUN   TestCases/p5r2/test_ingress/test_excess_future_occurrence_quarantined.json
+=== RUN   TestCases/p5r2/test_ingress/test_expired_unknown_mismatched_grant.json
+=== RUN   TestCases/p5r2/test_ingress/test_forged_recorded_fields_rejected.json
+=== RUN   TestCases/p5r2/test_ingress/test_future_occurrence_within_tolerance_ok.json
+=== RUN   TestCases/p5r2/test_ingress/test_grants_persist_across_restart.json
+=== RUN   TestCases/p5r2/test_ingress/test_legitimate_long_deadline_within_grant.json
+=== RUN   TestCases/p5r2/test_ingress/test_malformed_occurred_quarantined.json
+=== RUN   TestCases/p5r2/test_ingress/test_restart_replays_receipt_unchanged.json
+=== RUN   TestCases/p5r2/test_ingress/test_wall_jump_backward_quarantined.json
+=== RUN   TestCases/p5r2/test_ingress/test_wall_jump_forward_quarantined_deadlines_kept.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_action_due_dedup_across_restart_and_status.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_ambiguous_delivery_holds_no_redispatch.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_blocked_verifier_resume_never_reruns_worker.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_crash_after_ack_settled.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_crash_before_delivery_redelivers_same_action.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_duplicate_delivery_no_new_attempt.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_happy_path_authz_to_close.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_lost_timer_reconstructed_no_duplicate_stopwake.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_missing_disposition_reproduces_tern_omission.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_never_armed_deadline_is_noop.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_removed_deadline_is_noop.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_repeated_completion_deadline_trigger_dedup.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_rest_after_last_package_no_auto_authorize.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_stale_worker_timer_cannot_expire_verifier.json
+=== RUN   TestCases/p5r2/test_rehearsal/test_supervision_faults_and_masks.json
+=== RUN   TestCases/p5r2/test_repair/test_d1_ambiguous_receipt_holds_owned.json
+=== RUN   TestCases/p5r2/test_repair/test_d1_crash_after_interrupt_before_stop.json
+=== RUN   TestCases/p5r2/test_repair/test_d1_crash_after_stop_before_wake.json
+=== RUN   TestCases/p5r2/test_repair/test_d1_crash_after_stop_call_before_local_ack.json
+=== RUN   TestCases/p5r2/test_repair/test_d1_crash_after_wake_before_combined_ack.json
+=== RUN   TestCases/p5r2/test_repair/test_d2_cancel_current_timer_then_due_callback_noop.json
+=== RUN   TestCases/p5r2/test_repair/test_d2_cancellation_survives_reopen_loss_does_not.json
+=== RUN   TestCases/p5r2/test_repair/test_d2_cancelled_package_stays_ledger_accountable.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_archived_failure_now_commits_terminal_close.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_atomic_append_decide_form_commits_and_survives_reopen.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_atomic_replay_idempotent_both_forms.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_atomic_wrong_actor_forged_receipt_still_fail.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_invalid_disposition_leaves_both_rows_absent.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_nonterminal_pair_rejected_without_writes.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_pair_revision_mismatch_rejected_without_writes.json
+=== RUN   TestCases/p5r2/test_repair2_atomic/test_standalone_decide_from_checking_still_fails.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d1_atomic_decide_needs_trusted_actor.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d1_every_public_path_persists_bound_actor.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d1_forged_director_claim_rejected_trusted_context_wins.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d1_raw_admit_caller_actor_rejected.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d1_terminal_subevent_actor_rejected.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d1_untrusted_actor_context_rejected.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d2_actual_phase_not_hints.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d2_checking_grant_cannot_authorize_running_start.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d2_grantless_2099_verifier_deadline_rejected.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d2_nested_grant_cover_accepted.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d2_nested_handoff_grant_routes.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d2_start_needs_explicit_authorization.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d3_backward_utc_needs_bounded_reconcile.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d3_cross_process_mono_never_compared.json
+=== RUN   TestCases/p5r2/test_repair_p5/test_d3_new_epoch_per_lifetime.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_distinct_verifier_still_completes_with_disposition.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_missing_producer_provenance_fails_closed_internal.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_module_bytes_are_new_core.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_module_origin_aliases_pass_parent_and_lookalike_fail.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_rejected_verdict_with_atomic_hold_decide_leaves_zero_writes.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_reopen_preserves_producer_and_rejection.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_role_relabel_and_spoofed_worker_seat_do_not_defeat_rule.json
+=== RUN   TestCases/r13/test_r13_identity_independence/test_same_principal_verify_pass_and_fail_reject_before_mutation.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_A1_pair_duplicate_no_phantom_and_retry_commits.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_B_public_replay_idempotent_second_rejected.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_B_second_decide_rejects_replay_idempotent_amend_ok.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_C_decide_grant_ref_rejects_valid_forms_commit.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_D_instant_deadline_ordering.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_E_atomic_phase_matrix_no_silent_drop.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_module_bytes_are_new_core.json
+=== RUN   TestCases/r13/test_r13_record_integrity/test_module_origin_aliases_pass_parent_and_lookalike_fail.json
+=== RUN   TestCases/supplement/test_boundaries/test_attempt_budget_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_decision_task_and_decide_after_close.json
+=== RUN   TestCases/supplement/test_boundaries/test_duration_and_skew_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_lifecycle_random_walks.json
+=== RUN   TestCases/supplement/test_boundaries/test_nested_deadline_cap_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_publish_at_deadline_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_recovery_ceiling_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_start_ack_recording.json
+=== RUN   TestCases/supplement/test_boundaries/test_validator_deadline_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_validator_random_perturbations.json
+=== RUN   TestCases/supplement/test_boundaries/test_validator_successor_chains.json
+=== RUN   TestCases/supplement/test_boundaries/test_validator_trigger_edges.json
+=== RUN   TestCases/supplement/test_boundaries/test_verifier_spend_edges.json
+--- PASS: TestCases (0.17s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_amend_supersedes_preserves_question.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_blocked_preserves_verifier_flight.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_blocked_verification_returns_to_checking_same_attempt.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_controller_recovery_deviation_rejected.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_decide_needs_enumerable_kind.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_expired_verification_needs_grant.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_fail_without_repair_budget_exhausts_directly.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_flight_rotates_on_publish.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_happy_path_completes.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_late_publish_is_leftover.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_publish_without_verifier_needs_bounded_handoff.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_repair_then_exhausted_no_allocation.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_start_without_deadline_rejected.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_terminal_has_no_execution_exit.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_unauthorized_role_fails_closed.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_valid_negative_completes_not_exhausts.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_verifier_spend_enforced.json (0.00s)
+    --- PASS: TestCases/p3core/test_lifecycle/TestLifecycle.test_worker_cannot_self_verify.json (0.00s)
+    --- PASS: TestCases/p5r2/test_atomic_authority/test_atomic_schema_variants_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_atomic_authority/test_forged_sub_receipt_and_time_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_atomic_authority/test_genuine_decide_forms_still_commit.json (0.00s)
+    --- PASS: TestCases/p5r2/test_atomic_authority/test_genuine_hold_preserved_with_owned_task.json (0.00s)
+    --- PASS: TestCases/p5r2/test_atomic_authority/test_mixed_both_orders_rejected_pre_mutation.json (0.00s)
+    --- PASS: TestCases/p5r2/test_atomic_authority/test_mixed_forged_sub_rejected_no_rows.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_action_due_trigger_dedup_durable_across_reopen.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_crash_ambiguous_holds_no_exactly_once_claim.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_genuine_due_handoff_owned_path.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_genuine_due_verifier_after_rotation.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_genuine_due_worker_interrupts_once.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_interrupted_effect_acknowledged_in_world.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_output_hashes_and_status_simulated.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_probe1_stale_worker_deadline_noop_in_checking.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_probe2_early_current_deadline_noop_before_due.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_probe3_reopen_cannot_repeat_stop_wake.json (0.00s)
+    --- PASS: TestCases/p5r2/test_durable_events/test_wrong_package_and_old_generation_noop.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_backdated_retains_both_times_no_retro_auth.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_caller_start_deadline_forged.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_deadline_derived_from_trusted_start.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_duplicate_append_idempotent.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_duration_and_grant_phase_mismatch.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_excess_future_occurrence_quarantined.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_expired_unknown_mismatched_grant.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_forged_recorded_fields_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_future_occurrence_within_tolerance_ok.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_grants_persist_across_restart.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_legitimate_long_deadline_within_grant.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_malformed_occurred_quarantined.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_restart_replays_receipt_unchanged.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_wall_jump_backward_quarantined.json (0.00s)
+    --- PASS: TestCases/p5r2/test_ingress/test_wall_jump_forward_quarantined_deadlines_kept.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_action_due_dedup_across_restart_and_status.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_ambiguous_delivery_holds_no_redispatch.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_blocked_verifier_resume_never_reruns_worker.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_crash_after_ack_settled.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_crash_before_delivery_redelivers_same_action.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_duplicate_delivery_no_new_attempt.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_happy_path_authz_to_close.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_lost_timer_reconstructed_no_duplicate_stopwake.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_missing_disposition_reproduces_tern_omission.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_never_armed_deadline_is_noop.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_removed_deadline_is_noop.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_repeated_completion_deadline_trigger_dedup.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_rest_after_last_package_no_auto_authorize.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_stale_worker_timer_cannot_expire_verifier.json (0.00s)
+    --- PASS: TestCases/p5r2/test_rehearsal/test_supervision_faults_and_masks.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d1_ambiguous_receipt_holds_owned.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d1_crash_after_interrupt_before_stop.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d1_crash_after_stop_before_wake.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d1_crash_after_stop_call_before_local_ack.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d1_crash_after_wake_before_combined_ack.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d2_cancel_current_timer_then_due_callback_noop.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d2_cancellation_survives_reopen_loss_does_not.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair/test_d2_cancelled_package_stays_ledger_accountable.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_archived_failure_now_commits_terminal_close.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_atomic_append_decide_form_commits_and_survives_reopen.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_atomic_replay_idempotent_both_forms.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_atomic_wrong_actor_forged_receipt_still_fail.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_invalid_disposition_leaves_both_rows_absent.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_nonterminal_pair_rejected_without_writes.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_pair_revision_mismatch_rejected_without_writes.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair2_atomic/test_standalone_decide_from_checking_still_fails.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d1_atomic_decide_needs_trusted_actor.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d1_every_public_path_persists_bound_actor.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d1_forged_director_claim_rejected_trusted_context_wins.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d1_raw_admit_caller_actor_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d1_terminal_subevent_actor_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d1_untrusted_actor_context_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d2_actual_phase_not_hints.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d2_checking_grant_cannot_authorize_running_start.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d2_grantless_2099_verifier_deadline_rejected.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d2_nested_grant_cover_accepted.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d2_nested_handoff_grant_routes.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d2_start_needs_explicit_authorization.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d3_backward_utc_needs_bounded_reconcile.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d3_cross_process_mono_never_compared.json (0.00s)
+    --- PASS: TestCases/p5r2/test_repair_p5/test_d3_new_epoch_per_lifetime.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_distinct_verifier_still_completes_with_disposition.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_missing_producer_provenance_fails_closed_internal.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_module_bytes_are_new_core.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_module_origin_aliases_pass_parent_and_lookalike_fail.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_rejected_verdict_with_atomic_hold_decide_leaves_zero_writes.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_reopen_preserves_producer_and_rejection.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_role_relabel_and_spoofed_worker_seat_do_not_defeat_rule.json (0.01s)
+    --- PASS: TestCases/r13/test_r13_identity_independence/test_same_principal_verify_pass_and_fail_reject_before_mutation.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_A1_pair_duplicate_no_phantom_and_retry_commits.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_B_public_replay_idempotent_second_rejected.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_B_second_decide_rejects_replay_idempotent_amend_ok.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_C_decide_grant_ref_rejects_valid_forms_commit.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_D_instant_deadline_ordering.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_E_atomic_phase_matrix_no_silent_drop.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_module_bytes_are_new_core.json (0.00s)
+    --- PASS: TestCases/r13/test_r13_record_integrity/test_module_origin_aliases_pass_parent_and_lookalike_fail.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_attempt_budget_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_decision_task_and_decide_after_close.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_duration_and_skew_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_lifecycle_random_walks.json (0.01s)
+    --- PASS: TestCases/supplement/test_boundaries/test_nested_deadline_cap_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_publish_at_deadline_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_recovery_ceiling_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_start_ack_recording.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_validator_deadline_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_validator_random_perturbations.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_validator_successor_chains.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_validator_trigger_edges.json (0.00s)
+    --- PASS: TestCases/supplement/test_boundaries/test_verifier_spend_edges.json (0.00s)
+PASS
+ok  	agent-loop/internal/conform	0.177s
+=== RUN   TestNoLiveEffectsInCore
+--- PASS: TestNoLiveEffectsInCore (0.00s)
+=== RUN   TestOnlyIngressWritesTheStore
+--- PASS: TestOnlyIngressWritesTheStore (0.00s)
+PASS
+ok  	agent-loop/internal/core	0.002s
+=== RUN   TestPendingJudgmentAppearsAndResolves
+--- PASS: TestPendingJudgmentAppearsAndResolves (0.00s)
+=== RUN   TestNothingMissingLooksHealthy
+--- PASS: TestNothingMissingLooksHealthy (0.00s)
+=== RUN   TestOverheadMatchesTheSequence
+--- PASS: TestOverheadMatchesTheSequence (0.00s)
+=== RUN   TestPackageWithoutPrincipalsOffersNoCommand
+--- PASS: TestPackageWithoutPrincipalsOffersNoCommand (0.00s)
+PASS
+ok  	agent-loop/internal/expose	0.015s
+=== RUN   TestInvalidDispositionNeverRests
+--- PASS: TestInvalidDispositionNeverRests (0.00s)
+=== RUN   TestAtomicCloseSucceedsOnce
+--- PASS: TestAtomicCloseSucceedsOnce (0.00s)
+=== RUN   TestCrashBeforeCommitReconciles
+--- PASS: TestCrashBeforeCommitReconciles (0.00s)
+=== RUN   TestCrashAfterCommitDoesNotRepeat
+--- PASS: TestCrashAfterCommitDoesNotRepeat (0.00s)
+=== RUN   TestConflictingDispositionRejects
+--- PASS: TestConflictingDispositionRejects (0.00s)
+=== RUN   TestPartialVerdictGetsOnlyTheDecide
+--- PASS: TestPartialVerdictGetsOnlyTheDecide (0.00s)
+=== RUN   TestWrongIdentityRejects
+--- PASS: TestWrongIdentityRejects (0.00s)
+=== RUN   TestMissingEscalationBoundIsOwned
+--- PASS: TestMissingEscalationBoundIsOwned (0.00s)
+=== RUN   TestDirNotifier
+--- PASS: TestDirNotifier (0.05s)
+=== RUN   TestParity
+=== RUN   TestParity/wake_transport_maps_exit_codes_and_receipts
+=== RUN   TestParity/wake_transport_disabled_refuses_every_send
+=== RUN   TestParity/fake_timers:_early,_due,_stale,_handled,_cancelled,_durable
+=== RUN   TestParity/host_timers:_create,_reuse,_conflict,_refuse,_query,_cancel
+=== RUN   TestParity/host_timers_disabled
+=== RUN   TestParity/execution_identity:_register,_resume,_replace,_stale_results,_trail
+=== RUN   TestParity/capture:_trusted_receipt_time,_dedup,_conflict,_skew
+=== RUN   TestParity/outbox:_pending_until_delivered,_unrouted,_ack
+=== RUN   TestParity/outbox_reconcile_after_restart:_resend_same_identity,_hold,_ack
+=== RUN   TestParity/escalation_needs_delivered_evidence,_survives_reopen
+=== RUN   TestParity/escalation_through_a_refusing_transport_records_no_message
+=== RUN   TestParity/arming_from_the_ledger
+=== RUN   TestParity/turn_watcher:_once_per_line,_partial_tails_held,_notified_first
+=== RUN   TestParity/claims:_publication_and_validation
+=== RUN   TestParity/handoff:_worker_end_->_verifier_->_terminal_rest
+=== RUN   TestParity/handoff:_an_invalid_disposition_fails_the_close;_a_retry_still_marks_it_closed
+=== RUN   TestParity/handoff_refusals_and_owned_recovery
+=== RUN   TestParity/handoff:_verifier_rejection_authenticated_against_committed_worker_hashes
+=== RUN   TestParity/handoff:_declared_intent_rolls_forward,_director_close_recovers
+=== RUN   TestParity/handoff:_a_replaced_stream_file_is_a_new_incarnation
+=== RUN   TestParity/timer_callback_checks_identity_against_the_persisted_record
+=== RUN   TestParity/handoff:_a_failed_claim_whose_committed_artifact_is_intact_is_not_a_rejection
+=== RUN   TestParity/outbox_settles_only_on_a_valid_receipt_plus_proof_the_execution_ran
+=== NAME  TestParity
+    parity_test.go:112: 316 of 321 ops identical to Python; 5 held to adjudicated corrections
+--- PASS: TestParity (0.03s)
+    --- PASS: TestParity/wake_transport_maps_exit_codes_and_receipts (0.00s)
+    --- PASS: TestParity/wake_transport_disabled_refuses_every_send (0.00s)
+    --- PASS: TestParity/fake_timers:_early,_due,_stale,_handled,_cancelled,_durable (0.00s)
+    --- PASS: TestParity/host_timers:_create,_reuse,_conflict,_refuse,_query,_cancel (0.00s)
+    --- PASS: TestParity/host_timers_disabled (0.00s)
+    --- PASS: TestParity/execution_identity:_register,_resume,_replace,_stale_results,_trail (0.00s)
+    --- PASS: TestParity/capture:_trusted_receipt_time,_dedup,_conflict,_skew (0.00s)
+    --- PASS: TestParity/outbox:_pending_until_delivered,_unrouted,_ack (0.00s)
+    --- PASS: TestParity/outbox_reconcile_after_restart:_resend_same_identity,_hold,_ack (0.00s)
+    --- PASS: TestParity/escalation_needs_delivered_evidence,_survives_reopen (0.00s)
+    --- PASS: TestParity/escalation_through_a_refusing_transport_records_no_message (0.00s)
+    --- PASS: TestParity/arming_from_the_ledger (0.00s)
+    --- PASS: TestParity/turn_watcher:_once_per_line,_partial_tails_held,_notified_first (0.00s)
+    --- PASS: TestParity/claims:_publication_and_validation (0.00s)
+    --- PASS: TestParity/handoff:_worker_end_->_verifier_->_terminal_rest (0.00s)
+    --- PASS: TestParity/handoff:_an_invalid_disposition_fails_the_close;_a_retry_still_marks_it_closed (0.00s)
+    --- PASS: TestParity/handoff_refusals_and_owned_recovery (0.00s)
+    --- PASS: TestParity/handoff:_verifier_rejection_authenticated_against_committed_worker_hashes (0.00s)
+    --- PASS: TestParity/handoff:_declared_intent_rolls_forward,_director_close_recovers (0.00s)
+    --- PASS: TestParity/handoff:_a_replaced_stream_file_is_a_new_incarnation (0.00s)
+    --- PASS: TestParity/timer_callback_checks_identity_against_the_persisted_record (0.00s)
+    --- PASS: TestParity/handoff:_a_failed_claim_whose_committed_artifact_is_intact_is_not_a_rejection (0.00s)
+    --- PASS: TestParity/outbox_settles_only_on_a_valid_receipt_plus_proof_the_execution_ran (0.00s)
+=== RUN   TestExecRunnerTimeoutBoundsAGrandchildHoldingThePipes
+--- PASS: TestExecRunnerTimeoutBoundsAGrandchildHoldingThePipes (1.00s)
+=== RUN   TestCommandForKeepsTheRelativeForm
+--- PASS: TestCommandForKeepsTheRelativeForm (0.00s)
+=== RUN   TestCommandAtIsAnExplicitUTCInstant
+--- PASS: TestCommandAtIsAnExplicitUTCInstant (0.00s)
+=== RUN   TestCancelReceiptsAreClassifiedExactly
+--- PASS: TestCancelReceiptsAreClassifiedExactly (0.00s)
+=== RUN   TestRearmHostReusesTheWaitingUnitAndNeverMovesTheDeadline
+--- PASS: TestRearmHostReusesTheWaitingUnitAndNeverMovesTheDeadline (0.00s)
+PASS
+ok  	agent-loop/internal/host	1.092s
+=== RUN   TestPriorityOrderAndNoTwoPriorityGrantsInARow
+--- PASS: TestPriorityOrderAndNoTwoPriorityGrantsInARow (0.00s)
+=== RUN   TestClassesOfTheAckAndTheOutsideCheck
+--- PASS: TestClassesOfTheAckAndTheOutsideCheck (0.00s)
+=== RUN   TestDetectionIsTheEarliestTrustedTime
+--- PASS: TestDetectionIsTheEarliestTrustedTime (0.00s)
+=== RUN   TestAPendingRequestIsNotAnAckUntilAHolderCommitsIt
+--- PASS: TestAPendingRequestIsNotAnAckUntilAHolderCommitsIt (0.00s)
+=== RUN   TestReplayConflictAndQueueBound
+--- PASS: TestReplayConflictAndQueueBound (1.10s)
+=== RUN   TestForgedExpiredAndLateRequests
+--- PASS: TestForgedExpiredAndLateRequests (1.11s)
+=== RUN   TestASpentBudgetLeavesTheRequestPendingNotRejected
+--- PASS: TestASpentBudgetLeavesTheRequestPendingNotRejected (0.00s)
+=== RUN   TestLive1DecideWithFixturePrincipals
+--- PASS: TestLive1DecideWithFixturePrincipals (0.01s)
+=== RUN   TestOnPassWithFixturePrincipals
+--- PASS: TestOnPassWithFixturePrincipals (0.00s)
+=== RUN   TestRebindingIsRefusedBeforeAnyEffect
+--- PASS: TestRebindingIsRefusedBeforeAnyEffect (0.00s)
+=== RUN   TestWorkerRebindingBlocksTheHandoff
+--- PASS: TestWorkerRebindingBlocksTheHandoff (0.00s)
+=== RUN   TestMissingPrincipalIsNeverBackfilled
+--- PASS: TestMissingPrincipalIsNeverBackfilled (0.00s)
+=== RUN   TestDutySeatCannotBeWorkerOrVerifier
+--- PASS: TestDutySeatCannotBeWorkerOrVerifier (0.00s)
+=== RUN   TestTimerCallbackChecksDuty
+--- PASS: TestTimerCallbackChecksDuty (0.00s)
+=== RUN   TestTheBudgetedRunnerCapsAndRefusesIO
+--- PASS: TestTheBudgetedRunnerCapsAndRefusesIO (1.60s)
+=== RUN   TestAPassYieldsWhenTheBudgetIsShortAndSaysSo
+--- PASS: TestAPassYieldsWhenTheBudgetIsShortAndSaysSo (0.00s)
+=== RUN   TestDueMarkersAreBudgetedOldestFirstAndSaturationIsReported
+--- PASS: TestDueMarkersAreBudgetedOldestFirstAndSaturationIsReported (0.01s)
+=== RUN   TestACheckThatCannotTakeTheLedgerIsPendingAndFailed
+--- PASS: TestACheckThatCannotTakeTheLedgerIsPendingAndFailed (10.01s)
+=== RUN   TestTheHandlerEscalatesToTheDirectorAndDedupes
+--- PASS: TestTheHandlerEscalatesToTheDirectorAndDedupes (0.00s)
+=== RUN   TestNeverAckedTimeoutEscalatesDutyThenDirector
+--- PASS: TestNeverAckedTimeoutEscalatesDutyThenDirector (0.00s)
+=== RUN   TestAnAckStopsTheNoAckEscalation
+--- PASS: TestAnAckStopsTheNoAckEscalation (0.00s)
+=== RUN   TestFailedNoAckSendIsRetriedNotRecordedDelivered
+--- PASS: TestFailedNoAckSendIsRetriedNotRecordedDelivered (0.00s)
+=== RUN   TestNoAckEscalationRefusesAChangedPrincipal
+--- PASS: TestNoAckEscalationRefusesAChangedPrincipal (0.00s)
+=== RUN   TestEarlyCallbackRearmsTheSameUnitAndIsDueExactlyOnce
+--- PASS: TestEarlyCallbackRearmsTheSameUnitAndIsDueExactlyOnce (0.00s)
+=== RUN   TestRearmRefusesWrongActionAndOwnsAFailedTimer
+--- PASS: TestRearmRefusesWrongActionAndOwnsAFailedTimer (0.00s)
+=== RUN   TestTheOnlyDuplicateNoticeIsBounded
+--- PASS: TestTheOnlyDuplicateNoticeIsBounded (0.00s)
+=== RUN   TestStoppedRunTimeoutIsEscalatedByTheOutsideCheck
+--- PASS: TestStoppedRunTimeoutIsEscalatedByTheOutsideCheck (0.00s)
+=== RUN   TestRunAndCheckerNeverDoubleEscalateOrLoseAnAck
+--- PASS: TestRunAndCheckerNeverDoubleEscalateOrLoseAnAck (0.01s)
+=== RUN   TestLedgerLockIsExclusiveAndBounded
+--- PASS: TestLedgerLockIsExclusiveAndBounded (0.31s)
+=== RUN   TestMarkTimedOutOnlyForTheCoresCurrentAction
+--- PASS: TestMarkTimedOutOnlyForTheCoresCurrentAction (0.00s)
+=== RUN   TestDueMarkerIsSettledByTheNextHolder
+--- PASS: TestDueMarkerIsSettledByTheNextHolder (0.00s)
+=== RUN   TestDueMarkerHintsAreCheckedAgainstTheLedger
+--- PASS: TestDueMarkerHintsAreCheckedAgainstTheLedger (0.00s)
+=== RUN   TestAHolderThatLocksAgainGoesBehindAWaiter
+--- PASS: TestAHolderThatLocksAgainGoesBehindAWaiter (0.75s)
+=== RUN   TestHoldersAndGivenUpWaitersLeaveNoQueueEntry
+--- PASS: TestHoldersAndGivenUpWaitersLeaveNoQueueEntry (0.10s)
+=== RUN   TestAdmissionIsCappedAndRefusalIsVisible
+--- PASS: TestAdmissionIsCappedAndRefusalIsVisible (0.81s)
+=== RUN   TestDeadReusedStaleAndMalformedEntriesCannotWedgeTheQueue
+--- PASS: TestDeadReusedStaleAndMalformedEntriesCannotWedgeTheQueue (0.00s)
+=== RUN   TestSaturationIsStampedOnlyOnAnAcceptedWake
+=== RUN   TestSaturationIsStampedOnlyOnAnAcceptedWake/rc_1_refused
+=== RUN   TestSaturationIsStampedOnlyOnAnAcceptedWake/runner_error
+=== RUN   TestSaturationIsStampedOnlyOnAnAcceptedWake/budget_refusal
+=== RUN   TestSaturationIsStampedOnlyOnAnAcceptedWake/rc_0_started
+=== RUN   TestSaturationIsStampedOnlyOnAnAcceptedWake/rc_3_queued
+--- PASS: TestSaturationIsStampedOnlyOnAnAcceptedWake (0.00s)
+    --- PASS: TestSaturationIsStampedOnlyOnAnAcceptedWake/rc_1_refused (0.00s)
+    --- PASS: TestSaturationIsStampedOnlyOnAnAcceptedWake/runner_error (0.00s)
+    --- PASS: TestSaturationIsStampedOnlyOnAnAcceptedWake/budget_refusal (0.00s)
+    --- PASS: TestSaturationIsStampedOnlyOnAnAcceptedWake/rc_0_started (0.00s)
+    --- PASS: TestSaturationIsStampedOnlyOnAnAcceptedWake/rc_3_queued (0.00s)
+=== RUN   TestOneLabelledRepeatPerIncidentAcrossCrashes
+--- PASS: TestOneLabelledRepeatPerIncidentAcrossCrashes (0.00s)
+=== RUN   TestACancelIsNeverRepeatedAfterAnUnknownOutcome
+--- PASS: TestACancelIsNeverRepeatedAfterAnUnknownOutcome (0.00s)
+=== RUN   TestDefinitiveFailuresRetryWithBoundedBackoff
+--- PASS: TestDefinitiveFailuresRetryWithBoundedBackoff (0.00s)
+=== RUN   TestAnUnresolvedNoticeClosesItsDueMarkerAsAnOwnedFailure
+--- PASS: TestAnUnresolvedNoticeClosesItsDueMarkerAsAnOwnedFailure (0.00s)
+=== RUN   TestALostCounterNeverReusesALiveEntrysName
+--- PASS: TestALostCounterNeverReusesALiveEntrysName (0.00s)
+=== RUN   TestFutureTimeIsNeverFresh
+--- PASS: TestFutureTimeIsNeverFresh (0.00s)
+=== RUN   TestOnlyTheCurrentIncarnationCounts
+--- PASS: TestOnlyTheCurrentIncarnationCounts (0.00s)
+=== RUN   TestStartingNeverRecovers
+--- PASS: TestStartingNeverRecovers (0.00s)
+=== RUN   TestDamagedStateAlarmsAndKeepsTheBytes
+=== RUN   TestDamagedStateAlarmsAndKeepsTheBytes/malformed
+=== RUN   TestDamagedStateAlarmsAndKeepsTheBytes/truncated_with_an_open_incident_and_ack
+=== RUN   TestDamagedStateAlarmsAndKeepsTheBytes/partially_populated
+--- PASS: TestDamagedStateAlarmsAndKeepsTheBytes (0.01s)
+    --- PASS: TestDamagedStateAlarmsAndKeepsTheBytes/malformed (0.00s)
+    --- PASS: TestDamagedStateAlarmsAndKeepsTheBytes/truncated_with_an_open_incident_and_ack (0.00s)
+    --- PASS: TestDamagedStateAlarmsAndKeepsTheBytes/partially_populated (0.00s)
+=== RUN   TestUnreadableStateIsLeftUntouched
+--- PASS: TestUnreadableStateIsLeftUntouched (0.00s)
+=== RUN   TestNoPlaceToPreserveFailsLoudly
+--- PASS: TestNoPlaceToPreserveFailsLoudly (0.00s)
+=== RUN   TestUnreachableDutyReachesTheDirector
+--- PASS: TestUnreachableDutyReachesTheDirector (0.00s)
+=== RUN   TestAssessTable
+--- PASS: TestAssessTable (0.00s)
+=== RUN   TestIncidentFlow
+--- PASS: TestIncidentFlow (0.00s)
+=== RUN   TestAckBindsAndExpires
+--- PASS: TestAckBindsAndExpires (0.00s)
+=== RUN   TestIntentionalStopAndRestAreQuiet
+--- PASS: TestIntentionalStopAndRestAreQuiet (0.00s)
+=== RUN   TestRestartLoopEscalates
+--- PASS: TestRestartLoopEscalates (0.00s)
+=== RUN   TestUnknownIsNeverGreen
+--- PASS: TestUnknownIsNeverGreen (0.00s)
+=== RUN   TestRecordPassCountsErrors
+--- PASS: TestRecordPassCountsErrors (0.00s)
+=== RUN   TestHappyPathToDecision
+--- PASS: TestHappyPathToDecision (0.00s)
+=== RUN   TestOnPassClosesWithoutADecision
+--- PASS: TestOnPassClosesWithoutADecision (0.00s)
+=== RUN   TestVerifierFailWaitsForTheDirector
+--- PASS: TestVerifierFailWaitsForTheDirector (0.00s)
+=== RUN   TestTamperedArtifactIsOwnedRecovery
+--- PASS: TestTamperedArtifactIsOwnedRecovery (0.00s)
+=== RUN   TestOldTurnEndsAreIgnored
+--- PASS: TestOldTurnEndsAreIgnored (0.00s)
+=== RUN   TestNoTimerNoDispatch
+--- PASS: TestNoTimerNoDispatch (0.00s)
+=== RUN   TestDispatchRefusals
+--- PASS: TestDispatchRefusals (0.00s)
+=== RUN   TestRestartDoesNotResend
+--- PASS: TestRestartDoesNotResend (0.00s)
+=== RUN   TestDeadlineCancelsTheTurnAndTellsTheDirector
+--- PASS: TestDeadlineCancelsTheTurnAndTellsTheDirector (0.00s)
+=== RUN   TestSeatBindingIsCheckedBeforeDispatch
+--- PASS: TestSeatBindingIsCheckedBeforeDispatch (0.00s)
+=== RUN   TestChangedInputBlocksTheVerifierDispatch
+--- PASS: TestChangedInputBlocksTheVerifierDispatch (0.00s)
+=== RUN   TestHeldPackageWithChangedInputIsNotSent
+--- PASS: TestHeldPackageWithChangedInputIsNotSent (0.00s)
+=== RUN   TestPendingDecisionHoldsDependents
+--- PASS: TestPendingDecisionHoldsDependents (0.00s)
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds/idle_worker_(P11_L2/L6)
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds/running_turn_cancelled
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds/transport_refused
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds/receipt_for_another_session
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds/reply_without_a_receipt
+=== RUN   TestTimeoutSettlesWhateverTheCancelFinds/unknown_reply
+--- PASS: TestTimeoutSettlesWhateverTheCancelFinds (0.01s)
+    --- PASS: TestTimeoutSettlesWhateverTheCancelFinds/idle_worker_(P11_L2/L6) (0.00s)
+    --- PASS: TestTimeoutSettlesWhateverTheCancelFinds/running_turn_cancelled (0.00s)
+    --- PASS: TestTimeoutSettlesWhateverTheCancelFinds/transport_refused (0.00s)
+    --- PASS: TestTimeoutSettlesWhateverTheCancelFinds/receipt_for_another_session (0.00s)
+    --- PASS: TestTimeoutSettlesWhateverTheCancelFinds/reply_without_a_receipt (0.00s)
+    --- PASS: TestTimeoutSettlesWhateverTheCancelFinds/unknown_reply (0.00s)
+=== RUN   TestSettlementIsNotRepeated
+--- PASS: TestSettlementIsNotRepeated (0.00s)
+=== RUN   TestSettlementRefusesAPackageTheCoreDidNotInterrupt
+--- PASS: TestSettlementRefusesAPackageTheCoreDidNotInterrupt (0.00s)
+=== RUN   TestTimeoutAcknowledgement
+--- PASS: TestTimeoutAcknowledgement (0.00s)
+=== RUN   TestTimeoutAckRejectsAChangedPrincipal
+--- PASS: TestTimeoutAckRejectsAChangedPrincipal (0.00s)
+=== RUN   TestStepTimersAreArmedAtAnExplicitUTCInstant
+--- PASS: TestStepTimersAreArmedAtAnExplicitUTCInstant (0.00s)
+=== RUN   TestAReplayCompletesACrashedSettlement
+--- PASS: TestAReplayCompletesACrashedSettlement (0.00s)
+PASS
+ok  	agent-loop/internal/loop	15.941s
+?   	agent-loop/internal/py	[no test files]
+=== RUN   TestShadowSeesEachCase
+--- PASS: TestShadowSeesEachCase (0.00s)
+=== RUN   TestShadowHonoursTheLedgerVerifyWindow
+--- PASS: TestShadowHonoursTheLedgerVerifyWindow (0.00s)
+PASS
+ok  	agent-loop/internal/shadow	0.004s
+rc=0
