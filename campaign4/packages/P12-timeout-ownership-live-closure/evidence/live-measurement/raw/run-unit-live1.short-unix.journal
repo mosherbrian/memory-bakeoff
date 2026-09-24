@@ -1,0 +1,606 @@
+1790213020.587527 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Watchdog timeout (limit 1min 30s)!
+1790213020.587577 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Killing process 1805150 (agent-loop) with signal SIGABRT.
+1790213020.589760 strix-halo agent-loop[1805150]: SIGABRT: abort
+1790213020.589760 strix-halo agent-loop[1805150]: PC=0x48e2e1 m=5 sigcode=0
+1790213020.589760 strix-halo agent-loop[1805150]: goroutine 0 gp=0xf85b7f82960 m=5 mp=0xf85b8066008 [idle]:
+1790213020.589760 strix-halo agent-loop[1805150]: runtime.futex(0xceb2b8, 0x80, 0x0, 0x0, 0x0, 0x0)
+1790213020.589760 strix-halo agent-loop[1805150]:         runtime/sys_linux_amd64.s:575 +0x21 fp=0xf85b7e97ef8 sp=0xf85b7e97ef0 pc=0x48e2e1
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.futexsleep(0x0?, 0x0?, 0x5?)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/os_linux.go:73 +0x30 fp=0xf85b7e97f48 sp=0xf85b7e97ef8 pc=0x448ab0
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.notesleep(0xceb2b8)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/lock_futex.go:47 +0x87 fp=0xf85b7e97f80 sp=0xf85b7e97f48 pc=0x41d347
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.templateThread()
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:3001 +0x71 fp=0xf85b7e97fa0 sp=0xf85b7e97f80 pc=0x4535d1
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.mstart1()
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:1948 +0x93 fp=0xf85b7e97fc8 sp=0xf85b7e97fa0 pc=0x452013
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.mstart0()
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:1901 +0x75 fp=0xf85b7e97ff8 sp=0xf85b7e97fc8 pc=0x451f55
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.mstart()
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:393 +0xa fp=0xf85b7e98000 sp=0xf85b7e97ff8 pc=0x48ad2a
+1790213020.590422 strix-halo agent-loop[1805150]: goroutine 1 gp=0xf85b7dac1e0 m=nil [select]:
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.gopark(0xf85b8427c68?, 0x3?, 0xc0?, 0x54?, 0xf85b8427aea?)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8427970 sp=0xf85b8427950 pc=0x485b6a
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.selectgo(0xf85b8427c68, 0xf85b8427ae4, 0x0?, 0x0, 0x0?, 0x1)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/select.go:351 +0xa97 fp=0xf85b8427ab0 sp=0xf85b8427970 pc=0x460e77
+1790213020.590422 strix-halo agent-loop[1805150]: main.runRun({0xf85b7f840a0, 0x2, 0x2})
+1790213020.590422 strix-halo agent-loop[1805150]:         agent-loop/cmd/agent-loop/loop.go:393 +0x1059 fp=0xf85b8427e70 sp=0xf85b8427ab0 pc=0x88b799
+1790213020.590422 strix-halo agent-loop[1805150]: main.main()
+1790213020.590422 strix-halo agent-loop[1805150]:         agent-loop/cmd/agent-loop/main.go:38 +0x9a fp=0xf85b8427eb8 sp=0xf85b8427e70 pc=0x88ee5a
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.main()
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:302 +0x427 fp=0xf85b8427fe0 sp=0xf85b8427eb8 pc=0x44ed07
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8427fe8 sp=0xf85b8427fe0 pc=0x48c7a1
+1790213020.590422 strix-halo agent-loop[1805150]: goroutine 2 gp=0xf85b7dac780 m=nil [force gc (idle)]:
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e60fa8 sp=0xf85b7e60f88 pc=0x485b6a
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.goparkunlock(...)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:480
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.forcegchelper()
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:387 +0xb3 fp=0xf85b7e60fe0 sp=0xf85b7e60fa8 pc=0x44efd3
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e60fe8 sp=0xf85b7e60fe0 pc=0x48c7a1
+1790213020.590422 strix-halo agent-loop[1805150]: created by runtime.init.7 in goroutine 1
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:375 +0x1a
+1790213020.590422 strix-halo agent-loop[1805150]: goroutine 3 gp=0xf85b7dacd20 m=nil [GC sweep wait]:
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.gopark(0x1?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e61788 sp=0xf85b7e61768 pc=0x485b6a
+1790213020.590422 strix-halo agent-loop[1805150]: runtime.goparkunlock(...)
+1790213020.590422 strix-halo agent-loop[1805150]:         runtime/proc.go:480
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.bgsweep(0xf85b7dc2080)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgcsweep.go:324 +0x151 fp=0xf85b7e617c8 sp=0xf85b7e61788 pc=0x439cf1
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.gcenable.gowrap1()
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgc.go:214 +0x17 fp=0xf85b7e617e0 sp=0xf85b7e617c8 pc=0x47c9d7
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e617e8 sp=0xf85b7e617e0 pc=0x48c7a1
+1790213020.590955 strix-halo agent-loop[1805150]: created by runtime.gcenable in goroutine 1
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgc.go:214 +0x66
+1790213020.590955 strix-halo agent-loop[1805150]: goroutine 4 gp=0xf85b7dacf00 m=nil [GC scavenge wait]:
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.gopark(0x10000?, 0x8c6738?, 0x0?, 0x0?, 0x0?)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e61f78 sp=0xf85b7e61f58 pc=0x485b6a
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.goparkunlock(...)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:480
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.(*scavengerState).park(0xcc9b40)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgcscavenge.go:425 +0x49 fp=0xf85b7e61fa8 sp=0xf85b7e61f78 pc=0x437809
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.bgscavenge(0xf85b7dc2080)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgcscavenge.go:658 +0x59 fp=0xf85b7e61fc8 sp=0xf85b7e61fa8 pc=0x437d79
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.gcenable.gowrap2()
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgc.go:215 +0x17 fp=0xf85b7e61fe0 sp=0xf85b7e61fc8 pc=0x47c997
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e61fe8 sp=0xf85b7e61fe0 pc=0x48c7a1
+1790213020.590955 strix-halo agent-loop[1805150]: created by runtime.gcenable in goroutine 1
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mgc.go:215 +0xa5
+1790213020.590955 strix-halo agent-loop[1805150]: goroutine 17 gp=0xf85b7f82000 m=nil [GOMAXPROCS updater (idle)]:
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e5c788 sp=0xf85b7e5c768 pc=0x485b6a
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.goparkunlock(...)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:480
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.updateMaxProcsGoroutine()
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:7146 +0xe7 fp=0xf85b7e5c7e0 sp=0xf85b7e5c788 pc=0x45c427
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e5c7e8 sp=0xf85b7e5c7e0 pc=0x48c7a1
+1790213020.590955 strix-halo agent-loop[1805150]: created by runtime.defaultGOMAXPROCSUpdateEnable in goroutine 1
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:7134 +0x37
+1790213020.590955 strix-halo agent-loop[1805150]: goroutine 18 gp=0xf85b7f821e0 m=nil [finalizer wait]:
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e5ce20 sp=0xf85b7e5ce00 pc=0x485b6a
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.runFinalizers()
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/mfinal.go:210 +0x107 fp=0xf85b7e5cfe0 sp=0xf85b7e5ce20 pc=0x42af67
+1790213020.590955 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.590955 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e5cfe8 sp=0xf85b7e5cfe0 pc=0x48c7a1
+1790213020.590955 strix-halo agent-loop[1805150]: created by runtime.createfing in goroutine 1
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/mfinal.go:172 +0x3d
+1790213020.591337 strix-halo agent-loop[1805150]: goroutine 19 gp=0xf85b7f823c0 m=nil [cleanup wait]:
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e5d768 sp=0xf85b7e5d748 pc=0x485b6a
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.goparkunlock(...)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/proc.go:480
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.(*cleanupQueue).dequeue(0xcc9e20)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/mcleanup.go:522 +0xd3 fp=0xf85b7e5d7a0 sp=0xf85b7e5d768 pc=0x427c93
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.runCleanups()
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/mcleanup.go:718 +0x45 fp=0xf85b7e5d7e0 sp=0xf85b7e5d7a0 pc=0x428305
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e5d7e8 sp=0xf85b7e5d7e0 pc=0x48c7a1
+1790213020.591337 strix-halo agent-loop[1805150]: created by runtime.(*cleanupQueue).createGs in goroutine 1
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/mcleanup.go:672 +0xa5
+1790213020.591337 strix-halo agent-loop[1805150]: goroutine 20 gp=0xf85b7f825a0 m=nil [select, locked to thread]:
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.gopark(0xf85b7e5dfa8?, 0x2?, 0x68?, 0x0?, 0xf85b7e5df94?)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7e5de18 sp=0xf85b7e5ddf8 pc=0x485b6a
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.selectgo(0xf85b7e5dfa8, 0xf85b7e5df90, 0x0?, 0x0, 0x0?, 0x1)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/select.go:351 +0xa97 fp=0xf85b7e5df58 sp=0xf85b7e5de18 pc=0x460e77
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.ensureSigM.func1()
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/signal_unix.go:1093 +0x188 fp=0xf85b7e5dfe0 sp=0xf85b7e5df58 pc=0x480a48
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7e5dfe8 sp=0xf85b7e5dfe0 pc=0x48c7a1
+1790213020.591337 strix-halo agent-loop[1805150]: created by runtime.ensureSigM in goroutine 1
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/signal_unix.go:1076 +0xc5
+1790213020.591337 strix-halo agent-loop[1805150]: goroutine 33 gp=0xf85b7f043c0 m=3 mp=0xf85b7f00008 [syscall]:
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.notetsleepg(0xceba20, 0xffffffffffffffff)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/lock_futex.go:123 +0x29 fp=0xf85b7f147a0 sp=0xf85b7f14778 pc=0x41d629
+1790213020.591337 strix-halo agent-loop[1805150]: os/signal.signal_recv()
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/sigqueue.go:152 +0x98 fp=0xf85b7f147c0 sp=0xf85b7f147a0 pc=0x487d78
+1790213020.591337 strix-halo agent-loop[1805150]: os/signal.loop()
+1790213020.591337 strix-halo agent-loop[1805150]:         os/signal/signal_unix.go:23 +0x13 fp=0xf85b7f147e0 sp=0xf85b7f147c0 pc=0x59d8b3
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f147e8 sp=0xf85b7f147e0 pc=0x48c7a1
+1790213020.591337 strix-halo agent-loop[1805150]: created by os/signal.Notify.func2.1 in goroutine 1
+1790213020.591337 strix-halo agent-loop[1805150]:         os/signal/signal.go:164 +0x1f
+1790213020.591337 strix-halo agent-loop[1805150]: goroutine 28 gp=0xf85b7f832c0 m=nil [GC worker (idle)]:
+1790213020.591337 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.591337 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f10740 sp=0xf85b7f10720 pc=0x485b6a
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f107c8 sp=0xf85b7f10740 pc=0x42e1ab
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f107e0 sp=0xf85b7f107c8 pc=0x47ced7
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f107e8 sp=0xf85b7f107e0 pc=0x48c7a1
+1790213020.591673 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.591673 strix-halo agent-loop[1805150]: goroutine 29 gp=0xf85b7f834a0 m=nil [GC worker (idle)]:
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f10f40 sp=0xf85b7f10f20 pc=0x485b6a
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f10fc8 sp=0xf85b7f10f40 pc=0x42e1ab
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f10fe0 sp=0xf85b7f10fc8 pc=0x47ced7
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f10fe8 sp=0xf85b7f10fe0 pc=0x48c7a1
+1790213020.591673 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.591673 strix-halo agent-loop[1805150]: goroutine 30 gp=0xf85b7f83680 m=nil [GC worker (idle)]:
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f11740 sp=0xf85b7f11720 pc=0x485b6a
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f117c8 sp=0xf85b7f11740 pc=0x42e1ab
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f117e0 sp=0xf85b7f117c8 pc=0x47ced7
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f117e8 sp=0xf85b7f117e0 pc=0x48c7a1
+1790213020.591673 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.591673 strix-halo agent-loop[1805150]: goroutine 31 gp=0xf85b7f83860 m=nil [GC worker (idle)]:
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f11f40 sp=0xf85b7f11f20 pc=0x485b6a
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f11fc8 sp=0xf85b7f11f40 pc=0x42e1ab
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f11fe0 sp=0xf85b7f11fc8 pc=0x47ced7
+1790213020.591673 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.591673 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f11fe8 sp=0xf85b7f11fe0 pc=0x48c7a1
+1790213020.592007 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592007 strix-halo agent-loop[1805150]: goroutine 32 gp=0xf85b7f83a40 m=nil [GC worker (idle)]:
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f12740 sp=0xf85b7f12720 pc=0x485b6a
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f127c8 sp=0xf85b7f12740 pc=0x42e1ab
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f127e0 sp=0xf85b7f127c8 pc=0x47ced7
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f127e8 sp=0xf85b7f127e0 pc=0x48c7a1
+1790213020.592007 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592007 strix-halo agent-loop[1805150]: goroutine 49 gp=0xf85b7f83c20 m=nil [GC worker (idle)]:
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f12f40 sp=0xf85b7f12f20 pc=0x485b6a
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f12fc8 sp=0xf85b7f12f40 pc=0x42e1ab
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f12fe0 sp=0xf85b7f12fc8 pc=0x47ced7
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f12fe8 sp=0xf85b7f12fe0 pc=0x48c7a1
+1790213020.592007 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592007 strix-halo agent-loop[1805150]: goroutine 50 gp=0xf85b81fe000 m=nil [GC worker (idle)]:
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f13740 sp=0xf85b7f13720 pc=0x485b6a
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f137c8 sp=0xf85b7f13740 pc=0x42e1ab
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f137e0 sp=0xf85b7f137c8 pc=0x47ced7
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f137e8 sp=0xf85b7f137e0 pc=0x48c7a1
+1790213020.592007 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592007 strix-halo agent-loop[1805150]: goroutine 51 gp=0xf85b81fe1e0 m=nil [GC worker (idle)]:
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592007 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b7f13f40 sp=0xf85b7f13f20 pc=0x485b6a
+1790213020.592007 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b7f13fc8 sp=0xf85b7f13f40 pc=0x42e1ab
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b7f13fe0 sp=0xf85b7f13fc8 pc=0x47ced7
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b7f13fe8 sp=0xf85b7f13fe0 pc=0x48c7a1
+1790213020.592335 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592335 strix-halo agent-loop[1805150]: goroutine 52 gp=0xf85b81fe3c0 m=nil [GC worker (idle)]:
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8284740 sp=0xf85b8284720 pc=0x485b6a
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82847c8 sp=0xf85b8284740 pc=0x42e1ab
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82847e0 sp=0xf85b82847c8 pc=0x47ced7
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82847e8 sp=0xf85b82847e0 pc=0x48c7a1
+1790213020.592335 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592335 strix-halo agent-loop[1805150]: goroutine 53 gp=0xf85b81fe5a0 m=nil [GC worker (idle)]:
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8284f40 sp=0xf85b8284f20 pc=0x485b6a
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8284fc8 sp=0xf85b8284f40 pc=0x42e1ab
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8284fe0 sp=0xf85b8284fc8 pc=0x47ced7
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8284fe8 sp=0xf85b8284fe0 pc=0x48c7a1
+1790213020.592335 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592335 strix-halo agent-loop[1805150]: goroutine 54 gp=0xf85b81fe780 m=nil [GC worker (idle)]:
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8285740 sp=0xf85b8285720 pc=0x485b6a
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82857c8 sp=0xf85b8285740 pc=0x42e1ab
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82857e0 sp=0xf85b82857c8 pc=0x47ced7
+1790213020.592335 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592335 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82857e8 sp=0xf85b82857e0 pc=0x48c7a1
+1790213020.592646 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592646 strix-halo agent-loop[1805150]: goroutine 55 gp=0xf85b81fe960 m=nil [GC worker (idle)]:
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8285f40 sp=0xf85b8285f20 pc=0x485b6a
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8285fc8 sp=0xf85b8285f40 pc=0x42e1ab
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8285fe0 sp=0xf85b8285fc8 pc=0x47ced7
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8285fe8 sp=0xf85b8285fe0 pc=0x48c7a1
+1790213020.592646 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592646 strix-halo agent-loop[1805150]: goroutine 56 gp=0xf85b81feb40 m=nil [GC worker (idle)]:
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8286740 sp=0xf85b8286720 pc=0x485b6a
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82867c8 sp=0xf85b8286740 pc=0x42e1ab
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82867e0 sp=0xf85b82867c8 pc=0x47ced7
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82867e8 sp=0xf85b82867e0 pc=0x48c7a1
+1790213020.592646 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592646 strix-halo agent-loop[1805150]: goroutine 57 gp=0xf85b81fed20 m=nil [GC worker (idle)]:
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8286f40 sp=0xf85b8286f20 pc=0x485b6a
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8286fc8 sp=0xf85b8286f40 pc=0x42e1ab
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8286fe0 sp=0xf85b8286fc8 pc=0x47ced7
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8286fe8 sp=0xf85b8286fe0 pc=0x48c7a1
+1790213020.592646 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592646 strix-halo agent-loop[1805150]: goroutine 58 gp=0xf85b81fef00 m=nil [GC worker (idle)]:
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592646 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8287740 sp=0xf85b8287720 pc=0x485b6a
+1790213020.592646 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82877c8 sp=0xf85b8287740 pc=0x42e1ab
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82877e0 sp=0xf85b82877c8 pc=0x47ced7
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82877e8 sp=0xf85b82877e0 pc=0x48c7a1
+1790213020.592949 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592949 strix-halo agent-loop[1805150]: goroutine 59 gp=0xf85b81ff0e0 m=nil [GC worker (idle)]:
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8287f40 sp=0xf85b8287f20 pc=0x485b6a
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8287fc8 sp=0xf85b8287f40 pc=0x42e1ab
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8287fe0 sp=0xf85b8287fc8 pc=0x47ced7
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8287fe8 sp=0xf85b8287fe0 pc=0x48c7a1
+1790213020.592949 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592949 strix-halo agent-loop[1805150]: goroutine 60 gp=0xf85b81ff2c0 m=nil [GC worker (idle)]:
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8280740 sp=0xf85b8280720 pc=0x485b6a
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82807c8 sp=0xf85b8280740 pc=0x42e1ab
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82807e0 sp=0xf85b82807c8 pc=0x47ced7
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82807e8 sp=0xf85b82807e0 pc=0x48c7a1
+1790213020.592949 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.592949 strix-halo agent-loop[1805150]: goroutine 61 gp=0xf85b81ff4a0 m=nil [GC worker (idle)]:
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8280f40 sp=0xf85b8280f20 pc=0x485b6a
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8280fc8 sp=0xf85b8280f40 pc=0x42e1ab
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8280fe0 sp=0xf85b8280fc8 pc=0x47ced7
+1790213020.592949 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.592949 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8280fe8 sp=0xf85b8280fe0 pc=0x48c7a1
+1790213020.593256 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593256 strix-halo agent-loop[1805150]: goroutine 62 gp=0xf85b81ff680 m=nil [GC worker (idle)]:
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8281740 sp=0xf85b8281720 pc=0x485b6a
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82817c8 sp=0xf85b8281740 pc=0x42e1ab
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82817e0 sp=0xf85b82817c8 pc=0x47ced7
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82817e8 sp=0xf85b82817e0 pc=0x48c7a1
+1790213020.593256 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593256 strix-halo agent-loop[1805150]: goroutine 63 gp=0xf85b81ff860 m=nil [GC worker (idle)]:
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8281f40 sp=0xf85b8281f20 pc=0x485b6a
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8281fc8 sp=0xf85b8281f40 pc=0x42e1ab
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8281fe0 sp=0xf85b8281fc8 pc=0x47ced7
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8281fe8 sp=0xf85b8281fe0 pc=0x48c7a1
+1790213020.593256 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593256 strix-halo agent-loop[1805150]: goroutine 64 gp=0xf85b81ffa40 m=nil [GC worker (idle)]:
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8282740 sp=0xf85b8282720 pc=0x485b6a
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82827c8 sp=0xf85b8282740 pc=0x42e1ab
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82827e0 sp=0xf85b82827c8 pc=0x47ced7
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82827e8 sp=0xf85b82827e0 pc=0x48c7a1
+1790213020.593256 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593256 strix-halo agent-loop[1805150]: goroutine 65 gp=0xf85b81ffc20 m=nil [GC worker (idle)]:
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593256 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8282f40 sp=0xf85b8282f20 pc=0x485b6a
+1790213020.593256 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8282fc8 sp=0xf85b8282f40 pc=0x42e1ab
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8282fe0 sp=0xf85b8282fc8 pc=0x47ced7
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8282fe8 sp=0xf85b8282fe0 pc=0x48c7a1
+1790213020.593573 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593573 strix-halo agent-loop[1805150]: goroutine 66 gp=0xf85b828c000 m=nil [GC worker (idle)]:
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8283740 sp=0xf85b8283720 pc=0x485b6a
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82837c8 sp=0xf85b8283740 pc=0x42e1ab
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82837e0 sp=0xf85b82837c8 pc=0x47ced7
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82837e8 sp=0xf85b82837e0 pc=0x48c7a1
+1790213020.593573 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593573 strix-halo agent-loop[1805150]: goroutine 67 gp=0xf85b828c1e0 m=nil [GC worker (idle)]:
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e87220a?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8283f40 sp=0xf85b8283f20 pc=0x485b6a
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8283fc8 sp=0xf85b8283f40 pc=0x42e1ab
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8283fe0 sp=0xf85b8283fc8 pc=0x47ced7
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8283fe8 sp=0xf85b8283fe0 pc=0x48c7a1
+1790213020.593573 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.593573 strix-halo agent-loop[1805150]: goroutine 68 gp=0xf85b828c3c0 m=nil [GC worker (idle)]:
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e8a298d?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8292740 sp=0xf85b8292720 pc=0x485b6a
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82927c8 sp=0xf85b8292740 pc=0x42e1ab
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82927e0 sp=0xf85b82927c8 pc=0x47ced7
+1790213020.593573 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.593573 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82927e8 sp=0xf85b82927e0 pc=0x48c7a1
+1790213020.593548 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=2/INVALIDARGUMENT
+1790213020.594209 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594209 strix-halo agent-loop[1805150]: goroutine 69 gp=0xf85b828c5a0 m=nil [GC worker (idle)]:
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e8740f4?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8292f40 sp=0xf85b8292f20 pc=0x485b6a
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8292fc8 sp=0xf85b8292f40 pc=0x42e1ab
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8292fe0 sp=0xf85b8292fc8 pc=0x47ced7
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8292fe8 sp=0xf85b8292fe0 pc=0x48c7a1
+1790213020.594209 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594209 strix-halo agent-loop[1805150]: goroutine 70 gp=0xf85b828c780 m=nil [GC worker (idle)]:
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e887e9f?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8293740 sp=0xf85b8293720 pc=0x485b6a
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82937c8 sp=0xf85b8293740 pc=0x42e1ab
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82937e0 sp=0xf85b82937c8 pc=0x47ced7
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82937e8 sp=0xf85b82937e0 pc=0x48c7a1
+1790213020.594209 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594209 strix-halo agent-loop[1805150]: goroutine 71 gp=0xf85b828c960 m=nil [GC worker (idle)]:
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gopark(0xcecfe0?, 0x1?, 0x75?, 0x91?, 0x0?)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8293f40 sp=0xf85b8293f20 pc=0x485b6a
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8293fc8 sp=0xf85b8293f40 pc=0x42e1ab
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8293fe0 sp=0xf85b8293fc8 pc=0x47ced7
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8293fe8 sp=0xf85b8293fe0 pc=0x48c7a1
+1790213020.594209 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594209 strix-halo agent-loop[1805150]: goroutine 72 gp=0xf85b828cb40 m=nil [GC worker (idle)]:
+1790213020.594209 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e8697f7?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.594209 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8294740 sp=0xf85b8294720 pc=0x485b6a
+1790213020.593599 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'watchdog'.
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82947c8 sp=0xf85b8294740 pc=0x42e1ab
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82947e0 sp=0xf85b82947c8 pc=0x47ced7
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82947e8 sp=0xf85b82947e0 pc=0x48c7a1
+1790213020.594559 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594559 strix-halo agent-loop[1805150]: goroutine 73 gp=0xf85b828cd20 m=nil [GC worker (idle)]:
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e861f64?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8294f40 sp=0xf85b8294f20 pc=0x485b6a
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8294fc8 sp=0xf85b8294f40 pc=0x42e1ab
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8294fe0 sp=0xf85b8294fc8 pc=0x47ced7
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8294fe8 sp=0xf85b8294fe0 pc=0x48c7a1
+1790213020.594559 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594559 strix-halo agent-loop[1805150]: goroutine 74 gp=0xf85b828cf00 m=nil [GC worker (idle)]:
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gopark(0x177157e888a70?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8295740 sp=0xf85b8295720 pc=0x485b6a
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b82957c8 sp=0xf85b8295740 pc=0x42e1ab
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b82957e0 sp=0xf85b82957c8 pc=0x47ced7
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b82957e8 sp=0xf85b82957e0 pc=0x48c7a1
+1790213020.594559 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594559 strix-halo agent-loop[1805150]: goroutine 75 gp=0xf85b828d0e0 m=nil [GC worker (idle)]:
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gopark(0xcecfe0?, 0x1?, 0x3e?, 0x39?, 0x0?)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/proc.go:474 +0xca fp=0xf85b8295f40 sp=0xf85b8295f20 pc=0x485b6a
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkWorker(0xf85b81b48c0)
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1807 +0xeb fp=0xf85b8295fc8 sp=0xf85b8295f40 pc=0x42e1ab
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.gcBgMarkStartWorkers.gowrap1()
+1790213020.594559 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0x17 fp=0xf85b8295fe0 sp=0xf85b8295fc8 pc=0x47ced7
+1790213020.594559 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594866 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8295fe8 sp=0xf85b8295fe0 pc=0x48c7a1
+1790213020.594866 strix-halo agent-loop[1805150]: created by runtime.gcBgMarkStartWorkers in goroutine 1
+1790213020.594866 strix-halo agent-loop[1805150]:         runtime/mgc.go:1711 +0xfc
+1790213020.594866 strix-halo agent-loop[1805150]: goroutine 98 gp=0xf85b7f050e0 m=2 mp=0xf85b7e64808 [syscall]:
+1790213020.594866 strix-halo agent-loop[1805150]: syscall.Syscall6(0x17, 0x5, 0xf85b8129ef0, 0x0, 0x0, 0xf85b8129ee0, 0x0)
+1790213020.594866 strix-halo agent-loop[1805150]:         syscall/syscall_linux.go:96 +0x39 fp=0xf85b8119e48 sp=0xf85b8119de8 pc=0x4bd919
+1790213020.594866 strix-halo agent-loop[1805150]: syscall.Select(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+1790213020.594866 strix-halo agent-loop[1805150]:         syscall/zsyscall_linux_amd64.go:1288 +0x4b fp=0xf85b8119eb8 sp=0xf85b8119e48 pc=0x4bc68b
+1790213020.594866 strix-halo agent-loop[1805150]: agent-loop/internal/host.(*DirNotifier).Wait(0xf85b7e9c000, 0x6fc23ac00?)
+1790213020.594866 strix-halo agent-loop[1805150]:         agent-loop/internal/host/notify.go:48 +0x145 fp=0xf85b8129fa0 sp=0xf85b8119eb8 pc=0x849f45
+1790213020.594866 strix-halo agent-loop[1805150]: main.runRun.func2()
+1790213020.594866 strix-halo agent-loop[1805150]:         agent-loop/cmd/agent-loop/loop.go:383 +0x56 fp=0xf85b8129fe0 sp=0xf85b8129fa0 pc=0x88fe16
+1790213020.594866 strix-halo agent-loop[1805150]: runtime.goexit({})
+1790213020.594866 strix-halo agent-loop[1805150]:         runtime/asm_amd64.s:1264 +0x1 fp=0xf85b8129fe8 sp=0xf85b8129fe0 pc=0x48c7a1
+1790213020.594866 strix-halo agent-loop[1805150]: created by main.runRun in goroutine 1
+1790213020.594866 strix-halo agent-loop[1805150]:         agent-loop/cmd/agent-loop/loop.go:380 +0xfd9
+1790213020.594866 strix-halo agent-loop[1805150]: rax    0xca
+1790213020.594866 strix-halo agent-loop[1805150]: rbx    0x0
+1790213020.594866 strix-halo agent-loop[1805150]: rcx    0x48e2e3
+1790213020.594866 strix-halo agent-loop[1805150]: rdx    0x0
+1790213020.594866 strix-halo agent-loop[1805150]: rdi    0xceb2b8
+1790213020.594866 strix-halo agent-loop[1805150]: rsi    0x80
+1790213020.594866 strix-halo agent-loop[1805150]: rbp    0xf85b7e97f38
+1790213020.594866 strix-halo agent-loop[1805150]: rsp    0xf85b7e97ef0
+1790213020.594866 strix-halo agent-loop[1805150]: r8     0x0
+1790213020.594866 strix-halo agent-loop[1805150]: r9     0x0
+1790213020.594866 strix-halo agent-loop[1805150]: r10    0x0
+1790213020.594866 strix-halo agent-loop[1805150]: r11    0x286
+1790213020.594866 strix-halo agent-loop[1805150]: r12    0x101
+1790213020.594866 strix-halo agent-loop[1805150]: r13    0x1
+1790213020.594866 strix-halo agent-loop[1805150]: r14    0xf85b7f82960
+1790213020.594866 strix-halo agent-loop[1805150]: r15    0xffffffffffffff01
+1790213020.594866 strix-halo agent-loop[1805150]: rip    0x48e2e1
+1790213020.594866 strix-halo agent-loop[1805150]: rflags 0x286
+1790213020.594866 strix-halo agent-loop[1805150]: cs     0x33
+1790213020.594866 strix-halo agent-loop[1805150]: fs     0x0
+1790213020.594866 strix-halo agent-loop[1805150]: gs     0x0
+1790213025.598680 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 2.
+1790213025.600110 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213025.625094 strix-halo agent-loop[1845710]: 2026-09-24T01:23:45Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790213025.626374 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213121.209091 strix-halo systemd[1608]: Stopping agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213121.210263 strix-halo systemd[1608]: Stopped agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213121.211258 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213161.245289 strix-halo sh[1859309]: 2026-09-24T01:26:01Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790213161.246762 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213212.112926 strix-halo systemd[1608]: Stopping agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213212.113858 strix-halo systemd[1608]: Stopped agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213212.115074 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213212.148052 strix-halo agent-loop[1872391]: 2026-09-24T01:26:52Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790213212.149185 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213433.194477 strix-halo systemd[1608]: Stopping agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213433.195558 strix-halo systemd[1608]: Stopped agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213433.196577 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213433.226324 strix-halo agent-loop[1903551]: 2026-09-24T01:30:33Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790213433.227450 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213584.011839 strix-halo systemd[1608]: Stopping agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213584.013349 strix-halo systemd[1608]: Stopped agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213584.014533 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213584.035419 strix-halo agent-loop[1925056]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790213584.035825 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790213584.035890 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790213584.036094 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213589.056828 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 1.
+1790213589.058147 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213589.078864 strix-halo agent-loop[1925700]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790213589.079084 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790213589.079144 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790213589.079361 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213594.240854 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 2.
+1790213594.242691 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213594.267570 strix-halo agent-loop[1926505]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790213594.267829 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790213594.267903 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790213594.268239 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213599.490829 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 3.
+1790213599.492360 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213599.516296 strix-halo agent-loop[1927162]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790213599.516775 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790213599.516878 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790213599.517291 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213604.740721 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 4.
+1790213604.740914 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Start request repeated too quickly.
+1790213604.740921 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790213604.741004 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213704.511306 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790213704.531432 strix-halo agent-loop[1942308]: 2026-09-24T01:35:04Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790213704.532805 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790213976.298825 strix-halo agent-loop[1942308]: stop requested; exiting 64
+1790214035.467697 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214035.492283 strix-halo agent-loop[1991820]: agent-loop: stopped by agent-loop stop; run `agent-loop start` to resume
+1790214035.492598 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'protocol'.
+1790214035.492921 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214300.655093 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214300.687423 strix-halo agent-loop[2030915]: 2026-09-24T01:45:00Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-5e746eb0e39590b9": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790214300.688812 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214300.887775 strix-halo agent-loop[2030915]: stop requested; exiting 64
+1790214481.771489 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214481.801709 strix-halo agent-loop[2058428]: 2026-09-24T01:48:01Z outbox: {"ob-105542734488cecc": "held-awaiting-receipt", "ob-5e746eb0e39590b9": "held-awaiting-receipt", "ob-6ad5a220ac95d615": "held-awaiting-receipt", "ob-97a41e5e14ec464a": "held-awaiting-receipt", "ob-fe690c3cab2db5f1": "held-awaiting-receipt"}
+1790214481.803205 strix-halo systemd[1608]: Started agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214485.226717 strix-halo systemd[1608]: Stopping agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214485.229465 strix-halo systemd[1608]: Stopped agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214485.230514 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214485.244452 strix-halo agent-loop[2059103]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790214485.244709 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790214485.244753 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790214485.244872 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214490.491042 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 1.
+1790214490.492615 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214490.511960 strix-halo agent-loop[2059958]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790214490.512213 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790214490.512288 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790214490.512618 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214495.740581 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 2.
+1790214495.743280 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214495.760664 strix-halo agent-loop[2060683]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790214495.760966 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790214495.761048 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790214495.761420 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214500.991679 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 3.
+1790214500.993410 strix-halo systemd[1608]: Starting agent-loop-fxp12live1.service - agent-loop fxp12live1...
+1790214501.022970 strix-halo agent-loop[2061477]: agent-loop: open /nonexistent-p12live1.json: no such file or directory
+1790214501.023274 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Main process exited, code=exited, status=1/FAILURE
+1790214501.023398 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790214501.023862 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.
+1790214506.240966 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Scheduled restart job, restart counter is at 4.
+1790214506.241182 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Start request repeated too quickly.
+1790214506.241189 strix-halo systemd[1608]: agent-loop-fxp12live1.service: Failed with result 'exit-code'.
+1790214506.241310 strix-halo systemd[1608]: Failed to start agent-loop-fxp12live1.service - agent-loop fxp12live1.

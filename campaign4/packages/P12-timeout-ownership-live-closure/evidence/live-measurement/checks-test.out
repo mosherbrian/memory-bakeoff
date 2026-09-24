@@ -1,0 +1,42 @@
+ok	L3a OLD live1 (pipefail grep -q on the real journal)	want=141	got=141
+ok	L3a the watchdog line IS in the saved raw	want=1	got=1
+ok	L3a NEW live1	want=PASS	got=PASS
+ok	L3a NEG stale: onset after the watchdog line	want=FAIL	got=FAIL
+ok	L3a NEG no watchdog line	want=FAIL	got=FAIL
+ok	L3a NEG watchdog line but another result	want=FAIL	got=FAIL
+ok	L4a OLD live1 (Result after the start limit)	want=exit-code	got=exit-code
+ok	L4a NEW live1 (burst 5)	want=PASS	got=PASS
+ok	L4b NEW live1 (burst 5)	want=PASS	got=PASS
+ok	L4 NEG single crash (first failure only)	want=FAIL	got=FAIL
+ok	L4 NEG stale (onset after the loop)	want=FAIL	got=FAIL
+ok	L4 NEG wrong unit	want=FAIL	got=FAIL
+ok	L4 NEG no rate-limit refusal	want=FAIL	got=FAIL
+ok	L4 NEG too few restarts for the burst	want=FAIL	got=FAIL
+ok	L5 NEW live1 exit 64 after the stop	want=PASS	got=PASS
+ok	L6b NEW live1 exit 64 after the stop	want=PASS	got=PASS
+ok	L5 NEG no exit line (window before the stop)	want=FAIL	got=FAIL
+ok	L7c OLD live1 (state_is ok on the idle rest)	want=FAIL	got=FAIL
+ok	L7c NEW live1 rest after the onset	want=0	got=0
+ok	healthy ok after the event	want=0	got=0
+ok	healthy NEG stale verdict (before the event)	want=1	got=1
+ok	healthy NEG crashed	want=1	got=1
+ok	healthy NEG unknown	want=1	got=1
+ok	healthy NEG hung	want=1	got=1
+ok	healthy NEG starting	want=1	got=1
+ok	healthy NEG restart-loop	want=1	got=1
+ok	healthy NEG PARSE-ERROR	want=1	got=1
+ok	healthy NEG no checked_at	want=1	got=1
+ok	L6 argv from the live1 unit's own argv (ExecStart format of coax-dry)	want=0	got=0
+ok	L6 argv is the exact callback	want=/home/bmosher/p12live-p12live1/bin/agent-loop timer-callback --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L6-p12live1 --action L6-p12live1-w1 --execution ex-L6-p12live1-w1	got=/home/bmosher/p12live-p12live1/bin/agent-loop timer-callback --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L6-p12live1 --action L6-p12live1-w1 --execution ex-L6-p12live1-w1
+ok	L6 argv NEG wrong binary	want=1	got=1
+ok	L6 argv NEG wrong qid	want=1	got=1
+ok	L6 argv NEG unit gone (empty)	want=1	got=1
+ok	L6 OLD live1 replay did not run	want=not found	got=not found
+ok	L6 replay PASS shape	want=PASS	got=PASS
+ok	L6 replay NEG rc 1	want=FAIL	got=FAIL
+ok	L6 replay NEG interrupted again	want=FAIL	got=FAIL
+ok	L6 replay NEG new /cancel	want=FAIL	got=FAIL
+ok	L6 replay NEG new director wake	want=FAIL	got=FAIL
+ok	L6 replay NEG no output	want=FAIL	got=FAIL
+TOTAL 40 checks, 0 wrong
+rc=0

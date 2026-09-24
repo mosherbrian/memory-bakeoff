@@ -1,0 +1,107 @@
+102a103,109
+> # P12-live-measurement-1: evaluations live in live-checks.sh (pure; tested on the saved live1 raws). Journal
+> # reads are captured whole (never `| grep -q` under pipefail: SIGPIPE 141 hid live1 L3a's watchdog line).
+> . "$PLANS/live-checks.sh"
+> jcap() { journalctl --user -u "$1" --since "@$2" -o short-unix --no-pager 2>>"$EV/driver.log"; }
+> healthy_after() { local v; v=$(verdict) || return 1; healthy_eval "$1" "$v"; }   # ok|rest, checked after EPOCH
+> stop_exited() { local r; r=$(journalctl --user -u "$U" --since "@$1" -o cat --no-pager 2>>"$EV/driver.log" | stop_exit_eval); [ "${r%% *}" = PASS ] && [ "$(prop ActiveState)" != active ]; }
+> restart_loop_proven() { local r; r=$(jcap "$U" "$1" | start_limit_eval "$1" "$U" "$(systemctl --user show "$U" -p StartLimitBurst --value)"); log "restart-loop evidence: $r"; [ "${r%% *}" = PASS ]; }
+313c320
+< inv=$(prop InvocationID); log "L3a onset: SIGSTOP main pid"; run kill -STOP "$(prop MainPID)"
+---
+> inv=$(prop InvocationID); t3a=$(date +%s); log "L3a onset: SIGSTOP main pid"; run kill -STOP "$(prop MainPID)"
+315,317c322,325
+<   journalctl --user -u "$U" --since "-3min" -o cat --no-pager | grep -qi watchdog && result L3a PASS "watchdog killed and systemd restarted run" || result L3a FAIL "restart without a watchdog line"
+< else result L3a FAIL "no watchdog restart within 110 s"; fi
+< wait_for "L3a pass" 90 state_is ok; snap L3a
+---
+>   t3r=$(date +%s); r=$( [ "$DRY" = 1 ] && echo "DRY watchdog window $t3a..$t3r" || jcap "$U" "$t3a" | l3a_eval "$t3a" "$t3r" )
+>   result L3a "${r%% *}" "${r#* } (onset $t3a, restart $t3r)"
+> else result L3a FAIL "no watchdog restart within 110 s"; t3r=$(date +%s); fi
+> wait_for "L3a pass" 90 healthy_after "$t3r"; snap L3a
+324c332
+< reload; inv=$(prop InvocationID); log "L7c onset: restart with 40 s delay"; run systemctl --user restart --no-block "$U"
+---
+> reload; inv=$(prop InvocationID); t7=$(date +%s); log "L7c onset: restart with 40 s delay"; run systemctl --user restart --no-block "$U"
+328,329c336,339
+< wait_for "L7c first pass of the new run" 90 state_is ok; run systemctl --user start "$LU.service"
+< if [ "$s1" = PASS ] && state_is ok; then result L7c PASS "starting (quiet, not recovered) inside the window; ok after the new run's pass"; else result L7c FAIL "window $s1, after $(verdict)"; fi
+---
+> # After the new run's first pass the healthy state is ok, or rest when there is no open work (the idle
+> # fixture): both require a pass from the CURRENT invocation; starting/unknown/hung/crashed never count.
+> wait_for "L7c first pass of the new run" 90 healthy_after "$t7"; run systemctl --user start "$LU.service"
+> if [ "$s1" = PASS ] && healthy_after "$t7"; then result L7c PASS "starting (quiet, not recovered) inside the window; $(verdict | cut -d' ' -f1) after the new run's pass"; else result L7c FAIL "window $s1, after $(verdict)"; fi
+333,334c343,344
+< run sh -c "printf '[Service]\nWatchdogSec=0\n' > '$SD/$U.d/nowatchdog.conf'"; reload; run systemctl --user restart "$U"
+< wait_for "L3b pass" 90 state_is ok
+---
+> run sh -c "printf '[Service]\nWatchdogSec=0\n' > '$SD/$U.d/nowatchdog.conf'"; reload; t3b=$(date +%s); run systemctl --user restart "$U"
+> wait_for "L3b pass" 90 healthy_after "$t3b"
+339,340c349,350
+< run kill -CONT "$(prop MainPID)"; run rm -f "$SD/$U.d/nowatchdog.conf"; reload; run systemctl --user restart "$U"
+< wait_for "L3b recovered" 150 state_is ok; snap L3b
+---
+> run kill -CONT "$(prop MainPID)"; run rm -f "$SD/$U.d/nowatchdog.conf"; reload; t3c=$(date +%s); run systemctl --user restart "$U"
+> wait_for "L3b recovered" 150 healthy_after "$t3c"; snap L3b
+344,346c354,360
+< log "L4a onset: failing start"; run systemctl --user restart "$U"
+< [ "$DRY" = 1 ] || systemctl --user show "$U" -p DropInPaths --value | grep -q fail.conf || result L4a INCOMPLETE "fail.conf drop-in not in effect: no onset"
+< if wait_for "L4a start limit" 120 sh -c "systemctl --user show $U -p Result --value | grep -q start-limit-hit" && wait_for "L4a restart-loop verdict" 60 state_is restart-loop; then
+---
+> run systemctl --user reset-failed "$U"   # a fresh start-limit window for this onset
+> t4=$(date +%s); log "L4a onset: failing start (StartLimitBurst $(systemctl --user show "$U" -p StartLimitBurst --value), RestartUSec $(systemctl --user show "$U" -p RestartUSec --value))"; run systemctl --user restart "$U"
+> [ "$DRY" = 1 ] || { dp=$(systemctl --user show "$U" -p DropInPaths --value); case "$dp" in *fail.conf*) ;; *) result L4a INCOMPLETE "fail.conf drop-in not in effect: no onset";; esac; }
+> # Ruling restart-classification-ruling.json: the product reads this loop as crashed OR restart-loop (systemd keeps
+> # Result=exit-code after the start limit); either is the owned alarm ONLY with an independently proven restart loop
+> # of this exact unit since this onset. A single crash or a stale/other-unit line fails.
+> if wait_for "L4a restart loop proven" 90 restart_loop_proven "$t4" && wait_for "L4a owned alarm" 60 state_in restart-loop crashed; then
+352c366
+< else result L4a FAIL "no start-limit/restart-loop within bounds"; fi
+---
+> else result L4a FAIL "no proven restart loop and owned alarm within bounds (verdict $(verdict | cut -d' ' -f1))"; fi
+388a403,406
+> # P12-live-measurement-1: capture the deadline unit's exact callback argv NOW; the transient unit is collected after it
+> # fires (live1: the replay's `systemctl start` found no unit and never ran).
+> l6argv=$( [ "$DRY" = 1 ] && echo "DRY" || systemctl --user show "agent-loop-$P-$Q-w1.service" -p ExecStart --value 2>>"$EV/driver.log" | l6_argv_eval "$A" "$Q" ); l6ok=$?
+> log "L6 replay argv: $l6argv"
+392c410
+< c1=$(wakes "$W_ID"); dd1=$(wakes "$D_ID"); tstop=@$(date +%s)
+---
+> c1=$(wakes "$W_ID"); dd1=$(wakes "$D_ID"); t5=$(date +%s); tstop=@$t5
+394c412
+< wait_for "L5 run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
+---
+> wait_for "L5 run exited" 60 stop_exited "$t5"
+405,408c423,431
+<   run systemctl --user start "agent-loop-$P-$Q-w1.service"   # replay the callback
+<   if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | tail -n 3 | grep -q already-handled; }; then
+<     result L6 PASS "interrupted once while run was stopped: one /cancel, one director wake; replay already-handled"
+<   else result L6 FAIL "replay repeated effects"; fi
+---
+>   if [ "$DRY" = 1 ]; then result L6 DRY "replay the captured callback argv; expect rc 0, already-handled, no new effects"
+>   elif [ "$l6ok" != 0 ]; then result L6 INCOMPLETE "interrupted once, but the replay argv was not captured: $l6argv"
+>   else
+>     read -ra l6a <<< "$l6argv"; w0=$(wakes "$W_ID"); d0=$(wakes "$D_ID")
+>     l6out=$(out env AGENTDECK_PROFILE="$PROFILE" "${l6a[@]}"); l6rc=$?; log "L6 replay rc=$l6rc: $l6out"
+>     run sleep 5   # let the send log settle before counting
+>     r=$(printf '%s\n' "$l6out" | l6_replay_eval "$l6rc" "$w0" "$(wakes "$W_ID")" "$d0" "$(wakes "$D_ID")")
+>     [ "${r%% *}" = PASS ] && result L6 PASS "interrupted once while run was stopped: one /cancel, one director wake; ${r#* }" || result L6 "${r%% *}" "${r#* }"
+>   fi
+419,420c442,443
+< log "L6b onset: agent-loop stop, then no acknowledgement"; run "$A" stop $C
+< wait_for "L6b run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
+---
+> t6b=$(date +%s); log "L6b onset: agent-loop stop, then no acknowledgement"; run "$A" stop $C
+> wait_for "L6b run exited" 60 stop_exited "$t6b"
+435,436c458,461
+< d1=$(wakes "$D_ID"); log "L4b onset: failing start, duty seat $U_ID confirmed stopped"; run systemctl --user restart "$U"
+< if wait_for "L4b restart-loop" 180 state_is restart-loop && [ "$DRY" = 1 -o "$(wakes "$D_ID")" -gt "$d1" ]; then
+---
+> run systemctl --user reset-failed "$U"   # a fresh start-limit window for this onset
+> d1=$(wakes "$D_ID"); t4b=$(date +%s); log "L4b onset: failing start, duty seat $U_ID confirmed stopped"; run systemctl --user restart "$U"
+> # Same ruling as L4a: crashed OR restart-loop, only with a proven restart loop of this unit since this onset.
+> if wait_for "L4b restart loop proven" 90 restart_loop_proven "$t4b" && wait_for "L4b owned alarm" 90 state_in restart-loop crashed && [ "$DRY" = 1 -o "$(wakes "$D_ID")" -gt "$d1" ]; then
+439c464
+< else result L4b FAIL "observed $(verdict | cut -d' ' -f1) (required restart-loop); director wakes $d1 -> $(wakes "$D_ID")"; fi
+---
+> else result L4b FAIL "observed $(verdict | cut -d' ' -f1) (required crashed|restart-loop with a proven restart loop); director wakes $d1 -> $(wakes "$D_ID")"; fi

@@ -1,0 +1,178 @@
+2026-09-24T02:22:03.167Z P12 live dryms1, inputs sha256 413d1c1dae85850daeb18d965bb8a79dcdb6fee36f17048f7f3dc01c5b11dc25
+2026-09-24T02:22:03.170Z + systemd-run --user --unit=p12live-wallstop-dryms1 --timer-property=AccuracySec=1s --on-calendar=2026-09-24 05:00:00 UTC --setenv=PATH=/home/bmosher/.bun/bin:/home/bmosher/.local/bin:/home/bmosher/.nvm/versions/node/v22.22.1/bin:/home/bmosher/.local/bin:/home/bmosher/.local/bin:/home/bmosher/.local/bin:/home/bmosher/bin:/usr/local/bin:/usr/bin:/home/bmosher/.claude/plugins/cache/thedotmack/claude-mem/13.25.3/bin:/home/bmosher/.claude/plugins/cache/claude-plugins-official/fakechat/0.0.1/bin --setenv=AGENTDECK_PROFILE=campaign4 --setenv=EV_DIR=/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/evidence/live-measurement/dry /bin/bash /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/live-driver.sh /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-inputs.env cleanup
+2026-09-24T02:22:03.171Z + mkdir -p /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/art /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/claims /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks
+2026-09-24T02:22:03.172Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/agent-loop /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop
+2026-09-24T02:22:03.173Z + write config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json
+2026-09-24T02:22:03.174Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxdryms1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxdryms1.service#g; s#%h/.local/bin/agent-loop#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json#g; s#agent-loop %i#agent-loop fxdryms1#g; s#%i#fxdryms1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop@.service' > '/home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service'
+2026-09-24T02:22:03.175Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxdryms1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxdryms1.service#g; s#%h/.local/bin/agent-loop#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json#g; s#agent-loop %i#agent-loop fxdryms1#g; s#%i#fxdryms1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop-liveness@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxdryms1.service'
+2026-09-24T02:22:03.176Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxdryms1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxdryms1.service#g; s#%h/.local/bin/agent-loop#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json#g; s#agent-loop %i#agent-loop fxdryms1#g; s#%i#fxdryms1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop-liveness@.timer' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-fxdryms1.timer'
+2026-09-24T02:22:03.177Z + sh -c sed 's#agent-loop-liveness-failed@%i.service#agent-loop-liveness-failed-fxdryms1.service#g; s#agent-loop-liveness@%i.service#agent-loop-liveness-fxdryms1.service#g; s#%h/.local/bin/agent-loop#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop#g; s#%h/.config/agent-loop/%i.json#/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json#g; s#agent-loop %i#agent-loop fxdryms1#g; s#%i#fxdryms1#g' '/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/examples/systemd-unqualified/agent-loop-liveness-failed@.service' > '/home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxdryms1.service'
+2026-09-24T02:22:03.178Z + grep -c /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxdryms1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxdryms1.service
+2026-09-24T02:22:03.179Z + grep -q ^OnFailure=agent-loop-liveness-failed-fxdryms1.service$ /home/bmosher/.config/systemd/user/agent-loop-liveness-fxdryms1.service
+2026-09-24T02:22:03.180Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.181Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop check --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json
+2026-09-24T02:22:03.182Z + /home/bmosher/.config/agent-deck/wake D1 When a message starting "[agent-loop liveness]" reaches you during P12 live, run the exact
+liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P12 live witness: observed
+<state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+When a message starting "[agent-loop]" says a step passed its deadline and contains
+"Acknowledge ownership with:", run that exact timeout-ack command, replacing SEAT with your own
+seat name and 'NEXT ACTION' with 'P12 live witness: will review the timed-out step', and keep
+--within 15m. Then end your turn. Nothing else.
+EXCEPTION: never acknowledge anything about a package whose name starts with "L6b-". That case tests
+what happens when nobody acknowledges. For such a message, end your turn at once without running any command.
+If the command prints PENDING and exits 3, your request is already recorded durably and the loop commits it by itself
+(any ledger holder, or the outside check every 30 s). It is not an acknowledgement until committed. Do not run it again
+with different words: a different request from you for the same step is refused as a conflict. Running the exact same
+command again is safe (a replay).
+2026-09-24T02:22:03.183Z + /home/bmosher/.config/agent-deck/wake U1 When a message starting "[agent-loop liveness]" reaches you during P12 live, run the exact
+liveness-ack command it contains, replacing "WHAT YOU WILL DO" with "P12 live witness: observed
+<state>, investigating", and keep --within 10m. Then end your turn. Nothing else.
+When a message starting "[agent-loop]" says a step passed its deadline and contains
+"Acknowledge ownership with:", run that exact timeout-ack command, replacing SEAT with your own
+seat name and 'NEXT ACTION' with 'P12 live witness: will review the timed-out step', and keep
+--within 15m. Then end your turn. Nothing else.
+EXCEPTION: never acknowledge anything about a package whose name starts with "L6b-". That case tests
+what happens when nobody acknowledges. For such a message, end your turn at once without running any command.
+If the command prints PENDING and exits 3, your request is already recorded durably and the loop commits it by itself
+(any ledger holder, or the outside check every 30 s). It is not an acknowledgement until committed. Do not run it again
+with different words: a different request from you for the same step is refused as a conflict. Running the exact same
+command again is safe (a replay).
+2026-09-24T02:22:03.184Z + systemctl --user start agent-loop-fxdryms1.service agent-loop-liveness-fxdryms1.timer
+2026-09-24T02:22:03.186Z wait_for first pass (ok or rest) 60s: state_in ok rest
+2026-09-24T02:22:03.198Z L1 onset
+2026-09-24T02:22:03.200Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop dispatch --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json --qid L1-dryms1 --worker fx-worker --verifier fx-verifier --task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L1-dryms1-l-worker.md --verify-task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L1-dryms1-l-verify.md --duration 10m --verify-window 10m
+2026-09-24T02:22:03.201Z wait_for L1 decision 600s: is_step L1-dryms1 decision
+2026-09-24T02:22:03.203Z + systemctl --user restart agent-loop-fxdryms1.service
+2026-09-24T02:22:03.204Z wait_for L1 restart pass 90s: new_invocation 
+2026-09-24T02:22:03.205Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop decide --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json --qid L1-dryms1 --kind question_answered --ref P12-live-dryms1-L1 --reason live witness
+L1	DRY	2026-09-24T02:22:03.255Z	step ; worker wakes 0->0, verifier 0->0
+2026-09-24T02:22:03.269Z wait_for L1 settled 120s: state_is rest
+2026-09-24T02:22:03.271Z + sleep 185
+L5-rest	DRY	2026-09-24T02:22:03.272Z	185 s, >=3 checks, all rest
+2026-09-24T02:22:03.274Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop dispatch --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json --qid L2-dryms1 --worker fx-worker --verifier fx-verifier --task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L2-dryms1-l-noclaim-worker.md --verify-task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L2-dryms1-l-verify.md --duration 3m --verify-window 5m
+2026-09-24T02:22:03.275Z wait_for L2 worker step 30s: is_step L2-dryms1 worker
+2026-09-24T02:22:03.278Z L2 onset: SIGKILL
+2026-09-24T02:22:03.279Z + systemctl --user kill -s KILL agent-loop-fxdryms1.service
+2026-09-24T02:22:03.280Z wait_for L2 restarted 30s: new_invocation 
+2026-09-24T02:22:03.281Z wait_for L2 pass 60s: state_is ok
+L2	DRY	2026-09-24T02:22:03.285Z	restarts ->, worker wakes 0->0
+2026-09-24T02:22:03.299Z wait_for L2 settled by its deadline 240s: is_step L2-dryms1 timed-out
+2026-09-24T02:22:03.300Z + sleep 10
+L2-settle	DRY	2026-09-24T02:22:03.300Z	timed-out by its deadline: one /cancel, one director wake; no open work
+2026-09-24T02:22:03.302Z wait_for L2 rest (no open work) 120s: state_is rest
+2026-09-24T02:22:03.304Z L3a onset: SIGSTOP main pid
+2026-09-24T02:22:03.306Z + kill -STOP 
+2026-09-24T02:22:03.307Z wait_for L3a watchdog restart 110s: new_invocation 
+L3a	DRY	2026-09-24T02:22:03.309Z	watchdog window 1790216523..1790216523 (onset 1790216523, restart 1790216523)
+2026-09-24T02:22:03.310Z wait_for L3a pass 90s: healthy_after 1790216523
+2026-09-24T02:22:03.321Z + mkdir -p /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d
+2026-09-24T02:22:03.322Z + sh -c printf '[Service]\nExecStart=\nExecStart=/bin/sh -c "sleep 40; exec /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop run --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json"\nTimeoutStartSec=120\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/delay.conf'
+2026-09-24T02:22:03.323Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.325Z L7c onset: restart with 40 s delay
+2026-09-24T02:22:03.326Z + systemctl --user restart --no-block agent-loop-fxdryms1.service
+2026-09-24T02:22:03.327Z wait_for L7c new invocation 20s: sh -c [ "$(systemctl --user show agent-loop-fxdryms1.service -p InvocationID --value)" != '' ]
+2026-09-24T02:22:03.328Z + systemctl --user start agent-loop-liveness-fxdryms1.service
+2026-09-24T02:22:03.356Z wait_for L7c first pass of the new run 90s: healthy_after 1790216523
+2026-09-24T02:22:03.357Z + systemctl --user start agent-loop-liveness-fxdryms1.service
+L7c	DRY	2026-09-24T02:22:03.370Z	window FAIL(PARSE-ERROR JSONDecodeError), after PARSE-ERROR JSONDecodeError
+2026-09-24T02:22:03.371Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/delay.conf
+2026-09-24T02:22:03.372Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.385Z + sh -c printf '[Service]\nWatchdogSec=0\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/nowatchdog.conf'
+2026-09-24T02:22:03.385Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.387Z + systemctl --user restart agent-loop-fxdryms1.service
+2026-09-24T02:22:03.389Z wait_for L3b pass 90s: healthy_after 1790216523
+2026-09-24T02:22:03.390Z L3b onset: SIGSTOP main pid, no watchdog
+2026-09-24T02:22:03.393Z + kill -STOP 
+2026-09-24T02:22:03.395Z wait_for L3b hung 180s: state_is hung
+L3b	DRY	2026-09-24T02:22:03.396Z	hung but duty not woken
+2026-09-24T02:22:03.398Z + kill -CONT 
+2026-09-24T02:22:03.399Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/nowatchdog.conf
+2026-09-24T02:22:03.400Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.402Z + systemctl --user restart agent-loop-fxdryms1.service
+2026-09-24T02:22:03.403Z wait_for L3b recovered 150s: healthy_after 1790216523
+2026-09-24T02:22:03.412Z + sh -c printf '[Service]\nExecStart=\nExecStart=/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop run --config /nonexistent-dryms1.json\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/fail.conf'
+2026-09-24T02:22:03.413Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.414Z + systemctl --user reset-failed agent-loop-fxdryms1.service
+2026-09-24T02:22:03.425Z L4a onset: failing start (StartLimitBurst 5, RestartUSec 100ms)
+2026-09-24T02:22:03.426Z + systemctl --user restart agent-loop-fxdryms1.service
+2026-09-24T02:22:03.427Z wait_for L4a restart loop proven 90s: restart_loop_proven 1790216523
+2026-09-24T02:22:03.429Z wait_for L4a owned alarm 60s: state_in restart-loop crashed
+2026-09-24T02:22:03.430Z wait_for L4a duty ack recorded 300s: sh -c python3 -c 'import json;d=json.load(open("/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.liveness.json"));a=d["open"]["ack"];assert a["by"]=="fx-duty" and a["next_action"] and a["response_deadline"]'
+2026-09-24T02:22:03.431Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/fail.conf
+2026-09-24T02:22:03.432Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.433Z + systemctl --user reset-failed agent-loop-fxdryms1.service
+2026-09-24T02:22:03.434Z + systemctl --user start agent-loop-fxdryms1.service
+2026-09-24T02:22:03.435Z wait_for L4a recovered 150s: sh -c python3 -c 'import json;d=json.load(open("/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.liveness.json"));assert d.get("open") is None and d["history"][-1]["outcome"]=="recovered"'
+L4a	DRY	2026-09-24T02:22:03.436Z	restart-loop -> duty ack (owner/next/deadline) -> recovered on fresh pass
+2026-09-24T02:22:03.437Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/fail.conf
+2026-09-24T02:22:03.438Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.438Z + systemctl --user reset-failed agent-loop-fxdryms1.service
+2026-09-24T02:22:03.439Z + systemctl --user start agent-loop-fxdryms1.service
+2026-09-24T02:22:03.440Z wait_for L4a settled 90s: state_is rest
+L7-checker	DRY	2026-09-24T02:22:03.451Z	hold ledger lock 45 s; expect handler duty wake <= 60 s; recovery <= 45 s after release
+2026-09-24T02:22:03.452Z + sh -c printf '{bad-dryms1' > '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.liveness.json'
+2026-09-24T02:22:03.454Z wait_for L7a alarm 60s: sh -c ls /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.liveness.json.damaged-*.json
+2026-09-24T02:22:03.455Z + sleep 140
+L7a	DRY	2026-09-24T02:22:03.456Z	bytes preserved, duty woken once over >=3 checks
+2026-09-24T02:22:03.469Z wait_for L7a closed after ack 300s: sh -c python3 -c 'import json;d=json.load(open("/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.liveness.json"));assert d.get("open") is None'
+2026-09-24T02:22:03.471Z L7b onset: SIGSTOP run, write a pass 10 min in the future
+2026-09-24T02:22:03.472Z + kill -STOP 
+2026-09-24T02:22:03.473Z + python3 -c import sqlite3,json,datetime;c=sqlite3.connect('/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db');p=json.loads(c.execute("select value from driver_kv where key='loop-pass'").fetchone()[0]);p['at']=(datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=10)).strftime('%Y-%m-%dT%H:%M:%SZ');c.execute("update driver_kv set value=? where key='loop-pass'",(json.dumps(p),));c.commit()
+2026-09-24T02:22:03.473Z + systemctl --user start agent-loop-liveness-fxdryms1.service
+L7b	DRY	2026-09-24T02:22:03.500Z	PARSE-ERROR JSONDecodeError
+2026-09-24T02:22:03.501Z + kill -CONT 
+2026-09-24T02:22:03.503Z wait_for L7b recovered 150s: state_is rest
+2026-09-24T02:22:03.517Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop dispatch --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json --qid L6-dryms1 --worker fx-worker --verifier fx-verifier --task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L6-dryms1-l-noclaim-worker.md --verify-task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L6-dryms1-l-verify.md --duration 2m --verify-window 5m
+2026-09-24T02:22:03.519Z wait_for L6 worker step 30s: is_step L6-dryms1 worker
+2026-09-24T02:22:03.520Z L6 replay argv: DRY
+2026-09-24T02:22:03.523Z L5 onset: agent-loop stop
+2026-09-24T02:22:03.524Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop stop --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json
+2026-09-24T02:22:03.526Z wait_for L5 run exited 60s: stop_exited 1790216523
+2026-09-24T02:22:03.528Z L5: stray start while the marker exists
+2026-09-24T02:22:03.529Z + systemctl --user start agent-loop-fxdryms1.service
+2026-09-24T02:22:03.530Z + sleep 20
+L5-stray	DRY	2026-09-24T02:22:03.533Z	scheduled restarts 0, state , marker ls: cannot access '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.stop': No such file or directory
+2026-09-24T02:22:03.534Z + sleep 245
+L5-stopped	DRY	2026-09-24T02:22:03.535Z	245 s, >=3 checks, all stopped
+L6-timing	DRY	2026-09-24T02:22:03.536Z	deadline/settled/ack timestamps
+L6	DRY	2026-09-24T02:22:03.537Z	replay the captured callback argv; expect rc 0, already-handled, no new effects
+2026-09-24T02:22:03.538Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop start --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json
+2026-09-24T02:22:03.539Z wait_for L5 resumed 90s: sh -c systemctl --user is-active agent-loop-fxdryms1.service
+2026-09-24T02:22:03.552Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop dispatch --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json --qid L6b-dryms1 --worker fx-worker --verifier fx-verifier --task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L6b-dryms1-l-noclaim-worker.md --verify-task @/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/tasks/L6b-dryms1-l-verify.md --duration 1m --verify-window 5m
+2026-09-24T02:22:03.553Z wait_for L6b worker step 30s: is_step L6b-dryms1 worker
+2026-09-24T02:22:03.555Z L6b onset: agent-loop stop, then no acknowledgement
+2026-09-24T02:22:03.555Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop stop --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json
+2026-09-24T02:22:03.557Z wait_for L6b run exited 60s: stop_exited 1790216523
+2026-09-24T02:22:03.558Z wait_for L6b duty and director escalated 300s: sh -c /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop status --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json --json | python3 -c "import json,sys; t=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='L6b-dryms1'][0].get('timeout') or {}; assert t.get('no_ack_duty','').startswith('sent') and t.get('no_ack_director','').startswith('sent')"
+L6b	DRY	2026-09-24T02:22:03.598Z	unreadable timeout record: Expecting value: line 1 column 1 (char 0)
+2026-09-24T02:22:03.599Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop start --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.json
+2026-09-24T02:22:03.600Z wait_for L6b resumed 90s: sh -c systemctl --user is-active agent-loop-fxdryms1.service
+2026-09-24T02:22:03.612Z + agent-deck session stop U1
+2026-09-24T02:22:03.614Z + sh -c printf '[Service]\nExecStart=\nExecStart=/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/bin/agent-loop run --config /nonexistent-dryms1.json\n' > '/home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/fail.conf'
+2026-09-24T02:22:03.615Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.616Z + systemctl --user reset-failed agent-loop-fxdryms1.service
+2026-09-24T02:22:03.618Z L4b onset: failing start, duty seat U1 confirmed stopped
+2026-09-24T02:22:03.619Z + systemctl --user restart agent-loop-fxdryms1.service
+2026-09-24T02:22:03.620Z wait_for L4b restart loop proven 90s: restart_loop_proven 1790216523
+2026-09-24T02:22:03.621Z wait_for L4b owned alarm 90s: state_in restart-loop crashed
+2026-09-24T02:22:03.623Z wait_for L4b director ack 300s: sh -c python3 -c 'import json;d=json.load(open("/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/dry-root-ms1/fxdryms1.db.liveness.json"));assert d["open"]["ack"]["by"]=="fx-director"'
+L4b	DRY	2026-09-24T02:22:03.624Z	duty wake failed -> director woken in the same check -> director ack recorded
+2026-09-24T02:22:03.625Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d/fail.conf
+2026-09-24T02:22:03.626Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.637Z all cases run; results in /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/evidence/live-measurement/dry/results.tsv
+2026-09-24T02:22:03.640Z cleanup (exact IDs)
+2026-09-24T02:22:03.641Z + systemctl --user stop agent-loop-liveness-fxdryms1.timer agent-loop-liveness-fxdryms1.service agent-loop-liveness-failed-fxdryms1.service agent-loop-fxdryms1.service
+2026-09-24T02:22:03.647Z + systemctl --user reset-failed agent-loop-fxdryms1* agent-loop-liveness-fxdryms1* agent-loop-liveness-failed-fxdryms1*
+2026-09-24T02:22:03.648Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxdryms1.service /home/bmosher/.config/systemd/user/agent-loop-liveness-fxdryms1.timer /home/bmosher/.config/systemd/user/agent-loop-liveness-failed-fxdryms1.service
+2026-09-24T02:22:03.649Z + rm -rf /home/bmosher/.config/systemd/user/agent-loop-fxdryms1.service.d
+2026-09-24T02:22:03.650Z + systemctl --user daemon-reload
+2026-09-24T02:22:03.651Z + agent-deck session stop W1
+2026-09-24T02:22:03.652Z + agent-deck session remove W1
+2026-09-24T02:22:03.653Z + agent-deck session stop V1
+2026-09-24T02:22:03.654Z + agent-deck session remove V1
+2026-09-24T02:22:03.655Z + agent-deck session stop D1
+2026-09-24T02:22:03.656Z + agent-deck session remove D1
+2026-09-24T02:22:03.657Z + agent-deck session stop U1
+2026-09-24T02:22:03.658Z + agent-deck session remove U1
+2026-09-24T02:22:03.659Z + systemctl --user stop p12live-wallstop-dryms1.timer
+2026-09-24T02:22:03.660Z cleanup done

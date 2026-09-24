@@ -215,3 +215,16 @@ Closes the checker-ownership live blocker from P12-ack-capacity-1. Evidence: `ev
 | S6 duty transport refused, lock held | exit 1 | duty `failed`, director told at once |
 | S7 completed check | success | closed, duty told RECOVERED |
 | S8 run stopped intentionally, healthy | success | quiet: no wake |
+
+## P12-live-measurement-1 (live-driver corrections after live1 NOT READY; product 97a57db1 FROZEN)
+
+live1 (`live-p12live1/`, review `live-review-1.md`) stays NOT READY. Its five FAILs were measurement or setup faults, and the eight INCOMPLETEs were waits that cascaded from them. Evaluations now live in `plans/live-checks.sh` (pure functions). `evidence/live-measurement/checks-test.sh` runs old and new checks on the saved live1 raws, with a negative for each correction (40/40).
+
+- **L3a.** The old check was `journalctl ... | grep -qi watchdog` under `set -o pipefail`. grep exits at the first match, journalctl dies of SIGPIPE, and a real match reads rc 141 (reproduced on the real journal). The new check reads the whole journal and requires "Watchdog timeout" plus "Failed with result 'watchdog'" between the onset and the observed restart. Stale lines fail.
+- **L7c and the recovery waits** (L3a pass, L3b pass, L3b recovered). Healthy means `ok` or `rest` (idle, no open work), checked AFTER the event. starting, unknown, hung and crashed never count.
+- **L4a/L4b** (ruling `restart-classification-ruling.json`). systemd 258 hit the start limit ("Start request repeated too quickly") but kept Result=exit-code, so the frozen product reads the loop as `crashed`. **Known diagnostic limit**: this is not claimed for all systemd versions.
+  - Prospectively, `crashed` or `restart-loop` is the owned alarm ONLY with an independently proven restart loop of this exact unit since the onset: BURST-1 scheduled restarts, failed starts, then the rate-limit refusal.
+  - A single crash, stale lines or another unit's lines fail.
+  - `reset-failed` gives each onset a fresh start-limit window. Duty/director routing, the ack owner/next/deadline and recovery are unchanged.
+- **L6.** The live1 replay ran `systemctl start` on a transient unit that had already been collected ("Unit not found"), so it never ran. There is no retro-PASS. The new driver captures the deadline unit's exact callback argv right after dispatch (probe: the service is loaded with its ExecStart before the timer fires). It then replays that argv as a process and requires rc 0, `already-handled`, and no new /cancel or director wake. The construction test cannot prove a live replay; only the live run can.
+- **L5/L6b stop waits.** They now wait for run's own "stop requested; exiting 64" journal line since the stop onset, plus the unit not active. The old wait polled ExecMainStatus and timed out.

@@ -100,6 +100,13 @@ unit_is() { [ "$(prop ActiveState)" = "$1" ]; }
 new_invocation() { [ "$(prop InvocationID)" != "$1" ] && unit_is active; }
 state_is() { verdict | grep -q "^$1 "; }
 state_in() { local s w; s=$(verdict | cut -d' ' -f1); for w; do [ "$s" = "$w" ] && return 0; done; return 1; }
+# P12-live-measurement-1: evaluations live in live-checks.sh (pure; tested on the saved live1 raws). Journal
+# reads are captured whole (never `| grep -q` under pipefail: SIGPIPE 141 hid live1 L3a's watchdog line).
+. "$PLANS/live-checks.sh"
+jcap() { journalctl --user -u "$1" --since "@$2" -o short-unix --no-pager 2>>"$EV/driver.log"; }
+healthy_after() { local v; v=$(verdict) || return 1; healthy_eval "$1" "$v"; }   # ok|rest, checked after EPOCH
+stop_exited() { local r; r=$(journalctl --user -u "$U" --since "@$1" -o cat --no-pager 2>>"$EV/driver.log" | stop_exit_eval); [ "${r%% *}" = PASS ] && [ "$(prop ActiveState)" != active ]; }
+restart_loop_proven() { local r; r=$(jcap "$U" "$1" | start_limit_eval "$1" "$U" "$(systemctl --user show "$U" -p StartLimitBurst --value)"); log "restart-loop evidence: $r"; [ "${r%% *}" = PASS ]; }
 # R1: the registry (agent-deck list, declared profile) must hold exactly these four fixtures:
 # each ID once, with its declared title, in $PROFILE, not archived. Prints the problems; rc 1 if any.
 registry_check() { agent-deck list --json 2>>"$EV/driver.log" | python3 -c '
@@ -310,46 +317,53 @@ else result L2-settle FAIL "L2 not settled (step $(step "$Q"))"; fi
 wait_for "L2 rest (no open work)" 120 state_is rest
 
 # ---------------------------------------------------------------- L3a hang: watchdog
-inv=$(prop InvocationID); log "L3a onset: SIGSTOP main pid"; run kill -STOP "$(prop MainPID)"
+inv=$(prop InvocationID); t3a=$(date +%s); log "L3a onset: SIGSTOP main pid"; run kill -STOP "$(prop MainPID)"
 if wait_for "L3a watchdog restart" 110 new_invocation "$inv"; then
-  journalctl --user -u "$U" --since "-3min" -o cat --no-pager | grep -qi watchdog && result L3a PASS "watchdog killed and systemd restarted run" || result L3a FAIL "restart without a watchdog line"
-else result L3a FAIL "no watchdog restart within 110 s"; fi
-wait_for "L3a pass" 90 state_is ok; snap L3a
+  t3r=$(date +%s); r=$( [ "$DRY" = 1 ] && echo "DRY watchdog window $t3a..$t3r" || jcap "$U" "$t3a" | l3a_eval "$t3a" "$t3r" )
+  result L3a "${r%% *}" "${r#* } (onset $t3a, restart $t3r)"
+else result L3a FAIL "no watchdog restart within 110 s"; t3r=$(date +%s); fi
+wait_for "L3a pass" 90 healthy_after "$t3r"; snap L3a
 
 # ---------------------------------------------------------------- L7c causal pre-first-pass window
 # The OS fault: a drop-in makes the unit's main process sleep 40 s before exec'ing run
 # (same PID, same InvocationID), so the window before the first pass is controlled, not raced.
 run mkdir -p "$SD/$U.d"
 run sh -c "printf '[Service]\nExecStart=\nExecStart=/bin/sh -c \"sleep 40; exec $A run --config $CFG\"\nTimeoutStartSec=120\n' > '$SD/$U.d/delay.conf'"
-reload; inv=$(prop InvocationID); log "L7c onset: restart with 40 s delay"; run systemctl --user restart --no-block "$U"
+reload; inv=$(prop InvocationID); t7=$(date +%s); log "L7c onset: restart with 40 s delay"; run systemctl --user restart --no-block "$U"
 wait_for "L7c new invocation" 20 sh -c "[ \"\$(systemctl --user show $U -p InvocationID --value)\" != '$inv' ]"
 run systemctl --user start "$LU.service"   # an outside check inside the window
 if state_is starting; then s1=PASS; else s1="FAIL($(verdict))"; fi
-wait_for "L7c first pass of the new run" 90 state_is ok; run systemctl --user start "$LU.service"
-if [ "$s1" = PASS ] && state_is ok; then result L7c PASS "starting (quiet, not recovered) inside the window; ok after the new run's pass"; else result L7c FAIL "window $s1, after $(verdict)"; fi
+# After the new run's first pass the healthy state is ok, or rest when there is no open work (the idle
+# fixture): both require a pass from the CURRENT invocation; starting/unknown/hung/crashed never count.
+wait_for "L7c first pass of the new run" 90 healthy_after "$t7"; run systemctl --user start "$LU.service"
+if [ "$s1" = PASS ] && healthy_after "$t7"; then result L7c PASS "starting (quiet, not recovered) inside the window; $(verdict | cut -d' ' -f1) after the new run's pass"; else result L7c FAIL "window $s1, after $(verdict)"; fi
 run rm -f "$SD/$U.d/delay.conf"; reload; snap L7c
 
 # ---------------------------------------------------------------- L3b hang seen by the outside check (watchdog off)
-run sh -c "printf '[Service]\nWatchdogSec=0\n' > '$SD/$U.d/nowatchdog.conf'"; reload; run systemctl --user restart "$U"
-wait_for "L3b pass" 90 state_is ok
+run sh -c "printf '[Service]\nWatchdogSec=0\n' > '$SD/$U.d/nowatchdog.conf'"; reload; t3b=$(date +%s); run systemctl --user restart "$U"
+wait_for "L3b pass" 90 healthy_after "$t3b"
 d1=$(wakes "$U_ID"); log "L3b onset: SIGSTOP main pid, no watchdog"; run kill -STOP "$(prop MainPID)"; t0=$(date +%s)
 if wait_for "L3b hung" 180 state_is hung; then
   el=$(( $(date +%s) - t0 )); [ "$(wakes "$U_ID")" -gt "$d1" ] && result L3b PASS "hung after ${el}s (bound 180), duty woken" || result L3b FAIL "hung but duty not woken"
 else result L3b FAIL "not hung within 180 s"; fi
-run kill -CONT "$(prop MainPID)"; run rm -f "$SD/$U.d/nowatchdog.conf"; reload; run systemctl --user restart "$U"
-wait_for "L3b recovered" 150 state_is ok; snap L3b
+run kill -CONT "$(prop MainPID)"; run rm -f "$SD/$U.d/nowatchdog.conf"; reload; t3c=$(date +%s); run systemctl --user restart "$U"
+wait_for "L3b recovered" 150 healthy_after "$t3c"; snap L3b
 
 # ---------------------------------------------------------------- L4a restart loop, owned escalation with duty's ack
 run sh -c "printf '[Service]\nExecStart=\nExecStart=$A run --config /nonexistent-$RUN.json\n' > '$SD/$U.d/fail.conf'"; reload
-log "L4a onset: failing start"; run systemctl --user restart "$U"
-[ "$DRY" = 1 ] || systemctl --user show "$U" -p DropInPaths --value | grep -q fail.conf || result L4a INCOMPLETE "fail.conf drop-in not in effect: no onset"
-if wait_for "L4a start limit" 120 sh -c "systemctl --user show $U -p Result --value | grep -q start-limit-hit" && wait_for "L4a restart-loop verdict" 60 state_is restart-loop; then
+run systemctl --user reset-failed "$U"   # a fresh start-limit window for this onset
+t4=$(date +%s); log "L4a onset: failing start (StartLimitBurst $(systemctl --user show "$U" -p StartLimitBurst --value), RestartUSec $(systemctl --user show "$U" -p RestartUSec --value))"; run systemctl --user restart "$U"
+[ "$DRY" = 1 ] || { dp=$(systemctl --user show "$U" -p DropInPaths --value); case "$dp" in *fail.conf*) ;; *) result L4a INCOMPLETE "fail.conf drop-in not in effect: no onset";; esac; }
+# Ruling restart-classification-ruling.json: the product reads this loop as crashed OR restart-loop (systemd keeps
+# Result=exit-code after the start limit); either is the owned alarm ONLY with an independently proven restart loop
+# of this exact unit since this onset. A single crash or a stale/other-unit line fails.
+if wait_for "L4a restart loop proven" 90 restart_loop_proven "$t4" && wait_for "L4a owned alarm" 60 state_in restart-loop crashed; then
   if wait_for "L4a duty ack recorded" 300 sh -c "python3 -c 'import json;d=json.load(open(\"$ROOT/$P.db.liveness.json\"));a=d[\"open\"][\"ack\"];assert a[\"by\"]==\"$U_NAME\" and a[\"next_action\"] and a[\"response_deadline\"]'"; then
     run rm -f "$SD/$U.d/fail.conf"; reload; run systemctl --user reset-failed "$U"; run systemctl --user start "$U"
     wait_for "L4a recovered" 150 sh -c "python3 -c 'import json;d=json.load(open(\"$ROOT/$P.db.liveness.json\"));assert d.get(\"open\") is None and d[\"history\"][-1][\"outcome\"]==\"recovered\"'" \
       && result L4a PASS "restart-loop -> duty ack (owner/next/deadline) -> recovered on fresh pass" || result L4a FAIL "no recovery after ack"
   else result L4a FAIL "duty never acknowledged"; fi
-else result L4a FAIL "no start-limit/restart-loop within bounds"; fi
+else result L4a FAIL "no proven restart loop and owned alarm within bounds (verdict $(verdict | cut -d' ' -f1))"; fi
 run rm -f "$SD/$U.d/fail.conf"; reload; run systemctl --user reset-failed "$U"; run systemctl --user start "$U"
 wait_for "L4a settled" 90 state_is rest; snap L4a
 
@@ -386,12 +400,16 @@ run kill -CONT "$mp"; wait_for "L7b recovered" 150 state_is rest; snap L7b
 # ---------------------------------------------------------------- L6 timeout while run is down + L5 stopped quiet
 Q=L6-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 2m --verify-window 5m
 wait_for "L6 worker step" 30 is_step "$Q" worker
+# P12-live-measurement-1: capture the deadline unit's exact callback argv NOW; the transient unit is collected after it
+# fires (live1: the replay's `systemctl start` found no unit and never ran).
+l6argv=$( [ "$DRY" = 1 ] && echo "DRY" || systemctl --user show "agent-loop-$P-$Q-w1.service" -p ExecStart --value 2>>"$EV/driver.log" | l6_argv_eval "$A" "$Q" ); l6ok=$?
+log "L6 replay argv: $l6argv"
 # R4: the authorized deadline, from the ledger, before the fault; the send log's size, to read L6's wakes later.
 l6dl=$( [ "$DRY" = 1 ] && echo DRY || $A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print([p['deadline'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0])" 2>>"$EV/driver.log" )
 nl0=$( [ "$DRY" = 1 ] && echo 0 || wc -l < /home/bmosher/.local/share/agent-deck/wake-send.log )
-c1=$(wakes "$W_ID"); dd1=$(wakes "$D_ID"); tstop=@$(date +%s)
+c1=$(wakes "$W_ID"); dd1=$(wakes "$D_ID"); t5=$(date +%s); tstop=@$t5
 log "L5 onset: agent-loop stop"; run "$A" stop $C
-wait_for "L5 run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
+wait_for "L5 run exited" 60 stop_exited "$t5"
 st=$(prop ActiveState)
 log "L5: stray start while the marker exists"; run systemctl --user start "$U"; src=$?
 run sleep 20   # longer than RestartSec: a restart storm would show by now
@@ -402,10 +420,15 @@ sched=$( [ "$DRY" = 1 ] && echo 0 || journalctl --user -u "$U" --since "$tstop" 
 quiet_window L5-stopped stopped 245    # R3: 245 s collection; the L6 deadline (2 min) falls inside it
 l6_timing
 if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && [ "$(wakes "$D_ID")" -eq $(( dd1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | grep -q interrupted; }; then
-  run systemctl --user start "agent-loop-$P-$Q-w1.service"   # replay the callback
-  if [ "$DRY" = 1 ] || { [ "$(wakes "$W_ID")" -eq $(( c1 + 1 )) ] && journalctl --user -u "agent-loop-$P-$Q-w1.service" -o cat --no-pager | tail -n 3 | grep -q already-handled; }; then
-    result L6 PASS "interrupted once while run was stopped: one /cancel, one director wake; replay already-handled"
-  else result L6 FAIL "replay repeated effects"; fi
+  if [ "$DRY" = 1 ]; then result L6 DRY "replay the captured callback argv; expect rc 0, already-handled, no new effects"
+  elif [ "$l6ok" != 0 ]; then result L6 INCOMPLETE "interrupted once, but the replay argv was not captured: $l6argv"
+  else
+    read -ra l6a <<< "$l6argv"; w0=$(wakes "$W_ID"); d0=$(wakes "$D_ID")
+    l6out=$(out env AGENTDECK_PROFILE="$PROFILE" "${l6a[@]}"); l6rc=$?; log "L6 replay rc=$l6rc: $l6out"
+    run sleep 5   # let the send log settle before counting
+    r=$(printf '%s\n' "$l6out" | l6_replay_eval "$l6rc" "$w0" "$(wakes "$W_ID")" "$d0" "$(wakes "$D_ID")")
+    [ "${r%% *}" = PASS ] && result L6 PASS "interrupted once while run was stopped: one /cancel, one director wake; ${r#* }" || result L6 "${r%% *}" "${r#* }"
+  fi
 else result L6 FAIL "cancel/director wakes $c1->$(wakes "$W_ID") $dd1->$(wakes "$D_ID")"; fi
 run "$A" start $C; wait_for "L5 resumed" 90 sh -c "systemctl --user is-active $U"; snap L5-L6
 
@@ -416,8 +439,8 @@ run "$A" start $C; wait_for "L5 resumed" 90 sh -c "systemctl --user is-active $U
 # fixtures are told NOT to acknowledge L6b (tasks/ack.md). The stop itself must stay quiet (no alarm).
 Q=L6b-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task l-noclaim-worker.md "$Q")" --verify-task "@$(task l-verify.md "$Q")" --duration 1m --verify-window 5m
 wait_for "L6b worker step" 30 is_step "$Q" worker
-log "L6b onset: agent-loop stop, then no acknowledgement"; run "$A" stop $C
-wait_for "L6b run exited" 60 sh -c "systemctl --user show $U -p ExecMainStatus --value | grep -qx 64"
+t6b=$(date +%s); log "L6b onset: agent-loop stop, then no acknowledgement"; run "$A" stop $C
+wait_for "L6b run exited" 60 stop_exited "$t6b"
 l6bq() { $A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print(json.dumps([p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0].get('timeout') or {}))"; }
 if wait_for "L6b duty and director escalated" 300 sh -c "$A status $C --json | python3 -c \"import json,sys; t=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0].get('timeout') or {}; assert t.get('no_ack_duty','').startswith('sent') and t.get('no_ack_director','').startswith('sent')\""; then
   r=$(l6bq | l6b_eval)
@@ -432,11 +455,13 @@ if ! stop_seat "$U_ID"; then
   result L4b INCOMPLETE "duty fixture $U_ID not confirmed stopped (registry: $(seat_status "$U_ID")): no onset injected"
 else
 run sh -c "printf '[Service]\nExecStart=\nExecStart=$A run --config /nonexistent-$RUN.json\n' > '$SD/$U.d/fail.conf'"; reload
-d1=$(wakes "$D_ID"); log "L4b onset: failing start, duty seat $U_ID confirmed stopped"; run systemctl --user restart "$U"
-if wait_for "L4b restart-loop" 180 state_is restart-loop && [ "$DRY" = 1 -o "$(wakes "$D_ID")" -gt "$d1" ]; then
+run systemctl --user reset-failed "$U"   # a fresh start-limit window for this onset
+d1=$(wakes "$D_ID"); t4b=$(date +%s); log "L4b onset: failing start, duty seat $U_ID confirmed stopped"; run systemctl --user restart "$U"
+# Same ruling as L4a: crashed OR restart-loop, only with a proven restart loop of this unit since this onset.
+if wait_for "L4b restart loop proven" 90 restart_loop_proven "$t4b" && wait_for "L4b owned alarm" 90 state_in restart-loop crashed && [ "$DRY" = 1 -o "$(wakes "$D_ID")" -gt "$d1" ]; then
   wait_for "L4b director ack" 300 sh -c "python3 -c 'import json;d=json.load(open(\"$ROOT/$P.db.liveness.json\"));assert d[\"open\"][\"ack\"][\"by\"]==\"$D_NAME\"'" \
     && result L4b PASS "duty wake failed -> director woken in the same check -> director ack recorded" || result L4b FAIL "no director ack"
-else result L4b FAIL "observed $(verdict | cut -d' ' -f1) (required restart-loop); director wakes $d1 -> $(wakes "$D_ID")"; fi
+else result L4b FAIL "observed $(verdict | cut -d' ' -f1) (required crashed|restart-loop with a proven restart loop); director wakes $d1 -> $(wakes "$D_ID")"; fi
 run rm -f "$SD/$U.d/fail.conf"; reload
 fi
 snap L4b
