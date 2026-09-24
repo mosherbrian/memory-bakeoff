@@ -1,0 +1,36 @@
+{
+ "action": "P13-promotion-closure-continuation-1",
+ "author": "claude",
+ "status": "INCOMPLETE",
+ "filed_at": "2026-09-24T20:17:43Z",
+ "preserves": "promotion-closure-claim.json (INCOMPLETE, filed 20:08:35Z) unchanged",
+ "plan_fixes": [
+  "sandbox mode: every path under PROMOTE_ROOT and a sandbox prospective config (sandbox db); production only read to copy the old bytes",
+  "rollback mode exits with restore's status (failed restore -> nonzero, ROLLBACK FAIL)",
+  "snapshot copy verified by cmp; failure fails BEFORE any mutation",
+  "every systemctl call in restore bounded by timeout 30",
+  "FOUND BY THE SANDBOX: the mid-decision guard crashed on an empty ledger (status packages null); fixed to treat null as no packages"
+ ],
+ "sandbox_results": [
+  "ok   stale pass (old invocation) rejected -> PROMOTE FAIL rc 3",
+  "ok   exact restore: files/modes/units equal the snapshot",
+  "ok   absent resolver restored as ABSENT (introduced file removed, none fabricated)",
+  "ok   partial install failure -> PROMOTE FAIL rc 3",
+  "ok   partial install: binary and units restored exactly",
+  "ok   start failure -> PROMOTE FAIL; restore cannot restart the still-failing loop and says ROLLBACK FAIL (not a false PASS)",
+  "ok   a failed rollback exits nonzero (rc 1) and records ROLLBACK FAIL",
+  "ok   invalid policy refused by the guard; nothing changed, no snapshot taken",
+  "promotion-sandbox: 8 checks, 0 wrong",
+  "rc=0"
+ ],
+ "covered": "stale pass rejected + exact restore; absent resolver restored as ABSENT (never fabricated); partial install failure + exact restore of binary/units; loop start failure -> PROMOTE FAIL with an honest ROLLBACK FAIL when the loop still cannot start; failed rollback exits nonzero; invalid policy refused by the guard with no mutation and no snapshot.",
+ "not_covered": "A SUCCESSFUL end-to-end promotion (PROMOTE PASS) in the sandbox was not run: its final checker step runs the real candidate liveness, which in the sandbox would need a full systemctl-show double; not built inside the bound. So the positive path with the absent resolver is tested only up to the pass check, not to PROMOTE PASS.",
+ "no_changes": "No product/source/adapter/host changes; production files only read.",
+ "files_sha256": {
+  "plans/promotion-plan.sh": "528d11dbb63902ed80f3937806745d65a6aa66454283cf3e258f36ef1714c8dd",
+  "plans/MANIFEST.sha256": "9834705db176241a0d4e416cc672b802cd21fa72bc9ae73f931c05cc372d6da1",
+  "evidence/promotion-closure/sandbox-test.sh": "e02472043c8f8cdf23fc245b92b8f9e371e39eab95f29f847d18f60e832c463b",
+  "evidence/promotion-closure/sandbox-test.txt": "2895bd1872459393d47fd2878b29bebb2cd05e3496c536af4f06195dd4f45164",
+  "promotion-closure-claim.json": "bb7e5d13126ba600857b35eb3cf00161f4ac977e6f07a5885d22cfde79a71ce8"
+ }
+}

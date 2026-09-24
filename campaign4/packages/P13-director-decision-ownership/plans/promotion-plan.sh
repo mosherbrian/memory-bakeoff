@@ -19,9 +19,10 @@ CFG=$R/home/bmosher/.config/agent-loop/campaign4.json
 AD=$R/home/bmosher/.config/agent-deck
 SC=${PROMOTE_SYSTEMCTL:-systemctl}; [ "$SANDBOX" = 1 ] || SC=systemctl
 EV=${PROMOTE_EV:-$PKG/evidence/promotion-$RUN}; ARC=$EV/promo-archive
-CAND_BIN=/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/bin/agent-loop
+CAND_BIN=/home/bmosher/projects/agent-loop-releases/agent-loop-df5e6fc627b8/bin/agent-loop   # read-only source of the pinned bytes
 CAND_SHA=47f69dfdeb8b0d17472d871b68dfdfa8270e3421997a03f5d1c6929c8a818ec1
 PROSPECTIVE=$PKG/plans/campaign4-decision-config.prospective.json
+[ "$SANDBOX" = 1 ] && PROSPECTIVE=${PROMOTE_PROSPECTIVE:?sandbox needs its own prospective config (sandbox db)}
 TIMERS="agent-loop-liveness@campaign4.timer escalation-watch.timer"
 SERVICES="agent-loop@campaign4.service agent-loop-liveness@campaign4.service agent-loop-liveness-failed@campaign4.service escalation-watch.service"
 FILES="$BIN $CFG $AD/escalation-watch $AD/escalation-resolve"
@@ -43,7 +44,7 @@ guards() {
   "$CAND_BIN" status --config "$PROSPECTIVE" >/dev/null 2>>"$EV/promotion.log" || fail "prospective config refused by the candidate (required 0/300/600 policy)"
   MID=$("$BIN" status --config "$CFG" --json 2>/dev/null | python3 -c "
 import json, sys
-try: ps = json.load(sys.stdin).get('packages', [])
+try: ps = json.load(sys.stdin).get('packages') or []
 except Exception: print('unreadable'); sys.exit(2)
 print(' '.join(p['qid'] for p in ps if p.get('step') == 'decision'))") || fail "package status unreadable"
   [ -z "$MID" ] || fail "packages mid-decision: $MID"
@@ -53,7 +54,7 @@ snapshot() {
   mkdir -p "$ARC"; : > "$ARC/files.tsv"; : > "$ARC/units.tsv"
   local i=0 f
   for f in $FILES; do i=$((i+1))
-    if [ -e "$f" ]; then cp -p "$f" "$ARC/f$i"; printf '%s\tpresent\t%s\t%s\tf%d\n' "$f" "$(sha256sum "$f" | cut -d' ' -f1)" "$(stat -c %a "$f")" $i >> "$ARC/files.tsv"
+    if [ -e "$f" ]; then cp -p "$f" "$ARC/f$i" && cmp -s "$f" "$ARC/f$i" || fail "snapshot copy of $f failed (no mutation made)"; printf '%s\tpresent\t%s\t%s\tf%d\n' "$f" "$(sha256sum "$f" | cut -d' ' -f1)" "$(stat -c %a "$f")" $i >> "$ARC/files.tsv"
     else printf '%s\tabsent\t-\t-\t-\n' "$f" >> "$ARC/files.tsv"; fi; done
   for u in $TIMERS $SERVICES; do printf '%s\t%s\t%s\n' "$u" "$($SC --user is-active "$u" 2>/dev/null)" "$($SC --user is-enabled "$u" 2>/dev/null)" >> "$ARC/units.tsv"; done
   OLD_INV=$($SC --user show agent-loop@campaign4.service -p InvocationID --value 2>/dev/null)
@@ -61,22 +62,23 @@ snapshot() {
 restore() {
   log "RESTORE to the snapshot"
   local u st en
-  for u in $TIMERS $SERVICES; do $SC --user stop "$u" >>"$EV/promotion.log" 2>&1; done
+  for u in $TIMERS $SERVICES; do timeout 30 $SC --user stop "$u" >>"$EV/promotion.log" 2>&1; done
   while IFS=$'\t' read -r f pres sha mode key; do
     if [ "$pres" = present ]; then cp -p "$ARC/$key" "$f" && [ "$(sha256sum "$f" | cut -d' ' -f1)" = "$sha" ] || log "RESTORE MISMATCH $f"
     else rm -f "$f"; [ ! -e "$f" ] || log "RESTORE could not remove introduced $f"; fi
   done < "$ARC/files.tsv"
-  $SC --user daemon-reload >>"$EV/promotion.log" 2>&1
+  timeout 30 $SC --user daemon-reload >>"$EV/promotion.log" 2>&1
   while IFS=$'\t' read -r u st en; do
-    [ "$st" = active ] && $SC --user start "$u" >>"$EV/promotion.log" 2>&1
+    [ "$st" = active ] && timeout 30 $SC --user start "$u" >>"$EV/promotion.log" 2>&1
   done < "$ARC/units.tsv"
   local bad=0
   while IFS=$'\t' read -r f pres sha mode key; do
     if [ "$pres" = present ]; then [ "$(sha256sum "$f" 2>/dev/null | cut -d' ' -f1)" = "$sha" ] && [ "$(stat -c %a "$f")" = "$mode" ] || bad=1; else [ ! -e "$f" ] || bad=1; fi
   done < "$ARC/files.tsv"
   while IFS=$'\t' read -r u st en; do [ "$($SC --user is-active "$u" 2>/dev/null)" = "$st" ] || bad=1; done < "$ARC/units.tsv"
-  [ $bad = 0 ] && result ROLLBACK PASS "files and unit states equal the snapshot (absent files absent)" || result ROLLBACK FAIL "state differs from the snapshot after restore"; }
-[ "$MODE" = rollback ] && { MUTATED=0; restore; exit 0; }
+  if [ $bad = 0 ]; then result ROLLBACK PASS "files and unit states equal the snapshot (absent files absent)"; return 0; fi
+  result ROLLBACK FAIL "state differs from the snapshot after restore"; return 1; }
+[ "$MODE" = rollback ] && { MUTATED=0; restore; exit $?; }
 log "promotion $RUN"; guards; snapshot
 # ---- stop timers first, then services; bounded; never wait for the loop to stop itself
 MUTATED=1

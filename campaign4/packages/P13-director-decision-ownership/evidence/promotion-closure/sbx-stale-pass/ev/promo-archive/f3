@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""If nobody has acked an escalation, tell Brian. This is the missing reader.
+
+THE HOLE THIS FILLS, stated plainly. I built the escalation ledger this morning
+and said it meant escalations no longer depend on who is listening. That was
+true for DURABILITY and false for LATENCY: the ledger is read by a SessionStart
+hook and a UserPromptSubmit hook, and both require Brian to type. So the chain
+was
+
+    fleet -> ledger -> ... -> Brian arrives and says something -> Claude reads it
+
+and "the human is never the detector" was false, because the human was still
+the trigger. Measured 2026-09-20: fleet-stalled raised E-22 at 14:17 and it was
+read at 15:07, when Brian arrived angry to report the thing it had already
+detected fifty minutes earlier.
+
+WHAT THIS DOES. Runs on a timer, outside every session. Any escalation unacked
+longer than the grace goes to Brian by the normal push path, ONCE, with its id
+and age. Claude still gets first refusal - that is the whole point of the grace
+- but silence stops being indefinite.
+
+It cannot fix itself being broken, so it says so: if the ledger is unreadable
+or the pager is missing, that is reported on stderr and the unit's OnFailure
+handler fires.
+"""
+import json
+import os
+import subprocess
+import sys
+import time
+
+HOME = os.path.expanduser("~")
+LEDGER = os.path.join(HOME, ".local/share/agent-deck/escalations.jsonl")
+STATE = os.path.join(HOME, ".local/share/agent-deck/escalation-watch.json")
+TICKET = os.path.join(HOME, ".config/agent-deck/ticket")
+# Long enough that Claude gets a real chance at it, short enough that a night
+# is not lost. Claude reads the ledger on every prompt, so if Brian is awake
+# and working this never fires.
+GRACE = int(os.environ.get("ESCALATION_GRACE_MIN", "45"))
+
+
+def rows():
+    with open(LEDGER) as fh:
+        return [json.loads(ln) for ln in fh if ln.strip()]
+
+
+def main():
+    try:
+        rs = rows()
+    except FileNotFoundError:
+        print("no ledger yet - nothing to watch")
+        return 0
+    except Exception as exc:                            # noqa: BLE001
+        sys.stderr.write(f"escalation-watch: cannot read the ledger: {exc}\n")
+        return 1
+
+    acked = {r["ack"] for r in rs if "ack" in r}
+    now = time.time()
+
+    # AN ACK IS NOT A FIX, AND TRIGGERING ON "UNACKED" MADE THIS SILENT.
+    # Brian, 2026-09-20: "So everything is just stuck. It's been an hour.
+    # Nothing escalated either?" It had escalated - to me - and I acked each
+    # one within minutes, so this reported "0 unacked past 45 min" and never
+    # paged him while the condition ran for another hour. I built the thing
+    # that tells him and then made it structurally mute by being prompt.
+    #
+    # The ledger dedupes by key: the same condition re-raised produces another
+    # record with the same key. So a key that comes BACK after being acked is
+    # proof the ack did not fix it, and that is the mechanical signal - not
+    # whether anyone typed a note.
+    acked_at = {}
+    for r in rs:
+        if "ack" in r:
+            acked_at[r["ack"]] = r["t"]
+    ack_time_by_key = {}
+    for r in rs:
+        if "id" in r and r["id"] in acked_at:
+            ack_time_by_key[r["key"]] = max(ack_time_by_key.get(r["key"], 0),
+                                            acked_at[r["id"]])
+    recurred = [r for r in rs
+                if "id" in r and r["key"] in ack_time_by_key
+                and r["t"] > ack_time_by_key[r["key"]] + 60]
+
+    stale = [r for r in rs if "id" in r and r["id"] not in acked
+             and (now - r["t"]) / 60 >= GRACE]
+    # Newest record per recurring key, so one line per condition, not per firing.
+    by_key = {}
+    for r in recurred:
+        if r["t"] > by_key.get(r["key"], {"t": 0})["t"]:
+            by_key[r["key"]] = r
+    stale += list(by_key.values())
+    try:
+        told = set(json.load(open(STATE)).get("told", []))
+    except Exception:                                   # noqa: BLE001
+        told = set()
+    fresh = [r for r in stale if r["id"] not in told]
+
+    print(f"  {len(rs)} records, {len(stale)} unacked past {GRACE} min, "
+          f"{len(fresh)} not yet sent to Brian")
+    if not fresh:
+        return 0
+
+    lines = [f"{r['id']} [{r['kind']}] raised {int((now - r['t']) / 60)} min ago"
+             f"{' - RECURRED AFTER AN ACK' if r['key'] in ack_time_by_key else ' - unacked'}: "
+             f"{r['text'].splitlines()[0][:150]}" for r in fresh]
+    body = ("The fleet raised these and they are still happening.\n\n"
+            + "\n\n".join(lines)
+            + "\n\nEither nobody acted, or somebody acked and the condition "
+                "came back anyway. An ack is a note, not a fix.")
+    if not os.path.exists(TICKET):
+        sys.stderr.write(f"escalation-watch: no pager at {TICKET}\n{body}\n")
+        return 1
+    p = subprocess.run([TICKET, f"{len(fresh)} escalation(s) nobody acted on"],
+                       input=body, text=True, capture_output=True, timeout=60)
+    if p.returncode != 0:
+        sys.stderr.write(f"escalation-watch: pager failed: {p.stderr[-200:]}\n")
+        return 1
+    told |= {r["id"] for r in fresh}
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    json.dump({"told": sorted(told), "at": int(now)}, open(STATE, "w"))
+    print(f"  told Brian about {len(fresh)}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
