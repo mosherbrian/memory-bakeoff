@@ -1,0 +1,825 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index 7d65d6a..95ef07d 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -647,3 +647,44 @@ func runCheckerFailed(args []string) int {
+ 	}
+ 	return 0
+ }
++
++// runDecisionCheck is the decision deadline timer's callback: it walks the
++// decision ladder (and the other owned escalations) under the ledger lock.
++func runDecisionCheck(args []string) int {
++	fs, cfgPath := loopFlags("decision-check")
++	fs.Parse(args)
++	cfg, err := loop.LoadConfig(*cfgPath)
++	if err != nil {
++		return fail(err)
++	}
++	msgs, err := loop.EscalateTimeouts(cfg, nil)
++	for _, m := range msgs {
++		fmt.Println(m)
++	}
++	if err != nil {
++		return fail(err)
++	}
++	return 0
++}
++
++// runDecisionAck records a responder's single bounded acknowledgement of an
++// overdue decision. It is not a decision.
++func runDecisionAck(args []string) int {
++	fs, cfgPath := loopFlags("decision-ack")
++	qid := fs.String("qid", "", "package id")
++	by := fs.String("by", "", "a configured decision responder")
++	next := fs.String("next", "", "the next action you will take")
++	within := fs.Duration("within", 15*time.Minute, "response deadline from now (max 15m)")
++	fs.Parse(args)
++	l, done, err := openLocked(*cfgPath)
++	if err != nil {
++		return fail(err)
++	}
++	defer done()
++	a, err := l.DecisionAck(*qid, *by, *next, *within)
++	if err != nil {
++		return fail(err)
++	}
++	fmt.Printf("decision of %s acknowledged by %s at %s; respond by %s: %s. This is not a decision.\n", *qid, a.By, a.At, a.Deadline, a.Next)
++	return 0
++}
+diff --git a/cmd/agent-loop/main.go b/cmd/agent-loop/main.go
+index 57a8720..5eab4e3 100644
+--- a/cmd/agent-loop/main.go
++++ b/cmd/agent-loop/main.go
+@@ -52,6 +52,10 @@ func main() {
+ 		os.Exit(runExpose(os.Args[2:]))
+ 	case "liveness":
+ 		os.Exit(runLiveness(os.Args[2:]))
++	case "decision-check":
++		os.Exit(runDecisionCheck(os.Args[2:]))
++	case "decision-ack":
++		os.Exit(runDecisionAck(os.Args[2:]))
+ 	case "checker-failed":
+ 		os.Exit(runCheckerFailed(os.Args[2:]))
+ 	case "liveness-ack":
+diff --git a/conformance/tools/mutate_go.py b/conformance/tools/mutate_go.py
+index ff4f685..a11c5ea 100644
+--- a/conformance/tools/mutate_go.py
++++ b/conformance/tools/mutate_go.py
+@@ -220,6 +220,18 @@ LOOP_MUTANTS = [
+     (LP + "checkerfail.go", "	case p.RC == host.WakeRCSent || p.RC == host.WakeRCQueued:", "	case true:", "a refused wake counts as told"),
+     (LP + "checkerfail.go", "(!strings.HasPrefix(in.Duty, \"sent\") || now.Sub(dutySent) >= CheckerDirectorAfter) {", "(!strings.HasPrefix(in.Duty, \"sent\") || now.Sub(dutySent) >= 1000*CheckerDirectorAfter) {", "a lasting checker failure never reaches the director"),
+     (LP + "checkerfail.go", "		if !strings.HasPrefix(in.Duty, \"sent\") {\n			in.Duty = checkerSend", "		if true {\n			in.Duty = checkerSend", "duty is re-told on every failure (no dedup)"),
++    # P13: director decision ownership
++    (LP + "decision.go", "		if err := l.save(p); err != nil {\n			return err\n		}\n	}\n	return l.armDecision(p)", "		if err := l.save(p); err != nil {\n			return err\n		}\n	}\n	return nil", "no decision deadline timer is armed"),
++    (LP + "decision.go", "	if p.Decision == nil {\n		p.Decision = &DecisionDue{", "	if true {\n		p.Decision = &DecisionDue{", "a reopen moves the decision deadline"),
++    (LP + "decision.go", "if strings.HasPrefix(p.Decision.Rungs[k], \"sent\") || now.Before(", "if now.Before(", "a rung fires again on every check"),
++    (LP + "decision.go", "		ids := ledgerIDs(r, text, now.Add(-5*time.Second), false)\n		if len(ids) == 0 {", "		ids := ledgerIDs(r, text, now.Add(-5*time.Second), false)\n		if len(ids) < 0 {", "rc 0 without a durable ledger record counts as delivered"),
++    (LP + "decision.go", "	if p.Decision.Reraised != \"\" {\n		return nil", "	if false {\n		return nil", "the re-raise repeats on every check"),
++    (LP + "decision.go", "		return nil, fmt.Errorf(\"%s was already acknowledged once", "		p.Decision.Ack = nil\n		return nil, fmt.Errorf(\"%s was already acknowledged once", "a second acknowledgement is not refused cleanly"),
++    (LP + "decision.go", "	if within <= 0 || within > MaxDecisionAckWithin {", "	if within <= 0 {", "an unbounded decision acknowledgement is accepted"),
++    (LP + "decision.go", "		ok = ok || r == by", "		ok = true", "any principal may acknowledge a decision"),
++    (LP + "loop.go", "	if p = l.Pkg(qid); p.Decision != nil && p.Decision.Resolved == \"\" {", "	if p = l.Pkg(qid); false {", "a decision does not resolve its incident (late pages)"),
++    (LP + "decision.go", "		at, ok := py.Instant(p.StepAt)\n		if !ok {\n			at = now\n		}", "		at := now", "a migrated decision deadline starts from now"),
++    (LP + "loop.go", "	done = append(done, l.decisionLadder()...) // P13", "	_ = 0 // P13", "run's pass never walks the decision ladder"),
+     # P9 read-only view (internal/expose, checked by its own tests)
+     ("internal/expose/expose.go", "\t\t\t\tcase age < -5*time.Second:", "\t\t\t\tcase false:", "a future pass time reads as fresh"),
+     ("internal/expose/expose.go", "\t\treturn \"UNKNOWN: \" + r.Source + \" unreadable\"", "\t\treturn \"OK\"", "a missing source reads OK"),
+diff --git a/internal/loop/decision.go b/internal/loop/decision.go
+new file mode 100644
+index 0000000..f9f25c7
+--- /dev/null
++++ b/internal/loop/decision.go
+@@ -0,0 +1,364 @@
++package loop
++
++import (
++	"crypto/md5"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"os"
++	"strings"
++	"time"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++// P13: director decision ownership.
++//
++// MECHANISM (here, in the loop) versus POLICY (in the config). The loop owns
++// only the obligation: when a package enters the decision step it persists a
++// trusted deadline and incident identity, arms a real absolute UTC calendar
++// timer, and walks a ladder of rungs, each at most once per incident, each
++// persisted before delivery, with durable per-incident notice records (D3).
++// WHO is told at which offset is the config's decision_ladder: a rung names a
++// seat (a wake to that seat) or an external command (an adapter, e.g. the
++// fleet's notify-claude, fed the text on stdin). The loop knows nothing about
++// Claude, Signal or the fleet's pager: those are fleet policy, reached only
++// through a configured command and, beyond it, the fleet's own
++// escalation-watch.
++//
++// Responses: a configured responder may acknowledge ONCE per incident with an
++// owner, a next action and a response deadline of at most MaxDecisionAckWithin.
++// An acknowledgement is not a decision. If the response deadline passes while
++// the package still waits (or, after the external rung, no acknowledgement
++// comes within MaxDecisionAckWithin) the external rung is RE-RAISED once with
++// the SAME text, so a ledger keyed on the text sees the same key again after
++// its ack (the fleet's recurrence path). Only an actual decision resolves the
++// incident: every later rung is then skipped, a stale timer callback is
++// harmless, and resolution commands (e.g. acking the ledger records of that key)
++// run so an unacked record cannot page after the fact.
++const (
++	DefaultDecisionS     = 1800
++	MaxDecisionS         = 86400
++	MaxDecisionAckWithin = 15 * time.Minute
++)
++
++// Rung is one step of the decision ladder (config).
++type Rung struct {
++	AfterS int64    `json:"after_s"`        // seconds after the decision deadline
++	Seat   string   `json:"seat,omitempty"` // a configured seat to wake
++	Exec   []string `json:"exec,omitempty"` // or an external command; the text arrives on stdin
++	// External rungs only: the JSONL ledger the command writes (durable
++	// registration is verified by the key md5(kind + "\n" + text)), and the
++	// command that acknowledges a ledger record id on resolution.
++	Ledger     string   `json:"ledger,omitempty"`
++	LedgerKind string   `json:"ledger_kind,omitempty"`
++	ResolveCmd []string `json:"resolve_cmd,omitempty"` // + ID + "--note" + reason
++}
++
++// DecisionDue is a package's decision obligation (persisted in the package).
++type DecisionDue struct {
++	Incident string            `json:"incident"`
++	Deadline string            `json:"deadline"`
++	Rungs    map[string]string `json:"rungs,omitempty"` // rung index -> "sent <t>" | "failed <t>: why" | "intended <t>"
++	Ack      *DecisionAck      `json:"ack,omitempty"`
++	Reraised string            `json:"reraised,omitempty"`
++	Resolved string            `json:"resolved,omitempty"`
++	Resolve  []string          `json:"resolve_actions,omitempty"`
++}
++
++// DecisionAck is a responder's bounded acknowledgement (not a decision).
++type DecisionAck struct {
++	By       string `json:"by"`
++	Next     string `json:"next_action"`
++	Deadline string `json:"response_deadline"`
++	At       string `json:"at"`
++}
++
++func (c *Config) decisionWindow() time.Duration {
++	s := c.DecisionDeadlineS
++	if s <= 0 {
++		s = DefaultDecisionS
++	}
++	if s > MaxDecisionS {
++		s = MaxDecisionS
++	}
++	return time.Duration(s) * time.Second
++}
++
++// ladder is the configured ladder, or the default: director at the deadline,
++// duty 300 s later. External rungs exist only when configured.
++func (c *Config) ladder() []Rung {
++	if len(c.DecisionLadder) > 0 {
++		return c.DecisionLadder
++	}
++	return []Rung{{AfterS: 0, Seat: c.Director}, {AfterS: 300, Seat: c.Duty}}
++}
++
++func decisionUnit(p *Pkg) string { return p.VerifyAction + "-decision" }
++
++// openDecision persists the obligation and arms its calendar timer. The
++// deadline is taken from `from` (entry into the decision step); reopening a
++// package that already has one never moves it.
++func (l *Loop) openDecision(p *Pkg, from time.Time) error {
++	if p.Decision == nil {
++		p.Decision = &DecisionDue{Incident: "D-" + p.QID + "-" + p.VerifyAction,
++			Deadline: py.ISO(from.Add(l.Cfg.decisionWindow())), Rungs: map[string]string{}}
++		if err := l.save(p); err != nil {
++			return err
++		}
++	}
++	return l.armDecision(p)
++}
++
++// armDecision (re)arms the deadline timer at the ORIGINAL instant; a missing
++// timer is recovered by the next check, never by moving the deadline.
++func (l *Loop) armDecision(p *Pkg) error {
++	dl, ok := py.Instant(p.Decision.Deadline)
++	if !ok {
++		return fmt.Errorf("decision deadline %q unreadable", p.Decision.Deadline)
++	}
++	rem := dl.Sub(l.now()).Seconds()
++	if rem <= 0 {
++		return nil // already due: the checks own it
++	}
++	unit := l.unit(decisionUnit(p))
++	tm := l.Adapter.Timers
++	tm.Allowlist = append(tm.Allowlist, unit)
++	b, _ := json.Marshal(tm.Allowlist)
++	if err := l.D.KVPut("loop-units", string(b)); err != nil {
++		return err
++	}
++	_, err := tm.CreateHost(unit, p.Decision.Deadline, rem, []string{l.Cfg.Bin, "decision-check", "--config", l.Cfg.Path})
++	return err
++}
++
++func (l *Loop) decisionText(p *Pkg, i int) string {
++	// Stable per incident (no clock values): an external ledger keyed on the
++	// text sees the same key on a re-raise.
++	return fmt.Sprintf("[agent-loop] DECISION OVERDUE %s: package %s (verifier %s) has waited for the director (%s) since its decision deadline %s. Decide: %s decide --config %s --qid %s --kind ... --ref ... --reason ... ; or acknowledge once (owner, next action, <= %s): %s decision-ack --config %s --qid %s --by RESPONDER --next 'NEXT ACTION' --within 15m",
++		p.Decision.Incident, p.QID, p.Verdict, l.Cfg.Director, p.Decision.Deadline, l.Cfg.Bin, l.Cfg.Path, p.QID,
++		MaxDecisionAckWithin, l.Cfg.Bin, l.Cfg.Path, p.QID)
++}
++
++// decisionLadder walks every waiting decision (run after each pass, the
++// outside check every 30 s and the deadline timer's callback). The caller
++// holds the ledger lock.
++func (l *Loop) decisionLadder() []string {
++	var out []string
++	now := l.now()
++	for _, p := range l.Pkgs() {
++		if p.Step != "decision" {
++			if p.Decision != nil && p.Decision.Resolved == "" && p.Step == "closed" {
++				out = append(out, l.resolveDecision(p, now)...)
++			}
++			continue
++		}
++		if p.Decision == nil { // migration: a package that entered decision before P13
++			at, ok := py.Instant(p.StepAt)
++			if !ok {
++				at = now
++			}
++			if err := l.openDecision(p, at); err != nil {
++				out = append(out, p.QID+": decision deadline not armed: "+err.Error())
++			}
++			p = l.Pkg(p.QID)
++		}
++		dl, ok := py.Instant(p.Decision.Deadline)
++		if !ok || now.Before(dl) {
++			continue
++		}
++		for i, r := range l.Cfg.ladder() {
++			k := fmt.Sprint(i)
++			if strings.HasPrefix(p.Decision.Rungs[k], "sent") || now.Before(dl.Add(time.Duration(r.AfterS)*time.Second)) {
++				continue
++			}
++			out = append(out, l.fireRung(p, i, r, "rung", now)...)
++		}
++		out = append(out, l.reraise(p, now)...)
++	}
++	return out
++}
++
++// fireRung persists the intent, delivers once (D3 incident key), records the outcome.
++func (l *Loop) fireRung(p *Pkg, i int, r Rung, what string, now time.Time) []string {
++	k := fmt.Sprint(i)
++	if what != "rung" {
++		k = what
++	}
++	if p.Decision.Rungs == nil { // omitempty: an empty map reloads as nil
++		p.Decision.Rungs = map[string]string{}
++	}
++	p.Decision.Rungs[k] = "intended " + py.ISO(now)
++	if err := l.save(p); err != nil {
++		return []string{p.QID + ": decision rung not persisted: " + err.Error()}
++	}
++	text := l.decisionText(p, i)
++	var err error
++	switch {
++	case r.Seat != "":
++		err = l.sendSeat("decision|"+p.Decision.Incident+"|"+k, r.Seat, text, "escalation", p.QID)
++	case len(r.Exec) > 0:
++		err = l.execRung(p.Decision.Incident+"|"+k, r, text, now)
++	default:
++		err = fmt.Errorf("rung %d names neither a seat nor a command", i)
++	}
++	if err != nil {
++		p.Decision.Rungs[k] = "failed " + py.ISO(now) + ": " + err.Error()
++	} else {
++		p.Decision.Rungs[k] = "sent " + py.ISO(now)
++	}
++	l.save(p)
++	return []string{fmt.Sprintf("%s: decision %s %s: %s", p.QID, what, k, p.Decision.Rungs[k])}
++}
++
++// execRung runs an external rung: the text on stdin, bounded, rc 0 required,
++// and (with a ledger) durable registration verified by key.
++func (l *Loop) execRung(incident string, r Rung, text string, now time.Time) error {
++	run := l.Cfg.Run
++	if run == nil {
++		run = host.ExecRunner
++	}
++	argv := append([]string{"/bin/sh", "-c", `m=$1; shift; printf '%s\n' "$m" | "$@"`, "sh", text}, r.Exec...)
++	p, err := run(argv, nil, 10*time.Second)
++	if err != nil {
++		return err
++	}
++	if r.Ledger != "" {
++		// The ledger is the durable path; the command's rc reports only its fast
++		// path (notify-claude exits 1 when no chat listener is up, after writing
++		// the ledger). Delivered = a record with this incident's key since now-5s.
++		ids := ledgerIDs(r, text, now.Add(-5*time.Second), false)
++		if len(ids) == 0 {
++			return fmt.Errorf("rc %d and no durable ledger record with this key in %s: %s", p.RC, r.Ledger, strings.TrimSpace(p.Stderr))
++		}
++		return nil
++	}
++	if p.RC != 0 {
++		return fmt.Errorf("rc %d: %s", p.RC, strings.TrimSpace(p.Stderr))
++	}
++	return nil
++}
++
++// ledgerIDs lists the ledger record ids whose key is md5(kind + "\n" + text),
++// written at/after since (unacked only when requested).
++func ledgerIDs(r Rung, text string, since time.Time, unackedOnly bool) []string {
++	h := md5.Sum([]byte(r.LedgerKind + "\n" + strings.TrimSpace(text)))
++	key := hex.EncodeToString(h[:])[:12]
++	b, err := os.ReadFile(expand(r.Ledger))
++	if err != nil {
++		return nil
++	}
++	acked := map[string]bool{}
++	var recs []map[string]any
++	for _, ln := range strings.Split(string(b), "\n") {
++		var m map[string]any
++		if json.Unmarshal([]byte(ln), &m) != nil {
++			continue
++		}
++		if a, ok := m["ack"].(string); ok {
++			acked[a] = true
++		}
++		recs = append(recs, m)
++	}
++	var ids []string
++	for _, m := range recs {
++		id, _ := m["id"].(string)
++		t, _ := m["t"].(float64)
++		if id == "" || m["key"] != key || int64(t) < since.Unix() || (unackedOnly && acked[id]) {
++			continue
++		}
++		ids = append(ids, id)
++	}
++	return ids
++}
++
++// reraise re-sends the external rung once, with the same text, when the
++// responder's acknowledgement expired or never came within the bound.
++func (l *Loop) reraise(p *Pkg, now time.Time) []string {
++	if p.Decision.Reraised != "" {
++		return nil
++	}
++	for i, r := range l.Cfg.ladder() {
++		if len(r.Exec) == 0 {
++			continue
++		}
++		sent := strings.TrimPrefix(p.Decision.Rungs[fmt.Sprint(i)], "sent ")
++		at, ok := py.Instant(sent)
++		if !ok {
++			continue
++		}
++		due := at.Add(MaxDecisionAckWithin)
++		if a := p.Decision.Ack; a != nil {
++			if d, ok := py.Instant(a.Deadline); ok {
++				due = d
++			}
++		}
++		if now.Before(due) {
++			continue
++		}
++		p.Decision.Reraised = "intended " + py.ISO(now)
++		out := l.fireRung(p, i, r, "reraise", now)
++		p.Decision.Reraised = p.Decision.Rungs["reraise"]
++		l.save(p)
++		return out
++	}
++	return nil
++}
++
++// resolveDecision marks the incident resolved by the actual decision and runs
++// the external rungs' resolution commands for records of this incident's key.
++func (l *Loop) resolveDecision(p *Pkg, now time.Time) []string {
++	p.Decision.Resolved = py.ISO(now)
++	var out []string
++	for i, r := range l.Cfg.ladder() {
++		if len(r.ResolveCmd) == 0 || r.Ledger == "" {
++			continue
++		}
++		for _, id := range ledgerIDs(r, l.decisionText(p, i), time.Unix(0, 0), true) {
++			run := l.Cfg.Run
++			if run == nil {
++				run = host.ExecRunner
++			}
++			argv := append(append([]string{}, r.ResolveCmd...), id, "--note", "resolved: "+p.QID+" decided ("+p.Decision.Incident+")")
++			res, err := run(argv, nil, 10*time.Second)
++			st := "ok"
++			if err != nil || res.RC != 0 {
++				st = fmt.Sprintf("failed rc %d %v", res.RC, err)
++			}
++			p.Decision.Resolve = append(p.Decision.Resolve, id+" "+st)
++		}
++	}
++	l.save(p)
++	return append(out, p.QID+": decision incident "+p.Decision.Incident+" resolved by the decision")
++}
++
++// DecisionAck records a responder's single bounded acknowledgement.
++func (l *Loop) DecisionAck(qid, by, next string, within time.Duration) (*DecisionAck, error) {
++	p := l.Pkg(qid)
++	if p == nil || p.Step != "decision" || p.Decision == nil {
++		return nil, fmt.Errorf("%s has no open decision obligation", qid)
++	}
++	ok := false
++	for _, r := range l.Cfg.DecisionResponders {
++		ok = ok || r == by
++	}
++	if !ok {
++		return nil, fmt.Errorf("%s is not a configured decision responder %v", by, l.Cfg.DecisionResponders)
++	}
++	if strings.TrimSpace(next) == "" {
++		return nil, fmt.Errorf("--next must name the next action")
++	}
++	if within <= 0 || within > MaxDecisionAckWithin {
++		return nil, fmt.Errorf("--within must be between 1s and %s", MaxDecisionAckWithin)
++	}
++	if a := p.Decision.Ack; a != nil {
++		if a.By == by && a.Next == next {
++			return a, nil // replay
++		}
++		return nil, fmt.Errorf("%s was already acknowledged once by %s (%s); an acknowledgement is not renewed", p.Decision.Incident, a.By, a.Next)
++	}
++	now := l.now()
++	p.Decision.Ack = &DecisionAck{By: by, Next: next, Deadline: py.ISO(now.Add(within)), At: py.ISO(now)}
++	return p.Decision.Ack, l.save(p)
++}
+diff --git a/internal/loop/decision_p13_test.go b/internal/loop/decision_p13_test.go
+new file mode 100644
+index 0000000..0522b8b
+--- /dev/null
++++ b/internal/loop/decision_p13_test.go
+@@ -0,0 +1,248 @@
++package loop
++
++import (
++	"crypto/md5"
++	"encoding/hex"
++	"fmt"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"agent-loop/internal/py"
++)
++
++// P13: the director's decision is an owned obligation with a deadline.
++
++func decisionRig(t *testing.T) (*rig, *Loop) {
++	r := newRig(t)
++	l := r.open()
++	_, err := l.Dispatch(Request{QID: "Q", Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 3600, VerifyS: 3600})
++	must(t, err)
++	l = r.walk(l, "Q", false)
++	if p := l.Pkg("Q"); p.Step != "decision" {
++		t.Fatalf("not at decision: %s", p.Step)
++	}
++	return r, l
++}
++
++func wakesTo(r *rig, seat string) int { return len(r.wakesTo(seat)) }
++
++func TestEnteringDecisionPersistsADeadlineAndArmsACalendarTimer(t *testing.T) {
++	r, l := decisionRig(t)
++	defer l.Close()
++	d := l.Pkg("Q").Decision
++	at, _ := py.Instant(l.Pkg("Q").StepAt)
++	dl, _ := py.Instant(d.Deadline)
++	if d == nil || d.Incident != "D-Q-Q-v1" || dl.Sub(at) != 1800*time.Second {
++		t.Fatalf("decision record %+v (step at %s)", d, at)
++	}
++	armed := false
++	for _, c := range r.calls {
++		j := strings.Join(c, " ")
++		if c[0] == "systemd-run" && strings.Contains(j, "--on-calendar=") && strings.HasSuffix(j, "decision-check --config "+r.cfg.Path) {
++			armed = true
++		}
++	}
++	if !armed {
++		t.Fatal("no calendar timer running decision-check was armed")
++	}
++	// A reopen never moves the deadline.
++	l.Close()
++	l = r.open()
++	defer l.Close()
++	r.clock.Advance(600)
++	l.decisionLadder()
++	if l.Pkg("Q").Decision.Deadline != d.Deadline {
++		t.Fatal("the deadline moved on reopen/check")
++	}
++}
++
++func TestTheLadderFiresEachRungOnceInOrder(t *testing.T) {
++	r, l := decisionRig(t)
++	defer l.Close()
++	r.cfg.Director, r.cfg.Duty = "tern", "corvid"
++	n0 := wakesTo(r, "T")
++	r.clock.Advance(1799)
++	l.decisionLadder()
++	if wakesTo(r, "T") != n0 {
++		t.Fatal("reminded before the deadline")
++	}
++	r.clock.Advance(1)
++	l.decisionLadder()
++	l.decisionLadder()
++	if wakesTo(r, "T") != n0+1 || !strings.Contains(r.wakesTo("T")[n0], "DECISION OVERDUE D-Q-Q-v1") {
++		t.Fatalf("director rung: %v", r.wakesTo("T")[n0:])
++	}
++	c0 := wakesTo(r, "C")
++	r.clock.Advance(299)
++	l.decisionLadder()
++	if wakesTo(r, "C") != c0 {
++		t.Fatal("duty told before +300 s")
++	}
++	r.clock.Advance(1)
++	l.decisionLadder()
++	l.decisionLadder()
++	if wakesTo(r, "C") != c0+1 {
++		t.Fatalf("duty rung once: %d", wakesTo(r, "C")-c0)
++	}
++}
++
++func TestAnActualDecisionResolvesAndStopsLaterRungs(t *testing.T) {
++	r, l := decisionRig(t)
++	defer l.Close()
++	r.clock.Advance(1800)
++	l.decisionLadder()
++	must(t, l.Decide("Q", "question_answered", "rec-1", "done"))
++	p := l.Pkg("Q")
++	if p.Decision.Resolved == "" || p.Step != "closed" {
++		t.Fatalf("not resolved: %+v", p.Decision)
++	}
++	n := len(r.calls)
++	r.clock.Advance(3600)
++	l.decisionLadder() // a stale timer callback after close
++	if len(r.calls) != n {
++		t.Fatalf("a closed decision still escalated: %v", r.calls[n:])
++	}
++}
++
++func extRig(t *testing.T) (*rig, *Loop, string) {
++	r, l := decisionRig(t)
++	led := filepath.Join(t.TempDir(), "escalations.jsonl")
++	r.cfg.DecisionLadder = []Rung{{AfterS: 0, Seat: "tern"}, {AfterS: 300, Seat: "tern"},
++		{AfterS: 600, Exec: []string{"/x/notify-claude", "decision"}, Ledger: led, LedgerKind: "decision", ResolveCmd: []string{"/x/escalations", "--ack"}}}
++	r.cfg.DecisionResponders = []string{"claude"}
++	return r, l, led
++}
++
++func ledgerKey(kind, text string) string {
++	h := md5.Sum([]byte(kind + "\n" + strings.TrimSpace(text)))
++	return hex.EncodeToString(h[:])[:12]
++}
++
++func addLedger(t *testing.T, path, id, key string, at time.Time) {
++	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
++	must(t, err)
++	fmt.Fprintf(f, "{\"t\": %d, \"id\": %q, \"kind\": \"decision\", \"key\": %q, \"text\": \"x\"}\n", at.Unix(), id, key)
++	f.Close()
++}
++
++func execCalls(r *rig, argv0 string) int {
++	n := 0
++	for _, c := range r.calls {
++		for _, a := range c {
++			if a == argv0 {
++				n++
++			}
++		}
++	}
++	return n
++}
++
++func TestTheExternalRungNeedsDurableRegistrationAndReraisesOnceWithTheSameKey(t *testing.T) {
++	r, l, led := extRig(t)
++	defer l.Close()
++	r.clock.Advance(1800 + 600)
++	l.decisionLadder()
++	p := l.Pkg("Q")
++	if !strings.HasPrefix(p.Decision.Rungs["2"], "failed") || !strings.Contains(p.Decision.Rungs["2"], "no durable ledger record") {
++		t.Fatalf("rc 0 without a ledger record counted as delivered: %q", p.Decision.Rungs["2"])
++	}
++	now, _ := py.Instant(r.clock.Now())
++	key := ledgerKey("decision", l.decisionText(p, 2))
++	addLedger(t, led, "E-1", key, now)
++	l.decisionLadder()
++	if !strings.HasPrefix(l.Pkg("Q").Decision.Rungs["2"], "sent") {
++		t.Fatalf("registered record not accepted: %q", l.Pkg("Q").Decision.Rungs["2"])
++	}
++	// No acknowledgement within 15 min: re-raised once, same text (same ledger key).
++	n := execCalls(r, "/x/notify-claude")
++	r.clock.Advance(15*60 - 1)
++	l.decisionLadder()
++	if execCalls(r, "/x/notify-claude") != n {
++		t.Fatal("re-raised before the response bound")
++	}
++	r.clock.Advance(1)
++	now, _ = py.Instant(r.clock.Now())
++	addLedger(t, led, "E-2", key, now)
++	l.decisionLadder()
++	l.decisionLadder()
++	if execCalls(r, "/x/notify-claude") != n+1 || !strings.HasPrefix(l.Pkg("Q").Decision.Reraised, "sent") {
++		t.Fatalf("re-raise once: %d, %q", execCalls(r, "/x/notify-claude")-n, l.Pkg("Q").Decision.Reraised)
++	}
++	// The decision resolves: the unacked records of this key are acknowledged (no late page).
++	must(t, l.Decide("Q", "question_answered", "rec-1", "done"))
++	if acks := execCalls(r, "/x/escalations"); acks != 2 {
++		t.Fatalf("resolution acked %d records, want 2 (E-1, E-2)", acks)
++	}
++}
++
++func TestTheAcknowledgementIsBoundedOnceAndNotADecision(t *testing.T) {
++	r, l, led := extRig(t)
++	defer l.Close()
++	r.clock.Advance(1800 + 600)
++	now, _ := py.Instant(r.clock.Now())
++	addLedger(t, led, "E-1", ledgerKey("decision", l.decisionText(l.Pkg("Q"), 2)), now)
++	l.decisionLadder()
++	for _, c := range []struct {
++		by, next string
++		within   time.Duration
++	}{{"mallory", "look", 10 * time.Minute}, {"claude", " ", 10 * time.Minute}, {"claude", "look", 16 * time.Minute}, {"claude", "look", 0}} {
++		if _, err := l.DecisionAck("Q", c.by, c.next, c.within); err == nil {
++			t.Errorf("accepted %+v", c)
++		}
++	}
++	a, err := l.DecisionAck("Q", "claude", "pinged tern", 10*time.Minute)
++	must(t, err)
++	if l.Pkg("Q").Step != "decision" {
++		t.Fatal("an acknowledgement closed the decision")
++	}
++	if b, err := l.DecisionAck("Q", "claude", "pinged tern", 10*time.Minute); err != nil || b.At != a.At {
++		t.Fatalf("replay: %v", err)
++	}
++	if _, err := l.DecisionAck("Q", "claude", "renew", 15*time.Minute); err == nil {
++		t.Fatal("an acknowledgement was renewed")
++	}
++	// The ack's own deadline governs the re-raise.
++	n := execCalls(r, "/x/notify-claude")
++	r.clock.Advance(10*60 - 1)
++	l.decisionLadder()
++	if execCalls(r, "/x/notify-claude") != n {
++		t.Fatal("re-raised before the ack expired")
++	}
++	r.clock.Advance(2)
++	l.decisionLadder()
++	if execCalls(r, "/x/notify-claude") != n+1 {
++		t.Fatal("an expired ack did not re-raise")
++	}
++}
++
++func TestAPackageAlreadyWaitingKeepsItsOriginalDeadline(t *testing.T) {
++	r, l := decisionRig(t)
++	defer l.Close()
++	p := l.Pkg("Q")
++	p.Decision = nil // as a package that entered decision before P13
++	must(t, l.save(p))
++	r.clock.Advance(7200)
++	l.decisionLadder()
++	at, _ := py.Instant(p.StepAt)
++	dl, _ := py.Instant(l.Pkg("Q").Decision.Deadline)
++	if dl.Sub(at) != 1800*time.Second {
++		t.Fatalf("migrated deadline from now, not from entry: %s vs %s", dl, at)
++	}
++	if !strings.HasPrefix(l.Pkg("Q").Decision.Rungs["0"], "sent") {
++		t.Fatal("an overdue migrated decision was not escalated")
++	}
++}
++
++func TestRunsPassWalksTheLadder(t *testing.T) {
++	r, l := decisionRig(t)
++	defer l.Close()
++	n := wakesTo(r, "T")
++	r.clock.Advance(1800)
++	r.tick(l) // run's pass, not a direct call
++	if wakesTo(r, "T") != n+1 {
++		t.Fatalf("run's pass did not walk the decision ladder: %v", r.wakesTo("T")[n:])
++	}
++}
+diff --git a/internal/loop/liveness_p10_test.go b/internal/loop/liveness_p10_test.go
+index cb26534..05e8090 100644
+--- a/internal/loop/liveness_p10_test.go
++++ b/internal/loop/liveness_p10_test.go
+@@ -203,6 +203,11 @@ func TestNoPlaceToPreserveFailsLoudly(t *testing.T) {
+ 	if err == nil || !v.Alarm || len(r.wakes) != 1 {
+ 		t.Fatalf("silent: %v %v %v", v, err, r.wakes)
+ 	}
++	// P12-checker-ownership-1: the unwritable directory also stops the ledger part
++	// ("check incomplete"); the state failure itself must still be the reported error.
++	if strings.HasPrefix(err.Error(), "check incomplete") {
++		t.Fatalf("the state failure was not reported, only the ledger part: %v", err)
++	}
+ 	if b, _ := os.ReadFile(r.cfg.stateFile()); string(b) != "{bad" {
+ 		t.Fatal("the only copy was overwritten")
+ 	}
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 7c6475c..671fdcc 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -54,6 +54,11 @@ type Config struct {
+ 	Systemctl    string            `json:"systemctl"`
+ 	MaxVerifyS   int64             `json:"max_verify_s"`      // per-pass verifier ceiling
+ 	DecisionS    int64             `json:"decision_window_s"` // how long a verdict waits for the director
++	// P13: the director's decision obligation (mechanism here; the ladder and
++	// responders are fleet policy, in the config).
++	DecisionDeadlineS  int64    `json:"decision_deadline_s"` // default 1800, max 86400
++	DecisionLadder     []Rung   `json:"decision_ladder"`     // default: director at the deadline, duty +300 s
++	DecisionResponders []string `json:"decision_responders"` // who may acknowledge an overdue decision (once, <= 15 min)
+ 
+ 	Path string      `json:"-"`
+ 	Run  host.Runner `json:"-"` // tests inject; nil = real subprocesses
+@@ -151,7 +156,8 @@ type Pkg struct {
+ 	StepAt       string               `json:"step_at"`
+ 	Verdict      string               `json:"verdict,omitempty"`
+ 	Notes        []string             `json:"notes,omitempty"`
+-	Timeout      *StepTimeout         `json:"timeout,omitempty"` // set when a step deadline passed
++	Timeout      *StepTimeout         `json:"timeout,omitempty"`  // set when a step deadline passed
++	Decision     *DecisionDue         `json:"decision,omitempty"` // P13: set on entry into the decision step
+ }
+ 
+ // OnPass is a director-authorized disposition that closes the package
+@@ -721,6 +727,7 @@ func (l *Loop) Tick() ([]string, error) {
+ 	}
+ 	// run holds the ledger lock for the whole pass: this view is fresh.
+ 	done = append(done, l.unacked()...)
++	done = append(done, l.decisionLadder()...) // P13: run walks the decision ladder after every pass
+ 	return append(done, l.expiredAcks()...), nil
+ }
+ 
+@@ -903,6 +910,9 @@ func (l *Loop) finishVerify(p *Pkg, end, launch *py.Dict) (string, error) {
+ 	if err := l.setStep(p, "decision", "verifier "+p.Verdict+"; waiting for the director"); err != nil {
+ 		return "", err
+ 	}
++	if err := l.openDecision(l.Pkg(p.QID), l.now()); err != nil { // P13: deadline + timer; a failed arm is recovered by the checks
++		fmt.Fprintln(os.Stderr, "agent-loop: decision timer for", p.QID, "not armed:", err)
++	}
+ 	l.send(l.Cfg.Director, fmt.Sprintf("[agent-loop] %s: verifier %s. Claim: %s. Decide with: %s decide --config %s --qid %s --kind successor_opened|question_answered|budget_spent|blocked --ref REF --reason TEXT",
+ 		p.QID, p.Verdict, host.ClaimPathFor(l.Cfg.ClaimsDir, p.VerifyExec), l.Cfg.Bin, l.Cfg.Path, p.QID), "decision", p.QID)
+ 	return "verifier " + p.Verdict + "; decision requested from " + l.Cfg.Director, nil
+@@ -925,7 +935,14 @@ func (l *Loop) Decide(qid, kind, ref, reason string) error {
+ 	if _, err := l.D.Ingress.Append(ev, l.D.Budget, nil, l.D.Grants, director, nil); err != nil {
+ 		return err
+ 	}
+-	return l.setStep(p, "closed", "decided "+kind+" ("+ref+")")
++	if err := l.setStep(p, "closed", "decided "+kind+" ("+ref+")"); err != nil {
++		return err
++	}
++	if p = l.Pkg(qid); p.Decision != nil && p.Decision.Resolved == "" { // P13: an actual decision resolves the incident
++		l.Adapter.Timers.CancelHost(l.unit(decisionUnit(p)))
++		l.resolveDecision(p, l.now())
++	}
++	return nil
+ }
+ 
+ // Claim writes a seat's completion claim with hashes computed from disk.
+@@ -985,7 +1002,7 @@ func (l *Loop) Status() []map[string]any {
+ 			last = p.Notes[len(p.Notes)-1]
+ 		}
+ 		out = append(out, map[string]any{"qid": p.QID, "step": p.Step, "since": p.StepAt, "phase": phase,
+-			"deadline": deadline, "waiting_on": waiting, "verdict": p.Verdict, "last": last, "principals": p.Principals, "timeout": p.Timeout})
++			"deadline": deadline, "waiting_on": waiting, "verdict": p.Verdict, "last": last, "principals": p.Principals, "timeout": p.Timeout, "decision": p.Decision})
+ 	}
+ 	return out
+ }
+diff --git a/internal/loop/queue.go b/internal/loop/queue.go
+index 0ed194a..aad0c1b 100644
+--- a/internal/loop/queue.go
++++ b/internal/loop/queue.go
+@@ -58,9 +58,9 @@ func lockClass() string {
+ 	switch cmd {
+ 	case "run":
+ 		return "run"
+-	case "timer-callback":
++	case "timer-callback", "decision-check":
+ 		return "due"
+-	case "timeout-ack":
++	case "timeout-ack", "decision-ack":
+ 		return "ack"
+ 	case "liveness":
+ 		return "check"
+diff --git a/internal/loop/timeout.go b/internal/loop/timeout.go
+index 547a284..ccdb279 100644
+--- a/internal/loop/timeout.go
++++ b/internal/loop/timeout.go
+@@ -439,7 +439,7 @@ func withTimeouts(cfg *Config, clock core.DriverClock, fn func(f *Loop) error) e
+ func EscalateTimeouts(cfg *Config, clock core.DriverClock) ([]string, error) {
+ 	var out []string
+ 	err := withTimeouts(cfg, clock, func(f *Loop) error {
+-		out = append(f.unacked(), f.expiredAcks()...)
++		out = append(append(f.unacked(), f.expiredAcks()...), f.decisionLadder()...)
+ 		return nil
+ 	})
+ 	return out, err

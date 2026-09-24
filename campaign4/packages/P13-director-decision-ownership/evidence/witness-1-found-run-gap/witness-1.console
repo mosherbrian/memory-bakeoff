@@ -1,0 +1,26 @@
+2026-09-24T04:25:46.870Z run pid 3417948
+2026-09-24T04:25:54.019Z Q1 entered decision: {"incident": "D-Q1-Q1-v1", "deadline": "2026-09-24T04:26:52Z"}
+2026-09-24T04:25:54.025Z timers: agent-loop-p13w212546-Q1-v1-decision.service 
+2026-09-24T04:25:54.026Z daemon-reload during the wait
+2026-09-24T04:26:01.353Z Q2 entered decision: {"incident": "D-Q2-Q2-v1", "deadline": "2026-09-24T04:27:00Z"}
+2026-09-24T04:26:01.354Z restart run during the wait
+2026-09-24T04:26:01.357Z run pid 3421310
+2026-09-24T04:28:33.649Z Q1 after the ladder: {"incident": "D-Q1-Q1-v1", "deadline": "2026-09-24T04:26:52Z", "rungs": {"0": "sent 2026-09-24T04:26:52Z"}}
+2026-09-24T04:28:33.650Z Q1: the director decides (actual decision)
+2026-09-24T04:28:33.678Z Q1 decide rc=0 decision: {"incident": "D-Q1-Q1-v1", "deadline": "2026-09-24T04:26:52Z", "rungs": {"0": "sent 2026-09-24T04:26:52Z"}, "resolved": "2026-09-24T04:28:33Z"}
+2026-09-24T04:31:05.980Z Q2 after the ladder: {"incident": "D-Q2-Q2-v1", "deadline": "2026-09-24T04:27:00Z", "rungs": {"0": "sent 2026-09-24T04:27:00Z"}}
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json;rs=[json.loads(l) for l in open('/home/bmosher/.cache/p13w/w-jeOL/home/.local/share/agent-deck/escalations.jsonl') if l.strip()];print([r['id'] for r in rs if 'id' in r and 'Q2' in r.get('text','')][-1])
+                                           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/bmosher/.cache/p13w/w-jeOL/home/.local/share/agent-deck/escalations.jsonl'
+2026-09-24T04:31:06.032Z Claude acked ledger 
+2026-09-24T04:31:06.041Z decision-ack rc=0
+2026-09-24T04:31:06.047Z forged decision-ack rc=1 (want 1)
+2026-09-24T04:31:06.053Z renewal decision-ack rc=1 (want 1)
+2026-09-24T04:33:18.031Z Q2 after the ack expiry: {"incident": "D-Q2-Q2-v1", "deadline": "2026-09-24T04:27:00Z", "rungs": {"0": "sent 2026-09-24T04:27:00Z"}, "ack": {"by": "claude", "next_action": "witness: will chase the director", "response_deadline": "2026-09-24T04:32:36Z", "at": "2026-09-24T04:31:06Z"}}
+2026-09-24T04:33:18.033Z escalation-watch (actual script, sandbox HOME, grace 0 min for the fixture; the page goes to the stub):
+no ledger yet - nothing to watch
+rc=0
+2026-09-24T04:33:18.074Z cleanup: 0 units left
+2026-09-24T04:33:18.076Z sandbox removed

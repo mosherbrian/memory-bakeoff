@@ -1,0 +1,103 @@
+{
+ "action": "P13-initial-1",
+ "author": "claude",
+ "status": "INCOMPLETE",
+ "status_reason": "Mechanism built and witnessed in real separate processes against the actual pinned escalation scripts. INCOMPLETE because: the Claude +600 s rung is config policy, not in the built-in default ladder (default = director at deadline, duty +300 s); exec-rung failure retry is not bounded by a count; the stopped-run path is proven by a unit test only, not a real-process witness; the live 20 min run and the promotion are outside this round",
+ "filed_at": "2026-09-24T05:05:41Z",
+ "source": {
+  "branch": "agent-loop p13-decision-ownership (pushed)",
+  "base": "8ad12b86fa82 (bin 97a57db1)",
+  "release_commit": "bfb3851db565",
+  "head": "5b524d1: test-only after the release (stopped-run outside check walks the ladder; crash between intent and send -> one labelled repeat). Added while the mutation run was in progress.",
+  "frozen_areas": "internal/core, internal/py, conformance/cases: 0 diff lines (evidence/source-8ad12b8-to-bfb3851.diff)"
+ },
+ "release": {
+  "binary_sha256": "7040c0e32f3640daba2a1cb65083695721dec6f48d7e01c1c4b22d2562e9bc1f",
+  "superseded": [
+   "86478f2b4984 (1a550f4e): notify-claude exits 1 without a chat listener although the ledger record was written -> rung judged failed",
+   "45037ed4e465 (28d70e35): witness-1 found run's pass did not walk the ladder; the +300/+600 rungs waited for the timer or outside check (evidence/witness-1-found-run-gap)"
+  ]
+ },
+ "design": {
+  "mechanism_vs_policy": "The loop owns only the obligation: deadline + incident id persisted on entry to decision, a real calendar timer (callback 'agent-loop decision-check'), each rung once per incident, persisted as intended before delivery, one bounded ack (<=15 min, configured responders), one same-key re-raise, resolution by an actual decision. WHO is told and WHEN is config: decision_deadline_s (default 1800, max 86400), decision_ladder (Rung{after_s, seat | exec, ledger, ledger_kind, resolve_cmd}), decision_responders. Claude/ledger/Signal are reached only through the fleet's own notify-claude and escalation-watch, unchanged.",
+  "campaign4_policy_proposed": {
+   "decision_ladder": [
+    {
+     "after_s": 0,
+     "seat": "<director>"
+    },
+    {
+     "after_s": 300,
+     "seat": "<duty>"
+    },
+    {
+     "after_s": 600,
+     "exec": [
+      "~/.config/agent-deck/notify-claude",
+      "decision"
+     ],
+     "ledger": "~/.local/share/agent-deck/escalations.jsonl",
+     "ledger_kind": "decision",
+     "resolve_cmd": [
+      "~/.config/agent-deck/escalations",
+      "--ack"
+     ]
+    }
+   ],
+   "decision_responders": [
+    "claude"
+   ]
+  },
+  "delivery_rule": "An exec rung with a ledger counts as delivered only when a ledger record with the incident key exists since send-5 s, whatever the rc (notify-claude rc is not delivery proof). Without a ledger, rc 0 is required."
+ },
+ "evidence": {
+  "unit": "go test 0 FAIL (evidence/go-test.txt); new tests internal/loop/decision_p13_test.go",
+  "conformance": "125/125 rc 0 on the release binary (evidence/conformance-release-binary)",
+  "parity": "316/321 identical + 5 adjudicated (evidence/host-parity.txt)",
+  "mutation": "finished: internal/loop/loop.go        a budget_spent decision releases dependents                               caught (1 cases) | 158 of 164 Go mutants caught | rc=1 ; non-caught lines: internal/loop/queue.go       timeout-ack shares the callbacks' places                                  NOT APPLIED (text not unique) | internal/loop/decision.go    a reopen moves the decision deadline                                      SURVIVED | internal/loop/decision.go    a rung fires again on every check                                         BUILD FAILED (mutant invalid) | internal/loop/decision.go    a second acknowledgement is not refused cleanly                           SURVIVED | internal/loop/decision.go    any principal may acknowledge a decision                                  BUILD FAILED (mutant invalid) | internal/loop/decision.go    a migrated decision deadline starts from now                              NOT APPLIED (text not unique)",
+  "witness_2": "release bfb3851, real processes, real systemd calendar timers, daemon-reload + run restart during the wait, actual notify-claude/escalations/escalation-watch copied byte-for-byte (pinned-scripts.sha256) into a sandbox HOME, stub pager. Q1: rungs 04:35:14Z director (timer), 04:35:35Z duty, 04:35:55Z Claude (ledger E-1); decision resolved; resolve acked E-1. Q2: Claude acked E-2 and decision-ack 90 s; forged (mallory) rc 1; renewal rc 1; ack expired, re-raise wrote E-3 with the same key as E-2; escalation-watch (grace 0) paged the stub 'RECURRED AFTER AN ACK'; no page for Q1. 4 DECISION OVERDUE wakes total, no duplicates across reload/restart. Cleanup 0 units, sandbox removed.",
+  "witness_1": "kept: found the run-pass gap (fixed in bfb3851 with a test and a mutant)"
+ },
+ "residuals": [
+  "escalation-watch lists a recurring record as recurred even when that record was acked; so a record re-raised before the decision still pages. Pinned-script limit, not changed. It also listed E-3 twice (stale-unacked and recurred).",
+  "exec-rung failures have no bounded retry count.",
+  "A crash between 'intended' and delivery re-runs an exec rung: a second ledger record with the same key (unit-tested for seat rungs: one labelled repeat).",
+  "Responder identity 'claude' has no registry id.",
+  "Stopped-run path: unit test only (5b524d1); in witness-2 run was alive.",
+  "Signal latency is escalation-watch's (grace 45 min + 15 min interval + timer/transport); no 10 min Signal claim.",
+  "Release/routing general registration deferred; live 20 min and promotion are not in this round and need Tern's signatures."
+ ],
+ "files_sha256": {
+  "evidence/decision-witness.sh": "a273512cb0cba430de7ffd5573650fe94678bd2d89274d2a8dc408e841e44965",
+  "evidence/go-test.txt": "8460dc614ca60fabad5c847a84c3f99c4465b93bbed534c2dfab605a0c12baf2",
+  "evidence/host-parity.txt": "aaa0ae3488e8f13dd9ba4d30538bdaf4392c0ed5a0e76df9a3f27a794489e579",
+  "evidence/mutate-go.txt": "01d8eac10307f329b8126119540602d7ef3f8f4108779811669cc0a98aac9f24",
+  "evidence/source-8ad12b8-to-bfb3851.diff": "a256e1ad57ec594238bd439389876ace7b86638d3676230cb6f33357be75af94",
+  "evidence/witness-2.console": "344cfc6f6c1034ceca4001c1ffedc0989b6f642facf69fc0486629f1e19c1629",
+  "evidence/witness-1-found-run-gap/cli.out": "5bdc3ce3dcd3ae13e97cbe61c5b1cfd63bd8fac7b44d982556566cbbef9a77d2",
+  "evidence/witness-1-found-run-gap/env.txt": "ed79ad796c9e73881e64ba27c96d64e9718901631a24a1e56acfa456a602a6a4",
+  "evidence/witness-1-found-run-gap/escalation-watch.out": "7c2b4f548db0d358f6fdfa7fe31e18a7886574e07c91fce30c93e821c5cbb591",
+  "evidence/witness-1-found-run-gap/pages.log": "5e7db2bc907d050d293e32910fa099590c313ed8faab336296421a33f53c4e84",
+  "evidence/witness-1-found-run-gap/pinned-scripts.sha256": "8e7877ce6101071646f8c408df81305e56e129a7a5852ee180cf8d4b5315caca",
+  "evidence/witness-1-found-run-gap/status-final.json": "5558d1dd7e6eb0c3f6ff744107332c132db62a1764d9af0a25a6e595a8546119",
+  "evidence/witness-1-found-run-gap/wake.log": "12fa50c626df173e4ec531d8b307eb157e0e6f15065d1dee7f26830e785f7c8e",
+  "evidence/witness-1-found-run-gap/witness-1.console": "a21ee619df744a7950aa523812160cec81ab7fd79b97d90c20801f7719fc2140",
+  "evidence/witness-1-found-run-gap/witness.log": "4260920ad0bd672787e12e89174912ee1fa2c1fea7d97d68f9ea9ed1cab1a6dd",
+  "evidence/witness-2/cli.out": "89d01f6141b1ecb3fa1a2cde9c8ce775c4a5b1fc962cbfce70e37a227e397c06",
+  "evidence/witness-2/env.txt": "12d0a077ddaa3f2bbc160de346cdfd0cf410695e0a0d03d0375ff0a35ae776cf",
+  "evidence/witness-2/escalation-watch.out": "b8654753fb670a3689513f6b302880241b82007e0b2f2c1d6ebcbc45d504c1cf",
+  "evidence/witness-2/escalations.jsonl": "8046a7cc1e662497d1ed1b9462a8a4f3b2241279aa64db3ac4ce96df238e25d4",
+  "evidence/witness-2/pages.log": "d9f10beca468c89ea8cffb13ae2559664852b4d1cf1873b5fc88ea0b33749601",
+  "evidence/witness-2/pinned-scripts.sha256": "b00127feefcf03a540091ad22be7059de916b3e955113b38558f45f25ba2ca81",
+  "evidence/witness-2/status-final.json": "4c2fdac33deae96be2979f62d785fb61cf5fdd508fd588a4eee692d2db0f2be6",
+  "evidence/witness-2/wake.log": "e35e7be04c0dee29a02b77514e0c23c228b7d07544891f550e600d510903e5e1",
+  "evidence/witness-2/witness.log": "344cfc6f6c1034ceca4001c1ffedc0989b6f642facf69fc0486629f1e19c1629",
+  "evidence/conformance-release-binary/rc.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "evidence/conformance-release-binary/stderr.txt": "46160253ae08b5650d242efedf3e9aa8593da85d84628afb40a53ddafdbe214b",
+  "evidence/conformance-release-binary/stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "package.md": "a72fb97cb27366efa753e4be3da4bd8b1b7e0b3aa81091dadef73aeb6e75b0dd",
+  "acceptance-checklist.md": "d6c1c2b1b3cc4bbfe42dc7f86f7595deeabd7204246f9d5abff330d2b296d165",
+  "author-release-receipt.json": "ffb1624e2d4dde00d6f4739a18d19a27434fb3f77cafc98c4c65a272c6951e76",
+  "input-pins.json": "8d5f12b41b36bf3a3d472f0eaaaba2968e7a645d819a6bc95a3f721755ad46b2"
+ }
+}
