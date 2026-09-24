@@ -1,0 +1,37 @@
+{
+  "signer": "tern",
+  "action": "P12-cutover-1",
+  "signed_at": "2026-09-24T03:52:28.699918+00:00",
+  "absolute_deadline": "2026-09-24T04:37:28Z",
+  "latest_start": "2026-09-24T03:57:28Z",
+  "authority": "Brian PASS-only cutover authorization; live2 accepted and independent cutover-plan review PASS",
+  "allocation": "Held 45m cutover including production handoff20/10; subsequent independent postreview10m unchanged. No new engineering grant.",
+  "product_sha256": "97a57db11aa8a4a87d89fd912804d42ce899bb35b3790742d790d424184a948f",
+  "pins": {
+    "plans/cutover.sh": "2be6d13f89cc9d59d9548d05d903aa9c03b613e9e6788bdef774921ac9c2ed77",
+    "plans/live-checks.sh": "190858566b610a387e18d16834ab29b155356fec65d314dea161f793af958b51",
+    "plans/tasks/handoff-task.md": "cb1b9dba530a7950af778187a7621733cd5fd3a8d20d44da7acddd49363b94ef",
+    "plans/tasks/handoff-verify.md": "964a8547e2dcf3cf98d992e88a2fd099f632353460568e73cc00e3cefc834c96",
+    "plans/cutover-inputs.template.env": "cb4873cb3763b43e86b178066bb15797ac673265c0bf550cef7718d03fdc4f27"
+  },
+  "review_sha256": "226f6bec9cd6fd1293efe89fc020d19d699d3518b45abcdb394a454e2dbe2823",
+  "claim_sha256": "bda88b71eaf19af89c39af34c227692efb85dcb72021491b5b5087aa8bb8b4b6",
+  "inputs_sha256": "b0f75c91cfc7bdaa8804413431110b8d9ff55a245d08b41778c1b78833146dec",
+  "live_acceptance_sha256": "3856bd947374f261f127fcb46b7e9e6cbdfeb60fc2abc16db0221b55d2e96ebf",
+  "operator": "cairn for bounded deployment only; manual controller role ends on switch; remains duty",
+  "stages": [
+    "capture",
+    "switch",
+    "handoff"
+  ],
+  "execution": "bash /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/cutover.sh /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/cutover-inputs-1.env STAGE",
+  "conditions": [
+    "Verify every pin, actual campaign4 identities, no active legacy work, no existing campaign4 production DB, before mutation. Unset DRY/CUT_HOME/EV_DIR overrides.",
+    "Capture first. Arm and verify an absolute UTC calendar rollback timer at absolute_deadline before switch; callback invokes exact pinned rollback with same inputs. Deadline stays until Tern accepts first production handoff.",
+    "Any failed capture/switch/handoff or owned failure in first production package returns to Tern immediately and executes captured-state rollback if effects began; no retries or edits.",
+    "Do not record this cutover as a legacy DISPATCHED work item that blocks its own quiescence gate; use RELEASED and separate signed receipt. No historical ledger changes.",
+    "Send switch and handoff receipts to Tern immediately; software alone dispatches kiln then corvid. Cairn may execute bounded deployment and reconcile its own receipt but may not duplicate software dispatch or poll.",
+    "Tern decides first production handoff after independent verifier PASS; cancel rollback timer only upon explicit Tern acceptance;10m postreview then closes cutover.",
+    "Known live limits retained. Runtime source and binary unchanged. No research work in this action."
+  ]
+}
