@@ -1,0 +1,109 @@
+{
+  "signer": "tern",
+  "at": "2026-09-24T02:30:00.761226+00:00",
+  "stage": "PREPARATION_ONLY",
+  "action": "P12-prepare-2",
+  "grant": "Funded fresh prep15/binding10 in live-measurement-allocation; no new ceiling",
+  "profile": "campaign4",
+  "root": "/home/bmosher/p12-prep2-20260924T023000Z",
+  "roles": [
+    {
+      "role": "worker",
+      "name": "p12-fixture2-worker-20260924T023000Z",
+      "workdir": "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/worker",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/worker",
+        "-t",
+        "p12-fixture2-worker-20260924T023000Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go",
+        "--idle-timeout=150m",
+        "-json"
+      ]
+    },
+    {
+      "role": "verifier",
+      "name": "p12-fixture2-verifier-20260924T023000Z",
+      "workdir": "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/verifier",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/verifier",
+        "-t",
+        "p12-fixture2-verifier-20260924T023000Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+        "--idle-timeout=150m",
+        "-json"
+      ]
+    },
+    {
+      "role": "director",
+      "name": "p12-fixture2-director-20260924T023000Z",
+      "workdir": "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/director",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/director",
+        "-t",
+        "p12-fixture2-director-20260924T023000Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go",
+        "--idle-timeout=150m",
+        "-json"
+      ]
+    },
+    {
+      "role": "duty",
+      "name": "p12-fixture2-duty-20260924T023000Z",
+      "workdir": "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/duty",
+      "lane": "/home/bmosher/.config/agent-deck/acp-go-controller",
+      "argv": [
+        "agent-deck",
+        "launch",
+        "/home/bmosher/p12-prep2-20260924T023000Z/workdirs/duty",
+        "-t",
+        "p12-fixture2-duty-20260924T023000Z",
+        "-cmd",
+        "/home/bmosher/.config/agent-deck/acp-go-controller",
+        "--idle-timeout=150m",
+        "-json"
+      ]
+    }
+  ],
+  "source": "8ad12b86fa82",
+  "binary": "/home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/agent-loop",
+  "binary_sha256": "97a57db11aa8a4a87d89fd912804d42ce899bb35b3790742d790d424184a948f",
+  "decision": "New four fixtures, no tasks. Previous live1 IDs not reusable (removed). Independent reviewed unchanged binary97a57db1. Conditional prep only; no live until exact Tern signature.",
+  "review_arithmetic_correction": "Director escalation60s threshold +30s cadence +35s check +12s handler sums137s, not107s. This is a conservative bound under stated functioning timer/manager assumptions, not60s delivery promise; live L7 checks duty and recovery as specified.",
+  "environment": {
+    "AGENTDECK_PROFILE": "campaign4"
+  },
+  "unset": [
+    "ACP_SOURCE_TEST_NOW",
+    "FIXTURE_LAUNCH_EXEC",
+    "PINNED_MODEL_OVERRIDE",
+    "ACP_GO_MODEL",
+    "ACP_MODEL"
+  ],
+  "requirements": [
+    "Fresh names/root collision check; exact four argv as listed, no-message. Preserve raw stdout/stderr/rc and registry/incarnation facts.",
+    "Activate timing as above and verify epoch/calendar cleanup BEFORE launching; record each returned ID immediately in owned cleanup list. No main seats.",
+    "On partial failure preserve raw facts, reconcile registry, no blind retry.",
+    "Complete prep routes existing funded fresh corvid10m binding; wake Tern immediately on prep and binding results.",
+    "No task/run/dispatch/install/production services/cutover; no live before signature. Live end must precede cleanup; missed window returns Tern."
+  ],
+  "evidence_dir": "/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/live-preparation-2",
+  "next": "Signed live75 only after binding PASS and filled exact inputs. Independent live review25 then PASS-only cutover45/postreview10.",
+  "condition": "Activate ONLY independent corvid repair PASS on unchanged ebc83170 claim, helper19085856 and driverf6afd9e0, no required corrections. Record verdict hash and actual host start before effects; otherwise return Tern.",
+  "timing": "At actual activation write start, prep end+15m, cleanup+120m, latest live start+45m. Arm verified UTC calendar deadline AND exact-owned-ID cleanup before launch. Idle150m only secondary fallback.",
+  "runtime_hashes": {
+    "plans/live-checks.sh": "190858566b610a387e18d16834ab29b155356fec65d314dea161f793af958b51",
+    "plans/live-driver.sh": "f6afd9e08f84a0dff8d364a804dc04faa3fae48fb4ac687d3bd0bec78968f8dd"
+  }
+}
