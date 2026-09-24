@@ -45,36 +45,15 @@ healthy_eval $T7 "rest 2026-09-24T01:25:00Z"; t "healthy NEG stale verdict (befo
 for s in crashed unknown hung starting restart-loop PARSE-ERROR; do healthy_eval $T7 "$s 2026-09-24T01:26:51Z"; t "healthy NEG $s" 1 $?; done
 healthy_eval $T7 "rest"; t "healthy NEG no checked_at" 1 $?
 
-# ---- fresh authoritative pass (repair-1): the live1 ledger's own final loop-pass record, read-only
-LP=$(python3 -c 'import sqlite3,sys; c=sqlite3.connect("file:%s?mode=ro" % sys.argv[1], uri=True); print(c.execute("select value from driver_kv where key=?", ("loop-pass",)).fetchone()[0])' "$H/../../live-p12live1/archive/fxp12live1.db")
-PI=$(echo "$LP" | python3 -c 'import json,sys; print(json.load(sys.stdin)["invocation"])'); PP=$(echo "$LP" | python3 -c 'import json,sys; print(json.load(sys.stdin)["pid"])')
-PAT=$(date -u -d "$(echo "$LP" | python3 -c 'import json,sys; print(json.load(sys.stdin)["at"])')" +%s)
-echo "$LP" | pass_eval $((PAT-10)) "$PI" "$PP"; t "pass live1 record: fresh, same invocation and pid" 0 $?
-echo "$LP" | pass_eval $((PAT+1)) "$PI" "$PP"; t "pass NEG stale (event after the pass)" 1 $?
-echo "$LP" | pass_eval $((PAT-10)) "0000other" "$PP"; t "pass NEG other invocation" 1 $?
-echo "$LP" | pass_eval $((PAT-10)) "$PI" 1; t "pass NEG other main pid" 1 $?
-echo "$LP" | pass_eval $((PAT-10)) "" "$PP"; t "pass NEG unit invocation unreadable" 1 $?
-echo "{bad" | pass_eval $((PAT-10)) "$PI" "$PP"; t "pass NEG malformed record" 1 $?
-printf '' | pass_eval $((PAT-10)) "$PI" "$PP"; t "pass NEG missing record" 1 $?
-healthy_eval $((PAT-10)) "rest 2026-09-24T01:51:00Z"; h=$?; echo "$LP" | pass_eval $((PAT+60)) "$PI" "$PP"; t "healthy NEG fresh check over an OLD pass (check alone insufficient)" "0 1" "$h $?"
-
 # ---- L6: argv capture (construction only: this cannot prove a live replay) and replay evaluation
 A=/home/bmosher/p12live-p12live1/bin/agent-loop
 ARGV=$(sed -e "s/.*\[systemd-run\] //" -e "s/\.$//" "$R/l6-callback-argv-from-journal.txt")
 ES="{ path=$A ; argv[]=$ARGV ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }"
-CFG=/home/bmosher/p12live-p12live1/fxp12live1.json
-es() { echo "{ path=$A ; argv[]=$1 ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }"; }
-g=$(echo "$ES" | l6_argv_eval "$A" "$CFG" L6-p12live1); t "L6 argv from the live1 unit's own argv (ExecStart format of coax-dry)" 0 $?
+g=$(echo "$ES" | l6_argv_eval "$A" L6-p12live1); t "L6 argv from the live1 unit's own argv (ExecStart format of coax-dry)" 0 $?
 t "L6 argv is the exact callback" "$ARGV" "$g"
-echo "$ES" | l6_argv_eval /other/agent-loop "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG wrong binary" 1 $?
-echo "$ES" | l6_argv_eval "$A" "$CFG" L6b-p12live1 >/dev/null; t "L6 argv NEG wrong qid" 1 $?
-echo "$ES" | l6_argv_eval "$A" /other/fx.json L6-p12live1 >/dev/null; t "L6 argv NEG wrong config" 1 $?
-es "${ARGV/--action L6-p12live1-w1/--action L6-p12live1-v1}" | l6_argv_eval "$A" "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG wrong action value" 1 $?
-es "$ARGV --force" | l6_argv_eval "$A" "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG extra argument" 1 $?
-es "$ARGV --qid L6-p12live1" | l6_argv_eval "$A" "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG duplicate --qid" 1 $?
-es "${ARGV/ --execution ex-L6-p12live1-w1/}" | l6_argv_eval "$A" "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG missing --execution" 1 $?
-echo "$ES $ES" | l6_argv_eval "$A" "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG ambiguous (two argv[] entries)" 1 $?
-echo "" | l6_argv_eval "$A" "$CFG" L6-p12live1 >/dev/null; t "L6 argv NEG unit gone (empty)" 1 $?
+echo "$ES" | l6_argv_eval /other/agent-loop L6-p12live1 >/dev/null; t "L6 argv NEG wrong binary" 1 $?
+echo "$ES" | l6_argv_eval "$A" L6b-p12live1 >/dev/null; t "L6 argv NEG wrong qid" 1 $?
+echo "" | l6_argv_eval "$A" L6-p12live1 >/dev/null; t "L6 argv NEG unit gone (empty)" 1 $?
 t "L6 OLD live1 replay did not run" "not found" "$(grep -o 'not found' "$H/../../live-p12live1/driver.log" | head -1)"
 ok='{"decision": "already-handled", "note": "{\"decision\": \"already-handled\"}"}'
 t "L6 replay PASS shape" PASS "$(w "$(echo "$ok" | l6_replay_eval 0 5 5 9 9)")"

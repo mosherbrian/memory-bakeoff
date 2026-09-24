@@ -26,24 +26,10 @@ ok	healthy NEG starting	want=1	got=1
 ok	healthy NEG restart-loop	want=1	got=1
 ok	healthy NEG PARSE-ERROR	want=1	got=1
 ok	healthy NEG no checked_at	want=1	got=1
-ok	pass live1 record: fresh, same invocation and pid	want=0	got=0
-ok	pass NEG stale (event after the pass)	want=1	got=1
-ok	pass NEG other invocation	want=1	got=1
-ok	pass NEG other main pid	want=1	got=1
-ok	pass NEG unit invocation unreadable	want=1	got=1
-ok	pass NEG malformed record	want=1	got=1
-ok	pass NEG missing record	want=1	got=1
-ok	healthy NEG fresh check over an OLD pass (check alone insufficient)	want=0 1	got=0 1
 ok	L6 argv from the live1 unit's own argv (ExecStart format of coax-dry)	want=0	got=0
 ok	L6 argv is the exact callback	want=/home/bmosher/p12live-p12live1/bin/agent-loop timer-callback --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L6-p12live1 --action L6-p12live1-w1 --execution ex-L6-p12live1-w1	got=/home/bmosher/p12live-p12live1/bin/agent-loop timer-callback --config /home/bmosher/p12live-p12live1/fxp12live1.json --qid L6-p12live1 --action L6-p12live1-w1 --execution ex-L6-p12live1-w1
 ok	L6 argv NEG wrong binary	want=1	got=1
 ok	L6 argv NEG wrong qid	want=1	got=1
-ok	L6 argv NEG wrong config	want=1	got=1
-ok	L6 argv NEG wrong action value	want=1	got=1
-ok	L6 argv NEG extra argument	want=1	got=1
-ok	L6 argv NEG duplicate --qid	want=1	got=1
-ok	L6 argv NEG missing --execution	want=1	got=1
-ok	L6 argv NEG ambiguous (two argv[] entries)	want=1	got=1
 ok	L6 argv NEG unit gone (empty)	want=1	got=1
 ok	L6 OLD live1 replay did not run	want=not found	got=not found
 ok	L6 replay PASS shape	want=PASS	got=PASS
@@ -52,5 +38,5 @@ ok	L6 replay NEG interrupted again	want=FAIL	got=FAIL
 ok	L6 replay NEG new /cancel	want=FAIL	got=FAIL
 ok	L6 replay NEG new director wake	want=FAIL	got=FAIL
 ok	L6 replay NEG no output	want=FAIL	got=FAIL
-TOTAL 54 checks, 0 wrong
+TOTAL 40 checks, 0 wrong
 rc=0

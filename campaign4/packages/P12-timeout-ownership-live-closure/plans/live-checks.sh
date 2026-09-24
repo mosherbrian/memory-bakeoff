@@ -53,15 +53,29 @@ try: c = D.datetime.strptime(f[1], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=D.timezo
 except Exception: sys.exit(1)
 sys.exit(0 if f[0] in ("ok", "rest") and c >= ep else 1)' "$1" "$2"; }
 
-# l6_argv_eval EXPECTED_BIN QID < ExecStart value: the transient deadline unit's exact callback argv,
-# captured while the unit exists. Prints the argv (one line) or "INCOMPLETE why" and returns 1.
+# l6_argv_eval EXPECTED_BIN CONFIG QID < ExecStart value: the transient deadline unit's exact callback argv,
+# captured while the unit exists. It must be EXACTLY: BIN timer-callback --config CONFIG --qid QID
+# --action QID-w1 --execution ex-QID-w1 (no extra, duplicate, missing or reordered argument). Prints the argv
+# (one line) or "INCOMPLETE why" and returns 1.
 l6_argv_eval() { python3 -c '
 import sys, re
-b, q = sys.argv[1], sys.argv[2]; s = sys.stdin.read()
-m = re.search(r"argv\[\]=([^;]*);", s)
-a = m.group(1).split() if m else []
-ok = len(a) > 2 and a[0] == b and a[1] == "timer-callback" and "--qid" in a and a[a.index("--qid") + 1] == q and "--action" in a
-print(" ".join(a) if ok else "INCOMPLETE callback argv not captured or not this binary/qid: %r" % s[:200]); sys.exit(0 if ok else 1)' "$1" "$2"; }
+b, cfg, q = sys.argv[1:4]; s = sys.stdin.read()
+m = re.findall(r"argv\[\]=([^;]*);", s)
+a = m[0].split() if len(m) == 1 else []
+want = [b, "timer-callback", "--config", cfg, "--qid", q, "--action", q + "-w1", "--execution", "ex-" + q + "-w1"]
+ok = a == want
+print(" ".join(a) if ok else "INCOMPLETE callback argv is not exactly %s: got %r" % (" ".join(want), " ".join(a) if a else s[:200])); sys.exit(0 if ok else 1)' "$1" "$2" "$3"; }
+
+# pass_eval EPOCH INVOCATION MAINPID < loop-pass JSON (the ledger's authoritative pass record, read-only):
+# a pass completed at/after EPOCH by the CURRENT run (same systemd invocation and main pid). A fresh checker
+# timestamp or a check count is not pass evidence. Missing, malformed, stale or another incarnation: fail.
+pass_eval() { python3 -c '
+import sys, json, datetime as D
+ep, inv, pid = float(sys.argv[1]), sys.argv[2], sys.argv[3]
+try:
+    p = json.loads(sys.stdin.read()); at = D.datetime.strptime(p["at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=D.timezone.utc).timestamp()
+except Exception: sys.exit(1)
+sys.exit(0 if at >= ep and inv and p.get("invocation") == inv and str(p.get("pid")) == pid else 1)' "$1" "$2" "$3"; }
 
 # l6_replay_eval RC WORKER_BEFORE WORKER_AFTER DIRECTOR_BEFORE DIRECTOR_AFTER < replay output: the replayed
 # callback ran (rc 0), the core said already-handled, and no new /cancel or director wake happened.

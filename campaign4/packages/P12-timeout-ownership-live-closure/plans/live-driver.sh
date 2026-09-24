@@ -104,7 +104,10 @@ state_in() { local s w; s=$(verdict | cut -d' ' -f1); for w; do [ "$s" = "$w" ] 
 # reads are captured whole (never `| grep -q` under pipefail: SIGPIPE 141 hid live1 L3a's watchdog line).
 . "$PLANS/live-checks.sh"
 jcap() { journalctl --user -u "$1" --since "@$2" -o short-unix --no-pager 2>>"$EV/driver.log"; }
-healthy_after() { local v; v=$(verdict) || return 1; healthy_eval "$1" "$v"; }   # ok|rest, checked after EPOCH
+# healthy_after EPOCH: verdict ok|rest checked after EPOCH AND the ledger's own pass record (read-only) is from
+# at/after EPOCH by the unit's CURRENT invocation and main pid. Fail-closed on any missing/malformed input.
+loop_pass() { python3 -c 'import sqlite3,sys; c=sqlite3.connect("file:%s?mode=ro" % sys.argv[1], uri=True, timeout=1); print(c.execute("select value from driver_kv where key=?", ("loop-pass",)).fetchone()[0])' "$ROOT/$P.db" 2>>"$EV/driver.log"; }
+healthy_after() { local v; v=$(verdict) || return 1; healthy_eval "$1" "$v" || return 1; loop_pass | pass_eval "$1" "$(prop InvocationID)" "$(prop MainPID)"; }
 stop_exited() { local r; r=$(journalctl --user -u "$U" --since "@$1" -o cat --no-pager 2>>"$EV/driver.log" | stop_exit_eval); [ "${r%% *}" = PASS ] && [ "$(prop ActiveState)" != active ]; }
 restart_loop_proven() { local r; r=$(jcap "$U" "$1" | start_limit_eval "$1" "$U" "$(systemctl --user show "$U" -p StartLimitBurst --value)"); log "restart-loop evidence: $r"; [ "${r%% *}" = PASS ]; }
 # R1: the registry (agent-deck list, declared profile) must hold exactly these four fixtures:
@@ -402,7 +405,7 @@ Q=L6-$RUN; run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAM
 wait_for "L6 worker step" 30 is_step "$Q" worker
 # P12-live-measurement-1: capture the deadline unit's exact callback argv NOW; the transient unit is collected after it
 # fires (live1: the replay's `systemctl start` found no unit and never ran).
-l6argv=$( [ "$DRY" = 1 ] && echo "DRY" || systemctl --user show "agent-loop-$P-$Q-w1.service" -p ExecStart --value 2>>"$EV/driver.log" | l6_argv_eval "$A" "$Q" ); l6ok=$?
+l6argv=$( [ "$DRY" = 1 ] && echo "DRY" || systemctl --user show "agent-loop-$P-$Q-w1.service" -p ExecStart --value 2>>"$EV/driver.log" | l6_argv_eval "$A" "$CFG" "$Q" ); l6ok=$?
 log "L6 replay argv: $l6argv"
 # R4: the authorized deadline, from the ledger, before the fault; the send log's size, to read L6's wakes later.
 l6dl=$( [ "$DRY" = 1 ] && echo DRY || $A status $C --json 2>>"$EV/driver.log" | python3 -c "import json,sys; print([p['deadline'] for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0])" 2>>"$EV/driver.log" )
