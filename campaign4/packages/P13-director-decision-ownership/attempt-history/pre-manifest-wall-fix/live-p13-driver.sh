@@ -266,7 +266,7 @@ log "P13 live $RUN, inputs sha256 $(sha256sum "$INPUTS" | cut -d' ' -f1)"
 now=$(date +%s); dl=$(date -d "$LIVE_DEADLINE" +%s)
 if [ "$dl" -le "$now" ]; then log "live deadline $LIVE_DEADLINE already passed"; result SETUP INCOMPLETE "deadline passed"; exit 3; fi
 # Bounded wall stop, armed before any task: cleanup runs at the live deadline even if this shell dies.
-run systemd-run --user --unit="$WALL" --timer-property=AccuracySec=1s --on-calendar="$(date -u -d @$DL_EPOCH '+%Y-%m-%d %H:%M:%S') UTC" --setenv=PATH="$PATH" --setenv=AGENTDECK_PROFILE="$PROFILE" ${EV_DIR:+--setenv=EV_DIR="$EV_DIR"} /bin/bash "$PLANS/live-p13-driver.sh" "$INPUTS" cleanup \
+run systemd-run --user --unit="$WALL" --timer-property=AccuracySec=1s --on-calendar="$(date -u -d @$DL_EPOCH '+%Y-%m-%d %H:%M:%S') UTC" --setenv=PATH="$PATH" --setenv=AGENTDECK_PROFILE="$PROFILE" ${EV_DIR:+--setenv=EV_DIR="$EV_DIR"} /bin/bash "$PLANS/live-driver.sh" "$INPUTS" cleanup \
   || { result SETUP FAIL "wall-stop not armed: no effect started"; exit 3; }
 if [ "$DRY" != 1 ] && { [ "$(systemctl --user is-active "$WALL.timer")" != active ] || ! wall_ok; }; then result SETUP FAIL "wall-stop timer $WALL.timer not active at $LIVE_DEADLINE ($(wall_next)): no effect started"; exit 3; fi
 trap cleanup EXIT   # armed and verified: from here every exit cleans up exact IDs once

@@ -1,0 +1,24 @@
+{
+  "action": "P13-manifest-wall-review-1",
+  "signer": "tern",
+  "author": "tern mechanical correction",
+  "reviewer": "corvid",
+  "start": "2026-09-24T18:12:33Z",
+  "deadline": "2026-09-24T18:22:33Z",
+  "allocation": {
+    "review_minutes": 10,
+    "prior_ceiling": 530,
+    "new_ceiling": 540
+  },
+  "scope": "Independent correction review: canonical11-file runtime manifest, one wall callback path replacement only. Prior claim111 hashes preserved historical; override old driver/manifest pins with this signed record after PASS.",
+  "driver_sha256": "3f836ac07e8a773e3082e49734a71b38e73f9143afc0d683b69bef75c5c9fa96",
+  "manifest_sha256": "3ba48ee0de01230703c3d63f0fdc5f808fcc38660b3e06a6ac3c5da1433bdd75",
+  "old_snapshot": "attempt-history/pre-manifest-wall-fix",
+  "checks": [
+    "Verify diff exactly callback filename replacement, old path absent, new callback executable reaches cleanup mode. Source inspection plus safely injected argv test; no real cleanup or service changes.",
+    "sha256sum -c plans/MANIFEST.sha256 from package root; check all current direct runnable helpers/tasks including P12 sourced helper included. Source/binary/adapters still externally pinned by composition claim. Old offline harness not canonical live executor.",
+    "Use actual systemd-run captured callback argv and fail if path missing. Verify proper INPUTS cleanup argument, original driver scope/units/IDs cleanup and no private HOME confusion.",
+    "No product/live/prep/install effects. Return PASS with hashes or bounded finding."
+  ],
+  "verdict_path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/manifest-wall-review.md"
+}
