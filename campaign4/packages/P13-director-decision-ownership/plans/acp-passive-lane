@@ -3,4 +3,6 @@
 # engine. No model, no tools, no auto-approve. Launched by prep-p13.sh with agent-deck launch -cmd.
 set -u
 unset ACP_AUTO_APPROVE ACP_MODE
-exec /var/home/bmosher/.config/agent-deck/acp-worker python3 /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/passive-acp-engine.py "$@"
+# Usage: acp-passive-lane ABS_RECORD_PATH RUN_ROLE_KEY (fixed by prep before launch; see prep-p13.sh)
+[ $# -eq 2 ] && [ "${1#/}" != "$1" ] && [ -n "$2" ] || { echo "acp-passive-lane: usage ABS_RECORD_PATH RUN_ROLE_KEY" >&2; exit 2; }
+exec /var/home/bmosher/.config/agent-deck/acp-worker python3 /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/passive-acp-engine.py "$1" "$2"

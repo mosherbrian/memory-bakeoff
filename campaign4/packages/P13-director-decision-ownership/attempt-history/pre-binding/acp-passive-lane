@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# P13 passive fixture lane (director/duty ONLY): the real acp-worker runtime with the passive receiver
+# engine. No model, no tools, no auto-approve. Launched by prep-p13.sh with agent-deck launch -cmd.
+set -u
+unset ACP_AUTO_APPROVE ACP_MODE
+exec /var/home/bmosher/.config/agent-deck/acp-worker python3 /home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plans/passive-acp-engine.py "$@"

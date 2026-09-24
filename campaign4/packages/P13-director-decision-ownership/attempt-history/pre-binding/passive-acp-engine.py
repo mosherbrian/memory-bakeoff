@@ -9,12 +9,8 @@ $HOME/.local/share/p13-passive/<AGENTDECK_INSTANCE_ID>.jsonl (proof of real rece
 with a fixed reply. Only json/os/sys/time are imported.
 """
 import json, os, sys, time
-# BINDING (P13-receiver-binding-1): the record path and the run/role key are EXPLICIT arguments fixed by
-# prep before launch. The runtime-owned AGENTDECK_INSTANCE_ID and HOME are never read. Fail closed: a
-# missing/relative path or empty key exits 2 before any record is written (no "unknown" record exists).
-if len(sys.argv) != 3 or not os.path.isabs(sys.argv[1]) or not sys.argv[2].strip():
-    sys.stderr.write("passive receiver: usage ENGINE ABS_RECORD_PATH RUN_ROLE_KEY\n"); sys.exit(2)
-REC, KEY = sys.argv[1], sys.argv[2]
+INST = os.environ.get("AGENTDECK_INSTANCE_ID", "unknown")
+REC = os.path.join(os.path.expanduser("~"), ".local/share/p13-passive", INST + ".jsonl")
 os.makedirs(os.path.dirname(REC), exist_ok=True)
 def send(m): sys.stdout.write(json.dumps(m) + "\n"); sys.stdout.flush()
 for line in sys.stdin:
@@ -26,11 +22,11 @@ for line in sys.stdin:
         send({"jsonrpc": "2.0", "id": mid, "result": {"protocolVersion": 1, "agentCapabilities": {},
               "agentInfo": {"name": "p13-passive-receiver", "version": "1"}, "authMethods": []}})
     elif meth == "session/new":
-        send({"jsonrpc": "2.0", "id": mid, "result": {"sessionId": "passive-" + KEY}})
+        send({"jsonrpc": "2.0", "id": mid, "result": {"sessionId": "passive-" + INST}})
     elif meth == "session/prompt":
         text = "".join(x.get("text", "") for x in p.get("prompt", []) if isinstance(x, dict))
         with open(REC, "a") as f:
-            f.write(json.dumps({"t": time.time(), "key": KEY, "text": text}) + "\n")
+            f.write(json.dumps({"t": time.time(), "instance": INST, "text": text}) + "\n")
         send({"jsonrpc": "2.0", "method": "session/update", "params": {"sessionId": p.get("sessionId"),
               "update": {"sessionUpdate": "agent_message_chunk", "content": {"type": "text",
               "text": "received (passive fixture receiver: no tools, nothing executed)"}}}})

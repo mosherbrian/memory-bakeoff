@@ -15,7 +15,7 @@ PKG=/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-owner
 PLANS=$PKG/plans
 # shellcheck disable=SC1090
 . "$INPUTS"
-for v in RUN ROOT LIVE_DEADLINE PROFILE WAKE WAKE_SHA PASSIVE_LANE PASSIVE_LANE_SHA PASSIVE_ENGINE PASSIVE_ENGINE_SHA D_RECORD D_KEY U_RECORD U_KEY STREAMS BIN_SRC BIN_SHA UNITS_SRC W_NAME W_ID V_NAME V_ID D_NAME D_ID U_NAME U_ID NOTIFY_CLAUDE_SRC NOTIFY_CLAUDE_SHA ESCALATIONS_SRC ESCALATIONS_SHA ADAPTER_WATCH_SRC ADAPTER_WATCH_SHA ADAPTER_RESOLVE_SRC ADAPTER_RESOLVE_SHA; do
+for v in RUN ROOT LIVE_DEADLINE PROFILE WAKE WAKE_SHA PASSIVE_LANE PASSIVE_LANE_SHA PASSIVE_ENGINE PASSIVE_ENGINE_SHA STREAMS BIN_SRC BIN_SHA UNITS_SRC W_NAME W_ID V_NAME V_ID D_NAME D_ID U_NAME U_ID NOTIFY_CLAUDE_SRC NOTIFY_CLAUDE_SHA ESCALATIONS_SRC ESCALATIONS_SHA ADAPTER_WATCH_SRC ADAPTER_WATCH_SHA ADAPTER_RESOLVE_SRC ADAPTER_RESOLVE_SHA; do
   val=${!v:-}
   if [ -z "$val" ] || [[ "$val" == *"<"* ]]; then echo "input $v missing or unfilled" >&2; exit 2; fi
 done
@@ -326,8 +326,7 @@ for sid in "$D_ID" "$U_ID"; do
   "$WAKE" "$sid" "P13 passive receiver probe, run $RUN, seat $sid, nonce $n" >>"$EV/driver.log" 2>&1; rc=$?
   [ $rc = 0 ] || [ $rc = 3 ] || { result INDUCTION INVALID "probe not delivered to $sid (wake rc $rc): receiver missing"; exit 4; }
 done
-. "$PLANS/receiver-eval.sh"
-received() { receiver_has "$D_RECORD" "$D_KEY" "nonce $(cat "$ROOT/probe-$D_ID.nonce")" && receiver_has "$U_RECORD" "$U_KEY" "nonce $(cat "$ROOT/probe-$U_ID.nonce")"; }
+received() { for sid in "$D_ID" "$U_ID"; do grep -q "nonce $(cat "$ROOT/probe-$sid.nonce")" "$HOME/.local/share/p13-passive/$sid.jsonl" 2>/dev/null || return 1; done; }
 wait_for "both passive receivers recorded their probe" 60 received || { result INDUCTION INVALID "a passive receiver did not record its probe (director/duty not passive or not running)"; exit 4; }
 result INDUCTION PASS "director and duty are passive receivers (pinned bytes, probe recorded through the real wake)"
 premature() { [ -n "$(st "d.get('resolved','')")" ] && { result PRECONDITION INVALID "incident resolved at $(st "d.get('resolved','')") before the plan's decide ($1): the ladder test is invalid, not a product result"; exit 4; }; return 0; }

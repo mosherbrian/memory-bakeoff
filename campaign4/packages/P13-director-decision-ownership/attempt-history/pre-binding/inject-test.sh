@@ -19,8 +19,7 @@ python3 "$H/seat-runtime.py" $W $V & SEATPID=$!
 # director/duty: the REAL acp-worker runtime + passive receiver engine (plans/acp-passive-lane), not a double
 for id in $D $U; do
   [ "$MODE" = neg-no-receiver ] && [ "$id" = "$D" ] && continue
-  role=director; [ "$id" = "$U" ] && role=duty
-  ( sleep 1500 | AGENTDECK_INSTANCE_ID=$id "$PKG/plans/acp-passive-lane" "$INJ/rec-$role.jsonl" "$R-$role" > "$INJ/passive-$id.out" 2>&1 ) &
+  ( sleep 1500 | AGENTDECK_INSTANCE_ID=$id "$PKG/plans/acp-passive-lane" > "$INJ/passive-$id.out" 2>&1 ) &
 done
 if [ "$MODE" = neg-early-decide ]; then   # another actor decides as soon as the decision opens
   ( for i in $(seq 1 300); do c=$(ls "$INJ"/root/fx*.json 2>/dev/null | grep -v '\.db\.' | head -1); if [ -n "$c" ]; then q=D${c##*/fx}; q=${q%.json}; st=$("$INJ/root/bin/agent-loop" status --config "$c" --json 2>/dev/null); if printf '%s' "$st" | grep -Eq '"step": ?"decision"'; then "$INJ/root/bin/agent-loop" decide --config "$c" --qid "$q" --kind question_answered --ref early --reason early >> "$INJ/early.log" 2>&1; echo "EARLY-DECIDE rc=$?" >> "$INJ/seat-runtime.log"; break; fi; fi; sleep 1; done ) &
@@ -32,8 +31,6 @@ sed -e "s#<fresh run id, e.g. p13l1>#$R#" -e "s#<absolute private root, e.g. /ho
     -e "s#<absolute UTC end of the signed live20 grant>#$DL#" -e "s#^STREAMS=.*#STREAMS=$STREAMS#" \
     -e "s#^W_NAME=.*#W_NAME=fx-w-$R#" -e "s#^W_ID=.*#W_ID=$W#" -e "s#^V_NAME=.*#V_NAME=fx-v-$R#" -e "s#^V_ID=.*#V_ID=$V#" \
     -e "s#^D_NAME=.*#D_NAME=fx-d-$R#" -e "s#^D_ID=.*#D_ID=$D#" -e "s#^U_NAME=.*#U_NAME=fx-u-$R#" -e "s#^U_ID=.*#U_ID=$U#" \
-    -e "s#^D_RECORD=.*#D_RECORD=$INJ/rec-director.jsonl#" -e "s#^D_KEY=.*#D_KEY=$R-director#" \
-    -e "s#^U_RECORD=.*#U_RECORD=$INJ/rec-duty.jsonl#" -e "s#^U_KEY=.*#U_KEY=$R-duty#" \
     "$PKG/plans/live-p13-inputs.template.env" > "$EV/inputs.env"
 grep -v '^#' "$EV/inputs.env" | grep -q '<' && no "inputs unfilled" || ok "inputs late-bound"
 EV_DIR=$EV/driver bash "$PKG/plans/live-p13-driver.sh" "$EV/inputs.env" run > "$EV/driver.out" 2>&1; DRC=$?
@@ -49,8 +46,7 @@ if [ "${MODE#neg-}" != "$MODE" ]; then
 fi
 [ $DRC -eq 0 ] && ok "live branch rc 0 (injected)" || no "live branch rc $DRC"
 grep -q "^INDUCTION	INJECTED-PASS" "$EV/driver/results.tsv" && ok "induction: passive receivers verified (pinned bytes, probe recorded)" || no "no passive induction"
-for role in director duty; do grep -q "\"key\": \"$R-$role\".*DECISION OVERDUE" "$INJ/rec-$role.jsonl" 2>/dev/null && ok "passive $role receiver recorded its real rung notice under its bound key" || no "$role receiver has no bound rung record"; done
-[ -z "$(ls "$HOME/.local/share/p13-passive" 2>/dev/null)" ] && ok "no HOME-derived or unknown receiver record" || no "a HOME-derived record exists"
+for id in $D $U; do grep -q "DECISION OVERDUE" "$HOME/.local/share/p13-passive/$id.jsonl" 2>/dev/null && ok "passive receiver $id recorded its real rung notice (real runtime)" || no "receiver $id has no rung record"; done
 grep -q -- "--ref P13-live-$R" "$EV/driver/driver.log" && ! grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" 2>/dev/null && ! ls "$INJ"/pwned* >/dev/null 2>&1 && ok "only the driver decided; notice commands inert at the receivers" || no "decision not the driver's or a command ran"
 grep -q "DECISION OVERDUE" <(awk -F'\t' -v d="$D" '$4==d' "$HOME/.local/share/agent-deck/wake-send.log") && ok "incident-bound director rung in transport" || no "no incident-bound director transport"
 grep -q "^LIVE	INJECTED-PASS" "$EV/driver/results.tsv" 2>/dev/null && ok "LIVE INJECTED-PASS (labelled, not live)" || no "LIVE not passed"
