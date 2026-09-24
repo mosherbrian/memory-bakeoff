@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-24T07:02:40.849777+00:00",
+  "signer": "tern",
+  "incident": "T-P13-liveplan-repair-1-w1",
+  "event": "ack-expiry received after promised action completed",
+  "response": "Snapshot preserved, independent audit completed, separate continuation authorized and dispatched06:50:10Z before response bound07:00:26Z. No late repair accepted.",
+  "evidence": {
+    "plan-repair-timeout-disposition.json": "b2c44ecaa9cde741f65f55a8068498d0e5a9fab31e02ded206802d6d687888b7",
+    "timeout-audit-1.md": "f45e75df1a7ffafd989bbc12f5141102383fb3a573c4ad866fab81248109e639",
+    "plan-completion-release.json": "a5e8bf7e76da7e955456cf230d46b933cf662941ff02a05085435e1bdf773721"
+  },
+  "current_execution": {
+    "qid": "P13-liveplan-completion-1",
+    "state": "worker",
+    "deadline": "2026-09-24T07:20:10Z"
+  },
+  "product_gap": "Installed CLI lacks terminate/exhaust/resolve-timeout route; decide rejects nonterminal core state. Ack expiry keys only on timed-out and expiry, not completed promised action. No supported closure recorded; package honestly remains timed-out.",
+  "ruling": "No repeated acknowledgement of completed action, no forged verdict, no direct DB mutation, no automatic worker retry. Alert is handled in this disposition. expiredAcks emits once per ack deadline; do not reset it.",
+  "owner": "tern",
+  "followup": "Report lifecycle closure gap to Claude for subsequent scoped correction; no code grant and no interruption to active plan continuation."
+}
