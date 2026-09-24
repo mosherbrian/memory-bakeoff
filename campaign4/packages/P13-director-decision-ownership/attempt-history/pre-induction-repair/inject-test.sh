@@ -14,9 +14,7 @@ export PATH="$H/stubs:/usr/bin:/bin"
 pass=0; fail=0; ok() { pass=$((pass+1)); echo "PASS $1" | tee -a "$EV/test.log"; }; no() { fail=$((fail+1)); echo "FAIL $1" | tee -a "$EV/test.log"; }
 R=inj$(date +%H%M%S); W=$R-w-id V=$R-v-id D=$R-d-id U=$R-u-id
 python3 -c "import json,sys; json.dump([{'id': i, 'title': t, 'profile': 'campaign4', 'status': 'idle'} for i, t in zip(sys.argv[1::2], sys.argv[2::2])], open('$INJ/registry.json','w'))" $W fx-w-$R $V fx-v-$R $D fx-d-$R $U fx-u-$R
-case "$MODE" in
-  neg-early-decide) export SEAT_DIRECTOR_DECIDES=1;; neg-missing-priming) export SEAT_PRIMING=missing;;
-  neg-wrong-priming) export SEAT_PRIMING=wrong;; queued) export SEAT_QUEUED=1;; positive) ;; *) echo "unknown mode $MODE"; exit 2;; esac
+[ "$MODE" = neg-early-decide ] && export SEAT_DIRECTOR_DECIDES=1
 python3 "$H/seat-runtime.py" $W $V $D $U & SEATPID=$!
 sleep 1
 SHW=/var/home/bmosher/.local/share/agent-deck/wake-send.log; SHE=/var/home/bmosher/.local/share/agent-deck/escalations.jsonl
@@ -28,18 +26,15 @@ sed -e "s#<fresh run id, e.g. p13l1>#$R#" -e "s#<absolute private root, e.g. /ho
     "$PKG/plans/live-p13-inputs.template.env" > "$EV/inputs.env"
 grep -v '^#' "$EV/inputs.env" | grep -q '<' && no "inputs unfilled" || ok "inputs late-bound"
 EV_DIR=$EV/driver bash "$PKG/plans/live-p13-driver.sh" "$EV/inputs.env" run > "$EV/driver.out" 2>&1; DRC=$?
-if [ "${MODE#neg-}" != "$MODE" ]; then
-  want=PRECONDITION; [ "$MODE" = neg-early-decide ] || want=INDUCTION
-  [ $DRC -eq 4 ] && grep -q "^$want	INJECTED-INVALID" "$EV/driver/results.tsv" && ! grep -q "^LIVE	" "$EV/driver/results.tsv" && ! grep -q "^DECISION	" <([ "$want" = INDUCTION ] && cat "$EV/driver/results.tsv") && ok "NEG $MODE -> $want INVALID, rc 4, no LIVE row" || no "NEG $MODE not classified $want INVALID (rc $DRC)"
-  case "$MODE" in neg-early-decide) grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" && ok "NEG the injected director really decided early" || no "NEG director double did not decide";;
-    *) grep -q "PRIMING .* mode=${MODE#neg-}" "$INJ/seat-runtime.log" && ! grep -q "dispatch --config" "$EV/driver/driver.log" && ok "NEG priming ${MODE#neg-}: no dispatch happened" || no "NEG priming case dispatched or not exercised";; esac
+if [ "$MODE" = neg-early-decide ]; then
+  [ $DRC -eq 4 ] && grep -q "^PRECONDITION	INJECTED-INVALID" "$EV/driver/results.tsv" && ! grep -q "^LIVE	" "$EV/driver/results.tsv" && ok "NEG early decision -> PRECONDITION INVALID, rc 4, no LIVE row" || no "NEG early decision not classified INVALID (rc $DRC)"
+  grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" && ok "NEG the injected director really decided early" || no "NEG director double did not decide"
   python3 -c "import json; assert not json.load(open('$INJ/registry.json'))" && ok "NEG fixtures removed after INVALID" || no "NEG fixtures remain"
   kill $SEATPID 2>/dev/null; for p in $(ps -eo pid,args | grep -F "$INJ" | grep -v -e "grep -F" | awk '{print $1}'); do kill "$p" 2>/dev/null; done
   echo "inject-test($MODE): $pass passed, $fail failed (INJECTED)" | tee -a "$EV/test.log"; [ $fail -eq 0 ]; exit
 fi
 [ $DRC -eq 0 ] && ok "live branch rc 0 (injected)" || no "live branch rc $DRC"
-grep -q "^INDUCTION	INJECTED-PASS" "$EV/driver/results.tsv" && [ "$(grep -c "PRIMING .* mode=ok" "$INJ/seat-runtime.log")" = 2 ] && ok "induction: both fixtures confirmed exact nonces before dispatch" || no "no confirmed induction"
-[ "$MODE" = queued ] && { grep -qP "\tqueued" "$HOME/.local/share/agent-deck/wake-send.log" && ok "queued receipts (wake rc 3) accepted for director/duty rungs" || no "queued not exercised"; }
+grep -q "^INDUCTION	INJECTED-PASS" "$EV/driver/results.tsv" && ok "induction: fixture non-response verified before dispatch" || no "no induction row"
 grep -q "DECISION OVERDUE" <(awk -F'\t' -v d="$D" '$4==d' "$HOME/.local/share/agent-deck/wake-send.log") && ok "incident-bound director rung in transport" || no "no incident-bound director transport"
 grep -q "^LIVE	INJECTED-PASS" "$EV/driver/results.tsv" 2>/dev/null && ok "LIVE INJECTED-PASS (labelled, not live)" || no "LIVE not passed"
 P=fx$R

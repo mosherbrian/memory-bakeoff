@@ -12,12 +12,6 @@ def turn(sid, text):
     bad = [w for w in ("decision-turn", "<bound-stream>", ".jsonl") if w in text]
     log.write("%s RECV %s %d bytes anti-stub=%s\n" % (time.strftime("%H:%M:%S"), sid, len(text), bad or "clean"))
     open(os.environ["INJ"] + "/recv-" + sid + ".txt", "a").write(text + "\n----\n")
-    pm = re.search(r"P13 fixture priming.*?printf %s (\S+) > (\S+) ;", text, re.S)
-    if pm:
-        mode = os.environ.get("SEAT_PRIMING", "ok")
-        if mode == "ok": open(pm.group(2), "w").write(pm.group(1))
-        elif mode == "wrong": open(pm.group(2), "w").write("0" * 32)
-        log.write("%s PRIMING %s mode=%s\n" % (time.strftime("%H:%M:%S"), sid, mode)); return
     if os.environ.get("SEAT_DIRECTOR_DECIDES") == "1" and "verifier PASS" in text:
         d = re.search(r"(/\S+/agent-loop) decide --config (\S+) --qid (\S+)", text)
         if d:
@@ -45,8 +39,7 @@ def serve(sid):
             ch = c.recv(65536)
             if not ch: break
             buf += ch
-        q = os.environ.get("SEAT_QUEUED") == "1" and (sid.endswith("-d-id") or sid.endswith("-u-id"))
-        c.sendall(b'{"status": "queued (busy)"}\n' if q else b'{"status": "started"}\n'); c.close()
+        c.sendall(b'{"status": "started"}\n'); c.close()
         try: text = json.loads(buf.decode()).get("text", "")
         except Exception: text = ""
         # The loop's wake text is itself a JSON envelope {kind, package, action, execution, text};

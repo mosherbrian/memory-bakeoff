@@ -312,21 +312,15 @@ snap SETUP
 # Real worker/verifier: tasks run the candidate claim CLI and end their turn; the runtime writes the stream.
 Q=D$RUN
 st() { "$A" status $C --json | python3 -c "import json,sys; p=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0]; d=p.get('decision') or {}; print(eval(sys.argv[1]))" "$1"; }
-# INDUCTION (P13-induction-repair-1): the ladder is only exercised by an OVERDUE decision. Both fixture
-# director and duty must POSITIVELY CONFIRM a run- and seat-bound priming before dispatch: each gets a fresh
-# random nonce and must write exactly that nonce to its own confirmation file; that is the only action it
-# may take in this run (no decide, no ack, no command). Missing or wrong confirmation -> INDUCTION INVALID.
-# Wake rc 0 (started) and 3 (queued) are both real receipts.
-run mkdir -p "$ROOT/priming"
+# INDUCTION (P13-live-induction-1): the ladder is only exercised by an OVERDUE decision, so the fixture
+# director and duty must NOT decide. Standing fixture rule to both, then a canary probe: the seat is told
+# not to run the command in the message; after 45 s the canary must not exist and no decide exists.
 for sid in "$D_ID" "$U_ID"; do
-  n=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n'); echo "$n" > "$ROOT/priming/$sid.nonce"
-  guard "prime $sid"; log "+ $WAKE $sid <priming for run $RUN>"
-  "$WAKE" "$sid" "P13 fixture priming, run $RUN, seat $sid. You are a test fixture. Confirm by running exactly this one command: printf %s $n > $ROOT/priming/$sid.ok ; after that, for the rest of run $RUN do NOT run any command, do NOT run agent-loop decide or decision-ack, do not wake anyone; only reply noted." >>"$EV/driver.log" 2>&1; rc=$?
-  [ $rc = 0 ] || [ $rc = 3 ] || { result INDUCTION INVALID "priming not delivered to $sid (wake rc $rc)"; exit 4; }
+  run "$WAKE" "$sid" "P13 fixture rule for this whole run (package $Q): you are a test fixture. Do NOT run any command for it, do NOT run agent-loop decide or decision-ack, do not wake anyone. Only reply with the word noted. Canary, do NOT run it: touch $ROOT/canary-$sid" || { result INDUCTION FAIL "fixture rule not delivered to $sid"; exit 3; }
 done
-primed() { for sid in "$D_ID" "$U_ID"; do [ "$(cat "$ROOT/priming/$sid.ok" 2>/dev/null)" = "$(cat "$ROOT/priming/$sid.nonce")" ] || return 1; done; }
-wait_for "both fixtures confirmed the priming" 120 primed || { result INDUCTION INVALID "confirmation missing or wrong: director '$(cat "$ROOT/priming/$D_ID.ok" 2>/dev/null)', duty '$(cat "$ROOT/priming/$U_ID.ok" 2>/dev/null)'"; exit 4; }
-result INDUCTION PASS "director and duty confirmed the run/seat-bound priming (exact nonces)"
+sleep 45
+for sid in "$D_ID" "$U_ID"; do [ -e "$ROOT/canary-$sid" ] && { result INDUCTION INVALID "fixture $sid executed the canary: it would decide; not a valid ladder test"; exit 4; }; done
+result INDUCTION PASS "director and duty fixtures verified non-responding (canary not run in 45 s)"
 premature() { [ -n "$(st "d.get('resolved','')")" ] && { result PRECONDITION INVALID "incident resolved at $(st "d.get('resolved','')") before the plan's decide ($1): the ladder test is invalid, not a product result"; exit 4; }; return 0; }
 run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task decision-worker-live.md "$Q")" --verify-task "@$(task decision-verify-live.md "$Q")" --duration 8m --verify-window 8m \
   || { result DISPATCH FAIL "dispatch refused"; exit 3; }
@@ -342,8 +336,10 @@ premature "after stop"
 result STOP PASS "intentional stop marker after the authentic decision; timer + outside check own the ladder"
 E=$ROOT/home/.local/share/agent-deck/escalations.jsonl
 DL=$(st "d['deadline']"); DLE=$(date -u -d "$DL" +%s)
-. "$PLANS/rung-eval.sh"
-rung_ok() { premature "rung $1"; rung_eval "$(st "d.get('rungs') and d['rungs'].get('$1','') or ''")" "$HOME/.local/share/agent-deck/wake-send.log" "$2" "$INC" "$DLE"; }
+rung_ok() { # K SID: product DB records rung K sent at/after the deadline AND the send log has a started wake to SID at/after the deadline whose text names this incident
+  premature "rung $1"
+  local rs; rs=$(st "d.get('rungs',{}).get('$1','')"); case "$rs" in sent*) ;; *) return 1;; esac
+  awk -F'\t' -v s="$2" -v inc="$INC" -v dl="$DLE" '$4==s && $5=="started" && index($0,"DECISION OVERDUE " inc) { cmd="date -u -d " $1 " +%s"; cmd | getline e; close(cmd); if (e>=dl) f=1 } END { exit !f }' "$HOME/.local/share/agent-deck/wake-send.log"; }
 wait_for "director rung 0 (DB + transport, incident-bound)" 150 rung_ok 0 "$D_ID" || { result RUNGS FAIL "rung 0: DB '$(st "d.get('rungs',{}).get('0','')")', no incident-bound director transport after $DL"; exit 3; }
 wait_for "duty rung 1 (DB + transport, incident-bound)" 90 rung_ok 1 "$U_ID" || { result RUNGS FAIL "rung 1: DB '$(st "d.get('rungs',{}).get('1','')")', no incident-bound duty transport"; exit 3; }
 wait_for "Claude rung 2 (DB + private ledger)" 90 sh -c "grep -q 'DECISION OVERDUE $INC' '$E'" || { result RUNGS FAIL "no private ledger record"; exit 3; }
