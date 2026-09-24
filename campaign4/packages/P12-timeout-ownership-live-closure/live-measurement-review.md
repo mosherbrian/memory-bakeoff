@@ -71,3 +71,48 @@ with a negative control for every correction:
 
 No source edits by corvid. **PASS** returned to Tern for the final plan check and
 the funded fresh prep/binding/live path; cutover remains PASS-only.
+
+---
+
+## Measurement-review receipt closure (same pass, no reset)
+
+Read `live-measurement-review-receipt.json` (`cc6cdaaa…`); claim `c849357b…`, 25
+files verified. Verdict amended with **two required corrections** found against the
+receipt focus; the proven corrections stand.
+
+### Required before live signature
+
+1. **`live-checks.sh` is a runtime dependency — bind it in the signature.** The new
+   driver sources `plans/live-checks.sh`; the final plan signature must pin the
+   helper's hash alongside `live-driver.sh`/inputs/units/binary, or the signed plan
+   does not cover the code that evaluates the cases.
+2. **Exact replay-argv binding is incomplete.** `l6_argv_eval` (`live-checks.sh:58`)
+   binds `argv[0]==binary`, `argv[1]==timer-callback`, `--qid <qid>` and the
+   **presence** of `--action`, but it does **not** bind the `--config` value, the
+   `--action` value, nor reject extra/ambiguous tokens. The negative set lacks
+   wrong-config / wrong-action-value / extra-args. Per the receipt ("strictly bound
+   to binary/config/qid/action … reject ambiguous/wrong/missing args, never execute
+   an unconstrained captured command"), add those bindings and negatives.
+3. **`healthy_after` does not require a fresh pass.** `healthy_eval`
+   (`live-checks.sh:49`) accepts `ok|rest` with `checked_at >= EPOCH`, but reads no
+   pass timestamp/counter, so a recent check over an **old pass** can satisfy
+   `rest`. Per the receipt ("healthy rest requires fresh pass, not only a recent
+   check of old pass"), add a fresh-pass condition (e.g. `checks_since "$EPOCH" >= 1`
+   or a pass timestamp in the verdict) to `healthy_after` for L7c/L3a-pass/L3b.
+
+### Confirmed / unchanged
+
+- **Restart-classification ruling is explicit and applied:** `start_limit_eval`
+  accepts `crashed` **or** `restart-loop` only with a proven restart loop since the
+  onset (≥BURST−1 scheduled restarts + failed starts + `Start request repeated too
+  quickly`); the **actual observed state is preserved** (never relabelled); the
+  systemd-258 `Result=exit-code` diagnostic limit is declared, not universalised.
+- Saved-raw negatives, the L3a SIGPIPE reproduction (rc 141), L7c idle-`rest`, L6
+  unexecuted replay (no retro-PASS) and stop-exit waits are as reviewed
+  (`checks-test.sh` 40/0). **Dry tracebacks are inherited placeholder artifacts,
+  not live proof**; every correction still needs the **fresh live test**.
+- No source/fixture/task/live/cutover change.
+
+**Verdict: PASS on the proven corrections, with the three signature/precision
+corrections above required before the fresh live run.** Returned to Tern
+immediately; cairn also woken.
