@@ -15,7 +15,7 @@ PKG=/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-owner
 PLANS=$PKG/plans
 # shellcheck disable=SC1090
 . "$INPUTS"
-for v in RUN ROOT LIVE_DEADLINE PROFILE WAKE WAKE_SHA PASSIVE_LANE PASSIVE_LANE_SHA PASSIVE_ENGINE PASSIVE_ENGINE_SHA STREAMS BIN_SRC BIN_SHA UNITS_SRC W_NAME W_ID V_NAME V_ID D_NAME D_ID U_NAME U_ID NOTIFY_CLAUDE_SRC NOTIFY_CLAUDE_SHA ESCALATIONS_SRC ESCALATIONS_SHA ADAPTER_WATCH_SRC ADAPTER_WATCH_SHA ADAPTER_RESOLVE_SRC ADAPTER_RESOLVE_SHA; do
+for v in RUN ROOT LIVE_DEADLINE PROFILE WAKE WAKE_SHA STREAMS BIN_SRC BIN_SHA UNITS_SRC W_NAME W_ID V_NAME V_ID D_NAME D_ID U_NAME U_ID NOTIFY_CLAUDE_SRC NOTIFY_CLAUDE_SHA ESCALATIONS_SRC ESCALATIONS_SHA ADAPTER_WATCH_SRC ADAPTER_WATCH_SHA ADAPTER_RESOLVE_SRC ADAPTER_RESOLVE_SHA; do
   val=${!v:-}
   if [ -z "$val" ] || [[ "$val" == *"<"* ]]; then echo "input $v missing or unfilled" >&2; exit 2; fi
 done
@@ -312,23 +312,21 @@ snap SETUP
 # Real worker/verifier: tasks run the candidate claim CLI and end their turn; the runtime writes the stream.
 Q=D$RUN
 st() { "$A" status $C --json | python3 -c "import json,sys; p=[p for p in json.load(sys.stdin)['packages'] if p['qid']=='$Q'][0]; d=p.get('decision') or {}; print(eval(sys.argv[1]))" "$1"; }
-# INDUCTION (P13-passive-fixture-1): director and duty are PASSIVE RECEIVERS (plans/acp-passive-lane: the real
-# acp-worker runtime + plans/passive-acp-engine.py, which has no tools and cannot execute any notice text).
-# Before dispatch: the pinned lane/engine bytes must match, and a probe with a fresh nonce sent through the
-# REAL wake must appear in each receiver's own record (real receive protocol). Missing receiver, wrong bytes
-# or no record -> INDUCTION INVALID (exit 4), no dispatch. The driver alone acknowledges and decides later.
-for pair in "$PASSIVE_LANE:$PASSIVE_LANE_SHA" "$PASSIVE_ENGINE:$PASSIVE_ENGINE_SHA"; do
-  [ "$(sha256sum "${pair%%:*}" 2>/dev/null | cut -d' ' -f1)" = "${pair#*:}" ] || { result INDUCTION INVALID "passive fixture bytes differ: ${pair%%:*}"; exit 4; }
-done
+# INDUCTION (P13-induction-repair-1): the ladder is only exercised by an OVERDUE decision. Both fixture
+# director and duty must POSITIVELY CONFIRM a run- and seat-bound priming before dispatch: each gets a fresh
+# random nonce and must write exactly that nonce to its own confirmation file; that is the only action it
+# may take in this run (no decide, no ack, no command). Missing or wrong confirmation -> INDUCTION INVALID.
+# Wake rc 0 (started) and 3 (queued) are both real receipts.
+run mkdir -p "$ROOT/priming"
 for sid in "$D_ID" "$U_ID"; do
-  n=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n'); echo "$n" > "$ROOT/probe-$sid.nonce"
-  guard "probe $sid"; log "+ $WAKE $sid <passive-receiver probe for run $RUN>"
-  "$WAKE" "$sid" "P13 passive receiver probe, run $RUN, seat $sid, nonce $n" >>"$EV/driver.log" 2>&1; rc=$?
-  [ $rc = 0 ] || [ $rc = 3 ] || { result INDUCTION INVALID "probe not delivered to $sid (wake rc $rc): receiver missing"; exit 4; }
+  n=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n'); echo "$n" > "$ROOT/priming/$sid.nonce"
+  guard "prime $sid"; log "+ $WAKE $sid <priming for run $RUN>"
+  "$WAKE" "$sid" "P13 fixture priming, run $RUN, seat $sid. You are a test fixture. Confirm by running exactly this one command: printf %s $n > $ROOT/priming/$sid.ok ; after that, for the rest of run $RUN do NOT run any command, do NOT run agent-loop decide or decision-ack, do not wake anyone; only reply noted." >>"$EV/driver.log" 2>&1; rc=$?
+  [ $rc = 0 ] || [ $rc = 3 ] || { result INDUCTION INVALID "priming not delivered to $sid (wake rc $rc)"; exit 4; }
 done
-received() { for sid in "$D_ID" "$U_ID"; do grep -q "nonce $(cat "$ROOT/probe-$sid.nonce")" "$HOME/.local/share/p13-passive/$sid.jsonl" 2>/dev/null || return 1; done; }
-wait_for "both passive receivers recorded their probe" 60 received || { result INDUCTION INVALID "a passive receiver did not record its probe (director/duty not passive or not running)"; exit 4; }
-result INDUCTION PASS "director and duty are passive receivers (pinned bytes, probe recorded through the real wake)"
+primed() { for sid in "$D_ID" "$U_ID"; do [ "$(cat "$ROOT/priming/$sid.ok" 2>/dev/null)" = "$(cat "$ROOT/priming/$sid.nonce")" ] || return 1; done; }
+wait_for "both fixtures confirmed the priming" 120 primed || { result INDUCTION INVALID "confirmation missing or wrong: director '$(cat "$ROOT/priming/$D_ID.ok" 2>/dev/null)', duty '$(cat "$ROOT/priming/$U_ID.ok" 2>/dev/null)'"; exit 4; }
+result INDUCTION PASS "director and duty confirmed the run/seat-bound priming (exact nonces)"
 premature() { [ -n "$(st "d.get('resolved','')")" ] && { result PRECONDITION INVALID "incident resolved at $(st "d.get('resolved','')") before the plan's decide ($1): the ladder test is invalid, not a product result"; exit 4; }; return 0; }
 run "$A" dispatch $C --qid "$Q" --worker "$W_NAME" --verifier "$V_NAME" --task "@$(task decision-worker-live.md "$Q")" --verify-task "@$(task decision-verify-live.md "$Q")" --duration 8m --verify-window 8m \
   || { result DISPATCH FAIL "dispatch refused"; exit 3; }

@@ -21,10 +21,9 @@ systemd-run --user --unit="p13prep-cleanup-$RUN" --timer-property=AccuracySec=1s
 want=$(date -u -d "$CLEAN UTC" +%s)
 systemctl --user show "p13prep-cleanup-$RUN.timer" -p TimersCalendar --timestamp=unix --value | grep -q "next_elapse=@$want" || { echo "cleanup timer not at $CLEAN" >&2; exit 3; }
 out=$PREP/prep-result.env; : > "$out"
-for spec in "W:worker:acp-go" "V:verifier:acp-go-deepseek" "D:director:PASSIVE" "U:duty:PASSIVE"; do
+for spec in "W:worker:acp-go" "V:verifier:acp-go-deepseek" "D:director:acp-go" "U:duty:acp-go-controller"; do
   IFS=: read -r k role lane <<<"$spec"; name="p13-fixture-$role-$RUN"; mkdir -p "$PREP/workdirs/$role"
-  cmd=/home/bmosher/.config/agent-deck/$lane; [ "$lane" = PASSIVE ] && cmd=$PKG/plans/acp-passive-lane   # director/duty: passive receivers
-  agent-deck launch "$PREP/workdirs/$role" -t "$name" -cmd "$cmd" --idle-timeout=150m -json > "$PREP/$role.json" 2> "$PREP/$role.stderr"
+  agent-deck launch "$PREP/workdirs/$role" -t "$name" -cmd "/home/bmosher/.config/agent-deck/$lane" --idle-timeout=150m -json > "$PREP/$role.json" 2> "$PREP/$role.stderr"
   id=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])' "$PREP/$role.json" 2>/dev/null)
   [ -n "$id" ] || { echo "PREP FAIL: $role launch (see $PREP/$role.stderr); cleanup timer owns what exists" >&2; exit 3; }
   echo "$id" >> "$PREP/fixture-ids.txt"; printf '%s_NAME=%s\n%s_ID=%s\n' "$k" "$name" "$k" "$id" >> "$out"

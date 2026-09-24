@@ -14,16 +14,10 @@ export PATH="$H/stubs:/usr/bin:/bin"
 pass=0; fail=0; ok() { pass=$((pass+1)); echo "PASS $1" | tee -a "$EV/test.log"; }; no() { fail=$((fail+1)); echo "FAIL $1" | tee -a "$EV/test.log"; }
 R=inj$(date +%H%M%S); W=$R-w-id V=$R-v-id D=$R-d-id U=$R-u-id
 python3 -c "import json,sys; json.dump([{'id': i, 'title': t, 'profile': 'campaign4', 'status': 'idle'} for i, t in zip(sys.argv[1::2], sys.argv[2::2])], open('$INJ/registry.json','w'))" $W fx-w-$R $V fx-v-$R $D fx-d-$R $U fx-u-$R
-case "$MODE" in positive|neg-no-receiver|neg-early-decide) ;; *) echo "unknown mode $MODE"; exit 2;; esac
-python3 "$H/seat-runtime.py" $W $V & SEATPID=$!
-# director/duty: the REAL acp-worker runtime + passive receiver engine (plans/acp-passive-lane), not a double
-for id in $D $U; do
-  [ "$MODE" = neg-no-receiver ] && [ "$id" = "$D" ] && continue
-  ( sleep 1500 | AGENTDECK_INSTANCE_ID=$id "$PKG/plans/acp-passive-lane" > "$INJ/passive-$id.out" 2>&1 ) &
-done
-if [ "$MODE" = neg-early-decide ]; then   # another actor decides as soon as the decision opens
-  ( for i in $(seq 1 300); do c=$(ls "$INJ"/root/fx*.json 2>/dev/null | head -1); if [ -n "$c" ]; then q=D${c##*/fx}; q=${q%.json}; if "$INJ/root/bin/agent-loop" status --config "$c" --json 2>/dev/null | grep -q '"step":"decision"'; then "$INJ/root/bin/agent-loop" decide --config "$c" --qid "$q" --kind question_answered --ref early --reason early >> "$INJ/early.log" 2>&1; echo "EARLY-DECIDE rc=$?" >> "$INJ/seat-runtime.log"; break; fi; fi; sleep 1; done ) &
-fi
+case "$MODE" in
+  neg-early-decide) export SEAT_DIRECTOR_DECIDES=1;; neg-missing-priming) export SEAT_PRIMING=missing;;
+  neg-wrong-priming) export SEAT_PRIMING=wrong;; queued) export SEAT_QUEUED=1;; positive) ;; *) echo "unknown mode $MODE"; exit 2;; esac
+python3 "$H/seat-runtime.py" $W $V $D $U & SEATPID=$!
 sleep 1
 SHW=/var/home/bmosher/.local/share/agent-deck/wake-send.log; SHE=/var/home/bmosher/.local/share/agent-deck/escalations.jsonl
 W0=$(wc -l <"$SHW"); E0=$(wc -l <"$SHE")
@@ -35,19 +29,17 @@ sed -e "s#<fresh run id, e.g. p13l1>#$R#" -e "s#<absolute private root, e.g. /ho
 grep -v '^#' "$EV/inputs.env" | grep -q '<' && no "inputs unfilled" || ok "inputs late-bound"
 EV_DIR=$EV/driver bash "$PKG/plans/live-p13-driver.sh" "$EV/inputs.env" run > "$EV/driver.out" 2>&1; DRC=$?
 if [ "${MODE#neg-}" != "$MODE" ]; then
-  want=PRECONDITION; [ "$MODE" = neg-no-receiver ] && want=INDUCTION
-  [ $DRC -eq 4 ] && grep -q "^$want	INJECTED-INVALID" "$EV/driver/results.tsv" && ! grep -q "^LIVE	" "$EV/driver/results.tsv" && ok "NEG $MODE -> $want INVALID, rc 4, no LIVE row" || no "NEG $MODE not classified $want INVALID (rc $DRC)"
-  case "$MODE" in neg-early-decide) grep -q "EARLY-DECIDE rc=0" "$INJ/seat-runtime.log" && ok "NEG another actor really decided early" || no "NEG early decide not exercised";;
-    neg-no-receiver) ! grep -q "dispatch --config" "$EV/driver/driver.log" && ok "NEG missing receiver: fail-closed before dispatch" || no "NEG dispatched without a receiver";; esac
+  want=PRECONDITION; [ "$MODE" = neg-early-decide ] || want=INDUCTION
+  [ $DRC -eq 4 ] && grep -q "^$want	INJECTED-INVALID" "$EV/driver/results.tsv" && ! grep -q "^LIVE	" "$EV/driver/results.tsv" && ! grep -q "^DECISION	" <([ "$want" = INDUCTION ] && cat "$EV/driver/results.tsv") && ok "NEG $MODE -> $want INVALID, rc 4, no LIVE row" || no "NEG $MODE not classified $want INVALID (rc $DRC)"
+  case "$MODE" in neg-early-decide) grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" && ok "NEG the injected director really decided early" || no "NEG director double did not decide";;
+    *) pm=${MODE#neg-}; pm=${pm%-priming}; grep -q "PRIMING .* mode=$pm" "$INJ/seat-runtime.log" && ! grep -q "dispatch --config" "$EV/driver/driver.log" && ok "NEG priming ${MODE#neg-}: no dispatch happened" || no "NEG priming case dispatched or not exercised";; esac
   python3 -c "import json; assert not json.load(open('$INJ/registry.json'))" && ok "NEG fixtures removed after INVALID" || no "NEG fixtures remain"
   kill $SEATPID 2>/dev/null; for p in $(ps -eo pid,args | grep -F "$INJ" | grep -v -e "grep -F" | awk '{print $1}'); do kill "$p" 2>/dev/null; done
-  for p in $(ps -eo pid=); do [ "$p" != $$ ] && grep -qa "INJ=$INJ" /proc/$p/environ 2>/dev/null && kill "$p" 2>/dev/null; done
   echo "inject-test($MODE): $pass passed, $fail failed (INJECTED)" | tee -a "$EV/test.log"; [ $fail -eq 0 ]; exit
 fi
 [ $DRC -eq 0 ] && ok "live branch rc 0 (injected)" || no "live branch rc $DRC"
-grep -q "^INDUCTION	INJECTED-PASS" "$EV/driver/results.tsv" && ok "induction: passive receivers verified (pinned bytes, probe recorded)" || no "no passive induction"
-for id in $D $U; do grep -q "DECISION OVERDUE" "$HOME/.local/share/p13-passive/$id.jsonl" 2>/dev/null && ok "passive receiver $id recorded its real rung notice (real runtime)" || no "receiver $id has no rung record"; done
-grep -q -- "--ref P13-live-$R" "$EV/driver/driver.log" && ! grep -q "EARLY-DECIDE" "$INJ/seat-runtime.log" 2>/dev/null && ! ls "$INJ"/pwned* >/dev/null 2>&1 && ok "only the driver decided; notice commands inert at the receivers" || no "decision not the driver's or a command ran"
+grep -q "^INDUCTION	INJECTED-PASS" "$EV/driver/results.tsv" && [ "$(grep -c "PRIMING .* mode=ok" "$INJ/seat-runtime.log")" = 2 ] && ok "induction: both fixtures confirmed exact nonces before dispatch" || no "no confirmed induction"
+[ "$MODE" = queued ] && { grep -qP "\tqueued" "$HOME/.local/share/agent-deck/wake-send.log" && ok "queued receipts (wake rc 3) accepted for director/duty rungs" || no "queued not exercised"; }
 grep -q "DECISION OVERDUE" <(awk -F'\t' -v d="$D" '$4==d' "$HOME/.local/share/agent-deck/wake-send.log") && ok "incident-bound director rung in transport" || no "no incident-bound director transport"
 grep -q "^LIVE	INJECTED-PASS" "$EV/driver/results.tsv" 2>/dev/null && ok "LIVE INJECTED-PASS (labelled, not live)" || no "LIVE not passed"
 P=fx$R
@@ -84,5 +76,4 @@ sed "s#^WAKE_SHA=.*#WAKE_SHA=0000#" "$EV/inputs.env" > "$INJ/in3"; INJECT=1 INJE
 env -u INJECT -u INJECT_SD PATH=/usr/bin:/bin:$REALHOME/.local/bin EV_DIR=/tmp/x bash "$PKG/plans/live-p13-driver.sh" "$EV/inputs.env" run > "$EV/neg.out" 2>&1; [ $? = 2 ] && grep -q "EV_DIR" "$EV/neg.out" && ok "NEG live refuses the offline evidence override" || no "NEG EV_DIR accepted in live"
 INJ=$INJ INJECT_SD=$INJ/sd "$H/stubs/systemctl" --user start not-registered.service 2>/dev/null; [ $? = 5 ] && ok "NEG an unregistered unit cannot start by name" || no "NEG unregistered unit started"
 for p in $(ps -eo pid,args | grep -F "$INJ" | grep -v -e "grep -F" | awk '{print $1}'); do kill "$p" 2>/dev/null; done   # exact test-root processes only
-for p in $(ps -eo pid=); do [ "$p" != $$ ] && grep -qa "INJ=$INJ" /proc/$p/environ 2>/dev/null && kill "$p" 2>/dev/null; done
 echo "inject-test: $pass passed, $fail failed (INJECTED: not live proof)" | tee -a "$EV/test.log"; [ $fail -eq 0 ]
