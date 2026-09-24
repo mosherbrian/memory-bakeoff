@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""P13 private candidate: append ONE resolution record to the escalation ledger.
+
+    escalation-resolve KEY INCIDENT NOTE
+
+Called by agent-loop (a rung's resolve_cmd) only after an actual director
+decision. Append-only: no record is changed or removed. The private
+escalation-watch then does not page records of KEY raised at or before it.
+"""
+import json, os, re, sys, time
+
+LEDGER = os.path.join(os.path.expanduser("~"), ".local/share/agent-deck/escalations.jsonl")
+if len(sys.argv) != 4 or not re.fullmatch(r"[0-9a-f]{12}", sys.argv[1]) or not sys.argv[2]:
+    sys.exit("usage: escalation-resolve KEY(12 hex) INCIDENT NOTE")
+# "ack" makes the installed escalations/escalation-watch skip this record
+# (their pending() reads r["key"] on any record without "ack").
+rec = {"t": time.time(), "ack": "R-" + sys.argv[2], "resolve": sys.argv[1], "incident": sys.argv[2], "by": "agent-loop", "note": sys.argv[3]}
+os.makedirs(os.path.dirname(LEDGER), exist_ok=True)
+with open(LEDGER, "a") as f:
+    f.write(json.dumps(rec) + "\n")
+print("resolved", sys.argv[1], sys.argv[2])

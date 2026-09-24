@@ -1,0 +1,50 @@
+{
+ "project": "fxinj124745",
+ "profile": "campaign4",
+ "wake": "/home/bmosher/.config/agent-deck/wake",
+ "db": "/tmp/p13inj-NWlJh7/root/fxinj124745.db",
+ "stream_dir": "/tmp/p13inj-NWlJh7/streams",
+ "claims_dir": "/tmp/p13inj-NWlJh7/root/claims",
+ "artifacts_dir": "/tmp/p13inj-NWlJh7/root/art",
+ "director": "fx-d-inj124745",
+ "duty": "fx-u-inj124745",
+ "seats": {
+  "fx-w-inj124745": "inj124745-w-id",
+  "fx-v-inj124745": "inj124745-v-id",
+  "fx-d-inj124745": "inj124745-d-id",
+  "fx-u-inj124745": "inj124745-u-id"
+ },
+ "bin": "/tmp/p13inj-NWlJh7/root/bin/agent-loop",
+ "unit": "agent-loop-fxinj124745.service",
+ "decision_deadline_s": 60,
+ "decision_policy": "",
+ "decision_ladder": [
+  {
+   "after_s": 0,
+   "seat": "fx-d-inj124745"
+  },
+  {
+   "after_s": 20,
+   "seat": "fx-u-inj124745"
+  },
+  {
+   "after_s": 40,
+   "exec": [
+    "/usr/bin/env",
+    "HOME=/tmp/p13inj-NWlJh7/root/home",
+    "/tmp/p13inj-NWlJh7/root/home/.config/agent-deck/notify-claude",
+    "decision"
+   ],
+   "ledger": "/tmp/p13inj-NWlJh7/root/home/.local/share/agent-deck/escalations.jsonl",
+   "ledger_kind": "decision",
+   "resolve_cmd": [
+    "/usr/bin/env",
+    "HOME=/tmp/p13inj-NWlJh7/root/home",
+    "/tmp/p13inj-NWlJh7/root/home/.config/agent-deck/escalation-resolve"
+   ]
+  }
+ ],
+ "decision_responders": [
+  "claude"
+ ]
+}
