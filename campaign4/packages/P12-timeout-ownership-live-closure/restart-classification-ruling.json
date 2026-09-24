@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-24T02:18:16.937941+00:00",
+  "signer": "tern",
+  "action": "P12-live-measurement-1",
+  "evidence_sha256": "7548eec6edeea2fd735fc36e97cba0145c112290bfeb488b6ac20e3bd9bbca7d",
+  "finding": "Confirmed product classification limitation: saved exact-unit journal has repeated starts/counters1-4 and Start request repeated too quickly while result remains exit-code. Prior review no-product-defect conclusion narrowed; original preserved.",
+  "decision": "Prospective amendment L4a/L4b may accept product alarm state crashed OR restart-loop with independent causal evidence of the required restart-loop injection. Preserve actual observed state; never relabel crashed as restart-loop. Product remains frozen.",
+  "reason": "Required safety behavior is detection and owned bounded escalation/recovery of repeated start failure. Precise subtype is diagnostic, provided independently evidenced and actual state stays visible. This permits live proof, not retrospective qualification.",
+  "acceptance": [
+    "Exact fixture unit and fresh injection window: independently show repeated starts/restart counters and rate-limit refusal consistent with configured burst/interval. Deduplicate repeated snapshot journal lines. An arbitrary single crash, unrelated unit, stale window or merely NRestarts threshold is insufficient.",
+    "Verify actual product alarm is crashed or restart-loop, with correct incident/run correlation. L4a duty acknowledgement owner/next/deadline and recovery still required. L4b unavailable duty confirmed, director delivery+recorded acknowledgement still required. Existing timing bounds unchanged.",
+    "Saved-raw tests demonstrate old measurement contradiction and new prospective predicate, including single-crash/stale/wrong-unit/missing-onset negatives. Live1 NOT READY unchanged; fresh retest required.",
+    "Record classification limitation in claim and live report/known limits. Do not claim systemd258 universally uses this result based on one host trace."
+  ],
+  "allocation": "Within existing author grant/deadline03:16:28Z and independent25m review. No source edit, new grant or reset."
+}
