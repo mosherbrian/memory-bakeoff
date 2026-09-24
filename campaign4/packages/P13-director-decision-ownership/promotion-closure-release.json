@@ -1,0 +1,30 @@
+{
+  "action": "P13-promotion-closure-1",
+  "signer": "tern",
+  "author": "claude",
+  "start": "2026-09-24T20:06:52.779574+00:00",
+  "deadline": "2026-09-24T20:21:52Z",
+  "disposition": "Independent live4 PASS accepted for qualified candidate; promotion withheld solely for concrete plan closure",
+  "live_review_sha256": "4cf89b2c4616942b5f8f59e10f3750a62bb407d2d7e99dadf53030decf860d33",
+  "allocation": {
+    "prior_ceiling": 820,
+    "author": 15,
+    "review": 10,
+    "new_ceiling": 845,
+    "promotion10": "existing held grant unchanged"
+  },
+  "claim_path": "/var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/promotion-closure-claim.json",
+  "findings": [
+    "Installed escalation-resolve absent. Current script cp -a requires it and rollback requires archive file; cannot promote from real baseline.",
+    "Script waits120s for always-active service/timer before stopping; archive/restore claims exact ownership but rollback enables unconditionally. Affected checker-failed and watcher service can race script/config replacement.",
+    "Postcondition runs liveness after60s then labels fresh-pass validated without comparing new invocation/ledger pass or explicit required policy."
+  ],
+  "requirements": [
+    "Plan-only fix; frozen live-qualified binary47f69dfd/source/adapters unchanged. No production writes/services author effects; read-only baseline inspection authorized.",
+    "Snapshot presence/absence, content/hash/mode and exact active/enabled ownership before changes. Restore absent original by removing introduced exact file, never fabricate original. Include installed binary/config/watcher/resolver and changed service state.",
+    "Stop relevant timers first, stop/drain loop, checker, checker-failed and watcher service under bounded time; avoid waiting on a running loop to stop itself. Resume captured intended ownership. Every partial mutation failure rolls back, guard failure before mutation leaves baseline untouched. Total promotion fits10min.",
+    "After install verify binary/adapters/config exact pins, required0/300/600 policy, new invocation fresh successful pass and healthy checker. Preserve DB package decisions/deadlines, no resend. No assertion of physical exactly-once.",
+    "Exercise sandbox absent-resolver positive and failure rollback, partial install failure, exact state restoration and stale-pass rejection. Real host commands remain unexecuted by author. Archive old script and refresh canonical manifest last, exact final evidence.",
+    "Return claim by bound; corvid review10 then Tern signs held promotion10. No other live rerun required for plan-only correction."
+  ]
+}
