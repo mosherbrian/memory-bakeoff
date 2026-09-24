@@ -75,3 +75,7 @@ binary, as the release. Claude ports reusable core/host building blocks and
 builds NEW `run/status/stop` entrypoints. The fixture runner/P6 timing gates stay
 Python. Component conformance is not whole-product parity; P8 must qualify the
 shipping binary. See [release decision](GO-RELEASE-TARGET-20260923.md).
+
+## P13 production update — 2026-09-24
+
+Adopted Go agent-loop is now source `df5e6fc627b8`, installed binary `47f69dfd…`, with required director-decision ownership. [Acceptance](packages/P13-director-decision-ownership/acceptance.json) binds independent live proof, promotion review, installed result and rollback. The Python packages remain historical reference/proof tooling. No P13 fixture receiver is production code.
