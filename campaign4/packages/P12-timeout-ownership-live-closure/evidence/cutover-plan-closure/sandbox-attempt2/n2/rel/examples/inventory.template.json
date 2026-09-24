@@ -1,0 +1,13 @@
+{
+  "note": "Pointers, not authority: each item names a recorded file and its sha256. A missing or changed file shows as UNKNOWN or CONFLICT. A decision stays pending until resolved_by names a file that exists with its pinned hash.",
+  "items": [
+    {"id": "<id>", "kind": "ruling", "title": "<a decision already recorded>", "status": "<status copied verbatim>",
+     "source": "<path>", "sha256": "<sha256>"},
+    {"id": "<id>", "kind": "qualification", "title": "<what was qualified>", "status": "<status copied verbatim from the source>",
+     "source": "<path, relative to --base>", "sha256": "<sha256 of that file>"},
+    {"id": "<id>", "kind": "decision", "title": "<short name>", "status": "OPEN", "owner": "<seat>",
+     "question": "<the exact question>", "dependents": ["<what waits on it>"], "next_action": "<who does what>",
+     "source": "<path>", "sha256": "<sha256>",
+     "resolved_by": {"source": "<path of the recorded answer, once it exists>", "sha256": "<sha256>"}}
+  ]
+}

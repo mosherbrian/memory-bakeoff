@@ -1,0 +1,23 @@
+2026-09-24T03:48:17.809Z cli/unit preflight ok: commands, 4 units, OnFailure wiring, handler command
+2026-09-24T03:48:17.862Z seat identity ok: kiln/corvid/tern/cairn ids registered in campaign4 under their titles
+2026-09-24T03:48:17.863Z + systemctl --user disable --now openwork.timer coax-dry.timer shadow-watch.timer
+2026-09-24T03:48:17.863Z + systemctl --user stop campaign4-watch.timer
+2026-09-24T03:48:17.869Z drained openwork.service: inactive
+2026-09-24T03:48:17.874Z drained coax-dry.service: inactive
+2026-09-24T03:48:17.878Z drained shadow-watch.service: inactive
+2026-09-24T03:48:17.882Z drained campaign4-watch.service: inactive
+2026-09-24T03:48:17.883Z + env AGENTDECK_PROFILE=campaign4 /home/bmosher/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover dry-closure1] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry).
+2026-09-24T03:48:17.884Z + install -m 755 /home/bmosher/.local/bin/agent-loop /home/bmosher/.local/bin/agent-loop.prev-c124d82
+2026-09-24T03:48:17.885Z + install -m 755 /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/agent-loop /home/bmosher/.local/bin/agent-loop
+2026-09-24T03:48:17.887Z + mkdir -p /home/bmosher/.config/agent-loop /home/bmosher/.local/share/agent-loop /home/bmosher/.local/share/agent-loop/campaign4/claims
+2026-09-24T03:48:17.888Z + write /home/bmosher/.config/agent-loop/campaign4.json
+2026-09-24T03:48:17.889Z + cp /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/../examples/systemd-unqualified/agent-loop@.service /home/bmosher/.config/systemd/user/agent-loop@.service
+2026-09-24T03:48:17.889Z + cp /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/../examples/systemd-unqualified/agent-loop-liveness@.service /home/bmosher/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:48:17.890Z + cp /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/../examples/systemd-unqualified/agent-loop-liveness@.timer /home/bmosher/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:48:17.891Z + cp /home/bmosher/projects/agent-loop-releases/agent-loop-8ad12b86fa82/bin/../examples/systemd-unqualified/agent-loop-liveness-failed@.service /home/bmosher/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:48:17.892Z + systemctl --user daemon-reload
+2026-09-24T03:48:17.892Z + /home/bmosher/.local/bin/agent-loop check --config /home/bmosher/.config/agent-loop/campaign4.json
+2026-09-24T03:48:17.894Z + systemctl --user enable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:48:17.894Z + systemctl --user start agent-loop-liveness@campaign4.service
+2026-09-24T03:48:17.895Z + systemctl --user list-timers --all --no-pager
+switch	PASS	2026-09-24T03:48:17.896Z	old owners off and drained; 4 units installed (bytes = release, OnFailure wired); a fresh pass by the current run; outside check rest; one owner

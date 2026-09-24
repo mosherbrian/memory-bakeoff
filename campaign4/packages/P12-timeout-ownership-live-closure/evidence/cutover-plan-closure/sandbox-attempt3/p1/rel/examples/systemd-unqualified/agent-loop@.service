@@ -1,0 +1,27 @@
+# UNQUALIFIED EXAMPLE - SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE.
+# P8 ended NOT READY: this supervision has known liveness blockers (docs/SUPERVISED-PREVIEW.md).
+# Nothing installs or enables this file. Do not rely on it for unattended operation.
+# agent-loop for one project: %i is the config name in ~/.config/agent-loop/%i.json.
+# Restart=always recovers a crash or a watchdog kill; exit 64 is an
+# intentional `agent-loop stop` and is neither restarted nor a failure.
+# The start limit turns a restart loop into a failed unit, which the
+# outside check (agent-loop-liveness@%i.timer) escalates.
+[Unit]
+Description=agent-loop %i
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecStart=%h/.local/bin/agent-loop run --config %h/.config/agent-loop/%i.json
+Restart=always
+RestartSec=5
+RestartPreventExitStatus=64
+SuccessExitStatus=64
+WatchdogSec=90
+TimeoutStartSec=60
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

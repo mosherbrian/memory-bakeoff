@@ -1,0 +1,21 @@
+# UNQUALIFIED EXAMPLE - SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE.
+# P8 ended NOT READY: this supervision has known liveness blockers (docs/SUPERVISED-PREVIEW.md).
+# Nothing installs or enables this file. Do not rely on it for unattended operation.
+# The outside liveness check for agent-loop@%i. A separate process and unit:
+# it keeps running when run exits, hangs or restart-loops. Bounded: systemctl
+# show 2 s, wake 2.5 s, ledger read 1 s.
+# P12-checker-ownership-1: the check's own failures are owned by a separate handler that
+# needs neither the ledger lock nor a healthy run or check: a nonzero exit (also a check
+# that could not take the ledger lock in 10 s: it records a pending check and fails),
+# a killed check, or a hung one (killed at TimeoutStartSec) starts
+# agent-loop-liveness-failed@%i. Worst case of one check: systemctl 2 s + alarms 2 x 2.5 s
+# + lock wait 10 s + hold 10.5 s + ledger read 1 s = 28.5 s < 35 s. A tick that finds the
+# check still running is skipped by the timer; the check never overlaps itself.
+[Unit]
+Description=agent-loop %i liveness check
+OnFailure=agent-loop-liveness-failed@%i.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/agent-loop liveness --config %h/.config/agent-loop/%i.json
+TimeoutStartSec=35

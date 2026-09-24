@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "$*" >> /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n1/systemctl.log
+last=${@: -1}
+case " $* " in
+  *" is-active "*) grep -qx "$last active" /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n1/active 2>/dev/null && echo active || echo inactive;;
+  *" is-enabled "*) grep -qx "$last enabled" /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n1/enabled 2>/dev/null && echo enabled || echo disabled;;
+  *" disable "*) [ -e /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n1/fail-disable ] && exit 1; for u in "$@"; do sed -i "/^$u /d" /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n1/active /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n1/enabled 2>/dev/null; done;;
+  *" show "*) echo;;
+esac
+exit 0

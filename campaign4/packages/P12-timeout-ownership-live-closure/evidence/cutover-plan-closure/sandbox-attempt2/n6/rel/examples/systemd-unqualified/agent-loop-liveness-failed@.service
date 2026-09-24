@@ -1,0 +1,15 @@
+# UNQUALIFIED EXAMPLE - SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE.
+# Nothing installs or enables this file. Do not rely on it for unattended operation.
+# P12-checker-ownership-1: OnFailure handler of agent-loop-liveness@%i. It takes no ledger
+# lock: it reads the failed check's systemd result (2 s), records one checker incident
+# (<db>.checker-incident.json), tells duty at once (wake bounded 5 s), and tells the
+# director when duty's wake is not accepted or the incident still fails 60 s after duty
+# was told (5 s). Worst case 2 + 5 + 5 = 12 s < 20 s. It has no OnFailure of its own
+# (no recursion). Not covered: the timer not firing, or the user manager being down.
+[Unit]
+Description=agent-loop %i liveness check failure handler
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/agent-loop checker-failed --config %h/.config/agent-loop/%i.json --unit agent-loop-liveness@%i.service
+TimeoutStartSec=20

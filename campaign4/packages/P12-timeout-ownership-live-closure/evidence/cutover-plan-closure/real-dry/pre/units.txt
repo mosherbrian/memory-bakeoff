@@ -1,0 +1,356 @@
+== openwork.timer
+# /home/bmosher/.config/systemd/user/openwork.timer -> /var/home/bmosher/.config/systemd/user/openwork.timer
+[Unit]
+Description=Ask every 2 minutes whether any dispatched work has an idle worker
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=2min
+AccuracySec=15s
+Unit=openwork.service
+
+[Install]
+WantedBy=timers.target
+enabled=enabled
+active=active
+TimersMonotonic={ OnUnitActiveUSec=2min ; next_elapse=4d 21h 12.357544s }
+TimersMonotonic={ OnBootUSec=2min ; next_elapse=2min }
+NextElapseUSecRealtime=
+== coax-dry.timer
+# /home/bmosher/.config/systemd/user/coax-dry.timer -> /var/home/bmosher/.config/systemd/user/coax-dry.timer
+[Unit]
+Description=Run agent-loop coax (dry) every minute
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1min
+AccuracySec=10s
+Unit=coax-dry.service
+
+[Install]
+WantedBy=timers.target
+enabled=enabled
+active=active
+TimersMonotonic={ OnUnitActiveUSec=1min ; next_elapse=4d 21h 7.354515s }
+TimersMonotonic={ OnBootUSec=3min ; next_elapse=3min }
+NextElapseUSecRealtime=
+== shadow-watch.timer
+# /home/bmosher/.config/systemd/user/shadow-watch.timer -> /var/home/bmosher/.config/systemd/user/shadow-watch.timer
+[Unit]
+Description=Run the agent-loop shadow every 15 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+AccuracySec=1min
+Unit=shadow-watch.service
+
+[Install]
+WantedBy=timers.target
+enabled=enabled
+active=active
+TimersMonotonic={ OnUnitActiveUSec=15min ; next_elapse=4d 21h 9min 42.356566s }
+TimersMonotonic={ OnBootUSec=5min ; next_elapse=5min }
+NextElapseUSecRealtime=
+== openwork.service
+# /home/bmosher/.config/systemd/user/openwork.service -> /var/home/bmosher/.config/systemd/user/openwork.service
+[Unit]
+Description=Open dispatch with an idle worker is a stall, detected now rather than in 45 minutes
+
+[Service]
+Type=oneshot
+Environment=AGENTDECK_PROFILE=campaign4
+ExecStart=%h/.config/agent-deck/openwork
+# rc=1 means "found a stall and said so", which is success for this unit.
+SuccessExitStatus=0 1
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=static
+active=inactive
+== coax-dry.service
+# /home/bmosher/.config/systemd/user/coax-dry.service -> /var/home/bmosher/.config/systemd/user/coax-dry.service
+[Unit]
+Description=agent-loop coax, LIVE: wake cairn when a worker's turn ended with no result recorded (openwork still runs beside it for comparison)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/agent-loop coax --live --notify %h/.config/agent-deck/notify-claude
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=static
+active=inactive
+== shadow-watch.service
+# /home/bmosher/.config/systemd/user/shadow-watch.service -> /var/home/bmosher/.config/systemd/user/shadow-watch.service
+[Unit]
+Description=Replay the live campaign ledger through the Go agent-loop core (observe only); report new disagreements
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/agent-deck/shadow-watch
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=static
+active=inactive
+== campaign4-watch.service
+# /run/user/1000/systemd/transient/campaign4-watch.service
+# This is a transient unit file, created programmatically via the systemd API. Do not edit.
+[Unit]
+Description=[systemd-run] /home/bmosher/.config/agent-deck/campaign4-watch
+
+[Service]
+ExecStart=
+ExecStart="/home/bmosher/.config/agent-deck/campaign4-watch"
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=transient
+active=inactive
+== campaign4-watch.timer
+# /run/user/1000/systemd/transient/campaign4-watch.timer
+# This is a transient unit file, created programmatically via the systemd API. Do not edit.
+[Unit]
+Description=[systemd-run] /home/bmosher/.config/agent-deck/campaign4-watch
+
+[Timer]
+OnActiveSec=45min
+OnUnitActiveSec=45min
+AccuracySec=1s
+RemainAfterElapse=no
+enabled=transient
+active=active
+TimersMonotonic={ OnUnitActiveUSec=45min ; next_elapse=4d 21h 43min 37.354318s }
+TimersMonotonic={ OnActiveUSec=45min ; next_elapse=4d 8h 50min 9.194343s }
+NextElapseUSecRealtime=
+== openwork.timer
+# /home/bmosher/.config/systemd/user/openwork.timer -> /var/home/bmosher/.config/systemd/user/openwork.timer
+[Unit]
+Description=Ask every 2 minutes whether any dispatched work has an idle worker
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=2min
+AccuracySec=15s
+Unit=openwork.service
+
+[Install]
+WantedBy=timers.target
+enabled=enabled
+active=active
+TimersMonotonic={ OnUnitActiveUSec=2min ; next_elapse=4d 21h 12.357544s }
+TimersMonotonic={ OnBootUSec=2min ; next_elapse=2min }
+NextElapseUSecRealtime=
+== coax-dry.timer
+# /home/bmosher/.config/systemd/user/coax-dry.timer -> /var/home/bmosher/.config/systemd/user/coax-dry.timer
+[Unit]
+Description=Run agent-loop coax (dry) every minute
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1min
+AccuracySec=10s
+Unit=coax-dry.service
+
+[Install]
+WantedBy=timers.target
+enabled=enabled
+active=active
+TimersMonotonic={ OnUnitActiveUSec=1min ; next_elapse=4d 21h 7.354515s }
+TimersMonotonic={ OnBootUSec=3min ; next_elapse=3min }
+NextElapseUSecRealtime=
+== shadow-watch.timer
+# /home/bmosher/.config/systemd/user/shadow-watch.timer -> /var/home/bmosher/.config/systemd/user/shadow-watch.timer
+[Unit]
+Description=Run the agent-loop shadow every 15 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+AccuracySec=1min
+Unit=shadow-watch.service
+
+[Install]
+WantedBy=timers.target
+enabled=enabled
+active=active
+TimersMonotonic={ OnUnitActiveUSec=15min ; next_elapse=4d 21h 9min 42.356566s }
+TimersMonotonic={ OnBootUSec=5min ; next_elapse=5min }
+NextElapseUSecRealtime=
+== openwork.service
+# /home/bmosher/.config/systemd/user/openwork.service -> /var/home/bmosher/.config/systemd/user/openwork.service
+[Unit]
+Description=Open dispatch with an idle worker is a stall, detected now rather than in 45 minutes
+
+[Service]
+Type=oneshot
+Environment=AGENTDECK_PROFILE=campaign4
+ExecStart=%h/.config/agent-deck/openwork
+# rc=1 means "found a stall and said so", which is success for this unit.
+SuccessExitStatus=0 1
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=static
+active=inactive
+== coax-dry.service
+# /home/bmosher/.config/systemd/user/coax-dry.service -> /var/home/bmosher/.config/systemd/user/coax-dry.service
+[Unit]
+Description=agent-loop coax, LIVE: wake cairn when a worker's turn ended with no result recorded (openwork still runs beside it for comparison)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/agent-loop coax --live --notify %h/.config/agent-deck/notify-claude
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=static
+active=inactive
+== shadow-watch.service
+# /home/bmosher/.config/systemd/user/shadow-watch.service -> /var/home/bmosher/.config/systemd/user/shadow-watch.service
+[Unit]
+Description=Replay the live campaign ledger through the Go agent-loop core (observe only); report new disagreements
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/agent-deck/shadow-watch
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=static
+active=inactive
+== campaign4-watch.service
+# /run/user/1000/systemd/transient/campaign4-watch.service
+# This is a transient unit file, created programmatically via the systemd API. Do not edit.
+[Unit]
+Description=[systemd-run] /home/bmosher/.config/agent-deck/campaign4-watch
+
+[Service]
+ExecStart=
+ExecStart="/home/bmosher/.config/agent-deck/campaign4-watch"
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+enabled=transient
+active=inactive
+== campaign4-watch.timer
+# /run/user/1000/systemd/transient/campaign4-watch.timer
+# This is a transient unit file, created programmatically via the systemd API. Do not edit.
+[Unit]
+Description=[systemd-run] /home/bmosher/.config/agent-deck/campaign4-watch
+
+[Timer]
+OnActiveSec=45min
+OnUnitActiveSec=45min
+AccuracySec=1s
+RemainAfterElapse=no
+enabled=transient
+active=active
+TimersMonotonic={ OnUnitActiveUSec=45min ; next_elapse=4d 21h 43min 37.354318s }
+TimersMonotonic={ OnActiveUSec=45min ; next_elapse=4d 8h 50min 9.194343s }
+NextElapseUSecRealtime=

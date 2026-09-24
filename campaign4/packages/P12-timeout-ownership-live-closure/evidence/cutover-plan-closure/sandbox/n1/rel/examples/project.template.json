@@ -1,0 +1,21 @@
+{
+  "note": "TEMPLATE. Replace every <...> value; `agent-loop check --config FILE` refuses a seat whose session id is not registered under that seat's name.",
+  "project": "<project-name>",
+  "profile": "<agent-deck-profile>",
+  "wake": "<path to the wake script>",
+  "db": "<private path>/<project-name>.db",
+  "stream_dir": "<runtime stream directory, e.g. ~/.config/agent-deck/acp-stream>",
+  "claims_dir": "<private path>/claims",
+  "artifacts_dir": "<directory claim artifact paths are relative to>",
+  "director": "<director seat name>",
+  "duty": "<duty seat name: not the worker or verifier of any package>",
+  "seats": {
+    "<worker seat name>": "<worker session id>",
+    "<verifier seat name>": "<verifier session id>",
+    "<director seat name>": "<director session id>"
+  },
+  "bin": "<private prefix>/bin/agent-loop",
+  "unit": "<optional: systemd user unit running `agent-loop run`>",
+  "max_verify_s": 7200,
+  "decision_window_s": 86400
+}

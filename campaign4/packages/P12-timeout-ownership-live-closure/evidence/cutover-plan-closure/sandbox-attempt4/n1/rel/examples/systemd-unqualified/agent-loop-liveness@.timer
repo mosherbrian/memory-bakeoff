@@ -1,0 +1,19 @@
+# UNQUALIFIED EXAMPLE - SUPERVISED PREVIEW / NOT QUALIFIED FOR UNATTENDED USE.
+# P8 ended NOT READY: this supervision has known liveness blockers (docs/SUPERVISED-PREVIEW.md).
+# Nothing installs or enables this file. Do not rely on it for unattended operation.
+# Every 45 s, on time: a 100 s stale threshold then detects within 150 s,
+# inside the 180 s suspicion bound.
+[Unit]
+Description=agent-loop %i liveness check timer
+
+[Timer]
+# Every 30 s at fixed UTC wall-clock seconds (:00 and :30). A calendar schedule is
+# not restarted by daemon-reload; OnActiveSec/OnUnitActiveSec were (P12 measured:
+# 0 checks in 300 s with a reload every 20 s).
+OnCalendar=*-*-* *:*:00,30 UTC
+Persistent=false
+AccuracySec=1s
+RandomizedDelaySec=0
+
+[Install]
+WantedBy=timers.target

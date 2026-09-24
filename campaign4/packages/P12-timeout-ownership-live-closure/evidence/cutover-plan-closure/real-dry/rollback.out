@@ -1,0 +1,17 @@
+2026-09-24T03:48:17.904Z + systemctl --user disable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:48:17.915Z drained agent-loop-liveness@campaign4.service: inactive
+2026-09-24T03:48:17.919Z drained agent-loop-liveness-failed@campaign4.service: inactive
+2026-09-24T03:48:17.921Z + rm -f /home/bmosher/.config/systemd/user/agent-loop@.service
+2026-09-24T03:48:17.922Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:48:17.923Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:48:17.925Z + rm -f /home/bmosher/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:48:17.925Z + systemctl --user daemon-reload
+2026-09-24T03:48:17.926Z + systemctl --user enable openwork.timer
+2026-09-24T03:48:17.927Z + systemctl --user start openwork.timer
+2026-09-24T03:48:17.928Z + systemctl --user enable coax-dry.timer
+2026-09-24T03:48:17.928Z + systemctl --user start coax-dry.timer
+2026-09-24T03:48:17.929Z + systemctl --user enable shadow-watch.timer
+2026-09-24T03:48:17.930Z + systemctl --user start shadow-watch.timer
+2026-09-24T03:48:17.931Z + systemd-run --user --unit=campaign4-watch --on-active=45min --on-unit-active=45min /home/bmosher/.config/agent-deck/campaign4-watch
+2026-09-24T03:48:17.931Z + env AGENTDECK_PROFILE=campaign4 /home/bmosher/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover dry-closure1] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): /home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/evidence/cutover-plan-closure/real-dry/rollback/open-items.json
+rollback	PASS	2026-09-24T03:48:17.932Z	rolled back: old owners active, agent-loop off, open items handed to cairn

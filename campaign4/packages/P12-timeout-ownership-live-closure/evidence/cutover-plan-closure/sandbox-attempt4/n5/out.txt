@@ -1,0 +1,48 @@
+cp: cannot stat '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/memory-bake-off/campaign4/control-events.tsv': No such file or directory
+tail: cannot open '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/.local/share/agent-deck/wake-send.log' for reading: No such file or directory
+2026-09-24T03:47:28.565Z cli/unit preflight ok: commands, 4 units, OnFailure wiring, handler command
+capture	PASS	2026-09-24T03:47:28.567Z	prior state captured in /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/ev/pre (state.tsv: 4 units; 0 existing unit files kept)
+2026-09-24T03:47:28.574Z + systemctl --user disable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:47:28.578Z   rc=0
+2026-09-24T03:47:28.586Z drained agent-loop-liveness@campaign4.service: inactive
+2026-09-24T03:47:28.591Z drained agent-loop-liveness-failed@campaign4.service: inactive
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "/usr/lib64/python3.14/json/__init__.py", line 298, in load
+    return loads(fp.read(),
+        cls=cls, object_hook=object_hook,
+        parse_float=parse_float, parse_int=parse_int,
+        parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+  File "/usr/lib64/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib64/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2026-09-24T03:47:28.622Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/.config/systemd/user/agent-loop@.service
+2026-09-24T03:47:28.623Z   rc=0
+2026-09-24T03:47:28.624Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:47:28.626Z   rc=0
+2026-09-24T03:47:28.627Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:47:28.628Z   rc=0
+2026-09-24T03:47:28.629Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:47:28.630Z   rc=0
+2026-09-24T03:47:28.631Z + systemctl --user daemon-reload
+2026-09-24T03:47:28.633Z   rc=0
+2026-09-24T03:47:28.634Z + systemctl --user enable openwork.timer
+2026-09-24T03:47:28.635Z   rc=0
+2026-09-24T03:47:28.636Z + systemctl --user start openwork.timer
+2026-09-24T03:47:28.637Z   rc=0
+2026-09-24T03:47:28.638Z + systemctl --user enable coax-dry.timer
+2026-09-24T03:47:28.640Z   rc=0
+2026-09-24T03:47:28.640Z + systemctl --user enable shadow-watch.timer
+2026-09-24T03:47:28.642Z   rc=0
+2026-09-24T03:47:28.642Z + systemctl --user start shadow-watch.timer
+2026-09-24T03:47:28.644Z   rc=0
+2026-09-24T03:47:28.645Z campaign4-watch was inactive at capture: not recreated
+2026-09-24T03:47:28.645Z + env AGENTDECK_PROFILE=campaign4 /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/home/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover reh-n5] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/n5/ev/rollback/open-items.json
+2026-09-24T03:47:28.647Z   rc=0
+rollback	PASS	2026-09-24T03:47:28.651Z	rolled back: old owners active, agent-loop off, open items handed to cairn

@@ -1,0 +1,49 @@
+cp: cannot stat '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/memory-bake-off/campaign4/control-events.tsv': No such file or directory
+tail: cannot open '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/share/agent-deck/wake-send.log' for reading: No such file or directory
+2026-09-24T03:47:27.856Z cli/unit preflight ok: commands, 4 units, OnFailure wiring, handler command
+capture	PASS	2026-09-24T03:47:27.858Z	prior state captured in /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/ev/pre (state.tsv: 4 units; 0 existing unit files kept)
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/memory-bake-off/campaign4/control-events.tsv'
+2026-09-24T03:47:27.911Z cli/unit preflight ok: commands, 4 units, OnFailure wiring, handler command
+2026-09-24T03:47:27.925Z seat identity ok: kiln/corvid/tern/cairn ids registered in campaign4 under their titles
+2026-09-24T03:47:27.926Z + systemctl --user disable --now openwork.timer coax-dry.timer shadow-watch.timer
+2026-09-24T03:47:27.927Z + systemctl --user stop campaign4-watch.timer
+2026-09-24T03:47:27.930Z drained openwork.service: inactive
+2026-09-24T03:47:27.932Z drained coax-dry.service: inactive
+2026-09-24T03:47:27.935Z drained shadow-watch.service: inactive
+2026-09-24T03:47:27.938Z drained campaign4-watch.service: inactive
+2026-09-24T03:47:27.939Z + env AGENTDECK_PROFILE=campaign4 /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover reh-p1] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry).
+2026-09-24T03:47:27.939Z + install -m 755 /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/bin/agent-loop /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/bin/agent-loop.prev-c124d82
+2026-09-24T03:47:27.940Z + install -m 755 /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/rel/bin/agent-loop /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/bin/agent-loop
+2026-09-24T03:47:27.942Z + mkdir -p /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-loop /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/share/agent-loop /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/share/agent-loop/campaign4/claims
+2026-09-24T03:47:27.943Z + write /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-loop/campaign4.json
+2026-09-24T03:47:27.943Z + cp /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/rel/bin/../examples/systemd-unqualified/agent-loop@.service /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop@.service
+2026-09-24T03:47:27.944Z + cp /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/rel/bin/../examples/systemd-unqualified/agent-loop-liveness@.service /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:47:27.945Z + cp /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/rel/bin/../examples/systemd-unqualified/agent-loop-liveness@.timer /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:47:27.946Z + cp /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/rel/bin/../examples/systemd-unqualified/agent-loop-liveness-failed@.service /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:47:27.946Z + systemctl --user daemon-reload
+2026-09-24T03:47:27.947Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/bin/agent-loop check --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-loop/campaign4.json
+2026-09-24T03:47:27.948Z + systemctl --user enable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:47:27.949Z + systemctl --user start agent-loop-liveness@campaign4.service
+2026-09-24T03:47:27.950Z + systemctl --user list-timers --all --no-pager
+switch	PASS	2026-09-24T03:47:27.951Z	old owners off and drained; 4 units installed (bytes = release, OnFailure wired); a fresh pass by the current run; outside check rest; one owner
+2026-09-24T03:47:27.954Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/bin/agent-loop dispatch --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-loop/campaign4.json --qid P12-production-handoff-1 --worker kiln --verifier corvid --duration 20m --verify-window 10m --task @/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/handoff-task.md --verify-task @/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/handoff-verify.md
+handoff	PASS	2026-09-24T03:47:27.955Z	P12-production-handoff-1 dispatched through agent-loop; Tern decides with: /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.local/bin/agent-loop decide --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-loop/campaign4.json --qid P12-production-handoff-1 --kind question_answered --ref <record> --reason <text>
+2026-09-24T03:47:27.959Z + systemctl --user disable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:47:27.964Z drained agent-loop-liveness@campaign4.service: inactive
+2026-09-24T03:47:27.967Z drained agent-loop-liveness-failed@campaign4.service: inactive
+2026-09-24T03:47:27.969Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop@.service
+2026-09-24T03:47:27.970Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:47:27.971Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:47:27.973Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:47:27.973Z + systemctl --user daemon-reload
+2026-09-24T03:47:27.974Z + systemctl --user enable openwork.timer
+2026-09-24T03:47:27.975Z + systemctl --user start openwork.timer
+2026-09-24T03:47:27.976Z + systemctl --user enable coax-dry.timer
+2026-09-24T03:47:27.976Z + systemctl --user start coax-dry.timer
+2026-09-24T03:47:27.977Z + systemctl --user enable shadow-watch.timer
+2026-09-24T03:47:27.978Z + systemctl --user start shadow-watch.timer
+2026-09-24T03:47:27.979Z campaign4-watch was inactive at capture: not recreated
+2026-09-24T03:47:27.979Z + env AGENTDECK_PROFILE=campaign4 /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/home/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover reh-p1] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-0Q02/p1/ev/rollback/open-items.json
+rollback	PASS	2026-09-24T03:47:27.980Z	rolled back: old owners active, agent-loop off, open items handed to cairn

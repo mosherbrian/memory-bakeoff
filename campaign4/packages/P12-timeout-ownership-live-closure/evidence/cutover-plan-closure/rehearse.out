@@ -1,0 +1,25 @@
+ok	capture PASS with all 4 units	want=0	got=0
+ok	state.tsv rows (3 timers + campaign4-watch)	want=4	got=4
+ok	captured openwork.timer enabled+active	want=openwork.timer	enabled	active	got=openwork.timer	enabled	active
+ok	DRY switch rc	want=0	got=0
+ok	DRY handoff rc	want=0	got=0
+ok	DRY rollback rc	want=0	got=0
+ok	DRY switch copies all 4 units	want=4	got=4
+ok	NEG missing handler: capture rc	want=3	got=3
+ok	NEG missing handler: reason	want=1	got=1
+ok	NEG missing handler: no systemctl effect (only read-only queries)	want=0	got=0
+ok	NEG no OnFailure wiring: capture rc	want=3	got=3
+ok	NEG wrong handler command: capture rc	want=3	got=3
+ok	NEG failed required command: switch rc	want=3	got=3
+ok	NEG failed required command: no switch PASS row	want=0	got=0
+ok	NEG failed required command: reason	want=1	got=1
+ok	rollback rc	want=0	got=0
+ok	rollback drains the handler before enabling old owners	want=yes	got=yes
+ok	rollback starts only captured-active timers (coax-dry was inactive)	want=0	got=0
+ok	rollback re-enables captured-enabled coax-dry	want=1	got=1
+ok	rollback removes unit files the cutover added	want=0	got=0
+ok	rollback does not recreate campaign4-watch (inactive at capture)	want=0	got=0
+ok	NEG seat identity: switch rc	want=3	got=3
+ok	NEG seat identity: no disable ran	want=0	got=0
+ok	NEG rollback without state.tsv: rc	want=3	got=3
+TOTAL 24 checks, 0 wrong

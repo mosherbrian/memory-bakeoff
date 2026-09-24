@@ -1,0 +1,26 @@
+cp: cannot stat '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/memory-bake-off/campaign4/control-events.tsv': No such file or directory
+tail: cannot open '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.local/share/agent-deck/wake-send.log' for reading: No such file or directory
+2026-09-24T03:46:03.846Z FAILED: qualified binary lacks the 'timeout-ack' command
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/memory-bake-off/campaign4/control-events.tsv'
+2026-09-24T03:46:03.893Z FAILED: qualified binary lacks the 'timeout-ack' command
+2026-09-24T03:46:03.898Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.local/bin/agent-loop dispatch --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/agent-loop/campaign4.json --qid P12-production-handoff-1 --worker kiln --verifier corvid --duration 20m --verify-window 10m --task @/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/handoff-task.md --verify-task @/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure/plans/tasks/handoff-verify.md
+handoff	PASS	2026-09-24T03:46:03.899Z	P12-production-handoff-1 dispatched through agent-loop; Tern decides with: /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.local/bin/agent-loop decide --config /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/agent-loop/campaign4.json --qid P12-production-handoff-1 --kind question_answered --ref <record> --reason <text>
+2026-09-24T03:46:03.903Z + systemctl --user disable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:46:03.909Z drained agent-loop-liveness@campaign4.service: inactive
+2026-09-24T03:46:03.912Z drained agent-loop-liveness-failed@campaign4.service: inactive
+2026-09-24T03:46:03.913Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/systemd/user/agent-loop@.service
+2026-09-24T03:46:03.915Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:46:03.916Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:46:03.918Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:46:03.918Z + systemctl --user daemon-reload
+2026-09-24T03:46:03.919Z + systemctl --user enable openwork.timer
+2026-09-24T03:46:03.920Z + systemctl --user start openwork.timer
+2026-09-24T03:46:03.921Z + systemctl --user enable coax-dry.timer
+2026-09-24T03:46:03.922Z + systemctl --user start coax-dry.timer
+2026-09-24T03:46:03.922Z + systemctl --user enable shadow-watch.timer
+2026-09-24T03:46:03.923Z + systemctl --user start shadow-watch.timer
+2026-09-24T03:46:03.924Z campaign4-watch was inactive at capture: not recreated
+2026-09-24T03:46:03.925Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/home/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover reh-p1] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-EapK/p1/ev/rollback/open-items.json
+rollback	PASS	2026-09-24T03:46:03.925Z	rolled back: old owners active, agent-loop off, open items handed to cairn

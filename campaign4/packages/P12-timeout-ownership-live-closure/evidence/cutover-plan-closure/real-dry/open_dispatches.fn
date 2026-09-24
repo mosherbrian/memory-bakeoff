@@ -1,0 +1,15 @@
+open_dispatches() { # DISPATCHED rows in the TSV with no later result row for the same qid
+  python3 - $H/memory-bake-off/campaign4/control-events.tsv <<'PY'
+import sys
+results = {"COMPLETED","COMPLETE","INCOMPLETE","PARTIAL","PASS","FAIL","ACCEPTED","BLOCKED","CANCELLED","RETIRED",
+           "EXHAUSTED","SUPERSEDED","WITHDRAWN","FROZEN","RESOLVED","INFRA_FAILURE","PREPARED","TERMINATED",
+           "NOT-READY","BOUNDED-FAIL","CLOSED"}   # terminal verbs the P11/P12 reviews actually use (ledger 2026-09-23/24)
+openq = {}
+for line in open(sys.argv[1]):
+    f = line.rstrip("\n").split("\t")
+    if len(f) < 5: continue
+    if f[3] == "DISPATCHED": openq[f[2]] = line.strip()
+    elif f[3] in results: openq.pop(f[2], None)
+for q, l in openq.items(): print(l)
+PY
+}

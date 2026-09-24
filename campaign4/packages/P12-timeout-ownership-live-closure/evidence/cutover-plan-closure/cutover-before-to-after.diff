@@ -1,0 +1,149 @@
+19,20c19,20
+< H=/home/bmosher
+< PKG=$H/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure
+---
+> H=${CUT_HOME:-/home/bmosher}   # CUT_HOME: ONLY for offline rehearsal (a sandbox home with stub PATH); never in the signed run
+> PKG=/home/bmosher/memory-bake-off/campaign4/packages/P12-timeout-ownership-live-closure
+32a33,36
+> # P12-cutover-plan-closure-1: all FOUR qualified units, including the check's OnFailure handler (checker-ownership).
+> UNITS="agent-loop@.service agent-loop-liveness@.service agent-loop-liveness@.timer agent-loop-liveness-failed@.service"
+> NEW_FAIL=agent-loop-liveness-failed@campaign4.service
+> . "$PKG/plans/live-checks.sh"   # pass_eval, healthy_eval (the live-qualified predicates)
+36a41
+> must() { run "$@" || fail "required command failed: $*"; }   # a failed required command never ends a stage PASS
+56c61,101
+<   ok "prior state captured in $PRE"
+---
+>   # exact restorable state: one row per old unit (rollback restores exactly this, nothing more)
+>   : >"$PRE/state.tsv"; for u in $OLD_TIMERS campaign4-watch.timer; do
+>     printf '%s\t%s\t%s\n' "$u" "$(systemctl --user is-enabled "$u" 2>/dev/null || true)" "$(systemctl --user is-active "$u" 2>/dev/null || true)" >>"$PRE/state.tsv"; done
+>   # existing unit files that switch would replace are kept byte for byte
+>   mkdir -p "$PRE/units-prev"; : >"$PRE/units-prev.list"
+>   for u in $UNITS; do [ -e "$SD/$u" ] && { cp -a "$SD/$u" "$PRE/units-prev/$u"; echo "$u" >>"$PRE/units-prev.list"; }; done
+>   [ -e "$CFG" ] && cp -a "$CFG" "$PRE/config-prev.json"
+>   cli_preflight
+>   ok "prior state captured in $PRE (state.tsv: $(wc -l <"$PRE/state.tsv") units; $(wc -l <"$PRE/units-prev.list") existing unit files kept)"
+> }
+> 
+> # cli_preflight: the qualified release has every command the cutover, handoff and operator need, and all four
+> # units with the OnFailure wiring and the exact handler command. Read-only; fails the stage.
+> cli_preflight() {
+>   # each command is asked directly (the top-level help omits some, e.g. timeout-ack): a known command answers
+>   # `-h` with "Usage of CMD:"; an unknown one prints the top-level usage. Output captured whole.
+>   local c o
+>   for c in run dispatch decide claim status expose stop start liveness checker-failed liveness-ack timeout-ack check; do
+>     o=$("$QUALIFIED_BIN" "$c" -h 2>&1); case "$o" in *"Usage of $c:"*) ;; *) fail "qualified binary lacks the '$c' command";; esac; done
+>   o=$("$QUALIFIED_BIN" version 2>&1); case "$o" in ""|"usage: agent-loop COMMAND"*) fail "qualified binary lacks the 'version' command";; esac
+>   for u in $UNITS; do [ -s "$UNITS_SRC/$u" ] || fail "qualified unit $u missing from $UNITS_SRC"; done
+>   grep -qx 'OnFailure=agent-loop-liveness-failed@%i.service' "$UNITS_SRC/agent-loop-liveness@.service" || fail "the check unit lacks OnFailure=agent-loop-liveness-failed@%i.service"
+>   grep -qx 'ExecStart=%h/.local/bin/agent-loop checker-failed --config %h/.config/agent-loop/%i.json --unit agent-loop-liveness@%i.service' "$UNITS_SRC/agent-loop-liveness-failed@.service" || fail "the handler unit does not run the expected checker-failed command"
+>   for u in agent-loop@.service agent-loop-liveness@.service; do grep -q '^ExecStart=%h/.local/bin/agent-loop ' "$UNITS_SRC/$u" || fail "$u does not run %h/.local/bin/agent-loop (= $BIN)"; done
+>   log "cli/unit preflight ok: commands, 4 units, OnFailure wiring, handler command"
+> }
+> 
+> # seat_identity: every seat id in the inputs is registered in the campaign4 profile under its role title
+> # (runtime identity mapping for the config and every message). Read-only; fails the stage.
+> seat_identity() {
+>   local reg; reg=$(AGENTDECK_PROFILE=campaign4 agent-deck list --json 2>&1)
+>   printf '%s' "$reg" | python3 -c '
+> import json, sys
+> rows = {r.get("id"): (r.get("title") or "") for r in json.load(sys.stdin)}
+> want = dict(zip(sys.argv[1::2], sys.argv[2::2])); bad = []
+> for i, t in want.items():
+>     if i not in rows: bad.append("%s (%s) not registered" % (i, t))
+>     elif not rows[i].startswith(t): bad.append("%s is %r, not %s" % (i, rows[i], t))
+> print("; ".join(bad)); sys.exit(1 if bad else 0)' "$KILN_ID" kiln "$CORVID_ID" corvid "$TERN_ID" tern "$CAIRN_ID" cairn >"$EV/seat-identity.txt" 2>&1 \
+>     || fail "seat identity mismatch in profile campaign4: $(cat "$EV/seat-identity.txt")"
+>   log "seat identity ok: kiln/corvid/tern/cairn ids registered in campaign4 under their titles"
+63c108,109
+<            "EXHAUSTED","SUPERSEDED","WITHDRAWN","FROZEN","RESOLVED","INFRA_FAILURE","PREPARED","TERMINATED"}
+---
+>            "EXHAUSTED","SUPERSEDED","WITHDRAWN","FROZEN","RESOLVED","INFRA_FAILURE","PREPARED","TERMINATED",
+>            "NOT-READY","BOUNDED-FAIL","CLOSED"}   # terminal verbs the P11/P12 reviews actually use (ledger 2026-09-23/24)
+80,81c126,129
+<   run systemctl --user disable --now $OLD_TIMERS
+<   run systemctl --user stop campaign4-watch.timer
+---
+>   cli_preflight
+>   seat_identity
+>   must systemctl --user disable --now $OLD_TIMERS
+>   run systemctl --user stop campaign4-watch.timer   # transient; may already be absent
+83,84c131,133
+<   for u in $OLD_TIMERS campaign4-watch.timer; do [ "$DRY" = 1 ] || [ "$(systemctl --user is-active "$u")" != active ] || fail "$u still active"; done
+<   run "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P12 cutover $CUT_RUN] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry)."
+---
+>   # no old effect owner may still run before a new one starts
+>   for u in $OLD_TIMERS campaign4-watch.timer $OLD_SERVICES; do [ "$DRY" = 1 ] || case "$(systemctl --user is-active "$u" 2>/dev/null)" in active|activating) fail "$u still active";; esac; done
+>   run env AGENTDECK_PROFILE=campaign4 "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P12 cutover $CUT_RUN] Your controller role ends now: no dispatch, no ledger rows, no deadline timers. You stay duty and liveness owner for agent-loop (acknowledge liveness incidents with the command they carry)."
+86,87c135,136
+<   run install -m 755 "$BIN" "$PREV"
+<   run install -m 755 "$QUALIFIED_BIN" "$BIN"
+---
+>   must install -m 755 "$BIN" "$PREV"
+>   must install -m 755 "$QUALIFIED_BIN" "$BIN"
+97,98c146,148
+<   run cp "$UNITS_SRC/agent-loop@.service" "$UNITS_SRC/agent-loop-liveness@.service" "$UNITS_SRC/agent-loop-liveness@.timer" "$SD/"
+<   run systemctl --user daemon-reload
+---
+>   for u in $UNITS; do must cp "$UNITS_SRC/$u" "$SD/$u"; [ "$DRY" = 1 ] || cmp -s "$UNITS_SRC/$u" "$SD/$u" || { log "installed $u differs from the release: rolling back"; rollback; exit 3; }; done
+>   must systemctl --user daemon-reload
+>   [ "$DRY" = 1 ] || [ "$(systemctl --user show "$NEW_LIVE.service" -p OnFailure --value)" = "$NEW_FAIL" ] || { log "systemd does not wire $NEW_LIVE.service OnFailure=$NEW_FAIL: rolling back"; rollback; exit 3; }
+100,101d149
+<   run systemctl --user enable --now "$NEW_RUN" "$NEW_LIVE.timer"
+<   # 3. verify: a pass from the current invocation, then the outside check says rest
+103,106c151,161
+<   until [ "$DRY" = 1 ] || "$BIN" expose $C --json | grep -q '"freshness": "last loop pass'; do
+<     [ $(( $(date +%s) - t0 )) -ge 60 ] && { log "no pass within 60 s: rolling back"; rollback; exit 3; }; sleep 5; done
+<   run systemctl --user start "$NEW_LIVE.service"
+<   [ "$DRY" = 1 ] || grep -q '"state": "rest"' "$DB.liveness.json" || { log "check not rest: rolling back"; rollback; exit 3; }
+---
+>   run systemctl --user enable --now "$NEW_RUN" "$NEW_LIVE.timer" || { log "enable failed: rolling back"; rollback; exit 3; }
+>   # 3. verify with the live-qualified predicates: the ledger's own pass record is from after t0 by the unit's CURRENT
+>   # invocation and main pid; then a completed outside check (unit result success) reads rest, checked after t0.
+>   until [ "$DRY" = 1 ] || python3 -c 'import sqlite3,sys; c=sqlite3.connect("file:%s?mode=ro" % sys.argv[1], uri=True, timeout=1); print(c.execute("select value from driver_kv where key=?", ("loop-pass",)).fetchone()[0])' "$DB" 2>/dev/null \
+>       | pass_eval "$t0" "$(systemctl --user show "$NEW_RUN" -p InvocationID --value)" "$(systemctl --user show "$NEW_RUN" -p MainPID --value)"; do
+>     [ $(( $(date +%s) - t0 )) -ge 60 ] && { log "no pass by the current run within 60 s: rolling back"; rollback; exit 3; }; sleep 5; done
+>   run systemctl --user start "$NEW_LIVE.service" || { log "outside check failed (its OnFailure handler owns it): rolling back"; rollback; exit 3; }
+>   if [ "$DRY" != 1 ]; then
+>     v=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print((d.get("last_verdict") or {}).get("state",""), d.get("last_check_at",""))' "$DB.liveness.json" 2>/dev/null)
+>     [ "${v%% *}" = rest ] && healthy_eval "$t0" "$v" || { log "outside check not rest after t0 ($v): rolling back"; rollback; exit 3; }
+>   fi
+108c163
+<   ok "old owners off and drained; agent-loop serving; outside check rest; one owner"
+---
+>   ok "old owners off and drained; 4 units installed (bytes = release, OnFailure wired); a fresh pass by the current run; outside check rest; one owner"
+112c167
+<   run "$BIN" dispatch $C --qid P12-production-handoff-1 --worker kiln --verifier corvid --duration 20m --verify-window 10m \
+---
+>   must "$BIN" dispatch $C --qid P12-production-handoff-1 --worker kiln --verifier corvid --duration 20m --verify-window 10m \
+126c181,183
+<   drain "$NEW_LIVE.service" $(systemctl --user list-units --all --plain --no-legend 'agent-loop-campaign4-*.service' 2>/dev/null | awk '{print $1}')
+---
+>   # the check's OnFailure handler is drained too, AFTER the check (a failing check can still start it)
+>   drain "$NEW_LIVE.service" "$NEW_FAIL" $(systemctl --user list-units --all --plain --no-legend 'agent-loop-campaign4-*.service' 2>/dev/null | awk '{print $1}')
+>   for u in "$NEW_RUN" "$NEW_LIVE.timer" "$NEW_LIVE.service" "$NEW_FAIL"; do [ "$DRY" = 1 ] || case "$(systemctl --user is-active "$u" 2>/dev/null)" in active|activating) fail "$u still active: old owners NOT restored";; esac; done
+134,137c191,205
+<   [ -e "$PREV" ] && run install -m 755 "$PREV" "$BIN"
+<   run systemctl --user enable --now $OLD_TIMERS
+<   run systemd-run --user --unit=campaign4-watch --on-active=45min --on-unit-active=45min $H/.config/agent-deck/campaign4-watch
+<   run "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P12 cutover $CUT_RUN] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): $EV/rollback/open-items.json"
+---
+>   [ -e "$PREV" ] && must install -m 755 "$PREV" "$BIN"
+>   # unit files: the kept originals back; files this cutover added are removed
+>   for u in $UNITS; do if grep -qx "$u" "$PRE/units-prev.list" 2>/dev/null; then must cp -a "$PRE/units-prev/$u" "$SD/$u"; else run rm -f "$SD/$u"; fi; done
+>   [ -e "$PRE/config-prev.json" ] && must cp -a "$PRE/config-prev.json" "$CFG"
+>   must systemctl --user daemon-reload
+>   # old owners: exactly the captured enabled/active state (state.tsv), nothing more
+>   [ -s "$PRE/state.tsv" ] || fail "no captured state.tsv: cannot restore the exact prior state"
+>   while IFS=$'\t' read -r u en ac; do
+>     if [ "$u" = campaign4-watch.timer ]; then
+>       [ "$ac" = active ] && must systemd-run --user --unit=campaign4-watch --on-active=45min --on-unit-active=45min $H/.config/agent-deck/campaign4-watch || log "campaign4-watch was $ac at capture: not recreated"
+>       continue; fi
+>     [ "$en" = enabled ] && must systemctl --user enable "$u"
+>     [ "$ac" = active ] && must systemctl --user start "$u"
+>   done <"$PRE/state.tsv"
+>   run env AGENTDECK_PROFILE=campaign4 "$H/.config/agent-deck/wake" "$CAIRN_ID" "[P12 cutover $CUT_RUN] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): $EV/rollback/open-items.json"
+139c207
+<   for u in $OLD_TIMERS; do [ "$DRY" = 1 ] || [ "$(systemctl --user is-active "$u")" = active ] || fail "$u not active after rollback"; done
+---
+>   while IFS=$'\t' read -r u en ac; do [ "$DRY" = 1 ] || [ "$u" = campaign4-watch.timer ] || [ "$ac" != active ] || [ "$(systemctl --user is-active "$u")" = active ] || fail "$u not active after rollback (was active at capture)"; done <"$PRE/state.tsv"

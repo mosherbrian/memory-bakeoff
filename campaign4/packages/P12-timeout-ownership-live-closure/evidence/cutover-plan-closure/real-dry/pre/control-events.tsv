@@ -1,0 +1,765 @@
+2026-09-21T20:35:27Z	campaign4	scribe-recovery-1	CANCELLED	cairn	-	b9befb7:campaign4/CONTROL-RECORD.md
+2026-09-21T20:38:48Z	P4-integration-rehearsal	P4-initial-1	DISPATCHED	kiln	2026-09-21T21:23:48Z	packages/P4-integration-rehearsal/dispatch-receipt.json
+2026-09-21T20:54Z	P4-integration-rehearsal	P4-initial-1-infra1	INFRA_FAILURE	kiln	-	acp-adapter-err/a79067ca-1790000758.err:encrypted_content
+2026-09-21T20:57:44Z	P4-integration-rehearsal	P4-initial-1r	DISPATCHED	kiln	2026-09-21T21:42:44Z	packages/P4-integration-rehearsal/dispatch-receipt.json
+2026-09-21T21:02:10Z	P4-integration-rehearsal	P4-infra-grant-1	EXTENDED	tern	2026-09-21T21:42:44Z	packages/P4-integration-rehearsal/infra-recovery-decision.json
+2026-09-21T21:47Z	P4-integration-rehearsal	P4-initial-1r	COMPLETED	kiln	-	rehearsal-report.md=5dd328aa interface.md=3b82e895 src=4895f8b4 tests=262653a8 fixtures=b9ee445f (sha256, group sums)
+2026-09-21T21:52Z	P4-integration-rehearsal	P4-verify-1	DISPATCHED	corvid	-	packages/P4-integration-rehearsal/verification.md (scope package.md §6 + §2-5; budget 2400s per infra-recovery-decision.json; woke 493c0317 socket -> started)
+2026-09-21T21:56Z	P4-integration-rehearsal	P4-state-1	NOTIFIED	tern	-	control-events.tsv (completion row appended, corvid verify dispatched elapsed-eligible; tern socket 0c933c75 -> started)
+2026-09-22T21:58Z	P4-integration-rehearsal	P4-verify-1	FAIL	corvid	-	verification.md sha256 2f0bbfb69eee411fb17924bd46791027f79819a929c810ebb4675a268cbab086; D1 removed-timer honored in FakeTimer but not Driver.on_deadline driver.py:190-203 (stop+wake still fired, interrupted); all else pass; NONBLOCK: store.py one-import-line drift from accepted d27d5be undisclosed
+2026-09-22T21:58Z	P4-integration-rehearsal	P4-repair-1	DISPATCHED	kiln	-	scope driver.py+tests only: on_deadline armed check (removed/never-armed no-op) + removed/never-armed tests; store.py drift NOT in scope (director); wake acked started
+2026-09-22T21:58Z	P4-integration-rehearsal	P4-verify-1	RECORD-KEEP	corvid	-	verdict FAIL sha 2f0bbfb6 retained unchanged; governing basis corrected: 20min per pass (2400s = initial+postrepair total), no reset/new pass; worker timeliness 21:47Z vs authorized 21:42:44Z certified neither - Tern frontier
+2026-09-22T21:59Z	P4-integration-rehearsal	P4-frontier-1	PAGE	tern	-	worker completion 21:47Z vs authorized 21:42:44Z uncertified - reconciliation tern-only; budget basis corrected (20min/pass, 2400s total); tern socket queued behind running turn
+2026-09-22T21:59Z	P4-integration-rehearsal	P4-frontier-1	RESOLVED	tern	-	startup-reconciliation.json timing-reconciliation.json: session-history completion predates 21:42:44Z, 14 full hashes match, 21:47 was recording not completion - no worker timeout; verify bound 20m/pass, pass deadline 22:12:00Z, tern armed campaign4-p4-verify1-reconciled-deadline.timer, no duplicate pass
+2026-09-22T21:59Z	P4-integration-rehearsal	frontier-resolution	CANON	tern		packages/P4-integration-rehearsal/timing-reconciliation.json sha256 54bb57f70113aa43860bb75e092212cd7917894851e1923f9192785eaad36ea6
+2026-09-22T21:59Z	P4-integration-rehearsal	frontier-resolution	RETRACT	tern	-	all14-match claim RETRACTED: src/driver.py hash mismatch confirmed in timing-reconciliation.json; two versions present, preserve both, no repair/relaunch, corvid must identify tree under verification before any binding; verify1 deadline 22:12:00Z unchanged
+2026-09-21T21:59:59Z	P4-integration-rehearsal	P4-integrity-1	BLOCKED	tern	2026-09-21T22:12:00Z	packages/P4-integration-rehearsal/timing-reconciliation.json
+2026-09-22T22:00Z	P4-integration-rehearsal	P4-corrid-1	ROUTED	corvid	-	hashed-current-tree-does-not-equal-woken: reported tree = P4-initial-1 end state (driver 181f5b99, test ae8179b5), current tree = P4-repair-1 in flight (driver 4726a583, test 3838b03a both recomputed); corvid woke queued, verify1 deadline 22:12:00Z stands; both versions preserved, no repair/relaunch
+2026-09-22T22:01Z	P4-integration-rehearsal	P4-verify-2	PASS	corvid	-	verification.md sha256 038be5a6beddfbf1b6236873e50ded471d82237c74e3f51bc052ab42c04a9323 PRESENT-TREE PASS 16 rehearsal + 59 core, stops=0 wakes=0 removed/never-armed no-op, no live effects, initial FAIL text retained + postrepair section appended; initial timely tree not certified equal to present; store.py drift untouched; 21:47Z timeliness observability remains Tern frontier; verified 22:01Z < 22:12Z deadline
+2026-09-22T22:01Z	P4-integration-rehearsal	P4-frontier-2	PAGE	tern	-	verify2 PASS bound (038be5a6 disk-matched) + open uncertified items: initial-tree identity, 21:47Z timeliness, store.py drift nondisc; no further automatic step
+2026-09-22T22:02Z	P4-integration-rehearsal	P4-verify-2	WITHDRAWN	corvid	-	present-tree PASS withdrawn non-binding; REPORTED tree binding governs per tern scope one-liner; verification.md sha256 be08cfa7557b05a07395d83da39a0cdcbd9e37092199d535ee56885fd2f69e7f; both spans preserved no version overwrite; verify1 timer untouched; post-repair binding pass added to current dispatch line already captured by P4-repair-1 row, no new woken pass queued
+2026-09-21T22:01:46Z	P4-integration-rehearsal	P4-verify-2	DISPATCHED	corvid	2026-09-21T22:21:46Z	packages/P4-integration-rehearsal/postrepair-verification-receipt.json
+2026-09-21T22:44Z	P4-integration-rehearsal	P4-version-reconcile	CANON	tern	-	version-reconciliation.json sha256 134126c9
+2026-09-21T22:09Z	P4-integration-rehearsal	P4-verify-2	PASS	corvid	-	verification-v2.md sha256 cfecb2cb 14/14 manifest; archived-initial reproducer FAIL vs repaired no-op; timer retired 22:09Z predeadline
+2026-09-21T22:07:32Z	P4-integration-rehearsal	P4-boundary-1	EXHAUSTED	tern	-	packages/P4-integration-rehearsal/acceptance-withheld.json
+2026-09-21T22:08Z	P4-r2-durable-events	P4r2-initial-1	DISPATCHED	kiln	2026-09-21T22:38Z	contract cdd0ee2 sha ad6df34a; conditional release satisfied (admission-review 126b31c0, withheld c7582225); wake started; outputs src/tests/fixtures/README/interface/report
+2026-09-21T22:10Z	P4-r2-durable-events	P4r2-admission-1	ACCEPTED	corvid	-	acceptance 126b31c0 in 15m window; dispatch released per conditional clause; admission timer stopped 22:10Z
+2026-09-21T22:52Z	P4-r2-durable-events	P4r2-initial-1	RECEIPT	cairn	-	dispatch-receipt.json sha256 e55a8eaa (write finalized 15:10 local; no dup)
+2026-09-21T22:52Z	P4-r2-durable-events	P4r2-initial-1	COMPLETED	kiln	2026-09-21T22:38Z	report 59068369 interface 387b4a0b probes e2577b40 src777d2551 tests58c8bffb fixtures8dfab617 28 pass +59 core NOT-ready-live
+2026-09-21T22:52Z	P4-r2-durable-events	P4r2-verify-1	DISPATCHED	corvid	-	20m verify of bound hashes; no auto-retire verify-timer naming conflict verified; ack started
+2026-09-21T22:20Z	P4-r2-durable-events	P4r2-stamps	CORRECT	cairn	-	22:52Z stamps on RECEIPT/COMPLETED/DISPATCHED rows were 32m future; true stamp 22:20Z (read from date -u); verify window read from timer elapse
+2026-09-21T22:21Z	P4-r2-durable-events	P4r2-verify-1	PASS	corvid	-	verification-r2.md sha256 e2e617f5 disk-matched; probes1-3 no-op/already-handled; 28+59; NOT-ready live; no repair
+2026-09-21T22:23Z	P4-r2-durable-events	P4r2-repair-1	DISPATCHED	kiln	2026-09-21T22:38Z	receipt filed; archive 15f pre-repair; ack started
+2026-09-21T22:27Z	P4-r2-durable-events	P4r2-initial-1	RETIRED	cairn	-	initial deadline unit fired after COMPLETED; no stop; repair timer governs
+2026-09-21T22:39Z	P4-r2-durable-events	P4r2-repair-1	BLOCKED	kiln	2026-09-21T22:38Z	sole repair expired, no completion wake, seat stopped
+2026-09-21T22:40:35Z	P4-r2-durable-events	P4r2-verify-2	CHECKING	corvid	2026-09-21T23:00:08Z	packages/P4-r2-durable-events/postrepair-verification-receipt.json
+2026-09-21T22:40Z	P4-r2-durable-events	P4r2-repair-1	RESOLVED	tern	-	repair-reconciliation.json 9ee28ce2: completion 22:29Z timely 16/16; wake fault mine; verify2 to 23:00:08Z
+2026-09-21T22:42Z	P4-r2-durable-events	P4r2-verify-2	FAIL	corvid	-	verification-r2-repair.md 4e6eb965 disk-matched; behaviour PASS 16/16, D1+D2 corrected; defect: driver.py b285bc7f 944 lines, dup defs inert
+2026-09-21T22:43Z	P4-r2-durable-events	P4r2-cleanup-1	DISPATCHED	kiln	2026-09-21T22:48Z	cleanup ext-1 driver.py only; receipt filed; ack started
+2026-09-21T22:49Z	P4-r2-durable-events	P4r2-cleanup-1	COMPLETED	kiln	2026-09-21T22:48Z	session-history completion pre-deadline; driver b285bc7f->8f7c61ce disk-matched; 36 pass; cleanup timer consumed
+2026-09-21T22:49Z	P4-r2-durable-events	P4r2-cleanupverify-1	DISPATCHED	corvid	2026-09-21T22:54Z	cleanup ext-1 <=5m; AST equivalence + 15-file identity + 36/59; ack pending
+2026-09-21T22:50Z	P4-r2-durable-events	P4r2-cleanupverify-1	PASS	corvid	-	verification-cleanup.md d20bbe03 disk-matched; AST equiv 84c35805; 15/15 identical; 36+59; verify timer retired pre-22:54Z
+2026-09-21T22:53:08Z	P4-r2-durable-events	P4r2-boundary-1	COMPLETE	tern	-	packages/P4-r2-durable-events/acceptance.json
+2026-09-21T22:53Z	P4-r2-durable-events	P4r2-terminal	ACCEPTED	tern	-	acceptance.json 2742b7db source 4c07bd83; grants 133m56s/85m spent; no further P4 execution
+2026-09-21T22:53Z	P5-clock-ingress	P5-admission-1	PENDING	corvid	2026-09-21T23:07:20Z	contract ca8a9e05... pass in flight; release only on ACCEPTED + P4 pinned
+2026-09-21T22:53Z	P5-clock-ingress	P5-admission-1	ACCEPTED	corvid	-	review 8bbb360c exact bytes; tern admission timer retired by you; release authorized
+2026-09-21T22:53Z	P5-clock-ingress	P5-initial-1	DISPATCHED	kiln	2026-09-21T23:33Z	contract ec332546 ca8a9e05; wake started; no live adopt/clock change
+2026-09-21T22:54Z	P5-clock-ingress	P5-initial-1	CONFIRMED	tern	-	confirmation read; all 7 pins resolved full; receipt amended 30239130; prior dispatch stands, no dup
+2026-09-21T23:00Z	P4-r2-durable-events	P4r2-verify-2	RETIRED	cairn	-	FAIL 4e6eb965 bound 22:42Z pre-23:00:08Z deadline; timer consumed; no stop/BLOCKED
+2026-09-21T23:11Z	P5-clock-ingress	P5-initial-1	COMPLETED	kiln	2026-09-21T23:33Z	report f1027f17 interface df2a7b42 clock-cases dacf9dc7 ingress f1b39a66 driver 3fbb58ce test f0d15f17 src8a56376c testsb2bcc6e0 fixturesf49bb8d8 54+59 pass NOT-ready-live
+2026-09-21T23:11Z	P5-clock-ingress	P5-handoff-3	DEFECT	cairn	-	lost-completion recurred 3rd time today (P4r2-init 15:11, verify chain, P5 15:58); wake-delivery fault not worker overrun; evidence for P5 priority
+2026-09-21T23:11Z	P5-clock-ingress	P5-verify-1	DISPATCHED	corvid	2026-09-21T23:31Z	20m pass of bound hashes; ack pending; window anchored to dispatch wake
+2026-09-21T23:13Z	P5-clock-ingress	P5-verify-1	PASS	corvid	-	verification.md 33ae853d disk-matched; forged/skew/grant/discontinuity matrix all fault correctly; 54+59; timer retired pre-23:31Z
+2026-09-21T23:18Z	P5-clock-ingress	P5-repair-1	DISPATCHED	kiln	2026-09-21T23:33Z	receipt filed; archive 25f verified pre-repair; ack started
+2026-09-21T23:19Z	P5-clock-ingress	P5-repair-1	NUDGED	kiln	2026-09-21T23:33Z	idle seat, no artifacts post-dispatch; wake re-sent, no re-dispatch
+2026-09-21T23:21Z	P4-integration-rehearsal	P4-repair-1	COMPLETED	kiln	2026-09-21T21:59:19Z	late-recorded terminal: reconciled timely per version-reconciliation.json; superseded by EXHAUSTED
+2026-09-21T23:21Z	P5-clock-ingress	P5-repair-1	CONFIRMED	cairn	-	kiln editing ingress.py in_progress 23:21Z pre-23:33Z deadline; registry idle lags turn; no action
+2026-09-21T23:26Z	P5-clock-ingress	P5-repair-1	COMPLETED	kiln	2026-09-21T23:33Z	4th lost completion found in history; driver 80d770db ingress ba66ec02 test 129825f4 report df3961c0 iface 8dff6d37 disk-matched; 69 pass
+2026-09-21T23:26Z	P5-clock-ingress	P5-handoff-4	DEFECT	cairn	-	lost-completion 4th today; wake-delivery fault pattern stands; repair timer retired pre-23:33Z
+2026-09-21T23:26Z	P5-clock-ingress	P5-postrepair-1	DISPATCHED	corvid	2026-09-21T23:46Z	<=20m D1/D2/D3 archived-FAIL vs repaired-corrected + regressions; ack pending
+2026-09-21T23:29Z	P5-clock-ingress	P5-postrepair-1	FAIL	corvid	-	verification-repair.md 3221be1f disk-matched; D1/D2/D3 corrected, 69+59; defect: record_terminal checks decide vs PRE-verdict CHECKING, legit terminal rejected E_PHASE_MISMATCH
+2026-09-21T23:31Z	P5-clock-ingress	P5-repair-2	DISPATCHED	kiln	2026-09-21T23:41Z	ext-1 grant; archive 31f verified; atomic-close fix only; ack started
+2026-09-21T23:33Z	P5-clock-ingress	P5-repair-2	COMPLETED	kiln	2026-09-21T23:41Z	5th lost completion in history; ingress 371b189d test_r2 8f253cb1 report 755995b5 iface b9bbaf98 cases 2ac288b5 disk-matched; 77+59
+2026-09-21T23:33Z	P5-clock-ingress	P5-handoff-5	DEFECT	cairn	-	lost-completion 5th; repair timer retired pre-23:41Z; wake path still dropping
+2026-09-21T23:33Z	P5-clock-ingress	P5-repair2verify-1	DISPATCHED	corvid	2026-09-21T23:48Z	<=15m positive+negative transaction cases + retained regressions; ack pending
+2026-09-21T23:35Z	P5-clock-ingress	P5-repair2verify-1	PASS	corvid	-	verification-repair-2.md da7fe658 disk-matched; atomic close commits both+srvives reopen; negatives hold; 77+59; timer retired pre-23:48Z
+2026-09-21T23:37Z	P4-integration-rehearsal	P4-initial-1	CANCELLED	cairn	-	infra-killed 20:54Z, resumed as P4-initial-1r COMPLETED; no worker output on this id; superseded
+2026-09-21T23:39Z	P5-r2-atomic-authority	P5r2-admission-1	ACCEPTED	corvid	-	review e5589e87 exact bytes; parent EXHAUSTED 998b4500 successor present
+2026-09-21T23:39Z	P5-r2-atomic-authority	P5r2-initial-1	DISPATCHED	kiln	2026-09-22T00:09Z	contract 7b5772e e09c313c; wake started; no live effects
+2026-09-21T23:39Z	P5-r2-atomic-authority	P5r2-initial-1	CORRECT	cairn	2026-09-21T23:59Z	contract alloc 20m initial/10m repair/15m verify; deadline corrected; kiln notified; no dup
+2026-09-21T23:41Z	P5-r2-atomic-authority	P5r2-initial-1	CONFIRMED	cairn	2026-09-21T23:59Z	kiln running pytest+hashing 23:41Z pre-deadline; artifacts landing; registry idle lags turn
+2026-09-21T23:42Z	P5-r2-atomic-authority	P5r2-initial-1	CONFIRMED	tern	2026-09-21T23:59Z	timer elapse 23:59:14Z matches remaining time; admission record pinned; no redispatch
+2026-09-21T23:43Z	P5-r2-atomic-authority	P5r2-initial-1	COMPLETED	kiln	2026-09-21T23:59Z	6th lost completion in history; ingress c9327f85 atomictest dc0377af cases c8f09167 evidence 03c4c37b report dd16ccc0 iface 99e6e9e7 disk-matched; 83 pass
+2026-09-21T23:43Z	P5-r2-atomic-authority	P5r2-handoff-6	DEFECT	cairn	-	lost-completion 6th; initial timer retired pre-23:59Z; wake path still dropping
+2026-09-21T23:43Z	P5-r2-atomic-authority	P5r2-verify-1	DISPATCHED	corvid	2026-09-21T23:58Z	15m pass of bound hashes; ack pending; window anchored to dispatch wake
+2026-09-21T23:45Z	P5-r2-atomic-authority	P5r2-verify-1	PASS	corvid	-	verification.md ff1f6d89 disk-matched; mixed E_MIXED_ATOMIC 0 rows; genuine hold+decide commit; 83+59; timer retired pre-23:58Z
+2026-09-21T23:49Z	P5-r2-atomic-authority	P5r2-terminal	ACCEPTED	tern	-	acceptance.json tern ACCEPTED/COMPLETE src 80092f9; gate for P6 release
+2026-09-21T23:49Z	P6-live-recovery	P6-admission-1	ACCEPTED	corvid	-	review ffed97d9 exact bytes; release gates satisfied
+2026-09-21T23:49Z	P6-live-recovery	P6-stageA-1	DISPATCHED	kiln	2026-09-22T00:34Z	contract 91f19cf 174377f1; Stage A only, no live actions; ack started
+2026-09-21T23:54Z	P6-live-recovery	P6-stageA-1	COMPLETED	kiln	2026-09-22T00:34Z	7th lost completion in history; host_adapter f2f361b8 hosttest bd739c77 plan f6659330 inv e304039f matrix c05c7927 rollback 36b54eeb report 8093d6ff iface b3cea34e disk-matched
+2026-09-21T23:54Z	P6-live-recovery	P6-handoff-7	DEFECT	cairn	-	lost-completion 7th; stageA timer retired pre-00:34Z; wake path still dropping
+2026-09-21T23:54Z	P6-live-recovery	P6-candidate-1	DISPATCHED	corvid	2026-09-22T00:14Z	20m candidate check of bound bytes + fixture plan; ack pending
+2026-09-21T23:55Z	P6-live-recovery	P6-candidate-1	PASS	corvid	-	candidate-review.md f3171653 disk-matched; 97+59; core byte-identical; forward item: plan commands placeholder, needs exact+rehash pre-signature; timer retired pre-00:14Z
+2026-09-21T23:58Z	P6-live-recovery	P6-repair-1	DISPATCHED	kiln	2026-09-22T00:13Z	receipt filed; archive 32f verified; D1-D4 implement-not-execute; ack started
+2026-09-22T00:00Z	P5-clock-ingress	P5-initial-1	RETIRED	cairn	-	stale initial-deadline unit fired post-COMPLETED; no stop; repair chain governs
+2026-09-22T00:04Z	P6-live-recovery	P6-repair-1	COMPLETED	kiln	2026-09-22T00:13Z	8th lost completion in history; adapter 6525eb1b driver 3e1136bf hosttest 23dead83 plan 9af17a2a report 932f5630 iface 8863e055 disk-matched
+2026-09-22T00:04Z	P6-live-recovery	P6-handoff-8	DEFECT	cairn	-	lost-completion 8th; repair timer retired pre-00:13Z; wake path still dropping
+2026-09-22T00:04Z	P6-live-recovery	P6-repairverify-1	DISPATCHED	corvid	2026-09-22T00:24Z	<=20m D1-D4 repaired vs archived + injections; ack pending
+2026-09-22T00:06Z	P6-live-recovery	P6-repairverify-1	FAIL	corvid	-	candidate-review-repair.md 49967a93 disk-matched; D2/D3/D4 corrected, 107+59; defect: host_adapter.py:105 timeout_s=None -> TypeError on live send path
+2026-09-22T00:10Z	P6-live-recovery	P6-terminal	EXHAUSTED	tern	-	withheld 6a7bfd3d source 22c1308; gate for P6-r2 release
+2026-09-22T00:10Z	P6-r2-host-execution	P6r2-admission-1	ACCEPTED	corvid	-	unchanged contract bound pre-dispatch; parent EXHAUSTED pinned
+2026-09-22T00:10Z	P6-r2-host-execution	P6r2-stageA-1	DISPATCHED	kiln	2026-09-22T00:40Z	contract 582ae00 97b6dff8; connected host path per correction 1-6; ack started
+2026-09-22T00:17Z	P6-r2-host-execution	P6r2-stageA-1	HELD	tern	2026-09-22T00:40Z	amendment intake: bind+preserve on completion, no verifier/repair/live fixture until disposition; worker untouched
+2026-09-22T00:19Z	P6-r2-host-execution	P6r2-stageA-1	COMPLETED	kiln	2026-09-22T00:40Z	9th lost completion in history; harness e2c7bc66 adapter 83e6a8c9 ingress 4d12429f hosttest fe8da154 plan 1077cd86 schema 80883c01 inv 3b2d7e82 disk-matched; HELD no verifier
+2026-09-22T00:19Z	P6-r2-host-execution	P6r2-handoff-9	DEFECT	cairn	-	lost-completion 9th; stageA timer retired pre-00:40Z; HELD per amendment intake
+2026-09-22T00:20Z	P6-r21-event-handoff	P6r21-admission-1	PENDING	corvid	2026-09-22T00:34:36Z	review ACCEPTED exact bytes on disk; pass window open; r2 archive+supersession+base gates unchecked
+2026-09-22T00:20Z	P6-r2-host-execution	P6r2-stageA-1	SUPERSEDED	tern	-	supersession.json filed; archive 30f manifest; no verifier existed; repair15m+verify unused cancelled; base d3a3a83
+2026-09-22T00:21Z	P6-r21-event-handoff	P6r21-admission-1	ACCEPTED	corvid	-	review 615e25bd exact bytes; receipt recorded; supersession+base gates met
+2026-09-22T00:21Z	P6-r21-event-handoff	P6r21-stageA-1	DISPATCHED	kiln	2026-09-22T00:46Z	contract e9993e7 71b455c2; route-free claim required on completion; ack started
+2026-09-22T00:22Z	P6-r21-event-handoff	P6r21-stageA-1	RECONCILED	tern	2026-09-22T00:46Z	receipt existed, no redispatch; base->638f092, supersession->142c9710; dispatch terms stand
+2026-09-22T00:29Z	P6-r21-event-handoff	P6r21-stageA-1	COMPLETED	kiln	2026-09-22T00:46Z	10th lost completion in history BUT route-free claim 4c731d2b on disk matched; handoff db77cfff adapter 2211751a eventtest 3a9e5aa1 plan 4352f14d inv 31b090c8 disk-matched
+2026-09-22T00:29Z	P6-r21-event-handoff	P6r21-handoff-10	DEFECT	cairn	-	lost-completion 10th via wake; claim-path recovery WORKED first live exercise; stageA timer retired pre-00:46Z
+2026-09-22T00:29Z	P6-r21-event-handoff	P6r21-candidate-1	DISPATCHED	corvid	2026-09-22T00:49Z	20m candidate check of bound bytes; ack pending
+2026-09-22T00:34Z	P6-r21-event-handoff	P6r21-candidate-1	PASS	corvid	-	candidate-review.md 3ac2c5a0 disk-matched; turn-end path + outbox ack-after-delivery + forged-route rejects; 130+59; timer retired pre-00:49Z
+2026-09-22T00:36Z	P6-r21-event-handoff	P6r21-repair-1	DISPATCHED	kiln	2026-09-22T00:51Z	receipt filed; archive 39f verified; D1-D4 closed-graph fix; ack started
+2026-09-22T00:46Z	P6-r21-event-handoff	P6r21-repair-1	COMPLETED	kiln	2026-09-22T00:51Z	11th lost wake; claim 8d5a093b on disk; harness 4c7d8b2f adapter 69c921b4 handoff a1704354 disk-matched
+2026-09-22T00:46Z	P6-r21-event-handoff	P6r21-handoff-11	DEFECT	cairn	-	lost-completion 11th; claim-path recovery worked; repair timer retired pre-00:51Z
+2026-09-22T00:46Z	P6-r21-event-handoff	P6r21-repairverify-1	DISPATCHED	corvid	2026-09-22T01:06Z	recheck 4c7d8b2f2f5602 D1-D4+injections; ack pending
+2026-09-22T00:50Z	P6-r21-event-handoff	P6r21-repairverify-1	FAIL	corvid	-	review-repair 7dce5739ce8f disk-matched; D1-D4 corrected 135+59; defect: plan run step invalid choice run
+2026-09-22T00:53Z	P6-r3-cli-recovery	P6r3-admission-1	PENDING	corvid	2026-09-22T01:08Z	review not yet on disk; parent terminal + cases unchecked
+2026-09-22T00:55Z	P6-r3-cli-recovery	P6r3-admission-1	ACCEPTED	corvid	-	review cfaa5f71071b exact; cases b3422cfd3ef pinned; parent EXHAUSTED
+2026-09-22T00:55Z	P6-r3-cli-recovery	P6r3-stageA-1	DISPATCHED	kiln	2026-09-22T01:25Z	receipt filed; wake 866ch fault logged, scope in receipt; ack started
+2026-09-22T01:01Z	P6-r3-cli-recovery	P6r3-stageA-1	CONFIRMED	cairn	2026-09-22T01:25Z	kiln executing tests 00:59Z pre-deadline; registry idle lags turn
+2026-09-22T01:16Z	P6-r3-cli-recovery	P6r3-stageA-1	COMPLETED	kiln	2026-09-22T01:25Z	12th lost wake; claim cce3bfc779a9 on disk; driver 39c52dd2 harness 5b36775b handoff 1505dd97 clitest e040a17a disk-matched
+2026-09-22T01:16Z	P6-r3-cli-recovery	P6r3-handoff-12	DEFECT	cairn	-	lost-completion 12th; claim-path recovery worked; stageA timer retired pre-01:25Z
+2026-09-22T01:16Z	P6-r3-cli-recovery	P6r3-candidate-1	DISPATCHED	corvid	2026-09-22T01:36Z	20m exact-CLI check of bound bytes; ack pending
+2026-09-22T01:20Z	P6-r3-cli-recovery	P6r3-candidate-1	PASS	corvid	-	candidate-review.md 89f6ac20a9c4 disk-matched; C1-C12 exact-CLI pass, 150+59; no retro PASS; timer retired pre-01:36Z
+2026-09-22T01:21Z	P6-r3-cli-recovery	P6r3-repair-1	DISPATCHED	kiln	2026-09-22T01:31Z	receipt filed; archive 41f verified; D1-D4 per decision; ack started
+2026-09-22T01:26Z	P6-r3-cli-recovery	P6r3-repair-1	CONFIRMED	cairn	2026-09-22T01:31Z	kiln running CLI tests 01:24Z pre-deadline; registry idle lags turn
+2026-09-22T01:32Z	P6-r3-cli-recovery	P6r3-repair-1	BLOCKED	kiln	2026-09-22T01:31Z	no completion at deadline; tests running past bound; seat stopped
+2026-09-22T01:34Z	P6-r3-cli-recovery	P6r3-recovery-1	DISPATCHED	kiln	2026-09-22T01:54Z	recovery resumes P6r3-repair-1; old stopped verified; ack started
+2026-09-22T01:41Z	P6-r3-cli-recovery	P6r3-recovery-1	COMPLETED	kiln	2026-09-22T01:54Z	13th lost wake; claim 4bdf826379fc on disk; harness 89c83a13 clitest e7bb897a plan f3c40527 report 35f07e96 disk-matched
+2026-09-22T01:41Z	P6-r3-cli-recovery	P6r3-handoff-13	DEFECT	cairn	-	lost-completion 13th; claim-path recovery worked; recovery timer retired pre-01:54Z
+2026-09-22T01:41Z	P6-r3-cli-recovery	P6r3-recoveryverify-1	DISPATCHED	corvid	2026-09-22T02:01Z	20m D1-D4/C1-C12 recheck of bound bytes; ack pending
+2026-09-22T01:45Z	P6-r3-cli-recovery	P6r3-recoveryverify-1	FAIL	corvid	-	review-recovery 3cc00b9ea7bb disk-matched; D1/D3/D4 improved 156+59; D2: timer never invoked + polling primary
+2026-09-22T01:48Z	P6-r4-notify-timer-drain	P6r4-admission-1	PENDING	corvid	2026-09-22T02:02Z	review+checklist not yet on disk; parent terminal checked
+2026-09-22T01:49Z	P6-r4-notify-timer-drain	P6r4-admission-1	ACCEPTED	corvid	-	review 5c9fa73a4480 exact; checklist 966a8cb579a7 pinned; parent EXHAUSTED
+2026-09-22T01:49Z	P6-r4-notify-timer-drain	P6r4-stageA-1	DISPATCHED	kiln	2026-09-22T02:19Z	receipt filed; N/T/O per checklist; ack started
+2026-09-22T02:02Z	P6-r4-notify-timer-drain	P6r4-stageA-1	COMPLETED	kiln	2026-09-22T02:19Z	14th lost wake; claim 5cfe75b8bf19 on disk; notify 35805761 adapter 5deb3521 harness 8575bbb0 plan f899b29f inv 50b9b485 matched
+2026-09-22T02:02Z	P6-r4-notify-timer-drain	P6r4-handoff-14	DEFECT	cairn	-	lost-completion 14th; claim-path recovery worked; stageA timer retired pre-02:19Z
+2026-09-22T02:02Z	P6-r4-notify-timer-drain	P6r4-candidate-1	DISPATCHED	corvid	2026-09-22T02:17Z	15m N/T/O check of bound bytes; ack pending
+2026-09-22T02:05Z	P6-r4-notify-timer-drain	P6r4-candidate-1	FAIL	corvid	-	review 932f548f81c3 disk-matched; N/T pass 165+59; O FAIL: transport never emits delivered, outbox unacked
+2026-09-22T02:08Z	P6-r4-notify-timer-drain	P6r4-repair-1	DISPATCHED	kiln	2026-09-22T02:18Z	receipt filed; archive 44f verified; O-settlement only; ack started
+2026-09-22T02:14Z	P6-r4-notify-timer-drain	P6r4-repair-1	CONFIRMED	cairn	2026-09-22T02:18Z	kiln running full suite 02:12Z pre-deadline; registry idle lags turn
+2026-09-22T02:18Z	P6-r4-notify-timer-drain	P6r4-repair-1	COMPLETED	kiln	2026-09-22T02:18Z	wake 02:17:14Z timely; claim c4acfff2a97d on disk; adapter 68741f8e report ba30314a iface 9b71bd02 matched
+2026-09-22T02:18Z	P6-r4-notify-timer-drain	P6r4-handoff-15	DEFECT	cairn	-	lost-completion 15th; wake timely but inbox missed; claim-path recovery worked
+2026-09-22T02:18Z	P6-r4-notify-timer-drain	P6r4-repairverify-1	DISPATCHED	corvid	2026-09-22T02:33Z	15m O-settlement recheck of bound bytes; ack pending
+2026-09-22T02:21Z	P6-r4-notify-timer-drain	P6r4-repairverify-1	PASS	corvid	-	review-repair 3ca2ac579585 disk-matched; O fixed exact-CLI, rollback rc0; 172+59; timer retired pre-02:33Z
+2026-09-22T02:28Z	P6-r4-notify-timer-drain	P6r4-terminal	EXHAUSTED	tern	-	terminal-disposition pinned; gate for P6-r5 release
+2026-09-22T02:28Z	P6-r5-launch-binding	P6r5-admission-1	PENDING	corvid	2026-09-22T02:43Z	admission+L1-L4 checklist in flight; worker HELD
+2026-09-22T02:30Z	P6-r5-launch-binding	P6r5-admission-1	ACCEPTED	corvid	-	review 7f6fb5e8c23f exact; checklist e47a1c29c6c4 pinned; parent EXHAUSTED
+2026-09-22T02:30Z	P6-r5-launch-binding	P6r5-stageA-1	DISPATCHED	kiln	2026-09-22T03:00Z	receipt filed; L1-L4 per checklist; ack started
+2026-09-22T02:42Z	P6-r5-launch-binding	P6r5-stageA-1	CONFIRMED	cairn	2026-09-22T03:00Z	kiln running checks 02:41Z pre-deadline; registry idle lags turn
+2026-09-22T02:44Z	P6-r5-launch-binding	P6r5-stageA-1	CONFIRMED	cairn	2026-09-22T03:00Z	kiln executing 02:44Z pre-deadline; registry idle lags turn
+2026-09-22T03:00Z	P6-r5-launch-binding	P6r5-stageA-1	BLOCKED	kiln	2026-09-22T03:00Z	receipt exists; worker path confusion, no claim; seat stopped
+2026-09-22T03:03Z	P6-r5-launch-binding	P6r5-stageA-1	CANCELLED	cairn	-	superseded by P6r5-recovery-1 per ext-1; BLOCKED history preserved; archive 40f verified
+2026-09-22T03:03Z	P6-r5-launch-binding	P6r5-recovery-1	DISPATCHED	kiln	2026-09-22T03:23Z	recovery resumes stageA-1; old stopped verified; ack pending
+2026-09-22T03:13Z	P6-r5-launch-binding	P6r5-recovery-1	CONFIRMED	cairn	2026-09-22T03:23Z	kiln working absolute paths 03:10Z pre-deadline; registry idle lags turn
+2026-09-22T03:24Z	P6-r5-launch-binding	P6r5-recovery-1	COMPLETED	kiln	2026-09-22T03:23Z	16th lost wake (wake-exe no cairn match); claim 03:15:17Z timely; worker 67dd472d handoff ecbec310 harness d3586475 btest 46102858 disk-matched; 180 pass
+2026-09-22T03:24Z	P6-r5-launch-binding	P6r5-handoff-16	DEFECT	cairn	-	lost-completion 16th; wake-exe cannot resolve cairn title; claim-path recovery worked; timer consumed
+2026-09-22T03:24Z	P6-r5-launch-binding	P6r5-candidate-1	DISPATCHED	corvid	2026-09-22T03:44Z	20m L1-L4 check of bound bytes; ack pending
+2026-09-22T03:27Z	P6-r5-launch-binding	P6r5-candidate-1	FAIL	corvid	-	review b98a7d4ef76a disk-matched; L2 BLOCKING: plan setup missing explicit stream keys, evidence file uncreated; 180+59
+2026-09-22T03:30Z	P6-r5-launch-binding	P6r5-repair-1	DISPATCHED	kiln	2026-09-22T03:50Z	receipt filed; archive 45f verified; L2-executable-prep only; ack started
+2026-09-22T03:30Z	P6-r5-launch-binding	P6r5-repair-1	COMPLETED	kiln	2026-09-22T03:50Z	inbox wake arrived; claim ad290864e003 03:30:50Z timely; harness 96b91edf prep 8af13ddf plan 7679823e disk-matched
+2026-09-22T03:30Z	P6-r5-launch-binding	P6r5-repairverify-1	DISPATCHED	corvid	2026-09-22T03:50Z	20m exact-plan recheck of bound bytes; ack pending
+2026-09-22T03:34Z	P6-r5-launch-binding	P6r5-repairverify-1	PASS	corvid	-	review-repair a1efdb3c43d3 disk-matched; exact-plan e2e L1-L4+O pass, 180+59; timer retired pre-03:50Z
+2026-09-22T03:36Z	P6-r5-launch-binding	P6r5-repair-2	DISPATCHED	kiln	2026-09-22T04:06Z	receipt filed; archive 51f verified; L2/L4 only; ack started
+2026-09-22T03:42Z	P6-r5-launch-binding	P6r5-repair-2	COMPLETED	kiln	2026-09-22T04:06Z	inbox wake arrived; claim 35712cc7213b 03:42:53Z timely; 8/8 changed files disk-matched; 189 pass
+2026-09-22T03:42Z	P6-r5-launch-binding	P6r5-repair2verify-1	DISPATCHED	corvid	2026-09-22T04:02Z	20m archived-vs-corrected + unshared cases; ack pending
+2026-09-22T03:45Z	P6-r5-launch-binding	P6r5-repair2verify-1	PASS	corvid	-	review-repair-2 f20527d2a5f6 disk-matched; L2/L4 archived-FAIL vs corrected-pass, 189+59; timer retired pre-04:02Z
+2026-09-22T03:48Z	P6-r5-launch-binding	P6r5-terminal	EXHAUSTED	tern	-	terminal-disposition pinned; gate for P6-r6 release
+2026-09-22T03:48Z	P6-r6-live-preparation	P6r6-admission-1	PENDING	corvid	2026-09-22T04:03Z	admission+checklist in flight; worker HELD
+2026-09-22T03:49Z	P6-r6-live-preparation	P6r6-admission-1	ACCEPTED	corvid	-	review d4f484651808 exact; checklist ba44f88a0ced pinned; parent EXHAUSTED; worker HELD
+2026-09-22T03:51Z	P6-r6-live-preparation	P6r6-candidate-1	DISPATCHED	kiln	2026-09-22T04:21Z	receipt filed; tools/plan only, P6-r5 reused; ack started
+2026-09-22T03:54Z	P6-r6-live-preparation	P6r6-candidate-1	COMPLETED	kiln	2026-09-22T04:21Z	inbox wake arrived; claim da0d3ee51ec7 03:53:58Z timely; 8/8 files disk-matched; 8 tool tests
+2026-09-22T03:54Z	P6-r6-live-preparation	P6r6-review-1	DISPATCHED	corvid	2026-09-22T04:14Z	20m tools/plan review of bound bytes; ack pending
+2026-09-22T03:56Z	P6-r6-live-preparation	P6r6-review-1	MISMATCH	corvid	-	verdict db2e6c1e21b51 vs disk c4a2602b9868; sole post-verdict write is corvid 03:55:56Z; PASS not bound
+2026-09-22T03:56Z	P6-r6-live-preparation	P6r6-review-1	PASS	corvid	-	review c4a2602b9868 disk-EXACT after correction; tools/plan P1-P5/T1-T5 pass; timer consumed
+2026-09-22T03:58Z	P6-r6-live-preparation	P6r6-prepare-1	DISPATCHED	cairn	2026-09-22T04:08Z	receipt filed; tool+plan hashes match; no collision; timer armed
+2026-09-22T03:59Z	P6-r6-live-preparation	P6r6-prepare-1	FAIL	cairn	-	prepare_live rc3: idle-timeout -json passthrough defect; no sessions launched; evidence in live-preparation/
+2026-09-22T04:01Z	P6-r6-live-preparation	P6r6-repair-1	DISPATCHED	kiln	2026-09-22T04:21Z	receipt filed; old prep FAIL preserved, timers retired; parser-safe argv only; ack started
+2026-09-22T04:04Z	P6-r6-live-preparation	P6r6-repair-1	CONFIRMED	cairn	2026-09-22T04:21Z	kiln editing prepare_live.py 04:04Z pre-deadline; registry idle lags turn
+2026-09-22T04:05Z	P6-r6-live-preparation	P6r6-repair-1	COMPLETED	kiln	2026-09-22T04:21Z	inbox wake arrived; claim 0f87481d8c5b 04:05:15Z timely; 5/5 files disk-matched; 12 tests
+2026-09-22T04:05Z	P6-r6-live-preparation	P6r6-repairverify-1	DISPATCHED	corvid	2026-09-22T04:20Z	15m parser-failure vs corrected-argv check; ack pending
+2026-09-22T04:06Z	P6-r6-live-preparation	P6r6-repairverify-1	PASS	corvid	-	review-repair 301c7d76f330 disk-matched; old-fail vs new-argv reproduced on binary; 12 pass; timer retired pre-04:20Z
+2026-09-22T04:07Z	P6-r6-live-preparation	P6r6-prepare-2	DISPATCHED	cairn	2026-09-22T04:17Z	receipt filed; tool+plan hashes match; no collision; timer armed
+2026-09-22T04:08Z	P6-r6-live-preparation	P6r6-prepare-2	FAIL	cairn	-	E_LAUNCH_PARTIAL 0 completed; registry unchanged, nothing to stop; evidence in live-preparation-2/
+2026-09-22T04:10Z	P6-r6-live-preparation	P6r6-prepare-2	CORRECT	tern	-	my nothing-to-stop wrong: worker 0e734b30 created, Tern stopped it; journal count != effects inventory; timers retired
+2026-09-22T04:10Z	P6-r6-live-preparation	P6r6-repair-2	DISPATCHED	kiln	2026-09-22T04:30Z	receipt filed; SUCCESS-JSON correction only; ack started
+2026-09-22T04:12Z	P6-r6-live-preparation	P6r6-repair-2	COMPLETED	kiln	2026-09-22T04:30Z	inbox wake arrived; claim 4570c04dc8a2 04:11:55Z timely; 6/6 files disk-matched; 18 tests
+2026-09-22T04:12Z	P6-r6-live-preparation	P6r6-repair2verify-1	DISPATCHED	corvid	2026-09-22T04:27Z	15m SUCCESS/error-JSON check; ack pending
+2026-09-22T04:12Z	P6-r6-live-preparation	P6r6-repair2verify-1	PASS	corvid	-	review-repair-2 06147322c0ab disk-matched; quiet/JSON root cause confirmed on binary; 18 pass; timer retired pre-04:27Z
+2026-09-22T04:14Z	P6-r6-live-preparation	P6r6-prepare-3	DISPATCHED	cairn	2026-09-22T04:24Z	receipt filed; tool+plan match; *-p3 no collision; timer armed
+2026-09-22T04:16Z	P6-r6-live-preparation	P6r6-prepare-3	PREPARED	cairn	-	tool rc3 socket-race; reconciled: worker-p3 085360c2 idle + verifier-p3 caac0ba3 waiting, sockets present; evidence live-preparation-3/
+2026-09-22T04:16Z	P6-r6-live-preparation	P6r6-bindingcheck-1	DISPATCHED	corvid	2026-09-22T04:21Z	5m read-only binding check vs reconciled manifest b3eaf3cc; no relaunch/tasks; cleanup 04:39Z retained
+2026-09-22T04:17Z	P6-r6-live-preparation	P6r6-bindingcheck-1	PASS	corvid	-	binding-review 73233ae3850c + manifest b3eaf3cc disk-EXACT; both p3 ids bound; 5m charged, 10m witness remains
+2026-09-22T04:19Z	P6-r6-live-preparation	P6r6-composition-1	DISPATCHED	kiln	2026-09-22T04:49Z	receipt filed; Stage-C composition, injected only; cleanup 04:39Z honored; ack started
+2026-09-22T04:25Z	P6-r6-live-preparation	P6r6-prepare-3	RETIRED	cairn	-	stale prepare-window unit fired post-reconciliation; p3 ids live under 04:39Z cleanup bound, untouched
+2026-09-22T04:27Z	P6-r6-live-preparation	P6r6-composition-1	COMPLETED	kiln	2026-09-22T04:49Z	inbox wake arrived; claim 293644c80dfb 04:27:48Z timely; 3/3 files disk-matched; 28 tests
+2026-09-22T04:27Z	P6-r6-live-preparation	P6r6-compositionverify-1	DISPATCHED	corvid	2026-09-22T04:47Z	20m entrypoint+timing review of bound bytes; ack pending
+2026-09-22T04:29Z	P6-r6-live-preparation	P6r6-compositionverify-1	FAIL	corvid	-	review-composition 9c060279e4fb disk-matched; BLOCKING: entrypoint dead, no __main__ guard, plan cmds no-op rc0; module logic sound
+2026-09-22T04:30Z	P6-r6-live-preparation	P6r6-composition-repair-1	DISPATCHED	kiln	2026-09-22T04:50Z	receipt filed; FAIL pinned dc51558, tree clean; guard+CLI tests only; ack started
+2026-09-22T04:32Z	P6-r6-live-preparation	P6r6-composition-repair-1	COMPLETED	kiln	2026-09-22T04:50Z	inbox wake arrived; claim d856a8f77633 04:32:36Z timely; entry 211f495b clitest 72c678ea matched; 34 tests
+2026-09-22T04:32Z	P6-r6-live-preparation	P6r6-comprepairverify-1	DISPATCHED	corvid	2026-09-22T04:47Z	15m exact-CLI recheck of bound bytes; ack pending
+2026-09-22T04:33Z	P6-r6-live-preparation	P6r6-comprepairverify-1	PASS	corvid	-	review-repair eb6fa89765ba disk-matched; exact-CLI all green incl negatives; 34 pass; timer retired pre-04:47Z
+2026-09-22T04:37Z	P6-r6-live-preparation	P6r6-terminal	EXHAUSTED	tern	-	both p3 stopped by Tern; registry 4 main; no p6r6 timers remain
+2026-09-22T04:37Z	P6-r7-real-host-path	P6r7-admission-1	PENDING	corvid	2026-09-22T04:52Z	admission+H1-H4 checklist in flight; worker/live HELD
+2026-09-22T04:37Z	P6-r7-real-host-path	P6r7-admission-1	ACCEPTED	corvid	-	review 378b31c2ff1d exact; checklist ce7401f18bf pinned; parent EXHAUSTED; worker HELD
+2026-09-22T04:38Z	P6-r7-real-host-path	P6r7-candidate-1	DISPATCHED	kiln	2026-09-22T05:18Z	receipt filed; H1-H4 read-only discovery; ack started
+2026-09-22T04:49Z	P6-r7-real-host-path	P6r7-candidate-1	COMPLETED	kiln	2026-09-22T05:18Z	inbox wake arrived; claim ec35326ac5c9 04:49:26Z timely; 6/6 files disk-matched; 8 tests
+2026-09-22T04:49Z	P6-r7-real-host-path	P6r7-review-1	DISPATCHED	corvid	2026-09-22T05:14Z	25m H1-H4 review of bound bytes; ack pending
+2026-09-22T04:51Z	P6-r7-real-host-path	P6r7-review-1	FAIL	corvid	-	review 25cfff2b04a2 disk-matched; H2 fail-open: absent harness hash defaults to want; H1/H3/H4 sound; 8 pass
+2026-09-22T04:52Z	P6-r7-real-host-path	P6r7-repair-1	DISPATCHED	kiln	2026-09-22T05:12Z	receipt filed; FAIL pinned 5643f2d, tree clean; fail-closed hashes only; ack started
+2026-09-22T04:54Z	P6-r7-real-host-path	P6r7-repair-1	COMPLETED	kiln	2026-09-22T05:12Z	inbox wake arrived; claim e1f9a84bb328 04:54:17Z timely; 2/2 files disk-matched; 11 tests
+2026-09-22T04:54Z	P6-r7-real-host-path	P6r7-repairverify-1	DISPATCHED	corvid	2026-09-22T05:09Z	15m exact-CLI hash recheck of bound bytes; ack pending
+2026-09-22T04:55Z	P6-r7-real-host-path	P6r7-repairverify-1	PASS	corvid	-	review-repair 677dbeac365f disk-matched; fail-closed hashes exact-CLI, old fail-open reproduced; 11 pass; timer retired pre-05:09Z
+2026-09-22T05:00Z	P6-r7-real-host-path	P6r7-readiness-1	DISPATCHED	corvid	2026-09-22T05:10Z	receipt filed; R1-R3 bounded review; repair PASS preserved; ack started
+2026-09-22T05:01Z	P6-r7-real-host-path	P6r7-readiness-1	FAIL	corvid	-	readiness-review 12d5ce7fe6e9 disk-matched; R1/R2/R3 all FAIL bounded; H2 PASS preserved; timer retired pre-05:10Z
+2026-09-22T05:03Z	P6-r7-real-host-path	P6r7-terminal	EXHAUSTED	tern	-	terminal pinned; gate for P6-r8 release
+2026-09-22T05:03Z	P6-r8-case-execution	P6r8-admission-1	DISPATCHED	corvid	2026-09-22T05:18Z	receipt filed; review+checklist; worker HELD; ack started
+2026-09-22T05:04Z	P6-r8-case-execution	P6r8-admission-1	ACCEPTED	corvid	-	review 958d05910cd9 exact; checklist 5c2848473520 pinned; parent EXHAUSTED
+2026-09-22T05:04Z	P6-r8-case-execution	P6r8-candidate-1	DISPATCHED	kiln	2026-09-22T05:44Z	receipt filed; R1-R3 per checklist; ack started
+2026-09-22T05:06Z	P6-r8-case-execution	P6r8-candidate-1	CORRECT	tern	2026-09-22T05:44Z	contract commit 17cd6bf->8ceb879, bytes identical; pin-after-dispatch deviation stands; timer elapse matches; no redispatch
+2026-09-22T05:06Z	P6-r8-case-execution	P6r8-citation-1	ACK	corvid	-	citation-correction 266b32e24139 verified; review+checklist unchanged; timer elapse 05:44:33Z confirmed; attempt continues
+2026-09-22T05:11Z	P6-r8-case-execution	P6r8-candidate-1	CONFIRMED	cairn	2026-09-22T05:44Z	kiln writing 05:08Z pre-deadline; admission already ACCEPTED terminal; registry idle lags turn
+2026-09-22T05:19Z	P6-r8-case-execution	P6r8-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate attempt governs
+2026-09-22T05:38Z	P6-r8-case-execution	P6r8-candidate-1	NUDGED	cairn	2026-09-22T05:44Z	empty turn 05:34Z, no claim; wake re-sent, no re-dispatch
+2026-09-22T05:44Z	P6-r8-case-execution	P6r8-candidate-1	BLOCKED	kiln	2026-09-22T05:44Z	no completion at deadline; tests running past bound; seat stopped
+2026-09-22T05:46Z	P6-r8-case-execution	P6r8-recovery-1	DISPATCHED	kiln	2026-09-22T06:16Z	recovery resumes candidate-1; old stopped, archive 22f verified; timer armed
+2026-09-22T05:53Z	P6-r8-case-execution	P6r8-recovery-1	COMPLETED	kiln	2026-09-22T06:16Z	inbox wake arrived; claim 87e6af88bae1 05:53:03Z timely; 10/10 files disk-matched; 8 tests
+2026-09-22T05:53Z	P6-r8-case-execution	P6r8-review-1	DISPATCHED	corvid	2026-09-22T06:18Z	25m R1-R3 review of bound bytes; ack pending
+2026-09-22T05:57Z	P6-r8-case-execution	P6r8-review-1	CONFIRMED	cairn	2026-09-22T06:18Z	corvid executing 05:57Z pre-deadline, no review file yet; registry idle lags turn
+2026-09-22T05:59Z	P6-r8-case-execution	P6r8-review-1	PASS	corvid	-	review 9395778a9cb1 disk-matched; R1/R2/R3 pass, 8 suite pass; timer retired pre-06:18Z
+2026-09-22T06:02Z	P6-r8-case-execution	P6r8-checklist-1	DISPATCHED	corvid	2026-09-22T06:07Z	5m R1-host-checklist pinned FAIL on d40c1ce; ack started
+2026-09-22T06:05Z	P6-r8-case-execution	P6r8-checklist-1	FAIL	corvid	-	R1-host-checklist 222916ed01b8 disk-matched; declaration-vs-application FAIL pinned; timer retired pre-06:07Z
+2026-09-22T06:05Z	P6-r8-case-execution	P6r8-repair-1	DISPATCHED	kiln	2026-09-22T06:45Z	receipt filed; checklist-gated real consumer; ack started
+2026-09-22T06:20Z	P6-r8-case-execution	P6r8-repair-1	CONFIRMED	cairn	2026-09-22T06:45Z	kiln executing 06:13Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T06:25Z	P6-r8-case-execution	P6r8-repair-1	COMPLETED	kiln	2026-09-22T06:45Z	inbox wake arrived; claim 158249e874e4 06:25:36Z timely; 12/12 files disk-matched; 10 tests
+2026-09-22T06:25Z	P6-r8-case-execution	P6r8-postrepair-1	DISPATCHED	corvid	2026-09-22T06:45Z	20m production-consumer check of bound bytes; ack pending
+2026-09-22T06:29Z	P6-r8-case-execution	P6r8-postrepair-1	CONFIRMED	cairn	2026-09-22T06:45Z	corvid executing checks 06:29Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T06:44Z	P6-r8-case-execution	P6r8-postrepair-1	PASS	corvid	-	review-repair 84dde9cc57a5 disk-matched; R1 applied-receipts pass, 10 tests; timer retired pre-06:45Z
+2026-09-22T06:47Z	P6-r8-case-execution	P6r8-compositioncheck-1	DISPATCHED	corvid	2026-09-22T06:52Z	5m D1-D4 checklist pinned FAIL on ac0882b4; ack started
+2026-09-22T06:50Z	P6-r8-case-execution	P6r8-compositioncheck-1	FAIL	corvid	-	host-composition-checklist c076dddc093d disk-matched; D1-D4 FAIL pinned; timer retired pre-06:52Z
+2026-09-22T06:50Z	P6-r8-case-execution	P6r8-repair-2	DISPATCHED	kiln	2026-09-22T07:30Z	receipt filed; checklist-gated D1-D4 composition; ack started
+2026-09-22T07:08Z	P6-r8-case-execution	P6r8-repair-2	CONFIRMED	cairn	2026-09-22T07:30Z	kiln stall-rebuilt 07:08Z, src touched 07:03Z, no claim; 22m remain
+2026-09-22T07:25Z	P6-r8-case-execution	P6r8-repair-2	CONFIRMED	cairn	2026-09-22T07:30Z	second stall-rebuild, src touched 07:22Z, no claim; 5m remain
+2026-09-22T07:30Z	P6-r8-case-execution	P6r8-repair-2	INCOMPLETE	kiln	2026-09-22T07:30Z	claim 2703933c5e58 bounded-incomplete at bound; D4 seq green, D1-D3 units green; residuals: sim-queued fault + self-hash
+2026-09-22T07:31Z	P6-r8-case-execution	P6r8-repair-2	BLOCKED	cairn	-	post-bound claim amended 07:33Z not bound; bound set 2703933c5e58 INCOMPLETE stands; host 5/5 real-branch noted; no extension
+2026-09-22T07:33Z	P6-r8-case-execution	P6r8-recovery-2	DISPATCHED	kiln	2026-09-22T08:03Z	recovery resumes repair-2; no owned procs, timer consumed; ack started
+2026-09-22T07:35Z	P6-r8-case-execution	P6r8-recovery-2	CONFIRMED	cairn	2026-09-22T08:03Z	kiln reading files 07:35Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T07:52Z	P6-r8-case-execution	P6r8-recovery-2	COMPLETED	kiln	2026-09-22T08:03Z	found in history not inbox; claim 13bb8e66b06b 07:52Z timely; entry e83caa37 manifest a844a4f3 matched; 15 tests
+2026-09-22T07:52Z	P6-r8-case-execution	P6r8-postrepair-2	DISPATCHED	corvid	2026-09-22T08:12Z	20m queued-fix+manifest review of bound bytes; ack pending
+2026-09-22T07:55Z	P6-r8-case-execution	P6r8-postrepair-2	CONFIRMED	cairn	2026-09-22T08:12Z	corvid executing 07:55Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T08:12Z	P6-r8-case-execution	P6r8-postrepair-2	FAIL	corvid	-	review-repair-2 35d3fe4d17b4 disk-matched; queued fix pass, full gate flaky; timer fired at bound
+2026-09-22T08:13Z	P6-r8-case-execution	P6r8-repair-3	DISPATCHED	kiln	2026-09-22T08:53Z	receipt filed; FAIL pinned cc8cc2b, tree clean; causal race only; ack started
+2026-09-22T08:18Z	P6-r8-case-execution	P6r8-repair-3	CONFIRMED	cairn	2026-09-22T08:53Z	kiln running pytest 08:18Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T08:24Z	P6-r8-case-execution	P6r8-repair-3	COMPLETED	kiln	2026-09-22T08:53Z	bare notice + history; claim 5ed58392e050 08:50Z timely; 11/12 match, test_fault_ordering claim 8b60d34e vs disk 34548dc2
+2026-09-22T08:24Z	P6-r8-case-execution	P6r8-repair3verify-1	DISPATCHED	corvid	2026-09-22T08:49Z	25m causal-race review; hash mismatch flagged; ack pending
+2026-09-22T08:24Z	P6-r8-case-execution	P6r8-repair-3	SKEW	cairn	-	claim completed_at 08:50Z vs host 08:24Z; worker time not authoritative, receipt time governs; binding stands
+2026-09-22T08:24Z	P6-r8-case-execution	P6r8-repair-3	FROZEN	cairn	-	cause note filed (tamper-before-recompute race, gate on handoff-done); kiln told no further edits under verify
+2026-09-22T08:24Z	P6-r8-case-execution	P6r8-repair-3	NOTE	kiln	-	worker claims deterministic regression 3-fail-old/3-pass-new + 3x18/18 green no retries; offered, not verified; corvid adjudicates
+2026-09-22T08:27Z	P6-r8-case-execution	P6r8-repair3verify-1	CONFIRMED	cairn	2026-09-22T08:49Z	corvid executing 08:27Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T08:42Z	P6-r8-case-execution	P6r8-repair3verify-1	CONFIRMED	cairn	2026-09-22T08:49Z	corvid running repeat screen 08:42Z pre-deadline; 7m remain
+2026-09-22T08:50Z	P6-r8-case-execution	P6r8-repair3verify-1	PASS	corvid	-	review-repair-3 b0e23457a70f disk-matched; substance PASS, claim WITHHOLD: 61-hex truncated hash string; timer fired at bound
+2026-09-22T08:52Z	P6-r8-case-execution	P6r8-correction-1	DISPATCHED	corvid	2026-09-22T08:57Z	receipt filed; one-field mechanical check; ack started
+2026-09-22T08:55Z	P6-r8-case-execution	P6r8-correction-1	PASS	corvid	-	claim-correction-review fe8be0d0536c disk-matched; one-field fix verified, 27/27 rehash clean; timer retired pre-08:57Z
+2026-09-22T08:58Z	P6-r8-case-execution	P6r8-prepare-1	DISPATCHED	cairn	2026-09-22T09:08Z	receipt filed; tool+plan match; r8p1 no collision; timer armed
+2026-09-22T08:59Z	P6-r8-case-execution	P6r8-prepare-1	PREPARED	cairn	-	tool rc3 socket-race; reconciled: worker-r8p1 6c0b6725 idle + verifier-r8p1 ed54bf3d waiting, sockets present; evidence live-preparation-1/
+2026-09-22T08:59Z	P6-r8-case-execution	P6r8-bindingcheck-1	DISPATCHED	corvid	2026-09-22T09:04Z	5m read-only binding check vs reconciled fbfb3ca7795d; ack started
+2026-09-22T09:02Z	P6-r8-case-execution	P6r8-bindingcheck-1	PASS	corvid	-	binding-review f1c224dd8389 disk-matched; both r8p1 ids bound; timer retired pre-09:04Z
+2026-09-22T09:05Z	P6-r8-case-execution	P6r8-execbinding-1	DISPATCHED	corvid	2026-09-22T09:10Z	5m execution-schema check of 8496c10aeb5a; ack started
+2026-09-22T09:08Z	P6-r8-case-execution	P6r8-prepare-1	RETIRED	cairn	-	stale prepare-window unit fired post-reconciliation; r8p1 ids live under 09:23Z cleanup, untouched
+2026-09-22T09:08Z	P6-r8-case-execution	P6r8-execbinding-1	PASS	corvid	-	review 669d24443b89 disk-matched; execution schema verified derive-only; timer retired pre-09:10Z
+2026-09-22T09:12Z	P6-r8-case-execution	P6r8-live-positive-1	DISPATCHED	cairn	2026-09-22T09:22Z	receipt filed; all 4 hashes match; fixture ids live; watchdog armed
+2026-09-22T09:13Z	P6-r8-case-execution	P6r8-live-positive-1	FAIL	cairn	-	run-case rc3 E_CASE_FAIL owned-failure no-end; gate+arm rc0; evidence live-positive-1/; no retry per release
+2026-09-22T09:13Z	P6-r8-case-execution	P6r8-livereview-1	DISPATCHED	corvid	2026-09-22T09:23Z	10m live-evidence review; fixtures archived+stopped; ack pending
+2026-09-22T09:17Z	P6-r8-case-execution	P6r8-livereview-1	FAIL	corvid	-	live-review 88f52f74db6b disk-matched; dispatch+cleanup PASS, handoff no-end: 8s wait vs 18-20s latency; timer retired pre-09:23Z
+2026-09-22T09:21Z	P6-r8-case-execution	P6r8-terminal	EXHAUSTED	tern	-	terminal pinned; gate for P6-r9 release
+2026-09-22T09:21Z	P6-r9-observer-lifetime	P6r9-admission-1	DISPATCHED	corvid	2026-09-22T09:31Z	receipt filed; review+checklist; worker HELD; ack started
+2026-09-22T09:24Z	P6-r9-observer-lifetime	P6r9-admission-1	ACCEPTED	corvid	-	review a3a8ec84eb4f exact; checklist f52a876fcae pinned; parent EXHAUSTED
+2026-09-22T09:24Z	P6-r9-observer-lifetime	P6r9-candidate-1	DISPATCHED	kiln	2026-09-22T09:59Z	contract 7585aec bb103f35b857; O1-O4 injected only; ack started
+2026-09-22T09:31Z	P6-r9-observer-lifetime	P6r9-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate governs
+2026-09-22T09:34Z	P6-r9-observer-lifetime	P6r9-candidate-1	CONFIRMED	cairn	2026-09-22T09:59Z	kiln running observer tests 09:30Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T09:53Z	P6-r9-observer-lifetime	P6r9-candidate-1	COMPLETED	kiln	2026-09-22T09:59Z	bare notice + history; claim 55780a080a4f 09:55Z timely; manifest 9e59378d 27/27 verified
+2026-09-22T09:53Z	P6-r9-observer-lifetime	P6r9-review-1	DISPATCHED	corvid	2026-09-22T10:17Z	25m O1-O4 review of bound manifest; ack pending
+2026-09-22T09:53Z	P6-r9-observer-lifetime	P6r9-candidate-1	NOTE	kiln	-	worker claims old-fails + 7 new exact-CLI passes exactly-once; offered, not verified; corvid adjudicates
+2026-09-22T09:56Z	P6-r9-observer-lifetime	P6r9-review-1	CONFIRMED	cairn	2026-09-22T10:17Z	corvid stall-rebuilt 09:56Z, no verdict file; 21m remain
+2026-09-22T10:15Z	P6-r9-observer-lifetime	P6r9-review-1	FAIL	corvid	-	review 6cbd608e0e54 disk-matched; O1-O4 7/7 pass, manifest 27/27; BLOCKING: retained R3 first-run test timeouts
+2026-09-22T10:18Z	P6-r9-observer-lifetime	P6r9-amendment-1	DISPATCHED	corvid	2026-09-22T10:23Z	5m amendment admission; kiln repair waits on ACCEPTED
+2026-09-22T10:20Z	P6-r9-observer-lifetime	P6r9-amendment-1	ACCEPTED	corvid	-	review 1f8a5503708a; amendment 5c537bea9329 + checks 1-4 pinned; one kiln<=30m then corvid<=25m; worker HELD
+2026-09-22T10:20Z	P6-r9-observer-lifetime	P6r9-amendment-1	ACCEPTED	corvid	-	review 1f8a5503708a disk-matched; unchanged bytes
+2026-09-22T10:20Z	P6-r9-observer-lifetime	P6r9-repair-1	DISPATCHED	kiln	2026-09-22T10:50Z	receipt filed; replacement checks 1-4; ack started
+2026-09-22T10:23Z	P6-r9-observer-lifetime	P6r9-amendment-1	RETIRED	cairn	-	stale amendment unit fired post-ACCEPTED; timer consumed; repair governs
+2026-09-22T10:24Z	P6-r9-observer-lifetime	P6r9-repair-1	CONFIRMED	cairn	2026-09-22T10:50Z	kiln stall-rebuilt 10:24Z mid-tests, no claim; 26m remain
+2026-09-22T10:41Z	P6-r9-observer-lifetime	P6r9-repair-1	COMPLETED	kiln	2026-09-22T10:50Z	found via claim 10:34Z after 2 stalls; manifest 673c723c 27/27 verified; tests-only, parents frozen
+2026-09-22T10:41Z	P6-r9-observer-lifetime	P6r9-repairverify-1	DISPATCHED	corvid	2026-09-22T11:06Z	25m replacement-checks review of bound manifest; ack pending
+2026-09-22T10:45Z	P6-r9-observer-lifetime	P6r9-repairverify-1	CONFIRMED	cairn	2026-09-22T11:06Z	corvid stall-rebuilt 10:45Z, no verdict file; 21m remain
+2026-09-22T10:54Z	P6-r9-observer-lifetime	P6r9-repairverify-1	PASS	corvid	-	review 62af5b1e63e8; manifest 673c723c 27/27; suite 27/27 in 594s; checks1-4 met; tests-only, prod frozen; live still held
+2026-09-22T10:54Z	P6-r9-observer-lifetime	P6r9-repairverify-1	PASS	corvid	-	review-repair 62af5b1e63e8 disk-matched; replacement 1-4 met, 27/27 suite; timer retired pre-11:06Z
+2026-09-22T10:57Z	P6-r9-observer-lifetime	P6r9-prepare-1	DISPATCHED	cairn	2026-09-22T11:07Z	receipt filed; tool+plan match; r9p1 no collision; timer armed
+2026-09-22T10:58Z	P6-r9-observer-lifetime	P6r9-prepare-1	PREPARED	cairn	-	tool rc3 socket-race; reconciled: worker-r9p1 12bc0557 idle + verifier-r9p1 0d89b30c waiting, sockets real; binding 98c77115bbdd
+2026-09-22T11:08Z	P6-r9-observer-lifetime	P6r9-prepare-1	RETIRED	cairn	-	stale prepare-window unit fired post-reconciliation; r9p1 ids live under 11:22Z cleanup, untouched
+2026-09-22T12:25Z	P6-r9-observer-lifetime	P6r9-prepare-1	CLEANUP	cairn	-	overdue 11:22Z bound (no cleanup timer armed - fault); both r9p1 ids stopped rc0; registry retained
+2026-09-22T12:28Z	P6-r9-observer-lifetime	P6r9-prepare-2	DISPATCHED	cairn	2026-09-22T12:38Z	receipt filed; cleanup timer ACTIVE verified; r9p2 no collision; launched <5m
+2026-09-22T12:29Z	P6-r9-observer-lifetime	P6r9-prepare-2	PREPARED	cairn	-	tool rc3 socket-race; r9p2 ids live with real sockets; binding filed; routing witness now
+2026-09-22T12:29Z	P6-r9-observer-lifetime	P6r9-bindingcheck-2	DISPATCHED	corvid	2026-09-22T12:39Z	10m r9p2 binding check; ack pending
+2026-09-22T12:31Z	P6-r9-observer-lifetime	P6r9-bindingcheck-2	CONFIRMED	cairn	2026-09-22T12:39Z	corvid reading 12:31Z pre-deadline, no review file; prepare-2 already PREPARED terminal
+2026-09-22T12:33Z	P6-r9-observer-lifetime	P6r9-bindingcheck-2	FAIL	corvid	-	execution-binding-review-2 2a0f4ea5 disk-matched; identity/raw/registry/sockets/plan reconcile but derive-config rc3 E_SYNTHETIC missing stream_path/producer_root; role_lane=workdirs not lane; binding not derivable, repair re-file
+2026-09-22T12:32Z	P6-r9-observer-lifetime	P6r9-bindingcheck-2	FAIL	corvid	-	review-2 2a0f4ea5deaa disk-matched; reconciles but not derivable E_SYNTHETIC; timer retired pre-12:39Z
+2026-09-22T12:34Z	P6-r9-observer-lifetime	P6r9-correctioncheck-1	DISPATCHED	corvid	2026-09-22T12:39Z	5m corrected-binding check; original preserved; ack started
+2026-09-22T12:37Z	P6-r9-observer-lifetime	P6r9-correctioncheck-1	PASS	corvid	-	execution-binding-correction-review e36f486bc4a8 disk-matched; corrected 09bf07b2 supersedes preserved af42ea87; raw/registry/sockets/plan reconcile; derive rc0 parent=09bf07b2; not derivable defect fixed
+2026-09-22T12:35Z	P6-r9-observer-lifetime	P6r9-correctioncheck-1	PASS	corvid	-	correction-review e36f486bc4a8 disk-matched; corrected binding derives rc0; timer retired pre-12:39Z
+2026-09-22T12:39Z	P6-r9-observer-lifetime	P6r9-prepare-2	RETIRED	cairn	-	stale prepare2-window unit fired post-reconciliation; r9p2 ids live under director 12:48Z cleanup, untouched
+2026-09-22T13:50Z	P6-r9-observer-lifetime	P6r9-prepare-3	DISPATCHED	cairn	2026-09-22T14:00Z	receipt filed; cleanup ACTIVE verified; r9p3 no collision; launched <5m
+2026-09-22T13:51Z	P6-r9-observer-lifetime	P6r9-prepare-3	PREPARED	cairn	-	tool rc3 socket-race; r9p3 ids live with real sockets; binding 0536cbdb3c4b canonical schema; derive blocked: no signature for plan+binding
+2026-09-22T13:51Z	P6-r9-observer-lifetime	P6r9-bindingcheck-3	DISPATCHED	corvid	2026-09-22T13:56Z	5m r9p3 binding check; derive-block noted; ack pending
+2026-09-22T13:56Z	P6-r9-observer-lifetime	P6r9-bindingcheck-3	FAIL	corvid	-	execution-binding-review-3 1616ab59b7bc disk-matched; identity/raw/registry/sockets/plan reconcile but binding NOT canonical: role_lane=workdirs group not raw lane (H2 gate E_MISMATCH), launch_command='agent-deck launch', old rejected summary shape; derive not run no sig; re-file per corrected schema
+2026-09-22T13:52Z	P6-r9-observer-lifetime	P6r9-bindingcheck-3	FAIL	corvid	-	review-3 1616ab59b7bc disk-matched; binding repeats rejected shape (group-as-lane, invented command); timer retired pre-13:56Z
+2026-09-22T13:55Z	P6-r9-observer-lifetime	P6r9-correctioncheck-3	DISPATCHED	corvid	2026-09-22T14:00Z	5m corrected-3 check 661e80940aa3; original preserved; ack started
+2026-09-22T13:58Z	P6-r9-observer-lifetime	P6r9-correctioncheck-3	PASS	corvid	-	execution-binding-correction-review-3 3a078a518adb disk-matched; corrected 661e8094 supersedes preserved 0536cbdb; raw lane for role_lane+launch_command, raw_record_sha256 match, registry/sockets/plan reconcile, independent derive rc0 parent=661e8094
+2026-09-22T13:55Z	P6-r9-observer-lifetime	P6r9-correctioncheck-3	PASS	corvid	-	correction-review-3 3a078a518adb disk-matched; corrected binding derives rc0; timer retired pre-14:00Z
+2026-09-22T13:58Z	P6-r9-observer-lifetime	P6r9-live-positive-2	DISPATCHED	cairn	2026-09-22T14:08Z	receipt filed; all 4 hashes match; fixture ids live; watchdog armed
+2026-09-22T13:59Z	P6-r9-observer-lifetime	P6r9-live-positive-2	FAIL	cairn	-	run-case rc3 E_CASE_FAIL E_TIMER_CREATE-timer-backstop; gate+arm rc0; evidence live-positive-2/; no retry per release
+2026-09-22T13:59Z	P6-r9-observer-lifetime	P6r9-livereview-2	DISPATCHED	corvid	2026-09-22T14:09Z	10m live-evidence review incl timer-key mismatch; ack pending
+2026-09-22T14:08Z	P6-r9-observer-lifetime	P6r9-livereview-2	FAIL	corvid	-	live-review-2 6204144c6464 disk-matched; gate/id PASS, 1 worker send 0 verifier sends, worker claim real; reattach E_CASE_FAIL E_TIMER_CREATE-timer-backstop = confirmed guard key mismatch (timer-arm:deadline:<action> vs stored timer-arm:<unit>); no handoff; cleanup timer ~14:10Z unverified, r9p3 ids still registered
+2026-09-22T14:00Z	P6-r9-observer-lifetime	P6r9-livereview-2	FAIL	corvid	-	live-review-2 6204144c6464 disk-matched; 1 worker send, reattach E_TIMER_CREATE key mismatch; timer retired pre-14:09Z
+2026-09-22T14:01Z	P6-r9-observer-lifetime	P6r9-prepare-3	RETIRED	cairn	-	stale prepare3-window unit fired post-reconciliation; r9p3 ids live under director 14:10Z cleanup, untouched
+2026-09-22T14:03Z	P6-r9-observer-lifetime	P6r9-amendment-2	DISPATCHED	corvid	2026-09-22T14:08Z	5m timer-identity amendment admission; kiln repair waits on ACCEPTED
+2026-09-22T14:09Z	P6-r9-observer-lifetime	P6r9-amendment-2	ACCEPTED	corvid	-	amendment-2-admission-review cd9e0226 + checklist 5b8ae89f pinned; both defects source-confirmed (guard key != stored key; callback missing --db default /tmp/p6h); one kiln<=35m then corvid<=25m; worker HELD
+2026-09-22T14:04Z	P6-r9-observer-lifetime	P6r9-amendment-2	ACCEPTED	corvid	-	review cd9e022678a2 + checklist 5b8ae89fe286 disk-matched; unchanged
+2026-09-22T14:04Z	P6-r9-observer-lifetime	P6r9-repair-2	DISPATCHED	kiln	2026-09-22T14:39Z	receipt filed; timer-identity only; prep3 cleanup verifies after 14:10Z; ack started
+2026-09-22T14:08Z	P6-r9-observer-lifetime	P6r9-amendment-2	RETIRED	cairn	-	stale amendment2 unit fired post-ACCEPTED; timer consumed; repair governs
+2026-09-22T14:13Z	P6-r9-observer-lifetime	P6r9-repair-2	COMPLETED	kiln	2026-09-22T14:39Z	found in history not inbox; claim 2316c4be0314 timely; manifest 83e9dabf 28/28 verified; long suite PARTIAL declared
+2026-09-22T14:13Z	P6-r9-observer-lifetime	P6r9-repair2verify-1	DISPATCHED	corvid	2026-09-22T14:38Z	25m timer-identity review of bound manifest; ack pending
+2026-09-22T14:17Z	P6-r9-observer-lifetime	P6r9-repair2verify-1	CONFIRMED	cairn	2026-09-22T14:38Z	corvid executing 14:17Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T14:34Z	P6-r9-observer-lifetime	P6r9-repair2verify-1	CONFIRMED	cairn	2026-09-22T14:38Z	corvid stall-rebuilt 14:34Z, no verdict file; 4m remain
+2026-09-22T14:37Z	P6-r9-observer-lifetime	P6r9-repair2verify-1	FAIL	corvid	-	candidate-review-repair-2 7aac1ab518d4 disk-matched; timer-identity+callback fixes substantively correct (amendment2 tests 3/3, r3_lifetimes 5/5) BUT E_R3_DRIFT blocks run-case: R3_REVISION.json copy_sha256 not refreshed (harness 2a19f1b8 vs d1369ce5); test_d4 five-case composition FAILS; observer suite hangs test_delayed_worker_commits_new
+2026-09-22T14:38Z	P6-r9-observer-lifetime	P6r9-repair2verify-1	FAIL	corvid	-	review-repair-2 7aac1ab518d4 disk-matched; BLOCKING: R3_REVISION stale copy hash + observer hang; timer fired at bound
+2026-09-22T14:44Z	P6-r9-observer-lifetime	P6r9-repair-3	DISPATCHED	kiln	2026-09-22T15:24Z	receipt filed; base 9036b6f pinned; R3-hashes+hang+timer; ack started
+2026-09-22T14:47Z	P6-r9-observer-lifetime	P6r9-repair-3	CONFIRMED	cairn	2026-09-22T15:24Z	kiln diagnosing hang with faulthandler 14:47Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T15:04Z	P6-r9-observer-lifetime	P6r9-repair-3	CONFIRMED	cairn	2026-09-22T15:24Z	kiln stall-rebuilt 15:04Z mid-suite, no claim; 20m remain
+2026-09-22T15:14Z	P6-r9-observer-lifetime	P6r9-repair-3	COMPLETED	kiln	2026-09-22T15:24Z	no wake sent (empty turn); claim 7965c7a23edc 15:10:59Z timely; manifest 161afac5e212 29/29 verified
+2026-09-22T15:14Z	P6-r9-observer-lifetime	P6r9-handoff-17	DEFECT	cairn	-	17th lost completion; root cause 500s suite vs 120s stall killed turn mid-suite; openwork CONFIRMED-suppress blind 900s; deadline was sole backstop
+2026-09-22T15:14Z	P6-r9-observer-lifetime	P6r9-repair3verify-1	DISPATCHED	corvid	2026-09-22T15:44Z	30m R3+hang+timer review of bound manifest; ack pending
+2026-09-22T15:18Z	P6-r9-observer-lifetime	P6r9-repair3verify-1	CONFIRMED	cairn	2026-09-22T15:44Z	corvid stall-rebuilt 15:18Z (still 120s), no verdict file; 26m remain
+2026-09-22T15:36Z	P6-r9-observer-lifetime	P6r9-repair3verify-1	NUDGED	cairn	2026-09-22T15:44Z	repeated stalls, no verdict file; bounded-verdict nudge sent, no re-dispatch
+2026-09-22T15:42Z	P6-r9-observer-lifetime	P6r9-repair3verify-1	INCOMPLETE	corvid	-	review-repair-3 a0f43611f80a disk-matched; blockers resolved, full O3 gate not executable in-window; timer retired pre-15:44Z
+2026-09-22T15:45Z	P6-r9-observer-lifetime	P6r9-verify-completion-1	DISPATCHED	corvid	2026-09-22T16:15Z	receipt filed; frozen f1d7c86 full gate; kiln held; ack started
+2026-09-22T15:45Z	P6-r9-observer-lifetime	P6r9-verify-completion-1	DISPATCHED	corvid	2026-09-22T16:15Z	receipt filed; frozen f1d7c86 full gate; kiln held; ack started
+2026-09-22T15:57Z	P6-r9-observer-lifetime	P6r9-verify-completion-1	CONFIRMED	cairn	2026-09-22T16:15Z	corvid stall-rebuilt (600s now) 15:57Z; repair3verify already INCOMPLETE terminal; 18m remain
+2026-09-22T16:04Z	P6-r9-observer-lifetime	P6r9-verify-completion-1	PASS	corvid	-	full retained gate 34/34 rc0 840s on frozen f1d7c86; manifest 29/29 pre+post; checklist obligations executed; verdict 77d5b03ec040540789ea769d6d978c514c9af212d15dc72a76b176176d9f92b6; wakes cairn/Tern
+2026-09-22T16:16Z	P6-r9-observer-lifetime	P6r9-verify-completion-1	PASS	corvid	-	verification-completion 77d5b03ec04 disk-matched; full gate 34 pass on frozen bytes; timer fired at bound
+2026-09-22T16:18Z	P6-r9-observer-lifetime	P6r9-prepare-4	DISPATCHED	cairn	2026-09-22T16:28Z	receipt filed; cleanup ACTIVE verified; r9p4 no collision; launched <5m
+2026-09-22T16:19Z	P6-r9-observer-lifetime	P6r9-prepare-4	PREPARED	cairn	-	tool rc3 socket-race; r9p4 ids live with real sockets; binding a224daf4aa7f canonical schema; routing witness now
+2026-09-22T16:19Z	P6-r9-observer-lifetime	P6r9-bindingcheck-4	DISPATCHED	corvid	2026-09-22T16:24Z	5m r9p4 binding check; ack pending
+2026-09-22T16:22Z	P6-r9-observer-lifetime	P6r9-bindingcheck-4	FAIL	corvid	-	review-4 8c330b36150f disk-matched; identity reconciles, schema still old summary shape; timer retired pre-16:24Z
+2026-09-22T16:25Z	P6-r9-observer-lifetime	P6r9-correctioncheck-4	DISPATCHED	corvid	2026-09-22T16:30Z	5m corrected-4 check; r9p4 live verified; ack started
+2026-09-22T16:28Z	P6-r9-observer-lifetime	P6r9-prepare-4	RETIRED	cairn	-	stale prepare4-window unit fired post-reconciliation; r9p4 ids live under director 16:38Z cleanup, untouched
+2026-09-22T16:29Z	P6-r9-observer-lifetime	P6r9-correctioncheck-4	PASS	corvid	-	correction-review-4 f88170bbe7d0 disk-matched; corrected binding derives rc0, runtime live; timer retired pre-16:30Z
+2026-09-22T16:32Z	P6-r9-observer-lifetime	P6r9-live-positive-3	DISPATCHED	cairn	2026-09-22T16:36:45Z	receipt filed; all 4 hashes + manifest 29/29 match; watchdog armed
+2026-09-22T16:34Z	P6-r9-observer-lifetime	P6r9-live-positive-3	COMPLETED	cairn	-	run-case rc0 sends 1+1 timecheck accept simulated false; evidence live-positive-3/; watchdog retired
+2026-09-22T16:34Z	P6-r9-observer-lifetime	P6r9-livereview-3	DISPATCHED	corvid	2026-09-22T16:44Z	10m live-evidence review; ack started
+2026-09-22T16:37Z	P6-r9-observer-lifetime	P6r9-livereview-3	CONFIRMED	cairn	2026-09-22T16:44Z	corvid waiting out cleanup timer to verify post-cleanup registry; no verdict yet
+2026-09-22T16:42Z	P6-r9-observer-lifetime	P6r9-livereview-3	PASS	corvid	-	live-review-3 89f28ccbf14c disk-matched; 1+1 sends, no-dup, cleanup verified; timer retired pre-16:44Z
+2026-09-22T16:45Z	P6-r9-observer-lifetime	P6r9-terminal	ACCEPTED	tern	-	live-positive acceptance 0a77303; gate for P6-r10 release
+2026-09-22T16:45Z	P6-r10-live-recovery-matrix	P6r10-admission-1	DISPATCHED	corvid	2026-09-22T16:55Z	receipt filed; exact-CLI feasibility; kiln HELD; ack started
+2026-09-22T16:50Z	P6-r10-live-recovery-matrix	P6r10-admission-1	ACCEPTED	corvid	-	review b8beda750741 exact; checklist a97d64e8b801 pinned; precondition: queued+ambiguous control spec owed
+2026-09-22T16:53Z	P6-r10-live-recovery-matrix	P6r10-control-review-1	DISPATCHED	corvid	2026-09-22T17:03Z	receipt filed; actual-paths-only disposition; ack started
+2026-09-22T16:53Z	P6-r10-live-recovery-matrix	P6r10-control-review-1	DISPATCHED	corvid	2026-09-22T17:03Z	receipt filed; actual-paths-only disposition; ack started
+2026-09-22T16:57Z	P6-r10-live-recovery-matrix	P6r10-control-review-1	PARTIAL	corvid	-	feasibility-review 04b6501f26bf disk-matched; queued+delay MISSING mechanism, failed/quiet EXECUTABLE; timer retired pre-17:03Z
+2026-09-22T17:00Z	P6-r10-live-recovery-matrix	P6r10-failed-prepare-1	DISPATCHED	cairn	2026-09-22T17:10Z	receipt filed; cleanup ACTIVE verified; r10f1 no collision; launched <5m
+2026-09-22T17:01Z	P6-r10-live-recovery-matrix	P6r10-failed-prepare-1	PREPARED	cairn	-	tool rc3 socket-race; r10f1 ids live with sockets; raws archived live-preparation-failed-1/; no summary written
+2026-09-22T17:03Z	P6-r10-live-recovery-matrix	P6r10-failed-binding-1	DISPATCHED	corvid	2026-09-22T17:08Z	5m canonical binding + liveness check; r10f1 live verified; ack started
+2026-09-22T17:07Z	P6-r10-live-recovery-matrix	P6r10-failed-binding-1	PASS	corvid	-	binding-review c18e1ce76662 disk-matched; canonical binding derives rc0, runtime live; timer retired pre-17:08Z
+2026-09-22T17:10Z	P6-r10-live-recovery-matrix	P6r10-live-failed-1	DISPATCHED	cairn	2026-09-22T17:17Z	receipt filed; all 4 hashes match; fixture ids live; watchdog armed
+2026-09-22T17:11Z	P6-r10-live-recovery-matrix	P6r10-live-failed-1	INCOMPLETE	cairn	-	run-case rc3 E_NO_ONSET, fault lacks independent onset; gate+arm rc0; evidence live-failed-1/; no retry per release
+2026-09-22T17:11Z	P6-r10-live-recovery-matrix	P6r10-failed-prepare-1	RETIRED	cairn	-	stale prepare-window unit fired post-reconciliation; r10f1 ids live under director 17:18Z cleanup, untouched
+2026-09-22T17:12Z	P6-r10-live-recovery-matrix	P6r10-failed-review-1	DISPATCHED	corvid	2026-09-22T17:22Z	10m causal review of actual run; ack started
+2026-09-22T17:16Z	P6-r10-live-recovery-matrix	P6r10-failed-review-1	INCOMPLETE	corvid	-	live-review-failed-1 ebb6ff9d4f77 disk-matched; premature truncation, reattach missing in failed/quiet branches; late claim archived pre-cleanup
+2026-09-22T17:20Z	P6-r10-live-recovery-matrix	P6r10-terminal	EXHAUSTED	tern	-	terminal pinned; r10f1 cleaned (archive exists, 0 sessions); gate for P6-r11
+2026-09-22T17:20Z	P6-r11-case-observer-continuation	P6r11-admission-1	DISPATCHED	corvid	2026-09-22T17:30Z	receipt filed; review+checklist; worker HELD; ack started
+2026-09-22T17:26Z	P6-r11-case-observer-continuation	P6r11-admission-1	ACCEPTED	corvid	-	review 2ea38816d9bb exact; checklist bb3c1b392b4a pinned; parent EXHAUSTED
+2026-09-22T17:26Z	P6-r11-case-observer-continuation	P6r11-candidate-1	DISPATCHED	kiln	2026-09-22T18:06Z	receipt filed; per contract+checklist; ack started
+2026-09-22T17:29Z	P6-r11-case-observer-continuation	P6r11-candidate-1	CONFIRMED	cairn	2026-09-22T18:06Z	kiln executing 17:29Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T17:31Z	P6-r11-case-observer-continuation	P6r11-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate governs
+2026-09-22T17:38Z	P6-r11-case-observer-continuation	P6r11-candidate-1	INCOMPLETE	kiln	2026-09-22T18:06Z	claim 4dbbc31e0f9f INCOMPLETE-honest; shared reattach extended, full gate unfitted; entry 28ca0884 matched
+2026-09-22T17:42Z	P6-r11-case-observer-continuation	P6r11-candidate-1	CANCELLED	cairn	-	remainder cancelled per completion-allocation; base b5948bc3 pinned; kiln idle, timer retired
+2026-09-22T17:42Z	P6-r11-case-observer-continuation	P6r11-cases-1	DISPATCHED	corvid	2026-09-22T17:52Z	10m concrete failed+quiet cases; kiln held; ack started
+2026-09-22T17:52Z	P6-r11-case-observer-continuation	P6r11-cases-1	COMPLETED	corvid	2026-09-22T17:52Z	concrete-cases db840dd7fc9d disk-matched; 6 executable cases pinned, baseline old-fails reproduced; timer fired at bound
+2026-09-22T17:52Z	P6-r11-case-observer-continuation	P6r11-completion-1	DISPATCHED	kiln	2026-09-22T18:22Z	receipt filed; concrete cases bound; ack started
+2026-09-22T17:57Z	P6-r11-case-observer-continuation	P6r11-completion-1	CONFIRMED	cairn	2026-09-22T18:22Z	kiln executing 17:57Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T18:01Z	P6-r11-case-observer-continuation	P6r11-completion-1	INCOMPLETE	kiln	2026-09-22T18:22Z	claim 4782efcf7953 INCOMPLETE-honest; QR-W repaired rc0, FV-W honest fail; manifest 742eeb79 31/32 + self-hash mismatch (manifest lists itself)
+2026-09-22T18:04Z	P6-r11-case-observer-continuation	P6r11-completion-1	CANCELLED	cairn	-	remainder cancelled per verification-release; base 05eba44 pinned; kiln idle, timer retired
+2026-09-22T18:04Z	P6-r11-case-observer-continuation	P6r11-verify-1	DISPATCHED	corvid	2026-09-22T18:34Z	30m causal FV + manifest review of frozen bytes; ack pending
+2026-09-22T18:09Z	P6-r11-case-observer-continuation	P6r11-verify-1	FAIL	corvid	-	review-completion-1 4c6990cd4251 disk-matched; genuine verifier rejection, repair outside scope (turn_handoff frozen); timer retired pre-18:34Z
+2026-09-22T18:12Z	P6-r11-case-observer-continuation	P6r11-amendment-2	DISPATCHED	corvid	2026-09-22T18:22Z	10m verifier-rejection amendment admission; kiln repair waits on ACCEPTED
+2026-09-22T18:16Z	P6-r11-case-observer-continuation	P6r11-amendment-2	ACCEPTED	corvid	-	review ebf494ab238c exact; checklist 09f9d2972d9b pinned; unchanged
+2026-09-22T18:16Z	P6-r11-case-observer-continuation	P6r11-rejection-1	DISPATCHED	kiln	2026-09-22T18:56Z	receipt filed; authenticated-rejection only; ack started
+2026-09-22T18:20Z	P6-r11-case-observer-continuation	P6r11-rejection-1	CONFIRMED	cairn	2026-09-22T18:56Z	kiln executing 18:20Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T18:24Z	P6-r11-case-observer-continuation	P6r11-rejection-1	CONFIRMED	cairn	2026-09-22T18:56Z	kiln running pytest 18:24Z pre-deadline; no claim yet
+2026-09-22T18:29Z	P6-r11-case-observer-continuation	P6r11-rejection-1	CONFIRMED	cairn	2026-09-22T18:56Z	kiln executing 18:29Z pre-deadline; no claim yet
+2026-09-22T18:42Z	P6-r11-case-observer-continuation	P6r11-rejection-1	COMPLETED	kiln	2026-09-22T18:56Z	found in history not inbox; claim 1d8def9a7c45 timely; handoff 2b6aa7ef entry 2326e6b8 manifest 33/33 verified
+2026-09-22T18:42Z	P6-r11-case-observer-continuation	P6r11-rejectionverify-1	DISPATCHED	corvid	2026-09-22T19:12Z	30m authenticated-rejection review; ack pending
+2026-09-22T18:46Z	P6-r11-case-observer-continuation	P6r11-rejectionverify-1	CONFIRMED	cairn	2026-09-22T19:12Z	corvid executing 18:46Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T19:03Z	P6-r11-case-observer-continuation	P6r11-rejectionverify-1	PASS	corvid	-	review-rejection c28bb9d5ec2 disk-matched; authenticated rejection e2e, full gate 38 green; timer retired pre-19:12Z
+2026-09-22T19:08Z	P6-r11-case-observer-continuation	P6r11-closeout-1	DISPATCHED	corvid	2026-09-22T19:28Z	receipt filed; metadata+unexecuted checks; kiln held; ack started
+2026-09-22T19:12Z	P6-r11-case-observer-continuation	P6r11-closeout-1	CONFIRMED	cairn	2026-09-22T19:28Z	corvid running repros 19:12Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T19:25Z	P6-r11-case-observer-continuation	P6r11-closeout-1	INCOMPLETE	corvid	-	review-closeout 687a811f4322 disk-matched; checks 1-3 pass, check 4 partial (2 negatives unexecuted); timer retired pre-19:28Z
+2026-09-22T19:27Z	P6-r11-case-observer-continuation	P6r11-routing-negatives-1	DISPATCHED	corvid	2026-09-22T19:47Z	receipt filed; wrong-exec/forged-route only; ack started
+2026-09-22T19:31Z	P6-r11-case-observer-continuation	P6r11-routing-negatives-1	CONFIRMED	cairn	2026-09-22T19:47Z	corvid building fixtures 19:31Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T19:36Z	P6-r11-case-observer-continuation	P6r11-routing-negatives-1	INCOMPLETE	corvid	-	review-routing-neg 57208e389e3c disk-matched; both negatives refused at ingestion but CLI masks routing failure as E_NO_LATENCY
+2026-09-22T19:39Z	P6-r11-case-observer-continuation	P6r11-routing-repair-1	DISPATCHED	kiln	2026-09-22T20:09Z	receipt filed; error-before-timing only; ack started
+2026-09-22T19:42Z	P6-r11-case-observer-continuation	P6r11-routing-repair-1	CONFIRMED	cairn	2026-09-22T20:09Z	kiln copying evidence 19:42Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T19:46Z	P6-r11-case-observer-continuation	P6r11-routing-repair-1	CONFIRMED	cairn	2026-09-22T20:09Z	kiln running pytest 19:46Z pre-deadline; no claim yet
+2026-09-22T20:01Z	P6-r11-case-observer-continuation	P6r11-routing-repair-1	COMPLETED	kiln	2026-09-22T20:09Z	found in history not inbox; claim bc5b000a779b timely; entry 701a383e manifest 34/34 verified
+2026-09-22T20:01Z	P6-r11-case-observer-continuation	P6r11-routingverify-1	DISPATCHED	corvid	2026-09-22T20:26Z	25m error-propagation review; ack pending
+2026-09-22T20:06Z	P6-r11-case-observer-continuation	P6r11-routingverify-1	CONFIRMED	cairn	2026-09-22T20:26Z	corvid executing 20:06Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T20:23Z	P6-r11-case-observer-continuation	P6r11-routingverify-1	PASS	corvid	-	review-routing-repair da3ddf79f572 disk-matched; error-before-timing e2e, full gate 42 green; timer retired pre-20:26Z
+2026-09-22T20:27Z	P6-r11-case-observer-continuation	P6r11-terminal	ACCEPTED	tern	-	scoped acceptance; gate for P6-r12 diagnostic
+2026-09-22T20:27Z	P6-r12-reviewed-regressions	C4-review-regressions-1	DISPATCHED	corvid	2026-09-22T21:07Z	receipt filed; ten-row matrix, no fixes; single grant; ack started
+2026-09-22T20:30Z	P6-r12-reviewed-regressions	C4-review-regressions-1	CONFIRMED	cairn	2026-09-22T21:07Z	corvid working frozen baseline 20:30Z pre-deadline; no matrix yet; registry idle lags turn
+2026-09-22T20:40Z	P6-r12-reviewed-regressions	C4-review-regressions-1	COMPLETED	corvid	2026-09-22T21:07Z	found outside package dir per report; matrix 3d160ecffe04 9 REPRODUCED + #5 UNTESTED; no source edits
+2026-09-22T20:43Z	P6-r12-reviewed-regressions	C4-review-regressions-1	ACCEPTED	tern	-	R12 accepted bccd688; gate for P6-r13
+2026-09-22T20:43Z	P6-r13-core-record-integrity	P6r13-admission-1	DISPATCHED	corvid	2026-09-22T20:58Z	receipt filed; #2/6/7/10 + #5 reachability; kiln HELD; ack started
+2026-09-22T20:48Z	P6-r13-core-record-integrity	P6r13-admission-1	ACCEPTED	corvid	-	review ad68796e22ee exact; cases 6f4718d2283a pinned; parent EXHAUSTED
+2026-09-22T20:48Z	P6-r13-core-record-integrity	P6r13-initial-1	DISPATCHED	kiln	2026-09-22T21:33Z	receipt filed; cases A-E per admission; ack started
+2026-09-22T20:57Z	P6-r13-core-record-integrity	P6r13-initial-1	CONFIRMED	cairn	2026-09-22T21:33Z	kiln running pytest 20:57Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T20:59Z	P6-r13-core-record-integrity	P6r13-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate governs
+2026-09-22T21:14Z	P6-r13-core-record-integrity	P6r13-initial-1	CONFIRMED	cairn	2026-09-22T21:33Z	kiln pytest pending 21:14Z, candidate touched 20:54Z; 19m remain
+2026-09-22T21:23Z	P6-r13-core-record-integrity	P6r13-initial-1	CONFIRMED	cairn	2026-09-22T21:33Z	kiln running retained tests 21:23Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T21:33Z	P6-r13-core-record-integrity	P6r13-initial-1	COMPLETED	kiln	2026-09-22T21:33Z	no wake sent (title unresolvable); claim f9e609fa52fb timely; manifest 74/75, changes.md edited post-hash; A-D evidence + 83/59/8 pass
+2026-09-22T21:58Z	P6-r13-core-record-integrity	P6r13-initial-1	INCOMPLETE	tern	-	shadow-ruling f7b0cce: gates/hash unmet (changes.md mismatch + unrun gates); COMPLETED row superseded, bytes pinned
+2026-09-22T21:58Z	P6-r13-core-record-integrity	P6r13-amendment-1	DISPATCHED	corvid	2026-09-22T22:08Z	10m amendment admission; kiln 30m waits on ACCEPTED; ack started
+2026-09-22T22:01Z	P6-r13-core-record-integrity	P6r13-amendment-1	ACCEPTED	corvid	-	review 04eaff9a1945 exact; checklist ecc99a99a43e pinned; unchanged
+2026-09-22T22:01Z	P6-r13-core-record-integrity	P6r13-repair-1	DISPATCHED	kiln	2026-09-22T22:31Z	receipt filed; identity-from-provenance only; ack started
+2026-09-22T22:01Z	P6-r13-core-record-integrity	P6r13-repair-1	DISPATCHED	kiln	2026-09-22T22:31Z	receipt filed; identity-from-provenance only; ack started
+2026-09-22T22:06Z	P6-r13-core-record-integrity	P6r13-repair-1	COMPLETED	kiln	2026-09-22T22:31Z	claim b4d7313fad94 timely; manifest 72/74: lifecycle matches claim not manifest (stale), changes.md prose
+2026-09-22T22:06Z	P6-r13-core-record-integrity	P6r13-repairverify-1	DISPATCHED	corvid	2026-09-22T22:36Z	30m identity-from-provenance review; manifest staleness flagged; ack pending
+2026-09-22T22:11Z	P6-r13-core-record-integrity	P6r13-repairverify-1	PASS	corvid	-	review-repair 9197e1c7e2ac disk-matched; identity-from-provenance e2e, 83+59+15 green; manifest staleness confirmed; timer retired pre-22:36Z
+2026-09-22T22:14Z	P6-r13-core-record-integrity	P6r13-ledger-1	INCIDENT	cairn	-	dispatch-ledger-ruling 31447c3: row427 edit PROVEN mine; next sends via wake+profile+id only
+2026-09-22T22:20Z	P6-r13-core-record-integrity	P6r13-completion-2	DISPATCHED	kiln	2026-09-22T22:30Z	wake+profile+id started; base 6dbbc06; metadata only; claim path pinned
+2026-09-22T22:22Z	P6-r13-core-record-integrity	P6r13-completion-2	COMPLETED	kiln	2026-09-22T22:30Z	claim 8ac1d5ffbb6c timely; manifests 74+76 zero-drift; production frozen per receipt
+2026-09-22T22:22Z	P6-r13-core-record-integrity	P6r13-completionverify-2	DISPATCHED	corvid	2026-09-22T22:52Z	30m full-gate review of bound manifests; wake+profile+id started
+2026-09-22T22:27Z	P6-r13-core-record-integrity	P6r13-completionverify-2	CONFIRMED	cairn	2026-09-22T22:52Z	corvid executing 22:27Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T22:41Z	P6-r13-core-record-integrity	P6r13-completionverify-2	CONFIRMED	cairn	2026-09-22T22:52Z	corvid gate running 22:41Z, verdict pending; 11m remain
+2026-09-22T22:52Z	P6-r13-core-record-integrity	P6r13-completionverify-2	FAIL	corvid	-	review-completion-2 9f213eebf208 disk-matched; R3_REVISION stale copy hash blocks gate 10/32; timer fired at bound
+2026-09-22T22:56Z	P6-r13-core-record-integrity	P6r13-completion-3	DISPATCHED	kiln	2026-09-22T23:11Z	base de03245; descriptor+origin checks only; wake+profile+id started
+2026-09-22T22:58Z	P6-r13-core-record-integrity	P6r13-completion-3	SUPPLEMENT	kiln	-	exact notify command forwarded once to active worker; no restart/reset
+2026-09-22T22:59Z	P6-r13-core-record-integrity	P6r13-completion-3	COMPLETED	kiln	2026-09-22T23:11Z	inbox wake arrived; claim 784c7745d57d timely; manifests verified zero-drift; production frozen
+2026-09-22T22:59Z	P6-r13-core-record-integrity	P6r13-completionverify-3	DISPATCHED	corvid	2026-09-22T23:39Z	40m full-gate review; exact notify cmd inline (473ch per ruling); ack started
+2026-09-22T23:03Z	P6-r13-core-record-integrity	P6r13-completionverify-3	CONFIRMED	cairn	2026-09-22T23:39Z	corvid executing 23:03Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-22T23:14Z	P6-r13-core-record-integrity	P6r13-completionverify-3	PASS	corvid	-	review-completion-3 7f91da44e04d disk-matched; full gate green on bound bytes; timer retired pre-23:39Z
+2026-09-22T23:17Z	P6-r13-core-record-integrity	P6r13-terminal	ACCEPTED	tern	-	scoped candidate source 5410332; gate for P6-r14 admission
+2026-09-22T23:17Z	P6-r14-host-timing	P6r14-admission-1	DISPATCHED	corvid	2026-09-22T23:37Z	receipt filed; exact notify cmd inline (401ch per ruling); ack started
+2026-09-22T23:18Z	P6-r14-host-timing	P6r14-admission-1	ACCEPTED	corvid	-	review 4ebb07427e88 exact; checklist 8ca78adb57f6 pinned; R13 ACCEPTED
+2026-09-22T23:18Z	P6-r14-host-timing	P6r14-candidate-1	DISPATCHED	kiln	2026-09-23T00:18Z	receipt filed; obligations (a)-(d); exact notify cmd inline; ack started
+2026-09-22T23:22Z	P6-r14-host-timing	P6r14-candidate-1	CONFIRMED	cairn	2026-09-23T00:18Z	kiln reading 23:22Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-22T23:29Z	P6-r14-host-timing	P6r14-candidate-1	CONFIRMED	cairn	2026-09-23T00:18Z	kiln monitoring tests 23:29Z, src touched 23:24Z; 49m remain
+2026-09-22T23:35Z	P6-r14-host-timing	P6r14-candidate-1	CONFIRMED	cairn	2026-09-23T00:18Z	kiln running r14 tests 23:35Z pre-deadline; no claim yet
+2026-09-22T23:37Z	P6-r14-host-timing	P6r14-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate governs
+2026-09-22T23:42Z	P6-r14-host-timing	P6r14-candidate-1	CONFIRMED	cairn	2026-09-23T00:18Z	kiln awaiting full-gate log 23:42Z, tests touched 23:36Z; 36m remain
+2026-09-22T23:48Z	P6-r14-host-timing	P6r14-candidate-1	CONFIRMED	cairn	2026-09-23T00:18Z	kiln awaiting full-gate log 23:48Z; no claim yet; 30m remain
+2026-09-22T23:51Z	P6-r14-host-timing	P6r14-candidate-1	NUDGED	cairn	2026-09-23T00:18Z	empty turn 23:49Z, no claim; wake re-sent, no re-dispatch; 27m remain
+2026-09-22T23:58Z	P6-r14-host-timing	P6r14-runtime-1	ACTIVATED	cairn	-	corvid restarted quiescent 7200s; kiln DEFERRED active pytest; receipt filed; deadline stands
+2026-09-22T23:58Z	P6-r14-host-timing	P6r14-candidate-1	COMPLETED	kiln	2026-09-23T00:18Z	exact-cmd wake arrived; claim eef74d0e94fb; entry 64edb54e harness 62b86917 matched; claim clock +7m skewed
+2026-09-22T23:58Z	P6-r14-host-timing	P6r14-review-1	DISPATCHED	corvid	2026-09-23T00:38Z	40m full-gate review; exact notify cmd inline; corvid id re-verified post-restart; ack started
+2026-09-23T00:02Z	P6-r14-host-timing	P6r14-review-1	CONFIRMED	cairn	2026-09-23T00:38Z	corvid executing 00:02Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T00:11Z	P6-r14-host-timing	P6r14-review-1	PASS	corvid	-	review 84b75ed1dbf6 disk-matched; full gate 69 + 83 + 59 green; 1 bounded residual; timer retired pre-00:38Z
+2026-09-23T00:13Z	P6-r14-host-timing	P6r14-repair-1	DISPATCHED	kiln	2026-09-23T00:28Z	base 7509caf; callback-guard only; exact notify cmd inline; ack started
+2026-09-23T00:16Z	P6-r14-host-timing	P6r14-repair-1	CONFIRMED	cairn	2026-09-23T00:28Z	kiln awaiting focused-test log 00:16Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-23T00:19Z	P6-r14-host-timing	P6r14-repair-1	COMPLETED	kiln	2026-09-23T00:28Z	exact-cmd wake arrived; claim a572ffc00b30; manifests 151 files zero-drift; claim clock +2m skewed
+2026-09-23T00:19Z	P6-r14-host-timing	P6r14-repairverify-1	DISPATCHED	corvid	2026-09-23T00:59Z	40m guard-diff + full-gate review; exact notify cmd inline; ack started
+2026-09-23T00:23Z	P6-r14-host-timing	P6r14-repairverify-1	CONFIRMED	cairn	2026-09-23T00:59Z	corvid executing 00:23Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T00:32Z	P6-r14-host-timing	P6r14-repairverify-1	PASS	corvid	-	review-repair 931276301c61 disk-matched; guard-only correct, full gate 70+83+59 green; timer retired pre-00:59Z
+2026-09-23T00:35Z	P6-r14-host-timing	P6r14-terminal	ACCEPTED	tern	-	candidate source 02ea693; gate for P6-r15 admission
+2026-09-23T00:35Z	P6-r15-live-failure-rest	P6r15-admission-1	DISPATCHED	corvid	2026-09-23T00:50Z	receipt filed; exact readiness+checklist; worker0; ack started
+2026-09-23T00:36Z	P6-r15-live-failure-rest	P6r15-admission-1	ACCEPTED	corvid	-	review 9b0e2429db34 exact; checklist pinned; evidence-only, worker0
+2026-09-23T00:40Z	P6-r15-live-failure-rest	P6r15-failed-prepare-1	DISPATCHED	cairn	2026-09-23T00:50Z	receipt filed; cleanup ACTIVE verified; r15f1 no collision; launched <5m
+2026-09-23T00:41Z	P6-r15-live-failure-rest	P6r15-failed-prepare-1	PREPARED	cairn	-	tool rc3 socket-race; r15f1 ids live with sockets; workdir-base typo old-root recorded; raws archived
+2026-09-23T00:42Z	P6-r15-live-failure-rest	P6r15-failed-binding-1	DISPATCHED	corvid	2026-09-23T00:47Z	5m canonical binding + workdir-deviation check; ack started
+2026-09-23T00:44Z	P6-r15-live-failure-rest	P6r15-failed-binding-1	PASS	corvid	-	binding-review 48aeb023071c disk-matched; canonical binding derives rc0, runtime live; timer retired pre-00:47Z
+2026-09-23T00:47Z	P6-r15-live-failure-rest	P6r15-failed-prepare-1	CONFIRMED	cairn	-	case-a reconciled: PREPARED row present since 00:41Z; no wake owed (own action); r15f1 ids live
+2026-09-23T00:51Z	P6-r15-live-failure-rest	P6r15-live-failed-1	DISPATCHED	cairn	2026-09-23T01:06Z	receipt filed; all 4 hashes match; fixture ids+sockets live; cleanup ACTIVE beyond stop; watchdog armed
+2026-09-23T00:53Z	P6-r15-live-failure-rest	P6r15-live-failed-1	INCOMPLETE	cairn	-	run-case rc3 E_CAUSAL onset-after-detection; gate+arm rc0; evidence live-failed-1/; no retry per release
+2026-09-23T00:55Z	P6-r15-live-failure-rest	P6r15-livereview-1	DISPATCHED	corvid	2026-09-23T01:10Z	15m onset-join review of live evidence; fixtures cleaned rc0; ack started
+2026-09-23T00:57Z	P6-r15-live-failure-rest	P6r15-livereview-1	INCOMPLETE	corvid	-	live-review-failed-1 719c495c1650 disk-matched; genuine rejection, wrong onset join cause found; timer retired pre-01:10Z
+2026-09-23T01:00Z	P6-r15-live-failure-rest	P6r15-terminal	EXHAUSTED	tern	-	incomplete; quiet grants cancelled; cleanup confirmed
+2026-09-23T01:00Z	P6-r16-causal-identity	P6r16-admission-1	DISPATCHED	corvid	2026-09-23T01:10Z	receipt filed; concrete checks; worker 30/verify 30 conditional; ack started
+2026-09-23T01:02Z	P6-r16-causal-identity	P6r16-admission-1	ACCEPTED	corvid	-	review f3fda152155f exact; checks pinned in-review; R15 EXHAUSTED
+2026-09-23T01:02Z	P6-r16-causal-identity	P6r16-candidate-1	DISPATCHED	kiln	2026-09-23T01:32Z	receipt filed; checks per review; exact notify cmd inline; ack started
+2026-09-23T01:08Z	P6-r16-causal-identity	P6r16-candidate-1	CONFIRMED	cairn	2026-09-23T01:32Z	kiln awaiting full-gate log 01:08Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-23T01:11Z	P6-r16-causal-identity	P6r16-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate governs
+2026-09-23T01:18Z	P6-r16-causal-identity	P6r16-candidate-1	COMPLETED	kiln	2026-09-23T01:32Z	exact-cmd wake arrived; claim cf07b6586c8b; entry b14de4c4 matched; manifests 152 files zero-drift; clock +6m skewed
+2026-09-23T01:18Z	P6-r16-causal-identity	P6r16-review-1	DISPATCHED	corvid	2026-09-23T01:48Z	30m identity-join review; exact notify cmd inline; ack started
+2026-09-23T01:23Z	P6-r16-causal-identity	P6r16-review-1	CONFIRMED	cairn	2026-09-23T01:48Z	corvid executing 01:23Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T01:30Z	P6-r16-causal-identity	P6r16-review-1	PASS	corvid	-	review bb28e63f1df1 disk-matched; identity-join correct, full gate 76+83+59 green; timer retired pre-01:48Z
+2026-09-23T01:33Z	P6-r16-causal-identity	P6r16-repair-1	DISPATCHED	kiln	2026-09-23T02:03Z	base 64850c0; D1-explicit-item + D2-proof; exact notify cmd inline; ack started
+2026-09-23T01:40Z	P6-r16-causal-identity	P6r16-repair-1	CONFIRMED	cairn	2026-09-23T02:03Z	kiln awaiting repair-gate log 01:40Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-23T01:49Z	P6-r16-causal-identity	P6r16-repair-1	COMPLETED	kiln	2026-09-23T02:03Z	exact-cmd wake arrived; claim a0602988a5b4; manifests verified zero-drift; clock +6m skewed
+2026-09-23T01:49Z	P6-r16-causal-identity	P6r16-repairverify-1	DISPATCHED	corvid	2026-09-23T02:19Z	30m D1/D2 review; exact notify cmd inline; ack started
+2026-09-23T01:53Z	P6-r16-causal-identity	P6r16-repairverify-1	CONFIRMED	cairn	2026-09-23T02:19Z	corvid executing 01:53Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T02:02Z	P6-r16-causal-identity	P6r16-repairverify-1	PASS	corvid	-	review-repair 8acd6a49839d disk-matched; D1 fixed e2e, D2 dominated, full gate 78+83+59 green; timer retired pre-02:19Z
+2026-09-23T02:05Z	P6-r16-causal-identity	P6r16-terminal	ACCEPTED	tern	-	scoped candidate c8e99cf; gate for P6-r17 admission
+2026-09-23T02:05Z	P6-r17-live-failure-rest	P6r17-admission-1	DISPATCHED	corvid	2026-09-23T02:20Z	receipt filed; witness checklist; worker0; ack started
+2026-09-23T02:06Z	P6-r17-live-failure-rest	P6r17-admission-1	ACCEPTED	corvid	-	review 6fb90cf21b4e exact; failed-verif feasible, quiet-rest SCOPE BLOCKER (3s sleep)
+2026-09-23T02:08Z	P6-r17-live-failure-rest	P6r17-failed-prepare-1	DISPATCHED	cairn	2026-09-23T02:18Z	receipt filed; cleanup ACTIVE verified; r17f1 no collision; launched <5m
+2026-09-23T02:09Z	P6-r17-live-failure-rest	P6r17-failed-prepare-1	PREPARED	cairn	-	JSON argv verbatim; tool rc3 socket-race; r17f1 ids live with sockets; raws archived
+2026-09-23T02:11Z	P6-r17-live-failure-rest	P6r17-failed-binding-1	DISPATCHED	corvid	2026-09-23T02:16Z	5m canonical binding check; exact notify cmd inline (495ch per ruling); ack started
+2026-09-23T02:11Z	P6-r17-live-failure-rest	P6r17-failed-binding-1	PASS	corvid	-	binding-review 6be560b40b20 disk-matched; canonical binding derives rc0, runtime live; timer retired pre-02:16Z
+2026-09-23T02:15Z	P6-r17-live-failure-rest	P6r17-live-failed-1	DISPATCHED	cairn	2026-09-23T02:30Z	receipt filed; all 4 hashes match; fixture ids+sockets live; watchdog armed
+2026-09-23T02:16Z	P6-r17-live-failure-rest	P6r17-live-failed-1	INCOMPLETE	cairn	-	run-case rc3 E_NO_ONSET no bound source item; gate+arm rc0; evidence live-failed-1/; no retry per release
+2026-09-23T02:18Z	P6-r17-live-failure-rest	P6r17-livereview-1	DISPATCHED	corvid	2026-09-23T02:33Z	15m missing-vs-join review of live evidence; fixtures cleaned rc0; ack started
+2026-09-23T02:20Z	P6-r17-live-failure-rest	P6r17-livereview-1	INCOMPLETE	corvid	-	live-review-failed-1 4881d3561f46 disk-matched; onset sidecars absent, task never specified them; timer retired pre-02:33Z
+2026-09-23T02:22Z	P6-r17-live-failure-rest	P6r17-terminal	EXHAUSTED	tern	-	incomplete; quiet unused grants cancelled; cleanup confirmed
+2026-09-23T02:22Z	P6-r18-runtime-source-time	P6r18-admission-1	DISPATCHED	corvid	2026-09-23T02:37Z	receipt filed; checklist; worker 45/verify 40 conditional; ack started
+2026-09-23T02:24Z	P6-r18-runtime-source-time	P6r18-admission-1	ACCEPTED	corvid	-	review 6f4616117644 exact; checklist pinned in-review; R17 EXHAUSTED
+2026-09-23T02:24Z	P6-r18-runtime-source-time	P6r18-candidate-1	DISPATCHED	kiln	2026-09-23T03:09Z	receipt filed; local copy only; exact notify cmd inline; ack started
+2026-09-23T02:35Z	P6-r18-runtime-source-time	P6r18-candidate-1	CONFIRMED	cairn	2026-09-23T03:09Z	kiln running tests 02:35Z pre-deadline; no claim yet; registry idle lags turn
+2026-09-23T02:37Z	P6-r18-runtime-source-time	P6r18-admission-1	RETIRED	cairn	-	stale admission unit fired post-ACCEPTED; timer consumed; candidate governs
+2026-09-23T02:43Z	P6-r18-runtime-source-time	P6r18-candidate-1	CONFIRMED	cairn	2026-09-23T03:09Z	kiln awaiting full-gate log 02:43Z, runtime touched 02:32Z; 26m remain
+2026-09-23T02:51Z	P6-r18-runtime-source-time	P6r18-candidate-1	COMPLETED	kiln	2026-09-23T03:09Z	exact-cmd wake arrived; claim ca33c565f7b9; entry a07f82e4 harness d44e6103 matched; manifests 236 zero-drift; clock +7m
+2026-09-23T02:51Z	P6-r18-runtime-source-time	P6r18-review-1	DISPATCHED	corvid	2026-09-23T03:31Z	40m source-time review; exact notify cmd inline; ack started
+2026-09-23T02:54Z	P6-r18-runtime-source-time	P6r18-review-1	CONFIRMED	cairn	2026-09-23T03:31Z	corvid executing 02:54Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T03:04Z	P6-r18-runtime-source-time	P6r18-review-1	FAIL	corvid	-	review b89c5862e07c disk-matched; gate 90+83+59 green BUT manifest 79/162 stale-duplicate paths; timer retired pre-03:31Z
+2026-09-23T03:06Z	P6-r18-runtime-source-time	P6r18-manifest-repair-1	DISPATCHED	kiln	2026-09-23T03:16Z	base 05a4568; duplicate-removal only; exact notify cmd inline; ack started
+2026-09-23T03:08Z	P6-r18-runtime-source-time	P6r18-manifest-repair-1	COMPLETED	kiln	2026-09-23T03:16Z	exact-cmd wake arrived; claim 04e03eccc4a2; manifests 155 clean BUT both list removed candidate/candidate-plan.md (dangling); clock +2m
+2026-09-23T03:08Z	P6-r18-runtime-source-time	P6r18-manifestverify-1	DISPATCHED	corvid	2026-09-23T03:28Z	20m manifest-only review; dangling-entry note carried; ack started
+2026-09-23T03:09Z	P6-r18-runtime-source-time	P6r18-manifestverify-1	INCOMPLETE	corvid	-	review-manifest-repair c25493b1913c disk-matched; repair correct BUT NEW claim never filed at receipt path; timer retired pre-03:28Z
+2026-09-23T03:15Z	P6-r18-runtime-source-time	P6r18-claim-filing-1	DISPATCHED	kiln	2026-09-23T03:20Z	receipt filed; canonical-path filing only; exact notify cmd inline; ack started
+2026-09-23T03:15Z	P6-r18-runtime-source-time	P6r18-claim-filing-1	COMPLETED	kiln	2026-09-23T03:20Z	exact-cmd wake arrived; NEW claim 9095612fd818 filed 03:15:25Z timely at canonical path
+2026-09-23T03:15Z	P6-r18-runtime-source-time	P6r18-claimfilingcheck-1	DISPATCHED	corvid	2026-09-23T03:20Z	5m NEW-claim check; exact notify cmd inline; ack started
+2026-09-23T03:16Z	P6-r18-runtime-source-time	P6r18-claimfilingcheck-1	PASS	corvid	-	filing-review 6dbd851f777f disk-matched; NEW claim canonical, no drift; timer retired pre-03:20Z
+2026-09-23T03:18Z	P6-r18-runtime-source-time	P6r18-launch-admission-1	DISPATCHED	corvid	2026-09-23T03:28Z	receipt filed; gap-vs-existing-closure check; exact notify cmd inline; ack started
+2026-09-23T03:19Z	P6-r18-runtime-source-time	P6r18-launch-admission-1	ACCEPTED	corvid	-	review b8da58d6c0bd disk-matched; gap real, no existing closure; checklist pinned in-review
+2026-09-23T03:19Z	P6-r18-runtime-source-time	P6r18-launch-closure-1	DISPATCHED	kiln	2026-09-23T03:39Z	receipt filed; wrappers-or-equivalent only; exact notify cmd inline; ack started
+2026-09-23T03:23Z	P6-r18-runtime-source-time	P6r18-launch-closure-1	COMPLETED	kiln	2026-09-23T03:39Z	exact-cmd wake arrived; claim 032dd537265d; wrappers present+executable; clock +7m skewed
+2026-09-23T03:23Z	P6-r18-runtime-source-time	P6r18-launchverify-1	DISPATCHED	corvid	2026-09-23T03:38Z	15m wrapper-closure review; exact notify cmd inline; ack started
+2026-09-23T03:24Z	P6-r18-runtime-source-time	P6r18-launchverify-1	PASS	corvid	-	review-launch-closure 2baf3e86e57e disk-matched; wrapper closure delivered, 4 launch tests pass; timer retired pre-03:38Z
+2026-09-23T03:27Z	P6-r18-runtime-source-time	P6r18-exact-launch-1	DISPATCHED	kiln	2026-09-23T03:37Z	base 0f9e26b; dedup-backend-argv only; exact notify cmd inline; ack started
+2026-09-23T03:29Z	P6-r18-runtime-source-time	P6r18-exact-launch-1	COMPLETED	kiln	2026-09-23T03:37Z	exact-cmd wake arrived; claim 6d2a62c7179b timely; manifests verified zero-drift
+2026-09-23T03:29Z	P6-r18-runtime-source-time	P6r18-exact-launch-1	CORRECT	cairn	-	COMPLETED row overstates: 158 clean BUT 2 dangling candidate-plan entries persist (pre-existing, flagged); not zero-drift
+2026-09-23T03:29Z	P6-r18-runtime-source-time	P6r18-exact-launchverify-1	DISPATCHED	corvid	2026-09-23T03:39Z	10m dedup-argv review; dangling entries flagged; ack started
+2026-09-23T03:30Z	P6-r18-runtime-source-time	P6r18-exact-launchverify-1	INCOMPLETE	corvid	-	review-exact-launch 03b42b4668c5 disk-matched; dedup fixed BUT 1/4 launch tests fail path-alias; timer retired pre-03:39Z
+2026-09-23T03:32Z	P6-r18-runtime-source-time	P6r18-launch-portability-1	DISPATCHED	kiln	2026-09-23T03:42Z	base 3964080; alias-safe + executable-env only; exact notify cmd inline; ack started
+2026-09-23T03:34Z	P6-r18-runtime-source-time	P6r18-launch-portability-1	COMPLETED	kiln	2026-09-23T03:42Z	exact-cmd wake arrived; claim 83139e6765fe timely; manifests verified clean
+2026-09-23T03:34Z	P6-r18-runtime-source-time	P6r18-launch-portabilityverify-1	DISPATCHED	corvid	2026-09-23T03:44Z	10m portability review; dangling entries flagged; ack started
+2026-09-23T03:35Z	P6-r18-runtime-source-time	P6r18-launch-portabilityverify-1	PASS	corvid	-	review-portability 95431a9fcfb3 disk-matched; alias-safe e2e, 5 launch tests pass; timer retired pre-03:44Z
+2026-09-23T03:38Z	P6-r18-runtime-source-time	P6r18-terminal	ACCEPTED	tern	-	scoped candidate 7857c0c; no R18 timers remain; successor P6-r19
+2026-09-23T03:38Z	P6-r19-live-runtime-witness	P6r19-admission-1	DISPATCHED	corvid	2026-09-23T03:53Z	receipt filed; local-launch/env/source_mode checklist; worker0; ack started
+2026-09-23T03:39Z	P6-r19-live-runtime-witness	P6r19-admission-1	ACCEPTED	corvid	-	review 208edddab592 exact; checklist pinned; evidence-only worker0; in-env readiness obligation
+2026-09-23T03:41Z	P6-r19-live-runtime-witness	P6r19-terminal	TERMINATED	tern	-	Connect CLOSED per finish-line; finished admission retained; unstarted grants cancelled
+2026-09-23T03:41Z	P7-expose-status	P7-admission-1	DISPATCHED	corvid	2026-09-23T03:51Z	first wake sent stale P6r17 text (substitution fault); correct P7 brief re-sent; ack started
+2026-09-23T03:43Z	P7-expose-status	P7-admission-1	ACCEPTED	corvid	-	review ce08567f6c67 exact; checklist pinned in-review; view-only
+2026-09-23T03:43Z	P7-expose-status	P7-initial-1	DISPATCHED	kiln	2026-09-23T04:28Z	receipt filed; view-only derived status; exact notify cmd inline; ack started
+2026-09-23T03:47Z	P7-expose-status	P7-initial-1	COMPLETED	kiln	2026-09-23T04:28Z	exact-cmd wake arrived; claim b082ef1e6974; manifest 17/17 verified; 6 tests; clock +5m skewed
+2026-09-23T03:47Z	P7-expose-status	P7-verify-1	DISPATCHED	corvid	2026-09-23T04:07Z	20m blocking-checks review; exact notify cmd inline; ack started
+2026-09-23T03:48Z	P7-expose-status	P7-verify-1	PASS	corvid	-	verification 94f0226d91c3 disk-matched; blocking checks hold; 1 bounded packaging defect (cache debris); timer retired pre-04:07Z
+2026-09-23T03:50Z	P7-expose-status	P7-repair-1	DISPATCHED	kiln	2026-09-23T04:05Z	base 02edff6; missing-data+links+cache fixes; exact notify cmd inline; ack started
+2026-09-23T03:53Z	P7-expose-status	P7-repair-1	COMPLETED	kiln	2026-09-23T04:05Z	exact-cmd wake arrived; claim b07730eef96f; manifest verified zero-drift; 8 tests; clock +3m
+2026-09-23T03:53Z	P7-expose-status	P7-repair-1	DISPATCHED	corvid	2026-09-23T04:03Z	10m missing-data review; exact notify cmd inline; ack pending
+2026-09-23T03:53Z	P7-expose-status	P6r13-null	CORRECT	cairn	-	prior row action mistyped P6r13-repair-1; correct action P6r13-repairverify-1 corvid 03:53Z-04:03Z
+2026-09-23T03:53Z	P7-expose-status	P7-repairverify-1	CORRECT	cairn	-	prior two rows: wrong action (P7-repair-1) then wrong package (P6r13); correct: P7-repairverify-1 DISPATCHED corvid 03:53Z-04:03Z
+2026-09-23T03:54Z	P7-expose-status	P7-repairverify-1	FAIL	corvid	-	review-repair a8db7aacf52e disk-matched; cache entries still present, claim cache-free assertion false; timer retired pre-04:03Z
+2026-09-23T03:56Z	P7-expose-status	P7-terminal	EXHAUSTED	tern	-	budget_spent; sole repair spent; FAIL+false claim preserved; receipt terminal-receipt.json
+2026-09-23T04:33Z	P7-expose-status	P7-repair-1	CANCELLED	cairn	-	mistyped worker corvid was never a dispatch; true pass is P7-repairverify-1 FAIL; closes detector loop
+2026-09-23T05:12Z	P8-go-unattended-qualification	P8-admission-1	DISPATCHED	corvid	2026-09-23T05:32Z	receipt filed; two stale-text sends then correct P8 brief; fallback pattern retired
+2026-09-23T05:14Z	P8-go-unattended-qualification	P8-admission-1	ACCEPTED	corvid	-	review 450f1afcddf9 exact; checklist pinned in-review; Go pin + binary match
+2026-09-23T05:14Z	P8-go-unattended-qualification	P8-qualification-1	DISPATCHED	corvid	2026-09-23T05:59Z	receipt filed; fresh scoped adversarial pass; exact notify cmd inline; ack started
+2026-09-23T05:17Z	P8-go-unattended-qualification	P8-qualification-1	CONFIRMED	cairn	2026-09-23T05:59Z	corvid building probes 05:17Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T05:18Z	P8-go-unattended-qualification	P8-qualification-1	PASS	corvid	-	review 2310db38b855 disk-matched; Go suite+conformance green; black-box variants held for Stage C; timer retired pre-05:59Z
+2026-09-23T05:20Z	P8-go-unattended-qualification	P8-qualification-completion-1	DISPATCHED	corvid	2026-09-23T05:59Z	linked continuation, no new grant; w-text corrected pre-send; ack started
+2026-09-23T05:23Z	P8-go-unattended-qualification	P8-qualification-completion-1	CONFIRMED	cairn	2026-09-23T05:59Z	corvid building fixtures 05:23Z pre-deadline, no verdict file yet; registry idle lags turn
+2026-09-23T05:24Z	P8-go-unattended-qualification	P8-qualification-completion-1	COMPLETED	corvid	2026-09-23T05:59Z	review fd6c155fd226 disk-matched; Stage B COMPLETE bounded, 8/8 rows evidenced; timer retired pre-05:59Z
+2026-09-23T05:30Z	P8-go-unattended-qualification	P8-prepare-1	DISPATCHED	cairn	2026-09-23T05:40Z	receipt filed; 3-file hashes match; cleanup ACTIVE verified; launching 3 idle seats
+2026-09-23T05:32Z	P8-go-unattended-qualification	P8-prepare-1	PREPARED	cairn	-	first attempt missing workdirs (fixed, single effective launch); 3 idle seats rc0 with sockets; raws archived
+2026-09-23T05:32Z	P8-go-unattended-qualification	P8-binding-1	DISPATCHED	corvid	2026-09-23T05:37Z	5m 3-seat binding check; garbled prefix fixed pre-send; ack started
+2026-09-23T05:30Z	P8-go-unattended-qualification	P8-binding-1	PASS	corvid	-	binding-review 0336e9da1a82 disk-matched; 3 raws reconcile, sockets live, no tasks; timer retired pre-05:37Z
+2026-09-23T05:33Z	P8-go-unattended-qualification	P8-live-1	DISPATCHED	cairn	2026-09-23T05:58Z	receipt filed; signature hashes verified; cleanup ACTIVE beyond stop; watchdog armed
+2026-09-23T05:35Z	P8-go-unattended-qualification	P8-live-1	INCOMPLETE	cairn	-	driver rc3: decide step rc1; evidence live-1/; no retry per release
+2026-09-23T05:45Z	P8-go-unattended-qualification	P8-repair-1	DISPATCHED	Claude	2026-09-23T06:15Z	release 63938cc; author Claude replaces kiln in 30m grant; timer verified active, elapse matches
+2026-09-23T05:48Z	P8-go-unattended-qualification	P8-repair-1	CONFIRMED	cairn	2026-09-23T06:15Z	no claim yet 3m post-notify; notify-based author, seat-idle N/A; 27m remain
+2026-09-23T05:53Z	P8-go-unattended-qualification	P6r8-repair-1	COMPLETED	Claude	2026-09-23T06:15Z	claim filed timely; details in next row
+2026-09-23T05:53Z	P8-go-unattended-qualification	P8-repair-1	COMPLETED	Claude	2026-09-23T06:15Z	exact-cmd wake arrived; claim 6387012bc0d6 filed 05:53:17Z timely; binary hash matches
+2026-09-23T05:53Z	P8-go-unattended-qualification	P8-repair-1	CORRECT	cairn	-	prior row mistyped action P6r8-repair-1; correct action is P8-repair-1 this row; binary 3a84efb36e1f verified
+2026-09-23T05:53Z	P8-go-unattended-qualification	P8-repairreview-1	DISPATCHED	corvid	2026-09-23T06:13Z	20m Parts A+B review; garbled prefix fixed pre-send; ack started
+2026-09-23T05:54Z	P8-go-unattended-qualification	P8-repairreview-1	STEERED	cairn	-	intake focus passed to running pass, no reset; repair timer retired; Tern-bound 191/191 confirmed
+2026-09-23T05:56Z	P8-go-unattended-qualification	P8-repairreview-1	PASS	corvid	-	review 49102b8ae8f9 disk-matched; Parts A+B reproduced, suite green; timer retired pre-06:13Z
+2026-09-23T05:58Z	P8-go-unattended-qualification	P8-repairreview-1	AMENDED	corvid	-	review d0c077ee7555; Part B NOT READY (future-time heartbeat, no incarnation bind); malformed fail-closed; ack semantics verified
+2026-09-23T06:03Z	P8-go-unattended-qualification	P8-terminal	NOT_READY	tern	-	qualification-final f6009bbc9b44; unused grants cancelled; no timers remain; successor P9
+2026-09-23T06:03Z	P9-go-supervised-preview	P9-admission-1	DISPATCHED	corvid	2026-09-23T06:13Z	receipt filed; checklist; worker0; ack started
+2026-09-23T06:04Z	P9-go-supervised-preview	P9-admission-1	ACCEPTED	corvid	-	review eb5629d3f3c5 exact; checklist pinned; evidence-only worker0
+2026-09-23T06:07Z	P9-go-supervised-preview	P9-initial-1	DISPATCHED	Claude	2026-09-23T07:07Z	release 7736d38; ack notify delivered; timer verified active, elapse matches
+2026-09-23T06:10Z	P9-go-supervised-preview	P9-initial-1	CONFIRMED	cairn	2026-09-23T07:07Z	no claim yet 3m post-notify; notify-based author, seat-idle N/A; 57m remain
+2026-09-23T06:22Z	P9-go-supervised-preview	P9-initial-1	COMPLETED	Claude	2026-09-23T07:07Z	exact-cmd wake arrived; claim 916f386f5b13 filed 06:22:11Z timely; evidence verified
+2026-09-23T06:22Z	P9-go-supervised-preview	P9-verify-1	DISPATCHED	corvid	2026-09-23T06:42Z	20m blocking-checks review; exact notify cmd inline; ack started
+2026-09-23T06:23Z	P9-go-supervised-preview	P9-verify-1	STEERED	cairn	-	intake focus (WAL-only, as-of/UNKNOWN, DB scope) passed to running pass, no reset
+2026-09-23T06:25Z	P9-go-supervised-preview	P9-verify-1	PASS	corvid	-	verification ae87dedd393f disk-matched; six checks hold, P8 blockers declared; timer retired pre-06:42Z
+2026-09-23T06:26Z	P9-go-supervised-preview	P6r9-verify-1	AMENDED	corvid	-	see next row; action typo
+2026-09-23T06:26Z	P9-go-supervised-preview	P9-verify-1	AMENDED	corvid	-	review 6e16f658035e disk-matched; steering addendum: WAL/changed-inputs/DB-scope verified, PASS stands
+2026-09-23T06:26Z	P9-go-supervised-preview	P9-typo-1	CORRECT	cairn	-	prior row mistyped action P6r9-verify-1; correct action is P9-verify-1 this event
+2026-09-23T06:26Z	P6-go-supervised-preview	P6r9-verify-1	RESUMED	corvid	2026-09-23T06:42Z	continuation same action, no new grant; garbled prefix fixed pre-send; ack started
+2026-09-23T06:26Z	P9-go-supervised-preview	P9-verify-1	CORRECT	cairn	-	prior row mistyped package P6-go + action P6r9; correct P9-verify-1 RESUMED corvid 06:26Z-06:42Z; timer unit name likewise P6r9, governs correctly
+2026-09-23T06:28Z	P9-go-supervised-preview	P9-verify-1	PASS	corvid	-	completion cd7adc39c2ce disk-matched; six checks exercised, residuals named; timer retired pre-06:42Z
+2026-09-23T06:32Z	P9-go-supervised-preview	P9-terminal	ACCEPTED	tern	-	COMPLETE supervised preview 046582d; unused repair+recheck cancelled; legitimate rest, no successor
+2026-09-23T08:44Z	campaign4	liveness-false-positive	REST	tern	-	alarm reconciled FALSE POSITIVE vs P9 terminal; fb5d4d6 recorded; watch suspended; rest stands
+2026-09-23T13:58Z	campaign4	campaign-rest	ENDED	tern	-	rest ended, watcher rearmed+verified; resume-receipt on file
+2026-09-23T13:58Z	P10-go-requalification-cutover	P10-admission-1	DISPATCHED	corvid	2026-09-23T14:13Z	receipt filed; checklist; author0; ack started
+2026-09-23T14:01Z	P10-go-requalification-cutover	P10-admission-1	ACCEPTED	corvid	-	review a97de1aba58d exact; checklist pinned; author0
+2026-09-23T14:03Z	P10-go-requalification-cutover	P10-initial-1	DISPATCHED	Claude	2026-09-23T15:03Z	release 55a66a0; ack notify delivered; timer verified active, elapse matches
+2026-09-23T14:07Z	P10-go-requalification-cutover	P10-initial-1	CONFIRMED	cairn	2026-09-23T15:03Z	no claim yet 4m post-notify; notify-based author, seat-idle N/A; 56m remain
+2026-09-23T14:14Z	P10-go-unattended-qualification	P10-initial-1	COMPLETED	Claude	2026-09-23T15:03Z	claim filed timely; details in next row
+2026-09-23T14:14Z	P10-go-requalification-cutover	P10-initial-1	COMPLETED	Claude	2026-09-23T15:03Z	exact-cmd wake arrived; claim 3ed22b1a3489 filed 14:13:59Z timely; evidence 5/5 verified
+2026-09-23T14:14Z	P10-go-requalification-cutover	P6r10-null	CORRECT	cairn	-	prior row mistyped package P6-r10; correct package is P6-r10-go-requalification-cutover this event
+2026-09-23T14:14Z	P10-go-requalification-cutover	P10-typo-2	CORRECT	cairn	-	prior two rows garbled (wrong package/action); correct: P10-initial-1 COMPLETED Claude above; evidence verified
+2026-09-23T14:14Z	P10-go-requalification-cutover	P10-review-1	DISPATCHED	corvid	2026-09-23T14:44Z	30m full-gate review; exact notify cmd inline; ack started
+2026-09-23T14:15Z	P10-go-requalification-cutover	P10-review-1	STEERED	cairn	-	intake focus passed to running pass, no reset; garbled prefix fixed pre-send
+2026-09-23T14:16Z	P10-go-requalification-cutover	P10-review-1	PASS	corvid	-	review f0ee7b9c44bc disk-matched; 3 blockers fixed e2e, suite+125 conformance green; timer retired pre-14:44Z
+2026-09-23T14:19Z	P10-go-requalification-cutover	P10-review-1	AMENDED	corvid	-	review 335e4b1d5878 disk-matched; PASS stands + callback-drain note + rollback DEFECT (%h specifier)
+2026-09-23T14:20Z	P10-go-requalification-cutover	P10-plan-repair-1	DISPATCHED	Claude	2026-09-23T14:49Z	release 555db72; ack delivered; timer verified active, elapse matches
+2026-09-23T14:26Z	P10-go-requalification-cutover	P10-plan-repair-1	COMPLETED	Claude	2026-09-23T14:49Z	exact-cmd wake arrived; claim 95a7f53f0022 timely; plan files verified
+2026-09-23T14:26Z	P10-go-requalification-cutover	P10-planverify-1	DISPATCHED	corvid	2026-09-23T14:46Z	20m exact-plan review; exact notify cmd inline; ack started
+2026-09-23T14:29Z	P10-go-requalification-cutover	P10-planverify-1	PASS	corvid	-	review-plan-repair 12b1b90a5074 disk-matched; exact plans complete+consistent; timer retired pre-14:46Z
+2026-09-23T14:33Z	P10-go-requalification-cutover	P10-planverify-1	CORRECT	cairn	-	PASS preserved; scoped correction: out()-stdout breaks verdict JSON on valid REST; wall-stop lacks driver self-kill; L2 open work noted
+2026-09-23T14:57Z	P11-live-driver-qualification	P11-admission-1	REJECTED	corvid	-	BOUNDED REJECTION: 310-vs-410 budget gap; pins/scope/checklist 666abfde OK; no author release; returned Tern
+2026-09-23T15:04Z	P11-live-driver-qualification	P11-admission-1-CORRECTION	DISPATCHED	corvid	2026-09-23T15:09:54Z	budget correction 0e3847e/310m verified ca512b21; confirm+reconcile in existing bound, no reset
+2026-09-23T15:05Z	P11-live-driver-qualification	P11-initial-1	DISPATCHED	Claude	2026-09-23T15:49:46Z	corrected ACCEPTED ca512b21; timer armed+verified pre-send; notify-claude delivered
+2026-09-23T15:07Z	P11-live-driver-qualification	P11-admission-1-CORRECTION	ACCEPTED	corvid	-	correction confirmed: review 22f11f8b, checklist 6cc435b4, sum 310, rejection preserved; completion wake arrived (re-issued, queued rc3); author release sent
+2026-09-23T15:10Z	P11-live-driver-qualification	P11-admission-1	CLOSED	cairn	-	deadline 15:09:54Z elapsed; timer inactive/dead; REJECTED->CORRECTED ACCEPTED all in-bound; P11-initial-1 running to 15:49:46Z; no extension
+2026-09-23T15:22Z	P11-live-driver-qualification	P11-initial-1	COMPLETED	Claude	2026-09-23T15:49:46Z	claim timely, 29/29 hashes match, pins OK
+2026-09-23T15:22Z	P11-live-driver-qualification	P11-review-1	DISPATCHED	corvid	2026-09-23T15:47:45Z	timer armed+verified pre-send; claim verified
+2026-09-23T15:23Z	P11-live-driver-qualification	P11-review-1	STEERED	corvid	2026-09-23T15:47:45Z	director intake 24d3bc6c 30/30; focus F1/F2/F3 + deviation preserved; no reset
+2026-09-23T15:28Z	P11-live-driver-qualification	P11-review-1	PASS	corvid	-	F1/F2/F3 independent PASS; 30/30 match; residuals carried; returned Tern
+2026-09-23T15:33Z	P11-live-driver-qualification	P11-repair-1	DISPATCHED	Claude	2026-09-23T16:02:54Z	sole correction 22ddfd7; timer verified active, no duplicate; author delivered by Tern; archive initial exists
+2026-09-23T15:34Z	P11-live-driver-qualification	P11-repair-1	STEERED	Claude	2026-09-23T16:02:54Z	deadline-guard addendum 5fdf2d5 authorized in-bound; steered, no reset
+2026-09-23T15:41Z	P11-live-driver-qualification	P11-repair-1	COMPLETED	Claude	2026-09-23T16:02:54Z	claim timely, 34/34 match, guard honestly stated
+2026-09-23T15:41Z	P11-live-driver-qualification	P11-repairreview-1	DISPATCHED	corvid	2026-09-23T16:01:08Z	timer armed+verified pre-send; claim bound
+2026-09-23T15:41Z	P11-live-driver-qualification	P11-repairreview-1	STEERED	corvid	2026-09-23T16:01:08Z	director intake f89d77e9 36/36; L6 ack gap focus; no reset
+2026-09-23T15:44Z	P11-live-driver-qualification	P11-repairreview-1	PASS	corvid	-	repair PASS; L6 ack gap carried as residual; returned Tern
+2026-09-23T15:50Z	P11-live-driver-qualification	P11-prep-1	COMPLETED	cairn	2026-09-23T16:04:37Z	4 idle fixtures launched rc0; cleanup 17:39:37Z armed+verified pre-launch; facts recorded
+2026-09-23T15:50Z	P11-live-driver-qualification	P11-binding-1	DISPATCHED	corvid	2026-09-23T16:00:30Z	existing 10m binding; facts bound
+2026-09-23T15:50Z	P11-live-driver-qualification	P11-review-1	CLOSED	cairn	-	deadline 15:47:45Z elapsed; timer inactive/dead; PASS verdict arrived in-bound 15:28Z, already returned Tern; no INCOMPLETE
+2026-09-23T15:51Z	P11-live-driver-qualification	P11-binding-1	PASS	corvid	-	bindings confirmed; candidate not installed; live window <=16:24:44Z; returned Tern
+2026-09-23T16:01Z	P11-live-driver-qualification	P11-repairreview-1	CLOSED	cairn	-	deadline 16:01:08Z elapsed; timer inactive/dead; PASS arrived in-bound 15:44Z, already returned Tern
+2026-09-23T16:03Z	P11-live-driver-qualification	P11-repair-1	CLOSED	cairn	-	deadline 16:02:54Z elapsed; timer inactive/dead; COMPLETE in-bound 15:41Z, reviewed PASS, returned Tern; sole correction spent
+2026-09-23T16:05Z	P11-live-driver-qualification	P11-prep-1	CLOSED	cairn	-	deadline elapsed; COMPLETED in-bound, 4/4 fixtures present; no INCOMPLETE; cleanup armed
+2026-09-23T16:09Z	P11-live-driver-qualification	P11-live-1	STARTED	cairn	2026-09-23T17:23:36Z	hashes match, 4/4 fixtures, driver pid 568112, exact argv/env
+2026-09-23T16:17Z	P11-live-driver-qualification	P11-live-1	STEERED	Claude/cairn	2026-09-23T17:23:36Z	evidence defects D1-D3 recorded; UTC journal preservation started; no edit/retry/reset
+2026-09-23T16:45Z	P11-live-driver-qualification	P11-live-1	FINDING	Claude/cairn	2026-09-23T17:23:36Z	idle-worker /cancel nothing-running aborts L2/L6 settlement: product failure, not ack-only gap; evidence timeout-idle-evidence/; P12 scope addition proposed
+2026-09-23T16:46Z	P11-live-driver-qualification	P11-live-1	ENDED-FAIL	cairn	2026-09-23T17:23:36Z	early fail-closed end 16:45:25Z; 6P/8F/10I; exact cleanup done, 0 fixtures; wall moot
+2026-09-23T16:47Z	P11-live-driver-qualification	P11-livereview-1	DISPATCHED	corvid	2026-09-23T17:07:09Z	timer armed+verified pre-send; raw 6P/8F/10I preserved
+2026-09-23T16:48Z	P11-live-driver-qualification	P11-live-1	FINDING	Claude/cairn	-	wall enforcement NOT PROVEN: monotonic deadline lost across daemon-reload (hypothesis, needs controlled repro); early-cleanup PASS kept separate; P12 must include real-reload witness
+2026-09-23T16:48Z	P11-live-driver-qualification	P11-livereview-1	NOT-READY	corvid	-	6P/8F/10I classified; 6 P12 blockers incl SIGABRT; returned Tern
+2026-09-23T16:51Z	P12-timeout-ownership-live-closure	P12-admission-1	DISPATCHED	corvid	2026-09-23T17:06:11Z	timer armed+verified pre-send; P11 NOT READY preserved; no overlap
+2026-09-23T16:52Z	P12-timeout-ownership-live-closure	P12-admission-1	STEERED	corvid	2026-09-23T17:06:11Z	shutdown supplement c8d91ce; C checks into checklist; no reset
+2026-09-23T16:52Z	P12-timeout-ownership-live-closure	P12-admission-1	ACCEPTED	corvid	-	unchanged 1315196; 12/12 pins; 365 reconciled; checklist 9c951ad5
+2026-09-23T16:52Z	P12-timeout-ownership-live-closure	P12-initial-1	DISPATCHED	Claude	2026-09-23T18:07:46Z	ACCEPTED 1315196; timer verified pre-send; supplement c8d91ce included
+2026-09-23T17:10Z	P12-timeout-ownership-live-closure	P12-initial-1	NOTE	cairn	2026-09-23T18:07:46Z	idle-seat probe: no claim yet but author active (evidence files to 17:07:41Z); timer active; no redispatch
+2026-09-23T17:14Z	P12-timeout-ownership-live-closure	P12-initial-1	COMPLETED	Claude	2026-09-23T18:07:46Z	timely; 40/40 hashes match; new source cbfe3d91
+2026-09-23T17:14Z	P12-timeout-ownership-live-closure	P12-review-1	DISPATCHED	corvid	2026-09-23T17:44:43Z	timer armed+verified pre-send; claim bound
+2026-09-23T17:15Z	P12-timeout-ownership-live-closure	P12-review-1	STEERED	corvid	2026-09-23T17:44:43Z	director intake 2f597065 43/43; ack-interval + replay + clock focus; no reset
+2026-09-23T17:19Z	P12-timeout-ownership-live-closure	P12-review-1	MIXED	corvid	-	PASS substance, FAIL empty conformance artifact; returned Tern
+2026-09-23T17:21Z	P12-timeout-ownership-live-closure	P12-repair-1	DISPATCHED	Claude	2026-09-23T18:01:16Z	sole repair 91b53da; timer active, no duplicate; author delivered by Tern
+2026-09-23T17:20Z	P12-timeout-ownership-live-closure	P12-review-1	ADDENDUM	corvid	-	L6 ack-from-detection FAIL (80s gap PASSes); conformance replayed 125/125; gaps carried
+2026-09-23T17:23Z	P12-timeout-ownership-live-closure	P12-review-1	CONSOLIDATED	corvid	-	conformance stdout-only explained; L6 25/88 counterexample; 2 FAILs into sole repair
+2026-09-23T17:24Z	P12-timeout-ownership-live-closure	P12-repair-1	COMPLETED	Claude	2026-09-23T18:01:16Z	timely; 45/45 match; both fixes with repro
+2026-09-23T17:24Z	P12-timeout-ownership-live-closure	P12-repairreview-1	DISPATCHED	corvid	2026-09-23T17:49:04Z	timer armed+verified pre-send; claim bound
+2026-09-23T17:24Z	P12-timeout-ownership-live-closure	P12-repairreview-1	STEERED	corvid	2026-09-23T17:49:04Z	director intake de269456 48/48; repair-vs-readiness split; no reset
+2026-09-23T17:25Z	P12-timeout-ownership-live-closure	P12-repairreview-1	PASS	corvid	-	both fixes reproduced; 3 gaps carried; returned Tern
+2026-09-23T17:28Z	P12-timeout-ownership-live-closure	P12-closure-1	DISPATCHED	Claude	2026-09-23T17:58:03Z	new 55m closure (total 420) 3caa0d1; explicit-UTC timer verified, epoch matches; author delivered by Tern
+2026-09-23T17:29Z	P12-timeout-ownership-live-closure	P12-closure-1	STEERED	Claude	2026-09-23T17:58:03Z	early-callback ruling d0670c8; narrow rearm authorized; no reset
+2026-09-23T17:36Z	P12-timeout-ownership-live-closure	P12-closure-1	COMPLETED	Claude	2026-09-23T17:58:03Z	timely; 23/23 match; new candidate 669648cb
+2026-09-23T17:36Z	P12-timeout-ownership-live-closure	P12-closurereview-1	DISPATCHED	corvid	2026-09-23T18:01:32Z	timer armed+verified pre-send; exact amendment + new candidate
+2026-09-23T17:37Z	P12-timeout-ownership-live-closure	P12-closurereview-1	STEERED	corvid	2026-09-23T18:01:32Z	director intake 8f22f48d 26/26; escalation-bound + stopped-gap focus; no reset
+2026-09-23T17:38Z	P12-timeout-ownership-live-closure	P12-admission-1	CLOSED	cairn	-	deadline 17:06:11Z elapsed; timer inactive/dead; ACCEPTED in-bound + C-supplement; author released
+2026-09-23T17:41Z	P12-timeout-ownership-live-closure	P12-closurereview-1	PASS	corvid	-	3 obligations bounded+reproduced; residuals carried; returned Tern
+2026-09-23T17:43Z	P11-live-driver-qualification	P11-livereview-1	CLOSED	cairn	-	deadline 17:07:09Z elapsed; timer inactive/dead; NOT READY in-bound 16:48Z, already returned Tern
+2026-09-23T17:44Z	P12-timeout-ownership-live-closure	P12-stopped-ownership-1	DISPATCHED	Claude	2026-09-23T18:14:08Z	new 55m (total 475) e6ee8825; explicit-UTC timer active, no duplicate; author delivered by Tern
+2026-09-23T17:50Z	P12-timeout-ownership-live-closure	P12-repairreview-1	CLOSED	cairn	-	deadline 17:49:04Z elapsed; timer inactive/dead; PASS in-bound 17:25Z, already returned Tern
+2026-09-23T17:52Z	P12-timeout-ownership-live-closure	P12-stopped-ownership-1	COMPLETED	Claude	2026-09-23T18:14:08Z	timely; 29/29 match; new candidate 53c97191 new worktree
+2026-09-23T17:52Z	P12-timeout-ownership-live-closure	P12-stoppedreview-1	HELD	cairn	-	review dispatch held: closurereview-1 still running to 18:01:32Z; no verifier overlap
+2026-09-23T17:53Z	P12-timeout-ownership-live-closure	P12-stoppedreview-1	INTAKE-READY	cairn	-	intake 6683fbbc 31/31 verified; focus saved; still held: closurereview active
+2026-09-23T17:58Z	P12-timeout-ownership-live-closure	P12-closure-1	CLOSED	cairn	-	deadline 17:58:03Z elapsed; explicit-UTC timer fired/inactive; COMPLETED in-bound 17:36Z, review running
+2026-09-23T17:58Z	P12-timeout-ownership-live-closure	P12-stoppedreview-1	DISPATCHED	Tern-direct	-	dispatched by Tern after closurereview PASS 17:41Z; no overlap; observed via verdict
+2026-09-23T17:58Z	P12-timeout-ownership-live-closure	P12-stoppedreview-1	BOUNDED-FAIL	corvid	-	unguarded callback writer race; 45s cadence PENDING; smallest correction stated; returned Tern
+2026-09-23T17:59Z	P12-timeout-ownership-live-closure	P12-writer-safety-1	DISPATCHED	Claude	2026-09-23T18:39:48Z	new 65m (total 540) bfa01f3b; explicit-UTC timer active, no duplicate; author delivered by Tern
+2026-09-23T18:02Z	P12-timeout-ownership-live-closure	P12-writer-safety-1	NOTE	cairn	2026-09-23T18:39:48Z	idle-seat probe: no claim yet but author active (writer-safety evidence this minute); timer active; no redispatch
+2026-09-23T18:14Z	P12-timeout-ownership-live-closure	P12-stopped-ownership-1	CLOSED	cairn	-	deadline 18:14:08Z elapsed; timer inactive; COMPLETED in-bound, reviewed BOUNDED FAIL
+2026-09-23T18:19Z	P12-timeout-ownership-live-closure	P12-writer-safety-1	COMPLETED	Claude	2026-09-23T18:39:48Z	timely; 28/28 match; new candidate 844d1567
+2026-09-23T18:19Z	P12-timeout-ownership-live-closure	P12-writersafetyreview-1	DISPATCHED	corvid	2026-09-23T18:44:09Z	timer armed+verified pre-send; claim bound
+2026-09-23T18:19Z	P12-timeout-ownership-live-closure	P12-writersafetyreview-1	STEERED	corvid	2026-09-23T18:44:09Z	director intake e58fa361 30/30; zero-runs blocker + safety-vs-latency; no reset
+2026-09-23T18:29Z	P12-timeout-ownership-live-closure	P12-writersafetyreview-1	PASS	corvid	-	writer-safety satisfied; 6 residuals incl starvation limit; returned Tern
+2026-09-23T18:31Z	P12-timeout-ownership-live-closure	P12-bounded-deadline-1	DISPATCHED	Claude	2026-09-23T19:11:44Z	new 65m (total 605) 351a9bd3; explicit-UTC timer active, no duplicate; author delivered by Tern
+2026-09-23T18:37Z	P12-timeout-ownership-live-closure	P12-bounded-deadline-1	NOTE	cairn	2026-09-23T19:11:44Z	idle-seat probe: no claim yet but author active (bounded-deadline evidence seconds ago); timer active; no redispatch
+2026-09-23T18:39Z	P12-timeout-ownership-live-closure	P12-writer-safety-1	CLOSED	cairn	-	deadline 18:39:48Z elapsed; timer inactive; COMPLETED in-bound, reviewed PASS
+2026-09-23T18:43Z	P12-timeout-ownership-live-closure	P12-bounded-deadline-1	INCOMPLETE	Claude	2026-09-23T19:11:44Z	honest: no end-to-end contention bound; 34/34 match; fix direction stated; returned Tern
+2026-09-23T18:43Z	P12-timeout-ownership-live-closure	P12-boundedreview-1	DISPATCHED	corvid	2026-09-23T19:08:57Z	timer armed+verified pre-send; partial INCOMPLETE bound; author stopped
+2026-09-23T18:46Z	P12-timeout-ownership-live-closure	P12-boundedreview-1	NOTE	cairn	2026-09-23T19:08:57Z	idle-seat probe: no review file, timer active; single nudge sent, no redispatch
+2026-09-23T18:47Z	P12-timeout-ownership-live-closure	P12-boundedreview-1	INCOMPLETE	corvid	-	blocker preserved; reusable pieces verified; smallest fix described; returned Tern
+2026-09-23T18:57Z	P12-timeout-ownership-live-closure	P12-lock-budget-1	DISPATCHED	Claude	2026-09-23T19:57:29Z	4dc82958; lock-budget timer active explicit-UTC, no duplicate; author delivered by Tern
+2026-09-23T19:09Z	P12-timeout-ownership-live-closure	P12-lock-budget-1	NOTE	cairn	2026-09-23T19:57:29Z	idle-seat probe: no claim yet but author active (lock-budget contention evidence post-dispatch); timer active; no redispatch
+2026-09-23T19:11Z	P12-timeout-ownership-live-closure	P12-bounded-deadline-1	CLOSED	cairn	-	deadline 19:11:44Z elapsed; timer inactive; INCOMPLETE in-bound, reviewed, reusable pieces kept
+2026-09-23T19:12Z	P12-timeout-ownership-live-closure	P12-closurereview-1	CLOSED	cairn	-	deadline 18:01:32Z elapsed; timer inactive/dead; PASS in-bound 17:41Z, already returned Tern
+2026-09-23T19:13Z	P12-timeout-ownership-live-closure	P12-boundedreview-1	CLOSED	cairn	-	deadline 19:08:57Z elapsed; timer inactive; INCOMPLETE in-bound 18:47Z, already returned Tern
+2026-09-23T19:14Z	P12-timeout-ownership-live-closure	P12-writersafetyreview-1	CLOSED	cairn	-	deadline 18:44:09Z elapsed; timer inactive; PASS in-bound 18:29Z, already returned Tern
+2026-09-23T19:15Z	P12-timeout-ownership-live-closure	P12-review-1	CLOSED	cairn	-	deadline 17:44:43Z elapsed; timer inactive; MIXED+addendum+consolidated in-bound, sole repair released from them
+2026-09-23T19:20Z	P12-timeout-ownership-live-closure	P12-lock-budget-1	COMPLETED	Claude	2026-09-23T19:57:29Z	timely; 35/35 match; new candidate 487cb92e
+2026-09-23T19:20Z	P12-timeout-ownership-live-closure	P12-lockbudgetreview-1	DISPATCHED	corvid	2026-09-23T19:50:58Z	timer armed+verified pre-send; claim bound
+2026-09-23T19:22Z	P12-timeout-ownership-live-closure	P12-lock-budget-1	TIMER-RETIRED	cairn	-	author claim in-bound; lock-budget deadline timer stopped/inactive
+2026-09-23T19:22Z	P12-timeout-ownership-live-closure	P12-lockbudgetreview-1	STEERED	corvid	2026-09-23T19:50:58Z	director intake c3b75e28 37 paths; backlog/yield/fairness focus; no reset
+2026-09-23T19:26Z	P12-timeout-ownership-live-closure	P12-repair-1	CLOSED	cairn	-	deadline 18:01:16Z elapsed; timer inactive; COMPLETED in-bound, reviewed PASS
+2026-09-23T19:27Z	P11-live-driver-qualification	P11-initial-1	CLOSED	cairn	-	deadline 15:49:46Z elapsed; timer inactive; COMPLETED in-bound 15:22Z, full downstream done
+2026-09-23T19:33Z	P12-timeout-ownership-live-closure	P12-lockbudgetreview-1	BOUNDED-FAIL	corvid	-	mechanism reproduced; contention evidence wrong binary; smallest correction stated; returned Tern
+2026-09-23T19:34Z	P12-timeout-ownership-live-closure	P12-lockbudgetreview-1	CLASSIFIED	corvid	-	intake classification: blockers (a)-(f) explicit; SQLite unbudgeted, yield unit-only, crash not rerun, fairness unproven
+2026-09-23T19:35Z	P12-timeout-ownership-live-closure	P12-lockbudgetreview-1	CORRECTED	corvid/tern	-	off-binary withdrawn for release files; (a)->README label; (b)-(f) stand; no blanket PASS
+2026-09-23T19:55Z	P12-timeout-ownership-live-closure	P12-lockbudgetreview-1	CLOSED	cairn	-	deadline 19:50:58Z elapsed; timer inactive; BOUNDED FAIL + correction in-bound, already returned Tern
+2026-09-23T19:56Z	P12-timeout-ownership-live-closure	P12-initial-1	CLOSED	cairn	-	deadline 18:07:46Z elapsed; timer inactive; COMPLETED in-bound 17:14Z, full downstream done
+2026-09-23T20:02Z	P12-timeout-ownership-live-closure	P12-realprocess-1	DISPATCHED	Claude	2026-09-23T21:02:00Z	c0b16422; calendar timer active explicit-UTC, no duplicate; author delivered by Tern
+2026-09-23T20:04Z	P12-timeout-ownership-live-closure	P12-realprocess-1	NOTE	cairn	2026-09-23T21:02:00Z	idle-seat probe 2.5m post-dispatch: no claim yet, expected startup latency; timer active; no redispatch
+2026-09-23T20:18Z	P12-timeout-ownership-live-closure	P12-realprocess-1	STEERED	Claude	2026-09-23T21:02:00Z	defect ruling 25a980d9; D1/D2 confirmed; frozen evidence continues, no edits
+2026-09-23T20:22Z	P12-timeout-ownership-live-closure	P12-realprocess-1	INCOMPLETE	Claude	2026-09-23T21:02:00Z	honest D1/D2/D3; 100/100 match; returned Tern
+2026-09-23T20:24Z	P12-timeout-ownership-live-closure	P12-realprocess-1	TIMER-RETIRED	cairn	-	INCOMPLETE accepted as report; timer stopped/inactive
+2026-09-23T20:24Z	P12-timeout-ownership-live-closure	P12-fair-handoff-1	DISPATCHED	Claude	2026-09-23T22:24:26Z	successor b1b1d65a impl75+evidence45; timer active, no duplicate; author delivered by Tern
+2026-09-23T20:27Z	P12-timeout-ownership-live-closure	P12-fair-handoff-1	NOTE	cairn	2026-09-23T22:24:26Z	idle-seat probe 3m post-dispatch: no claim yet, startup latency; timer active; no redispatch
+2026-09-23T21:28Z	P12-timeout-ownership-live-closure	P12-fair-handoff-1	COMPLETED	Claude	2026-09-23T22:24:26Z	timely; 286/286 match; new release 5da2b36f FIFO design
+2026-09-23T21:28Z	P12-timeout-ownership-live-closure	P12-fairhandoffreview-1	DISPATCHED	corvid	2026-09-23T21:58:51Z	timer armed+verified pre-send; claim bound
+2026-09-23T21:31Z	P12-timeout-ownership-live-closure	P12-fair-handoff-1	TIMER-RETIRED	cairn	-	claim in-bound; fairhandoff author timer stopped/inactive
+2026-09-23T21:31Z	P12-timeout-ownership-live-closure	P12-fairhandoffreview-1	STEERED	corvid	2026-09-23T21:58:51Z	director intake 6d473ad9 286 files; ack-cap blocker + D3 scope; no reset
+2026-09-23T21:35Z	P12-timeout-ownership-live-closure	P12-fairhandoffreview-1	PASS	corvid	-	FIFO + D1/D3 reproduced; capacity restriction returned; needs ruling
+2026-09-23T21:42Z	P12-timeout-ownership-live-closure	P12-fairhandoffreview-1	TIMER-RETIRED	cairn	-	verdict returned; review timer stopped/inactive
+2026-09-23T21:42Z	P12-timeout-ownership-live-closure	P12-ack-capacity-1	DISPATCHED	Claude	2026-09-23T23:11:40Z	6ee436d0; calendar timer active explicit-UTC, no duplicate; author delivered by Tern
+2026-09-23T21:44Z	P12-timeout-ownership-live-closure	P12-ack-capacity-1	STANDIN-ARMED	cairn	2026-09-23T23:11:40Z	kiln conditional stand-in 69b6d204 recorded; no activation trigger (3m post-dispatch, ambiguous); Claude continues
+2026-09-23T22:38Z	P12-timeout-ownership-live-closure	P12-ack-capacity-1	COMPLETED	Claude	2026-09-23T23:11:40Z	timely; 163/163 match; release dbcf5df; stand-in unneeded
+2026-09-23T22:38Z	P12-timeout-ownership-live-closure	P12-ackcapacityreview-1	DISPATCHED	corvid	2026-09-23T23:08:39Z	timer armed+verified pre-send; claim bound
+2026-09-23T22:39Z	P12-timeout-ownership-live-closure	P12-ack-capacity-1	TIMER-RETIRED	cairn	-	claim in-bound; ackcapacity author timer stopped/inactive; stand-in never activated
+2026-09-23T22:39Z	P12-timeout-ownership-live-closure	P12-ackcapacityreview-1	STEERED	corvid	2026-09-23T23:08:39Z	director intake 645577b1 163 files; arithmetic + freshness + eviction focus; no reset
+2026-09-23T22:46Z	P12-timeout-ownership-live-closure	P12-ackcapacityreview-1	PASS	corvid	-	reserved admission reproduced; cap blocker resolved; residuals explicit; returned Tern
+2026-09-23T23:10Z	P12-timeout-ownership-live-closure	P12-ackcapacityreview-1	CLOSED	cairn	-	deadline 23:08:39Z elapsed; timer inactive; PASS in-bound 22:46Z, already returned Tern
+2026-09-23T23:31Z	P12-timeout-ownership-live-closure	P12-checker-ownership-1	DISPATCHED	Claude	2026-09-24T00:29:45Z	eb3f1aa9; calendar timer active explicit-UTC, no duplicate; prior review timer already inactive
+2026-09-23T23:32Z	P12-timeout-ownership-live-closure	P12-checker-ownership-1	NOTE	cairn	2026-09-24T00:29:45Z	idle-seat probe 3m post-dispatch: no claim yet, startup latency; timer active; no redispatch
+2026-09-24T00:05Z	P12-timeout-ownership-live-closure	P12-checker-ownership-1	COMPLETED	Claude	2026-09-24T00:29:45Z	timely; 48/48 match; new release 8ad12b86
+2026-09-24T00:05Z	P12-timeout-ownership-live-closure	P12-checkerownershipreview-1	DISPATCHED	corvid	2026-09-24T00:35:29Z	timer armed+verified pre-send; claim bound
+2026-09-24T00:06Z	P12-timeout-ownership-live-closure	P12-checker-ownership-1	TIMER-RETIRED	cairn	-	claim in-bound; checkerownership author timer stopped/inactive
+2026-09-24T00:06Z	P12-timeout-ownership-live-closure	P12-checkerownershipreview-1	STEERED	corvid	2026-09-24T00:35:29Z	director intake 7ed06443 48 files; owner-path + trigger-bound focus; no reset
+2026-09-24T00:10Z	P12-timeout-ownership-live-closure	P12-checkerownershipreview-1	PASS	corvid	-	owner path reproduced; live plan fitted; residuals explicit; returned Tern
+2026-09-24T00:15Z	P12-timeout-ownership-live-closure	P12-prepare-1	COMPLETED	cairn	2026-09-24T00:29:00Z	4 fixtures rc0; timers verified pre-launch; prior review timers retired
+2026-09-24T00:15Z	P12-timeout-ownership-live-closure	P12-binding-1	DISPATCHED	corvid	2026-09-24T00:25:15Z	fresh 10m read-only binding; facts bound
+2026-09-24T00:16Z	P12-timeout-ownership-live-closure	P12-binding-1	PASS	corvid	-	bindings confirmed; private release only; live window fits; returned Tern
+2026-09-24T00:29Z	P12-timeout-ownership-live-closure	P12-prepare-1	CLOSED	cairn	-	deadline elapsed; COMPLETED in-bound, 4/4 present; no INCOMPLETE; cleanup armed
+2026-09-24T01:15Z	P12-timeout-ownership-live-closure	P12-live-1	STARTED	cairn	2026-09-24T02:30:00Z	hashes+fixtures verified; pid 1767449 exact argv/env; cleanup 02:40Z
+2026-09-24T02:01Z	P12-timeout-ownership-live-closure	P12-live-1	ENDED	cairn	2026-09-24T02:30:00Z	cleanup 01:51:16; raw 12P/5F/8I verified; 0 fixtures; fallback retired; no process-end stamp inferred
+2026-09-24T02:01Z	P12-timeout-ownership-live-closure	P12-livereview-1	DISPATCHED	Tern-direct	2026-09-24T02:26:07Z	Tern dispatched corvid directly, timer active; no duplicate by Cairn
+2026-09-24T02:03Z	P12-timeout-ownership-live-closure	P12-livereview-1	NOT-READY	corvid	-	12 product PASS; 5 FAILs measurement/injection; L6 replay unexecuted; no cutover
+2026-09-24T02:17Z	P12-timeout-ownership-live-closure	P12-live-measurement-1	DISPATCHED	Claude	2026-09-24T03:16:28Z	7d77df95; calendar timer active, no duplicate; prev review timer already stopped
+2026-09-24T02:18Z	P12-timeout-ownership-live-closure	P12-live-measurement-1	STEERED	Claude	2026-09-24T03:16:28Z	restart-classification ruling; prospective L4a/L4b amendment; product frozen; no reset
+2026-09-24T02:23Z	P12-timeout-ownership-live-closure	P12-live-measurement-1	COMPLETED	Claude	2026-09-24T03:16:28Z	timely; 25/25 match; product frozen
+2026-09-24T02:23Z	P12-timeout-ownership-live-closure	P12-measurementreview-1	DISPATCHED	corvid	2026-09-24T02:48:21Z	timer armed+verified pre-send; claim bound
+2026-09-24T02:25Z	P12-timeout-ownership-live-closure	P12-measurementreview-1	PASS	corvid	-	corrections proven 40/0 with negatives; live1 NOT READY preserved; returned Tern
+2026-09-24T02:25Z	P12-timeout-ownership-live-closure	P12-measurementreview-1	NOTE	cairn	2026-09-24T02:48:21Z	Tern steer arrived post-verdict (PASS already filed+returned); claim hash matches; focus items covered in review; no duplicate pass
+2026-09-24T02:28Z	P12-timeout-ownership-live-closure	P12-measurement-repair-1	DISPATCHED	Claude	2026-09-24T02:47:56Z	new 20m repair; calendar timer active, no duplicate; prev review timer inactive
+2026-09-24T02:29Z	P12-timeout-ownership-live-closure	P12-measurement-repair-1	COMPLETED	Claude	2026-09-24T02:47:56Z	timely; 32/32 match; corrections 2/3 + helper hashes
+2026-09-24T02:29Z	P12-timeout-ownership-live-closure	P12-measurementrepairreview-1	DISPATCHED	corvid	2026-09-24T02:44:20Z	timer armed+verified pre-send; claim bound
+2026-09-24T02:30Z	P12-timeout-ownership-live-closure	P12-measurement-repair-1	TIMER-RETIRED	cairn	-	claim in-bound; repair author timer stopped/inactive
+2026-09-24T02:30Z	P12-timeout-ownership-live-closure	P12-measurementrepairreview-1	STEERED	corvid	2026-09-24T02:44:20Z	intake ebc83170 32 files; argv-vs-production + incarnation focus; prep-2 gated, not active
+2026-09-24T02:31Z	P12-timeout-ownership-live-closure	P12-measurementrepairreview-1	PASS	corvid	-	corrections 2/3 reproduced; helpers bound; condition met, prep-2 activated
+2026-09-24T02:31Z	P12-timeout-ownership-live-closure	P12-prepare-2	COMPLETED	cairn	2026-09-24T02:45:54Z	4 new fixtures rc0; timers verified pre-launch
+2026-09-24T02:31Z	P12-timeout-ownership-live-closure	P12-binding-2	DISPATCHED	corvid	2026-09-24T02:41:21Z	funded 10m read-only binding; new facts bound
+2026-09-24T02:33Z	P12-timeout-ownership-live-closure	P12-measurementrepairreview-1	AMENDED	corvid	-	intake-closure appended post-read (905d77b8): production-argv binding + bound PASS confirms prep-2 gate; already committed+acted
+2026-09-24T02:32Z	P12-timeout-ownership-live-closure	P12-binding-2	PASS	corvid	-	new bindings confirmed; prep-facts gap closed; returned Tern
+2026-09-24T02:37Z	P12-timeout-ownership-live-closure	P12-live-2	STARTED	cairn	2026-09-24T03:52:00Z	pins+fixtures verified; pid 2478035 exact argv/env
+2026-09-24T02:45Z	P12-timeout-ownership-live-closure	P12-prepare-2	CLOSED	cairn	-	deadline elapsed; COMPLETED in-bound, 4/4 present, live running; no INCOMPLETE
+2026-09-24T02:46Z	P12-timeout-ownership-live-closure	P12-measurementrepairreview-1	CLOSED	cairn	-	deadline 02:44:20Z elapsed; timer inactive; PASS+amendment in-bound, prep-2 activated
+2026-09-24T03:04Z	P12-timeout-ownership-live-closure	P12-live-2	ENDED-ALLPASS-RAW	cairn	2026-09-24T03:52:00Z	cleanup 03:03:48Z; raw 17/17 PASS; 0 fixtures, no units; needs review, not acceptance
+2026-09-24T03:41Z	P12-timeout-ownership-live-closure	P12-live-2	VERIFY-RECEIPT	Tern/cairn	-	host-end 03:40:00Z preserved (distinct from cleanup 03:03:48Z); fallback retired; handoff deviation noted
+2026-09-24T03:41Z	P12-timeout-ownership-live-closure	P12-livereview-2	DISPATCHED	Tern-direct	2026-09-24T04:06:00Z	Tern dispatched corvid directly, timer active; no duplicate by Cairn
+2026-09-24T03:42Z	P12-timeout-ownership-live-closure	P12-livereview-2	PASS	corvid	-	17/17 independently verified; cutover decision with Tern
+2026-09-24T03:44Z	P12-timeout-ownership-live-closure	P12-cutover-plan-closure-1	DISPATCHED	Claude	2026-09-24T04:08:58Z	live2 ACCEPTED 1bedb9be; timer active, no duplicate; review timer already inactive

@@ -228,3 +228,28 @@ live1 (`live-p12live1/`, review `live-review-1.md`) stays NOT READY. Its five FA
   - `reset-failed` gives each onset a fresh start-limit window. Duty/director routing, the ack owner/next/deadline and recovery are unchanged.
 - **L6.** The live1 replay ran `systemctl start` on a transient unit that had already been collected ("Unit not found"), so it never ran. There is no retro-PASS. The new driver captures the deadline unit's exact callback argv right after dispatch (probe: the service is loaded with its ExecStart before the timer fires). It then replays that argv as a process and requires rc 0, `already-handled`, and no new /cancel or director wake. The construction test cannot prove a live replay; only the live run can.
 - **L5/L6b stop waits.** They now wait for run's own "stop requested; exiting 64" journal line since the stop onset, plus the unit not active. The old wait polled ExecMainStatus and timed out.
+
+## P12-cutover-plan-closure-1 (deployment alignment of cutover.sh; product 97a57db1 FROZEN)
+
+The live qualification (live-2, 17/17) was accepted. `cutover.sh` now matches what was qualified. Evidence: `evidence/cutover-plan-closure/`.
+
+- **Units.** `switch` installs all four qualified units, including `agent-loop-liveness-failed@.service`. A read-only preflight (`cli_preflight`) fails the stage before any effect if:
+  - a unit is missing;
+  - the check unit lacks `OnFailure=agent-loop-liveness-failed@%i.service`;
+  - the handler does not run `checker-failed`;
+  - the units do not run the installed binary;
+  - any command the cutover, handoff or operator uses is missing (each is asked with `-h`, because the top-level help omits `timeout-ack`).
+
+  Each installed unit must equal the release byte for byte, and systemd must report `OnFailure=agent-loop-liveness-failed@campaign4.service`.
+- **Identity.** `seat_identity` checks that the kiln, corvid, tern and cairn ids are registered in campaign4 under those titles before anything changes. Every message carries `AGENTDECK_PROFILE=campaign4`.
+- **Failures.** A failed required command (`must`) fails the stage; it can never end in PASS. Old timers AND old services must be inactive before a new owner starts.
+- **Verify.** Verification uses the live-qualified predicates, not text greps: a ledger pass after the switch by the current invocation and pid (`pass_eval`), then a completed outside check that reads `rest`, checked after the switch (`healthy_eval`).
+- **Capture and rollback.**
+  - `capture` records each old unit's enabled and active state (`pre/state.tsv`), and keeps any existing unit files and config byte for byte.
+  - `rollback` drains the check, the handler and the callbacks, then checks none is active. It restores kept unit files and removes added ones, then restores EXACTLY the captured state. campaign4-watch is recreated only if it was active at capture. With no captured state, rollback refuses.
+- **Open rows.** The open-dispatch check now knows the terminal verbs NOT-READY, BOUNDED-FAIL and CLOSED. Five finished reviews had read as open and would have blocked the switch; after the fix only the current round is open. No ledger row was changed.
+- **Operator tasks.** The handoff task and verifier now include:
+  - the handler unit and its OnFailure wiring;
+  - the release pins: sha256 and vcs.revision (`agent-loop version` prints the campaign repository, not the binary);
+  - five known limits from the live acceptance: the crashed label on systemd 258, the 143 s contention bound, the empirical local commit, the 137 s director escalation, and the timer/user-manager boundary.
+- **Filled inputs.** Copy `plans/cutover-inputs.template.env`, set only `CUT_RUN` to a fresh id, sha256 the file, and Tern signs that hash together with the hashes of `cutover.sh`, `live-checks.sh` and the tasks. `CUT_HOME` and `EV_DIR` must be unset in the signed run.

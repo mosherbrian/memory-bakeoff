@@ -1,0 +1,48 @@
+cp: cannot stat '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/memory-bake-off/campaign4/control-events.tsv': No such file or directory
+tail: cannot open '/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/.local/share/agent-deck/wake-send.log' for reading: No such file or directory
+2026-09-24T03:46:33.779Z cli/unit preflight ok: commands, 4 units, OnFailure wiring, handler command
+capture	PASS	2026-09-24T03:46:33.781Z	prior state captured in /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/ev/pre (state.tsv: 4 units; 0 existing unit files kept)
+2026-09-24T03:46:33.790Z + systemctl --user disable --now agent-loop@campaign4.service agent-loop-liveness@campaign4.timer
+2026-09-24T03:46:33.794Z   rc=0
+2026-09-24T03:46:33.802Z drained agent-loop-liveness@campaign4.service: inactive
+2026-09-24T03:46:33.808Z drained agent-loop-liveness-failed@campaign4.service: inactive
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "/usr/lib64/python3.14/json/__init__.py", line 298, in load
+    return loads(fp.read(),
+        cls=cls, object_hook=object_hook,
+        parse_float=parse_float, parse_int=parse_int,
+        parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+  File "/usr/lib64/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib64/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2026-09-24T03:46:33.840Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/.config/systemd/user/agent-loop@.service
+2026-09-24T03:46:33.842Z   rc=0
+2026-09-24T03:46:33.844Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/.config/systemd/user/agent-loop-liveness@.service
+2026-09-24T03:46:33.845Z   rc=0
+2026-09-24T03:46:33.846Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/.config/systemd/user/agent-loop-liveness@.timer
+2026-09-24T03:46:33.848Z   rc=0
+2026-09-24T03:46:33.850Z + rm -f /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/.config/systemd/user/agent-loop-liveness-failed@.service
+2026-09-24T03:46:33.851Z   rc=0
+2026-09-24T03:46:33.852Z + systemctl --user daemon-reload
+2026-09-24T03:46:33.853Z   rc=0
+2026-09-24T03:46:33.855Z + systemctl --user enable openwork.timer
+2026-09-24T03:46:33.857Z   rc=0
+2026-09-24T03:46:33.858Z + systemctl --user start openwork.timer
+2026-09-24T03:46:33.859Z   rc=0
+2026-09-24T03:46:33.860Z + systemctl --user enable coax-dry.timer
+2026-09-24T03:46:33.862Z   rc=0
+2026-09-24T03:46:33.863Z + systemctl --user enable shadow-watch.timer
+2026-09-24T03:46:33.865Z   rc=0
+2026-09-24T03:46:33.866Z + systemctl --user start shadow-watch.timer
+2026-09-24T03:46:33.867Z   rc=0
+2026-09-24T03:46:33.868Z campaign4-watch was inactive at capture: not recreated
+2026-09-24T03:46:33.869Z + /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/home/.config/agent-deck/wake 56513e0e-1790000758 [P12 cutover reh-n5] ROLLBACK: your controller role is restored. Open agent-loop items to adopt (no resend; check each seat first): /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/cutsb-fsmS/n5/ev/rollback/open-items.json
+2026-09-24T03:46:33.871Z   rc=0
+rollback	PASS	2026-09-24T03:46:33.876Z	rolled back: old owners active, agent-loop off, open items handed to cairn
