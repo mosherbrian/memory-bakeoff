@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-25T19:48:00Z",
+  "qid": "R19-outcome-review-1",
+  "question_id": "Q-WORK-BENEFIT",
+  "stream_id": "A",
+  "owner": "tern",
+  "reviewer": "corvid",
+  "status": "COMPLETE_review_not_director_acceptance",
+  "scope": "All 12 evidence files and grades, frozen inputs, order, histories, delivery deviation and recovery records. All 12 answer/grade sha256 recomputed and match outcome-review-input.json.",
+  "primary_definition": "usable AND compliant under the frozen rubric; aid recorded, never decisive",
+  "per_case": [
+    {"case": "PY-1", "C": {"usable": "yes", "compliant": "no", "primary": false}, "T": {"usable": "yes", "compliant": "yes", "primary": true}},
+    {"case": "PY-2", "C": {"usable": "yes", "compliant": "yes", "primary": true}, "T": {"usable": "yes", "compliant": "yes", "primary": true}},
+    {"case": "LB-1", "C": {"usable": "yes", "compliant": "yes", "primary": true}, "T": {"usable": "yes", "compliant": "yes", "primary": true}},
+    {"case": "LB-2", "C": {"usable": "yes", "compliant": "yes", "primary": true}, "T": {"usable": "yes", "compliant": "yes", "primary": true}},
+    {"case": "NET-1", "C": {"usable": "yes", "compliant": "yes", "primary": true}, "T": {"usable": "yes", "compliant": "yes", "primary": true}},
+    {"case": "NET-2", "C": {"usable": "no", "compliant": "yes", "primary": false}, "T": {"usable": "yes", "compliant": "yes", "primary": true}}
+  ],
+  "per_rule_primary_success": {"R-PY": {"C": "1/2", "T": "2/2"}, "R-LB": {"C": "2/2", "T": "2/2"}, "R-NET": {"C": "1/2", "T": "2/2"}},
+  "overall_primary_success": {"C": "4/6", "T": "6/6"},
+  "by_delivery": {"loop_claimed": {"phases": ["PY1-C", "PY1-T", "LB2-C", "LB2-T", "NET1-C", "NET1-T", "NET2-C", "NET2-T"], "count": 8}, "operator_recovered": {"phases": ["PY2-C", "PY2-T", "LB1-C", "LB1-T"], "count": 4, "all_primary_success": true}, "timely_loop_success": "8/12"},
+  "corrections_separate_from_grades": [
+    {"id": "NET-endpoints-symmetric", "reason": "NET2-T /router/status and /router/reload are assumed, hedged ('use whichever matches'), with before/after confirmation; NET1-C and NET1-T likewise assume /health + /models or /v1/models, both hedged. Grades kept; usable-yes rests on complete hedged handoff, not on any endpoint being real; no differential credit for invented exactness."},
+    {"id": "LB1-T-message-not-code", "reason": "Startup message shown as text, not printed by code (uvicorn.run only). Frozen rubric 'working bind/start plus where to reach it' is satisfied; prompt did not require code-printed output; no post-hoc criterion."},
+    {"id": "recovered-grade-binding", "reason": "recovered-grade-{1..4}-receipt.json record question_id Q-EVALUATOR-VALIDITY, stream_id B, but R19 is Q-WORK-BENEFIT/A (all 12 dispatch *-binding.json correct). Grades content-correct; reconcile envelopes before counting as stream-A evidence."},
+    {"id": "delivery-deviation", "reason": "Preparation defect (safety line said run nothing while also requiring cp+claim) caused 4 timeouts (PY2-C/T, LB1-C/T). Operator recovered byte-exact pre-bound answers; tasks-delivery-v2 amended only the safety line for the 6 remaining phases. Timely loop success 8/12; 4 recovered phases are not retroactive timely loop success; content not pooled with delivery."},
+    {"id": "aid-divergence", "reason": "PY2-T aid returned not-applicable (2-space-indented commands unparsed); adjudication read usable/compliant. All NET aids returned needs-adjudication (always defer). Recorded divergence, no rubric change."},
+    {"id": "NET-measures-plans", "reason": "All arms told to run nothing/contact no host; NET prompts supply office host, Qwen and model. NET results are handoff/refusal behavior under a fixed scenario, not real reachability; R-NET incremental contribution partly prompted."}
+  ],
+  "fresh_sessions": {"count": 12, "unique": true, "ids": ["ses_f2623cadaffeu3GgmbL4kKIlnD", "ses_f261e3a16ffeKuIYlt5gKy2Tpc", "ses_f261be39dffeVdGR3haOUqvJeR", "ses_f2612dc1bffe5zhm5bRpGYnGxQ", "ses_f260d3cdfffeaCASi8JfSbbeRK", "ses_f26077f9bffeJO2bSoUCtEpDRW", "ses_f25fa19b3ffeIr6v7Gy0wd6Fk3", "ses_f25f6e5c2ffe74iTxQKCFqWPSQ", "ses_f25f3c0edffeTqmUhWpScMq0xj", "ses_f25f0de6affeTomozKrp85C73D", "ses_f25ee8737ffeyuBF1xj0L227Mj", "ses_f25ea9f55ffe9590y1JlxOtoqB"], "binding": "all Q-WORK-BENEFIT/stream A"},
+  "order": {"PY1": "C,T", "PY2": "C,T", "LB1": "C,T", "LB2": "T,C", "NET1": "C,T", "NET2": "T,C", "drawn_before_output": true, "sha256": "dc6edca725d07682fde586a8be38302d546bd5e14e1aa491925488a41b4f78d5"},
+  "limits": [
+    "n=1 per arm per case; 2 cases per rule; one model; six handpicked cases; no significance test.",
+    "Grading not blind to arm (qid carries T/C); reviewer had read the design.",
+    "Kiln not naive (R18 checker work, prior python3 usage); fresh sessions do not erase training/exposure; instruction boundary, not a sandbox.",
+    "T 6/6 vs C 4/6 is descriptive, confounded by delivery deviation, no-effects instruction and refusal behavior; no causal or general memory-efficacy/retrieval/compaction claim."
+  ],
+  "smallest_next_lead": "Already-scoped post-R17 persistence-rule study: one paired single-turn case on a persistence/stop rule with the same frozen rubric and aid, the rule's fact present only in the packet (never the prompt or ordinary files) to avoid the NET prompt leak; keep tasks-delivery-v2 hand-in fix. No new cases or rubric; no execution authorized now."
+}
