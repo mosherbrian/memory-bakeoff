@@ -1,45 +1,56 @@
 {
   "package": "R1-evidence-synthesis",
   "tier": 1,
-  "status": "PENDING_TERMINAL",
+  "status": "TERMINAL",
   "owner": "tern",
   "policy": "../../PROCESS-POSTMORTEM-DISPOSITION-20260924.md#lightweight-measurement--sponsor-request-2026-09-24",
   "actual_minutes": {
     "author": null,
     "review": null,
     "admission": null,
-    "live": null
+    "live": 0
   },
-  "timing_basis": null,
+  "timing_basis": "timing-events.json: start\u2192publish (5m15 +3m06), publish\u2192verdict (2m21+3m41); includes dispatch/observation latency, NOT exact active effort. Admission/director active intervals unavailable; unknown, not ceilings.",
   "round_counts": {
-    "author": null,
-    "review": null,
-    "admission": null,
-    "signature": null
+    "author": 2,
+    "review": 3,
+    "admission": 1,
+    "signature": 3
   },
-  "overhead_ratio": null,
+  "overhead_ratio": 3.5,
   "non_pass_verdicts": {
-    "total_verdicts": null,
-    "total_non_pass": null,
-    "evidence_format_only": null,
-    "substance_including_mixed": null,
-    "mixed_subset": null,
-    "unknown": null
+    "total_verdicts": 4,
+    "total_non_pass": 2,
+    "evidence_format_only": 1,
+    "substance_including_mixed": 1,
+    "mixed_subset": 0,
+    "unknown": 0
   },
   "incomplete_rounds": {
-    "time_box_only": null,
-    "usage_only": null,
-    "both": null,
-    "unknown_cause": null
+    "time_box_only": 0,
+    "usage_only": 0,
+    "both": 0,
+    "unknown_cause": 0
   },
   "granted_minutes": {
     "initial": 185,
-    "final": null
+    "final": 185
   },
   "evidence": [
-    "admission-receipt.json"
+    "timing-events.json",
+    "admission-review.md",
+    "attempt-history/initial/verification.md",
+    "repair-decision.json",
+    "verification-repair.md",
+    "normalization-note.md"
   ],
   "notes": [
-    "No actual durations inferred from ceilings. Populate from observed receipts at terminal. Admission includes source-first baseline once."
-  ]
+    "One independent admission, two independent execution verdicts, one director substantive coverage-withheld review. Final director mechanical reconciliation is acceptance, not an independent review round. Three signatures: initial release, repair release, final acceptance.",
+    "Conditional admission ACCEPTED recorded as such; source omission retained as finding, not an invented non-PASS. Repair reviewer INCOMPLETE was format-only, not time/usage limited.",
+    "Local normalization did not alter scientific substance. No comparable tier2\u20134 outcome yet. This is package1 of3 for sponsor comparison."
+  ],
+  "observed_elapsed_minutes": {
+    "author_loop_intervals": 8.35,
+    "independent_review_loop_intervals": 6.0333
+  }
 }
