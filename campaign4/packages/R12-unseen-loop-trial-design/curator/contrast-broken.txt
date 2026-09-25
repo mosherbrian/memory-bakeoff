@@ -1,0 +1,111 @@
+..FFF                                                                    [100%]
+=================================== FAILURES ===================================
+__________________ test_drain_reads_to_completion_then_closes __________________
+
+    @pytest.mark.asyncio
+    async def test_drain_reads_to_completion_then_closes() -> None:
+        """The whole point: the upstream sees a normal completion, not an abort."""
+        r = FakeResponse(chunks=4)
+>       await _drain_detached(r.aiter_raw(), r, "npu-box")
+
+tests/test_drain_on_disconnect.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+igw/router/app.py:365: in _drain_detached
+    async with asyncio.timeout(deadline_s):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delay = 'npu-box'
+
+    def timeout(delay: float | None) -> Timeout:
+        """Timeout async context manager.
+    
+        Useful in cases when you want to apply timeout logic around block
+        of code or in cases when asyncio.wait_for is not suitable. For example:
+    
+        >>> async with asyncio.timeout(10):  # 10 seconds timeout
+        ...     await long_running_task()
+    
+    
+        delay - value in seconds or None to disable timeout logic
+    
+        long_running_task() is interrupted by raising asyncio.CancelledError,
+        the top-most affected timeout() context manager converts CancelledError
+        into TimeoutError.
+        """
+        loop = events.get_running_loop()
+>       return Timeout(loop.time() + delay if delay is not None else None)
+                       ^^^^^^^^^^^^^^^^^^^
+E       TypeError: unsupported operand type(s) for +: 'float' and 'str'
+
+/usr/lib64/python3.14/asyncio/timeouts.py:160: TypeError
+____________________ test_drain_is_bounded_by_its_deadline _____________________
+
+    @pytest.mark.asyncio
+    async def test_drain_is_bounded_by_its_deadline() -> None:
+        """Without a deadline this trades a leaked socket for a leaked task - the
+        same bug one layer up.
+    
+        The drain must return BY ITSELF, on its own deadline. An earlier version of
+        this test wrapped the call in asyncio.wait_for(), which supplied the bound
+        externally - so it passed with the deadline deleted and proved nothing.
+        The outer timeout here is generous and exists only to stop a hang; if the
+        internal deadline is missing this raises TimeoutError and FAILS.
+        """
+        r = FakeResponse(hang=True)
+        started = asyncio.get_running_loop().time()
+        await asyncio.wait_for(
+>           _drain_detached(r.aiter_raw(), r, "npu-box", deadline_s=0.05), timeout=3
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: _drain_detached() got multiple values for argument 'deadline_s'
+
+tests/test_drain_on_disconnect.py:83: TypeError
+_________________ test_drain_closes_even_when_upstream_errors __________________
+
+    @pytest.mark.asyncio
+    async def test_drain_closes_even_when_upstream_errors() -> None:
+        class Broken(FakeResponse):
+            async def aiter_raw(self):
+                raise httpx.ReadError("upstream died")
+                yield b""  # pragma: no cover
+    
+        r = Broken()
+>       await _drain_detached(r.aiter_raw(), r, "npu-box")
+
+tests/test_drain_on_disconnect.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+igw/router/app.py:365: in _drain_detached
+    async with asyncio.timeout(deadline_s):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delay = 'npu-box'
+
+    def timeout(delay: float | None) -> Timeout:
+        """Timeout async context manager.
+    
+        Useful in cases when you want to apply timeout logic around block
+        of code or in cases when asyncio.wait_for is not suitable. For example:
+    
+        >>> async with asyncio.timeout(10):  # 10 seconds timeout
+        ...     await long_running_task()
+    
+    
+        delay - value in seconds or None to disable timeout logic
+    
+        long_running_task() is interrupted by raising asyncio.CancelledError,
+        the top-most affected timeout() context manager converts CancelledError
+        into TimeoutError.
+        """
+        loop = events.get_running_loop()
+>       return Timeout(loop.time() + delay if delay is not None else None)
+                       ^^^^^^^^^^^^^^^^^^^
+E       TypeError: unsupported operand type(s) for +: 'float' and 'str'
+
+/usr/lib64/python3.14/asyncio/timeouts.py:160: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_drain_on_disconnect.py::test_drain_reads_to_completion_then_closes
+FAILED tests/test_drain_on_disconnect.py::test_drain_is_bounded_by_its_deadline
+FAILED tests/test_drain_on_disconnect.py::test_drain_closes_even_when_upstream_errors
+rc=1

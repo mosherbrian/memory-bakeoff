@@ -1,0 +1,24 @@
+{
+ "repo": "/home/bmosher/inference-gateway",
+ "fix_commit": "7b368e243c28afe156815a1d5885d4ff50557d76",
+ "broken_commit": "846dfc138619649eb8663871e6f01b203b6d926e",
+ "arm_recipe": "git -C ~/inference-gateway archive 7b368e2^ | tar -x -C <arm>; cp curator/check-test_drain_on_disconnect.py <arm>/tests/test_drain_on_disconnect.py; mkdir <arm>/notes",
+ "sha256": {
+  "broken igw/router/app.py": "89459e70b9231030232929212eebd1dbacc49d5ea50b3e5f1c2aca067d6ba70f",
+  "check tests/test_drain_on_disconnect.py": "b096c71943a709a91f4c846be9d6eeb1bba6bcd1058f10500d7cdeaab31295d2",
+  "reference (curator only) igw/router/app.py": "c9ddd60aabe925d57194bf96c61521bd337ac12dcd00b911be0aae2223425436"
+ },
+ "check_command": "python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py",
+ "contrast": {
+  "broken": "3 failed, 2 passed, rc 1",
+  "fixed": "5 passed, rc 0"
+ },
+ "templates": {
+  "tasks/phase1-verifier.txt": "1c417b78752c3f0cb02c6ad211ce19ec0f3d67c4eaeca230fd7e4e86545e4090",
+  "tasks/phase1-worker.txt": "30008c7502f7c7df82316cf23b1975d6df694ece3c48e586e297bc5309ead880",
+  "tasks/phase2-verifier.txt": "08d5090560a3047f7740a4d215f04078731b2220b63897f3e0cf0d42b3a444f3",
+  "tasks/phase2-worker.txt": "cbd6d7fe0d1f6002dae56e4e9ab94099cc2d4e0619f14b6ee9a9f0b0c8279d97",
+  "tasks/summary-block-T.txt": "e48ca1e5df7cb4c2fa2094d81fb03dd5013104dd6e8b925f38ce07695461c965",
+  "tasks/summary-instruction-T.txt": "a6d749d13c9fb183d03b97b88a644a1a05f2c032e27848c4d6fc61dffe10d791"
+ }
+}

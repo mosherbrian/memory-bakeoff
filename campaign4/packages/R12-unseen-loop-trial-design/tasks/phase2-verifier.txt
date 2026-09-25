@@ -1,0 +1,5 @@
+R13 arm {ARM} phase 2 verification. Write findings ONLY to {PKG}/verify/{ARM}-p2.md.
+1. Files under {ARM_DIR}/tests are byte-identical to input-manifest.json.
+2. Run exactly: cd {ARM_DIR} && python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py ; record rc and the full output.
+3. Record `diff -ru` of {ARM_DIR}/igw against the broken snapshot at {BROKEN_SNAPSHOT}.
+PASS = rc 0 with 5 passed and item 1 holds. FAIL otherwise. Do not suggest fixes. Claim with the exact verify command below.
