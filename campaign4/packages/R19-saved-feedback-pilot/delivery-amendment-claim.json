@@ -1,0 +1,45 @@
+{
+ "qid": "R19-delivery-amendment-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T19:10:29.067311+00:00",
+ "deviation": "PREPARATION PROTOCOL DEVIATION (my defect): the original worker tasks told kiln 'produce answer.md only. Do not run any command you write' and then asked it to run cp + agent-loop claim; kiln obeyed the safety line in PY2-C, PY2-T and LB1-C, so those arms timed out after writing their answers. This is not a timely loop success; the recovered arms were delivered by the director.",
+ "change": {
+  "old_line": "Safety and scope: produce answer.md only. Do not run any command you write, do not contact any host or service, and do not read or list files outside your working directory.",
+  "new_line": "Safety and scope: produce answer.md. Do not run any command you write in answer.md, do not contact any host or service, and do not read or list files outside your working directory. The ONLY commands you may run are the cp and agent-loop claim commands given at the end of this task; you must run them to hand in your answer.",
+  "scope": "only the scope line; identical in both arms; prompts, packet, inputs, cp/claim lines and verifier tasks unchanged"
+ },
+ "files": {
+  "LB2-C-worker.txt": {
+   "old_sha256": "bfc59ee8d2b27c69afa4e79699ad094246e6768d32072351637fa31012a9aeb7",
+   "new_sha256": "ef97bc6bceae2f94dad16a22a04ff0df16a4c5e9d8184c70f3512f7e02abca44",
+   "changed_lines": 2
+  },
+  "LB2-T-worker.txt": {
+   "old_sha256": "f564db3acb940c1c6053ccb5f3d3eb9001f6e0eec54bb61fb441e945ef3c9fa6",
+   "new_sha256": "e12956db35f8c0dea598ea9840d0b4640adbc2288c018c10ba9d77f92d3a7324",
+   "changed_lines": 2
+  },
+  "NET1-C-worker.txt": {
+   "old_sha256": "f932d01209589b26d1901309297f4ce184a5159a7b3c866608dd912837962ce5",
+   "new_sha256": "0cc62e56acc7fbfcc33e9dd9d95290e07f9acdf902408605ee05297af346aaee",
+   "changed_lines": 2
+  },
+  "NET1-T-worker.txt": {
+   "old_sha256": "87f1be7017c29f0b2b10e660d9799e013014a2ccaad8ce95235d9e14df0e43a4",
+   "new_sha256": "a135f38db320511d53c98ecffa5bd38dfb4fdc370f9b8831d5aa6f1dde352fad",
+   "changed_lines": 2
+  },
+  "NET2-C-worker.txt": {
+   "old_sha256": "3e1a547e68195212235d9b3a6ad18e615e855e92dd6db13c4d489c3ae2cf9770",
+   "new_sha256": "87d6f4a05a0604660540d7becc66e346532acc8ee37673a78758c2b18d93bb2e",
+   "changed_lines": 2
+  },
+  "NET2-T-worker.txt": {
+   "old_sha256": "23f54e449d12945bc1f704d704950eb22709f807d882e595ed5bd9f9341aed4f",
+   "new_sha256": "8e7575c6a77b15feed70236adf9a71ea5510f5036254a8da9afa2df375c739b4",
+   "changed_lines": 2
+  }
+ },
+ "not_touched": "original tasks/ preserved; LB1-T (active) and the already-dispatched arms not edited; no participant action; recovered arms not duplicated"
+}
