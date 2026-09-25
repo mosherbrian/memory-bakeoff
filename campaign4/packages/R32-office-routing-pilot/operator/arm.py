@@ -50,7 +50,7 @@ def main():
     pre = {"at": now(), "arm": pa, "ping": ping, "state_before": json.load(open(STATE)),
            "production_open": open_pkgs(PROD_BIN, PROD_CFG), "private_open": [],
            "frozen_drift": drift,
-           "private_run": "n/a (production loop)",
+           "private_run": "n/a (production loop)"}
     pre["ok"] = (ping.get("ok") and ping.get("status") == "idle" and not pre["production_open"]
                  and not pre["private_open"] and not drift )
     json.dump(pre, open(f"{R}/operator/preflight-{pa}.json", "w"), indent=1)
