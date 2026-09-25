@@ -37,7 +37,9 @@ OPEN_S = int(os.environ.get("GAP_OPEN_MIN", "30")) * 60
 ESC_S = int(os.environ.get("GAP_ESC_MIN", "15")) * 60
 NOW = float(os.environ.get("GAP_NOW") or time.time())
 KIND = "research-gap"
-IDLE_STEPS = {"closed", "timed-out"}  # not executing; anything else is live in the loop
+EXECUTING_STEPS = {"worker", "verify"}  # agent-loop steps where a seat is doing the work; held, blocked,
+# decision, timed-out, closed or any unknown step do not suppress the gap (a decision wait may use a timed rest)
+RESOLVED = {"answered", "dropped"}  # the only statuses that close; open, active, absent or unknown stay unresolved
 REST_FIELDS = ("question_id", "reason", "owner", "entered_at", "revisit_at", "next_action")
 
 
@@ -54,12 +56,11 @@ def ts(s):
         return None
 
 
-def top_and_open():
+def top_and_resolved():
     d = json.load(open(PRIORITIES))
-    items = [i for i in d["items"] if i.get("status") == "open"]
-    if not items:
-        return None, set()
-    return min(items, key=lambda i: i["rank"])["id"], {i["id"] for i in items}
+    items = [i for i in d["items"] if i.get("status") not in RESOLVED]
+    top = min(items, key=lambda i: i["rank"])["id"] if items else None
+    return top, {i["id"] for i in d["items"] if i.get("status") in RESOLVED}
 
 
 def bindings():
@@ -82,7 +83,7 @@ def live_packages():
     out = subprocess.run(STATUS_CMD, shell=True, capture_output=True, text=True, timeout=60)
     if out.returncode != 0:
         raise RuntimeError(f"status rc={out.returncode}: {out.stderr.strip()[:200]}")
-    return [p["qid"] for p in json.loads(out.stdout)["packages"] if p.get("step") not in IDLE_STEPS]
+    return [p["qid"] for p in json.loads(out.stdout)["packages"] if p.get("step") in EXECUTING_STEPS]
 
 
 def rest_for(q):
@@ -160,9 +161,9 @@ def main():
 
     unknown = []
     try:
-        top, open_qs = top_and_open()
+        top, resolved = top_and_resolved()
     except Exception as e:
-        top, open_qs = None, None
+        top, resolved = None, None
         unknown.append(f"priorities unreadable: {e.__class__.__name__}: {e}")
     try:
         live = live_packages()
@@ -172,15 +173,20 @@ def main():
     b = bindings()
 
     # The top question plus any question that already has an open incident.
+    if resolved is None:
+        state["gaps"].setdefault("UNKNOWN", None)  # cannot even tell which question is on top
+    elif "UNKNOWN" in state["gaps"]:  # readable again: the gap carries over to the real top question
+        u = state["gaps"].pop("UNKNOWN")
+        if u and top and top not in state["gaps"]:
+            state["gaps"][top] = u
+    state["gaps"] = {k: v for k, v in state["gaps"].items() if v is not None or k == "UNKNOWN"}
     qs = set(state["gaps"]) | ({top} if top else set())
-    if top is None and open_qs is None:
-        qs.add("UNKNOWN")  # cannot even tell which question is on top
     report = []
     for q in sorted(qs):
         g = state["gaps"].get(q)
-        if open_qs is not None and q not in open_qs:
-            if g:  # answered, dropped or removed by a recorded decision
-                close(g, q, "question no longer open in RESEARCH-PRIORITIES.json")
+        if resolved is not None and q in resolved:
+            if g:  # explicitly answered or dropped by a recorded decision
+                close(g, q, "question answered or dropped in RESEARCH-PRIORITIES.json")
                 del state["gaps"][q]
             continue
         why = list(unknown)
@@ -200,6 +206,8 @@ def main():
                 del state["gaps"][q]
             report.append(f"{q}: ok ({'package ' + ','.join(linked) if linked else 'rest to ' + rest['revisit_at']})")
             continue
+        if resolved is not None and q != top:
+            why.append(f"{q} is no longer the top question (or is missing), but its incident stays open until resolved")
         why += bad + ([] if live is None else ["no bound executing package"]) + ([] if rest else ["no valid timed rest"])
         if not g:
             g = state["gaps"][q] = {"start": NOW, "incident": f"GAP-{q}-{iso(NOW)}"}

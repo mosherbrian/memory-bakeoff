@@ -172,11 +172,55 @@ class Gap(unittest.TestCase):
         self.assertIn("Q-A: escalated", out)
 
     # -- must stay quiet and close ---------------------------------------------
-    def test_bound_active_package_is_quiet(self):
-        self.bind("P1", "Q-A"); self.live([("P1", "decision")])
-        for t in (T0, T0 + 30 * M, T0 + 60 * M):
-            self.assertIn("ok (package P1)", self.check(t))
-        self.assertEqual(self.raised(), [])
+    def test_bound_executing_package_is_quiet(self):
+        for step in ("worker", "verify"):
+            self.bind("P1", "Q-A"); self.live([("P1", step)])
+            for t in (T0, T0 + 30 * M, T0 + 60 * M):
+                self.assertIn("ok (package P1)", self.check(t))
+            self.assertEqual(self.raised(), [])
+
+    # -- R5-repair-1 D2: only declared executing steps suppress the gap ----------
+    def test_non_executing_steps_open_the_gap(self):
+        for step in ("held", "blocked", "unknown", "decision", "handoff", ""):
+            with self.subTest(step=step):
+                self.tearDown(); self.setUp()
+                self.bind("P1", "Q-A"); self.live([("P1", step)])
+                self.ladder()
+
+    # -- R5-repair-1 D1: open and active are unresolved; only answered/dropped close
+    def test_active_top_question_is_tracked(self):
+        self.prio([("Q-A", 1, "active"), ("Q-B", 2)])
+        self.ladder()
+        self.assertIn("Q-A", self.raised()[0]["text"])
+
+    def test_open_to_active_keeps_incident(self):
+        self.check(T0); self.check(T0 + 30 * M)
+        self.prio([("Q-A", 1, "active"), ("Q-B", 2)])
+        self.assertIn("Q-A: escalated", self.check(T0 + 45 * M))
+        self.assertEqual([r for r in self.ledger() if "resolve" in r], [])
+
+    def test_unknown_or_absent_status_does_not_close(self):
+        self.check(T0); self.check(T0 + 30 * M)
+        self.prio([("Q-A", 1, "weird"), ("Q-B", 2)])
+        self.check(T0 + 35 * M)
+        self.prio([("Q-B", 2)])  # Q-A vanished from the file
+        out = self.check(T0 + 45 * M)
+        self.assertIn("Q-A: escalated", out)
+        self.assertEqual([r for r in self.ledger() if "resolve" in r], [])
+
+    def test_dropped_closes(self):
+        self.check(T0); self.check(T0 + 30 * M)
+        self.prio([("Q-A", 1, "dropped"), ("Q-B", 2)])
+        self.check(T0 + 35 * M)
+        self.assertEqual(len([r for r in self.ledger() if "resolve" in r]), 1)
+
+    def test_unreadable_priorities_gap_carries_to_top(self):
+        open(f"{self.d}/c4/RESEARCH-PRIORITIES.json", "w").write("{")
+        self.check(T0); self.check(T0 + 30 * M)
+        self.assertIn("priorities unreadable", self.raised()[0]["text"])
+        self.prio([("Q-A", 1), ("Q-B", 2)])
+        self.assertIn("Q-A: escalated", self.check(T0 + 45 * M))
+        self.assertEqual(len(self.raised()), 2)
 
     def test_bound_but_closed_or_timed_out_is_not_active(self):
         self.bind("P1", "Q-A"); self.bind("P2", "Q-A"); self.live([("P1", "closed"), ("P2", "timed-out")])
