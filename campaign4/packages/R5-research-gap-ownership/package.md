@@ -1,0 +1,19 @@
+# R5 — Own research gaps between packages
+
+Tier 2. Director Tern; author Claude; independent reviewer Corvid. QUEUED immediately after R4-real-work-task terminates, not released now. This contract allocates 90 seat-minutes: author30, review20, one held repair15/recheck10, timer witness and activation10, director5. No hidden reserve or automatic extension. Absolute deadlines are recorded at release. Record actual elapsed/active-time limits and round metrics at terminal.
+
+## Outcome and scope
+
+One short-lived check, invoked by one systemd user calendar timer every five minutes. No new daemon, polling seat, restored controller, product-core change, live fixture or Signal send. Read canonical RESEARCH-PRIORITIES.json, agent-loop status --json and campaign4/REST.jsonl. Use explicit question_id -> loop qid bindings from pinned contract/dispatch records; no name inference. Future contracts and dispatch receipts both carry question_id. R4's existing dispatch receipt already carries Q-WORK-BENEFIT; its bound contract is not changed during execution. Missing or contradictory binding is UNKNOWN, not proof of active work.
+
+One append-only rest file, REST.jsonl. Each row requires question_id, reason, owner, entered_at, revisit_at and next_action; timestamps are UTC instants, revisit_at later than entered_at. Latest valid row for the question governs, only until revisit_at. Missing revisit_at is invalid. A malformed new row never extends an older rest; diagnose invalid data rather than silently declaring healthy. An empty/nonexistent rest file grants no rest, not an exemption from checking. Sponsor stops and hard-stop ownership remain authoritative; do not manufacture successors to avoid alarms.
+
+A top open question with no linked executing package and no valid timed rest for30m opens one planning-gap incident owned by Tern. If neither concrete execution nor valid rest resolves it within15m, escalate to Claude. Use the existing notify-claude escalation ledger exclusively for incident history/delivery/response; no second incident ledger or Signal path. Persist original observed gap start and incident identity through process restart; do not infer an unknowable earlier start. Failed reads/status commands are UNKNOWN and owned, not legitimate rest. Acknowledgement alone does not close or reset the gap. Irrelevant work does not reset it. Switching the top question does not erase an existing incident.
+
+Calendar sampling adds up to5m plus bounded command runtime to each threshold (first notice up to35m after an observed gap, escalation up to20m after the first notice). State these operational bounds honestly. If the existing escalation ledger cannot preserve the required clocks/identity, report the concrete incompatibility rather than inventing a parallel control mechanism.
+
+## Completion check
+
+Deliver the check, calendar/service unit, short install/disable instructions and source-bound evidence. Independent review exercises planted faults: no package; expired rest; missing rest file; missing required field; missing/failed status; unknown binding; and restart retaining the original clock. Genuine active work and valid rest stay quiet; no duplicate incident/escalation after restart. Prove explicit question-ID matching and unchanged 30m/15m thresholds with a controllable clock.
+
+One real calendar-timer witness must execute the actual entrypoint with isolated input and notification capture, demonstrate a scheduled invocation, then clean up its unit. No fleet fixtures or Signal. Production activation follows PASS with exact reviewed bytes and rollback = disable/remove only this new timer. Integration may use notify-claude as authorized, but witness notifications must not page Brian. Do not claim automated protection before activation. A failed round returns a bounded defect or honest INCOMPLETE; terminal must name next action or legitimate rest.
