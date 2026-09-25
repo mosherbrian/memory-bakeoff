@@ -217,16 +217,8 @@ def main():
         if u and top and top not in state["gaps"]:
             state["gaps"][top] = u
     state["gaps"] = {k: v for k, v in state["gaps"].items() if v is not None or k == "UNKNOWN"}
-    known = {**state.get("watched", {}), **known}
-    # Every question that was ever an active stream stays watched until an
-    # explicit retirement record: removing it, or setting it inactive, while it
-    # is quiet must not make it vanish.
-    watched = state.setdefault("watched", {})
-    for q, sid in active.items():
-        watched[q] = sid
-    for q in retired:
-        watched.pop(q, None)
-    qs = set(state["gaps"]) | set(watched) | ({top} if top and mode != "registry" else set())
+    targets = set(active) if mode == "registry" else ({top} if top else set())
+    qs = set(state["gaps"]) | targets
     report = []
     for q in sorted(qs):
         g = state["gaps"].get(q)
@@ -258,7 +250,7 @@ def main():
                 del state["gaps"][q]
             report.append(f"{q}: ok ({'package ' + ','.join(linked) if linked else 'rest to ' + rest['revisit_at']})")
             continue
-        if q in state["watched"] and q not in active:
+        if mode == "registry" and q not in active:
             why.append(f"{q} is not an active registered stream, but its incident stays open until resolved or its stream is retired")
         elif mode != "registry" and resolved is not None and q != top:
             why.append(f"{q} is no longer the top question (or is missing), but its incident stays open until resolved")

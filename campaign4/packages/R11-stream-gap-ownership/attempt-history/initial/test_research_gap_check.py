@@ -361,55 +361,6 @@ class Gap(unittest.TestCase):
         self.check(T0 + 30 * M)
         self.assertEqual(len(self.by_q("Q-A")), 1, "clock from T0 survives adopting the registry")
 
-    # -- R11 repair D1: a quiet active stream never vanishes without retirement ----
-    def _quiet_B_then(self, rows_after):
-        self.streams(self.AB); self.bind("PA", "Q-A"); self.live([("PA", "worker")])
-        self.rest({"question_id": "Q-B", "reason": "r", "owner": "tern", "entered_at": iso(T0 - 60), "revisit_at": iso(T0 + 20 * M), "next_action": "n"})
-        self.assertIn("Q-B: ok (rest", self.check(T0))
-        self.streams(rows_after)
-        out = self.check(T0 + 10 * M)          # still quiet, still reported
-        self.assertIn("Q-B: ok (rest", out)
-        self.check(T0 + 20 * M)                 # rest expires; B's clock starts
-        self.check(T0 + 49 * M)
-        self.assertEqual(len(self.by_q("Q-B")), 0)
-        self.check(T0 + 50 * M)
-        return self.by_q("Q-B")
-
-    def test_r11_quiet_stream_removed_still_watched(self):
-        got = self._quiet_B_then([self.AB[0]])
-        self.assertEqual(len(got), 1)
-        self.assertIn("not an active registered stream", got[0]["text"])
-        self.assertIn("stream B question Q-B", got[0]["text"])
-
-    def test_r11_quiet_stream_set_inactive_still_watched(self):
-        self.assertEqual(len(self._quiet_B_then([self.AB[0], dict(self.AB[1], status="inactive")])), 1)
-
-    def test_r11_quiet_stream_retired_stops_watch(self):
-        self.streams(self.AB); self.bind("PA", "Q-A"); self.live([("PA", "worker")])
-        self.rest({"question_id": "Q-B", "reason": "r", "owner": "tern", "entered_at": iso(T0 - 60), "revisit_at": iso(T0 + 20 * M), "next_action": "n"})
-        self.assertIn("Q-B: ok (rest", self.check(T0))
-        self.streams([self.AB[0], dict(self.AB[1], status="retired", retired_at=iso(T0 + 5 * M), by="tern", reason="done")])
-        for t in (T0 + 10 * M, T0 + 20 * M, T0 + 50 * M, T0 + 90 * M):
-            self.assertNotIn("Q-B", self.check(t))
-        self.assertEqual(self.by_q("Q-B"), [])
-        self.streams([self.AB[0]])  # the retirement row later disappears: B stays retired
-        self.check(T0 + 95 * M); self.check(T0 + 130 * M)
-        self.assertEqual(self.by_q("Q-B"), [])
-
-    def test_r11_top_question_outside_registry_not_watched(self):
-        self.streams([self.AB[1]])  # only B registered; Q-A is the top question
-        self.bind("PB", "Q-B"); self.live([("PB", "worker")])
-        self.check(T0); self.check(T0 + 30 * M)
-        self.assertEqual(self.raised(), [])
-
-    def test_r11_removed_stream_package_still_quiets_until_done(self):
-        self.streams(self.AB); self.bind("PB", "Q-B"); self.live([("PB", "verify")])
-        self.check(T0)
-        self.streams([self.AB[0]])
-        self.assertIn("Q-B: ok (package PB)", self.check(T0 + 10 * M))
-        self.live([]); self.check(T0 + 20 * M); self.check(T0 + 50 * M)
-        self.assertEqual(len(self.by_q("Q-B")), 1, "work finished on a removed stream: the gap is still owned")
-
     def test_r11_no_package_either_stream(self):
         self.streams(self.AB)
         for t in (T0, T0 + 30 * M, T0 + 45 * M):

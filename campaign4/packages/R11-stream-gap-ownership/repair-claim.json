@@ -1,0 +1,20 @@
+{
+ "qid": "R11-repair-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T15:30:37.729804+00:00",
+ "D1_fix": "state['watched'] records every question that was ever an active stream; it stays watched (rest, executing package, expiry, completion, restart) until an explicit retirement record removes it. Removal from the file or setting inactive no longer hides a quiet stream. A retired question is dropped from 'watched', so it stays retired even if its retirement row later disappears. qs = open gaps + watched (+ top question only when no registry is in use).",
+ "tests": "41/41 passed at 15:25:48Z (37 prior + quiet stream removed, set inactive, retired incl. row later removed, removed stream whose package then finishes, top question outside registry not watched)",
+ "planted_faults": "29/29 caught at 15:30Z (27 prior + r11-watched-dropped, r11-top-watched-in-registry-mode; r11-registry-ignored retargeted); an intermediate run showed 4 survivors caused by duplicated coverage in my first repair edit, which I removed",
+ "preserved": "initial attempt copied to attempt-history/initial before editing; completion-claim.json, verification.md unchanged",
+ "files_sha256": {
+  "candidate/research-gap-check": "518581b9eb761a4c0f55f87f97fca900ba9a0d4130929bcc36415bff53695511",
+  "candidate/test_research_gap_check.py": "dc156726f013e4ca99049d69f0a2d11098b083b4c2c338b9f9ed001335baa1d2",
+  "candidate/mutants.py": "92afabc3eb4c2a59c9f6b38dd8beff5e65037bd762a815da81597b714aade17c",
+  "candidate/research-gap-check.service": "adeecbb03c1141dcf4d5342353ff02efc8bb2c2d04594d8b6c77d60f0f4a5559",
+  "candidate/research-gap-check.timer": "1b05c366016be8e52875fd382403f878451dd5348e06fc609c51de293a6bb317",
+  "repair-test-results.txt": "1475015eb537b23fa3ca2e432afdc6edf600df4999f08355ea800b20af9164f3",
+  "repair-mutants-results.txt": "682697c306b190c315c25ecd349a60f348b97615e2166e84ddd72f8f0299235e"
+ },
+ "not_done": "no install, no production registry, no notifications, no seats"
+}

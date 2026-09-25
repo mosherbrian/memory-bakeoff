@@ -1,0 +1,31 @@
+{
+ "qid": "R11-initial-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T15:08:46.981990+00:00",
+ "contract_sha256": "da457c019d1e03aa36121a391a94a2f535474cdb4900a04e05545469b54aa09f",
+ "base_sha256": "571532593e739fcb46cf2f8726074fd2e3412bf078b62b3cc9e8d414a8b3e34f",
+ "files_sha256": {
+  "INSTALL.md": "6b352e58ea108deadc71bfbc56d8a0e0eb9234ad94af8849318346d612782386",
+  "RESEARCH-STREAMS.proposed.json": "6a483e864214a7f25b59eb417c338ba9399d821f1160f099df5ccda352581ddb",
+  "candidate/mutants.py": "cc40062ef605571137c1b721320fa38df826de3a8d14680e95d76f082363750a",
+  "candidate/research-gap-check": "349a9780dd42483c92620d1bce9480642dbbb737f98f2ab8e0df9c331a3c9623",
+  "candidate/research-gap-check.service": "adeecbb03c1141dcf4d5342353ff02efc8bb2c2d04594d8b6c77d60f0f4a5559",
+  "candidate/research-gap-check.timer": "1b05c366016be8e52875fd382403f878451dd5348e06fc609c51de293a6bb317",
+  "candidate/test_research_gap_check.py": "3dccdf041483863359d57a85ce9707337d31efeda63e9c5e97c6e24dc3fd565c",
+  "dryrun-production-inputs.txt": "cf8d980f274af40e0cee6c4cead6bb2ed2f360270987d500be32b7160ff53200",
+  "mutants-results.txt": "d336fb6a44352343ae8d30fc2dd77ca623d9f31e74c9dae50f4e712690aebebe",
+  "test-results.txt": "524902fafe00f103fc28bce7d3c81e97d7207b88b17383f126db77e8c5ff6c27"
+ },
+ "design": "One registry file (RESEARCH-STREAMS.json, schema_version 1; streams with stream_id, question_id, status active|inactive|retired; retired needs retired_at/by/reason; unique ids). Absent file = R5 behaviour. Unusable file = UNKNOWN: existing incidents and R5 top-question coverage kept, reason carried in every notice. Registry mode watches active streams plus every question that already has an incident; each has its own clock, rest and incident (state keyed by question id, so migration keeps clocks). A package quiets only its bound question in worker/verify; a record stream_id that disagrees with the registry is a contradictory binding. Removal without retirement keeps the incident; explicit retirement resolves only that stream via escalation-resolve. Ladder, ledger, dedupe, service and timer unchanged (units byte-identical to R5).",
+ "tests": "37/37: 24 R5 cases unchanged + 13 R11 (one active/one stalled lower-ranked, inactive untracked, independent rest+expiry, cross-binding, A package does not quiet B, removed stream keeps incident, retirement resolves only its stream, retirement without fields = bad registry, two clocks through restarts, bad registry owned, unknown status/duplicates bad, migration keeps legacy clock, no package either stream)",
+ "planted_faults": "27/27 caught (20 R5 + 7 R11; one R5 anchor re-pointed to the new binding line, same fault)",
+ "dry_run": "read-only on real priorities/status/REST with sandbox state and stub transports, with and without the proposed registry: both 'Q-WORK-BENEFIT: ok (rest to 15:25:44Z)'",
+ "limits": [
+  "B stays inactive in the proposed registry; activating it is a director step",
+  "real calendar-timer witness and install held for the post-review slot",
+  "a stream whose rest expires between ticks starts its clock at the next tick (same +5 min bound as R5)"
+ ],
+ "not_done": "no install, no registry created in campaign4, no Signal, no seats"
+}
