@@ -1,0 +1,87 @@
+{
+ "qid": "R15-setup-1",
+ "question_id": "Q-EVALUATOR-VALIDITY",
+ "stream_id": "B",
+ "operator": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T16:26:42.626422+00:00",
+ "created": {
+  "kiln-eval": {
+   "agent_deck_id": "e4ef4638-1790353572",
+   "command": "/home/bmosher/.config/agent-deck/acp-go",
+   "group": "worker",
+   "workdir": "/home/bmosher/memory-bake-off/implementer/stream-b-kiln-eval (new, empty)",
+   "model": "opencode-go/muse-spark-1.3-contributor (same lane as kiln)"
+  },
+  "corvid-eval": {
+   "agent_deck_id": "3872d6ce-1790353572",
+   "command": "/home/bmosher/.config/agent-deck/acp-go-deepseek",
+   "group": "checker",
+   "workdir": "/home/bmosher/memory-bake-off/implementer/stream-b-corvid-eval (new, empty)",
+   "model": "opencode-go/deepseek-v4.1-flash (same lane as corvid)"
+  }
+ },
+ "names_existed_before": false,
+ "live_bindings_1626Z": [
+  {
+   "seat": "e4ef4638-1790353572",
+   "ping": {
+    "ok": true,
+    "status": "idle"
+   },
+   "socket": "/home/bmosher/.config/agent-deck/acp-sock/e4ef4638-1790353572.sock",
+   "socket_inode": [
+    "560384293"
+   ],
+   "state": {
+    "sessionId": null,
+    "adapter": "muse-engine acp",
+    "model": "opencode-go/muse-spark-1.3-contributor",
+    "features": [
+     "mlfile",
+     "socket",
+     "unattended",
+     "new"
+    ]
+   }
+  },
+  {
+   "seat": "3872d6ce-1790353572",
+   "ping": {
+    "ok": true,
+    "status": "idle"
+   },
+   "socket": "/home/bmosher/.config/agent-deck/acp-sock/3872d6ce-1790353572.sock",
+   "socket_inode": [
+    "560364481"
+   ],
+   "state": {
+    "sessionId": null,
+    "adapter": "muse-engine acp",
+    "model": "opencode-go/deepseek-v4.1-flash",
+    "features": [
+     "mlfile",
+     "socket",
+     "unattended",
+     "new"
+    ]
+   }
+  }
+ ],
+ "fresh": "both started 16:26Z, /ping idle with no queue, state sessionId null (no conversation yet, no prompt sent), running R10 acp-worker (features include new)",
+ "existing_seats": "untouched: kiln, corvid, tern, cairn, gufo not stopped or restarted",
+ "config_proposed_only": {
+  "file": "setup/campaign4.json.proposed",
+  "base_sha256": "899199cd85747ed1bb0410998c7cf9d479e8f576be38955d5f00be7c08d84236",
+  "change": "adds seats kiln-eval -> e4ef4638-1790353572 and corvid-eval -> 3872d6ce-1790353572; nothing else",
+  "proposed_sha256": "35991190f7d7001fcad98d9bb560d6587b5f7c2cac028131bac8c028e5de8374",
+  "applied": false
+ },
+ "registry_B": "not activated (RESEARCH-STREAMS.json unchanged, B inactive); Tern activates with a timed owned rest per contract",
+ "rollback": "AGENTDECK_PROFILE=campaign4 agent-deck session archive e4ef4638-1790353572 and 3872d6ce-1790353572 (their empty workdirs can stay); no config to revert since none applied",
+ "files_sha256": {
+  "setup/add.txt": "12fb7ee5ee685ab33a7cab813a92ca1738472b55e473413d476436aa3f318195",
+  "setup/bindings.txt": "f00f3dab9b3e754b1eeb5c0399098d21af33722a955cb2bfac83a460916cf127",
+  "setup/campaign4.json.proposed": "35991190f7d7001fcad98d9bb560d6587b5f7c2cac028131bac8c028e5de8374"
+ }
+}
