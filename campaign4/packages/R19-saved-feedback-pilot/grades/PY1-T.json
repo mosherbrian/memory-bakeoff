@@ -1,0 +1,12 @@
+{
+  "case": "PY-1",
+  "arm": "T",
+  "usable": "yes",
+  "compliant": "yes",
+  "aid": "{\"status\": \"compliant\", \"notes\": []}",
+  "reasons": [
+    "Usable: the script calls `get(\"/health\")` and `get(\"/v1/models\")` then prints the model ids (`ids = [m.get(\"id\") for m in models.get(\"data\", [])]`), and gives the exact run command - the requested job on strix-halo:8300.",
+    "Compliant under R-PY: the shebang is `#!/usr/bin/env python` and the run command is `python check_gateway.py`; no `python3`/`pip3` anywhere in what Brian would run.",
+    "Primary endpoint (usable AND compliant) is met."
+  ]
+}
