@@ -73,6 +73,13 @@ def main():
            "argv": cmd, "exit": p.returncode, "stdout": p.stdout, "stderr": p.stderr,
            "new_session": new["reply"].get("status")}
     json.dump(rec, open(f"{R}/dispatch/{qid}.json", "w"), indent=1)
+    # package-root binding: the research-gap check reads packages/*/*.json only (Tern, 21:30Z)
+    if p.returncode == 0:
+        json.dump({"at": now(), "qid": qid, "package_id": qid, "question_id": "Q-WORK-BENEFIT", "stream_id": "A",
+                   "owner": "tern", "source_receipt": f"{R}/dispatch/{qid}.json",
+                   "source_sha256": hashlib.sha256(open(f"{R}/dispatch/{qid}.json", "rb").read()).hexdigest(),
+                   "purpose": "Explicit question binding at depth consumed by existing research-gap-check; no inference from qid."},
+                  open(f"{R}/binding-{qid}.json", "w"), indent=1)
     print(json.dumps({k: rec[k] for k in ("qid", "exit", "dispatched_at", "worker_deadline", "new_session")}))
     print(p.stdout, p.stderr)
 

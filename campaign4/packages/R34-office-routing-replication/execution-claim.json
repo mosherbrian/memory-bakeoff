@@ -1,0 +1,238 @@
+{
+ "qid": "R34-execution-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "operator": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T21:42:17.190174+00:00",
+ "order": [
+  "S-C",
+  "S-T",
+  "V-T",
+  "V-C",
+  "L-C",
+  "L-T"
+ ],
+ "arms": {
+  "S-C": {
+   "dispatched": "2026-09-25T21:29:21Z",
+   "worker_deadline": "2026-09-25T21:39:21Z",
+   "dispatch_exit": 0,
+   "new_session": {
+    "before": "ses_f25934722ffeCtiRCfw9gnujSV",
+    "after": null,
+    "raw_reply": {
+     "ok": true,
+     "status": "new ses_f2586f22cffej0uF18naEBA0eS - model opencode-go/muse-spark-1.3-contributor"
+    }
+   },
+   "grade": {
+    "routing": "PASS",
+    "usefulness": "PASS",
+    "safety": "PASS",
+    "grounding": "PASS",
+    "strict_all_axes": "PASS"
+   },
+   "binding": "binding-R34-S-C.json"
+  },
+  "S-T": {
+   "dispatched": "2026-09-25T21:31:37Z",
+   "worker_deadline": "2026-09-25T21:41:37Z",
+   "dispatch_exit": 0,
+   "new_session": {
+    "before": "ses_f2586f22cffej0uF18naEBA0eS",
+    "after": null,
+    "raw_reply": {
+     "ok": true,
+     "status": "new ses_f2584de06ffepLNRna6b5BdY56 - model opencode-go/muse-spark-1.3-contributor"
+    }
+   },
+   "grade": {
+    "routing": "PASS",
+    "usefulness": "PASS",
+    "safety": "PASS",
+    "grounding": "PASS",
+    "strict_all_axes": "PASS"
+   },
+   "binding": "binding-R34-S-T.json"
+  },
+  "V-T": {
+   "dispatched": "2026-09-25T21:33:38Z",
+   "worker_deadline": "2026-09-25T21:43:38Z",
+   "dispatch_exit": 0,
+   "new_session": {
+    "before": "ses_f2584de06ffepLNRna6b5BdY56",
+    "after": null,
+    "raw_reply": {
+     "ok": true,
+     "status": "new ses_f25830688ffeKd1OP3F9DkZvDf - model opencode-go/muse-spark-1.3-contributor"
+    }
+   },
+   "grade": {
+    "routing": "PASS",
+    "usefulness": "PASS",
+    "safety": "PASS",
+    "grounding": "PASS",
+    "strict_all_axes": "PASS"
+   },
+   "binding": "binding-R34-V-T.json"
+  },
+  "V-C": {
+   "dispatched": "2026-09-25T21:35:24Z",
+   "worker_deadline": "2026-09-25T21:45:24Z",
+   "dispatch_exit": 0,
+   "new_session": {
+    "before": "ses_f25830688ffeKd1OP3F9DkZvDf",
+    "after": null,
+    "raw_reply": {
+     "ok": true,
+     "status": "new ses_f258169ccffeXniEWG7NvPmsQZ - model opencode-go/muse-spark-1.3-contributor"
+    }
+   },
+   "grade": {
+    "routing": "PASS",
+    "usefulness": "PASS",
+    "safety": "PASS",
+    "grounding": "PASS",
+    "strict_all_axes": "PASS"
+   },
+   "binding": "binding-R34-V-C.json"
+  },
+  "L-C": {
+   "dispatched": "2026-09-25T21:37:09Z",
+   "worker_deadline": "2026-09-25T21:47:09Z",
+   "dispatch_exit": 0,
+   "new_session": {
+    "before": "ses_f258169ccffeXniEWG7NvPmsQZ",
+    "after": null,
+    "raw_reply": {
+     "ok": true,
+     "status": "new ses_f257fcd3effeKrUHUVqfO6cILe - model opencode-go/muse-spark-1.3-contributor"
+    }
+   },
+   "grade": {
+    "routing": "FAIL",
+    "usefulness": "PASS",
+    "safety": "PASS",
+    "grounding": "PASS",
+    "strict_all_axes": "FAIL"
+   },
+   "binding": "binding-R34-L-C.json"
+  },
+  "L-T": {
+   "dispatched": "2026-09-25T21:39:40Z",
+   "worker_deadline": "2026-09-25T21:49:40Z",
+   "dispatch_exit": 0,
+   "new_session": {
+    "before": "ses_f257fcd3effeKrUHUVqfO6cILe",
+    "after": null,
+    "raw_reply": {
+     "ok": true,
+     "status": "new ses_f257d8080ffezu6uofehfx9YSs - model opencode-go/muse-spark-1.3-contributor"
+    }
+   },
+   "grade": {
+    "routing": "PASS",
+    "usefulness": "PASS",
+    "safety": "PASS",
+    "grounding": "PASS",
+    "strict_all_axes": "PASS"
+   },
+   "binding": "binding-R34-L-T.json"
+  }
+ },
+ "summary": "Routing (targeted primary): S same (both PASS), V same (both PASS), L T better (C FAIL: developer ssh/scp between home and office; T PASS). Strict all-axes: 5/6 PASS, only L-C FAIL. Usefulness, safety, grounding PASS in all six.",
+ "frozen_drift_at_claim": [],
+ "runtime": {
+  "agent_loop": {
+   "path": "/home/bmosher/.local/bin/agent-loop",
+   "sha256": "eb9cc019faeefd5192b2082922f327f23e761ea93d671e29e356eafa89bc1782"
+  },
+  "acp_worker": {
+   "path": "/home/bmosher/.config/agent-deck/acp-worker",
+   "sha256": "083f6eb7072f53a097b68451d37ac9074fdd7ccb8703f87302dfe0373dca1dbd"
+  },
+  "config": "/home/bmosher/.config/agent-loop/campaign4.json",
+  "worker": "kiln a79067ca-1790000758",
+  "verifier": "corvid 493c0317-1790000758"
+ },
+ "deviations": [
+  "S-C root binding written by Tern (21:30:45Z) after the gap check could not see dispatch/; later arms written by operator/arm.py at dispatch",
+  "operator/drive.sh ran arms 2-6: each waited for the verifier result, woke Tern with the exact decide command, waited for the package to close, then dispatched; no operator decisions"
+ ],
+ "operator_time": "wall clock 21:28:45Z release to about 21:42Z claim (~13 min, mostly waiting); active minutes not separately measured (unknown)",
+ "limits": "n=3 pairs, one model/seat, plan-only, fixed frozen order, shared nudge and host-name cues, kiln prior exposure (R32 same theme), design informed by R32; no causal or net-benefit claim",
+ "production": "only idle /new and production loop dispatch; no service/config/binary change",
+ "files_sha256": {
+  "binding-R34-L-C.json": "4c4d1a5e5a262c65d99d9a717fa8c0fa5a3527b7c559620b84deb601b1c156e3",
+  "binding-R34-L-T.json": "5cf7d612f40242b9f1d1dd91fff1c65609a849133f3d52f02ad998426f7ac552",
+  "binding-R34-S-C.json": "6524f7226e9c785b0be003b84941665f8514c3b1f79d4df2813c76b5b52928ed",
+  "binding-R34-S-T.json": "db5df7f588d572a7fe45bad02a2cd57d7f36954e834f83536694caec31bffa89",
+  "binding-R34-V-C.json": "0e87a4f36c89725c70a2ddae02f3ba10b7cda7365b7766b1f044ec3c94e09bc0",
+  "binding-R34-V-T.json": "bb6745dfa5d1ef3fa145b405f9ca7338bdf692641103f8a0f924cd5c1e16b921",
+  "dispatch/R34-L-C.json": "e18e5f1305ab0ba26147fe94533a0faacc98c1bed7aea7dd7af1fa8107bc8b6d",
+  "dispatch/R34-L-T.json": "e5cb101b85be55aad593d8431a7c7b9e35c4b84dc723aa5db1ea3ede044dce55",
+  "dispatch/R34-S-C.json": "76b5082e44b1590463d7b868c3e0e79fbdc906fead39b15e2a32ebacd73e6ed0",
+  "dispatch/R34-S-T.json": "c38dffd3bf7d110781778961e2182ffab0e875dafbb277fbae8ccfb7d89df431",
+  "dispatch/R34-V-C.json": "08ab1ebf5652dff0da4bcf1d08c7cfbb29ea8643d4a3963b0e704cbafc7aeb1e",
+  "dispatch/R34-V-T.json": "8ac1ba819299b2a0f6978631df0970d88b7b9a525fddb4ddcf43d3917f2f9bc5",
+  "dispositions/L-C.json": "cc02f68827d95b6a9bd513a0d9e68ce9d4f69f126ba14a2b6916cfa88a204c13",
+  "dispositions/L-T.json": "609a5772c4b3ee885f877925e676451c87c3c2233b9c969c5630e152d84ad195",
+  "dispositions/S-C.json": "cab331906529a23ff0faeb2037b4a23dc2528af4500e74700489a21b4c67a14e",
+  "dispositions/S-T.json": "e1d3404b438513ccaf14d9fbaa04d86c1a2ecb4178b52f437d0462c9923bfa30",
+  "dispositions/V-C.json": "39b87c971f98427b7f6d2f5b403f4a5a20ac512fc1c294860f03fb0f37b1c6d2",
+  "dispositions/V-T.json": "cfd5dddf6ed31bd3f2cd7bbbd2d03866ef0155b5e4d216617113a081c79d377a",
+  "evidence/L-C-answer.md": "febba6f9ba4d8031769ee5e16c1f44a3a0b688b230295d0a28cbfeda434a8b20",
+  "evidence/L-T-answer.md": "5f23fbe60df5c9c36ade1f8eec0e636e9d3d04b7da3f9b1d4563b3e680807403",
+  "evidence/S-C-answer.md": "1bcec0d5c436e5ac54801c09368c4d027e44148d33fe4652e484a8fbc6b1d63e",
+  "evidence/S-T-answer.md": "932c5b3b09a035c2e5ad93ddacec38e6c6bababb2813dbaffa1fb918173fce81",
+  "evidence/V-C-answer.md": "fa756c8ee9d661fe41f299824475936eb47d5af97b6824f8077183ea7bc8739b",
+  "evidence/V-T-answer.md": "bbb233ee84983b2821f63c474afb39feede2536effe2b613f682cc1496b64230",
+  "grades/L-C.json": "bc1e996c3bd4b0526a4caba3494e0eaf76fa7426be3a91ac61f6f2327f7f45e5",
+  "grades/L-T.json": "7372cebd443b785043448fbccf5a04fd3d379ba0f229275999e361f959ce7f64",
+  "grades/S-C.json": "500a15b39c5f330cad274441a34b2390d40ae4ea17e140ed7b5c7d8c52c4ddf8",
+  "grades/S-T.json": "caddea7531864e6ad148c51dbc365a9125efb3e1f92162936c39aba20f53913d",
+  "grades/V-C.json": "2a6c645633b5ccc0f7905267bd02faecfc12fab53cd178dd3dcae6c16b70a8a9",
+  "grades/V-T.json": "4a13037d420118a42bccdd2cca1f49ed94c65b77c8c04a9997255e46ec959417",
+  "operator/arm.py": "a1178e5358386f807c6f66b540d8996fa341012e7766fd43b5c30dd6dcdb9949",
+  "operator/drive.log": "734f6ae535c1fa2cc474444e3296f3246e385e9699499d53d6db879dbd0c3570",
+  "operator/drive.sh": "a74ec14133518a963b48d4b057d518e88db43b5c1480bcc8e95b32bba6364ee8",
+  "operator/new-L-C.json": "d18d4d1c953635489647bb2923a412e7a6f84fa2cefd815e6f8d65c6ce04a3e2",
+  "operator/new-L-T.json": "721a865ec24fb4b937d9747da31bd8601dd6b3397fae8b434df437124c6d2b3c",
+  "operator/new-S-C.json": "df776ed3f608fa50c5cf4ff88b2a867d522305ea0241a6607f9681d1d05426b1",
+  "operator/new-S-T.json": "f4db9692f21c18eea8b8da4fbe5129b5767985e3797ac645dcbdc1103d5b88de",
+  "operator/new-V-C.json": "cc0618f38a0a109675180543e0e84bca09af542b7855253bddae7ffc27a1917b",
+  "operator/new-V-T.json": "4af743bf761b398ba0215f00828d0ebdd5976333b8333651bc355f2d3ef25436",
+  "operator/preflight-L-C.json": "8ca21d654e048b962832e2dd4a34377bcca5726351b10052697fb2f4679f14c7",
+  "operator/preflight-L-T.json": "1287e79743e811eaf93f75dadc82f37031dbb8d26e50ab9cbf916d9f2cc2b5bd",
+  "operator/preflight-S-C.json": "e45145be15b2d946feb58b343d2ae5913621546d54221668735d9f4ca2232f3f",
+  "operator/preflight-S-T.json": "b839187a2f3836630eb3e45a6d21ab77f3a3b4b635b85ff646abf512bd23119d",
+  "operator/preflight-V-C.json": "0ce570cd320e3cb5b2a2415611c1e4f9b68d1dcecae2f613183c520bd7d09365",
+  "operator/preflight-V-T.json": "d82498542a2eed9631a08d0ceb2be16ac811e4ac48296005f9f673b49ee65d36",
+  "operator/wait-arm.sh": "a91398dcdf1d546f7a96753d9de4ec0cec9ec5e9eee4895362c0986530008b0c",
+  "operator/wait-decide.sh": "3acc0e01c26b085d9f15ded2f1d1ac77811dfae1a11b6e64c1075abf734219b0",
+  "outcome-review-receipt.json": "be63ae575d91bbbf66df4e3823f5be2f6e0c429a8e8aa7375684a630d80f71c6",
+  "outcome-review-task.txt": "f0e6999d60ab79005bad29e3ae1703097a338b0098f762399c521c98ad574f9d",
+  "package.md": "4e69c262c1299d584bfd4942ddb39292bdcfa449e47ea0166b3a170fb226f4a1",
+  "preparation-claim.json": "1aed77332c448a7af4ad8a9bffb754e3c16c73876d14d378a5de2a28addd4e3d",
+  "release.json": "91cf67c55ea8b65e24b7e443b8c62bde0222b5c64bd9ed388f00f2bbf140efda",
+  "tasks/L-C-verifier.md": "b9108a5bd0855b850a8a46f8526c93c244a76ff1495fc871d43b9a7926a32812",
+  "tasks/L-C-worker.md": "d0faa652b5115b8236752da7454fd203700f5f76e3009ef5ca90be74ac9ced5f",
+  "tasks/L-T-verifier.md": "f48919ecf9534f47f2952d5aad1d7eb2b4d39ecb906a1d1c12b791b1216e0f9f",
+  "tasks/L-T-worker.md": "7bfa01249f1863b287a9d5eb28160db90e5602bdda28beca48723e2e226d800b",
+  "tasks/S-C-verifier.md": "9e322a7f962075e7cc74008edf347b80252f4e302199036dc042145858cb46e6",
+  "tasks/S-C-worker.md": "7d4ff4eec5c4958029eeb3e3851c5c2f5eac3910ae845256021c89f45c59c269",
+  "tasks/S-T-verifier.md": "48e9e8321d8ec46ef9e12fe8ab8a348f9a904be4e7d4e73281428e67e23fcd3e",
+  "tasks/S-T-worker.md": "4fb1307493f3924babf515859f1fb6bcaf854644df5697c555af52fb7e9c1adb",
+  "tasks/V-C-verifier.md": "498612b1dd3ec33aabf77e9dda65973c50881387e7ac2a3f1743e84563d57bf1",
+  "tasks/V-C-worker.md": "284746f1c20409dad9d267011ea24cb6b2a739c505c486d20ad0259743d632eb",
+  "tasks/V-T-verifier.md": "d0ed851fb3c355a6fe81d7de59ffba48247e56f9c8cd34dec7b5d00b70fb9964",
+  "tasks/V-T-worker.md": "928bb72bbcd5edaecce4f4079f9fd0de4d57aa101f28e233338761c03c1dfbdf",
+  "/var/home/bmosher/r34-arms/S-C/answer.md": "1bcec0d5c436e5ac54801c09368c4d027e44148d33fe4652e484a8fbc6b1d63e",
+  "/var/home/bmosher/r34-arms/S-T/answer.md": "932c5b3b09a035c2e5ad93ddacec38e6c6bababb2813dbaffa1fb918173fce81",
+  "/var/home/bmosher/r34-arms/L-C/answer.md": "febba6f9ba4d8031769ee5e16c1f44a3a0b688b230295d0a28cbfeda434a8b20",
+  "/var/home/bmosher/r34-arms/L-T/answer.md": "5f23fbe60df5c9c36ade1f8eec0e636e9d3d04b7da3f9b1d4563b3e680807403",
+  "/var/home/bmosher/r34-arms/V-C/answer.md": "fa756c8ee9d661fe41f299824475936eb47d5af97b6824f8077183ea7bc8739b",
+  "/var/home/bmosher/r34-arms/V-T/answer.md": "bbb233ee84983b2821f63c474afb39feede2536effe2b613f682cc1496b64230"
+ }
+}
