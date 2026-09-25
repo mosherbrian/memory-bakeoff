@@ -1,0 +1,17 @@
+{
+  "qid": "R11-repair-1",
+  "question_id": "Q-WORK-BENEFIT",
+  "owner": "tern",
+  "author": "claude",
+  "start": "2026-09-25T15:16:10.716594+00:00",
+  "deadline": "2026-09-25T15:31:10.716594+00:00",
+  "allocation": "Sole reserved repair15m; recheck10 and witness/activation10 held; ceiling85 unchanged.",
+  "verdict_sha256": "19359d173c66171f6b5642db275cc1eb66f9543fb207a473788f10a04023dd9f",
+  "requirements": [
+    "Fix D1: durably remember previously active stream/question coverage even while quiet, until an explicit valid retirement. Removal/inactivation/rebinding must not silently drop that coverage. Preserve existing clock/incident semantics.",
+    "Tests must cover removal while resting then rest expiry, removal while executing then completion, restart between observations, and explicit retirement still resolving only its stream. Focused planted fault for quiet removal.",
+    "Retain existing R5/R11 tests and source scope. Preserve initial claim, verdict and bound bytes before editing candidate; file repair-claim.json with hashes and concrete evidence.",
+    "No production install/notification, seats or Signal. No scope expansion, automatic extension or further repair. Honest INCOMPLETE at bound if needed."
+  ],
+  "claim_path": "campaign4/packages/R11-stream-gap-ownership/repair-claim.json"
+}
