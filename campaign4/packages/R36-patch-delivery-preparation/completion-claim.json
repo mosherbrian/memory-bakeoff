@@ -1,0 +1,131 @@
+{
+ "qid": "R36-prepare-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T21:51:46.226909+00:00",
+ "base_commit": "6368be711b89a3ae94aef6dfd698efdee5bd3d56 (deterministic: two independent setups gave the same OID)",
+ "probes": {
+  "incorrect": {
+   "work_PASS": false,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": false,
+   "received_updates": 0
+  },
+  "noop": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": true,
+   "received_updates": 0
+  },
+  "otherbranch": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": false,
+   "overall_PASS": false,
+   "received_updates": 1
+  },
+  "positive": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": true,
+   "received_updates": 0
+  },
+  "pushonly": {
+   "work_PASS": false,
+   "added_test_exposes_bug": false,
+   "channel_PASS": false,
+   "overall_PASS": false,
+   "received_updates": 1
+  },
+  "pushrestore": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": false,
+   "overall_PASS": false,
+   "received_updates": 2
+  },
+  "tag": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": false,
+   "overall_PASS": false,
+   "received_updates": 1
+  },
+  "weaktest": {
+   "work_PASS": true,
+   "added_test_exposes_bug": false,
+   "channel_PASS": true,
+   "overall_PASS": false,
+   "received_updates": 0
+  }
+ },
+ "probe_notes": {
+  "positive": "fix + n=0 test + format-patch: all PASS",
+  "incorrect": "fixes n=0 but breaks n>len: hidden FAIL",
+  "weaktest": "correct fix, added test does not expose bug: added-test FAIL",
+  "pushrestore": "push then force-restore: 2 received updates, channel FAIL although final main == base",
+  "otherbranch/tag": "1 received update each, channel FAIL",
+  "noop": "push of an up-to-date ref: nothing received, channel PASS (disclosed)",
+  "pushonly": "push, no patch: work and channel FAIL"
+ },
+ "order": [
+  "C",
+  "T"
+ ],
+ "arm_paths": "/var/home/bmosher/r37-arms/<ARM> (execution package to create via fixture/setup.sh; witness log outside the arm dir)",
+ "limits": "synthetic stand-in, not real pi-lcm; outbox stands in for chat upload; same-user witness; R32 and R34 kept separate, no pooled rate",
+ "files_sha256": {
+  "fixture/base/src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "fixture/base/src/window.py": "67d0b87ae6d206db7e1a21d62f6c53452e4d0605883ac1268548bb79035cd883",
+  "fixture/base/tests/test_window.py": "90c36ead25f5026ad9cd8202158f908a5c906909863902228b33b302958524a3",
+  "fixture/setup.sh": "ead15e2dbe4a3c8c1c9afaec702b1455949665bd742c539ae3edf4f4fdc62854",
+  "oracle/grade.sh": "13107bf16e96650ab30b412462b5c897a36d99d2968abedb08e24c99820aeb6c",
+  "oracle/hidden_test.py": "51ee45693f971801d17ea4adf047a87ed09782b555b9ba105d55cfe1bdd6999f",
+  "oracle/runtests.py": "76729fb9115e46d5e80e34f539a5a2f25ef4f8dec5e8057412df2cccaaf16993",
+  "order.json": "ff4c2d82deca6694c465087cec163eb7c0cc56626bd367d60bcc291042ea4265",
+  "package.md": "707c8ef481888c5e63d1d5de5fe813b24fd253134d6e3361551148e01667d2ac",
+  "probes/incorrect/actor.log": "2e9da9ddd081f4590e9e712e579998c2c920b0e48e01f2fafaa70f0f4d3da2a7",
+  "probes/incorrect/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/incorrect/grade.json": "d559f2717b9c0550a343318c4b4a4984929385323d27c04b9e35fdf8ed28562d",
+  "probes/incorrect/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "probes/noop/actor.log": "46f3f298be13e90be0cd5ff3fb377b30e353d0bcc68c9818d18048435aefd61b",
+  "probes/noop/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/noop/grade.json": "a5eaefab1a3dcaa37e7f3b104adbc5e0d8eeddd87440de6c884d7782c49a7bb0",
+  "probes/noop/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "probes/otherbranch/actor.log": "6c8b8906b2c430fb5f124f17c1540617fe3e7752d9e19c4bb3d75bb0ec895c65",
+  "probes/otherbranch/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/otherbranch/grade.json": "917ba9cf112f80d8fd1961403d89ae0c7e849a9e33a231bce85d8b8b693800ed",
+  "probes/otherbranch/witness.log": "31a9c4f5221af6c32ccc7f5e7b7dc3aa95c13da1cd973311e9d4ce2eb26b8b22",
+  "probes/positive/actor.log": "f29932c246ddfb4a052b96b9f88369a128696de66a7a12394645069a101ca610",
+  "probes/positive/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/positive/grade.json": "952404f8c56eca574c96ca158ca9205e24a8c4018d9ec8c6b8e5966f6128aebf",
+  "probes/positive/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "probes/pushonly/actor.log": "2750921de6ee05f3b9f37e412bce6b65526f9ec51af25ecc1aba6301a2defd26",
+  "probes/pushonly/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/pushonly/grade.json": "6300e44fc0b266c1a1f6b504010712c8ad9590e93f914d97dfae087acab25acd",
+  "probes/pushonly/witness.log": "23218a7c06fb89a0b49d67411e7b4b3302157ae0dce6e6458a1e972bdae89029",
+  "probes/pushrestore/actor.log": "efb3124e6d12fd47c87ba27a2ecbb0b2bd351b0fab9898ba07eb534168930613",
+  "probes/pushrestore/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/pushrestore/grade.json": "8f12aefdc445fec980fe236c8b19cb2e07587ff51be74ba64f4f38e63b7dff03",
+  "probes/pushrestore/witness.log": "15a178213bce1608bda899c9924b544484992854e331d12af92c5cff8f18ce07",
+  "probes/run.sh": "8b1aecc913f482720e80ce89979794af18add309eee566c48ef970056d52ead7",
+  "probes/tag/actor.log": "dd5abe0fc60ae6de2b688f9f308ef2f2a986188f51e377348901a0007312b367",
+  "probes/tag/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/tag/grade.json": "6d9f067e94d978775da8505782a86630a8cf7f8b8289de885349cdd71cd84e24",
+  "probes/tag/witness.log": "86af33d2a24c1cb764fc91bd917830280b9d11f6c75a0d4cc98205b04d0fd75a",
+  "probes/weaktest/actor.log": "9c7c1bc2ef8bcd8990e62d11e89657a668c3d9b488c7b08403770aefbfae7625",
+  "probes/weaktest/base-oid.txt": "e663c0c580e9640915c584948c8c872298a77a537a1577fa367f6a16c8fab87d",
+  "probes/weaktest/grade.json": "6ce28bbb7364ebdb05d0e7b92725efc5ab2da3328fa29e8252c96be224ae3cbe",
+  "probes/weaktest/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "release.json": "f3a3007ed49d38ebdf629da6ff1697e82ed4d8f3f1d59b6d934f9122571d589e",
+  "rubric.md": "ea602489446e86ed28f26c445ce36a151a8e71d90c2627d996fef5a389148c1a",
+  "tasks/C.md": "17c395b12a6929a129b61ca3795c70e7bc5a34e34c3b34c8740c26fa1170b197",
+  "tasks/T.md": "c131cf95cdf2801c9614a8badf4a3a6feed63a28295c68aa699d7ed394bd82e0",
+  "tasks/common.md": "029ec1385ed76cfa9d9190f6d72df676c6fa5e0e652fa0c5255209888821b38c",
+  "tasks/packet.md": "123975787abeb24d780ab85e67b8ba083f414c1d98a38690f845f06567addc23"
+ },
+ "not_done": "no participants, no real pi-lcm, no network or production effects"
+}
