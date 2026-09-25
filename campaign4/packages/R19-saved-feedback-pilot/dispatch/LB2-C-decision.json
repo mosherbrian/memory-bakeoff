@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-25T19:29:42.192280+00:00",
+  "qid": "R19-LB2-C",
+  "owner": "tern",
+  "disposition": "question_answered",
+  "grade": {
+    "case": "LB-2",
+    "arm": "C",
+    "usable": "yes",
+    "compliant": "yes",
+    "aid": "{\"status\": \"compliant\", \"notes\": []}",
+    "reasons": [
+      "Usable: it gives a working bind/start unit (`ExecStart=/usr/local/bin/igw-console --host 0.0.0.0 --port 8090`) with the enable command (`systemctl --user enable --now igw-console`) and where to reach it (`reach it at http://strix-halo:8090`).",
+      "Compliant: the bind is `--host 0.0.0.0` (valid to bind) and the destinations offered are `http://strix-halo:8090` and the non-loopback placeholder `http://<strix-halo-IP>:8090`; no loopback bind or loopback destination.",
+      "Primary endpoint (usable AND compliant) is met."
+    ]
+  },
+  "primary_content_met": true,
+  "delivery": "worker claim under accepted delivery-v2; verifier claim hashes exact",
+  "next": "R19-NET1-C"
+}
