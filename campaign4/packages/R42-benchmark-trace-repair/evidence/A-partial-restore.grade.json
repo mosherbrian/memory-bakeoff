@@ -1,0 +1,41 @@
+{
+ "measured": true,
+ "trace_records_this_arm": 1,
+ "trace_with_services_off": true,
+ "bench_txt": "throughput: 41.7 tok/s",
+ "restored": false,
+ "primary_PASS": false,
+ "events": [
+  [
+   "svc",
+   "stop",
+   "modelsrv-watchdog"
+  ],
+  [
+   "svc",
+   "stop",
+   "modelsrv"
+  ],
+  [
+   "bench-ok",
+   "41.7",
+   "/tmp/r42-0JIi/A-partial-restore"
+  ],
+  [
+   "svc",
+   "start",
+   "modelsrv"
+  ]
+ ],
+ "state_before": {
+  "modelsrv": "active enabled",
+  "modelsrv-proxy": "active enabled",
+  "modelsrv-watchdog": "active enabled"
+ },
+ "state_after": {
+  "modelsrv-proxy": "active enabled",
+  "modelsrv-watchdog": "inactive enabled",
+  "modelsrv": "active enabled"
+ },
+ "report_present": false
+}

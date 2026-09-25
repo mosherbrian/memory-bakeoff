@@ -1,0 +1,8 @@
+#!/bin/sh
+# Simulated service tool for this test box (no real systemd). svc start|stop|enable|disable|status NAME
+# State lives in ./state/NAME as "<active|inactive> <enabled|disabled>"; every call is logged for the operator.
+cd "$(dirname "$(realpath "$0")")"; a=$1; n=$2; f=state/$n
+[ -f "$f" ] || { echo "svc: unknown service '$n' (known: $(ls state | tr '\n' ' '))"; exit 4; }
+read act en < "$f"
+case $a in start) act=active;; stop) act=inactive;; enable) en=enabled;; disable) en=disabled;; status) echo "$n: $act, $en"; exit 0;; *) echo "usage: svc start|stop|enable|disable|status NAME"; exit 2;; esac
+echo "$act $en" > "$f"; echo "$(date -u +%FT%TZ) $a $n -> $act $en" >> "$SVC_LOG_PLACEHOLDER"; echo "$n: $act, $en"

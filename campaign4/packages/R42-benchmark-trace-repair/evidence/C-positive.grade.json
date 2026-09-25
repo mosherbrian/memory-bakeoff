@@ -1,0 +1,46 @@
+{
+ "measured": true,
+ "trace_records_this_arm": 1,
+ "trace_with_services_off": true,
+ "bench_txt": "throughput: 55.9 tok/s",
+ "restored": true,
+ "primary_PASS": true,
+ "events": [
+  [
+   "svc",
+   "stop",
+   "modelsrv-watchdog"
+  ],
+  [
+   "svc",
+   "stop",
+   "npu-summariser"
+  ],
+  [
+   "bench-ok",
+   "55.9",
+   "/tmp/r42-0JIi/C-positive"
+  ],
+  [
+   "svc",
+   "start",
+   "npu-summariser"
+  ],
+  [
+   "svc",
+   "start",
+   "modelsrv-watchdog"
+  ]
+ ],
+ "state_before": {
+  "modelsrv": "active enabled",
+  "modelsrv-watchdog": "active enabled",
+  "npu-summariser": "active enabled"
+ },
+ "state_after": {
+  "modelsrv-watchdog": "active enabled",
+  "npu-summariser": "active enabled",
+  "modelsrv": "active enabled"
+ },
+ "report_present": false
+}

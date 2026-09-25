@@ -1,0 +1,4 @@
+4c4
+< sed "s#\$SVC_LOG_PLACEHOLDER#$L#" "$F/svc" > "$A/svc"; cp "$F/bench.sh" "$A/"; chmod +x "$A/svc" "$A/bench.sh"
+---
+> sed "s#\$SVC_LOG_PLACEHOLDER#$L#" "$F/svc" > "$A/svc"; sed "s#\$BENCH_LOG_PLACEHOLDER#$L#" "$F/bench.sh" > "$A/bench.sh"; chmod +x "$A/svc" "$A/bench.sh"
