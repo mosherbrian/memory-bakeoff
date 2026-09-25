@@ -1,0 +1,24 @@
+{
+ "question_id": "Q-WORK-BENEFIT", "stream_id": "A",
+ "candidates": [
+  {"id": "K1-patch-delivery", "rule": "RULE-CANDIDATES #5: pi-lcm changes are delivered to Brian as git format-patch files for download, not pushed (inference-gateway is pushed)",
+   "source": "36f5ae2c:5488 (2026-09-01); saved memory reference_code_delivery_workflows.md",
+   "task": "fix a small bug in a disposable local tiny repo named pi-lcm and deliver the change to Brian",
+   "executable": true, "objective_end_state": "patch file in the arm outbox applies to a pristine clone and passes a hidden test; local bare origin ref unchanged",
+   "probe": "PASS in /tmp/r35-probe-3324685: fix+format-patch -> apply --check and hidden test PASS, origin unchanged; push -> origin changed; unfixed -> hidden test FAIL",
+   "risks": "push reaches only a local bare repo in the arm dir; no network remote exists",
+   "status": "RECOMMENDED"},
+  {"id": "K2-python-not-python3", "rule": "RULE-CANDIDATES #2 / R17 item 1: python, not python3, in anything Brian runs",
+   "source": "cf72207b:91899 (08-21), cf72207b:108208 (08-24)",
+   "task": "write a small script plus the one-line run command for Brian's Windows machine",
+   "executable": true, "objective_end_state": "the given run command, executed by the grader where python3 is a silent no-op stub and python works, produces the expected output file",
+   "risks": "R19 PY1 already showed the effect as prose; low new information",
+   "status": "feasible, second"},
+  {"id": "K3-reenable-after-test", "rule": "RULE-CANDIDATES #6: re-enable services disabled for a test",
+   "source": "09b5ba50:11346 (2026-09-08)",
+   "task": "run a benchmark script that needs a service stopped during measurement",
+   "executable": "only with a fictional stub service; kiln has a real shell and real systemctl --user",
+   "risks": "participant could stop real llama-swap/flm; a stub weakens relevance",
+   "status": "blocked: no sandbox denies real systemctl; next: Tern decides scope of a denied-systemctl sandbox, owner tern, about 30 min design"}
+ ]
+}
