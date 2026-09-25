@@ -1,0 +1,189 @@
+{
+ "qid": "R9-execution-2",
+ "question_id": "Q-WORK-BENEFIT",
+ "operator": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T14:50:18.728673+00:00",
+ "window": {
+  "release_start": "2026-09-25T14:34:01Z",
+  "first_precheck": "2026-09-25T14:36:41.432156+00:00",
+  "closeout": "2026-09-25T14:49:00.243335+00:00",
+  "absolute_end": "2026-09-25T15:29:01Z"
+ },
+ "order": {
+  "random_bit": 1,
+  "order": [
+   "C",
+   "T"
+  ],
+  "recorded_before_first_prompt": true
+ },
+ "arms": {
+  "C": {
+   "phase1_seconds": 73.0,
+   "phase2_seconds": 263.1,
+   "pre_test": {
+    "rc": 1,
+    "last": "116 passed, 1 failed"
+   },
+   "post_test": {
+    "rc": 0,
+    "last": "117 passed, 0 failed",
+    "skips": 0,
+    "test_rowcheck_worker_unchanged": {
+     "test-fleet-poller.sh": true,
+     "rowcheck": true,
+     "acp-worker": true
+    }
+   },
+   "diff_lines": 17,
+   "notes_written": [
+    "phase1-findings.md"
+   ],
+   "outcome": "SUCCESS",
+   "timer_cancelled": false,
+   "extra_prompts_in_phase": 0
+  },
+  "T": {
+   "phase1_seconds": 83.0,
+   "phase2_seconds": 98.0,
+   "pre_test": {
+    "rc": 1,
+    "last": "116 passed, 1 failed"
+   },
+   "post_test": {
+    "rc": 0,
+    "last": "117 passed, 0 failed",
+    "skips": 0,
+    "test_rowcheck_worker_unchanged": {
+     "test-fleet-poller.sh": true,
+     "rowcheck": true,
+     "acp-worker": true
+    }
+   },
+   "diff_lines": 25,
+   "notes_written": [
+    "phase1-findings.md"
+   ],
+   "outcome": "SUCCESS",
+   "timer_cancelled": false,
+   "extra_prompts_in_phase": 0
+  }
+ },
+ "treatment": {
+  "summary_words": 148,
+  "marked": true,
+  "truncated": false,
+  "summary_turn_seconds": 8.0,
+  "inside_T_phase1": true,
+  "delivered_verbatim_in_T_phase2_prompt": true,
+  "file": "execution-2/T-summary.txt"
+ },
+ "fresh_boundaries": {
+  "new_replies": [
+   {
+    "label": "C-p1",
+    "sid": "ses_f26fff1bdffeXDt9RJX16nSvp5",
+    "ok": true,
+    "reply": "new ses_f26fff1bdffeXDt9RJX16nSvp5 - model opencode-go/muse-spark-1.3-contributor",
+    "at": "2026-09-25T14:37:34.675318+00:00"
+   },
+   {
+    "label": "C-p2",
+    "sid": "ses_f26fed227ffeN1bNL6YAiRp7wo",
+    "ok": true,
+    "reply": "new ses_f26fed227ffeN1bNL6YAiRp7wo - model opencode-go/muse-spark-1.3-contributor",
+    "at": "2026-09-25T14:38:48.293283+00:00"
+   },
+   {
+    "label": "T-p1",
+    "sid": "ses_f26f930a6ffeVJOk2s5wLOYJp9",
+    "ok": true,
+    "reply": "new ses_f26f930a6ffeVJOk2s5wLOYJp9 - model opencode-go/muse-spark-1.3-contributor",
+    "at": "2026-09-25T14:44:57.318937+00:00"
+   },
+   {
+    "label": "T-p2",
+    "sid": "ses_f26f7ca95ffeu5h20zb5DNwCcj",
+    "ok": true,
+    "reply": "new ses_f26f7ca95ffeu5h20zb5DNwCcj - model opencode-go/muse-spark-1.3-contributor",
+    "at": "2026-09-25T14:46:28.983874+00:00"
+   }
+  ],
+  "confirmed_after_first_reply": [
+   {
+    "label": "C-p1",
+    "sid": "ses_f26fff1bdffeXDt9RJX16nSvp5",
+    "engine_store": true,
+    "state_matches": true
+   },
+   {
+    "label": "C-p2",
+    "sid": "ses_f26fed227ffeN1bNL6YAiRp7wo",
+    "engine_store": true,
+    "state_matches": true
+   },
+   {
+    "label": "T-p1",
+    "sid": "ses_f26f930a6ffeVJOk2s5wLOYJp9",
+    "engine_store": true,
+    "state_matches": true
+   },
+   {
+    "label": "T-p2",
+    "sid": "ses_f26f7ca95ffeu5h20zb5DNwCcj",
+    "engine_store": true,
+    "state_matches": true
+   }
+  ],
+  "all_unique": true
+ },
+ "prechecks": "before every phase: installed R10 hash 083f6eb7; socket inode 554033536 and worker pid 4141367 (start 1790346647.69) unchanged vs the director's activation-reconciliation join (this sandbox cannot read another process's fd links); features include new; /ping exactly idle; no executing kiln loop package; 15 kiln outbox rows all closed+claim or timed-out+stop delivered-acked, none cleared",
+ "timers": "one calendar one-shot per trial turn (AccuracySec=1s), stopped at turn end; none fired; 0 r9e2 timers remain",
+ "contamination": "records scanned for fixed.sh, director-closure, R8 package, cbc9d52, git log/show/diff: 0 hits. 'conductor-chat/' appears once per arm only as a path string inside fleet-poller.sh's own contents, not a file read. Seen-task limit remains.",
+ "no_extra_prompts": "ACP_PROMISE_CHECK on for kiln in both arms; 0 extra user prompts in any phase",
+ "closeout": {
+  "kiln_ping": "idle",
+  "kiln_session_now": "ses_f26f7ca95ffeu5h20zb5DNwCcj (T phase-2 conversation; prior conversation not restored, per amendment)",
+  "no_queued_trial_task": true
+ },
+ "cost": "model wall time 336 s (C) and 189 s (T incl. 8 s summary); about 12.5 min operator wall time; no retries, no repair",
+ "reading": "Both arms fixed the bug; the unchanged test went 116/1 rc1 -> 117/0 rc0 in each. T phase 2 took 98 s vs C 263 s. n=1 per arm on a seen task: the procedure works end to end and gives one paired observation; not evidence that memory helps in general.",
+ "arms_final_copy": "execution-2/arms-final",
+ "files_sha256": {
+  "execution-2/C-p1-reply.txt": "f6fcbc60bbe5f6480f3ec5cfc41c9548fa9ea107c3c8e584e5654bd1ec23baff",
+  "execution-2/C-p2-prompt.txt": "ae70488cbd0bea4534c6f8d31ed7e4aa6c8a31feee56816bf38081a420bcc0f5",
+  "execution-2/C-p2-reply.txt": "49826fd05faf6d63d947df2abd54fca1750bd6e3cd415f8560e8fd497e6fe8df",
+  "execution-2/C-post-fleet-poller.diff": "7ca0e83139dc1148432bfc818da49ab22ccae12b39a71ddf2391f4e1df5ce89a",
+  "execution-2/C-post-test.out": "4fed75618a2397c8c3a08133671146bccd2821a2c34e607a55b409ab36b013c1",
+  "execution-2/C-pre-fleet-poller.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "execution-2/C-pre-test.out": "161877f5a0b553f6b36dd024ae1c2fefd20f951d0e70f3d9559a2b999e1af3f8",
+  "execution-2/T-p1-reply.txt": "813e0bbf2a7280edd887fc07c55cd828d37cc2b657a8080405f68777ddcb3d66",
+  "execution-2/T-p2-prompt.txt": "fe9f56241d8c555b45aafe57056b21e5803e1047e298e88cf474831235def9b5",
+  "execution-2/T-p2-reply.txt": "49826fd05faf6d63d947df2abd54fca1750bd6e3cd415f8560e8fd497e6fe8df",
+  "execution-2/T-post-fleet-poller.diff": "3d367c5a1de17217bc1d5bb12fec0d0fb9fe7ce3e5c89352e909da9df6f5b9fc",
+  "execution-2/T-post-test.out": "4fed75618a2397c8c3a08133671146bccd2821a2c34e607a55b409ab36b013c1",
+  "execution-2/T-pre-fleet-poller.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "execution-2/T-pre-test.out": "161877f5a0b553f6b36dd024ae1c2fefd20f951d0e70f3d9559a2b999e1af3f8",
+  "execution-2/T-summary.txt": "2d48c476e9ababacafb54215b2d5fb5d104a09745cbb4ee7e3e278ee9b0a4962",
+  "execution-2/arms-final/C/acp-worker": "6871ceb1fa15e3b744c29b3aacde59f8c77a9ca54285b4ba954859f8fbb64d02",
+  "execution-2/arms-final/C/fleet-poller.sh": "ae053e06048d1b5f6e995a2870c05cb8829b6a89d01feea597917557eb768cce",
+  "execution-2/arms-final/C/notes/phase1-findings.md": "47e227c28d8084b1edfe56c587c0f7832facae0211c33e45038265aec5637601",
+  "execution-2/arms-final/C/rowcheck": "5334ee6abc00049732c8c1e856c8ec85a0239e5b76b4181516443f6e58489f9b",
+  "execution-2/arms-final/C/test-fleet-poller.sh": "0894381c077cf08c0a8408a069920e296a9f1f8bba40c688957b26c95f9fbca2",
+  "execution-2/arms-final/T/acp-worker": "6871ceb1fa15e3b744c29b3aacde59f8c77a9ca54285b4ba954859f8fbb64d02",
+  "execution-2/arms-final/T/fleet-poller.sh": "06ece0451a4fca9b3a9685bec65bd65630f0f24ea4c13ca4b1d80d4cfc3ca305",
+  "execution-2/arms-final/T/notes/phase1-findings.md": "3d632e066bf610c3594ea7d67874a1bc4db546e083d6dfff215ba70223a9063f",
+  "execution-2/arms-final/T/rowcheck": "5334ee6abc00049732c8c1e856c8ec85a0239e5b76b4181516443f6e58489f9b",
+  "execution-2/arms-final/T/test-fleet-poller.sh": "0894381c077cf08c0a8408a069920e296a9f1f8bba40c688957b26c95f9fbca2",
+  "execution-2/log.jsonl": "86ce69a162b0566d33ab05f51d327b9f894a995fab37358c2a96e60d959d828b",
+  "execution-2/r9e2-C-p1-records.jsonl": "7d45aa0819b39c65beb346437fea2a9341418e278e7c41cc3a046f8759598c2d",
+  "execution-2/r9e2-C-p2-records.jsonl": "4ced043a8dfdc4ff99d4a1c3b886d2bcfe18c901b58ff654c9406fda58b94f2f",
+  "execution-2/r9e2-T-p1-records.jsonl": "c3c2d7b2a0f17ae4b20922f54f958136d2f33a7639d0f7784e922cdd1f8948b7",
+  "execution-2/r9e2-T-p1s-records.jsonl": "0793467b9e206d99c977971b703938c34f296e5376a65e1e2e374f071f0de39e",
+  "execution-2/r9e2-T-p2-records.jsonl": "320825d6f2d29b412069813b10b10c211f5497d6d81973f4c2d5ead115eabe81",
+  "execution-2/r9op2.py": "915239977685920fd0e9b928f215b7345afd124ea7eacb0ec263502013c828db",
+  "execution-2/r9op2.sha256": "db9bf12ee182f606d36b3b5b9da02c274ec0c89823412ea13861a3002a9bdab6",
+  "execution-2/run.out": "a4a5abde7d00548d56cd105ba0b6f8f224b05177522917685d98b291966f6f07"
+ }
+}

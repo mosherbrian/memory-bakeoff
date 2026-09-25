@@ -1,0 +1,17 @@
+--- /home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/broken.sh	2026-09-24 22:44:27.268345618 -0700
++++ /var/home/bmosher/r9-arms/execution-2/C/fleet-poller.sh	2026-09-25 07:42:11.376784094 -0700
+@@ -459,7 +459,13 @@
+   RC=$?
+   [ "$RC" = 0 ] && { echo pass; return; }
+   CE=$(echo "$J" | sed -n 's/.*"check_exit": *\([0-9-]*\).*/\1/p' | head -1)
+-  [ "$CE" = "127" ] && { echo none; return; }
++  if [ "$CE" = "127" ]; then
++    if echo "$J" | grep -qE '"path": *"'; then
++      log_once "rowgate-127-$1" "rowgate $1: declared check TRUNCATED at a pipe, exit 127 — counts FAILED, not absent" >/dev/null 2>&1 || true
++      echo fail; return
++    fi
++    echo none; return
++  fi
+   echo "$J" | grep -qE '"declared_check": *"|"path": *"' && { echo fail; return; }
+   echo none
+ }

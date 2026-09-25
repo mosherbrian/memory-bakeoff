@@ -1,0 +1,25 @@
+--- /home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/broken.sh	2026-09-24 22:44:27.268345618 -0700
++++ /var/home/bmosher/r9-arms/execution-2/T/fleet-poller.sh	2026-09-25 07:47:05.366245601 -0700
+@@ -459,7 +459,21 @@
+   RC=$?
+   [ "$RC" = 0 ] && { echo pass; return; }
+   CE=$(echo "$J" | sed -n 's/.*"check_exit": *\([0-9-]*\).*/\1/p' | head -1)
+-  [ "$CE" = "127" ] && { echo none; return; }
++  # Exit 127 must not hide a broken gate: rowcheck splits table cells on "|",
++  # so a declared check CONTAINING a pipe TRUNCATED at a pipe executes the
++  # literal word "check:" -> exit 127, with declared_check starting "check:".
++  # That is a broken gate (fail), not an absent one. Prose checks (e.g. T-3,
++  # "reviewer agrees...") also exit 127 but carry no "check:" prefix: those
++  # stay none.
++  if [ "$CE" = "127" ]; then
++    DC=$(echo "$J" | sed -n 's/.*"declared_check": *"\([^"]*\).*/\1/p' | head -1)
++    case "$DC" in
++      check:*|"check: "*)
++        log_once "gate-trunc-$1" "GATE $1: declared check TRUNCATED at a pipe (exit 127): $DC" 2>/dev/null || log "GATE $1: declared check TRUNCATED at a pipe (exit 127): $DC"
++        echo fail; return;;
++    esac
++    echo none; return
++  fi
+   echo "$J" | grep -qE '"declared_check": *"|"path": *"' && { echo fail; return; }
+   echo none
+ }

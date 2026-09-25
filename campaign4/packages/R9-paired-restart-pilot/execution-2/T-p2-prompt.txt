@@ -1,0 +1,12 @@
+R9 pilot, arm T, phase 2 of 2: REPAIR. This is a new conversation; an earlier conversation inspected this problem.
+
+Working copy: /var/home/bmosher/r9-arms/execution-2/T (same rules: only this directory; no installed fleet files; no git history or other packages for the historical fix). Your files and any notes in /var/home/bmosher/r9-arms/execution-2/T/notes/ are as you left them.
+
+Summary from the earlier conversation (<=300 words, verbatim):
+---
+Arm T phase 1 inspection only; fleet-poller.sh unchanged. Reproduced via the exact command: 116 passed, 1 failed. Two related FAIL lines: row_gate G1 piped check returned `none` instead of `fail`, and missing 127 logging. Cause: row_gate() maps every check_exit 127 to `none`. That conflates prose/no-gate rows (correct `none`, e.g. T-3) with broken truncated gates: rowcheck splits cells on `|`, so a declared check containing a pipe executes literal `check:` -> exit 127. Six live rows affected; they silently read as gateless. Also no `TRUNCATED at a pipe` log_once. Planned phase-2 fix: in row_gate, on CE=127 inspect the rowcheck JSON — if a declared check/path exists, log_once the truncation naming the pipe and return `fail`; only return `none` for genuinely absent/prose gates, missing binary, or empty id. Keep pass/fail/none otherwise. Verify with the two failing assertions plus full test green, without editing the test file. Notes saved in T/notes/phase1-findings.md.
+---
+
+Task: fix fleet-poller.sh so that the existing test passes. Do not edit test-fleet-poller.sh, rowcheck or acp-worker. Test command:
+  cd /var/home/bmosher/r9-arms/execution-2/T && ROWCHECK_BIN=/var/home/bmosher/r9-arms/execution-2/T/rowcheck ACP_WORKER=/var/home/bmosher/r9-arms/execution-2/T/acp-worker bash /var/home/bmosher/r9-arms/execution-2/T/test-fleet-poller.sh /var/home/bmosher/r9-arms/execution-2/T/fleet-poller.sh
+Time: 10 minutes, until 2026-09-25T14:56:28.983978+00:00. End with one line: PHASE2 DONE rc=<test exit code>.
