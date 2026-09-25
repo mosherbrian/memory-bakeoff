@@ -2,46 +2,41 @@
  "qid": "R40-design-1",
  "author": "claude",
  "outcome": "COMPLETE",
- "at": "2026-09-25T22:36:19.987479+00:00",
+ "at": "2026-09-25T22:38:03.058491+00:00",
+ "design_of_record": "workflow/ (sponsor-steered: restoring services after a test); the earlier patch-task variant in the package root is superseded per sponsor-priority-addendum.json and kept unchanged",
  "deliverables": [
-  "protocol.md",
-  "packets/relevant.md",
-  "packets/irrelevant.md",
-  "tasks/{K,U,J}-{N,I,R}.md",
-  "order.json",
-  "review-checklist.md"
+  "workflow/protocol.md",
+  "workflow/packets/{relevant,irrelevant}.md",
+  "workflow/tasks/{A,B,C}-{N,I,R}.md",
+  "workflow/tasks/{A,B,C}-common.md",
+  "workflow/fixture/{svc,bench.sh,setup.sh}",
+  "workflow/order.json",
+  "workflow/review-checklist.md"
  ],
  "checks": {
-  "relevant_packet_identical_to_R36": true,
   "nine_tasks_differ_only_by_packet_and_paths": true,
   "packet_words": {
-   "irrelevant": 67,
-   "relevant": 71
-  }
+   "irrelevant": 85,
+   "relevant": 83
+  },
+  "restore_leak_scan_common_tasks": "none",
+  "simulated_names_on_this_host": "0 unit files match modelsrv|npu-summariser"
  },
  "order": [
-  "K-N",
-  "K-I",
-  "K-R",
-  "J-R",
-  "J-N",
-  "J-I",
-  "U-I",
-  "U-R",
-  "U-N"
+  "A-N",
+  "A-I",
+  "A-R",
+  "C-R",
+  "C-N",
+  "C-I",
+  "B-I",
+  "B-R",
+  "B-N"
  ],
- "frozen_references": {
-  "../R36-patch-delivery-preparation/tasks/packet.md": "123975787abeb24d780ab85e67b8ba083f414c1d98a38690f845f06567addc23",
-  "../R38-patch-workflow-replication-preparation/repair/setup.sh": "96cf24a5ccada7076ef34462bc30d593229e4689b03a5e82b0645e8fb6eac911",
-  "../R38-patch-workflow-replication-preparation/oracle/grade.sh": "316ad5bd62a6599940d96b8b46a92996efbf0697f80d3b01f8f2b44b972e766f",
-  "../R38-patch-workflow-replication-preparation/oracle/runtests.py": "76729fb9115e46d5e80e34f539a5a2f25ef4f8dec5e8057412df2cccaaf16993",
-  "../R38-patch-workflow-replication-preparation/oracle/hidden_K.py": "314a18986445d154caf5e2e0f6b5fedba972f5c46fe3f411df4e08210b055434",
-  "../R38-patch-workflow-replication-preparation/oracle/hidden_U.py": "805ea85c30361c0c8624f774b6b4bc5731bae3357437bac215f6c9f2888ffe2b",
-  "../R38-patch-workflow-replication-preparation/oracle/hidden_J.py": "83ca09eff4ad9a5b82ee1f2f91bc038928be5ffde484608d86b532e84986c4d1",
-  "../R38-patch-workflow-replication-preparation/tasks/K-common.md": "851c0401427e9e589204cf97769e9a1732642686ee7d71522f39ba8882b28393",
-  "../R38-patch-workflow-replication-preparation/tasks/U-common.md": "8a19c768395fbadced71cacecb7b987811fc19f2e712667c4dd44abcc155014a",
-  "../R38-patch-workflow-replication-preparation/tasks/J-common.md": "76d293781882e8f63baf54f5e6c2762311c9377edafb625aa1936f384b9da290"
- },
+ "residuals": [
+  "fixture not executed (design grant forbids local fixture execution); an execution contract should include one operator smoke per block before participants",
+  "packet pointers are as recorded in RULE-CANDIDATES; transcript lines were not re-read in this grant"
+ ],
  "files_sha256": {
   "order.json": "068cfcf15084289708bb3ce3cfeabed48e65ca6956eb94d314774e094706709d",
   "package.md": "e7dee9a14c3ce2f3d4ef929593b155bb92010362920832a0ad48fd850a6aae6a",
@@ -50,6 +45,7 @@
   "protocol.md": "bea585730126f11d127887f0dfc314fc2b59cc6910bdce5b2354b91b2831c7be",
   "release.json": "a57891d9ae78addc4e11644331e7f6e95678babfacab5bd7cb1fedd6854ad73a",
   "review-checklist.md": "4c5201f64bad9c05e37487a65419738dc926f089018e275e0eda90c5059995d6",
+  "sponsor-priority-addendum.json": "86ed2726444af01ed106b1faa3b080c1b75e3f7c6d20c80c88308dc6af320230",
   "tasks/J-I.md": "56f04b47ffef15ffbe737ca467cd16923b4ea7fb3ed11f769cbde1e1c35586ed",
   "tasks/J-N.md": "f7d1fc8da33e8f3f95f17ddcee129c5349be7d9a321af692813e3383e76953ed",
   "tasks/J-R.md": "d53881ec371293f4b6324ab9886026cd257ec478db4cbe340225b596ab5ed9a5",
@@ -58,7 +54,27 @@
   "tasks/K-R.md": "bb5bf4fe31703c107fbfe16dbde9bd5650f30461bc9a5780708fd5c8562bbaaa",
   "tasks/U-I.md": "396263cc880c793d1ac6055aceef711fc66991e47eb0625d308c3301a5d01a1c",
   "tasks/U-N.md": "2eb37e9c43e96cef94311e625e49a832af5e690f27dc4322e519d4b24c3333be",
-  "tasks/U-R.md": "c166cac8df42b127d01edd32e6060de960375799b338d0595101e656028a4eae"
+  "tasks/U-R.md": "c166cac8df42b127d01edd32e6060de960375799b338d0595101e656028a4eae",
+  "workflow/fixture/bench.sh": "e3b17d0f5765d69040af20c76555b5b5f6100117ae3d4cadfb4ae0e787f444d7",
+  "workflow/fixture/setup.sh": "f3de461fb6348734e65f238602dc264186fb3cf05ca68c8116aa6fee7950215e",
+  "workflow/fixture/svc": "45da5f91f02abdf52b353f27d894fe99f7d560c02136ad40ea932aa8da159588",
+  "workflow/order.json": "1f944141c2583836cedd5ca548999b6ca37efe0d03e400a5953d4b644ce56da9",
+  "workflow/packets/irrelevant.md": "045c2dbd76382f57310eb43ffdd5fa1b33d25d4ab10103fde74538ce19333c7d",
+  "workflow/packets/relevant.md": "d76a3e94ddeae1d01f3c6665a83b3baa07ac2338441869fbd305718c9cd1a304",
+  "workflow/protocol.md": "1808a96516b99e51150c6ce0040e88b7a0c8c4f02cfb02e4ce24b6fd9e3e1b11",
+  "workflow/review-checklist.md": "7fff449c767499613b32cec8106736494dfaef799d962d9c33a12e3b58745ef0",
+  "workflow/tasks/A-I.md": "0701848145f79f74db7a8cabc36cafc84f3754831b4079728839777bfa844ae7",
+  "workflow/tasks/A-N.md": "d128fe7bb8c4e3e226f1e840257c26b46f473784884f538998aa466c44fb6cad",
+  "workflow/tasks/A-R.md": "e2483f5f801c4327bcc5d076f1ff91999891970aff8bb47125dfddaf79555d12",
+  "workflow/tasks/A-common.md": "ea55550003294bad50c4fec70033283aaa0982ed8f86f796ceb9cca937635eee",
+  "workflow/tasks/B-I.md": "6156c709d60d090e82a34ec68e3ea90d7aaabe751b11a76ac1378c2024f8a986",
+  "workflow/tasks/B-N.md": "b0803221e54be65a4a7115026a67a526bf3c7b23992dd28e869f5f1f72ce7e03",
+  "workflow/tasks/B-R.md": "3604cd7bbace086d82ebe73eaef775e01a940b07dc70a1b23509627fd7e7e52d",
+  "workflow/tasks/B-common.md": "113059658d86afe9872344613ade6ab206fe59f607020f2c282eff44dac93c70",
+  "workflow/tasks/C-I.md": "0bd83597097dc050459a89cfff6039e1e8b74c81b337e17cc8d90f600471e9c6",
+  "workflow/tasks/C-N.md": "62eab8347a998424f77d44055e51215f4c07478053bb97d77696f2c1c491c0de",
+  "workflow/tasks/C-R.md": "cc1f682f220a0fbe2d066762c3e0b0e325e8988f75b38a55578a59329907bb35",
+  "workflow/tasks/C-common.md": "662615064bd66c83e9fb57dabf5291504db0192074eff59fdf2e403ba0ddbbf8"
  },
- "not_done": "no participants, no fixture execution, no tooling"
+ "not_done": "no participants, no fixture execution, no real services or hosts"
 }
