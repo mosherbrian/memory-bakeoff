@@ -1,0 +1,108 @@
+diff --git a/workers/acp-worker b/workers/acp-worker
+index d7e0d83..84d0308 100755
+--- a/workers/acp-worker
++++ b/workers/acp-worker
+@@ -445,6 +445,9 @@ class Worker:
+         # the work, which is what wedged the implementer.
+         self.queued = []
+         self.qlock = threading.Lock()
++        # Admission lock: a prompt being admitted and a /new switching the
++        # session never interleave, so /new's idle check cannot race a prompt.
++        self.ctl = threading.Lock()
+         self.out_lock = threading.RLock()
+         # Key on the session, not on where it runs. agent-deck gives every
+         # session a stable AGENTDECK_INSTANCE_ID, and it is the same id the web
+@@ -830,6 +833,55 @@ class Worker:
+         self.resumed = False
+         self.save()
+ 
++    def new_session(self):
++        """/new: a fresh conversation for this seat, without stopping it.
++
++        Idle only. Refused while a turn runs, prompts are queued, a permission
++        answer is awaited, or another /new holds the admission lock. The old
++        session stays in use unless the adapter returns a NEW, different id.
++
++        Three records, three meanings:
++          - the reply ("new <id> ...") is the id the adapter just created;
++          - acp-history gets one "[new session] <old> -> <new>" line;
++          - acp-sessions/<seat>.json holds the new id only once it answers a
++            prompt (the proven-session rule), so until then a restart starts
++            a fresh session rather than resuming an unconfirmed one.
++        A lane pinned with ACP_RESUME is refused: /new there would reopen the
++        named conversation, which is the opposite of what was asked."""
++        if RESUME:
++            return "new refused: this lane is pinned to ACP_RESUME, so session/new would resume that conversation"
++        if not self.ctl.acquire(blocking=False):
++            return "new refused: another prompt or control change is being admitted"
++        try:
++            with self.qlock:
++                depth = len(self.queued)
++            if self.running or depth or self.pending is not None:
++                return ("new refused: seat busy ("
++                        + ", ".join(x for x in ("turn running" if self.running else "",
++                                                f"{depth} queued" if depth else "",
++                                                "permission pending" if self.pending is not None else "") if x)
++                        + ") - nothing changed")
++            old = self.session
++            try:
++                new = self.call("session/new", {"cwd": CWD, "mcpServers": []})
++            except Exception as exc:
++                return f"new failed: adapter refused session/new ({exc}) - still on {old}"
++            sid = new.get("sessionId")
++            if not sid or sid == old:
++                return f"new failed: adapter returned {'no' if not sid else 'the same'} session id - still on {old}"
++            self.session, self.modes = sid, new.get("modes")
++            self.proven = self.resumed = self.stalled = False
++            self.save()
++            line = f"[new session] {old} -> {sid} (operator /new; context above this line was not carried over)"
++            self.show(line)
++            self.record("assistant", line)
++            applied = self.apply_mode() + self.apply_model() + self.apply_config_model()
++            if "REFUSED" in applied:
++                return f"new {sid} SWITCHED but{applied} - old context is gone"
++            return f"new {sid}" + applied
++        finally:
++            self.ctl.release()
++
+     def apply_mode(self):
+         # Only ZCode offers modes; the other adapters answer "Invalid params"
+         # and the noisy REFUSED line was alarming for a normal condition.
+@@ -1298,6 +1350,8 @@ class Worker:
+                             f"has no {method})")
+                 except Exception as exc2:
+                     return f"{text[1:]} failed as method and as prompt: {exc2}"
++        if text == "/new":
++            return self.new_session()
+         if text == "/ping":
+             # A probe that CHANGES NOTHING. Added because a diagnostic used
+             # /cancel to find out which sockets answered and killed three live
+@@ -1350,15 +1404,19 @@ class Worker:
+                 os.remove(path)
+             except OSError as exc:
+                 return f"could not read the multi-line prompt: {exc}"
+-        if self.running:
+-            with self.qlock:
+-                self.queued.append(text)
+-                depth = len(self.queued)
+-            return f"queued behind the running turn - {depth} waiting"
+-        # a thread, so a permission request can be answered from stdin while
+-        # the prompt is still in flight
+-        threading.Thread(target=self.prompt, args=(text,), daemon=True).start()
+-        return "started"
++        with self.ctl:
++            if self.running:
++                with self.qlock:
++                    self.queued.append(text)
++                    depth = len(self.queued)
++                return f"queued behind the running turn - {depth} waiting"
++            # Marked running HERE, under the admission lock, not later in the
++            # thread: otherwise a /new arriving in that gap would see idle.
++            self.running = True
++            # a thread, so a permission request can be answered from stdin
++            # while the prompt is still in flight
++            threading.Thread(target=self.prompt, args=(text,), daemon=True).start()
++            return "started"
+ 
+     def serve_socket(self):
+         """One JSON request per connection: {"text": "..."} -> {"ok", "status"}.

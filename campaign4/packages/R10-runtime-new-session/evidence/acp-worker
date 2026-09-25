@@ -1,0 +1,1511 @@
+#!/usr/bin/env python3
+"""A generic ACP client that Agent Deck runs as a session command.
+
+Agent Deck does not need to know what ACP is: it needs a process in a pane,
+keystrokes in, text out. So the client lives in the pane. Any ACP agent works
+by changing argv - this file is not ZCode-specific.
+
+    acp-worker zcode-acp-server
+    acp-worker gemini --experimental-acp
+
+Permission requests are drawn in the exact shape conductor-chat's pane detector
+already parses (rule, question, "> 1. ..." choices), so approval cards appear in
+/deck with no server change.
+
+Env:
+  ACP_MODE  session mode to select after connecting (default: build).
+            ZCode offers plan|build|edit|yolo|auto; "yolo" disables gating.
+  ACP_MODEL pin the session model, e.g. "zai/glm-5.3". Runtime-only for this
+            one session; the global config default and other sessions are
+            untouched. A refusal is printed loudly, never silently ignored.
+"""
+import json
+import os
+import socket
+import subprocess
+import sys
+import threading
+import time
+
+MODE = os.environ.get("ACP_MODE", "build")
+# The longest a single turn may run. It was a hard-coded 1800s, which cut
+# kiln's P6r14 candidate turn at exactly 30:00 (2026-09-22 23:19-23:49Z)
+# while it waited on a long full gate, under a dispatch that allowed 60m.
+# It left no text and no claim. Hangs are the stall watchdog's job
+# (ACP_STALL_SECS, engine silence); this cap is only a last resort.
+TURN_SECS = float(os.environ.get("ACP_TURN_SECS", "7200"))
+# Let a zcode lane compact itself. zcode-acp-server calls maybeAutoCompact()
+# after every prompt, but its first line is `if (threshold <= 0) return` and
+# the threshold comes from THIS variable, which defaults to 0 - disabled. So
+# no lane on this box had ever auto-compacted: conductor-glm's session reached
+# 829,468 tokens by 2026-09-13, re-read in full every 138 seconds to emit a
+# median 307 output tokens - 993 input tokens per output token written, which
+# is what exhausted the Z.ai window overnight.
+#
+# 200k against a window of at least 830k (the largest context actually
+# observed). setdefault, so a lane that wants a different number or wants it
+# off can still say so. Popen inherits this environment, which is why one line
+# here covers every zcode lane including stratum-glm - it runs acp-worker
+# directly with no wrapper of its own.
+os.environ.setdefault("ZCODE_ACP_AUTO_COMPACT_THRESHOLD", "200000")
+
+
+# ---- shared concurrency gate ------------------------------------------------
+# A provider can rate-limit the ACCOUNT, and every lane on it competes for the
+# same allowance. Measured 2026-09-14: opencode's free tier served four
+# concurrent lanes for 24 minutes without a refusal, and thirteen lanes plus
+# the poller produced 123 refusals in six hours. A refusal is not a clean
+# error - it arrives as a stream error inside the adapter, nothing propagates
+# to ACP, and the turn hangs until the stall watchdog gives up. So exceeding
+# the limit does not cost a retry, it costs ten minutes of a lane's life.
+#
+# Waiting for a slot is therefore strictly cheaper than being refused. Each
+# lane is its own process, so the gate has to work ACROSS processes: N lock
+# files, flock'd non-blocking, first one that takes is the slot. The kernel
+# releases a flock when the holder dies, so a crashed or killed lane cannot
+# leak a slot - which a counter in a file could not promise.
+#
+# Set per wrapper, not per adapter: ACP_CONCURRENCY_SLOTS=N with an optional
+# ACP_CONCURRENCY_KEY to name the pool (lanes sharing one account share one
+# key). Unset or 0 means no gate, which is every existing lane's behaviour.
+SLOTS = int(os.environ.get("ACP_CONCURRENCY_SLOTS", "0") or 0)
+SLOT_KEY = os.environ.get("ACP_CONCURRENCY_KEY", "default")
+SLOT_WAIT_CAP = float(os.environ.get("ACP_CONCURRENCY_WAIT", "900"))
+# A strict pool never overruns, however long the wait. For a provider whose
+# plan CAPS in-flight requests (Z.ai Lite = 1) breaching it risks the account,
+# so slow is the correct failure. Advisory pools (a soft rate ceiling) still
+# proceed after the cap rather than stall the fleet.
+SLOT_STRICT = os.environ.get("ACP_CONCURRENCY_STRICT", "0") not in ("", "0", "no")
+
+
+
+def slot_dir():
+    """Where the lock files live. Computed on use, not at import: the state
+    root is defined further down this file, and naming it up here cost a
+    NameError that ast.parse could not see and that would have stopped every
+    lane from booting."""
+    return os.path.join(os.path.dirname(STATE_DIR), "concurrency", SLOT_KEY)
+
+
+class Slot:
+    """Hold one of SLOTS slots for the life of a turn. A no-op when unset."""
+
+    def __init__(self, show):
+        self.fh = None
+        self.show = show
+
+    def __enter__(self):
+        if SLOTS <= 0:
+            return self
+        import fcntl
+        d = slot_dir()
+        os.makedirs(d, exist_ok=True)
+        start, told = time.time(), False
+        while True:
+            for i in range(SLOTS):
+                fh = open(os.path.join(d, f"slot-{i}"), "w")
+                try:
+                    fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError:
+                    fh.close()
+                    continue
+                self.fh = fh
+                if told:
+                    self.show(f"[got a slot after {time.time()-start:.0f}s]")
+                return self
+            if time.time() - start > SLOT_WAIT_CAP:
+                if SLOT_STRICT:
+                    # STRICT pools are contractual, not advisory. Z.ai's Lite
+                    # plan allows ONE request in flight and repeated breaches
+                    # risk the account, so overrunning the pool is worse than
+                    # being slow - keep waiting and say so every cap interval.
+                    self.show(f"[still waiting for the one {SLOT_KEY} slot "
+                              f"after {time.time()-start:.0f}s - this pool is "
+                              f"strict, the turn will not go ungated]")
+                    start = time.time()
+                else:
+                    # Advisory pool: going ahead beats refusing the work, but
+                    # say so - a silent override would hide that the gate is
+                    # too small for the offered load.
+                    self.show(f"[waited {SLOT_WAIT_CAP:.0f}s for one of "
+                              f"{SLOTS} {SLOT_KEY} slots and none came free - "
+                              f"going ahead ungated]")
+                    return self
+            if not told:
+                self.show(f"[waiting for one of {SLOTS} {SLOT_KEY} slots]")
+                told = True
+            time.sleep(1.5)
+
+    def __exit__(self, *exc):
+        if self.fh:
+            self.fh.close()      # closing releases the flock
+        return False
+# Answer permission requests automatically. For a CONDUCTOR this is the
+# difference between working and not: it runs agent-deck commands constantly,
+# and claude-code-acp advertises no modes at all (measured - session/new
+# returns none), so there is no "yolo" to ask for. A gated conductor stops on
+# its first dispatch and waits for a human who is not watching the pane.
+AUTO_OK = os.environ.get("ACP_AUTO_APPROVE", "") not in ("", "0", "no")
+# Fleet-wide unattended window. One file holds an EXPIRY, and while it is in
+# the future every worker answers its own permission requests - so an overnight
+# run does not stop on the first approval card with nobody awake to press it.
+#
+# A file rather than seven wrapper edits, and read PER REQUEST rather than at
+# startup, so turning it on reaches sessions that are already running and
+# turning it off stops them without a restart. It expires by itself, because
+# the failure mode of a forgotten switch is every session ungated for weeks.
+UNATTENDED = os.path.join(
+    os.environ.get("ACP_STATE_HOME") or os.path.expanduser("~/.config/agent-deck"),
+    "unattended")
+
+def unattended_until():
+    """The expiry in the window file, or "" when there is no live window."""
+    try:
+        for line in open(UNATTENDED):
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            stamp = line.rstrip("Z")
+            try:
+                time.strptime(stamp, "%Y-%m-%dT%H:%M:%S")
+            except ValueError:
+                continue  # garbage must never gate: fail closed, not open
+            # Compare as text: both sides are UTC ISO-8601, which sorts.
+            now = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime())
+            return line if stamp > now else ""
+    except OSError:
+        pass
+    return ""
+# Whether the mode was ASKED for, or is just our default. An explicit
+# request is honoured and its refusal reported; the default is only
+# applied where the adapter says it exists.
+MODE_EXPLICIT = "ACP_MODE" in os.environ
+MODEL = os.environ.get("ACP_MODEL", "")
+# pi-acp takes its model as an ACP CONFIG OPTION (configId "model"), not as an
+# env var and not through session/setModel. Same intent as ACP_MODEL, different
+# call, so it gets its own switch rather than guessing which one an adapter
+# wants and silently picking wrong.
+CONFIG_MODEL = os.environ.get("ACP_CONFIG_MODEL", "")
+# Bring an EXISTING Claude Code conversation into ACP: the id of a
+# ~/.claude/projects/<slug>/<id>.jsonl transcript. claude-code-acp reads it
+# from session/new's _meta and passes it to the SDK as `resume`, which
+# continues that conversation instead of starting an empty one.
+#
+# Not session/load, deliberately: load replays the whole history back to the
+# client as updates, and the conversation this was built for is 377 MB - the
+# load attempt died with "Query closed before response received". Resuming on
+# session/new costs nothing and the history stays on disk where it already is.
+RESUME = os.environ.get("ACP_RESUME", "")
+
+CWD = os.getcwd()
+# Fleet data root. A wrapper that redirects HOME for the whole session chain
+# (to pin a model via a per-lane ZCode config tree) sets ACP_STATE_HOME to the
+# REAL agent-deck config dir, so state/streams/transcripts stay where the
+# fleet's readers look even though $HOME points elsewhere.
+_STATE_ROOT = os.environ.get("ACP_STATE_HOME") or os.path.expanduser("~/.config/agent-deck")
+STATE_DIR = os.path.join(_STATE_ROOT, "acp-sessions")
+# Streaming sidecar. The pane cannot carry structure, and the on-disk
+# transcripts every agent writes only appear when a turn COMPLETES, so live
+# text needs its own channel. One file per working directory; the server maps
+# a session to it by projectPath and tails it.
+STREAM_DIR = os.path.join(_STATE_ROOT, "acp-stream")
+# Durable transcript. The stream sidecar is truncated every turn, and these
+# adapters do not all write a store we can read, so the worker keeps its own.
+HIST_DIR = os.path.join(_STATE_ROOT, "acp-history")
+# The engine's own error output. It used to go to DEVNULL, and on 2026-09-16
+# that cost us the reason corvid's engine stopped answering: five stalls, five
+# session rebuilds and four empty turns, with nothing anywhere saying why - the
+# only process that knew had its mouth taped shut. Capped and rotated once, so
+# a chatty adapter cannot fill the disk.
+ERR_DIR = os.path.join(_STATE_ROOT, "acp-adapter-err")
+ERR_CAP = int(os.environ.get("ACP_ERR_CAP", str(4 * 1024 * 1024)))
+# Direct channel. agent-deck can only deliver by typing into the pane, which is
+# why a newline used to split a prompt and why issue #1978 cannot tell a
+# delivered message from a lost one. conductor-chat writes here instead and
+# gets a real answer. The pane still works; this is a second door.
+SOCK_DIR = os.path.join(_STATE_ROOT, "acp-sock")
+RULE = "─" * 64
+
+# ---- deferred-promise check -------------------------------------------------
+# Measured 2026-09-15: 54 promises made to Brian in chat over 24h, against 2
+# tracking rows. Nothing watched the watchers, so an obligation only survived
+# if he happened to remember it himself.
+#
+# The detector is a regex on purpose. qwen3.5 0.8b on the NPU was tested as the
+# classifier across five prompt framings and could not do the task - every
+# framing collapsed to a constant answer (two always NO, one always FUTURE on
+# 8 of 10 true negatives), best separation +2 of 10, and it calls "I'll send
+# the report next week" a non-promise. 4b is no better: 0/10 both ways. The
+# patterns below were the SELECTOR for that test set and were right on all 10,
+# including declining "I'll fold that in now" as not deferred.
+#
+# Precision is not what makes this work - the injection is. A false positive
+# costs the agent one line to dismiss, so there is nothing to buy with a model
+# call, a resident NPU model, or 0.5-2.7s per turn.
+PROMISE_CHECK = os.environ.get("ACP_PROMISE_CHECK", "") not in ("", "0", "no")
+PROMISE_TAG = "[promise-check]"
+_PROMISE_RE = None
+_NOT_DEFERRED_RE = None
+_OFFER_RE = None
+_MACHINE_RE = None
+
+
+def machine_prompt(text):
+    """True if this turn was driven by the fleet rather than by a person.
+
+    The obligation being guarded is one made TO SOMEONE in conversation.
+    Measured over 24h: 2,164 of 2,439 turns were machine-prompted - poller
+    nudges, watch ticks, inter-seat briefs - and checking those would have
+    added 26 injected turns, 27% of all firings, to a fleet that already
+    spends 89% of its turns talking to itself.
+    """
+    global _MACHINE_RE
+    if _MACHINE_RE is None:
+        import re as _r
+        _MACHINE_RE = _r.compile(
+            r"fleet-poller|\[fleet\]|\[note\]|\[brief\]|pulse \(idle"
+            r"|watch tick|gated wake|HEARTBEAT|inactivity nudge"
+            r"|claimed-dark|scoreboard refresh due|^\[[A-Za-z]",
+            _r.I | _r.M)
+    return bool(_MACHINE_RE.search(text or ""))
+
+
+def promise_in(body):
+    """The first sentence of a reply that reads as an obligation for later.
+
+    Returns the sentence, or None. Deliberately one per turn: the injected
+    prompt costs a real turn, and turn rate is then the only bound needed.
+    """
+    global _PROMISE_RE, _NOT_DEFERRED_RE, _OFFER_RE
+    if _PROMISE_RE is None:
+        import re as _r
+        # The first version enumerated verbs - i'll (chase|confirm|ask|...).
+        # It scored 10/10 on a test set, and the test set was SELECTED BY THE
+        # SAME REGEX, so that number measured nothing about recall. Against
+        # 297 real human-addressed turns it caught 31 of 74 - 42%. It missed
+        # "I'll track it personally until the run lands", "I'll hand you the
+        # new version as soon as it lands", "I'll bring it when it lands".
+        #
+        # So match the general future-commitment form instead and let the
+        # exclusions below do the narrowing. Recall is what matters here: a
+        # false positive costs one line to dismiss, a miss loses the
+        # obligation silently, which is the whole reason this exists.
+        #
+        # The apostrophe is REQUIRED. "i'?ll" also matches "ill" and "we'?ll"
+        # matches "well" - measured, the latter flagged "Real spend from here
+        # should run well under the measured rate".
+        _PROMISE_RE = _r.compile(
+            r"(\bi'll\b|\bwe'll\b|\bi will\b|\bwe will\b|\bi'm going to\b"
+            r"|\bi intend to\b|you'll hear|report back|daily follow-?up"
+            r"|by (?:tonight|today|tomorrow|morning)"
+            r"|the moment (?:it|the|that|they))", _r.I)
+        # Action inside THIS reply. Tested AFTER the match and only to the end
+        # of its clause, never sentence-wide: "If Assay's working now, I'll
+        # confirm the claim lands in the queue" is a real promise whose "now"
+        # describes someone else. A sentence-wide test dropped it - measured
+        # live, on the second firing this check ever produced.
+        _NOT_DEFERRED_RE = _r.compile(
+            r"\b(now|already|just did|in this reply|above)\b", _r.I)
+        # OFFERS conditional on Brian answering, tested across the whole
+        # sentence because the qualifier usually leads: "Say the word and
+        # I'll record it." An offer is not an obligation until he takes it up.
+        _OFFER_RE = _r.compile(
+            r"\b(say the word|want me to|shall i|if you want|let me know if"
+            r"|happy to|i can)\b", _r.I)
+    import re as _r
+    # Quoted spans are somebody ELSE's words. Measured live 2026-09-15: a
+    # reply quoting Assay's "ready the moment the freeze is recorded" was
+    # flagged on that phrase, while the author's own promise - "I'll confirm
+    # the claim lands in the queue" - sat two clauses later. Only double and
+    # curly quotes; a single quote is an apostrophe in "I'll".
+    unquote = lambda t: _r.sub(r'"[^"]*"|“[^”]*”', " ", t)
+    sents = [s.strip() for s in _r.split(r"(?<=[.!?])\s+", body)
+             if 20 < len(s.strip()) < 400]
+    # First person wins. A reply usually reports several obligations - its
+    # own, and other seats' - and only its own is the author's to file.
+    own = _r.compile(r"\b(i'll|i will|we'll|we will|i'm going to|i intend to)\b",
+                     _r.I)
+    for pattern in (own, _PROMISE_RE):
+        for s in sents:
+            bare = unquote(s)
+            m = pattern.search(bare)
+            if not m or _OFFER_RE.search(bare):
+                continue
+            # from the commitment to the end of its clause
+            clause = _r.split(r"[;—]", bare[m.start():])[0]
+            if not _NOT_DEFERRED_RE.search(clause):
+                return s
+    return None
+
+
+PROMISE_PROMPT = (
+    PROMISE_TAG + """ An automatic check read your last reply as promising
+something for later:
+
+  "%s"
+
+This is a regex, not a person, and it is often wrong. Two answers only:
+
+- A real commitment: queue it where it will be picked up without anyone
+  remembering to ask - a tracking row, your own queue - and say in one line
+  where you put it.
+- Not a commitment: say so in one line and stop.
+
+Either way, do not restate the work and do not start it now. The point is
+that the obligation outlives this conversation, not that it happens next.""")
+
+
+def slug(path):
+    return path.strip("/").replace("/", "-") or "root"
+
+
+def instance_id():
+    """agent-deck's own id for this session, or "".
+
+    It sets AGENTDECK_INSTANCE_ID in the tmux SESSION environment, which a
+    respawned pane does NOT inherit - measured: the variable is visible to
+    `tmux show-environment` and absent from the worker's own environment. So
+    ask tmux rather than trusting the inherited env."""
+    got = os.environ.get("AGENTDECK_INSTANCE_ID")
+    if got:
+        return got
+    # ONLY from inside a tmux pane. Outside one, `tmux display-message`
+    # answers for whatever session was last active, so a worker run from a
+    # plain shell would adopt ANOTHER session's id and share its state - the
+    # exact collision this key is meant to prevent. Measured.
+    if not os.environ.get("TMUX"):
+        return ""
+    try:
+        name = subprocess.run(["tmux", "display-message", "-p", "#{session_name}"],
+                              capture_output=True, text=True, timeout=5).stdout.strip()
+        if not name:
+            return ""
+        out = subprocess.run(["tmux", "show-environment", "-t", name,
+                              "AGENTDECK_INSTANCE_ID"],
+                             capture_output=True, text=True, timeout=5).stdout.strip()
+        if out.startswith("AGENTDECK_INSTANCE_ID="):
+            return out.split("=", 1)[1].strip()
+    except Exception:
+        pass
+    return ""
+
+class Worker:
+    def __init__(self, argv):
+        # The WHOLE argv, not argv[0]: a lane wrapper takes its backend as an
+        # argument (`dsh-lane openrouter`), and argv[0] alone made all three
+        # DeepSeek backends indistinguishable to every reader downstream -
+        # including the one that says which account pays. Every match on this
+        # field is a substring test, so a longer string breaks nothing.
+        self.adapter = " ".join(argv)
+        # Keep the child's stderr. self.key is computed further down, so the
+        # same expression runs here - the alternative was reordering the whole
+        # constructor around a log file.
+        _key = instance_id() or slug(CWD)
+        self.errlog = os.path.join(ERR_DIR, _key + ".err")
+        self._errfh = None
+        try:
+            os.makedirs(ERR_DIR, exist_ok=True)
+            if os.path.exists(self.errlog) and os.path.getsize(self.errlog) > ERR_CAP:
+                os.replace(self.errlog, self.errlog + ".1")
+            self._errfh = open(self.errlog, "a", buffering=1)
+            self._errfh.write(f"\n===== adapter start {time.strftime('%F %T')} "
+                              f"{self.adapter} =====\n")
+            _err = self._errfh
+        except OSError:
+            _err = subprocess.DEVNULL      # never let logging stop a lane booting
+        self.proc = subprocess.Popen(
+            argv, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=_err, bufsize=1, text=True, cwd=CWD)
+        self.lock = threading.Lock()
+        self.next_id = 1
+        self.replies = {}          # id -> (Event, box)
+        self.session = None
+        self.pending = None        # a permission request awaiting a keystroke
+        self.running = False       # a prompt is in flight
+        self.slot = None           # shared concurrency slot, if gated
+        self.footer = False        # busy marker currently drawn
+        self.resumed = False       # session came from session/load
+        # ROOT CAUSE, 2026-09-16. ZCode's session/create reports success
+        # WITHOUT writing the session to its database - only a session that
+        # receives content gets persisted. We saved the id the instant it was
+        # created, so it was unresumable from the moment we wrote it. Corvid
+        # then looped: resume fails -> 600s stall -> rebuild -> another
+        # contentless session -> resume fails. ZCode's own log shows nine of
+        # them created between 10:16 and 11:56, and "session resume found no
+        # persisted record" 17 times starting at 08:00.
+        #
+        # So an id is only worth remembering once the session has answered at
+        # least once. Until then this worker keeps it in memory only.
+        self.proven = False
+        self.stalled = False       # a turn ended by the watchdog, agent stuck
+        # Prompts that arrived while a turn was in flight. They used to be
+        # DISCARDED with "[busy]" printed to a pane nobody reads, and the
+        # sender was never told - agent-deck reports its usual false negative
+        # either way. A conductor dispatching to a busy worker silently lost
+        # the work, which is what wedged the implementer.
+        self.queued = []
+        self.qlock = threading.Lock()
+        # Admission lock: a prompt being admitted and a /new switching the
+        # session never interleave, so /new's idle check cannot race a prompt.
+        self.ctl = threading.Lock()
+        self.out_lock = threading.RLock()
+        # Key on the session, not on where it runs. agent-deck gives every
+        # session a stable AGENTDECK_INSTANCE_ID, and it is the same id the web
+        # UI already holds. Keying on the working directory made two sessions in
+        # one directory silently share one session-id file, one stream and one
+        # transcript. Fall back to the path only when run outside agent-deck.
+        self.key = instance_id() or slug(CWD)
+        self.state = os.path.join(STATE_DIR, self.key + ".json")
+        self.stream = os.path.join(STREAM_DIR, self.key + ".jsonl")
+        self.history = os.path.join(HIST_DIR, self.key + ".jsonl")
+        self.sock_path = os.path.join(SOCK_DIR, self.key + ".sock")
+        self.reply = []
+        self.gap = False   # owe a paragraph break after a tool call
+        self.item = None
+        self.last_update = 0.0     # for the stalled-response watchdog
+        self.modes = None          # session/new reports these, if any
+
+    # ---- transport ------------------------------------------------------
+    def send(self, obj):
+        with self.lock:
+            self.proc.stdin.write(json.dumps(obj) + "\n")
+            self.proc.stdin.flush()
+
+    def call(self, method, params, timeout=180):
+        i = self.next_id
+        self.next_id += 1
+        done, box = threading.Event(), {}
+        self.replies[i] = (done, box)
+        self.send({"jsonrpc": "2.0", "id": i, "method": method, "params": params})
+        if not done.wait(timeout):
+            self.replies.pop(i, None)
+            raise TimeoutError(f"{method} timed out")
+        self.replies.pop(i, None)
+        if "error" in box:
+            raise RuntimeError(box["error"].get("message", "error"))
+        return box.get("result") or {}
+
+    def notify_result(self, rid, payload):
+        hit = self.replies.get(rid)
+        if hit:
+            hit[1].update(payload)
+            hit[0].set()
+
+    # ---- streaming sidecar ----------------------------------------------
+    def emit(self, kind, **kw):
+        """Append one streaming record. Best-effort: a failure here must never
+        interfere with the turn itself."""
+        try:
+            os.makedirs(STREAM_DIR, exist_ok=True)
+            with open(self.stream, "a") as fh:
+                fh.write(json.dumps({"t": kind, "item": self.item, **kw}) + "\n")
+        except Exception:
+            pass
+
+    def record(self, role, text):
+        """Append one completed message to the durable transcript."""
+        if not text.strip():
+            return
+        try:
+            os.makedirs(HIST_DIR, exist_ok=True)
+            with open(self.history, "a") as fh:
+                fh.write(json.dumps({"role": role, "text": text,
+                                     "at": time.time()}) + "\n")
+        except Exception:
+            pass
+
+    def flush_text(self):
+        """Close the text accumulated so far as its own assistant record."""
+        body = "".join(self.reply)
+        if body.strip():
+            self.record("assistant", body)
+            self.said = True
+            self.gap = True     # the next text starts a new paragraph
+        self.reply = []
+
+    def record_tool(self, u):
+        """One tool call, flattened to what the activity rail needs. ACP gives
+        a kind (edit / execute / read / ...), locations, and content parts that
+        may carry a real diff with oldText/newText."""
+        call_id = u.get("toolCallId") or u.get("id")
+        if not call_id:
+            return
+        parts = u.get("content") or []
+        diffs = [c for c in parts if c.get("type") == "diff"]
+        # ACP wraps tool output as {type:"content", content:{type:"text",...}};
+        # without this a fold-out would have a title and nothing to show.
+        out = []
+        for c in parts:
+            if c.get("type") == "content":
+                inner = c.get("content") or {}
+                if inner.get("type") == "text" and inner.get("text"):
+                    out.append(inner["text"])
+        if not out:
+            # zcode-acp-server puts tool output in rawOutput, not in content
+            # parts (dist/handlers/dispatch.js), so every ZCode fold-out and
+            # every activity entry had a title and nothing under it.
+            raw = u.get("rawOutput")
+            if isinstance(raw, str):
+                out.append(raw)
+            elif isinstance(raw, dict):
+                if isinstance(raw.get("text"), str):
+                    out.append(raw["text"])
+                elif isinstance(raw.get("output"), str):
+                    out.append(raw["output"])
+            elif isinstance(raw, list):
+                for c in raw:
+                    if isinstance(c, str):
+                        out.append(c)
+                    elif isinstance(c, dict) and isinstance(c.get("text"), str):
+                        out.append(c["text"])
+        rec = {"role": "tool", "id": call_id,
+               "kind": u.get("kind"), "title": u.get("title"),
+               "status": u.get("status"),
+               "paths": [l.get("path") for l in (u.get("locations") or [])
+                         if l.get("path")],
+               "output": "\n".join(out)[:20000],
+               "raw": (u.get("rawInput") or {}).get("command")
+                      or (u.get("rawInput") or {}).get("description") or "",
+               "diffs": [{"path": d.get("path"),
+                          "oldText": (d.get("oldText") or "")[:20000],
+                          "newText": (d.get("newText") or "")[:20000]}
+                         for d in diffs]}
+        # a later tool_call_update supersedes the first record for the same id
+        try:
+            os.makedirs(HIST_DIR, exist_ok=True)
+            with open(self.history, "a") as fh:
+                fh.write(json.dumps({**rec, "at": time.time()}) + "\n")
+        except Exception:
+            pass
+
+    def stream_reset(self):
+        """Truncate at the start of each turn so the file cannot grow forever;
+        the transcript of record is the agent's own store, not this."""
+        try:
+            os.makedirs(STREAM_DIR, exist_ok=True)
+            open(self.stream, "w").close()
+        except Exception:
+            pass
+
+    # ---- rendering ------------------------------------------------------
+    def show(self, text, end="\n"):
+        with self.out_lock:
+            sys.stdout.write(text + end)
+            sys.stdout.flush()
+
+    def set_busy(self, on):
+        """agent-deck's "shell" preset has no BusyPatterns, so a worker cannot
+        make itself look active and `session send` always reports the issue
+        #1793 false failure. A busy footer was tried and abandoned: streamed
+        chunks arrive with end="", so erasing "one line up" removed the reply
+        instead. Delivery works; the caller has to know the error is advisory.
+
+        Also the one place a turn reliably ENDS, so the shared concurrency
+        slot is released here - see Slot. Freeing it before the next queued
+        prompt starts is what lets a gated lane hand the allowance on instead
+        of holding it across its whole backlog."""
+        self.footer = on
+        if not on and getattr(self, "slot", None):
+            self.slot.__exit__()
+            self.slot = None
+
+    def draw_permission(self, params):
+        """Draw the box conductor-chat's pane detector already understands:
+        a horizontal rule, content lines, a line ending in '?', then numbered
+        choices with a cursor on the first."""
+        tool = params.get("toolCall") or {}
+        raw = tool.get("rawInput") or {}
+        detail = (raw.get("command") or raw.get("file_path")
+                  or tool.get("title") or tool.get("toolCallId") or "")
+        options = params.get("options") or []
+        self.show("")
+        self.show(RULE)
+        self.show(f"{tool.get('title') or 'Tool permission'}")
+        if detail:
+            self.show(str(detail)[:400])
+        self.show("Do you want to proceed?")
+        for n, opt in enumerate(options, 1):
+            cursor = "❯" if n == 1 else " "
+            self.show(f"{cursor} {n}. {opt.get('name') or opt.get('optionId')}")
+        self.show(RULE)
+
+    def auto_permission(self):
+        """Take the most permissive option and say so.
+
+        Printed, never silent: the transcript has to show what was allowed
+        without anyone being asked, or an automatic yes is indistinguishable
+        from a human one after the fact.
+        """
+        req, self.pending = self.pending, None
+        options = req["params"].get("options") or []
+        allow = [o for o in options
+                 if "reject" not in (o.get("kind") or "")
+                 and "reject" not in (o.get("name") or "").lower()]
+        # allow_always before allow_once when the adapter offers both
+        pick = next((o for o in allow if "always" in (o.get("kind") or "")
+                     or "always" in (o.get("name") or "").lower()),
+                    allow[0] if allow else None)
+        if not pick:
+            self.draw_permission(req["params"])     # nothing safe to pick
+            self.pending = req
+            return
+        self.send({"jsonrpc": "2.0", "id": req["id"],
+                   "result": {"outcome": {"outcome": "selected",
+                                          "optionId": pick["optionId"]}}})
+        tool = (req["params"].get("toolCall") or {})
+        raw = tool.get("rawInput") or {}
+        what = (raw.get("command") or raw.get("file_path")
+                or tool.get("title") or "tool")
+        self.show(f"\n  [auto-approved: {pick.get('name')}] {str(what)[:160]}")
+        if self.running:
+            self.set_busy(True)
+
+    def answer_permission(self, line):
+        req, self.pending = self.pending, None
+        options = req["params"].get("options") or []
+        choice = line.strip()
+        pick = None
+        if choice.isdigit() and 1 <= int(choice) <= len(options):
+            pick = options[int(choice) - 1]
+        else:                       # anything else is treated as a refusal
+            pick = next((o for o in options
+                         if "reject" in (o.get("kind") or "")), options[-1])
+        self.send({"jsonrpc": "2.0", "id": req["id"],
+                   "result": {"outcome": {"outcome": "selected",
+                                          "optionId": pick["optionId"]}}})
+        self.show(f"  -> {pick.get('name')}")
+        if self.running:
+            self.set_busy(True)
+
+    def on_update(self, update):
+        self.last_update = time.time()
+        kind = update.get("sessionUpdate")
+        if not self.running:
+            # session/load replays the whole session back at us, so a resumed
+            # worker re-recorded every past tool call - ZCode sends them with
+            # part_* ids and the input JSON prepended to the output, which
+            # showed up as duplicate "Bash" cards in the transcript. Anything
+            # arriving outside a prompt is history we already have.
+            return
+        if kind == "agent_message_chunk":
+            content = update.get("content") or {}
+            if content.get("type") == "text":
+                text = content.get("text", "")
+                # A tool call closes the text before it, and the agent resumes
+                # mid-sentence-looking: "...whether that's a problem." then
+                # "Everything checks out" arrived glued together as
+                # "problem.Everything". The adapter sends no separator across
+                # that boundary, so put one in - once, on the first chunk after
+                # a flush, and in the SAME string that goes to the pane, the
+                # stream and the record, so all three read alike.
+                lead = ""
+                if self.gap and text.strip():
+                    lead, text = "\n\n", text.lstrip()
+                    self.gap = False
+                # The break belongs to the LIVE view only. The pane and the
+                # stream concatenate a whole turn into one running text, so
+                # without it "...run the echo command." and "The command ran"
+                # arrive as "command.The" - measured on the wire, that boundary
+                # is a tool call and the adapter sends no separator across it.
+                # The durable records are already split one per segment, so
+                # adding it there would only open each one with a blank line.
+                self.show(lead + text, end="")
+                self.emit("d", x=lead + text)
+                self.reply.append(text)
+        elif kind in ("tool_call", "tool_call_update"):
+            # ACP describes file edits and commands here, including diff
+            # content. Record it so the activity rail can show what changed.
+            if kind == "tool_call":
+                # Close the text written so far as its own record FIRST, so the
+                # transcript reads narrative, tool, narrative, tool in the order
+                # it happened. Recording a turn's text as one blob at the end
+                # made every tool card land after the whole narrative, which is
+                # the opposite of where it belongs.
+                self.flush_text()
+                title = update.get("title") or update.get("kind") or "tool"
+                self.show(f"\n  [{title}]")
+            self.record_tool(update)
+        # thought chunks, usage, plan and config updates are deliberately not
+        # rendered - the transcript comes from the agent's own store.
+
+    # ---- reader ---------------------------------------------------------
+    def reader(self):
+        for line in self.proc.stdout:
+            line = line.strip()
+            if not line.startswith("{"):
+                continue
+            try:
+                msg = json.loads(line)
+            except Exception:
+                continue
+            method, rid = msg.get("method"), msg.get("id")
+            if method == "session/update":
+                self.on_update((msg.get("params") or {}).get("update") or {})
+            elif method == "session/request_permission" and rid is not None:
+                self.set_busy(False)   # the box must be the last thing on screen
+                self.pending = msg
+                window = "" if AUTO_OK else unattended_until()
+                if window:
+                    self.show(f"[unattended until {window} - answering this "
+                              f"approval automatically]")
+                if AUTO_OK or window:
+                    self.auto_permission()
+                else:
+                    self.draw_permission(msg.get("params") or {})
+            elif method and rid is not None:
+                # any other server->client request: decline rather than hang
+                self.send({"jsonrpc": "2.0", "id": rid,
+                           "error": {"code": -32601, "message": "unsupported"}})
+            elif rid is not None:
+                self.notify_result(rid, msg)
+        # QUEUE D-2 (2026-09-17; the 2026-09-16 wedge): engine EOF used to end
+        # in os._exit(1) here, killing the whole worker - the seat LOOKED
+        # alive (socket file on disk, nothing listening) and the next prompt
+        # stalled the full 600s instead of naming the cause. Stay up: the
+        # socket keeps serving, and the next prompt names the exit at once.
+        self.show("\n[agent exited]")
+
+    # ---- lifecycle ------------------------------------------------------
+    def start(self):
+        threading.Thread(target=self.reader, daemon=True).start()
+        info = self.call("initialize", {
+            "protocolVersion": 1,
+            "clientCapabilities": {
+                "fs": {"readTextFile": False, "writeTextFile": False},
+                "terminal": False}})
+        agent = (info.get("agentInfo") or {}).get("name", "agent")
+        version = (info.get("agentInfo") or {}).get("version", "")
+        # T-003: agent-deck's spawn_watcher re-infers tool from pane content.
+        # Mask the names it knows as tools of their own, or it re-infers from
+        # this very line. "opencode" joined the list on 2026-09-14: eleven
+        # lanes moved onto opencode came back as tool=opencode, which drops
+        # every `session send` (it waits for that tool's TUI signature, and an
+        # ACP REPL draws none) and makes `session output` return the tool's
+        # view instead of the pane, so a live worker reads as blank.
+        # Renaming the BINARY did not help - the detector reads the pane, not
+        # the process - which is why this line is the fix and the rename is
+        # only belt to its braces.
+        import re as _re
+
+        loaded = self.resume()
+        self.resumed = loaded
+        if not loaded:
+            self.fresh_session()
+        else:
+            # rewrite the record on resume too: it carries the adapter name the
+            # fleet's readers key on, and a session that only ever resumes
+            # would never gain a field added after it was first created
+            self.save()
+        threading.Thread(target=self.serve_socket, daemon=True).start()
+        modes = self.apply_mode()
+        pinned = self.apply_model() + self.apply_config_model()
+        banner = f"{agent} {version}{modes}{pinned}" + (
+            " (resumed)" if loaded else "")
+        # Mask every name agent-deck knows as a tool of its own. The detector
+        # reads THIS LINE out of the pane, and a wrong `tool` drops dispatches
+        # silently. The model id keeps its provider prefix in the state file
+        # and in the ledger - only the pane text is rewritten, so nothing that
+        # reads the real value is affected.
+        # Order matters: the provider-prefixed forms first, or the bare
+        # fallback turns "opencode-go/" into "muse-agent-go/" - which is what
+        # the pane showed on 2026-09-14 until this was fixed. The state file
+        # and the ledger keep the real id either way; only pane text changes.
+        for pat, sub in ((r'(?i)codex', 'oai-agent'),
+                         (r'(?i)opencode-go/', 'go/'),
+                         (r'(?i)opencode/', 'zen/'),
+                         (r'(?i)opencode', 'muse-agent')):
+            banner = _re.sub(pat, sub, banner)
+        self.show(banner)
+        self.show("Type a prompt and press Enter.\n")
+
+    def fresh_session(self):
+        """A brand new agent session, replacing whatever we had.
+
+        With ACP_RESUME set it is not brand new: the adapter is asked to
+        continue that Claude conversation, so the agent keeps its history and
+        its identity across the move into agent-deck."""
+        params = {"cwd": CWD, "mcpServers": []}
+        if RESUME:
+            params["_meta"] = {"claudeCode": {"options": {"resume": RESUME}}}
+        new = self.call("session/new", params)
+        self.session = new.get("sessionId")
+        self.modes = new.get("modes")
+        self.resumed = False
+        self.save()
+
+    def new_session(self):
+        """/new: a fresh conversation for this seat, without stopping it.
+
+        Idle only. Refused while a turn runs, prompts are queued, a permission
+        answer is awaited, or another /new holds the admission lock. The old
+        session stays in use unless the adapter returns a NEW, different id.
+
+        Three records, three meanings:
+          - the reply ("new <id> ...") is the id the adapter just created;
+          - acp-history gets one "[new session] <old> -> <new>" line;
+          - acp-sessions/<seat>.json holds the new id only once it answers a
+            prompt (the proven-session rule), so until then a restart starts
+            a fresh session rather than resuming an unconfirmed one.
+        A lane pinned with ACP_RESUME is refused: /new there would reopen the
+        named conversation, which is the opposite of what was asked."""
+        if RESUME:
+            return "new refused: this lane is pinned to ACP_RESUME, so session/new would resume that conversation"
+        if not self.ctl.acquire(blocking=False):
+            return "new refused: another prompt or control change is being admitted"
+        try:
+            with self.qlock:
+                depth = len(self.queued)
+            if self.running or depth or self.pending is not None:
+                return ("new refused: seat busy ("
+                        + ", ".join(x for x in ("turn running" if self.running else "",
+                                                f"{depth} queued" if depth else "",
+                                                "permission pending" if self.pending is not None else "") if x)
+                        + ") - nothing changed")
+            old = self.session
+            try:
+                new = self.call("session/new", {"cwd": CWD, "mcpServers": []})
+            except Exception as exc:
+                return f"new failed: adapter refused session/new ({exc}) - still on {old}"
+            sid = new.get("sessionId")
+            if not sid or sid == old:
+                return f"new failed: adapter returned {'no' if not sid else 'the same'} session id - still on {old}"
+            self.session, self.modes = sid, new.get("modes")
+            self.proven = self.resumed = self.stalled = False
+            self.save()
+            line = f"[new session] {old} -> {sid} (operator /new; context above this line was not carried over)"
+            self.show(line)
+            self.record("assistant", line)
+            applied = self.apply_mode() + self.apply_model() + self.apply_config_model()
+            if "REFUSED" in applied:
+                return f"new {sid} SWITCHED but{applied} - old context is gone"
+            return f"new {sid}" + applied
+        finally:
+            self.ctl.release()
+
+    def apply_mode(self):
+        # Only ZCode offers modes; the other adapters answer "Invalid params"
+        # and the noisy REFUSED line was alarming for a normal condition.
+        modes = ""
+        # A RESUMED session reports no modes - availableModes comes back from
+        # session/new only - so gating on it silently left a resumed session in
+        # whatever mode it had before, which is how a yolo conductor came back
+        # up still asking for approvals. Try the call whenever a mode is asked
+        # for; an adapter without modes answers "Invalid params" and we say so.
+        known = {m.get("id") for m in
+                 ((self.modes or {}).get("availableModes") or [])}
+        # "build" is the ZCode default and neither claude-code-acp nor pi-acp
+        # has it, so both answered "Internal error"/"Invalid params" and wore a
+        # REFUSED banner for a mode nobody asked them for. Our own default is
+        # applied only where the adapter advertises it; a mode set in the
+        # environment is still always attempted, and still reported loudly,
+        # because then someone is relying on it.
+        if MODE and (MODE in known or (MODE_EXPLICIT and not known)):
+            try:
+                self.call("session/set_mode",
+                          {"sessionId": self.session, "modeId": MODE})
+                modes = f" - mode {MODE}"
+            except Exception as exc:
+                modes = f" - mode {MODE} refused ({exc})"
+        return modes
+
+    def apply_config_model(self):
+        """Set the model through session/set_session_config_option.
+
+        pi-acp exposes it this way; a refusal is printed rather than swallowed,
+        because running a different model than asked for is a silent
+        substitution and the caller may be relying on THIS one.
+        """
+        if not CONFIG_MODEL:
+            return ""
+        try:
+            self.call("session/set_session_config_option",
+                      {"sessionId": self.session, "configId": "model",
+                       "value": CONFIG_MODEL})
+            return f" - model {CONFIG_MODEL}"
+        except Exception as exc:
+            self.show(f"[ACP_CONFIG_MODEL {CONFIG_MODEL} REFUSED: {exc}"
+                      f" - default model in use]")
+            return f" - model {CONFIG_MODEL} REFUSED"
+
+    def apply_model(self):
+        """Pin this session's model when ACP_MODEL is set. The server's
+        session/setModel switches runtime-only (it persists nothing), so this
+        is safe to repeat after every fresh_session() rebuild."""
+        if not MODEL:
+            return ""
+        # TWO SPELLINGS EXIST IN THE WILD. The ACP spec says
+        # session/set_model, and opencode 1.18.30 refuses anything else with
+        # -32601 "Method not found": session/setModel. zcode-acp-server
+        # answers the camelCase one. Measured both 2026-09-13. This worker is
+        # adapter-agnostic by design, so it tries the spec spelling first and
+        # falls back, rather than making every wrapper know which is which.
+            # Report EVERY attempt, not just the last. Measured 2026-09-16: the
+            # banner read 'REFUSED: "Method not found": session/setModel' and I
+            # concluded set_model was unimplemented. It IS implemented in
+            # codex-acp 1.12.0, as a legacy extension whose parser wants exactly
+            # {sessionId, modelId} - which is what this already sends. The first
+            # error was swallowed here, so the wrong spelling stood in for both
+            # and sent the diagnosis down the wrong path for an hour.
+        exc = None
+        for method in ("session/set_model", "session/setModel"):
+            try:
+                self.call(method, {"sessionId": self.session, "modelId": MODEL})
+                return f" - model {MODEL}"
+            except Exception as e:
+                exc = e
+                self.show(f"[model pin: {method} failed: {e}]")
+        # A silent fallback onto the default model would be a silent
+        # substitution - the caller may be relying on THIS model.
+        self.show(f"[ACP_MODEL {MODEL} REFUSED: {exc} - default model in use]")
+        return f" - model {MODEL} REFUSED"
+
+    def resume(self):
+        """session/load only exists when the agent advertises loadSession."""
+        try:
+            with open(self.state) as fh:
+                sid = json.load(fh).get("sessionId")
+        except Exception:
+            return False
+        if not sid:
+            return False
+        if RESUME:
+            # A lane that resumes a named conversation has no use for
+            # session/load: the conversation id IS the durable state, and on
+            # claude-code-acp load replays the whole history and dies on a
+            # large one. Let fresh_session() ask for the resume instead - it
+            # lands on the same conversation.
+            return False
+        try:
+            self.call("session/load", {"sessionId": sid, "cwd": CWD,
+                                       "mcpServers": []}, timeout=60)
+            self.session = sid
+            # It was on disk and it loaded, so it is a real persisted session.
+            self.proven = True
+            return True
+        except Exception:
+            return False
+
+    def save(self):
+        os.makedirs(STATE_DIR, exist_ok=True)
+        with open(self.state, "w") as fh:
+            # `adapter` is what the fleet's readers key on. Naming a wrapper
+            # without "acp" in it used to make conductor-chat stop recognising
+            # the session entirely, so state it here rather than let anyone
+            # guess it from a filename.
+            # `features` lets conductor-chat tell whether THIS worker
+            # understands a newer control line before it sends one. Without it
+            # a server upgrade would have to be matched by restarting every
+            # worker at the same moment.
+            json.dump({"sessionId": self.session if self.proven else None,
+                       "cwd": CWD,
+                       "adapter": self.adapter,
+                       # The model this lane was PINNED to. agent-deck reports
+                       # its inferred `tool` for ACP lanes and nothing else, so
+                       # without this /deck shows "shell" where the name
+                       # belongs. Recording it here means any lane with
+                       # ACP_MODEL labels itself, whatever its adapter.
+                       "model": MODEL,
+                       "socket": self.sock_path,
+                       # "unattended" says this process can read the fleet's
+                       # unattended window. A worker started before that
+                       # existed cannot, and reports nothing - which is how
+                       # fleet-gates tells "ungated" from "ungated once you
+                       # restart it", instead of calling a stale worker ready.
+                       "features": ["mlfile", "socket", "unattended"]}, fh)
+
+    def prompt(self, text):
+        if self.stalled:
+            # The session boundary is the single most important thing to record
+            # for anyone reading this transcript later: everything above it was
+            # said to a different session object, and no in-session memory
+            # survived the line.
+            boundary = ("[session rebuilt] the previous turn stalled, so this "
+                        "prompt runs in a NEW session - conversation context "
+                        "above this line was not carried over")
+            self.show(boundary)
+            self.record("assistant", boundary)
+            try:
+                self.fresh_session()
+                self.apply_mode()
+                self.apply_model()
+                self.apply_config_model()
+            except Exception as exc:
+                self.show(f"[error] could not rebuild the session: {exc}")
+            self.stalled = False
+        self.running = True
+        self.set_busy(True)
+        self.item = f"i{int(time.time() * 1000)}"
+        self.last_update = time.time()
+        self.reply = []
+        self.gap = False        # a new turn does not owe the last one a break
+        self.said = False
+        self.record("user", text)
+        self.stream_reset()
+        self.emit("start")
+        threading.Thread(target=self.watch_stall, args=(self.item,),
+                         daemon=True).start()
+        # Held until set_busy(False), which every ending path goes through -
+        # normal completion, the stall watchdog, and /cancel. Releasing it in
+        # one of those three instead would leak a slot down the other two, and
+        # a leaked slot is permanent: nothing ever reclaims it.
+        self.slot = Slot(self.show).__enter__()
+        # The stall clock started before this line, so every second spent
+        # QUEUING for the shared Z.ai slot counted as the engine failing to
+        # answer. Measured 2026-09-16: kiln finishes a turn every ~44s and
+        # retakes the slot immediately, corvid waited behind it, and the 600s
+        # watchdog killed corvid's turn - recording a stall, rebuilding the
+        # session, and looking exactly like a wedged engine. The engine had
+        # never been asked anything.
+        #
+        # The watchdog measures ENGINE silence. Queue time is not silence, so
+        # the clock restarts the moment the turn can actually speak.
+        self.last_update = time.time()
+        try:
+            self.call("session/prompt",
+                      {"sessionId": self.session,
+                       "prompt": [{"type": "text", "text": text}]},
+                      timeout=TURN_SECS)
+        except Exception as exc:
+            # A session whose prompt was interrupted stays poisoned: session/load
+            # restores it happily and then EVERY prompt fails with an internal
+            # error. Only a resumed session does this, and only a new session
+            # fixes it - so build one and send the prompt again rather than
+            # telling a human to restart a worker they may not be watching.
+            if self.resumed:
+                self.show(f"\n[resumed session was broken ({exc}) - starting a fresh one]")
+                try:
+                    self.fresh_session()
+                    self.apply_mode()
+                    self.apply_model()
+                    self.apply_config_model()
+                except Exception as exc2:
+                    self.show(f"[error] could not start a fresh session: {exc2}")
+                    return
+                self.reply.clear()
+                # the failed attempt left the stall clock stale; the watchdog
+                # is still armed on this turn and would cut the retry short
+                self.last_update = time.time()
+                try:
+                    self.call("session/prompt",
+                              {"sessionId": self.session,
+                               "prompt": [{"type": "text", "text": text}]},
+                              timeout=TURN_SECS)
+                    return          # recovered; the finally block still records
+                except Exception as exc2:
+                    # a fresh session failing is a real fault, not stale state
+                    self.show(f"\n[error] {exc2}")
+            else:
+                self.show(f"\n[error] {exc}")
+        finally:
+            body = "".join(self.reply)
+            if not body.strip() and getattr(self, "cancelled", False):
+                # Say what happened, in wording the alarm does NOT match.
+                body = "[cancelled by request - the turn was stopped before it replied]"
+                self.show("\n" + body)
+            elif not body.strip() and self.proc is not None \
+                    and self.proc.poll() is not None:
+                # QUEUE D-2: name a dead engine immediately instead of
+                # stalling 600s. The wording carries the fleet mute marker so
+                # the poller escalates by itself.
+                body = (f"engine process has EXITED (code {self.proc.returncode}) "
+                        "- no reply was produced for this prompt")
+                self.show("\n" + body)
+            elif not body.strip() and not getattr(self, "said", False):
+                # A turn that produced no text must never pass unnoticed. One
+                # prompt WAS lost this way - sent, answered by nothing, and
+                # invisible in the transcript; the only reason it was caught is
+                # that the conductor read the pane and said so. The cause is
+                # not pinned and a deliberate reproduction did NOT fail, so
+                # this is a tripwire, not a fix: the next one is on the record.
+                body = ("[no reply was produced for this prompt - the turn "
+                        "ended with no text. First line was: "
+                        + (text.splitlines() or [""])[0][:120] + "]")
+                self.show("\n" + body)
+            self.record("assistant", body)
+            # The session has now answered, so its id is worth remembering: an
+            # answer is proof ZCode persisted it. An EMPTY reply is not proof -
+            # that is the exact state corvid was in nine times over.
+            if body.strip() and not body.startswith("[no reply was produced") \
+                    and not body.startswith("engine process has EXITED"):
+                if not self.proven:
+                    self.proven = True
+                    self.save()
+            self.emit("end")
+            self.item = None
+            self.cancelled = False
+            # Only this path. A stalled or cancelled turn ends with the session
+            # marked stalled and the next prompt rebuilding it, so a check
+            # queued there would be answered by an agent that never saw the
+            # reply it is about.
+            if PROMISE_CHECK and not text.startswith(PROMISE_TAG) \
+                    and not machine_prompt(text):
+                said = promise_in(body)
+                if said:
+                    with self.qlock:
+                        self.queued.append(PROMISE_PROMPT % said)
+                    self.show(f"\n[promise check queued - {said[:70]!r}]")
+            self.set_busy(False)
+            self.run_next_or_idle()
+            self.show("")
+
+    def run_next_or_idle(self):
+        """Start the next queued prompt, or go idle if there is none.
+
+        running stays True across the handover, so a prompt arriving in the
+        gap is queued rather than started concurrently."""
+        with self.qlock:
+            nxt = self.queued.pop(0) if self.queued else None
+            left = len(self.queued)
+        if nxt is None:
+            self.running = False
+            return
+        self.show(f"[starting queued prompt, {left} still waiting]")
+        threading.Thread(target=self.prompt, args=(nxt,), daemon=True).start()
+
+    def watch_stall(self, item, idle=None):
+        """End a turn that has gone completely silent, so the session is not
+        dead until someone restarts it.
+
+        It was built for pi-acp 0.0.33 on a then-believed failure: that it
+        streams deltas and then never replies to session/prompt. Measurement
+        (2026-09-16) corrected that - over 1123 cairn turns pi-acp's no-reply
+        rate is 0.36 percent, the lowest in the fleet - so this is a hang
+        guard, not a workaround for an adapter that cannot finish; do not
+        design around the old claim. 45 seconds was safe there because that
+        adapter emits deltas continuously - but the claim in the original
+        comment, that a live turn always does, is FALSE for the others. A
+        claude-code-acp turn writing a long file, or waiting on a permission
+        dialog it handles internally rather than over ACP, can be silent for
+        much longer, and cutting it kills real work: 2026-09-11, a drafting
+        turn was declared stalled mid-Write - the proposal did land a minute
+        later, so the cut was wrong and the retry it triggered was wasted.
+
+        So the timeout is per adapter now: short where silence is rare, so a
+        genuine hang trips sooner; long enough elsewhere that slow real work
+        is not cut. ACP_STALL_SECS overrides both.
+        """
+        if idle is None:
+            env = os.environ.get("ACP_STALL_SECS", "")
+            if env:
+                idle = float(env)
+            else:
+                # An older comment here claimed this adapter never replies
+                # to a prompt; measured 2026-09-16 over 1123 cairn turns,
+                # its no-reply rate is 0.36 percent - the lowest in the
+                # fleet - so that bug is fixed and the claim is retired;
+                # do not design around it. The short idle stays because
+                # silence from this adapter is rare, so a tight hang bound
+                # costs little; the others can be silent through a long
+                # real Write, so they keep the looser bound.
+                idle = 300.0 if "pi-acp" in self.adapter else 600.0
+        while self.running and self.item == item:
+            time.sleep(2)
+            if not self.running or self.item != item:
+                return
+            if self.pending is not None:
+                # blocked on an approval: waiting is correct, not a stall
+                self.last_update = time.time()
+                continue
+            # DO NOT hand the slot back while the turn is still silent. That
+            # was tried on 2026-09-14 and it defeated the gate it lived in:
+            # the request is still open at the PROVIDER, so releasing the slot
+            # let another lane start one and a limit of four became unbounded
+            # exactly when the account was already refusing. The slot is freed
+            # by ending the turn below, which is the only point at which the
+            # upstream request is really given up.
+            if time.time() - self.last_update < idle:
+                continue
+            # Name the source of the number. The drafter was killed at 45s
+            # tonight by a worker process older than the per-adapter change,
+            # and the notice gave no way to tell a stale process from a
+            # misconfigured one.
+            src = "ACP_STALL_SECS" if os.environ.get("ACP_STALL_SECS") else "default"
+            # RECORDED, not just shown. This notice used to go to the pane only,
+            # so a stall left no trace in the transcript - a check for
+            # "stall-ended turns" over 1,123 cairn turns returned 0 and was
+            # worthless. It also matters for the memory trial: the next prompt
+            # rebuilds the session, which resets the very thing under test, and
+            # without this line a lost fact is indistinguishable from a memory
+            # system that failed to recall it.
+            note = (f"[stall] no response for {int(idle)}s ({src}) - ending the "
+                    f"turn; the next prompt will rebuild this session and the "
+                    f"conversation context will be reset")
+            self.show("\n" + note)
+            # Ending the turn on OUR side is not enough: pi-acp still believes
+            # the prompt is running, so every later prompt comes back "Queued
+            # message (position 1)" and never executes. Tell the agent to drop
+            # it too, or the session is dead until it is restarted.
+            # session/cancel is not enough - measured: pi-acp 0.0.33 answers
+            # the NEXT prompt with "Queued message (position 1)" and never runs
+            # it, so the session is dead until rebuilt. Mark it, and build a
+            # fresh one before the next prompt rather than now, so a stall that
+            # turns out to be the last turn costs nothing.
+            self.stalled = True
+            # A stall means this session object is not answering, and the id on
+            # disk is the FIRST thing a restart tries to resume. Corvid spent
+            # 2026-09-16 10:46-11:54 resuming a backend session that no longer
+            # existed: the adapter answered session/load at the protocol level
+            # while telling its stderr "backend session no longer exists", so
+            # the worker believed it had a session and hung 600s per prompt,
+            # five times. Forgetting the id costs one conversation that is
+            # already lost, and stops a restart from walking back into it.
+            try:
+                if os.path.exists(self.state):
+                    with open(self.state) as _fh:
+                        _st = json.load(_fh)
+                    if _st.get("sessionId"):
+                        _st["sessionId"] = None
+                        _tmp = self.state + ".tmp"
+                        with open(_tmp, "w") as _fh:
+                            json.dump(_st, _fh)
+                        os.replace(_tmp, self.state)
+                        self.show("[stalled session id forgotten - a restart "
+                                  "will start clean rather than resume this one]")
+            except Exception as _exc:              # never let this stop the turn ending
+                self.show(f"[could not clear the stalled session id: {_exc}]")
+            # NOT session/cancel. opencode 1.18.30 answers -32601 to it, the
+            # same way it does to session/compact and session/load_earlier,
+            # and calling it printed "could not cancel the stalled turn" on
+            # every muse lane on 2026-09-14. So a stalled turn cannot be given
+            # up upstream from here: self.stalled makes the NEXT prompt build a
+            # fresh session, which is the only lever this adapter offers.
+            body = "".join(self.reply)
+            self.record("assistant", (body + "\n\n" if body.strip() else "") + note)
+            self.emit("end")
+            self.item = None
+            self.set_busy(False)
+            self.run_next_or_idle()
+            return
+
+    def close_after_cancel(self, item, grace=None):
+        """End a cancelled turn locally when the adapter drags its feet.
+
+        The adapter may still be streaming; we stop REPORTING it, which is
+        what the user asked for. The session is marked stalled so the next
+        prompt starts a fresh one rather than queueing behind a turn the
+        agent may still think is live - the same trap pi-acp springs after a
+        cancel, where every later prompt answers "Queued message (position
+        1)" forever."""
+        grace = float(os.environ.get("ACP_CANCEL_GRACE", "8")) if grace is None else grace
+        end = time.time() + grace
+        while time.time() < end:
+            time.sleep(0.5)
+            if not self.running or self.item != item:
+                return                      # the adapter ended it in time
+        if not self.running or self.item != item:
+            return
+        note = (f"[stall] cancelled - the agent did not end the turn within "
+                f"{int(grace)}s, so this session stops reporting it; the next "
+                f"prompt will rebuild it and reset the conversation context")
+        self.show("\n" + note)
+        self.stalled = True
+        body = "".join(self.reply)
+        self.record("assistant", (body + "\n\n" if body.strip() else "") + note)
+        self.emit("end")
+        self.item = None
+        self.set_busy(False)
+        self.run_next_or_idle()
+
+    def submit(self, text):
+        """Handle one line of input, from the pane OR the socket.
+
+        Returns a short status string. Control lines are handled here too, so
+        conductor-chat can send /cancel and /compact down the socket instead of
+        typing them as keystrokes."""
+        text = (text or "").strip()
+        if not text:
+            return "empty"
+        if text in ("/compact", "/earlier"):
+            method = ("session/compact" if text == "/compact"
+                      else "session/load_earlier")
+            try:
+                # 330s, not 120s. zcode allows its OWN auto-compact 300s before
+                # it gives up, and compaction is a summarisation of the whole
+                # history - conductor-glm sat at a 518k context on 2026-09-13,
+                # which does not summarise in two minutes. A 120s timeout here
+                # reported "compact failed" while the backend was still working
+                # and would have succeeded, which is worse than slow: it tells
+                # you the context is still huge when it is about to shrink.
+                self.call(method, {"sessionId": self.session}, timeout=330)
+                return f"{text[1:]} done"
+            except Exception as exc:
+                # SOME ADAPTERS HAVE THE FEATURE BUT NOT THE METHOD. opencode
+                # 1.18.30 answers -32601 "Method not found" to session/compact
+                # and session/load_earlier, yet its agent handles /compact
+                # perfectly well when the slash command arrives as a PROMPT -
+                # measured 2026-09-14, it returned a structured
+                # Objective/Work State summary. Reporting "compact failed"
+                # there would have been wrong on all ten lanes moved onto
+                # opencode that morning, and wrong in the worst direction: it
+                # says the context is still huge when it just shrank.
+                #
+                # Same shape as apply_model()'s two spellings: try the spec
+                # way, fall back, and SAY WHICH ONE WORKED rather than let a
+                # silent substitution hide that this lane compacts by prompt.
+                if "-32601" not in str(exc) and "Method not found" not in str(exc):
+                    return f"{text[1:]} failed: {exc}"
+                try:
+                    self.prompt(text)
+                    return (f"{text[1:]} done (as a prompt - this adapter "
+                            f"has no {method})")
+                except Exception as exc2:
+                    return f"{text[1:]} failed as method and as prompt: {exc2}"
+        if text == "/new":
+            return self.new_session()
+        if text == "/ping":
+            # A probe that CHANGES NOTHING. Added because a diagnostic used
+            # /cancel to find out which sockets answered and killed three live
+            # turns doing it (2026-09-12). Anything checking liveness uses
+            # this; anything wanting to stop a turn uses /cancel.
+            return ("busy" if self.running else "idle") + (
+                f", {len(self.queued)} queued" if self.queued else "")
+        if text == "/cancel":
+            # Stop means stop. A cancelled turn used to hand straight over to
+            # whatever was queued behind it, so the indicator came back within
+            # a second and the button read as broken - measured 2026-09-12,
+            # conductor-glm started a queued prompt immediately after its turn
+            # was cancelled. The queue is dropped with the turn, and the count
+            # is reported so nothing disappears quietly.
+            with self.qlock:
+                dropped = len(self.queued)
+                self.queued = []
+            # A cancelled turn produces no text, which is exactly the shape of
+            # the tripwire below - so a press of Stop used to raise the DEAD
+            # TURN alarm and buzz Brian's phone. Measured 2026-09-12: testing
+            # the stop button on three lanes sent three pushes in 25 seconds,
+            # and because that alarm bypasses the cooldown on purpose, each one
+            # also muted the next ten minutes of legitimate notices. A cancel
+            # is the opposite of a silent death: he asked for it.
+            self.cancelled = True
+            note = f" ({dropped} queued dropped)" if dropped else ""
+            if dropped:
+                self.show(f"\n[cancel dropped {dropped} queued prompt"
+                          f"{'s' if dropped > 1 else ''} - resend if still wanted]")
+            if self.running and self.session:
+                self.send({"jsonrpc": "2.0", "method": "session/cancel",
+                           "params": {"sessionId": self.session}})
+                # session/cancel is a REQUEST, and an adapter can take its
+                # time: measured 2026-09-12, zcode-acp-server kept the turn
+                # open for 65 seconds after answering. A minute of a spinning
+                # indicator is indistinguishable from a broken button, so
+                # close the turn on our side if the adapter has not.
+                threading.Thread(target=self.close_after_cancel,
+                                 args=(self.item,), daemon=True).start()
+                return "cancelled" + note
+            return ("nothing running" + note) if note else "nothing running"
+        if text.startswith("/mlfile "):
+            # Legacy: a multi-line prompt spooled to a file because a newline
+            # typed into the pane is Enter. Kept for the pane; the socket
+            # carries newlines natively and needs none of this.
+            path = text[len("/mlfile "):].strip()
+            try:
+                with open(path) as fh:
+                    text = fh.read().rstrip("\n")
+                os.remove(path)
+            except OSError as exc:
+                return f"could not read the multi-line prompt: {exc}"
+        with self.ctl:
+            if self.running:
+                with self.qlock:
+                    self.queued.append(text)
+                    depth = len(self.queued)
+                return f"queued behind the running turn - {depth} waiting"
+            # Marked running HERE, under the admission lock, not later in the
+            # thread: otherwise a /new arriving in that gap would see idle.
+            self.running = True
+            # a thread, so a permission request can be answered from stdin
+            # while the prompt is still in flight
+            threading.Thread(target=self.prompt, args=(text,), daemon=True).start()
+            return "started"
+
+    def serve_socket(self):
+        """One JSON request per connection: {"text": "..."} -> {"ok", "status"}.
+
+        A definite answer, which the keystroke path cannot give: agent-deck
+        reports a message undelivered whenever it cannot see a submission
+        signal, and a tool=shell session never produces one."""
+        try:
+            os.makedirs(SOCK_DIR, exist_ok=True)
+            if os.path.exists(self.sock_path):
+                os.unlink(self.sock_path)
+            srv = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            srv.bind(self.sock_path)
+            os.chmod(self.sock_path, 0o600)
+            srv.listen(8)
+        except Exception as exc:
+            self.show(f"[socket unavailable: {exc}]")
+            return
+        while True:
+            try:
+                conn, _ = srv.accept()
+            except OSError:
+                return
+            threading.Thread(target=self._serve_one, args=(conn,),
+                             daemon=True).start()
+
+    def _serve_one(self, conn):
+        try:
+            conn.settimeout(10)
+            buf = b""
+            while b"\n" not in buf and len(buf) < 4_000_000:
+                chunk = conn.recv(65536)
+                if not chunk:
+                    break
+                buf += chunk
+            req = json.loads(buf.decode("utf-8", "replace") or "{}")
+            text = req.get("text") or ""
+            if self.pending is not None and req.get("answer"):
+                self.answer_permission(str(req["answer"]))
+                status = "permission answered"
+            else:
+                status = self.submit(text)
+            # Echo into the pane so the transcript and a human watching agree
+            # with what arrived over the socket.
+            if status in ("started",) or status.startswith("queued"):
+                self.show(f"> {text.splitlines()[0][:200]}"
+                          + (" ..." if "\n" in text else ""))
+            conn.sendall(json.dumps({"ok": True, "status": status}).encode() + b"\n")
+        except Exception as exc:
+            try:
+                conn.sendall(json.dumps({"ok": False,
+                                         "error": str(exc)}).encode() + b"\n")
+            except Exception:
+                pass
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+    def loop(self):
+        while True:
+            try:
+                line = input("> ")
+            except (EOFError, KeyboardInterrupt):
+                return
+            if self.pending is not None:
+                self.answer_permission(line)
+                continue
+            text = line.strip()
+            if not text:
+                continue
+            if text in ("/exit", "/quit"):
+                return
+            status = self.submit(text)
+            if status not in ("started", "empty"):
+                self.show(f"[{status}]")
+
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit("usage: acp-worker <agent-command> [args...]")
+    w = Worker(sys.argv[1:])
+    try:
+        w.start()
+    except Exception as exc:
+        sys.exit(f"failed to start {sys.argv[1]}: {exc}")
+    w.loop()
+
+
+if __name__ == "__main__":
+    main()

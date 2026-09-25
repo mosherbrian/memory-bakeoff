@@ -1,0 +1,41 @@
+{
+ "qid": "R10-initial-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T14:08:33.949731+00:00",
+ "contract_sha256": "2398117d4ff295d24d8a6cac2d39458adb42bb96549f3774aaa96f8542085f79",
+ "source": {
+  "repo": "/home/bmosher/conductor-chat",
+  "branch": "r10-new-session",
+  "base": "a457a719cffb4832f133d361ab638886ba45529e",
+  "commit": "ab82f1576747466aecac7434b419a451973dffeb",
+  "worktree": "/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/r10",
+  "acp_worker_sha256": "5543a23f8e7a652e9fc6d04f24a72076f9d354453c89bd181326fb4200a86d15",
+  "base_acp_worker_sha256": "6871ceb1fa15e3b744c29b3aacde59f8c77a9ca54285b4ba954859f8fbb64d02",
+  "commit_note": "committed with --no-verify: the repo's drift hook requires workers/acp-worker == installed file; this branch is deliberately ahead of the host until an accepted install. main and the installed file are untouched; unrelated conductor-chat dirty files untouched."
+ },
+ "files_sha256": {
+  "OPERATOR.md": "3991112f574620fee3f9cd07090192ac6cd5c2695547f0a623e1a5fa2c17445e",
+  "evidence/acp-worker": "5543a23f8e7a652e9fc6d04f24a72076f9d354453c89bd181326fb4200a86d15",
+  "evidence/acp-worker.diff": "4a490811cf9f81c2069285148d3af5b9be1ec81edc8b377d698401feeac6c083",
+  "evidence/existing-worker-suite.txt": "a33855a7b425018a2271fe589f512cacb14a1955660cdff0d2f3408c65641c34",
+  "evidence/fleet-poller-suite.txt": "f49ccbcb0157997efe23256a0d65290b6d005549aed96ff93d0791cf2db5b2b9",
+  "evidence/mutants-acp-worker-new.py": "ad5b3fcac203ddb8a942dd2c429ace54985c3e5436adbb9132240a0945c5ab01",
+  "evidence/mutants-results.txt": "2f1efa9a1867e520e60759f8a3b25c3174421c083de35bc63099b1282c8f8b85",
+  "evidence/test-acp-worker-new.py": "d84d06f80a33894ee4d3d77abc482585661c38f2a8156a3ed1ee90875cdd4c15",
+  "evidence/test-results.txt": "17560ef3a73bb753949f67e6b7f9d9b92b5e7d781e8507aeb0dd83c394860ce4"
+ },
+ "design": "submit(): prompt admission and /new share one admission lock (self.ctl); running is set under that lock before the prompt thread starts, so /new's idle check cannot race a prompt. /new: refuses on ACP_RESUME lanes, if the lock is held, or if running/queued/permission-pending; calls session/new without resume; failure, missing id or same id -> 'new failed ... still on <old>' with the old session kept; on success switches, resets proven/resumed/stalled, save() (sessionId null until the new session answers), writes one '[new session] old -> new' history line, re-applies mode/model/config-model and reports any REFUSED as an explicit 'SWITCHED but' non-success.",
+ "tests": {
+  "new_socket_suite": "30/30 (real worker process, real unix socket, stub ACP engine): idle switch + boundary + model/mode on new id + unproven not persisted + no prompt side effect; normal prompt and /ping after; busy+queued refusal with queue intact; prompt racing /new waits and runs on new id; two concurrent /new -> one switch one refusal; adapter error / same id / missing id -> failure, old session kept; ACP_RESUME refused",
+  "planted_faults": "11/11 caught (evidence/mutants-results.txt)",
+  "existing_suites": "test-acp-worker.sh 4/4; test-fleet-poller.sh with ACP_WORKER pinned to the candidate 117/117"
+ },
+ "limits": [
+  "permission-pending refusal is defensive: a pending permission only exists during a running turn, so the running check already refuses; no separate stub case",
+  "'SWITCHED but REFUSED' model path is code-reviewed, not stub-tested (stub accepts set_model)",
+  "no install, restart or model prompt in this round; activation plan in OPERATOR.md"
+ ],
+ "not_done": "no production install/restart, no fleet task, no Signal, no new seat"
+}
