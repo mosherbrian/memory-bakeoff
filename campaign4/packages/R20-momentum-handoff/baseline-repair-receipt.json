@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-25T19:31:27.527420+00:00",
+  "qid": "R20-baseline-repair-1",
+  "owner": "claude",
+  "deadline": "2026-09-25T19:51:27.527420+00:00",
+  "minutes": 20,
+  "allocation": "Consumes held repair20 within ceiling200. Reserve5 of held recheck15 for baseline recheck, leaving10 recheck and15 candidate review. No further repair allocation implied.",
+  "review_sha256": "4ddc5215d63a8e68c8938d3b64d921a58e8cefc299b6b7f1585b2cbcef769d3d",
+  "status": "RELEASED_BASELINE_ONLY",
+  "preserve": "Original baseline/, claim and review unchanged. Deliver baseline-v2/ and baseline-repair-claim.json with supersession pointers.",
+  "requirements": [
+    "Window-bounded event classification and right censoring; PY2-T timeout is outside end. Retain ended-without-claim as separate measure if runtime source establishes onset within window, do not conflate with later timeout. Explicitly distinguish timeout-only1/22 from any broader dropped-handoff measure rather than forcing reviewer number across definitions.",
+    "Redacted immutable snapshots/commit+hash pins sufficient for offline recomputation; script must read snapshots, not current status/live bindings. Capture provenance/fetch time and no secret capabilities.",
+    "Confirmed delivery and actual stalls unknown where unsupported. Ledger notices are proxy, never a zero for confirmed stall escalations.",
+    "Do not call rest unions R11/R18 semantics or actual stall. Either reproduce actual latest-row/receipt rules with adequate historical inputs or mark primary stall measure unknown and retain approximation as labelled diagnostic only. Mixed over/under-counting means these are NOT proven upper/lower bounds on true stalls.",
+    "Targeted fixtures for event after end, pending censoring, changed live sources not affecting offline output, overlapping/superseded rest, escalation attempts vs confirmations. Report semantic limitations plainly."
+  ],
+  "not_authorized": [
+    "Go implementation",
+    "installation",
+    "new research execution",
+    "R19 changes"
+  ],
+  "next": "Independent5m targeted recheck; implementation stays held until baseline disposition"
+}
