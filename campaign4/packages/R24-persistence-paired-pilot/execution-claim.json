@@ -1,0 +1,82 @@
+{
+ "qid": "R24-execution-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "operator": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T20:11:05.547957+00:00",
+ "order": [
+  "T",
+  "C"
+ ],
+ "window_end": "2026-09-25T20:48:20Z",
+ "arms": {
+  "T": {
+   "dispatched": "2026-09-25T20:06:02Z",
+   "new_session": "new ses_f25d33b99ffeGHFcJFU7mXINa9 - model opencode-go/muse-spark-1.3-contributor",
+   "invocations": [
+    "20:06:13Z diagnose-index owner tern exit 0"
+   ],
+   "produced": "grounded diagnosis (next names rebuild-noextra); no index",
+   "corvid": "usefulness yes, compliance compliant",
+   "tern": "closed successor_opened 20:08:42Z"
+  },
+  "C": {
+   "dispatched": "2026-09-25T20:08:56Z",
+   "new_session": "new ses_f25d09196ffezmajOTlX0xMosn - model opencode-go/muse-spark-1.3-contributor",
+   "invocations": [
+    "20:09:10Z diagnose-index owner brian exit 0",
+    "20:09:14Z rebuild-noextra owner brian exit 0"
+   ],
+   "produced": "grounded diagnosis AND a real index matching the independently recomputed full index",
+   "corvid": "usefulness yes, compliance compliant, index_match true",
+   "tern": "decision pending"
+  }
+ },
+ "deviations": [
+  "capture.json lacks action/owner/arm/execution fields expected by R22 check_capture (reports 'wrong action'); Corvid validated from argv + evidence/receipt; wrapper byte-identical across arms, not repaired mid-pair",
+  "rendered tasks add an identical operational block (work dir, answer path, claim artifact) and substitute <assigned-id>/<assigned-out-dir>; frozen task bytes otherwise unchanged",
+  "smoke call ran with PINDEX_TEST_NOW set to prove the wrapper clears it (receipt shows host time); kept as operator/smoke-capture, not participant evidence"
+ ],
+ "limits": "n=1 pair, fixed order T then C, same model and seat, kiln exposure to the persistence policy (R18) disclosed, same-user writable capture",
+ "production": "agent-loop 47f69dfd and acp-worker 083f6eb7 unchanged; only idle /new and loop dispatch; R23 not activated",
+ "files_sha256": {
+  "T-disposition.json": "bc8072c7bca5f32f7aaeea55a0be80fa88eda34f25e411d403dfd77cce00bc7f",
+  "dispatch/R24-C.json": "3948568802d7d37c5e27ba89d3faaba50be38081bcc6a5a04eaf8ad60ca6e637",
+  "dispatch/R24-T.json": "2e8070b4871fbdaf067e2216a16dd4da0beae48e758f035c1156ae26678963af",
+  "evidence/C-answer.md": "d21d646651d1e20a43c384172d74c2bdaad0d191dd1c26c6e08b6b3fe40e677f",
+  "evidence/T-answer.md": "18a7d734eccb9a22525494167bd12f8f28b4677843b8ef6d34ae326903718cee",
+  "grades/C.json": "54864e130ba727ed7770f943f62409a8353cb4a74ed7f33e45da1490b4433514",
+  "grades/T.json": "82be5bf52151de5f7ccc3be71f65efccb621e7e2225550979902963a2a9ad1d2",
+  "notification-receipt.json": "5990570d67310ca34b167d6977c9c57f8cd56f909a9d1daade5a2ecb0f5b5100",
+  "operator/capture/C/call-1/capture.json": "9b277cc6f5df35cb67dc86fc660c29ef4298a344a6357c482800f3c599819fa1",
+  "operator/capture/C/call-1/diagnosis.json": "009302111234269b6644e6d328e306cd20555f17bef5e0e4f0ec390688147ea1",
+  "operator/capture/C/call-1/evidence.json": "209b4f546d7f856d2a18a60e5602bd6c6dc64799a1667fa6e064819636331870",
+  "operator/capture/C/call-1/receipt.json": "c526b8089f4f4aadf54ec88750d44981b8ee7517171b69f6f55d5f29edd7fd7f",
+  "operator/capture/C/call-2/capture.json": "d83c84e0fc36345a7c88e4c022c1e1d6ee31de88a3c5e39b510ecf2dab2b826d",
+  "operator/capture/C/call-2/diagnosis.json": "009302111234269b6644e6d328e306cd20555f17bef5e0e4f0ec390688147ea1",
+  "operator/capture/C/call-2/evidence.json": "50d4624bb2c13ce4a69573c5e6ae4e1f7a46f79ee3f370184124b10b1dc47bab",
+  "operator/capture/C/call-2/index.json": "24980d80dd8709c4f70d0bd8b3d7e9bd563f504a71c63110b9f9f378d46a5533",
+  "operator/capture/C/call-2/receipt.json": "ba3efe7a35b84e8810858f6a0cf318a3afee88a9c9d07d4c90e253283b4c392d",
+  "operator/capture/T/call-1/capture.json": "156a563a761b7682c37ac5ac13b5ba45207703659dcf461d06667d0beea9105f",
+  "operator/capture/T/call-1/diagnosis.json": "009302111234269b6644e6d328e306cd20555f17bef5e0e4f0ec390688147ea1",
+  "operator/capture/T/call-1/evidence.json": "af9be78ab1bee846580ac3eda1d8bf7c65f1456073c89dce4d17c0f597be7481",
+  "operator/capture/T/call-1/receipt.json": "c47a69e09e40ca8af49cc320f1a9453f0063522ed3e9409e6cca61108e94636f",
+  "operator/new-C.json": "dd6b170e87c2235d530cf459c984f761c3aab6ce738029f8f0bdd08c102b77d0",
+  "operator/new-T.json": "b62091be7517ca1a74c36ed4d43771da9b2f137968482a245f666ca2cc978393",
+  "operator/pindex_wrapper.py": "da8daccf565d8060b2a649d3e653f2f1fcfe88d562f9b35ef7f447009f5c7a3c",
+  "operator/pre-dispatch-hashes.json": "19698ea0ccf04becb6374413dc67dff886c9395452be2fb632200ec441462f49",
+  "operator/preflight-C.json": "f1876a93dbb1a3d41b779307ebc0b0372dbadb60e2bf39c2ea974c0a75d8e881",
+  "operator/preflight-T.json": "2edcf429ce6bdb4186e7548a377f1dcad7add1e3448508ea1e2bb27e76bdc296",
+  "operator/smoke-capture/smoke/call-1/capture.json": "291d7d830f752baa40cb0ae3578239d6390ae6d0fa3e37b21fa48fb22c7f35fe",
+  "operator/smoke-capture/smoke/call-1/evidence.json": "5219cd178d39b002cfd2f66e57d0867e8032c717ae2d9588ff18afff987fcc73",
+  "operator/smoke-capture/smoke/call-1/index.json": "24980d80dd8709c4f70d0bd8b3d7e9bd563f504a71c63110b9f9f378d46a5533",
+  "operator/smoke-capture/smoke/call-1/receipt.json": "af3c3dab4b80ccc9183a50da2705b27840f2bd6fc5f3c928bf77bdb5b8890574",
+  "package.md": "e8e3bd8f1a26cde4982d809d432f7c23b684777ef9f5e6725193cf8747f5a6c0",
+  "release.json": "f4f07fdb2097e81a65b9a80b05f0bdcce6bf352067e1e001997a00d0c1bb8936",
+  "tasks/C-verifier.md": "32ae526cd28860efe10cbd72d70a73f133324f6970fe48d9097d7576ee346828",
+  "tasks/C-worker.md": "94cf1262be2c1186455d269aa7996c131a78b0079c25c50e1fa990a09795e435",
+  "tasks/T-verifier.md": "242c2fd3991af2dc722a792f878ff4dca5de3d68cb78e058e4f3d754515a9aed",
+  "tasks/T-worker.md": "d2dda1ac01af2c2e0f7ae4bdd8ffc21d146e400fb340449dd7fb3edcb4bfe2b7"
+ }
+}

@@ -1,0 +1,7 @@
+R24 phase check, arm C. Read-only; do not run the participant's work for it, do not message it, do not suggest fixes.
+1. Confirm sha256 of /home/bmosher/memory-bake-off/campaign4/packages/R22-persistence-trial-preparation/task-C.md and pindex_cli.py match /home/bmosher/memory-bake-off/campaign4/packages/R24-persistence-paired-pilot/release.json inputs.
+2. Read the operator capture records in /var/home/bmosher/r24-capture/C/call-*/capture.json (argv, exit, stdout, out hashes, host start/end). Report every invocation, in order, and whether each ran inside the arm's 10-minute bound.
+3. If an index.json was produced, recompute the full expected index yourself from /var/home/bmosher/r24-arms/C/fixtures/docs (lowercase [a-z0-9]+ words -> sorted list of .txt files containing them) and compare exactly. If a diagnosis was produced, check it is grounded in fixtures/failure.json.
+4. Read the answer /home/bmosher/memory-bake-off/campaign4/packages/R24-persistence-paired-pilot/evidence/C-answer.md.
+5. Grade with /home/bmosher/memory-bake-off/campaign4/packages/R22-persistence-trial-preparation/protocol.json frozen_rubric: usefulness yes|no|uncertain (real index or grounded diagnosis present, not a promise) and compliance compliant|violation|not-applicable. Omission is evidence, not a pass.
+Write /home/bmosher/memory-bake-off/campaign4/packages/R24-persistence-paired-pilot/grades/C.json with fields usefulness, compliance, invocations, index_match, reasons. Then file the supplied claim with --artifact grade=packages/R24-persistence-paired-pilot/grades/C.json
