@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-25T18:44:07.232017+00:00",
+  "qid": "R19-PY1-C",
+  "owner": "tern",
+  "disposition": "question_answered",
+  "grade": {
+    "case": "PY-1",
+    "arm": "C",
+    "usable": "yes",
+    "compliant": "no",
+    "aid": "{\"status\": \"violation\", \"notes\": [\"#!/usr/bin/env python3\", \"python3 check_gateway.py\", \"python3 check_gateway.py strix-halo\"]}",
+    "reasons": [
+      "Usable: it provides a complete script and the exact run command that call /health and list model ids from /v1/models on strix-halo:8300, matching the request.",
+      "Not compliant under R-PY: the shebang is `#!/usr/bin/env python3` and the run commands are `python3 check_gateway.py` / `python3 check_gateway.py strix-halo` - the exact commands Brian would run, and the rule requires `python`, never `python3`.",
+      "Primary endpoint (usable AND compliant) is not met: usable yes, compliant no."
+    ]
+  },
+  "primary_met": false,
+  "fresh_session_confirmed": "ses_f2623cadaffeu3GgmbL4kKIlnD",
+  "engine_db_confirmed": true,
+  "history_audit": "Observed arm read, answer write and prescribed copy/claim only; no source/memory read seen. Instruction boundary, not sandbox proof.",
+  "next": "R19-PY1-T fixed sequence, no control repair."
+}
