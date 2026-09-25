@@ -1,0 +1,97 @@
+{
+ "verdict": "native-failure",
+ "finding": "the native pi-lcm arm fails on the declared broader corpus: 22/33 false supersessions, 0/13 missed updates (per family {'mailbox-rename': 11, 'ledger-amend': 0, 'roster-drift': 11}) against the prior's controlled-corpus 0/32 false supersessions, 0/12 missed updates - broader histories do surface native supersession failure, and the state-layer answer changes: the prior's 0/32 null does not generalize untested",
+ "feeds": "roadmap R-PF, Decision Gate F \u2014 the Gate F evidence base named by the S6-3 map",
+ "changes_state_layer_answer": true,
+ "native": {
+  "false_superseded": 22,
+  "distractor_trials": 33,
+  "missed_updates": 0,
+  "update_trials": 13,
+  "false_supersession_rate": 0.6666666666666666
+ },
+ "per_family": {
+  "mailbox-rename": {
+   "false_superseded": 11,
+   "distractor_trials": 11
+  },
+  "ledger-amend": {
+   "false_superseded": 0,
+   "distractor_trials": 11
+  },
+  "roster-drift": {
+   "false_superseded": 11,
+   "distractor_trials": 11
+  }
+ },
+ "false_supersession_trials": [
+  "dis-mailbox00-delta",
+  "dis-mailbox01-fjord",
+  "dis-mailbox02-archive",
+  "dis-mailbox03-delta",
+  "dis-mailbox04-fjord",
+  "dis-mailbox05-archive",
+  "dis-mailbox06-delta",
+  "dis-mailbox07-fjord",
+  "dis-mailbox08-archive",
+  "dis-mailbox09-delta",
+  "dis-mailbox10-fjord",
+  "dis-roster00-delta",
+  "dis-roster01-fjord",
+  "dis-roster02-archive",
+  "dis-roster03-delta",
+  "dis-roster04-fjord",
+  "dis-roster05-archive",
+  "dis-roster06-delta",
+  "dis-roster07-fjord",
+  "dis-roster08-archive",
+  "dis-roster09-delta",
+  "dis-roster10-fjord"
+ ],
+ "missed_update_trials": [],
+ "prior": {
+  "source": "team/S7-STATELAYER/verdict.json",
+  "native": {
+   "false_superseded": 0,
+   "distractor_trials": 32,
+   "missed_updates": 0,
+   "update_trials": 12
+  }
+ },
+ "native_detail": {
+  "distractor_trials_displaced": [
+   "dis-mailbox00-delta",
+   "dis-mailbox01-fjord",
+   "dis-mailbox02-archive",
+   "dis-mailbox03-delta",
+   "dis-mailbox04-fjord",
+   "dis-mailbox05-archive",
+   "dis-mailbox06-delta",
+   "dis-mailbox07-fjord",
+   "dis-mailbox08-archive",
+   "dis-mailbox09-delta",
+   "dis-mailbox10-fjord",
+   "dis-roster00-delta",
+   "dis-roster01-fjord",
+   "dis-roster02-archive",
+   "dis-roster03-delta",
+   "dis-roster04-fjord",
+   "dis-roster05-archive",
+   "dis-roster06-delta",
+   "dis-roster07-fjord",
+   "dis-roster08-archive",
+   "dis-roster09-delta",
+   "dis-roster10-fjord"
+  ],
+  "update_trials_superseded": 13,
+  "update_trials_missed": [],
+  "note": "superseded = the original's own query returns a newer write as top-1 with the whole 4-write stream in a fresh store; per-write winners are recoverable by re-running run_hist.py against the frozen trials sha"
+ },
+ "comparison": {
+  "system": "agentmemory",
+  "false_superseded": 418,
+  "trials": 450,
+  "source": "implementer/repo/research/AGENTMEMORY_FINDINGS.md"
+ },
+ "expectation_registered_before_run": "pre-registered before the run: the prior native arm scored 0/32 false supersessions on cross-scope near-neighbors (same whole-token scope match was the only pressure). The three new families pressure mechanisms the prior corpus never exercised: mailbox-rename and roster-drift embed the original's scope token as a SUBSTRING of the near-neighbor subject (delta-mailbox, delta-fjord), and whether the exact-AND gate matches substrings or whole tokens decides if they compete at all; ledger-amend shares scope and template but swaps the object token. Expected: false supersession stays LOW if the store matches whole tokens; a HIGH rate would be a genuine native failure on broader histories - exactly the evidence the state-layer answer page requires. Either number decides; this row measures, it does not defend the prior's null."
+}
