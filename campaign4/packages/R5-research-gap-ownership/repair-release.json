@@ -1,0 +1,19 @@
+{
+  "qid": "R5-repair-1",
+  "question_id": "Q-WORK-BENEFIT",
+  "owner": "tern",
+  "author": "claude",
+  "at": "2026-09-25T04:43:30.125964+00:00",
+  "deadline": "2026-09-25T04:58:30.125964+00:00",
+  "worker_minutes": 15,
+  "held_recheck_minutes": 10,
+  "remaining_repairs": 0,
+  "verdict_preserved": "INCOMPLETE, two substantive surviving faults; not time-box exhaustion",
+  "review_sha256": "90818e82b31b6b7bfe4ccbe52e6445e92c3e3d738ea6e10e0ab9eec7de33145b",
+  "requirements": [
+    "D1: open and active are unresolved. Only explicit answered/dropped resolution may close on question status; absent/unknown status must not masquerade as resolution. Preserve original incident across open->active and top-rank selection.",
+    "D2: explicit allowlist of real executing loop steps from installed interface; worker/verify are known. held/blocked/unknown/decision do not count as executing. Do not invent a handoff step. Legitimate decision waiting can use bounded rest; existing P13 decision ownership unchanged.",
+    "Add tests and planted faults for both families, retain existing cases. Archive remains untouched. File repair-claim.json with exact hashes and honest limits. No installation, Signal, production changes or live fixtures."
+  ],
+  "for_brian": "The check could miss unfinished work or mistake blocked work for progress. Both need fixing before we turn it on."
+}
