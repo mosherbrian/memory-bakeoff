@@ -1,0 +1,49 @@
+{
+ "qid": "R5-initial-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T04:38:56.792701+00:00",
+ "contract_sha256": "375612227211111c8f0e14e6f77ddca52be5dd021861195dffeafdb4f5ed2e7b",
+ "files_sha256": {
+  "research-gap-check": "1aaee0d209a13aa56935f33ebc2e625f52fb55b4018a7160a391c4517a4a8d3f",
+  "research-gap-check.service": "adeecbb03c1141dcf4d5342353ff02efc8bb2c2d04594d8b6c77d60f0f4a5559",
+  "research-gap-check.timer": "1b05c366016be8e52875fd382403f878451dd5348e06fc609c51de293a6bb317",
+  "INSTALL.md": "f06fb115f6f07f3986c3d4d97524194e567370fe4a61080c7338f47af0886dad",
+  "test_research_gap_check.py": "32da86313b04f73d8d9ae6e3a2db1d7a59f66d2af36211bd5661092b7d11cbea",
+  "mutants.py": "3676b598eb89412434022d7da165671418b1da690956d21f08512ae870cef6f4",
+  "test-results.txt": "a5c6eccf6125e3bc96ebfad55bec057162ba1c2df5b4ef5c48875faaec827b00",
+  "mutants-results.txt": "116e709ff8e3af24686ba5a4fa0c5534aa7a5ea3d28ad50d0abb4d23cccff8c5",
+  "dryrun-production-inputs.txt": "b22042b9c6dfacf762187198f97ff1ae82a852d21caf60e1626f8e804d78deee"
+ },
+ "reused_installed_scripts_sha256_unchanged": {
+  "escalations": "c6f90cfa846c6d7f92bf6cbbf8feafd630a5e5ecd39e11dbf563754f0de13954",
+  "escalation-resolve": "fdf49d0b511ed6a225cd309b597eff2a597dee5b51bb2c614c97f1455e598ea0",
+  "escalation-watch": "df51a1f45a2fe8ff614645bc2fe55e445e2f4281faa5b4a7cd2550f820b1356f",
+  "notify-claude": "c9aa340eecc5f6cc8f59b2828460bea18cf1f7e67d324fcb28ff3273baf33687"
+ },
+ "tests": "18/18 pass (test_research_gap_check.py; sandbox HOME, byte copies of installed escalations/escalation-resolve/escalation-watch, stub wake + stub channel, GAP_NOW controllable clock, every step a fresh process = restart)",
+ "planted_faults": "13/13 caught (mutants.py): notice-at-29m, escalate-early, timed-out-counts-as-active, name-inference, invalid-row-extends, missing-rest-exempts, status-failure-quiet, contradiction-is-active, clock-reset-on-restart, no-resolve-on-close, wake-not-retried, top-switch-drops-incident, corrupt-state-silent",
+ "contract_faults_covered": {
+  "no package": "test_no_package_thresholds_30_then_15",
+  "expired rest": "test_expired_rest",
+  "missing rest file": "test_missing_rest_file_is_no_rest",
+  "missing required field": "test_missing_required_field_and_newer_bad_row_does_not_extend",
+  "missing/failed status": "test_status_failure_is_unknown_not_rest",
+  "unknown binding": "test_unknown_binding_and_name_is_not_binding + test_contradictory_binding_is_unknown",
+  "restart keeps original clock": "test_restart_keeps_original_clock",
+  "active work quiet": "test_bound_active_package_is_quiet",
+  "valid rest quiet": "test_valid_rest_is_quiet",
+  "no duplicate after restart": "test_no_package_thresholds_30_then_15",
+  "30m/15m exact thresholds": "ladder() at 30m-1s/30m and 45m-1s/45m"
+ },
+ "dry_run_production_inputs": "read-only run against real priorities, agent-loop status and REST.jsonl with sandbox state and stub wake/notify/ledger: 'Q-WORK-BENEFIT: ok (rest to 2026-09-25T05:03:26Z)' (Tern's R5 rest row)",
+ "bounds": "notice <= 35 min after the first tick that sees the gap; escalation to Claude <= 20 min after the notice; a gap opening between ticks starts at the next tick",
+ "design": "one oneshot check per 5-min UTC calendar tick; no daemon, no seat, no core change; incident rows kind research-gap in the existing escalation ledger (Tern notice via escalations --add + wake; Claude rung via notify-claude); closure appends escalation-resolve records so escalation-watch does not page a resolved gap; ack is not closure; own state = per-question gap start + delivery marks, atomic replace, flock; corrupt state kept aside and reported to Claude",
+ "limitations": [
+  "agent-loop status --json has no question_id; binding comes only from package records (dispatch/author-release receipts) carrying question_id + package_id or qid. A package released outside the loop (like R5 itself) is not 'executing' to this check; Tern covers that with a REST.jsonl row, as done now.",
+  "escalation-watch still pages Brian if a research-gap row stays unacked and unresolved for its 45-min grace: existing policy, unchanged.",
+  "Real calendar-timer witness NOT run: held for the 10m slot after review, per release."
+ ],
+ "not_done": "no install, no production timer, no Signal, no live fixtures"
+}

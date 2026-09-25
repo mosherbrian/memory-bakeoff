@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+"""R5: own the gap between research packages. One short run per timer tick.
+
+If the top open research question has no bound executing loop package and no
+valid timed rest for 30 min, open ONE planning-gap incident owned by Tern
+(escalation ledger row + wake). If still unresolved 15 min later, escalate to
+Claude through notify-claude. Calendar sampling adds up to one tick (5 min) to
+each threshold.
+
+Inputs (read only): RESEARCH-PRIORITIES.json, `agent-loop status --json`,
+REST.jsonl, and the question_id bindings in packages/*/*.json records that
+carry question_id plus package_id or qid. Package names are never parsed.
+
+Own state: one small JSON file holding each open gap's start and delivery
+state, so a restart keeps the original clock. Incident history lives only in
+the existing escalation ledger. Every override is an env var so the tests can
+run against a sandbox and a controllable clock (GAP_NOW).
+"""
+import fcntl, glob, hashlib, json, os, subprocess, sys, time
+from datetime import datetime, timezone
+
+H = os.path.expanduser("~")
+C4 = os.environ.get("GAP_CAMPAIGN", f"{H}/memory-bake-off/campaign4")
+PRIORITIES = os.environ.get("GAP_PRIORITIES", f"{C4}/RESEARCH-PRIORITIES.json")
+REST = os.environ.get("GAP_REST", f"{C4}/REST.jsonl")
+PACKAGES = os.environ.get("GAP_PACKAGES", f"{C4}/packages")
+STATUS_CMD = os.environ.get("GAP_STATUS_CMD", f"{H}/.local/bin/agent-loop status --config {H}/.config/agent-loop/campaign4.json --json")
+STATE = os.environ.get("GAP_STATE", f"{H}/.local/state/research-gap/state.json")
+AD = f"{H}/.config/agent-deck"
+ESCALATIONS = os.environ.get("GAP_ESCALATIONS", f"{AD}/escalations")
+RESOLVE = os.environ.get("GAP_RESOLVE", f"{AD}/escalation-resolve")
+NOTIFY = os.environ.get("GAP_NOTIFY", f"{AD}/notify-claude")
+WAKE = os.environ.get("GAP_WAKE", f"{AD}/wake")
+LEDGER = os.environ.get("GAP_LEDGER", f"{H}/.local/share/agent-deck/escalations.jsonl")
+DIRECTOR = os.environ.get("GAP_DIRECTOR", "tern")
+OPEN_S = int(os.environ.get("GAP_OPEN_MIN", "30")) * 60
+ESC_S = int(os.environ.get("GAP_ESC_MIN", "15")) * 60
+NOW = float(os.environ.get("GAP_NOW") or time.time())
+KIND = "research-gap"
+IDLE_STEPS = {"closed", "timed-out"}  # not executing; anything else is live in the loop
+REST_FIELDS = ("question_id", "reason", "owner", "entered_at", "revisit_at", "next_action")
+
+
+def iso(t):
+    return datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def ts(s):
+    """UTC instant -> epoch, or None. Requires an explicit offset or Z."""
+    try:
+        d = datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+        return d.timestamp() if d.tzinfo else None
+    except ValueError:
+        return None
+
+
+def top_and_open():
+    d = json.load(open(PRIORITIES))
+    items = [i for i in d["items"] if i.get("status") == "open"]
+    if not items:
+        return None, set()
+    return min(items, key=lambda i: i["rank"])["id"], {i["id"] for i in items}
+
+
+def bindings():
+    """qid -> set of question_ids, from package records only."""
+    b = {}
+    for f in glob.glob(f"{PACKAGES}/*/*.json"):
+        try:
+            r = json.load(open(f))
+        except (OSError, ValueError):
+            continue
+        if not isinstance(r, dict) or not r.get("question_id"):
+            continue
+        for k in ("package_id", "qid"):
+            if r.get(k):
+                b.setdefault(r[k], set()).add(r["question_id"])
+    return b
+
+
+def live_packages():
+    out = subprocess.run(STATUS_CMD, shell=True, capture_output=True, text=True, timeout=60)
+    if out.returncode != 0:
+        raise RuntimeError(f"status rc={out.returncode}: {out.stderr.strip()[:200]}")
+    return [p["qid"] for p in json.loads(out.stdout)["packages"] if p.get("step") not in IDLE_STEPS]
+
+
+def rest_for(q):
+    """(valid rest row or None, list of problems). Missing file = no rest."""
+    if not os.path.exists(REST):
+        return None, []
+    best, bad = None, []
+    for n, line in enumerate(open(REST), 1):
+        if not line.strip():
+            continue
+        try:
+            r = json.loads(line)
+        except ValueError:
+            bad.append(f"REST.jsonl line {n}: not JSON")
+            continue
+        if not isinstance(r, dict) or r.get("question_id") != q:
+            continue
+        miss = [f for f in REST_FIELDS if not r.get(f)]
+        e, v = ts(r.get("entered_at")), ts(r.get("revisit_at"))
+        if miss or e is None or v is None or v <= e:
+            bad.append(f"REST.jsonl line {n}: invalid ({'missing ' + ','.join(miss) if miss else 'bad UTC times'})")
+            continue
+        best = (r, v)  # latest valid row governs; an invalid newer row never extends it
+    if best and NOW < best[1]:
+        return best[0], bad
+    return None, bad + ([f"rest expired at {best[0]['revisit_at']}"] if best else [])
+
+
+def key(text):
+    return hashlib.md5(f"{KIND}\n{text.strip()}".encode()).hexdigest()[:12]
+
+
+def ledger_has(k):
+    try:
+        return any(json.loads(l).get("key") == k for l in open(LEDGER) if l.strip())
+    except (OSError, ValueError):
+        return False
+
+
+def run(argv, text=None):
+    try:
+        return subprocess.run(argv, input=text, capture_output=True, text=True, timeout=60).returncode
+    except (OSError, subprocess.TimeoutExpired):
+        return -1
+
+
+def save(state):
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    tmp = STATE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(state, f, indent=1, sort_keys=True)
+    os.replace(tmp, STATE)
+
+
+def load():
+    if not os.path.exists(STATE):
+        return {"gaps": {}}, None
+    try:
+        s = json.load(open(STATE))
+        assert isinstance(s.get("gaps"), dict)
+        return s, None
+    except Exception as e:  # keep the bad bytes; start clean but say so
+        aside = f"{STATE}.corrupt-{int(NOW)}"
+        os.replace(STATE, aside)
+        return {"gaps": {}}, f"gap state unreadable ({e.__class__.__name__}); kept as {aside}; clocks restart now"
+
+
+def main():
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    lock = open(STATE + ".lock", "w")
+    fcntl.flock(lock, fcntl.LOCK_EX)
+    state, problem = load()
+    if problem:
+        run([NOTIFY, KIND], f"[research-gap-check] UNKNOWN: {problem}")
+
+    unknown = []
+    try:
+        top, open_qs = top_and_open()
+    except Exception as e:
+        top, open_qs = None, None
+        unknown.append(f"priorities unreadable: {e.__class__.__name__}: {e}")
+    try:
+        live = live_packages()
+    except Exception as e:
+        live = None
+        unknown.append(f"agent-loop status failed: {e}")
+    b = bindings()
+
+    # The top question plus any question that already has an open incident.
+    qs = set(state["gaps"]) | ({top} if top else set())
+    if top is None and open_qs is None:
+        qs.add("UNKNOWN")  # cannot even tell which question is on top
+    report = []
+    for q in sorted(qs):
+        g = state["gaps"].get(q)
+        if open_qs is not None and q not in open_qs:
+            if g:  # answered, dropped or removed by a recorded decision
+                close(g, q, "question no longer open in RESEARCH-PRIORITIES.json")
+                del state["gaps"][q]
+            continue
+        why = list(unknown)
+        linked, contra = [], []
+        for p in live or []:
+            qids = b.get(p, set())
+            if len(qids) > 1 and q in qids:
+                contra.append(p)
+            elif qids == {q}:
+                linked.append(p)
+        if contra:
+            why.append(f"contradictory question_id binding for {','.join(contra)} (UNKNOWN, not active work)")
+        rest, bad = rest_for(q) if q != "UNKNOWN" else (None, [])
+        if not why and (linked or rest):
+            if g:
+                close(g, q, f"executing {','.join(linked)}" if linked else f"valid rest until {rest['revisit_at']}")
+                del state["gaps"][q]
+            report.append(f"{q}: ok ({'package ' + ','.join(linked) if linked else 'rest to ' + rest['revisit_at']})")
+            continue
+        why += bad + ([] if live is None else ["no bound executing package"]) + ([] if rest else ["no valid timed rest"])
+        if not g:
+            g = state["gaps"][q] = {"start": NOW, "incident": f"GAP-{q}-{iso(NOW)}"}
+        age = NOW - g["start"]
+        if age >= OPEN_S and not g.get("tern_key"):
+            text = (f"[research-gap-check] {g['incident']} owner {DIRECTOR}: top question {q} has had no executing package "
+                    f"and no valid timed rest since {iso(g['start'])}. Reasons: {'; '.join(why)}. "
+                    f"Release a package bound by question_id, or append a timed rest row to REST.jsonl "
+                    f"(question_id, reason, owner, entered_at, revisit_at, next_action). "
+                    f"Claude is told if unresolved by {iso(NOW + ESC_S)}. An ack is not a resolution.")
+            if run([ESCALATIONS, "--add", KIND, "--source", "research-gap-check"], text) == 0:
+                g.update(tern_key=key(text), tern_at=NOW, tern_text=text)
+        if g.get("tern_key") and not g.get("tern_woken"):
+            g["tern_woken"] = run([WAKE, DIRECTOR, g["tern_text"]]) in (0, 3)  # 3 = queued; retried next tick otherwise
+        if g.get("tern_at") and NOW - g["tern_at"] >= ESC_S and not g.get("claude_key"):
+            text = (f"[research-gap-check] {g['incident']} ESCALATED: {DIRECTOR} has not released a package or a timed rest "
+                    f"for {q} since the notice at {iso(g['tern_at'])} (gap since {iso(g['start'])}). Reasons: {'; '.join(why)}.")
+            run([NOTIFY, KIND], text)
+            if ledger_has(key(text)):  # the ledger row is the delivery record, not the channel's rc
+                g.update(claude_key=key(text), claude_at=NOW)
+        stage = "escalated" if g.get("claude_key") else "tern notified" if g.get("tern_key") else f"gap {int(age // 60)}m"
+        report.append(f"{q}: {stage} ({g['incident']})")
+    save(state)
+    print(f"{iso(NOW)} " + ("; ".join(report) or "no open question"))
+    return 0
+
+
+def close(g, q, note):
+    for k in (g.get("tern_key"), g.get("claude_key")):
+        if k:
+            run([RESOLVE, k, g["incident"], f"research-gap closed: {note}"])
+
+
+if __name__ == "__main__":
+    sys.exit(main())
