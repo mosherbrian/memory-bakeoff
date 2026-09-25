@@ -1,0 +1,184 @@
+{
+ "window": [
+  "2026-09-24T19:00:00Z",
+  "2026-09-25T19:00:00Z"
+ ],
+ "first_loop_event": "2026-09-25T01:17:36Z",
+ "a_stall": {
+  "primary_stall_minutes": "UNKNOWN",
+  "why": "the snapshot lacks out-of-loop work records and the live checker's historical latest-row/receipt verdicts; the union below over-credits rest (any row counts, superseded rows included) and under-credits work (out-of-loop packages absent), so it is neither an upper nor a lower bound",
+  "diagnostic_union": {
+   "A": {
+    "active_min": 1440,
+    "loop_executing_min": 85,
+    "uncovered_by_loop_or_any_rest_row_min": 583,
+    "rest_rows_in_window": 39,
+    "overlapping_rest_row_pairs": 70,
+    "longest_uncovered": [
+     "2026-09-24T19:00:00Z",
+     "2026-09-25T04:20:41Z"
+    ]
+   },
+   "B": {
+    "active_min": 151,
+    "loop_executing_min": 4,
+    "uncovered_by_loop_or_any_rest_row_min": 4,
+    "rest_rows_in_window": 11,
+    "overlapping_rest_row_pairs": 13,
+    "longest_uncovered": [
+     "2026-09-25T17:09:43Z",
+     "2026-09-25T17:13:54Z"
+    ]
+   }
+  }
+ },
+ "b_dropped": {
+  "packages_started_in_window": 22,
+  "timeout_only": [
+   "R19-PY2-C"
+  ],
+  "timeout_only_per_10": 0.45,
+  "right_censored_open_at_end": [
+   "R19-PY2-T"
+  ],
+  "ended_without_claim": "UNKNOWN: needs the worker's runtime turn-end evidence per phase, which this snapshot does not include; not inferred from later timeouts"
+ },
+ "c_decision_to_next_dispatch": [
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R4-task-1",
+   "at": "2026-09-25T04:28:11Z",
+   "next": "R4-task-repair-1",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R4-task-repair-1",
+   "at": "2026-09-25T04:34:17Z",
+   "next": "R6-plan-1",
+   "minutes": 22.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R6-plan-1",
+   "at": "2026-09-25T05:02:02Z",
+   "next": "R6-plan-repair-1",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R6-plan-repair-1",
+   "at": "2026-09-25T05:08:56Z",
+   "next": "R7-oracle-1",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R7-oracle-1",
+   "at": "2026-09-25T05:25:07Z",
+   "next": "R8-task-1",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R8-task-1",
+   "at": "2026-09-25T05:48:00Z",
+   "next": "R14-C-p1",
+   "minutes": 623.5,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R14-C-p1",
+   "at": "2026-09-25T16:14:30Z",
+   "next": "R14-C-p2",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R14-C-p2",
+   "at": "2026-09-25T16:17:31Z",
+   "next": "R14-T-p1",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R14-T-p1",
+   "at": "2026-09-25T16:20:42Z",
+   "next": "R14-T-p2",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R14-T-p2",
+   "at": "2026-09-25T16:24:36Z",
+   "next": "R18-initial-1",
+   "minutes": 107.4,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R18-initial-1",
+   "at": "2026-09-25T18:30:36Z",
+   "next": "R18-repair-1",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R18-repair-1",
+   "at": "2026-09-25T18:36:36Z",
+   "next": "R19-PY1-C",
+   "minutes": 1.4,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R19-PY1-C",
+   "at": "2026-09-25T18:44:07Z",
+   "next": "R19-PY1-T",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-WORK-BENEFIT",
+   "decided": "R19-PY1-T",
+   "at": "2026-09-25T18:46:40Z",
+   "next": "R19-PY2-C",
+   "minutes": 0.0,
+   "censored_at_end": false
+  },
+  {
+   "question": "Q-EVALUATOR-VALIDITY",
+   "decided": "R15-audit-1",
+   "at": "2026-09-25T16:33:30Z",
+   "next": null,
+   "minutes": null,
+   "censored_at_end": true
+  }
+ ],
+ "d_escalations": {
+  "ledger_notices_in_window": 71,
+  "by_kind": {
+   "tern": 63,
+   "agent-loop": 6,
+   "fleet": 2
+  },
+  "confirmed_delivery": "UNKNOWN: notify-claude records no receipt; the ledger is attempted notice, not delivery",
+  "stall_escalations": "UNKNOWN as a confirmed count; ledger shows notices only",
+  "brian_ticket_files": [
+   "T-103-fleet-spend-stop.md",
+   "T-104-fleet-spend-stop.md"
+  ],
+  "excluded_test_pages": "two synthetic Signal pages ~15:52Z from the old poller harness (not in ticket files)"
+ },
+ "e_stamp_honesty": "N/A before activation"
+}

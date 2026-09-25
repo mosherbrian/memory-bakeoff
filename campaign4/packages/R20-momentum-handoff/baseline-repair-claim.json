@@ -1,0 +1,30 @@
+{
+ "qid": "R20-baseline-repair-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T19:33:12.190656+00:00",
+ "supersedes_for_use": "baseline/ (kept unchanged, with baseline-claim.json and the review)",
+ "report": "baseline-v2/REPORT.md",
+ "fixes": {
+  "1": "window-bounded: events at/after END excluded at capture and again at measure; PY2-T right-censored; timeout-only 1/22 kept distinct from ended-without-claim (UNKNOWN)",
+  "2": "snapshot.py freezes redacted events, REST rows entered before END, registry history before END, bindings with record hashes, escalation metadata, tickets; measure_v2.py reads only the snapshot; rerun byte-identical",
+  "3": "(d) recast as ledger notices with delivery UNKNOWN; no zero stall-escalation claim",
+  "4": "rest union relabelled as a diagnostic; primary stall UNKNOWN; explicitly not a bound in either direction"
+ },
+ "fixtures": "7/7 (test_measure_v2.py)",
+ "files_sha256": {
+  "baseline-v2/REPORT.md": "5249bd6b510a3b6c0ee7b662eabf202d4826094fa2b87e160e23347179659b0c",
+  "baseline-v2/measure_v2.py": "63824e809cab80a4f6784da0c304f80d42955128d16b22bc568c850df0d2be17",
+  "baseline-v2/metrics.json": "543e072ae95cbb695d8274797966b5289ddd8e5fb3ad67842e9155dc7fc741fd",
+  "baseline-v2/snapshot.py": "aeb3658d0a4b30f222b33421cf2a2e194594152b80774871c5f0bfa146552a00",
+  "baseline-v2/snapshot/bindings.json": "856e2849392e08e5290320b998463614f10f6f42a773efd7cf166a1f58761c9a",
+  "baseline-v2/snapshot/escalations.json": "5b90557a624e0041e74f92f3c77545746b4b922a7c51e69a71d4341dc158cd88",
+  "baseline-v2/snapshot/events.json": "b7a34ea2d3909f2fb1869ff7c86b1ec86850c18bb0fc7fc61c9b5f9ec7db54ab",
+  "baseline-v2/snapshot/provenance.json": "cbe45f207b3724286ab3c6edb172ab65b7e7f43371602ef062db95f97564e0f4",
+  "baseline-v2/snapshot/registry.json": "098d3f1e1225c1437c271e66601ae90b8bca5744a844a6bdde07a034dcfa5508",
+  "baseline-v2/snapshot/rest.jsonl": "de93fb2d6c00a397c6954d11f8fce75087cec9978f1ab8567f83c5096577fc3b",
+  "baseline-v2/snapshot/tickets.json": "f287d8fc7ff27daeb701d84af1ca8f5aabb938c3fe00cdfc3f3a30d3eecd6882",
+  "baseline-v2/test_measure_v2.py": "cedf3ac14a3109ae1992be5a82f1e29cdb3a3130cb1448b074f5715cf6bb8546"
+ },
+ "not_done": "no Go implementation, no install, R19 untouched"
+}
