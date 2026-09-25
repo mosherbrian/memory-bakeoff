@@ -1,0 +1,106 @@
+{
+ "qid": "R38-base-repair-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T22:10:22.405339+00:00",
+ "old_failure": "oracle/setup.sh copied fixtures with cp -r and git add -A; fixtures had __pycache__ (created by my base-check runs after the OIDs were recorded), so the committed base held .pyc with the absolute package path: U caf3ab12, K 7c2f23ab, J 25044715 (reviewer) instead of the documented bases",
+ "fix": "repair/setup.sh stages only fixture *.py files (not under __pycache__); nothing else changed (same content, metadata, commit algorithm). Original fixtures/claim/probes preserved.",
+ "bases": {
+  "U": "518668bb94286d4a99d81dbdc30c63b614d17496",
+  "K": "82bba0078c0623906dc076cf3b1935e32e20bcfb",
+  "J": "361693fba7f7d26b32589b035267206873c5aeaa"
+ },
+ "reproduction": "repair/base-reproduction.txt: two independent /tmp setups per bug plus a relocated package copy (fixtures with __pycache__ present) all give the documented OIDs; trees contain only src/__init__.py, src/<mod>.py, tests/test_<mod>.py",
+ "probes": {
+  "J-faulty": {
+   "work_PASS": false,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": false,
+   "received_updates": 0
+  },
+  "J-valid": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": true,
+   "received_updates": 0
+  },
+  "K-faulty": {
+   "work_PASS": false,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": false,
+   "received_updates": 0
+  },
+  "K-pushrestore": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": false,
+   "overall_PASS": false,
+   "received_updates": 2
+  },
+  "K-valid": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": true,
+   "received_updates": 0
+  },
+  "U-faulty": {
+   "work_PASS": false,
+   "added_test_exposes_bug": false,
+   "channel_PASS": true,
+   "overall_PASS": false,
+   "received_updates": 0
+  },
+  "U-valid": {
+   "work_PASS": true,
+   "added_test_exposes_bug": true,
+   "channel_PASS": true,
+   "overall_PASS": true,
+   "received_updates": 0
+  }
+ },
+ "invocation": {
+  "setup": "sh repair/setup.sh ARMDIR WITNESS_LOG fixtures/<BUG>",
+  "grade": "sh oracle/grade.sh ARMDIR WITNESS_LOG oracle/hidden_<BUG>.py",
+  "probes": "sh repair/run.sh (PYTHONDONTWRITEBYTECODE=1)"
+ },
+ "unchanged": "tasks, packet, order, hidden tests, grade.sh, runtests.py, rubric semantics",
+ "files_sha256": {
+  "repair/base-reproduction.txt": "677fbbe84dc62f3c155e4fd47a4771337431ea6d6d89e4103dd3a419d7a1fd6a",
+  "repair/probe-summary.txt": "cfc76d154472134794440e27112ee04ca40c502b6a4c68ee4cb7298cbaf029cc",
+  "repair/probes/J-faulty/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/J-faulty/base-oid.txt": "480d7a0274eaf2ac3cf2f51c6a5fc78c9cdcd998450dbaf70abb720ac884a2d0",
+  "repair/probes/J-faulty/grade.json": "af57dd9b4a9661b1bd6788326e8647b2eaa9209b3bb7f0bbb5b17af006ab0a15",
+  "repair/probes/J-faulty/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/J-valid/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/J-valid/base-oid.txt": "480d7a0274eaf2ac3cf2f51c6a5fc78c9cdcd998450dbaf70abb720ac884a2d0",
+  "repair/probes/J-valid/grade.json": "896319eb65590ad090bf7b00e7276d17d0d0c9a9ccb4673b8bfb819de0b71821",
+  "repair/probes/J-valid/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/K-faulty/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/K-faulty/base-oid.txt": "2414db41d004093a95b4b25d4b42c008331e6535ca436fbcb1421a65b43bb7a8",
+  "repair/probes/K-faulty/grade.json": "a8fc5fc2c857d404bd71bc0378ea149c2799415edc6a9b99acc0b518c1d1ae66",
+  "repair/probes/K-faulty/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/K-pushrestore/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/K-pushrestore/base-oid.txt": "2414db41d004093a95b4b25d4b42c008331e6535ca436fbcb1421a65b43bb7a8",
+  "repair/probes/K-pushrestore/grade.json": "93743a08f8ff37fe43c5e8d2a11847a2f21422db0e3102e097883131f563beea",
+  "repair/probes/K-pushrestore/witness.log": "ce3c8bd8dd6a762ce3f37dc9716b085c42f445b6c2f95aa8dc8523b5ced43704",
+  "repair/probes/K-valid/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/K-valid/base-oid.txt": "2414db41d004093a95b4b25d4b42c008331e6535ca436fbcb1421a65b43bb7a8",
+  "repair/probes/K-valid/grade.json": "6e85553ed9942b7be8d1c445ebb9aa91ef966ed485b039a8fe86eee73ea50f5a",
+  "repair/probes/K-valid/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/U-faulty/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/U-faulty/base-oid.txt": "e5f16197e67e11244f3376c9538e79a8d4647740ae2617cc4cd711446c835acb",
+  "repair/probes/U-faulty/grade.json": "cf6ea19727848f8e59a28089482b26a30a0ae0d8ff72d0dc127ec6aeae9808b9",
+  "repair/probes/U-faulty/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/U-valid/actor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/probes/U-valid/base-oid.txt": "e5f16197e67e11244f3376c9538e79a8d4647740ae2617cc4cd711446c835acb",
+  "repair/probes/U-valid/grade.json": "e04559e0f7886872b37858c5dec602ee8733c44321bbedc01f4fc46ad75a604c",
+  "repair/probes/U-valid/witness.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repair/run.sh": "b7e2f375c9b42cad6b7a216d13f7b018ce5699d3b6c7ccf3937e9d74bb2887b4",
+  "repair/setup.sh": "96cf24a5ccada7076ef34462bc30d593229e4689b03a5e82b0645e8fb6eac911"
+ },
+ "not_done": "no participants, network, real repo or production effects"
+}
