@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-25T19:49:10.236754+00:00",
+  "qid": "R20-candidate-review-1",
+  "owner": "corvid-eval",
+  "deadline": "2026-09-25T20:04:10.236754+00:00",
+  "minutes": 15,
+  "allocation": "Remaining15 of review25; repair20 spent, recheck10/witness15/activation10/followup15 held",
+  "claim_sha256": "a256dfe241cfcd2bc1fd67817df2c033017964bea17c09f1d401e3b80fe5a472",
+  "file_hashes": "5/5 match; installed binary unchanged",
+  "source": {
+    "repo": "/home/bmosher/projects/agent-loop",
+    "branch": "r20-momentum-stamp",
+    "base": "df5e6fc627b8031c969cfb0402c623eaf11119ba",
+    "commit": "d026436621df7c1f1c5a81e6b751f482fa22a762",
+    "worktree": "/tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/r20wt",
+    "frozen_unchanged": "internal/core, internal/py, conformance: 0 diff lines"
+  },
+  "private_binary_sha256": "9aea16753dbf0787d40062dc094b91bb6dee7232f91f604dfe07caddab304ea1",
+  "scope": "Independent exact-CLI candidate review, targeted contract tests and unshared negative, no live effects",
+  "focus": [
+    "Question binding: moved.question_id must match declared research question, not merely arbitrary nonempty string or operational qid. Owner must be allowed by bound config/contract.",
+    "Dropped ack receipts: can worker self-author ack:true for another owner? Need attributable receipt, not self-attested JSON; same-user isolation limitation must be honest.",
+    "Stamp path/size/hash validation across CLI decide, claim, on-pass auto-close and restart/replay; director stamp persistence for later independent measurement, not validation-only lost artifact.",
+    "Malformed/absent claim/stamp fault must retain evidence and be owned; route must not silently dead-end. Failed/incomplete remains recordable.",
+    "Actual-start metric must join exact action+owner+question and deadline; first arbitrary same-question start is insufficient.",
+    "Prospective migration, old contract preserved, rollback cannot silently waive stamped in-flight contract; R21 memory trial must remain isolated from injected rule."
+  ],
+  "output": "candidate-review.md",
+  "hold": "No install/activation/live witness"
+}
