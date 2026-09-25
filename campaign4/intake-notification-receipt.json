@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-25T03:43:06.038448+00:00",
+  "owner": "tern",
+  "tier": 3,
+  "authorization": "Brian regular intake ownership request; Tern approves this reviewed bounded notification change",
+  "source_sha256": "1394211b4f5e4cd8cf8fe0c5cbb07e96574fb34dac254b9705cc788f85e93f5b",
+  "installed_path": "/home/bmosher/.config/systemd/user/intel-intake.service.d/triage.conf",
+  "rollback": "Remove only this drop-in and systemctl --user daemon-reload; original intake service/timer untouched.",
+  "review": "intake-triage-review.md",
+  "budget": "Tern integration10m, corvid reader6m; no new work package",
+  "new_timer": false,
+  "reload_rc": 0,
+  "installed_state": "DropInPaths=/usr/lib/systemd/user/service.d/10-timeout-abort.conf /var/home/bmosher/.config/systemd/user/intel-intake.service.d/triage.conf\nExecStartPost={ path=/bin/sh ; argv[]=/bin/sh -c AGENTDECK_PROFILE=campaign4 /home/bmosher/.config/agent-deck/wake tern \"Research intake finished. Tern owns tier4 triage of new or changed team/INTEL reports within 2h. Read campaign4/INTAKE-TRIAGE-POLICY.md; commit raw reports and hash-bound dispositions. No research execution implied.\"; rc=$$?; if [ \"$$rc\" -eq 3 ]; then exit 0; else exit \"$$rc\"; fi ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\n",
+  "witness": {
+    "rc": 0,
+    "stdout": "",
+    "stderr": "Running as unit: intel-triage-notification-witness.service\n          Finished with result: success\nMain processes terminated with: code=exited, status=0/SUCCESS\n               Service runtime: 91ms\n             CPU time consumed: 79ms\n                   Memory peak: 21.7M (swap: 0B)\n"
+  },
+  "existing_timer": "ActiveState=active\nNextElapseUSecRealtime=Fri 2026-09-25 07:15:00 PDT\n",
+  "state": "ACTIVE; successful service completion triggers Tern wake; no new overdue detector claimed"
+}
