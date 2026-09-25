@@ -1,0 +1,180 @@
+From 41b856e6aa4a7a4a85543d1c8497222b0a51d5d7 Mon Sep 17 00:00:00 2001
+From: kiln <kiln@example.invalid>
+Date: Fri, 25 Sep 2026 15:14:16 -0700
+Subject: [PATCH 1/2] Fix clamp upper bound: hi is inclusive
+
+---
+ src/__pycache__/__init__.cpython-314.pyc         | Bin 0 -> 152 bytes
+ src/__pycache__/num.cpython-314.pyc              | Bin 0 -> 373 bytes
+ src/num.py                                       |   2 +-
+ .../test_num.cpython-314-pytest-9.0.3.pyc        | Bin 0 -> 2564 bytes
+ tests/test_num.py                                |   4 ++++
+ 5 files changed, 5 insertions(+), 1 deletion(-)
+ create mode 100644 src/__pycache__/__init__.cpython-314.pyc
+ create mode 100644 src/__pycache__/num.cpython-314.pyc
+ create mode 100644 tests/__pycache__/test_num.cpython-314-pytest-9.0.3.pyc
+
+diff --git a/src/__pycache__/__init__.cpython-314.pyc b/src/__pycache__/__init__.cpython-314.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..212f8fe36be96e8177cca19802925bc8df5ed37e
+GIT binary patch
+literal 152
+zcmdPq<K<#tU|<mXv@HunKL!ynzzAi0W@BJrXkZ9pP-f6%^jpbL#KgeB@EIg|%T&KC
+zu}D87KQ~oBDL213Beh7s$k<Xhu_(7#-&@yNzaUdLCplNYxF}gaK0Y%qvm`!Vub}c4
+ghfQvNN@-52T@fn-1K6Ho5aSawBO_xGGXnzy00)>M!2kdN
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/__pycache__/num.cpython-314.pyc b/src/__pycache__/num.cpython-314.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a3226b21da51e764b5710783a2349c2b5b40724
+GIT binary patch
+literal 373
+zcmX|-u};G<5Qcv{MHC8M7}$!XN|hqo8dQb?g@qA`p#uz*A*2=wvg6{UC@?WHBEd`W
+z0z3y2n^$-MM0o(@K)B`Zbl<Pj|F74V7Xe`N>*X>B@a~qf$lowq0&s^RR*_*yn(%4p
+zl@Ne=03J}8wF_=k>Tpa(|J(`PqQ9E5H{p}p{!nC7ldzo0SjCwbvrMxr5-gND6=P<C
+z<U+7hsoN}y&vu#AY_P|oxa(8vsUWwWiWA?nB)3#*OQSe-FI%ma-Qd@O;gME?pDUe4
+z!f?~u?gU1q{IGMtCviuHil-*z$y9YGH+C+Rftr{Fpzxlq6n;Kx^?UQwd$@Ysd8;*E
+rD~*}+apaQ%e1>renkoQW9Vk7XO0jQTWG;u)9X~xn$Ty{Atzdru=l)Q=
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/num.py b/src/num.py
+index 5e9c091..c279fd4 100644
+--- a/src/num.py
++++ b/src/num.py
+@@ -1,3 +1,3 @@
+ def clamp(x, lo, hi):
+     """Return x limited to the closed range [lo, hi]; lo <= hi."""
+-    return max(lo, min(x, hi - 1))
++    return max(lo, min(x, hi))
+diff --git a/tests/__pycache__/test_num.cpython-314-pytest-9.0.3.pyc b/tests/__pycache__/test_num.cpython-314-pytest-9.0.3.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..23f210f3271d803d89416286ad86d7cc2a1c0b49
+GIT binary patch
+literal 2564
+zcmeHJ&2Jk;6o0cGf31@iCx;M%WN$-7S2T7UJ8dEp+A6A)3N<RL;$EVxHug3#+K=hX
+zx?nye4jhok!55_b3zj(Zceuf{XfK?5Lk*{%(A%##ZACb6?34BUdvAU-Z)UvjxBlqD
+zv<v`HfAQ-VKLbD;gV>}9oU8%B_pl2ZxdR>vzNM{HPb$F{_0lCAk?v%+vR<|XT51lw
+zoJQxs%WGs2)bw*)W?LnGx@{RYJ5%B!0Hgrm<Xb5yk!G+9jO@xx+9B~i9*~yQKo$V7
+z)NcCGW{a+E0X+Kr!-#U5>=yyvhn;xKaF0eq6Q+PxXr=2!n|jcwOO1%35l!03#I$?4
+z7@e8|jVM?LfPLkaO2Gx5H3fE(L?b#!yw}dcEAyukYGQAif0t;ImYO)>8|Sr>dKx{K
+zOX9t0>2tYK!p)q^O(opyxm+4^tC_3GuK>U@T29NiGF5UWo87@DCa{T>--&alra&tj
+zuN;3L5KV3p22H|9lQ5}CSgJ|*eNA2jb^3W40Q?l|FLQi~5UrqVpu2`{&8MtitG&Ev
+z2w`%seEACN*XpVW()H~jc`0pd49VA<IIyM)`I`uoHv;amDz0E=MHN?rL?Z^*RH4e>
+zl{Z3Ot)_}$KHP<Tll47Qc)G#;qTV(vOXnuzZP#W7H~p!btgr9&x|Y{<grBk8wqXhX
+zU0ocwJ*yK?^?l3TGc4UPY}3!{!gy%n3jT##!6~|~bDMLQ`?LB(m)nM?n_n@@a10z7
+z=KKOy2oGGF4C<4?>SS;|+*LGZd2(ny91087R?b8Xfvs1L%)efJZ1C!VYn#<Q+Z6{U
+zuk!l(lEH0J{d8%w%DPKd+pgl>h`{Sk&#th(UkI+N>xgd0<ck1+eJ+N9g#A&R8PU?<
+z7CJtnrNh-haln7NF`}g-BXCa&rDrtyjA`k|8%dOa!_@>H;}T)?l$Hj?5RS3LDdY)^
+zR~uuwF#Ebcrlk{nj{j9B<^Q0Q@>`umd#jVND*jJ8iSIj(Vi_nDN73e4blAT<k1n7T
+z5aCN|n@=M|<>n~Wd>%V;vfKG3RNVK1&h0T~a(&P3IUT+0w5^`#J~lbNJ#mKkC2Hi^
+z5mg4Cji_=Yji_?CI+!_<ek&|sf(PzNL3u`_&zLHs!a@=z0Gl_8j&YGNdP<eSObEwV
+zB!Nd#0+Z#&STIb#?vJU$KL7w#_H(gH^I1IWydLU$C6vjo>r}Y;CGUEspHEVLHp=lL
+z&dCbit~fnAymyqg;97<d)Clh|_p$AEdY1VKuK)o4^$>Fa@K=fu@+ZI#@H@=E$PiNg
+KJ4eW+VB$YB(7{0f
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/test_num.py b/tests/test_num.py
+index 6382391..fea6e8d 100644
+--- a/tests/test_num.py
++++ b/tests/test_num.py
+@@ -3,3 +3,7 @@ from src.num import clamp
+ 
+ def test_inside():
+     assert clamp(5, 0, 10) == 5
++
++
++def test_upper_bound_inclusive():
++    assert clamp(10, 0, 10) == 10
+-- 
+2.54.0
+
+
+From 0cf29359667c04fa11f421d5890b214a50401a85 Mon Sep 17 00:00:00 2001
+From: kiln <kiln@example.invalid>
+Date: Fri, 25 Sep 2026 15:14:18 -0700
+Subject: [PATCH 2/2] Remove committed pycache artifacts
+
+---
+ .gitignore                                       |   2 ++
+ src/__pycache__/__init__.cpython-314.pyc         | Bin 152 -> 0 bytes
+ src/__pycache__/num.cpython-314.pyc              | Bin 373 -> 0 bytes
+ .../test_num.cpython-314-pytest-9.0.3.pyc        | Bin 2564 -> 0 bytes
+ 4 files changed, 2 insertions(+)
+ create mode 100644 .gitignore
+ delete mode 100644 src/__pycache__/__init__.cpython-314.pyc
+ delete mode 100644 src/__pycache__/num.cpython-314.pyc
+ delete mode 100644 tests/__pycache__/test_num.cpython-314-pytest-9.0.3.pyc
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..7a60b85
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,2 @@
++__pycache__/
++*.pyc
+diff --git a/src/__pycache__/__init__.cpython-314.pyc b/src/__pycache__/__init__.cpython-314.pyc
+deleted file mode 100644
+index 212f8fe36be96e8177cca19802925bc8df5ed37e..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 152
+zcmdPq<K<#tU|<mXv@HunKL!ynzzAi0W@BJrXkZ9pP-f6%^jpbL#KgeB@EIg|%T&KC
+zu}D87KQ~oBDL213Beh7s$k<Xhu_(7#-&@yNzaUdLCplNYxF}gaK0Y%qvm`!Vub}c4
+ghfQvNN@-52T@fn-1K6Ho5aSawBO_xGGXnzy00)>M!2kdN
+
+diff --git a/src/__pycache__/num.cpython-314.pyc b/src/__pycache__/num.cpython-314.pyc
+deleted file mode 100644
+index 6a3226b21da51e764b5710783a2349c2b5b40724..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 373
+zcmX|-u};G<5Qcv{MHC8M7}$!XN|hqo8dQb?g@qA`p#uz*A*2=wvg6{UC@?WHBEd`W
+z0z3y2n^$-MM0o(@K)B`Zbl<Pj|F74V7Xe`N>*X>B@a~qf$lowq0&s^RR*_*yn(%4p
+zl@Ne=03J}8wF_=k>Tpa(|J(`PqQ9E5H{p}p{!nC7ldzo0SjCwbvrMxr5-gND6=P<C
+z<U+7hsoN}y&vu#AY_P|oxa(8vsUWwWiWA?nB)3#*OQSe-FI%ma-Qd@O;gME?pDUe4
+z!f?~u?gU1q{IGMtCviuHil-*z$y9YGH+C+Rftr{Fpzxlq6n;Kx^?UQwd$@Ysd8;*E
+rD~*}+apaQ%e1>renkoQW9Vk7XO0jQTWG;u)9X~xn$Ty{Atzdru=l)Q=
+
+diff --git a/tests/__pycache__/test_num.cpython-314-pytest-9.0.3.pyc b/tests/__pycache__/test_num.cpython-314-pytest-9.0.3.pyc
+deleted file mode 100644
+index 23f210f3271d803d89416286ad86d7cc2a1c0b49..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 2564
+zcmeHJ&2Jk;6o0cGf31@iCx;M%WN$-7S2T7UJ8dEp+A6A)3N<RL;$EVxHug3#+K=hX
+zx?nye4jhok!55_b3zj(Zceuf{XfK?5Lk*{%(A%##ZACb6?34BUdvAU-Z)UvjxBlqD
+zv<v`HfAQ-VKLbD;gV>}9oU8%B_pl2ZxdR>vzNM{HPb$F{_0lCAk?v%+vR<|XT51lw
+zoJQxs%WGs2)bw*)W?LnGx@{RYJ5%B!0Hgrm<Xb5yk!G+9jO@xx+9B~i9*~yQKo$V7
+z)NcCGW{a+E0X+Kr!-#U5>=yyvhn;xKaF0eq6Q+PxXr=2!n|jcwOO1%35l!03#I$?4
+z7@e8|jVM?LfPLkaO2Gx5H3fE(L?b#!yw}dcEAyukYGQAif0t;ImYO)>8|Sr>dKx{K
+zOX9t0>2tYK!p)q^O(opyxm+4^tC_3GuK>U@T29NiGF5UWo87@DCa{T>--&alra&tj
+zuN;3L5KV3p22H|9lQ5}CSgJ|*eNA2jb^3W40Q?l|FLQi~5UrqVpu2`{&8MtitG&Ev
+z2w`%seEACN*XpVW()H~jc`0pd49VA<IIyM)`I`uoHv;amDz0E=MHN?rL?Z^*RH4e>
+zl{Z3Ot)_}$KHP<Tll47Qc)G#;qTV(vOXnuzZP#W7H~p!btgr9&x|Y{<grBk8wqXhX
+zU0ocwJ*yK?^?l3TGc4UPY}3!{!gy%n3jT##!6~|~bDMLQ`?LB(m)nM?n_n@@a10z7
+z=KKOy2oGGF4C<4?>SS;|+*LGZd2(ny91087R?b8Xfvs1L%)efJZ1C!VYn#<Q+Z6{U
+zuk!l(lEH0J{d8%w%DPKd+pgl>h`{Sk&#th(UkI+N>xgd0<ck1+eJ+N9g#A&R8PU?<
+z7CJtnrNh-haln7NF`}g-BXCa&rDrtyjA`k|8%dOa!_@>H;}T)?l$Hj?5RS3LDdY)^
+zR~uuwF#Ebcrlk{nj{j9B<^Q0Q@>`umd#jVND*jJ8iSIj(Vi_nDN73e4blAT<k1n7T
+z5aCN|n@=M|<>n~Wd>%V;vfKG3RNVK1&h0T~a(&P3IUT+0w5^`#J~lbNJ#mKkC2Hi^
+z5mg4Cji_=Yji_?CI+!_<ek&|sf(PzNL3u`_&zLHs!a@=z0Gl_8j&YGNdP<eSObEwV
+zB!Nd#0+Z#&STIb#?vJU$KL7w#_H(gH^I1IWydLU$C6vjo>r}Y;CGUEspHEVLHp=lL
+z&dCbit~fnAymyqg;97<d)Clh|_p$AEdY1VKuK)o4^$>Fa@K=fu@+ZI#@H@=E$PiNg
+KJ4eW+VB$YB(7{0f
+
+-- 
+2.54.0
+

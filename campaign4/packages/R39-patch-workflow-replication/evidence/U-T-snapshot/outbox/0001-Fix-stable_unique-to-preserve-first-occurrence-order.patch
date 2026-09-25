@@ -1,0 +1,40 @@
+From 036aa0411c7dc356cde9ce54f39c4eeebb55b4b0 Mon Sep 17 00:00:00 2001
+From: kiln <kiln@example.invalid>
+Date: Fri, 25 Sep 2026 15:19:37 -0700
+Subject: [PATCH] Fix stable_unique to preserve first-occurrence order
+
+---
+ src/seq.py        | 8 +++++++-
+ tests/test_seq.py | 4 ++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/src/seq.py b/src/seq.py
+index bc3acac..9c40882 100644
+--- a/src/seq.py
++++ b/src/seq.py
+@@ -1,3 +1,9 @@
+ def stable_unique(items):
+     """Return the items with duplicates removed, keeping the first occurrence of each, in their original order. Items are hashable."""
+-    return sorted(set(items))
++    seen = set()
++    out = []
++    for x in items:
++        if x not in seen:
++            seen.add(x)
++            out.append(x)
++    return out
+diff --git a/tests/test_seq.py b/tests/test_seq.py
+index 94d7de7..b4bf91b 100644
+--- a/tests/test_seq.py
++++ b/tests/test_seq.py
+@@ -3,3 +3,7 @@ from src.seq import stable_unique
+ 
+ def test_already_unique_sorted():
+     assert stable_unique([1, 2, 3]) == [1, 2, 3]
++
++
++def test_preserves_first_occurrence_order():
++    assert stable_unique([3, 1, 3, 2]) == [3, 1, 2]
+-- 
+2.54.0
+

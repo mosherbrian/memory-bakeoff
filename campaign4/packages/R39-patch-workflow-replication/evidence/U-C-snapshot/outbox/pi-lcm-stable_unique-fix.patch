@@ -1,0 +1,21 @@
+diff --git a/src/seq.py b/src/seq.py
+index bc3acac..de5de38 100644
+--- a/src/seq.py
++++ b/src/seq.py
+@@ -1,3 +1,3 @@
+ def stable_unique(items):
+     """Return the items with duplicates removed, keeping the first occurrence of each, in their original order. Items are hashable."""
+-    return sorted(set(items))
++    return list(dict.fromkeys(items))
+diff --git a/tests/test_seq.py b/tests/test_seq.py
+index 94d7de7..0a5dce1 100644
+--- a/tests/test_seq.py
++++ b/tests/test_seq.py
+@@ -3,3 +3,7 @@ from src.seq import stable_unique
+ 
+ def test_already_unique_sorted():
+     assert stable_unique([1, 2, 3]) == [1, 2, 3]
++
++
++def test_keeps_first_occurrence_order():
++    assert stable_unique([3, 1, 3, 2]) == [3, 1, 2]

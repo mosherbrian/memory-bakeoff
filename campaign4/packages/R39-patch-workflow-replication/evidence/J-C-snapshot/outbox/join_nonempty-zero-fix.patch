@@ -1,0 +1,34 @@
+From f94efcde79b9728f7c09bf680a6db706be8c1a6f Mon Sep 17 00:00:00 2001
+From: kiln <kiln@example.invalid>
+Date: Fri, 25 Sep 2026 15:24:13 -0700
+Subject: [PATCH] Fix join_nonempty to keep 0; add regression test
+
+---
+ src/text.py        | 2 +-
+ tests/test_text.py | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/text.py b/src/text.py
+index 42b189c..b56a382 100644
+--- a/src/text.py
++++ b/src/text.py
+@@ -1,3 +1,3 @@
+ def join_nonempty(parts, sep=","):
+     """Join the parts with sep, converting each to str and skipping only None and the empty string."""
+-    return sep.join(str(p) for p in parts if p)
++    return sep.join(str(p) for p in parts if p is not None and p != "")
+diff --git a/tests/test_text.py b/tests/test_text.py
+index 93e0ccf..21783ae 100644
+--- a/tests/test_text.py
++++ b/tests/test_text.py
+@@ -3,3 +3,7 @@ from src.text import join_nonempty
+ 
+ def test_two_words():
+     assert join_nonempty(["a", "b"]) == "a,b"
++
++
++def test_zero_is_kept():
++    assert join_nonempty(["a", 0, "b"]) == "a,0,b"
+-- 
+2.54.0
+
