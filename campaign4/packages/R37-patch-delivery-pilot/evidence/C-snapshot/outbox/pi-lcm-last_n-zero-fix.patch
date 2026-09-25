@@ -1,0 +1,36 @@
+From c96370e34d83a50f69a62db2e224ca703f553531 Mon Sep 17 00:00:00 2001
+From: kiln <kiln@example.invalid>
+Date: Fri, 25 Sep 2026 14:56:41 -0700
+Subject: [PATCH] Fix last_n(items, 0) returning whole list; add regression
+ test
+
+---
+ src/window.py        | 2 ++
+ tests/test_window.py | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/src/window.py b/src/window.py
+index a2525f6..3802579 100644
+--- a/src/window.py
++++ b/src/window.py
+@@ -1,3 +1,5 @@
+ def last_n(items, n):
+     """Return the last n items of a list (n >= 0)."""
++    if n <= 0:
++        return []
+     return items[-n:]
+diff --git a/tests/test_window.py b/tests/test_window.py
+index da17979..75d1eda 100644
+--- a/tests/test_window.py
++++ b/tests/test_window.py
+@@ -3,3 +3,7 @@ from src.window import last_n
+ 
+ def test_last_two():
+     assert last_n([1, 2, 3], 2) == [2, 3]
++
++
++def test_last_zero_returns_empty():
++    assert last_n([1, 2, 3], 0) == []
+-- 
+2.54.0
+
