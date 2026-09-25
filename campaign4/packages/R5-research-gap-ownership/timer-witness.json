@@ -1,0 +1,43 @@
+{
+  "sandbox": "/tmp/r5-calendar-oz3ggb4z",
+  "unit": "campaign4-r5-calendar-witness",
+  "scheduled": "2026-09-25 04:53:00 UTC",
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--unit=campaign4-r5-calendar-witness",
+    "--on-calendar=2026-09-25 04:53:00 UTC",
+    "--timer-property=AccuracySec=1s",
+    "--property=TimeoutStartSec=60",
+    "--setenv=GAP_CAMPAIGN=/tmp/r5-calendar-oz3ggb4z/c4",
+    "--setenv=GAP_STATE=/tmp/r5-calendar-oz3ggb4z/state.json",
+    "--setenv=GAP_STATUS_CMD=cat /tmp/r5-calendar-oz3ggb4z/status.json",
+    "--setenv=GAP_ESCALATIONS=/tmp/r5-calendar-oz3ggb4z/escalations",
+    "--setenv=GAP_WAKE=/tmp/r5-calendar-oz3ggb4z/wake",
+    "--setenv=GAP_NOTIFY=/tmp/r5-calendar-oz3ggb4z/notify",
+    "--setenv=GAP_RESOLVE=/tmp/r5-calendar-oz3ggb4z/resolve",
+    "--setenv=GAP_LEDGER=/tmp/r5-calendar-oz3ggb4z/ledger.jsonl",
+    "/usr/bin/python",
+    "/var/home/bmosher/memory-bake-off/campaign4/packages/R5-research-gap-ownership/research-gap-check"
+  ],
+  "arm_rc": 0,
+  "stderr": "Running timer as unit: campaign4-r5-calendar-witness.timer\nWill run service as unit: campaign4-r5-calendar-witness.service\n",
+  "result": "PASS",
+  "service_show": "Result=success\nExecMainStartTimestamp=\nExecMainStatus=0\n",
+  "captured_calls": "escalations --add research-gap --source research-gap-check\nwake tern [research-gap-check] R5-WITNESS owner tern: top question Q-WITNESS has had no executing package and no valid timed rest since 2026-09-25T04:22:39Z. Reasons: no bound executing package; no valid timed rest. Release a package bound by question_id, or append a timed rest row to REST.jsonl (question_id, reason, owner, entered_at, revisit_at, next_action). Claude is told if unresolved by 2026-09-25T05:08:00Z. An ack is not a resolution.\n",
+  "state": {
+    "gaps": {
+      "Q-WITNESS": {
+        "incident": "R5-WITNESS",
+        "start": 1790310159.788408,
+        "tern_at": 1790311980.3902593,
+        "tern_key": "f0f43bf40181",
+        "tern_text": "[research-gap-check] R5-WITNESS owner tern: top question Q-WITNESS has had no executing package and no valid timed rest since 2026-09-25T04:22:39Z. Reasons: no bound executing package; no valid timed rest. Release a package bound by question_id, or append a timed rest row to REST.jsonl (question_id, reason, owner, entered_at, revisit_at, next_action). Claude is told if unresolved by 2026-09-25T05:08:00Z. An ack is not a resolution.",
+        "tern_woken": true
+      }
+    }
+  },
+  "completed_at": "2026-09-25T04:53:47.484839+00:00",
+  "cleanup": "Transient units already unloaded; stop returned5; confirmed not loaded/inactive",
+  "cleanup_show": "LoadState=not-found\nActiveState=inactive\n\nLoadState=not-found\nActiveState=inactive\n"
+}
