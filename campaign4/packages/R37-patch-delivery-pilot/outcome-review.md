@@ -95,3 +95,17 @@ axis changed; no new grant.
 `grades/{C,T}.json`, `dispositions/{C,T}.json`,
 `operator/{drive.log,drive.sh,arm.py,new-*.json,preflight-*.json,base-oid-*.txt}`;
 independent hash/grep checks. `execution-claim.json` absent.*
+(The trailing "absent" is the original first-review text, preserved; it is
+superseded by the Addendum above.)
+
+## Addendum 2 — archive reconciliation (same bound)
+
+`grade-history/T-original.json` is archived and its sha256 **`76b341a6…`** equals
+the hash the execution claim lists for `grades/T.json`, so the pre-correction T
+grade is preserved and reconciles exactly. Recomputing the claim's 44 entries:
+**43/44 still match**; the only mismatch is `grades/T.json` (claim `76b341a6…`
+vs current **`102f43e0…`**), which is the single review-required wording edit
+already recorded in Addendum 1. **Scores unchanged** (work/added_test/channel/
+overall all PASS). No further edits to any bound file; the current corrected
+grade and the archived original are both preserved. Tern owns the terminal
+result.
