@@ -1,4 +1,10 @@
 {
+ "qid": "R17-design-repair-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T18:10:48.359562+00:00",
  "files_sha256": {
   "cases.json": "598870cd10253016f26014fafa8728f9e3796804efadfdabde70c5e3a3f10357",
   "checks.py": "0fef1c187880c6ebcc03f198484058431d5dd4bcdb40b0bf1585a80f5c7adf8a",
@@ -18,20 +24,19 @@
   "examples-repair/py-vacuous.md": "710c9dcd1731eb2311f3d74d63a19f90f48e4e23c7147d424cc632298ab7db83",
   "examples-repair/selfcheck.txt": "0bbfe51b2f4004ece7c5ced6bb1e43dcaae518475671b289e3dc1782a7003eaf",
   "memory-packet.md": "f1d0e3de6b3214ec708967347a1b8139dc652673b6bc928c0e16ca78d29db835",
-  "shared/audit.py": "11994be3edfce4faeaed6213bad01cdc0325787c057030422746e6fc7d53a5d2"
+  "shared/audit.py": "11994be3edfce4faeaed6213bad01cdc0325787c057030422746e6fc7d53a5d2",
+  "manifest.json": "809ffb8d65909992df81f081dff8f8c14ff1848cadce34462707239d92620b46"
  },
- "rules": [
-  "R-PY",
-  "R-LB",
-  "R-NET"
- ],
- "cases": [
-  "PY-1",
-  "PY-2",
-  "LB-1",
-  "LB-2",
-  "NET-1",
-  "NET-2"
- ],
- "sources": "transcript line pointers only (cases.json); no transcript copied"
+ "changes": {
+  "rules": "R-PY, R-LB, R-NET (R-PID dropped as Claude-authored)",
+  "R-NET_source": "3 pointers checked, Brian's words quoted minimally, scenario fixed in prompt, Qwen route labelled as memory-file wording",
+  "D1": "R-PY usability is rubric/verifier (language-neutral); aid returns not-applicable when no python/pip command; README pip steps now compliant",
+  "D2": "aid reads fenced (``` and ~~~), 4-space/tab indented, inline backtick and $-prompt code; anything else -> needs-adjudication, not usable:false",
+  "D3": "loopback URL judged per clause; negated/warning clause ignored; only-warned-loopback -> needs-adjudication",
+  "D5": "PY-2 now ships shared/audit.py (needs httpx) as an ordinary input to both arms",
+  "D4": "moot: R-PID removed"
+ },
+ "selfcheck": "13 examples incl. corvid survivors, examples-repair/selfcheck.txt; one clause-splitting bug found and fixed during authoring (a warning and a good URL on one line were scored as a violation)",
+ "parked": "delivery workflow, re-enable services, 'do not stop' (sponsor's top rule)",
+ "not_done": "no trial, no worker prompt, no network, no services, no paging, no production edits"
 }
