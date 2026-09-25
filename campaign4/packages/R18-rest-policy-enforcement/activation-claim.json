@@ -1,0 +1,40 @@
+{
+ "qid": "R18-activation-1",
+ "operator": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T18:39:04.048352+00:00",
+ "witness": {
+  "unit": "r18-witness (transient, on-calendar 18:38:00Z, AccuracySec=1s)",
+  "fired": "2026-09-25T18:38:00Z",
+  "result": "Q-A: overlong rest (14460 s > 7200 s) rejected with the reason logged, tern notified (one sandbox ledger row, one stub wake); Q-B: valid rest with a matching receipt stayed quiet",
+  "units_left": 0,
+  "PASS": true,
+  "inputs": "isolated HOME ~/.cache/r18w, stub status/wake/notify, byte copies of escalations/escalation-resolve"
+ },
+ "install": {
+  "old_verified": "518581b9eb761a4c0f55f87f97fca900ba9a0d4130929bcc36415bff53695511",
+  "backup": "~/.config/agent-deck/research-gap-check.bak-R18",
+  "installed": "337521b00472e99f922b8de6310be51fc6817ded3b2139edbbf8083b91d6551a",
+  "units_and_registry": "unchanged"
+ },
+ "live_evidence_before": {
+  "REST.jsonl": "1d5cee160bf307669e403561c4ae903fffb96ecfdf421c47bb87821c799c98eb",
+  "state.json": "c8ca699161da6c3b00fe05a1fb7fddb5d207dd3a4bb8a90cb527429afce3d3bf"
+ },
+ "appended": {
+  "receipts": [
+   "campaign4/receipts/r19-a-dispatch-py1c.json",
+   "campaign4/receipts/r19-b-route-grading.json"
+  ],
+  "deadline": "2026-09-25T18:46:00Z",
+  "mistake": "first two rows (18:38:24Z) used next_step.kind 'dispatch' and 'review-routing', outside the checker's STEP_KINDS {search,design,review,execute,decision}; the new checker correctly rejected them and opened gap clocks for both streams at 18:38:24Z (no notices: under 30 min). Corrected rows appended at 18:38:49Z (kind execute / review); invalid rows kept in history (append-only). The next run closed both gaps; no ledger rows, no wakes."
+ },
+ "production_check_after": "2026-09-25T18:38:49Z Q-EVALUATOR-VALIDITY: ok (rest to 18:46:00Z); Q-WORK-BENEFIT: ok (rest to 18:46:00Z); state gaps {} watched A,B",
+ "rollback": "per director override: restore the checker executable only (research-gap-check.bak-R18); never rewind REST or state",
+ "files_sha256": {
+  "activation/install.txt": "2ef65b0e5db561f3a25323d020541376ed6a40d9db7496865c1155109f6a9d34",
+  "activation/live-before/REST.jsonl": "1d5cee160bf307669e403561c4ae903fffb96ecfdf421c47bb87821c799c98eb",
+  "activation/live-before/state.json": "c8ca699161da6c3b00fe05a1fb7fddb5d207dd3a4bb8a90cb527429afce3d3bf",
+  "activation/witness.txt": "0b10b074d02bb6622a664b4bde3735eb558ceac2608c5b9edddc153af8226b79"
+ }
+}
