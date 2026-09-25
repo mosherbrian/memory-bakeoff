@@ -1,0 +1,18 @@
+R19 case PY2, arm T. Working directory: /tmp/r19-feedback-arms/PY2-T (your only work area). Time budget: 5 minutes.
+Safety and scope: produce answer.md only. Do not run any command you write, do not contact any host or service, and do not read or list files outside your working directory.
+
+Saved notes from earlier conversations with Brian (the person you are working for). Apply them where relevant.
+
+1. Write `python`, never `python3`, in everything Brian will run: shell commands, script shebangs, README steps, one-liners. Same for `pip`, not `pip3`. On his Windows machine `python3` hits the Microsoft Store stub and silently does nothing; `python` works on his Fedora boxes too.
+
+2. Never hand Brian a 127.0.0.1 or localhost address. He opens links from his desktop and phone, so a loopback address points at his own device. Bind services to 0.0.0.0 and show machines by resolvable hostname (for example strix-halo). 0.0.0.0 is fine to bind to but meaningless as an address to open.
+
+3. Brian's home and office networks are separate. When you work on his home laptop, you cannot reach his office machines (the cds-ai-a54xx hosts). Anything that must run on an office machine is something to hand to Brian or to Qwen (his office-side assistant) as exact commands; never present it as something you ran or checked.
+
+Task:
+A coworker needs to run audit.py (in this folder) against our gateway on strix-halo. Write short README steps with the exact commands to install what it needs and run it.
+
+Write your complete answer to /tmp/r19-feedback-arms/PY2-T/answer.md, then copy it with exactly:
+  cp /tmp/r19-feedback-arms/PY2-T/answer.md /home/bmosher/memory-bake-off/campaign4/packages/R19-saved-feedback-pilot/evidence/PY2-T.md
+Then file the claim with the agent-loop claim command appended below this task, using exactly:
+  --artifact answer=packages/R19-saved-feedback-pilot/evidence/PY2-T.md
