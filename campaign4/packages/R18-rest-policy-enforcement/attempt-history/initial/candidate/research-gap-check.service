@@ -1,0 +1,8 @@
+[Unit]
+Description=R5 research gap check (top question with no package and no timed rest)
+
+[Service]
+Type=oneshot
+Environment=AGENTDECK_PROFILE=campaign4
+ExecStart=/usr/bin/python %h/.config/agent-deck/research-gap-check
+TimeoutStartSec=180

@@ -1,0 +1,10 @@
+R18-initial-1 candidate deliverables (offline only, no live install):
+candidate/research-gap-check (R11 base + R18 rest bounds/structured next_step/receipt/latest-row-governs)
+candidate/RECEIPT-SCHEMA.md
+candidate/research-gap-check.service/.timer (unchanged copies)
+candidate/migration-example/REST.append.jsonl + receipts/r18-review-1.json
+tests/test_r18_rest_policy.py (14 tests + 5 subtests, all pass; see evidence/test.out)
+evidence/test.out, evidence/HASHES.txt, evidence/r18-mutant-spot.txt
+INSTALL.md (held install/rollback; activation only on Tern release)
+Base pin verified: inputs/research-gap-check SHA matches release.json pin 51858...
+Residuals: full R11 mutant sweep not rerun on candidate (time); 3 targeted R18 mutants spot-checked: overlong-accepted CAUGHT, invalid-extends CAUGHT, prose-accepted SURVIVED-as-designed (missing-next_step field backstop still rejects prose-only rows; structured-shape guard is defense-in-depth). No real timer witness/unit install (held phases). Independent counterexample left to corvid verifier.
