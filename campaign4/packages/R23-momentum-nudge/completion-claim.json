@@ -1,0 +1,21 @@
+{
+ "qid": "R23-nudge-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T20:01:14.460844+00:00",
+ "source": {
+  "branch": "r23-momentum-nudge",
+  "base": "df5e6fc627b8031c969cfb0402c623eaf11119ba",
+  "commit": "862015d921b102923e74750df301bb29f0ad58d9",
+  "diff": "source.diff",
+  "diff_sha256": "a55b1fd7fdb94299b1285a3cd44be2359ad63a0ffab1455f00cee3905ae036e8"
+ },
+ "change": "const Nudge appended to instructions() (worker and verifier dispatch text) and to the director decision notice. No artifact, schema, validation or blocking; nothing reads the answers.",
+ "test": "TestNudgeReachesWorkerVerifierAndDirector: nudge present in the wakes to kiln (worker), corvid (verifier) and tern (director); go test ./... all ok",
+ "binary": {
+  "private_sha256": "612e3c5c0af52f8eef55439621e1e97285a48e8867ad62cad912d4205d5974be",
+  "installed_unchanged": "47f69dfdeb8b0d17472d871b68dfdfa8270e3421997a03f5d1c6929c8a818ec1"
+ },
+ "activation": "held until R22 closes; install = back up ~/.local/bin/agent-loop, install the private binary, restart agent-loop@campaign4; rollback = restore the backup and restart. No config change.",
+ "not_done": "no install, no activation, R22 untouched"
+}

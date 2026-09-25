@@ -1,0 +1,36 @@
+{
+ "about": "Reference defects adjudicated by the director. The Python outcome stays recorded in expected.json; the Go port is held to the corrected expectation here instead. Every other Go/Python difference is a finding.",
+ "cases": [
+  {"scenario": "handoff: a replaced stream file is a new incarnation", "op": 9,
+   "go": {"op": "run_handoff", "error": "E_NO_ESCALATION_BOUND"},
+   "ruling": "HOST-PORT-RULING-20260923 finding 1",
+   "why": "Python raises NameError (OwnedFault not imported in _recover); an unbounded launch must fail owned."},
+  {"scenario": "handoff: worker end -> verifier -> terminal rest", "op": 23,
+   "go": {"op": "run_handoff", "result": {"decision": "terminal-rest", "durable": true}},
+   "ruling": "HOST-PORT-RULING-20260923 finding 2",
+   "why": "Verdict and disposition now commit in one transaction, so there is no separate verify result to report."},
+  {"scenario": "handoff: an invalid disposition fails the close; a retry still marks it closed", "op": 21,
+   "go": {"op": "run_handoff", "error": "E_FORGED_DISPOSITION"},
+   "ruling": "HOST-PORT-RULING-20260923 finding 2",
+   "why": "The disposition is validated before anything commits; Python commits the verdict, then the decide fails."},
+  {"scenario": "handoff: an invalid disposition fails the close; a retry still marks it closed", "op": 22,
+   "go": {"op": "run_handoff", "error": "E_FORGED_DISPOSITION"},
+   "ruling": "HOST-PORT-RULING-20260923 finding 2",
+   "why": "A retry must never report terminal-rest while the ledger holds no disposition."},
+  {"scenario": "handoff: declared intent rolls forward, director close recovers", "op": 20,
+   "go": {"op": "run_handoff", "error": "E_CLOSE_UNRESOLVED"},
+   "ruling": "HOST-PORT-RULING-20260923 finding 2",
+   "why": "An intent alone (no declared disposition, none in the ledger) is incomplete closure, not terminal-rest."}
+ ],
+ "final_excluded": [
+  {"scenario": "handoff: worker end -> verifier -> terminal rest", "why": "finding 2: different close records; asserted by internal/host/closure_test.go"},
+  {"scenario": "handoff: an invalid disposition fails the close; a retry still marks it closed", "why": "finding 2: no verdict, seen or done is written; asserted by closure_test.go"},
+  {"scenario": "handoff: declared intent rolls forward, director close recovers", "why": "finding 2: done stays unset; asserted by closure_test.go"}
+ ],
+ "final_corrected": [
+  {"scenario": "host timers: create, reuse, conflict, refuse, query, cancel", "key": "runner_calls",
+   "go": [["systemd-run", "--user", "--unit=p6-u1.timer", "--timer-property=AccuracySec=1s", "--on-calendar=2026-09-21 12:30:00 UTC", "python3", "harness.py", "timer-callback"], ["systemd-run", "--user", "--unit=p6-u2.timer", "--timer-property=AccuracySec=1s", "--on-calendar=2026-09-21 12:30:00 UTC", "x", "--timer", "p6-u2"], ["systemd-run", "--user", "--unit=p6-u3.timer", "--timer-property=AccuracySec=1s", "--on-calendar=2026-09-21 12:30:00 UTC", "python3", "harness.py", "timer-callback"], ["systemctl", "--user", "show", "p6-u1.timer", "--property=ActiveState,SubState"], ["systemctl", "--user", "show", "p6-u1.timer", "--property=ActiveState,SubState"], ["systemctl", "--user", "show", "p6-u1.timer", "--property=ActiveState,SubState"], ["systemctl", "--user", "stop", "p6-u1.timer"], ["systemctl", "--user", "reset-failed", "p6-u1.timer"]],
+   "ruling": "P12 package.md section E (Tern 1315196): step-timer precision and reload robustness",
+   "why": "P12 measured on real systemd (evidence/e-reload-timers-run1.txt) that daemon-reload restarts an --on-active countdown and that the default AccuracySec is 1 min. A deadline with a known UTC instant is armed as an explicit-UTC --on-calendar timer with AccuracySec=1s. Python arms --on-active and stays recorded in expected.json."}
+ ]
+}
