@@ -1,0 +1,37 @@
+{
+ "source": "R8 director closure",
+ "files": {
+  "fleet-poller.sh": {
+   "from": "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/broken.sh",
+   "sha256": "a987e2e98ed752ae36a2996612cbd63853d91ef6e5df51dc58124f6d40677e3e"
+  },
+  "test-fleet-poller.sh": {
+   "from": "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/test-fleet-poller.sh",
+   "sha256": "0894381c077cf08c0a8408a069920e296a9f1f8bba40c688957b26c95f9fbca2"
+  },
+  "rowcheck": {
+   "from": "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/rowcheck",
+   "sha256": "5334ee6abc00049732c8c1e856c8ec85a0239e5b76b4181516443f6e58489f9b"
+  },
+  "acp-worker": {
+   "from": "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/acp-worker",
+   "sha256": "6871ceb1fa15e3b744c29b3aacde59f8c77a9ca54285b4ba954859f8fbb64d02"
+  }
+ },
+ "excluded_from_arms": {
+  "fixed.sh": "6607dc1a993bfacb348aef2e14a30c2131675891d03ba8119389248b46e33ed8"
+ },
+ "arm_root": "/var/home/bmosher/r9-arms/<T|C>/",
+ "test_command": "cd {ARM_DIR} && ROWCHECK_BIN={ARM_DIR}/rowcheck ACP_WORKER={ARM_DIR}/acp-worker bash {ARM_DIR}/test-fleet-poller.sh {ARM_DIR}/fleet-poller.sh",
+ "preparation_reproduction": {
+  "broken": "rc=1, 116 passed, 1 failed",
+  "fixed": "rc=0, 117 passed, 0 failed",
+  "at": "2026-09-25T05:51Z"
+ },
+ "templates": {
+  "templates/phase1-task.txt": "cb46e9f75bf05ce981f4b42044284fe788b67951ac58c0763dac71bb39e33f16",
+  "templates/phase2-resume.txt": "e6dba774726573e65b1b1ede1a0c2d7896b5985252a07729f90b6b544a676d75",
+  "templates/summary-block.txt": "e48ca1e5df7cb4c2fa2094d81fb03dd5013104dd6e8b925f38ce07695461c965",
+  "templates/summary-request.txt": "d0b5f4d16cf66af02007c76b51ad4a4ba3f48d55be631f45c805be5cb6c5eef7"
+ }
+}

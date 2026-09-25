@@ -1,0 +1,7 @@
+R9 pilot, arm {ARM}, phase 2 of 2: REPAIR. This is a new conversation; an earlier conversation inspected this problem.
+
+Working copy: {ARM_DIR} (same rules: only this directory; no installed fleet files; no git history or other packages for the historical fix). Your files and any notes in {ARM_DIR}/notes/ are as you left them.
+{SUMMARY_BLOCK}
+Task: fix fleet-poller.sh so that the existing test passes. Do not edit test-fleet-poller.sh, rowcheck or acp-worker. Test command:
+  cd {ARM_DIR} && ROWCHECK_BIN={ARM_DIR}/rowcheck ACP_WORKER={ARM_DIR}/acp-worker bash {ARM_DIR}/test-fleet-poller.sh {ARM_DIR}/fleet-poller.sh
+Time: {PHASE_MIN} minutes, until {DEADLINE_UTC}. End with one line: PHASE2 DONE rc=<test exit code>.

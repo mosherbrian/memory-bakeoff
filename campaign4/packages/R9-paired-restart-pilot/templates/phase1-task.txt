@@ -1,0 +1,9 @@
+R9 pilot, arm {ARM}, phase 1 of 2: INSPECTION ONLY. Do not change fleet-poller.sh in this phase.
+
+Working copy: {ARM_DIR} (your only work area; never touch ~/conductor-chat, ~/.config/agent-deck or any installed fleet file, and do not look up the historical fix in git history or other packages).
+
+Problem: the existing test fails on this copy of fleet-poller.sh. Run it exactly as:
+  cd {ARM_DIR} && ROWCHECK_BIN={ARM_DIR}/rowcheck ACP_WORKER={ARM_DIR}/acp-worker bash {ARM_DIR}/test-fleet-poller.sh {ARM_DIR}/fleet-poller.sh
+Reproduce the failure, find the cause in fleet-poller.sh, and decide how you would fix it. The test file is fixed and must not be edited.
+You may write any notes you like in {ARM_DIR}/notes/ ; they stay available in phase 2.
+Time: {PHASE_MIN} minutes, until {DEADLINE_UTC}. End with one line: PHASE1 DONE.

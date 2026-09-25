@@ -1,0 +1,33 @@
+{
+ "qid": "R9-preparation-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "author": "claude",
+ "at": "2026-09-25T05:53:09.092409+00:00",
+ "contract_sha256": "475cf89b59e70643fab8261cd3759142dc4a4d7e3339be4dcaf959e8dbc268b6",
+ "outcome": "COMPLETE_WITH_OBSTACLE",
+ "files_sha256": {
+  "run-plan.md": "f2eeaa8d8b73cbc35e866eea816795e5c92c8443ee034e2c3b1c0901e5d082f2",
+  "preregistration.json": "3f3b93be5c88fa40550053b11fd23b8331efdeb063f49cd4de88dab0c0ab971c",
+  "input-manifest.json": "e00f19ae25d861c36379954252ad0a245f82ef7705106f3e204b9c5985f60b86",
+  "templates/phase1-task.txt": "cb46e9f75bf05ce981f4b42044284fe788b67951ac58c0763dac71bb39e33f16",
+  "templates/phase2-resume.txt": "e6dba774726573e65b1b1ede1a0c2d7896b5985252a07729f90b6b544a676d75",
+  "templates/summary-block.txt": "e48ca1e5df7cb4c2fa2094d81fb03dd5013104dd6e8b925f38ce07695461c965",
+  "templates/summary-request.txt": "d0b5f4d16cf66af02007c76b51ad4a4ba3f48d55be631f45c805be5cb6c5eef7"
+ },
+ "run_plan_words": 755,
+ "reproduced": "pinned test on fresh arm-style copies: broken rc=1 116/1, fixed rc=0 117/0 (ROWCHECK_BIN and ACP_WORKER pinned to snapshots; no SKIP observed)",
+ "obstacle": "acp-worker has no operator command for a new conversation; restart resumes via session/load from acp-sessions/a79067ca-1790000758.json. The only existing path to session/new for this seat is a null sessionId in that state file at start. Proposed boundary op (state file aside, sessionId null, agent-deck session restart, restore after) is a runtime-state operation NOT performed and NOT granted by this contract: Tern must authorize it or name another mechanism.",
+ "freshness_evidence_available": [
+  "new sessionId in state file after first reply differs from all earlier ids",
+  "pane banner without '(resumed)'",
+  "opencode session list (engine store, independent of acp-worker) shows the new id",
+  "first reply checked for earlier-phase content not in its files"
+ ],
+ "kiln_current_session": "ses_f3504dd29ffePm32V9ivpic8Cv (state file and opencode session list agree)",
+ "design_choices": [
+  "summary returned as reply text, not a file, so the control arm's ordinary files stay identical",
+  "arm dirs outside campaign4 so fixed.sh is not adjacent",
+  "contamination (reading fixed solution or conductor-chat git history) is a reported flag; the seat cannot be sandboxed from the host"
+ ],
+ "not_done": "no model task, no reset, no restart, no seats, no installs, no Signal"
+}
