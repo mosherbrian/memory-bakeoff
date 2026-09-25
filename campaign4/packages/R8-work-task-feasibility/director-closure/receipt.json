@@ -1,0 +1,61 @@
+{
+  "start": "2026-09-25T05:44:27.266045+00:00",
+  "end": "2026-09-25T05:46:12.648667+00:00",
+  "owner": "tern",
+  "basis": "Rule8 deterministic provenance closure within director5m; initial reviewer INCOMPLETE preserved",
+  "files": {
+    "broken.sh": {
+      "sha256": "a987e2e98ed752ae36a2996612cbd63853d91ef6e5df51dc58124f6d40677e3e",
+      "source": "cbc9d52^:workers/fleet-poller.sh"
+    },
+    "fixed.sh": {
+      "sha256": "6607dc1a993bfacb348aef2e14a30c2131675891d03ba8119389248b46e33ed8",
+      "source": "cbc9d52:workers/fleet-poller.sh"
+    },
+    "test-fleet-poller.sh": {
+      "sha256": "0894381c077cf08c0a8408a069920e296a9f1f8bba40c688957b26c95f9fbca2",
+      "source": "a457a71:workers/test-fleet-poller.sh"
+    },
+    "rowcheck": {
+      "sha256": "5334ee6abc00049732c8c1e856c8ec85a0239e5b76b4181516443f6e58489f9b",
+      "source": "/home/bmosher/.config/agent-deck/rowcheck",
+      "qualification": "current snapshot for director rerun, not proof of author-time bytes"
+    },
+    "acp-worker": {
+      "sha256": "6871ceb1fa15e3b744c29b3aacde59f8c77a9ca54285b4ba954859f8fbb64d02",
+      "source": "/home/bmosher/.config/agent-deck/acp-worker",
+      "qualification": "current snapshot for director rerun, not proof of author-time bytes"
+    }
+  },
+  "results": {
+    "broken": {
+      "argv": [
+        "bash",
+        "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/test-fleet-poller.sh",
+        "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/broken.sh"
+      ],
+      "rc": 1,
+      "summary": [
+        "116 passed, 1 failed"
+      ],
+      "skips": []
+    },
+    "fixed": {
+      "argv": [
+        "bash",
+        "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/test-fleet-poller.sh",
+        "/var/home/bmosher/memory-bake-off/campaign4/packages/R8-work-task-feasibility/director-closure/fixed.sh"
+      ],
+      "rc": 0,
+      "summary": [
+        "117 passed, 0 failed"
+      ],
+      "skips": []
+    }
+  },
+  "qualifications": [
+    "Author116/1 and117/0 vs reviewer115/1 and116/0 differ by optional conductor-wrapper check; contrast unaffected, not invariant tally.",
+    "Go absent from PATH is not Go absent from host: /home/bmosher/sdk/go/bin/go exists. Rejected candidate not established infeasible on that ground.",
+    "No memory trial or restart efficacy shown; only task/check feasibility."
+  ]
+}

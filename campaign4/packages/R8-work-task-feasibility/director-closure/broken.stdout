@@ -1,0 +1,146 @@
+unit: file-age predicate
+  pass  mt returns an epoch for a file that exists
+  pass  mt returns 0 for a missing file (never a stale truthy value)
+unit: artifact-movement clock
+  pass  art_ts ignores task-log/RD-THREADS/poller.log (chatter is not work)
+  pass  art_ts reports the product write's own timestamp
+  pass  art_ts returns 0 for a missing history file
+unit: queue row status, read fresh
+  pass  row_closed_now sees a done row
+  pass  row_closed_now sees an open row as open
+  pass  row_closed_now treats an absent row as open (fail-open: a vanished row must not suppress a wake silently)
+unit: computed-done gate (three outcomes, not two)
+  pass  gate PASSES when the declared check exits 0
+  pass  gate FAILS when the declared artifact is absent
+  pass  gate reports NONE for prose in the check cell (exit 127)
+  pass  gate reports NONE when rowcheck itself is missing
+  pass  gate reports NONE for an empty row id
+unit: heartbeat backpressure
+  pass  an unseen seat is never blocked
+  pass  a seat with 3 queued and 0 turns since is blocked
+  pass  still blocked after 2 of 3 turns
+  pass  clears by itself once the seat has caught up
+  pass  a stale note is ignored, so a dead seat still gets poked
+  pass  sat_note reads the depth the wake binary reported
+  pass  sat_note records nothing when the wake actually started
+unit: every alarm states an action and a consequence
+  pass  found Signal alarm kinds in the target: claimed-dark ghost-both ghost-verifier seat-mute self-verify sprint-close unroutable verifier-dark 
+  pass  alarm 'claimed-dark' states an action
+  pass  alarm 'claimed-dark' states a consequence
+  pass  alarm 'ghost-both' states an action
+  pass  alarm 'ghost-both' states a consequence
+  pass  alarm 'ghost-verifier' states an action
+  pass  alarm 'ghost-verifier' states a consequence
+  pass  alarm 'seat-mute' states an action
+  pass  alarm 'seat-mute' states a consequence
+  pass  alarm 'self-verify' states an action
+  pass  alarm 'self-verify' states a consequence
+  pass  alarm 'sprint-close' states an action
+  pass  alarm 'sprint-close' states a consequence
+  pass  alarm 'unroutable' states an action
+  pass  alarm 'unroutable' states a consequence
+  pass  alarm 'verifier-dark' states an action
+  pass  alarm 'verifier-dark' states a consequence
+  pass  the alarm text promises nothing the loop cannot do
+unit: nobody marks their own homework
+  pass  an unknown row has no recorded producer
+  pass  the seat that was handed the row is a producer
+  pass  a seat that was NOT handed it is not a producer
+  pass  producers do not leak between rows
+  pass  matching is case-insensitive on the seat name
+  pass  the ledger is append-only, so repeats are both kept
+  pass  it names the producers for the alarm text
+  pass  a dry run records nothing
+static: the worker never remembers an unproven session
+  pass  an id is written only once the session has answered
+  pass  a stall forgets the id, so a restart cannot resume a dead session
+  pass  the stall clock restarts after the slot is acquired, so queuing is not counted as silence
+  pass  the engine's stderr is kept rather than discarded
+system: a sweep never buzzes a real phone
+  pass  DRY_RUN reaches the Signal sender, so a test run cannot page Brian
+  pass  the Signal address can be pointed somewhere harmless for a test
+static: the conductor's promises are actually watched
+  pass  the conductor lane enables the promise check (acp-pi-worker)
+unit: a log line speaks on transition, not every sweep
+  pass  the same state logs once, not three times
+  pass  a real change speaks again
+  pass  different keys do not suppress each other
+  pass  it reports suppression to the caller
+  pass  a dry run records no state
+  pass  the per-row evidence lines all go through log_once
+unit: a seat that answers nothing is noticed
+  pass  three empty answers in a row reads as mute
+  pass  stalls and rebuilds count as no answer too
+  pass  one real answer among them is not mute
+  pass  too few answers to judge is NOT mute (a fresh seat is not written off)
+  pass  an unknown seat is not mute
+  pass  an empty seat id is not mute
+  pass  history says mute BUT a turn is in flight (start, no end) -> NOT mute (blocked, not broken)
+  pass  history says mute and the last turn ENDED -> still mute
+  pass  a stream with an unparseable line still guards the parseable start
+unit: the loop picks the checker itself
+  pass  picks the worker that did NOT do the job
+  pass  and the other way round
+  pass  asks nobody when both workers did the work
+  pass  never picks the conductor, which routes rather than judges
+  pass  skips a seat that poller-exclude parks
+  pass  asks nobody when every worker is parked
+  pass  asks nobody when the roster holds only the conductor
+  pass  asks nobody when the roster is empty
+system: an excluded seat is not recorded as having done the work
+  pass  no record appears when the sweep attempted no hand-off
+  pass  every record is written after its hand-off, never before
+static: a finished sprint commissions its own write-up
+  pass  the conductor is asked for the demo when the sprint closes
+  pass  and Brian is told whether a demo is actually coming
+  pass  the demo request carries real line breaks, not escape characters
+static: the close detector counts evidence, not just the word done
+  pass  a computed-done row counts toward the close even with no done: token
+static: a dispatch message never quotes the row back at the reader
+  pass  no dispatch message quotes the row's cells back at the reader
+  pass  and it tells the reader to go read the row instead
+static: a hand-off into silence does not consume the retry
+  pass  a mute verifier does not consume the transition
+system: a finished row whose checker did the work is refused
+  pass  the sign-off is refused even though the row's text names a different author
+  pass  the refusal is recorded and surfaced, not swallowed
+  pass  self-verify still pages (acceptable: the guarantee is non-silence)
+  pass  kiln is never asked to check its own row
+system: pause marker and self-resume
+  pass  a pause marker does NOT end the process (it idled until the timeout)
+  pass  pause is logged once, not once per sweep
+  pass  alive is NOT touched while paused, so the external check still sees an outage
+  pass  no wake is delivered while paused
+  pass  the sweep resumes with the marker gone, with no restart
+system: evidence beats prose in the live classifier
+  pass  a finished row with no 'done:' token closes on evidence (row-42 case)
+  pass  a row claiming done with a failing check is refused
+  pass  a row declaring no gate is left to its text, exactly as before
+  FAIL  a DECLARED check that cannot run counts FAILED, not absent
+       expected: fail
+       actual:   none
+  pass  a plain runnable check still passes
+  FAIL  127 logging
+       expected: a log_once naming exit 127
+       actual:   absent
+  pass  real row id '37' is admitted
+  pass  real row id '6' is admitted
+  pass  real row id 'S3-7' is admitted
+  pass  real row id 'S6-1G' is admitted
+  pass  real row id 'D-1' is admitted
+  pass  real row id 'D-6' is admitted
+  pass  real row id 'S4-8' is admitted
+  pass  table cell 'model' is NOT a row
+  pass  table cell 'provider' is NOT a row
+  pass  table cell 'muse-spark-1.3-contributor' is NOT a row
+  pass  table cell 'deepseek-v4.1-flash' is NOT a row
+  pass  table cell 'glm-5.3-flash' is NOT a row
+  pass  table cell 'glm-5.3' is NOT a row
+  pass  table cell 'zcode glm-5.3-flash' is NOT a row
+  pass  table cell '100%' is NOT a row
+  pass  table cell '1-2m' is NOT a row
+  pass  table cell '83%' is NOT a row
+  pass  the guard is applied to all 4 all-rows parsers
+  pass  the guard carries no apostrophe to close its single-quoted awk
+
+116 passed, 1 failed

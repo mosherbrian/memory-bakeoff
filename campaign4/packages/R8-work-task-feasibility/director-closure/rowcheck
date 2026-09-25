@@ -1,0 +1,309 @@
+#!/usr/bin/env python3
+"""rowcheck — computed-done gate for team/QUEUE.md rows (QUEUE S4-8).
+
+kiln-flash, 2026-09-16. Spec sources: the S4-8 row ("given a queue row, print
+JSON saying whether its declared artifact exists and what its declared check
+returns. No LLM in it. Reuse the existing guard exit contract"), the Sprint-4
+adjudication (`team/SPRINT-4-ADJUDICATION-corvid.md`: when S4-8 lands, the
+poller's wake gate upgrades to the row's DECLARED CHECK exiting 0, not its
+snapshot text), and Assay's advisory item 3 ("make done the computed
+artifact+check gate").
+
+Contract (reused, not a second dialect — same as scripts/check_*.py in the
+canonical repo):
+  - exit 0  = the row's done-declaration HOLDS: its declared machine gate
+    passes. The gate is the row's own declared check when present (the row
+    author's contract, e.g. `test -f A -o -f B` for either-or artifacts);
+    otherwise every extracted artifact path must exist.
+  - exit 1  = findings, each printed (check rc != 0, missing artifact on a
+    check-less row, no machine-declarable artifact, no declared check,
+    row not found / ambiguous / malformed). A zero exit never coexists with
+    a finding. Artifact states are ALWAYS in the JSON, even when the declared
+    check governs, so drift stays visible to auditors.
+  - --self-test asserts detection LOGIC on synthetic fixtures only (clean and
+    dirty), deterministic, never dependent on live queue state.
+
+Decluration heuristic (deterministic, documented):
+  - A row is a `|`-pipe line whose first cell is its id; artifact-required
+    cell = 6th column. The declared check is the balanced-paren span starting
+    `(check:`; it runs under `/bin/bash -c` from the queue root with a
+    timeout. Artifact paths are path-like tokens in the remaining cell text
+    (backticked spans preferred, then slash-bearing/suffixed words). Paths
+    resolve against the queue root, then the fleet home (/home/bmosher) for
+    config-relative declarations like `.config/agent-deck/...`.
+  - A check-less row or a prose-only artifact cell is a finding ON PURPOSE:
+    such a row cannot be computed-done (the S4-4 class this tool surfaces).
+
+Usage:
+  python3 rowcheck <ROW-ID> [--queue PATH] [--root PATH] [--json]
+  python3 rowcheck --self-test
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+DEFAULT_QUEUE = Path("/var/home/bmosher/memory-bake-off/team/QUEUE.md")
+FLEET_HOME = Path("/home/bmosher")
+CHECK_TIMEOUT_SECS = 120
+PATH_TOKEN_RE = re.compile(r"^[~./]?[A-Za-z0-9_.+-]+(?:/[A-Za-z0-9_.+-]+)+$|^[A-Za-z0-9_.+-]+\.[A-Za-z0-9]{1,6}$")
+NONPATH_TOKENS = {"e.g", "i.e", "etc", "vs"}
+
+
+def split_row(line: str):
+    return [c.strip() for c in line.strip().strip("|").split("|")]
+
+
+def extract_check(artifact_cell: str):
+    """Return (cell_without_check, check_command_or_None) via a balanced scan."""
+    marker = artifact_cell.find("(check:")
+    if marker == -1:
+        return artifact_cell, None
+    depth, end = 0, None
+    for i in range(marker, len(artifact_cell)):
+        if artifact_cell[i] == "(":
+            depth += 1
+        elif artifact_cell[i] == ")":
+            depth -= 1
+            if depth == 0:
+                end = i
+                break
+    if end is None:  # unbalanced; treat rest of cell as the check span
+        return artifact_cell[:marker], artifact_cell[marker + 1:]
+    return artifact_cell[:marker] + artifact_cell[end + 1:], artifact_cell[marker + len("(check:"):end].strip()
+
+
+def _is_path_token(tok: str) -> bool:
+    if tok in NONPATH_TOKENS:
+        return False
+    if not PATH_TOKEN_RE.match(tok):
+        return False
+    try:  # numbers like 0.36 or 115M are not paths
+        float(tok.rstrip("MKT"))
+        return False
+    except ValueError:
+        return True
+
+
+def extract_artifact_paths(cell_minus_check: str):
+    paths = []
+    for ticked in re.findall(r"`([^`]+)`", cell_minus_check):
+        t = ticked.strip()
+        if " " not in t and _is_path_token(t):
+            paths.append(t)
+    if not paths:
+        for raw in cell_minus_check.replace("`", " ").split():
+            tok = raw.rstrip(",.;:()")  # trailing only: a leading dot is path content (.config/...)
+            if _is_path_token(tok):
+                paths.append(tok)
+    seen, out = set(), []
+    for p in paths:
+        if p not in seen:
+            seen.add(p)
+            out.append(p)
+    return out
+
+
+def resolve_path(p: str, root: Path):
+    cands = [Path(p)] if p.startswith("/") else [root / p, FLEET_HOME / p]
+    for c in cands:
+        if c.exists():
+            return True, str(c)
+    return False, str(cands[0])
+
+
+def find_rows(queue_text: str, row_id: str):
+    matches, malformed = [], []
+    for line in queue_text.splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = split_row(line)
+        if len(cells) < 2 or cells[0] in ("", "#") or set(cells[0]) <= {"-", " "}:
+            continue
+        if len(cells) < 5:
+            malformed.append(cells[0])
+            continue
+        if cells[0] == row_id:
+            matches.append(cells)
+    return matches, malformed
+
+
+def check(row_id: str, queue_path: Path, root: Path):
+    findings = []
+    if not queue_path.is_file():
+        return {"row": row_id, "artifact_states": [], "declared_check": None,
+                "check_exit": None, "status_declares_done": None,
+                "findings": [{"finding": f"missing prerequisite: {queue_path}"}]}, False
+    matches, _malformed = find_rows(queue_path.read_text(encoding="utf-8", errors="replace"), row_id)
+    if len(matches) > 1:
+        findings.append({"finding": f"ambiguous row id: {len(matches)} rows share id {row_id!r}; evaluating the first"})
+    if not matches:
+        findings.append({"finding": f"row not found: {row_id!r}"})
+        return {"row": row_id, "artifact_states": [], "declared_check": None,
+                "check_exit": None, "status_declares_done": None,
+                "findings": findings}, False
+    cells = matches[0]
+    artifact_cell = cells[4]
+    status_cell = cells[-1]
+    cell_minus_check, check_cmd = extract_check(artifact_cell)
+    paths = extract_artifact_paths(cell_minus_check)
+    status_declares_done = status_cell.startswith("done:")
+
+    artifact_states = []
+    for p in paths:
+        exists, resolved = resolve_path(p, root)
+        artifact_states.append({"path": p, "exists": exists, "resolved": resolved})
+        if not exists and check_cmd is None:
+            findings.append({"finding": f"declared artifact missing: {p}"})
+    if not paths and check_cmd is None:
+        findings.append({"finding": "no-declared-artifact-path and no declared check: nothing machine-computable (S4-4 class)"})
+
+    check_exit = None
+    if check_cmd is not None:
+        try:
+            proc = subprocess.run(["/bin/bash", "-c", check_cmd], cwd=str(root),
+                                  capture_output=True, text=True, timeout=CHECK_TIMEOUT_SECS)
+            check_exit = proc.returncode
+        except subprocess.TimeoutExpired:
+            findings.append({"finding": f"declared check timed out after {CHECK_TIMEOUT_SECS}s: {check_cmd}"})
+            check_exit = -1
+        else:
+            if check_exit != 0:
+                findings.append({"finding": f"declared check exited {check_exit}: {check_cmd}"})
+    else:
+        if paths:
+            findings.append({"finding": "no declared check: row declares no (check:) command; done rests on artifact existence alone"})
+
+    report = {"row": row_id, "queue": str(queue_path), "artifact_states": artifact_states,
+              "declared_check": check_cmd, "check_exit": check_exit,
+              "status_declares_done": status_declares_done,
+              "findings": findings}
+    return report, not findings
+
+
+def self_test():
+    failures = []
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        (root / "team").mkdir()
+        art = root / "team" / "ART.md"
+        art.write_text("x")
+
+        def queue(rows):
+            q = root / "team" / "Q.md"
+            q.write_text("| # | Task | Seats | Trigger | Artifact required | Cost | Status |\n"
+                         "|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
+            return q
+
+        # 1 clean: artifact exists, declared check passes -> holds, no findings
+        q = queue(["| T1 | task | seat | now | team/ART.md (check: test -f team/ART.md) | 1 | done: team/ART.md |"])
+        rep, ok = check("T1", q, root)
+        if not ok or rep["findings"] or not rep["artifact_states"][0]["exists"] \
+                or rep["check_exit"] != 0 or rep["status_declares_done"] is not True:
+            failures.append(f"clean case must hold: {rep}")
+
+        # 2 dirty artifact: file gone, check tests it -> check finding + exists False
+        art.unlink()
+        rep, ok = check("T1", q, root)
+        if ok or rep["artifact_states"][0]["exists"] or rep["check_exit"] == 0:
+            failures.append(f"missing artifact must break: {rep}")
+        art.write_text("x")
+
+        # 3 dirty check: artifact exists, declared check fails -> finding
+        q2 = queue(["| T2 | task | seat | now | team/ART.md (check: test -f team/ABSENT.md) | 1 | done: x |"])
+        rep, ok = check("T2", q2, root)
+        if ok or rep["check_exit"] == 0:
+            failures.append(f"failing check must break: {rep}")
+
+        # 4 prose-only artifact cell, no check (S4-4 class) -> nothing machine-computable
+        q3 = queue(["| T3 | task | seat | now | a receipt in team/ | 1 | done: x |"])
+        rep, ok = check("T3", q3, root)
+        if ok or not any("nothing machine-computable" in f["finding"] for f in rep["findings"]):
+            failures.append(f"prose artifact must be flagged: {rep}")
+
+        # 5 duplicate ids -> ambiguity finding, verdict broken
+        q4 = queue(["| T4 | a | s | n | team/ART.md | 1 | open |",
+                    "| T4 | b | s | n | team/ART.md | 1 | open |"])
+        rep, ok = check("T4", q4, root)
+        if ok or not any("ambiguous row id" in f["finding"] for f in rep["findings"]):
+            failures.append(f"duplicate ids must be flagged: {rep}")
+
+        # 6 absent row id -> row-not-found finding
+        rep, ok = check("NOPE", q, root)
+        if ok or not any("row not found" in f["finding"] for f in rep["findings"]):
+            failures.append(f"absent row must be flagged: {rep}")
+
+        # 7 non-executable prose check -> nonzero exit finding, no traceback
+        q5 = queue(["| T5 | task | seat | now | team/ART.md (check: selftest ALL GREEN on v3) | 1 | open |"])
+        rep, ok = check("T5", q5, root)
+        if ok or rep["check_exit"] in (0, None):
+            failures.append(f"prose check must exit nonzero and be named: {rep}")
+
+        # 8 either-or semantics: declared check governs; missing alternative is informational only
+        q6 = queue(["| T6 | task | seat | now | team/ABSENT.md or team/ART.md "
+                    "(check: test -f team/ABSENT.md -o -f team/ART.md) | 1 | done: x |"])
+        rep, ok = check("T6", q6, root)
+        if not ok or rep["check_exit"] != 0 or rep["artifact_states"][0]["exists"]:
+            failures.append(f"either-or check must hold with informational missing alt: {rep}")
+
+        # 9 unquoted edited-prefixed path is still extracted
+        q7 = queue(["| T7 | task | seat | now | edited .config/agent-deck/acp-worker (check: test -f team/ART.md) | 1 | done: x |"])
+        rep, _ok = check("T7", q7, root)
+        if not rep["artifact_states"] or rep["artifact_states"][0]["path"] != ".config/agent-deck/acp-worker":
+            failures.append(f"unquoted path must be extracted: {rep}")
+
+        # 10 check-less row with existing artifact -> strict no-declared-check finding
+        q8 = queue(["| T8 | task | seat | now | team/ART.md | 1 | done: x |"])
+        rep, ok = check("T8", q8, root)
+        if ok or not any("no declared check" in f["finding"] for f in rep["findings"]):
+            failures.append(f"check-less row must be flagged: {rep}")
+
+    if failures:
+        print("=== rowcheck self-test FAILURES:")
+        for f in failures:
+            print(f"    {f}")
+        return 1
+    print("=== rowcheck self-test: 10/10 logic controls hold (clean holds; missing artifact, "
+          "failing check, prose-only artifact, duplicate id, absent row, non-executable check, "
+          "either-or informational alternative, unquoted path, check-less row all detected)")
+    return 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="computed-done gate for QUEUE rows")
+    ap.add_argument("row", nargs="?", help="row id from the queue's first column, e.g. S4-1 or 38")
+    ap.add_argument("--queue", type=Path, default=DEFAULT_QUEUE)
+    ap.add_argument("--root", type=Path, default=None,
+                    help="cwd for artifact paths and the declared check (default: queue's parent's parent)")
+    ap.add_argument("--json", action="store_true", help="print only the JSON verdict")
+    ap.add_argument("--self-test", action="store_true")
+    args = ap.parse_args()
+
+    if args.self_test:
+        return self_test()
+    if not args.row:
+        ap.error("a row id is required (or use --self-test)")
+    queue_path = args.queue.expanduser()
+    root = args.root.expanduser() if args.root else queue_path.resolve().parent.parent
+    report, holds = check(args.row, queue_path, root)
+    if args.json:
+        print(json.dumps(report, indent=2))
+    else:
+        print(f"=== rowcheck {args.row} ({queue_path})")
+        print(f"    declared artifacts: {[(a['path'], 'exists' if a['exists'] else 'MISSING') for a in report['artifact_states']] or 'none extractable'}")
+        print(f"    declared check: {report['declared_check'] or 'none'}  -> exit {report['check_exit']}")
+        print(f"    status cell declares done: {report['status_declares_done']} (informational; the gate is artifact+check, not prose)")
+        for f in report["findings"]:
+            print(f"    finding: {f['finding']}")
+        print(f"    verdict: {'done-holds' if holds else 'done-NOT-computed'}")
+        print(json.dumps(report, indent=2))
+    return 0 if holds else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
