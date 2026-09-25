@@ -1,0 +1,26 @@
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 119bebf..23456f5 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -423,7 +423,7 @@ func (l *Loop) ClaimCommand(qid, step string) string {
+ // Nudge is appended to every worker, verifier and director message (R23):
+ // a prompt, not a check. Nothing reads or validates the answers.
+ const Nudge = "\n\nBefore you end your turn, answer briefly in your reply: (1) What did this move forward? " +
+-	"(2) What happens next, who does it, and by when? (3) What might I have dropped - anything left undone, " +
++	"(2) What happens next? If it is yours, do it now; if not, who has it, and do they know? (3) What might I have dropped - anything left undone, " +
+ 	"skipped because of a rule, or handed to someone who does not know?"
+ 
+ func (l *Loop) instructions(p *Pkg, step string) string {
+diff --git a/internal/loop/nudge_r23_test.go b/internal/loop/nudge_r23_test.go
+index bca8066..dad07b9 100644
+--- a/internal/loop/nudge_r23_test.go
++++ b/internal/loop/nudge_r23_test.go
+@@ -25,7 +25,7 @@ func TestNudgeReachesWorkerVerifierAndDirector(t *testing.T) {
+ 	must(t, err)
+ 	r.turnEnd("C")
+ 	r.tick(l)
+-	want := "What happens next, who does it, and by when?"
++	want := "What happens next? If it is yours, do it now; if not, who has it, and do they know?"
+ 	seen := map[string]bool{}
+ 	for _, c := range r.calls {
+ 		if filepath.Base(c[0]) == "wake" && strings.Contains(c[2], want) {
