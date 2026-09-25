@@ -1,0 +1,29 @@
+{
+ "qid": "R11-activation-1",
+ "operator": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T15:42:11.577700+00:00",
+ "witness": {
+  "unit": "r11-witness (transient, systemd-run --on-calendar 15:40:00 UTC, AccuracySec=1s)",
+  "fired": "2026-09-25T15:40:00Z",
+  "candidate_sha256": "518581b9eb761a4c0f55f87f97fca900ba9a0d4130929bcc36415bff53695511",
+  "inputs": "isolated HOME ~/.cache/r11w; registry A(Q-A) and B(Q-B) active; Q-A gap seeded 40 min old; Q-B on a valid rest; stub wake/notify, stub status (no packages); byte copies of escalations/escalation-resolve in the sandbox HOME",
+  "result": "Q-A: tern notified (GAP-Q-A-witness); Q-B: ok (rest). One sandbox ledger row, one stub wake to tern, no Claude notice, no live notification",
+  "units_left": 0,
+  "PASS": true,
+  "note": "my own wait loop polled a property of the transient unit, which is removed on exit, so it never ended; stopped it by task id after reading the journal"
+ },
+ "install": {
+  "backup": "~/.config/agent-deck/research-gap-check.bak-R11 (R5 base 571532593e73... verified before copy)",
+  "installed_sha256": "518581b9eb761a4c0f55f87f97fca900ba9a0d4130929bcc36415bff53695511",
+  "registry": "/home/bmosher/memory-bake-off/campaign4/RESEARCH-STREAMS.json sha256 6a483e864214a7f25b59eb417c338ba9399d821f1160f099df5ccda352581ddb (A=Q-WORK-BENEFIT active, B=Q-EVALUATOR-VALIDITY inactive)",
+  "units": "research-gap-check.service and .timer unchanged, no daemon-reload"
+ },
+ "first_production_run": "15:41:58Z manual start of the existing service: 'Q-WORK-BENEFIT: ok (rest to 15:48:42Z)'; live state now {gaps: {}, watched: {Q-WORK-BENEFIT: A}}; prior live state had no open gaps, so nothing to migrate",
+ "rollback": "install -m 755 ~/.config/agent-deck/research-gap-check.bak-R11 ~/.config/agent-deck/research-gap-check (state compatible; registry ignored by R5 code)",
+ "files_sha256": {
+  "activation/install.txt": "69c49f7d38124c144f52c5d8e124939dd26043fe24a2c81e5026d3a49c9cad1e",
+  "activation/witness.txt": "6c163412bea1a4bb52cb675730c289785e4945d83b299e4ea555845e941336f3"
+ },
+ "not_done": "stream B not activated; no seats, no research, no Signal"
+}
