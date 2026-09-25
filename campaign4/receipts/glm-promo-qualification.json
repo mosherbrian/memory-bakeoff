@@ -1,0 +1,31 @@
+{
+ "at": "2026-09-25T23:52:37.869525+00:00",
+ "owner": "claude",
+ "qid": "GLM-promo-qualification",
+ "official_terms": {
+  "source": "https://docs.z.ai/devpack/overview (read 2026-09-25 ~23:53Z)",
+  "dates": "September 3 - October 7",
+  "hours": "daily 23:00-09:00 next day, UTC+8 (= 15:00-01:00 UTC = 08:00-18:00 PDT; matches Brian's '8am-6pm')",
+  "tools": "ZCode and AutoClaw",
+  "eligible": "paid plan users",
+  "allowance": "unlimited usage on these tools",
+  "concurrency": "not stated on the page"
+ },
+ "routing_eligibility": {
+  "route": "existing isolated ZCode lane home ~/.local/share/agent-deck/zcode-homes/glmflash (model pinned zai/glm-5.3-flash, provider 'Z.AI Coding Plan' base https://api.z.ai/api/anthropic)",
+  "account": "Z.ai Coding Plan, Lite tier per saved records (paid); not re-verified on the Z.ai site in this check",
+  "earlier_evidence": "2026-09-08 a ZCode Flash request logged cost 0 during the earlier promo (saved record)"
+ },
+ "probe": {
+  "when_utc": "2026-09-25T23:52:11Z-23:52:21Z (inside the free window)",
+  "command": "HOME=<glmflash lane> timeout 60 zcode --mode plan --prompt 'Reply with exactly: FLASH OK'",
+  "rc": 0,
+  "output": "FLASH OK",
+  "ledger": "~/.zcode/cli/db/db.sqlite model_usage row msg_muhm80wq_742bca44...: provider zai, model glm-5.3-flash, status completed, 9.95 s, input 12,913 / output 289 / cache read 192 tokens",
+  "concurrency": 1,
+  "scratch": "/tmp/glm-qual-8W71"
+ },
+ "cost_evidence": "NOT DIRECTLY SHOWN: this ZCode build's model_usage table has no cost column, and no quota reading was taken before the probe. Zero cost rests on the official terms (paid plan, in-window, ZCode) plus the earlier cost-0 record. Smallest next check: read the Z.ai quota endpoint before and after one more request, or the Z.ai billing page.",
+ "status": "ROUTE WORKS; ZERO COST PROBABLE, NOT PROVEN",
+ "not_done": "no seat repoint, purchase, paid fallback, scheduler activation or R43 change"
+}
