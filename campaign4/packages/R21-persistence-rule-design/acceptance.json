@@ -1,0 +1,49 @@
+{
+  "at": "2026-09-25T19:57:36.487041+00:00",
+  "status": "ACCEPTED_DESIGN_WITH_EXECUTION_LIMITS",
+  "question_id": "Q-WORK-BENEFIT",
+  "owner": "tern",
+  "claim": {
+    "action": "R21-design-repair-1-v1",
+    "artifacts": {
+      "cases": {
+        "path": "packages/R21-persistence-rule-design/cases.json",
+        "sha256": "e3228fe38392d18652fa6c8439e595122cdb96ecaf3f6ccb062fef1bc69c302e"
+      },
+      "checker": {
+        "path": "packages/R21-persistence-rule-design/check_persistence.py",
+        "sha256": "181902d33451b0f868225b401d0e967fee9425f3b86f41878815469b91cab35a"
+      },
+      "design": {
+        "path": "packages/R21-persistence-rule-design/design.md",
+        "sha256": "1de2670916ede7307951b8e8b577c0d339c28c1e5129b3e5d61796e4989e39db"
+      },
+      "review": {
+        "path": "packages/R21-persistence-rule-design/verification-repair.md",
+        "sha256": "7adf2340f30ef1dc571cf1bb4b15e9f00916eb03e04e6a3d50e8bf1f1531526d"
+      },
+      "runner": {
+        "path": "packages/R21-persistence-rule-design/stub_runner.py",
+        "sha256": "7d3bbbe58e7b238cd0f01933f50caf3efd1fe157b375363cfd6548b037166158"
+      },
+      "tests": {
+        "path": "packages/R21-persistence-rule-design/test_check_persistence.py",
+        "sha256": "7ffab3c8865592f8eeea2d639416792d189f4109df718166f5f7035a9214d8e3"
+      }
+    },
+    "attempt": "a1",
+    "contract_step": "verify-run",
+    "execution": "ex-R21-design-repair-1-v1",
+    "outcome": "completed",
+    "package": "R21-design-repair-1"
+  },
+  "independent_verdict": "PASS preserved; design only",
+  "limits": [
+    "Runner emits canned strings, does not build an index or inspect fixture docs.",
+    "Caller supplies now_iso; no production host clock or independent capture exists.",
+    "Checker does not compare evidence at to receipt started_at; permission-denied mode does not forbid non-escalation actions.",
+    "Same-user files are not independent attribution. No participant release."
+  ],
+  "next_package": "R22-persistence-trial-preparation",
+  "for_brian": "We have a usable comparison design. Before trying it, we need a real little task and evidence that an action actually ran, rather than a receipt that says it did."
+}
