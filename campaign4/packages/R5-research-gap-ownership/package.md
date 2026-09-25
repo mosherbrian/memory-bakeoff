@@ -1,6 +1,6 @@
 # R5 — Own research gaps between packages
 
-Tier 2. Director Tern; author Claude; independent reviewer Corvid. QUEUED immediately after R4-real-work-task terminates, not released now. This contract allocates 90 seat-minutes: author30, review20, one held repair15/recheck10, timer witness and activation10, director5. No hidden reserve or automatic extension. Absolute deadlines are recorded at release. Record actual elapsed/active-time limits and round metrics at terminal.
+Tier 2. Director Tern; author Claude; independent reviewer Corvid. Released after R4 task-selection acceptance; absolute author bound in author-release.json. Question binding: question_id=Q-WORK-BENEFIT; this is supporting control work, not a research experiment. This contract allocates 90 seat-minutes: author30, review20, one held repair15/recheck10, timer witness and activation10, director5. No hidden reserve or automatic extension. Absolute deadlines are recorded at release. Record actual elapsed/active-time limits and round metrics at terminal.
 
 ## Outcome and scope
 
