@@ -1,0 +1,50 @@
+worker: /tmp/claude-1000/-var-home-bmosher/09b5ba50-67c7-4535-b27c-5baa3e1c4fa8/scratchpad/r10/workers/acp-worker
+case: idle /new gives a new, different id, a history boundary, and model/mode re-applied
+  pass  first session answered and persisted
+  pass  reply is ok and names a new id
+  pass  exactly one extra session/new
+  pass  history has one old -> new boundary
+  pass  model pinned on the new session
+  pass  mode applied on the new session
+  pass  unproven new id is not persisted
+  pass  no prompt was sent by /new
+  pass  running worker advertises 'new' in its state file
+case: normal prompt and /ping still work, on the new session
+  pass  prompt starts
+  pass  turn ends idle
+  pass  prompt ran on stub-2
+  pass  answered session is now persisted
+case: busy and queued refuse, with no effect
+  pass  refused while running + queued
+  pass  no session/new was called
+  pass  queue untouched: both prompts run on stub-1
+case: /new and a prompt racing: the prompt waits, then runs on the new session
+  pass  /new succeeded
+  pass  prompt admitted after /new
+  pass  prompt used the new session
+case: two /new at once do not interleave
+  pass  one switched, one refused
+case: adapter fail: never a success, old session kept
+  pass  fail: reported as failure
+  pass  fail: no boundary written
+  pass  fail: next prompt still on stub-1
+case: adapter same: never a success, old session kept
+  pass  same: reported as failure
+  pass  same: no boundary written
+  pass  same: next prompt still on stub-1
+case: adapter none: never a success, old session kept
+  pass  none: reported as failure
+  pass  none: no boundary written
+  pass  none: next prompt still on stub-1
+case: /new while /compact is in flight is refused; after it, /new works
+  pass  refused during compact
+  pass  compact finished normally
+  pass  no session/new during compact
+  pass  after compact, /new switches
+case: model pin refused on the new session is an explicit non-success
+  pass  reply says SWITCHED but REFUSED
+case: a lane pinned with ACP_RESUME refuses /new
+  pass  refused, naming ACP_RESUME
+  pass  no extra session/new
+
+36 passed, 0 failed

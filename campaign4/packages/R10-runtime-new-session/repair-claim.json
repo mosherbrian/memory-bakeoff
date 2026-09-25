@@ -1,0 +1,27 @@
+{
+ "qid": "R10-repair-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T14:21:57.194311+00:00",
+ "base_commit": "ab82f1576747466aecac7434b419a451973dffeb",
+ "repair_commit": "65048a340378eda8773746155a4d37d0a42152b1",
+ "branch": "r10-new-session",
+ "acp_worker_sha256": "083f6eb7072f53a097b68451d37ac9074fdd7ccb8703f87302dfe0373dca1dbd",
+ "D1": "OPERATOR activation rewritten (repair/OPERATOR.md): /new is never a version probe. Positive provenance first: installed hash == reviewed hash; worker process start after install mtime; acp-sessions features contains 'new' (written only by R10+ code at process start, mtime >= process start); /ping exactly idle. Any failure -> do not send /new. Code: save() now advertises 'new' in features. Test: running worker advertises 'new'; planted fault feature-not-advertised caught.",
+ "D2": "/compact and /earlier now increment self.transitions under self.ctl (waiting out a /new) and decrement in finally; /new refuses while transitions>0. Prompt admission unchanged (prompts still admitted during compact); the compact -32601 prompt fallback calls prompt() directly, no lock held, so no deadlock. Reproducer: stub compact sleeps 3s, /new 0.5s later -> refused naming compact; compact completes; /new then switches. Planted fault compact-not-guarded caught.",
+ "refusal_path": "stub refuses set_model and setModel on the new session -> reply 'new stub-2 SWITCHED but ... REFUSED'; planted fault refusal-reported-as-success caught.",
+ "tests": "36/36 (30 prior + compact race 4 + feature 1 + refusal 1); planted faults 14/14 (11 prior + 3 new); existing test-acp-worker.sh 4/4",
+ "files_sha256": {
+  "repair/OPERATOR.md": "c4acf2902404abd8963ecd89ee5ad49d9e2ee5a035d2139347b277f4cb08f189",
+  "repair/acp-worker": "083f6eb7072f53a097b68451d37ac9074fdd7ccb8703f87302dfe0373dca1dbd",
+  "repair/acp-worker.diff": "815e5fd83fb00b7077e1ef853495fac0b435a5ddaf7aa67f741d480fa4278693",
+  "repair/commit.txt": "82555fe0532ac8d23a23a6c064d6eea267469a51830591759bfa56ada696e560",
+  "repair/existing-worker-suite.txt": "a33855a7b425018a2271fe589f512cacb14a1955660cdff0d2f3408c65641c34",
+  "repair/mutants-acp-worker-new.py": "dbf9b7a1fa6a276fc217be22125a8d681f49962cb99cc764689c293ebdf98f41",
+  "repair/mutants-results.txt": "9cf282d69917d91b07e69b950fdfe3000c46c3bd432303a97393228fef0850fa",
+  "repair/test-acp-worker-new.py": "b228756769885209e85b5b5e098e90fcb437d2941640efecd62ac7606dc6034d",
+  "repair/test-results.txt": "63044d7c7db1fd078b63bd1e730a7ee00c31ce6c313b7f2564e9a362f50c37f3"
+ },
+ "preserved": "original claim, evidence/, OPERATOR.md, verification.md unchanged",
+ "not_done": "no install, restart, fleet prompt or R9 retry"
+}

@@ -1,0 +1,201 @@
+diff --git a/workers/acp-worker b/workers/acp-worker
+index d7e0d83..8f082f7 100755
+--- a/workers/acp-worker
++++ b/workers/acp-worker
+@@ -445,6 +445,12 @@ class Worker:
+         # the work, which is what wedged the implementer.
+         self.queued = []
+         self.qlock = threading.Lock()
++        # Admission lock: a prompt being admitted and a /new switching the
++        # session never interleave, so /new's idle check cannot race a prompt.
++        self.ctl = threading.Lock()
++        # Session-mutating control calls (/compact, /earlier) in flight. /new
++        # refuses while this is non-zero; prompts are still admitted as before.
++        self.transitions = 0
+         self.out_lock = threading.RLock()
+         # Key on the session, not on where it runs. agent-deck gives every
+         # session a stable AGENTDECK_INSTANCE_ID, and it is the same id the web
+@@ -830,6 +836,56 @@ class Worker:
+         self.resumed = False
+         self.save()
+ 
++    def new_session(self):
++        """/new: a fresh conversation for this seat, without stopping it.
++
++        Idle only. Refused while a turn runs, prompts are queued, a permission
++        answer is awaited, or another /new holds the admission lock. The old
++        session stays in use unless the adapter returns a NEW, different id.
++
++        Three records, three meanings:
++          - the reply ("new <id> ...") is the id the adapter just created;
++          - acp-history gets one "[new session] <old> -> <new>" line;
++          - acp-sessions/<seat>.json holds the new id only once it answers a
++            prompt (the proven-session rule), so until then a restart starts
++            a fresh session rather than resuming an unconfirmed one.
++        A lane pinned with ACP_RESUME is refused: /new there would reopen the
++        named conversation, which is the opposite of what was asked."""
++        if RESUME:
++            return "new refused: this lane is pinned to ACP_RESUME, so session/new would resume that conversation"
++        if not self.ctl.acquire(blocking=False):
++            return "new refused: another prompt or control change is being admitted"
++        try:
++            with self.qlock:
++                depth = len(self.queued)
++            if self.running or depth or self.pending is not None or self.transitions:
++                return ("new refused: seat busy ("
++                        + ", ".join(x for x in ("turn running" if self.running else "",
++                                                f"{depth} queued" if depth else "",
++                                                "permission pending" if self.pending is not None else "",
++                                                "compact/earlier in flight" if self.transitions else "") if x)
++                        + ") - nothing changed")
++            old = self.session
++            try:
++                new = self.call("session/new", {"cwd": CWD, "mcpServers": []})
++            except Exception as exc:
++                return f"new failed: adapter refused session/new ({exc}) - still on {old}"
++            sid = new.get("sessionId")
++            if not sid or sid == old:
++                return f"new failed: adapter returned {'no' if not sid else 'the same'} session id - still on {old}"
++            self.session, self.modes = sid, new.get("modes")
++            self.proven = self.resumed = self.stalled = False
++            self.save()
++            line = f"[new session] {old} -> {sid} (operator /new; context above this line was not carried over)"
++            self.show(line)
++            self.record("assistant", line)
++            applied = self.apply_mode() + self.apply_model() + self.apply_config_model()
++            if "REFUSED" in applied:
++                return f"new {sid} SWITCHED but{applied} - old context is gone"
++            return f"new {sid}" + applied
++        finally:
++            self.ctl.release()
++
+     def apply_mode(self):
+         # Only ZCode offers modes; the other adapters answer "Invalid params"
+         # and the noisy REFUSED line was alarming for a normal condition.
+@@ -959,7 +1015,7 @@ class Worker:
+                        # existed cannot, and reports nothing - which is how
+                        # fleet-gates tells "ungated" from "ungated once you
+                        # restart it", instead of calling a stale worker ready.
+-                       "features": ["mlfile", "socket", "unattended"]}, fh)
++                       "features": ["mlfile", "socket", "unattended", "new"]}, fh)
+ 
+     def prompt(self, text):
+         if self.stalled:
+@@ -1264,40 +1320,55 @@ class Worker:
+         if not text:
+             return "empty"
+         if text in ("/compact", "/earlier"):
+-            method = ("session/compact" if text == "/compact"
+-                      else "session/load_earlier")
++            with self.ctl:          # waits out a /new, then marks this in flight
++                self.transitions += 1
+             try:
+-                # 330s, not 120s. zcode allows its OWN auto-compact 300s before
+-                # it gives up, and compaction is a summarisation of the whole
+-                # history - conductor-glm sat at a 518k context on 2026-09-13,
+-                # which does not summarise in two minutes. A 120s timeout here
+-                # reported "compact failed" while the backend was still working
+-                # and would have succeeded, which is worse than slow: it tells
+-                # you the context is still huge when it is about to shrink.
+-                self.call(method, {"sessionId": self.session}, timeout=330)
+-                return f"{text[1:]} done"
+-            except Exception as exc:
+-                # SOME ADAPTERS HAVE THE FEATURE BUT NOT THE METHOD. opencode
+-                # 1.18.30 answers -32601 "Method not found" to session/compact
+-                # and session/load_earlier, yet its agent handles /compact
+-                # perfectly well when the slash command arrives as a PROMPT -
+-                # measured 2026-09-14, it returned a structured
+-                # Objective/Work State summary. Reporting "compact failed"
+-                # there would have been wrong on all ten lanes moved onto
+-                # opencode that morning, and wrong in the worst direction: it
+-                # says the context is still huge when it just shrank.
+-                #
+-                # Same shape as apply_model()'s two spellings: try the spec
+-                # way, fall back, and SAY WHICH ONE WORKED rather than let a
+-                # silent substitution hide that this lane compacts by prompt.
+-                if "-32601" not in str(exc) and "Method not found" not in str(exc):
+-                    return f"{text[1:]} failed: {exc}"
+-                try:
+-                    self.prompt(text)
+-                    return (f"{text[1:]} done (as a prompt - this adapter "
+-                            f"has no {method})")
+-                except Exception as exc2:
+-                    return f"{text[1:]} failed as method and as prompt: {exc2}"
++                return self.compact_or_earlier(text)
++            finally:
++                with self.ctl:
++                    self.transitions -= 1
++        return self.submit_rest(text)
++
++    def compact_or_earlier(self, text):
++        """/compact or /earlier; /new refuses while one is in flight."""
++        method = ("session/compact" if text == "/compact"
++                  else "session/load_earlier")
++        try:
++            # 330s, not 120s. zcode allows its OWN auto-compact 300s before
++            # it gives up, and compaction is a summarisation of the whole
++            # history - conductor-glm sat at a 518k context on 2026-09-13,
++            # which does not summarise in two minutes. A 120s timeout here
++            # reported "compact failed" while the backend was still working
++            # and would have succeeded, which is worse than slow: it tells
++            # you the context is still huge when it is about to shrink.
++            self.call(method, {"sessionId": self.session}, timeout=330)
++            return f"{text[1:]} done"
++        except Exception as exc:
++            # SOME ADAPTERS HAVE THE FEATURE BUT NOT THE METHOD. opencode
++            # 1.18.30 answers -32601 "Method not found" to session/compact
++            # and session/load_earlier, yet its agent handles /compact
++            # perfectly well when the slash command arrives as a PROMPT -
++            # measured 2026-09-14, it returned a structured
++            # Objective/Work State summary. Reporting "compact failed"
++            # there would have been wrong on all ten lanes moved onto
++            # opencode that morning, and wrong in the worst direction: it
++            # says the context is still huge when it just shrank.
++            #
++            # Same shape as apply_model()'s two spellings: try the spec
++            # way, fall back, and SAY WHICH ONE WORKED rather than let a
++            # silent substitution hide that this lane compacts by prompt.
++            if "-32601" not in str(exc) and "Method not found" not in str(exc):
++                return f"{text[1:]} failed: {exc}"
++            try:
++                self.prompt(text)
++                return (f"{text[1:]} done (as a prompt - this adapter "
++                        f"has no {method})")
++            except Exception as exc2:
++                return f"{text[1:]} failed as method and as prompt: {exc2}"
++
++    def submit_rest(self, text):
++        if text == "/new":
++            return self.new_session()
+         if text == "/ping":
+             # A probe that CHANGES NOTHING. Added because a diagnostic used
+             # /cancel to find out which sockets answered and killed three live
+@@ -1350,15 +1421,19 @@ class Worker:
+                 os.remove(path)
+             except OSError as exc:
+                 return f"could not read the multi-line prompt: {exc}"
+-        if self.running:
+-            with self.qlock:
+-                self.queued.append(text)
+-                depth = len(self.queued)
+-            return f"queued behind the running turn - {depth} waiting"
+-        # a thread, so a permission request can be answered from stdin while
+-        # the prompt is still in flight
+-        threading.Thread(target=self.prompt, args=(text,), daemon=True).start()
+-        return "started"
++        with self.ctl:
++            if self.running:
++                with self.qlock:
++                    self.queued.append(text)
++                    depth = len(self.queued)
++                return f"queued behind the running turn - {depth} waiting"
++            # Marked running HERE, under the admission lock, not later in the
++            # thread: otherwise a /new arriving in that gap would see idle.
++            self.running = True
++            # a thread, so a permission request can be answered from stdin
++            # while the prompt is still in flight
++            threading.Thread(target=self.prompt, args=(text,), daemon=True).start()
++            return "started"
+ 
+     def serve_socket(self):
+         """One JSON request per connection: {"text": "..."} -> {"ok", "status"}.
