@@ -1,0 +1,11 @@
+R14 trial, arm {ARM}, phase 2 of 2: REPAIR. This is a new conversation; an earlier conversation inspected this problem.
+
+Working copy: {ARM_DIR} (same rules: only this directory; not ~/inference-gateway, its history, or campaign4 packages other than the collect.py command below). Your files and any notes in {ARM_DIR}/notes/ are as you left them.
+{SUMMARY_BLOCK}
+Task: fix the code so that tests/test_drain_on_disconnect.py passes. Do not edit anything under tests/. Test command:
+  cd {ARM_DIR} && python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py
+Before claiming, run exactly:
+  python /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/collect.py {ARM} 2
+Then file the claim with the agent-loop claim command that the loop appends below this task, using exactly these artifacts:
+  --artifact test_output=packages/R14-loop-paired-trial/evidence/{ARM}-p2/test.out --artifact notes_index=packages/R14-loop-paired-trial/evidence/{ARM}-p2/notes-index.json --artifact manifest=packages/R14-loop-paired-trial/evidence/{ARM}-p2/manifest.txt --artifact igw_diff=packages/R14-loop-paired-trial/evidence/{ARM}-p2/igw.diff
+Outcome: completed if the test passes, failed otherwise.

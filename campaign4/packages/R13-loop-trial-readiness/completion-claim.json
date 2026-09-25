@@ -1,0 +1,27 @@
+{
+ "qid": "R13-readiness-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T16:03:18.494819+00:00",
+ "contract_sha256": "3721d8f327e9f4905098af6b4c5cbae099ab04cfc84b8ea110888598c802357c",
+ "D1": "Templates are self-contained apart from the claim command, which the installed loop appends (df5e6fc internal/loop/loop.go instructions(); same text in the live dispatch payloads). Each template names exact artifacts. All artifacts are files under artifacts_dir=/home/bmosher/memory-bake-off/campaign4; since arms are outside it, collect.py copies evidence into packages/R14-loop-paired-trial/evidence/<ARM>-p<N>/. Verifier outputs go to verify/, never into arms. The trial is renamed R14 to avoid a collision with this package.",
+ "D2": "manifest.py builds a deterministic relpath->sha256 manifest excluding only __pycache__/, *.pyc and .pytest_cache/. arm-manifest.json: 201 files (74 igw/, 53 tests/) from git archive 7b368e2^ plus the frozen check. Proof (evidence/manifest-proof.txt): untouched tree after running the check (34 .pyc created) + notes -> exit 0; changed test (phase-2 rule) -> 1; changed source (phase-1 rule) -> 1; changed source (phase-2 rule) -> 0; added source + missing test file -> 1 naming both; change outside igw/tests -> 1.",
+ "files_sha256": {
+  "evidence/manifest-proof.txt": "db2ea3e7ba696bede30bd9592970c5ebd463cc6546228a4978373d938ce43ede",
+  "prospective/arm-manifest.json": "77508854683d1e37327f980e0a172d5f11d3785fc89c9eb7894fdea2a68e2461",
+  "prospective/collect.py": "0ab903b5d34d57bd4643fd24880040f5bf2e2726ffcccf4acec69b9654b9d0ab",
+  "prospective/loop-composition.md": "251b7f0f59af6771c33697f36032fc8c1c776147bbcd9a11009d69f1b9b9a206",
+  "prospective/manifest.py": "434323153ea0c39d467654e741905881167e885e36ef7ef31e6e9c1cc51b6d2b",
+  "prospective/phase1-verifier.txt": "6e1ed49c66ddc86a18c6ac4c9bb9f646d695b6f6757f2602de258821b7e6e26f",
+  "prospective/phase1-worker.txt": "0be352edb233328691d42e693c4fbcc20ab5e496a18069dbfa37b63e3273cb6c",
+  "prospective/phase2-verifier.txt": "3c4b5e59c3a3da90b576a16591077fb640b7fe1c41c7a51cc2a83c859f36f932",
+  "prospective/phase2-worker.txt": "e97482b56f50c69443dca9cf1d5ffc15141ee8039ef30a26365244b200646a1b",
+  "prospective/summary-artifact-T.txt": "4f9ea066bed8ed12b399c46e928c04cdcdb38560b73d1126c889b5bb944ab188",
+  "prospective/summary-block-T.txt": "e48ca1e5df7cb4c2fa2094d81fb03dd5013104dd6e8b925f38ce07695461c965",
+  "prospective/summary-instruction-T.txt": "194075c461a36eba373a6804521f317eae27190703969103b292645bfe86cba1"
+ },
+ "unchanged": "task 7b368e2, check, treatment, scoring, 10m phases, T summary inside phase 1, n=1/order/exposure limits; R12 artifacts untouched",
+ "not_done": "no trial, no kiln prompt, no arms created, no historical fleet scripts, no network/Signal"
+}
