@@ -1,0 +1,63 @@
+{
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "config": "/home/bmosher/.config/agent-loop/campaign4-r29.json",
+ "config_content": {
+  "project": "campaign4-r29",
+  "profile": "campaign4",
+  "wake": "/home/bmosher/.config/agent-deck/wake",
+  "db": "/home/bmosher/.local/share/agent-loop/campaign4-r29.db",
+  "stream_dir": "/home/bmosher/.config/agent-deck/acp-stream",
+  "claims_dir": "/home/bmosher/.local/share/agent-loop/campaign4-r29/claims",
+  "artifacts_dir": "/home/bmosher/memory-bake-off/campaign4/packages/R29-revised-persistence-pilot",
+  "director": "tern",
+  "duty": "cairn",
+  "seats": {
+   "kiln": "a79067ca-1790000758",
+   "corvid": "493c0317-1790000758",
+   "tern": "0c933c75-1790000758",
+   "cairn": "56513e0e-1790000758"
+  },
+  "bin": "/home/bmosher/.local/bin/agent-loop.prev-r23-47f69dfd",
+  "unit": "agent-loop-r29-private-run.service",
+  "decision_policy": "required",
+  "decision_deadline_s": 1800,
+  "decision_responders": [
+   "claude"
+  ],
+  "decision_ladder": [
+   {
+    "after_s": 0,
+    "seat": "tern"
+   },
+   {
+    "after_s": 300,
+    "seat": "cairn"
+   },
+   {
+    "after_s": 600,
+    "exec": [
+     "/var/home/bmosher/.config/agent-deck/notify-claude",
+     "decision"
+    ],
+    "ledger": "/var/home/bmosher/.local/share/agent-deck/escalations.jsonl",
+    "ledger_kind": "decision",
+    "resolve_cmd": [
+     "/var/home/bmosher/.config/agent-deck/escalation-resolve"
+    ]
+   }
+  ]
+ },
+ "bin": "/home/bmosher/.local/bin/agent-loop.prev-r23-47f69dfd",
+ "bin_sha256": "47f69dfdeb8b0d17472d871b68dfdfa8270e3421997a03f5d1c6929c8a818ec1",
+ "production_bin_sha256": "eb9cc019faeefd5192b2082922f327f23e761ea93d671e29e356eafa89bc1782",
+ "run_unit": "agent-loop-r29-private-run.service",
+ "run_unit_show": "ActiveState=active\nInvocationID=2e58d3f40564461e8afe311d129055dc\nRestart=always\nMainPID=2845799\nExecStart={ path=/home/bmosher/.local/bin/agent-loop.prev-r23-47f69dfd ; argv[]=/home/bmosher/.local/bin/agent-loop.prev-r23-47f69dfd run --config /home/bmosher/.config/agent-loop/campaign4-r29.json ; ignore_errors=no ; start_time=[Fri 2026-09-25 13:39:14 PDT] ; stop_time=[n/a] ; pid=2845799 ; code=(null) ; status=0/0 }",
+ "timer_namespace": "agent-loop-campaign4-r29-<action>.timer (loop unit(): agent-loop-+project+-action); callback argv = private bin timer-callback --config private config",
+ "cleanup_timer": "agent-loop-r29-private-cleanup.timer OnCalendar 2026-09-25 22:35:03 UTC -> operator/cleanup.sh",
+ "stream_dir": "/home/bmosher/.config/agent-deck/acp-stream (the runtime's real per-session stream files: a79067ca-1790000758.jsonl etc. present, read-only)",
+ "arms_root": "/var/home/bmosher/r29-arms",
+ "capture_root": "/var/home/bmosher/r29-capture",
+ "smoke": "/var/home/bmosher/r29-smoke + /var/home/bmosher/r29-capture-smoke (operator smoke, not participant evidence)",
+ "render_check": "operator/render/checks.json all_ok true"
+}
