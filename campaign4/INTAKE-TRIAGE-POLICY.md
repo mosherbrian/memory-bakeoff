@@ -28,3 +28,10 @@ This supersedes the earlier phone-page contract above. The sole current list is 
 Each intake disposition also records `priority_effect`: linked change event IDs or `unchanged` with a reason. No unchanged event is required in movement history and no report must create work. If a report warrants adding/moving/parking a question, Tern records that scheduling decision and its source, keeping unverified claims labelled. Any resulting research-direction/experiment change still requires its tier1 decision; the feed cannot authorize it. No automatic source-date backdating: history records decision time and cites historical source time separately where needed.
 
 Initial ranking: work benefit first, check validity second, safe updates third, delivery-to-task-harm fourth. These existed in the prior unranked registry; `new` events mean newly entered into this ranked register, not newly discovered science. Existing answered R1 synthesis imported separately. The four initial reports attach leads or park reconnaissance without changing that initial ordering. September22's parked report does not mean the work-benefit question is parked.
+
+
+## Brian-facing wording — 2026-09-24 local
+
+Follow FOR-BRIAN-STYLE.md from now on. Priority items include `for_brian_why` and `for_brian_next`; history events, research acceptance/terminal outcomes and intake dispositions include `for_brian`. Keep the precise fields. Use one or two short sentences (about25 words maximum), say what it means for Brian, and state uncertainty plainly. This is tier5 wording, not a new review or research decision.
+
+Brian explicitly requested backfilling the existing five history events and outcomes. The wording backfill adds display-only fields in place; every prior precise value, ID, time, order and finding is unchanged and original bytes remain in Git. This narrow authorized annotation is not permission to rewrite event facts or triage decisions. Future events/dispositions include plain wording when first written; no fabricated priority movement for a wording change.
