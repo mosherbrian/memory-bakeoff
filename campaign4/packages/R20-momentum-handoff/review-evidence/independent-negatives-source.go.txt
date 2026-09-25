@@ -1,0 +1,42 @@
+package loop
+
+import "testing"
+
+// Unshared independent negatives (R20-candidate-review-1, corvid-eval).
+// Each asserts the SECURE behaviour; a failure is evidence of the defect.
+
+func TestNegQuestionBinding(t *testing.T) {
+	r, l := stamped(t)
+	defer l.Close()
+	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
+		m["moved"].(map[string]any)["question_id"] = "Q-NOT-A-DECLARED-QUESTION"
+	}), "completed")
+	if step(l, "P1") != "blocked" {
+		t.Fatalf("DEFECT: a stamp naming an undeclared question_id advanced to %s (%s)", step(l, "P1"), lastNote(l, "P1"))
+	}
+}
+
+func TestNegUnknownOwnerNotAllowed(t *testing.T) {
+	r, l := stamped(t)
+	defer l.Close()
+	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
+		m["next"].(map[string]any)["owner"] = "intruder-not-a-seat"
+	}), "completed")
+	if step(l, "P1") != "blocked" {
+		t.Fatalf("DEFECT: next.owner not allowed by config/contract advanced to %s (%s)", step(l, "P1"), lastNote(l, "P1"))
+	}
+}
+
+func TestNegSelfAttestedAckIsNotAttribution(t *testing.T) {
+	r, l := stamped(t)
+	defer l.Close()
+	// The worker itself writes a receipt naming cairn as the acknowledger and
+	// cairn as the dropped-item owner, then prints that in its own stamp.
+	r.artifact("forge.json", `{"ack": true, "qid": "P1", "item": "hand off to cairn", "owner": "cairn"}`)
+	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
+		m["dropped"] = []any{map[string]any{"item": "hand off to cairn", "owner": "cairn", "receipt": "forge.json"}}
+	}), "completed")
+	if step(l, "P1") != "blocked" {
+		t.Fatalf("DEFECT: worker-authored receipt for another owner counted as attribution; advanced to %s", step(l, "P1"))
+	}
+}
