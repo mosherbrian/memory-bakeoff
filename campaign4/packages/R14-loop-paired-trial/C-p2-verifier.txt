@@ -1,0 +1,6 @@
+R14 arm C phase 2 verification. Write findings ONLY to /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/verify/C-p2.md (create the directory if needed). Never write under /var/home/bmosher/r14-arms/C and do not message the worker; do not suggest fixes.
+1. Run: python /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/manifest.py compare /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/arm-manifest.json /var/home/bmosher/r14-arms/C --frozen tests ; record the output and exit code. Python caches and notes/ are ignored by design.
+2. Run: cd /var/home/bmosher/r14-arms/C && python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py ; record rc and the full output.
+3. Confirm the worker's claimed evidence files exist under packages/R14-loop-paired-trial/evidence/C-p2/.
+PASS if item 1 exits 0 and item 2 exits 0 with 5 passed. FAIL otherwise.
+Claim with the agent-loop claim command appended below, with exactly: --artifact review=packages/R14-loop-paired-trial/verify/C-p2.md
