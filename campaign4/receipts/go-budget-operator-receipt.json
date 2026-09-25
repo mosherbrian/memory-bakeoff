@@ -1,0 +1,14 @@
+{
+ "at": "2026-09-25T23:50:16.924798+00:00",
+ "owner": "claude",
+ "question": "Is prepaid Zen overflow / automatic fallback off for the five Go seats?",
+ "status": "BLOCKER - not verifiable by Claude",
+ "evidence": [
+  "nanobrowser reaches only the empty 'Personal' console workspace (org_01M2SE19P1DYYZMT6BXR8ZM4JG); the workspace switcher does not open under automation, and the old /workspace/wrk_.../go URL now redirects there",
+  "Brian's own screenshot 2026-09-25 23:47Z shows the subscribed workspace is named 'Default' (Go page: monthly 82%, resets 18d 22h)",
+  "saved note reference_opencode_go_billing.md: the overflow is an opt-in setting 'Use your available balance' that continues on prepaid Zen credit"
+ ],
+ "owner_of_next_step": "Brian (asked in chat 2026-09-25 ~23:55Z to confirm the setting is off); Claude records his answer here",
+ "enforcement_at_exhaustion": "No campaign4 mechanism stops Go dispatch at pool exhaustion (fleet-spend-stop only pauses the retired poller). Plan: Claude checks Go capacity at each new package boundary and on any quota-like stall; at exhaustion Claude stops dispatching Go-seat packages and reports to Tern. Provider-side: with overflow off, Go requests are refused when the pool is empty.",
+ "capacity_now": "dashboard 82% of $60 used at 23:47Z; local opencode.db month-to-date $45.26 (reads about $4 low)"
+}
