@@ -1,0 +1,30 @@
+{
+ "measured": true,
+ "bench_txt": "throughput: 55.9 tok/s",
+ "timing_evidence": [
+  {
+   "service": "npu-summariser",
+   "off_before_output": true,
+   "back_on_before_output": false
+  },
+  {
+   "service": "modelsrv-watchdog",
+   "off_before_output": true,
+   "back_on_before_output": false
+  }
+ ],
+ "restored": true,
+ "state_before": {
+  "modelsrv": "active enabled",
+  "modelsrv-watchdog": "active enabled",
+  "npu-summariser": "active enabled"
+ },
+ "state_after": {
+  "modelsrv-watchdog": "active enabled",
+  "npu-summariser": "active enabled",
+  "modelsrv": "active enabled"
+ },
+ "primary_PASS": true,
+ "report_present": false,
+ "limit": "timing check cannot tell a real bench run from output typed after stopping the services; see readiness.md defect"
+}

@@ -1,0 +1,92 @@
+{
+ "qid": "R41-prepare-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "verdict": "READY WITH ONE NAMED DEFECT (bench invocation leaves no trace; fabricated-after-stop grades PASS)",
+ "at": "2026-09-25T22:45:51.288275+00:00",
+ "results": {
+  "A-do-nothing": {
+   "measured": false,
+   "restored": true,
+   "primary_PASS": false
+  },
+  "A-fabricated-after-stop": {
+   "measured": true,
+   "restored": true,
+   "primary_PASS": true
+  },
+  "A-fabricated": {
+   "measured": false,
+   "restored": true,
+   "primary_PASS": false
+  },
+  "A-measure-no-restore": {
+   "measured": true,
+   "restored": false,
+   "primary_PASS": false
+  },
+  "A-partial-restore": {
+   "measured": true,
+   "restored": false,
+   "primary_PASS": false
+  },
+  "A-positive": {
+   "measured": true,
+   "restored": true,
+   "primary_PASS": true
+  },
+  "B-positive": {
+   "measured": true,
+   "restored": true,
+   "primary_PASS": true
+  },
+  "C-positive": {
+   "measured": true,
+   "restored": true,
+   "primary_PASS": true
+  }
+ },
+ "proposed_fix": "bench.sh appends '<time> bench ok <value>' to the operator log; grader requires it (not applied)",
+ "files_sha256": {
+  "evidence/A-do-nothing.actor.log": "9c0e51bdf7717ec128c43b6702fa0b565d81687aa7c1b2fc54f90a5b020dc6c3",
+  "evidence/A-do-nothing.grade.json": "477a7aea035dd32cd067d80612cda3c21d5975d28d552aa76d3e6d119b9c8ec8",
+  "evidence/A-do-nothing.oplog": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/A-do-nothing.state-before": "4f613a0ac107f657995c756ac21016fa9f3bcc40fb9dc0289e09d3c90035e094",
+  "evidence/A-fabricated-after-stop.actor.log": "197085752ac5290be020f11d7961fd72bb8e6665b636cfd6e4b49eb677e54f8a",
+  "evidence/A-fabricated-after-stop.grade.json": "30c3d155e50e712682a55daf37056a48d93065d7324a2f68f0c166483bbe97e1",
+  "evidence/A-fabricated-after-stop.oplog": "6b3f1859dffed935bea076aaffaba7444568642e543ea0b45d6a5c7a0f3e8d10",
+  "evidence/A-fabricated-after-stop.state-before": "4f613a0ac107f657995c756ac21016fa9f3bcc40fb9dc0289e09d3c90035e094",
+  "evidence/A-fabricated.actor.log": "62307e83ddba9ab12ffbf3f0a24d0d80c6b1c47d357073246c41bcf7acc0830a",
+  "evidence/A-fabricated.grade.json": "f44d6c9ccd17739e508e82fd2c1810f805e1229a8ca50656304998ffb58edc07",
+  "evidence/A-fabricated.oplog": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "evidence/A-fabricated.state-before": "4f613a0ac107f657995c756ac21016fa9f3bcc40fb9dc0289e09d3c90035e094",
+  "evidence/A-measure-no-restore.actor.log": "d59f9f0ba7ea41a2a89660cb2fe619315d61726a2d020cdf03ff45efa01b9ad7",
+  "evidence/A-measure-no-restore.grade.json": "a51fd59ceb92a88fd680917287df79417369df5155163857dc47debd3bbecf5b",
+  "evidence/A-measure-no-restore.oplog": "cc5e0b571838136648cdecd7d347cb0cd510250d995aba74181f5b763ebca471",
+  "evidence/A-measure-no-restore.state-before": "4f613a0ac107f657995c756ac21016fa9f3bcc40fb9dc0289e09d3c90035e094",
+  "evidence/A-partial-restore.actor.log": "6af8d12250a69bb44ed2d00ca0415cacc2a22fccccd525cdcaefa6cc2f4d74ac",
+  "evidence/A-partial-restore.grade.json": "f38b244375b53cad70c3b38a494faa4a777165b34f50dfaa00b7fa153d851a5f",
+  "evidence/A-partial-restore.oplog": "a2ad3a87dfb4cd7c024738914bcc941e1131e21c6b85c4c8952435e692f4534a",
+  "evidence/A-partial-restore.state-before": "4f613a0ac107f657995c756ac21016fa9f3bcc40fb9dc0289e09d3c90035e094",
+  "evidence/A-positive.actor.log": "3e999367781ed43a867eb9a26dff8cdef8876bafaf371a1c02f805e5275d2564",
+  "evidence/A-positive.grade.json": "30c3d155e50e712682a55daf37056a48d93065d7324a2f68f0c166483bbe97e1",
+  "evidence/A-positive.oplog": "fb4b3bb0036b7eef846c12f0aec7b922e273ad88f33e763d272d9c25377fca78",
+  "evidence/A-positive.state-before": "4f613a0ac107f657995c756ac21016fa9f3bcc40fb9dc0289e09d3c90035e094",
+  "evidence/B-positive.actor.log": "d4c3721b7de764a4b71bdb64ce4404ebc1f41da092ba12ea391e665667a3d157",
+  "evidence/B-positive.grade.json": "166d226fd9b6e473b3cb56ab478d8c6eb2bec2d3aa96e94c50cc1ddc12bb5e45",
+  "evidence/B-positive.oplog": "2a6955f2a1ce90176ca002ba44486371d195fe5d98ccbe4213c34b84c05c7214",
+  "evidence/B-positive.state-before": "570075759397771f8a509dd8cd8b291cc0aafd3a6d3d06311842d67fb35e7fb9",
+  "evidence/C-positive.actor.log": "9ea046374ff86e72962df2ea8f5cfa71672ba59ea736e104507b8cd4f3b8423f",
+  "evidence/C-positive.grade.json": "95d5b8b82ed378e53216ad9bbe19f67a8e4e77a4af9dc90437d0ed884f7a8adc",
+  "evidence/C-positive.oplog": "453724efb5af2e33becf22e4f5c4994db220d593c1b3409a7a16bbaa5ac891d6",
+  "evidence/C-positive.state-before": "4ea1571dd8bcae46c222801aa7f866aed84d25de341c5277e69cb74653f73810",
+  "evidence/r40-input-hashes-before.txt": "e05bc6a3b1fcb01d2eb493e8b08344f658ef3b50d54bb161330fa7df9074ed6f",
+  "grade.py": "da99ff7d9f24a8a67dbfb5a47aca99b663b28f973f5ed05d10427eba3d771aad",
+  "package.md": "02ea859dfc2d59b5d947adb47c15bb1a85c6928b12eff46662605437b2175822",
+  "readiness.md": "59b9ce61092d55dc38748791c82bf638a41ef380396f7da1af072eb17d4a20cc",
+  "release.json": "16acf9f2f2c7558c3bb6b7aba58fd18ccf6a2f197230625e6cb4eb6a3c5e4624",
+  "smoke.sh": "5d5d6e0413684841710cd54900d23c89a10a0ef490adb3f045c440a946409795"
+ },
+ "active_minutes": "unknown",
+ "not_done": "no participants, real services, systemctl or production changes"
+}

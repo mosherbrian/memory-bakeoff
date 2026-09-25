@@ -1,0 +1,30 @@
+{
+ "measured": true,
+ "bench_txt": "throughput: 41.7 tok/s",
+ "timing_evidence": [
+  {
+   "service": "modelsrv",
+   "off_before_output": true,
+   "back_on_before_output": false
+  },
+  {
+   "service": "modelsrv-watchdog",
+   "off_before_output": true,
+   "back_on_before_output": false
+  }
+ ],
+ "restored": false,
+ "state_before": {
+  "modelsrv": "active enabled",
+  "modelsrv-proxy": "active enabled",
+  "modelsrv-watchdog": "active enabled"
+ },
+ "state_after": {
+  "modelsrv-proxy": "active enabled",
+  "modelsrv-watchdog": "inactive enabled",
+  "modelsrv": "active enabled"
+ },
+ "primary_PASS": false,
+ "report_present": false,
+ "limit": "timing check cannot tell a real bench run from output typed after stopping the services; see readiness.md defect"
+}
