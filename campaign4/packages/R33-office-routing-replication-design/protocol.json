@@ -1,0 +1,79 @@
+{
+ "package": "R33-office-routing-replication-design",
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "scope": "design only; no participants, hosts, transcript search or production edits",
+ "informed_by": "R32 (accepted: both primary FAIL; routing T PASS / C FAIL; grounding T FAIL / C PASS). R32 grades and outcome definition unchanged; no retrospective regrade.",
+ "pairs": {
+  "S": "inspect a service failure",
+  "L": "collect a bounded diagnostic log bundle",
+  "V": "verify a deployed configuration against a supplied expected setting"
+ },
+ "arms": {
+  "control": "tasks/<P>-control.md = nudge + 'No saved notes for this session.' + common",
+  "treatment": "tasks/<P>-treatment.md = nudge + R30 memory-packet.md verbatim + common"
+ },
+ "packet": {
+  "path": "packages/R30-office-routing-preparation/memory-packet.md",
+  "sha256": "b17621338dfe6e58a6a934f31d2ff05f84b5ca6c5bffd8afc50063a5e83c1d8f",
+  "changed": false
+ },
+ "contrast": "only the saved packet differs; common task asks neutrally who runs each step on which machine; no owner/routing answer; no lesson-bearing additions (no after-df task, no grounding hint beyond R30's shared 'name unknowns' line)",
+ "shared_cues": [
+  "R23v2 production nudge (both arms)",
+  "host names strix-halo vs cds-ai-a5410",
+  "no real host/network/pager",
+  "name unknowns; do not claim results you did not observe"
+ ],
+ "primary_targeted": "routing (rubric.md); motivated by R32, declared here before any R33 participant",
+ "companions": [
+  "usefulness",
+  "safety",
+  "grounding (3 classes)"
+ ],
+ "net": "strict all-axes success per arm and pair",
+ "order": [
+  "S-C",
+  "S-T",
+  "V-T",
+  "V-C",
+  "L-C",
+  "L-T"
+ ],
+ "order_method": "secrets draw at author time (order.json); 3 pairs, first arm T,C,T or C,T,C",
+ "execution_proposal": {
+  "loop": "production campaign4 (shared nudge allowed)",
+  "worker": "kiln",
+  "verifier": "corvid",
+  "per_arm": "10m worker + 5m verify, fresh R10 /new, idle check",
+  "operator_preflight": "sha256 of explicit paths: /home/bmosher/.local/bin/agent-loop and /home/bmosher/.config/agent-deck/acp-worker (never hash empty stdin); one check",
+  "no_reruns": true,
+  "activation": "none from design PASS; Tern must release"
+ },
+ "limits": [
+  "one model/seat",
+  "plan-only endpoint (no execution)",
+  "prior design exposure is not none",
+  "n=3 pairs, direction only",
+  "shared cues may let control infer routing; not suppressed"
+ ],
+ "fixtures_sha256": {
+  "fixtures/L/listing.tsv": "b09286915be5b16d5b06df6a5942375854afd4a093a1a3c23caf1b7df6f3ce57",
+  "fixtures/S/journal.txt": "517de9be7c12db916a762e2ed99aba35eac67f435f7edfb2120cef9a11655618",
+  "fixtures/S/status.txt": "025f36a91c2460b0f121f8671cbfb893e9db2e3b9b61fdfc0929dc87a1c205eb",
+  "fixtures/V/pgbouncer.ini": "12644c5306f82d10a85fb0845bab372537d7d54a0d0921c2f6af32afb6f25daf"
+ },
+ "tasks_sha256": {
+  "tasks/L-common.md": "64797445e2cb669bc27a5b68e3a427b9512c40aba854cc6e50ec7ef0361eace4",
+  "tasks/L-control.md": "f4184e6ce5f88db75197f6852e171953ac15c4b70c23cc675edfdcba130dc36d",
+  "tasks/L-treatment.md": "5dafa76e5a75500b94e287a49940bf8f2e9d9ee27086212bfd7925f8f6708f3f",
+  "tasks/S-common.md": "918ec6db05036f56ee38a8f7c9f54eab643d1fe8ffa961014611914db0193d36",
+  "tasks/S-control.md": "a97e84718b0b401e08d524337395feb67834d51e44cb7216b14267de0a093459",
+  "tasks/S-treatment.md": "79606739e865c50d4eb45a10632a82fc19349f1b258aba7c4b24918656c97807",
+  "tasks/V-common.md": "fce43f44bafdaf75f93ce78d2847dc3efb4b63d9b19f3e8a1c3a4b3a5e9fbccc",
+  "tasks/V-control.md": "d74c0286dbed41b618799b774032021b70ad274864c9c2e2113347b3de06083a",
+  "tasks/V-treatment.md": "eed67bd877235a30a9147ebd525569a0ef7e6c0d726bd7274cf1abd2a75fc1fd"
+ },
+ "oracles": "oracles.md",
+ "rubric": "rubric.md"
+}
