@@ -54,3 +54,7 @@ All three seats were heard; their original responses remain verbatim. The refine
 CHARTER.md links this amendment and limits its supersession to process/proof rules. Existing grants, frozen artifacts, production settings and sponsor scope are unchanged. No deletion, Python-reference retirement, new dependency, production change or research execution is authorized by this document. No additional machinery package is opened to implement these written operating rules.
 
 Next research package proposed: source-bound synthesis using `team/ANSWER.20260920-133909.md`, `team/FAILURE-CLUSTERS-20260920.md`, `team/REQUIREMENTS-NEXT-SYSTEM-20260920.md` and the primary experiment/gate evidence those cite. That is a starting source inventory, not a signed research contract or a claim that summaries alone suffice. Brian's research-scope answer returns through Claude. The goal-3 view and retention inventory are subsequent separately bounded deliverables, not implied allocations.
+
+## Sponsor resolution — 2026-09-24
+
+Brian answered “Yes to all three of the questions”: ratified this disposition at d44d3418, ended the research pause and closed the machinery phase, and retained Python as frozen historical reference without deletion. The pending scope questions above are resolved by SPONSOR-RESEARCH-RESUMPTION-20260924.json. R1-evidence-synthesis is opened subject to independent admission and explicit loop dispatch; the tier 4 roadmap view and dry retention/reference audit remain separately bounded follow-ups.

@@ -239,3 +239,9 @@ operating rules in [PROCESS-POSTMORTEM-DISPOSITION-20260924.md](PROCESS-POSTMORT
 
 This does not alter sponsor scope or budget, either hard stop, production authorization,
 existing grants, frozen evidence or append-only history. The research pause is not lifted by this process amendment. Cairn's manual controller role remains retired after P12; duty ownership remains. The historical OnActive-only timer instruction above is superseded by the accepted P12 calendar-timer policy: absolute UTC calendar deadlines with verified next firing, preserving bounds through daemon-reload. No new timer implementation is authorized here.
+
+## Sponsor research resumption and machinery closure — 2026-09-24
+
+Brian: “Yes to all three of the questions.” The explicit research pause ENDS and the machinery phase is CLOSED. This supersedes the historical machinery-only scope and research-waits language above. The accepted Go loop continues as production; no retired controller is restored. Tern may release the first tier 1 bounded synthesis of the September 20 evidence through the live loop. No new empirical experiment follows without its own authorization.
+
+Brian RATIFIES the proportional-proof disposition at d44d3418. Python stays frozen historical reference; retirement requires later explicit bounded work and no deletion is authorized. The tier 4 research/roadmap view and dry retention inventory/reference audit are approved directions for separately bounded work. See SPONSOR-RESEARCH-RESUMPTION-20260924.json. Both hard stops remain.
