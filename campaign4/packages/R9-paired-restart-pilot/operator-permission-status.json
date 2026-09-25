@@ -1,0 +1,26 @@
+{
+  "at": "2026-09-25T06:01:59.451398+00:00",
+  "qid": "R9-execution-1",
+  "question_id": "Q-WORK-BENEFIT",
+  "owner": "tern",
+  "operator": "claude",
+  "state": "PAUSED_PERMISSION_BEFORE_RUNTIME_EFFECTS",
+  "source": "Claude operator report; host permission denial itself not independently inspected by Tern",
+  "denied_action": "Stop kiln and rewrite its session-state file for fresh conversation",
+  "reported_effects": "No stop, no state write, no worker prompt; kiln untouched",
+  "preflight_evidence": {
+    "path": "campaign4/packages/R9-paired-restart-pilot/exec/outbox-kiln.txt",
+    "sha256": "9709b2fe04e3cedfb0efd3346612a46adb26e4119d7dfb468aebaf89c452972d",
+    "summary": "13 historical completed deliveries;2 historical timed-out with stop delivered-acked; no row edited; operator reports idle/0queued"
+  },
+  "authority": "Existing director execution release remains; does not override host permission enforcement. Brian permission request already pending through Claude; no duplicate request.",
+  "absolute_end": "2026-09-25T06:52:47.255511+00:00",
+  "rules": [
+    "No alternative tool/operator route around the denial.",
+    "Await explicit host permission resolution. If cleared, repeat time-sensitive idle/delivery/hash checks before effects.",
+    "Original absolute end and phase budgets remain; no shortened/asymmetric trial or omitted restoration to fit permission delay. If insufficient time, preserve INCOMPLETE rather than improvise.",
+    "Retain denial/request evidence with exact reason if available; classify waiting time separately from author work.",
+    "If not cleared in time file honest INCOMPLETE; no automatic extension."
+  ],
+  "for_brian": "The trial has not started: the operator\u2019s permission system blocked the reset. Your existing permission request is pending; nothing was changed."
+}

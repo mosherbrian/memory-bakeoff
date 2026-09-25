@@ -1,0 +1,32 @@
+outbox-pending total 28
+HISTORICAL outbox-pending:ob-d80cf5417bb7b467 exec=ex-P12-production-handoff-1-w1 package=P12-production-handoff-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-99d3e34b8a458052 exec=ex-P13-liveplan-standin-1-w1 package=P13-liveplan-standin-1 step=closed claim_file=True sent=True
+AMBIGUOUS outbox-pending:ob-82a1ae4d108c4e0a exec=ex-P13-liveplan-repair-1-w1 package=P13-liveplan-repair-1 step=timed-out claim_file=False sent=True
+AMBIGUOUS outbox-pending:ob-865e21d851e92a33 exec=ex-P13-liveplan-completion-1-w1 package=P13-liveplan-completion-1 step=timed-out claim_file=False sent=True
+HISTORICAL outbox-pending:ob-b6b44eabb2960bbb exec=ex-R1-synthesis-1-w1 package=R1-synthesis-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-905e865747939cd7 exec=ex-R1-synthesis-repair-1-w1 package=R1-synthesis-repair-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-0966d1ec11d3ba9c exec=ex-R2-design-1-w1 package=R2-design-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-1739da4fad62006f exec=ex-R2-design-repair-1-w1 package=R2-design-repair-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-2b51886c12730749 exec=ex-R3-view-1-w1 package=R3-view-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-092f04c4d2a1cd41 exec=ex-R4-task-1-w1 package=R4-task-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-2f74ba1b289c6d6c exec=ex-R4-task-repair-1-w1 package=R4-task-repair-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-08412cbb0077deed exec=ex-R6-plan-1-w1 package=R6-plan-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-b9236c7663153199 exec=ex-R6-plan-repair-1-w1 package=R6-plan-repair-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-1723681fba14baa4 exec=ex-R7-oracle-1-w1 package=R7-oracle-1 step=closed claim_file=True sent=True
+HISTORICAL outbox-pending:ob-eaf9b1526368975a exec=ex-R8-task-1-w1 package=R8-task-1 step=closed claim_file=True sent=True
+kiln pending 15, ambiguous 2
+EVIDENCE P13-liveplan-repair-1-w1 exec-current:P13-liveplan-repair-1-w1 ex-P13-liveplan-repair-1-w1
+EVIDENCE P13-liveplan-repair-1-w1 route:P13-liveplan-repair-1-w1 a79067ca-1790000758
+EVIDENCE P13-liveplan-repair-1-w1 timer-arm:agent-loop-campaign4-P13-liveplan-repair-1-w1 {"callback": ["/home/bmosher/.local/bin/agent-loop", "timer-callback", "--config", "/home/bmosher/.config/agent-loop/campaign4.json", "--qid", "P13-liveplan-repair-1", "--action", "P13-liveplan-repair-1-w1", "--execution", "ex-P13-liveplan-repair-1-w
+EVIDENCE P13-liveplan-repair-1-w1 deadline:P13-liveplan-repair-1:P13-liveplan-repair-1-w1:stop delivered-acked
+EVIDENCE P13-liveplan-repair-1-w1 deadline:P13-liveplan-repair-1:P13-liveplan-repair-1-w1:wake delivered-acked
+EVIDENCE P13-liveplan-repair-1-w1 handled:deadline:P13-liveplan-repair-1:P13-liveplan-repair-1-w1 handled-acked
+EVIDENCE P13-liveplan-repair-1-w1 loop-pkg:P13-liveplan-repair-1 {"qid":"P13-liveplan-repair-1","worker":"kiln","verifier":"corvid","worker_task":"P13-liveplan-repair-1 author45m. Read /var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/director-plan-findings.json and existing live
+EVIDENCE P13-liveplan-completion-1-w1 exec-current:P13-liveplan-completion-1-w1 ex-P13-liveplan-completion-1-w1
+EVIDENCE P13-liveplan-completion-1-w1 route:P13-liveplan-completion-1-w1 a79067ca-1790000758
+EVIDENCE P13-liveplan-completion-1-w1 timer-arm:agent-loop-campaign4-P13-liveplan-completion-1-w1 {"callback": ["/home/bmosher/.local/bin/agent-loop", "timer-callback", "--config", "/home/bmosher/.config/agent-loop/campaign4.json", "--qid", "P13-liveplan-completion-1", "--action", "P13-liveplan-completion-1-w1", "--execution", "ex-P13-liveplan-co
+EVIDENCE P13-liveplan-completion-1-w1 deadline:P13-liveplan-completion-1:P13-liveplan-completion-1-w1:stop delivered-acked
+EVIDENCE P13-liveplan-completion-1-w1 deadline:P13-liveplan-completion-1:P13-liveplan-completion-1-w1:wake delivered-acked
+EVIDENCE P13-liveplan-completion-1-w1 handled:deadline:P13-liveplan-completion-1:P13-liveplan-completion-1-w1 handled-acked
+EVIDENCE P13-liveplan-completion-1-w1 loop-pkg:P13-liveplan-completion-1 {"qid":"P13-liveplan-completion-1","worker":"kiln","verifier":"corvid","worker_task":"Read /var/home/bmosher/memory-bake-off/campaign4/packages/P13-director-decision-ownership/plan-completion-release.json and timeout-audit-1.md FIRST: this is a new b
+CLASSIFICATION: 15 kiln rows in outbox-pending. 13 HISTORICAL: package closed and the execution's claim file exists. 2 HISTORICAL-TIMED-OUT: P13-liveplan-repair-1-w1 and P13-liveplan-completion-1-w1, package step timed-out, deadline stop and wake both "delivered-acked", handled "handled-acked", timeout acknowledged by tern in agent-loop status; kiln has since completed R1-R8 worker turns. Live /ping: idle, 0 queued. No executing package assigned to kiln. No row cleared or edited.
