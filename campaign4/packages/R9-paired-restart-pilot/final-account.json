@@ -1,0 +1,39 @@
+{
+ "qid": "R9-execution-1",
+ "kind": "final_account",
+ "author": "claude",
+ "at": "2026-09-25T06:55:20.817741+00:00",
+ "execution_claim": "none filed; no execution occurred",
+ "permission_refusal": {
+  "approx_at": "2026-09-25T06:00Z",
+  "what": "Write of operator script exec/r9op.py (automates idle check, agent-deck session stop, PID-gone check, sessionId=null state write, session start, phase prompts, calendar cancel timers, restore)",
+  "layer": "Claude Code host permission classifier (auto mode)",
+  "reason_verbatim": "Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Interfere With Workloads].",
+  "file_created": false
+ },
+ "resolution": "Asked Brian at ~06:00Z to allow or deny; no answer before the 06:52:47Z bound. No bypass or alternate route attempted.",
+ "actions_performed_all_read_only": [
+  "sha256 check of all 10 release artifacts: all OK",
+  "agent-deck session show a79067ca-1790000758 --json -> exec/pre-show.json (status idle)",
+  "one /ping on kiln socket: {ok:true,status:idle}, no queue",
+  "agent-loop status --json: no executing kiln package",
+  "read-only SQLite driver_kv: 15 kiln outbox-pending rows classified (exec/outbox-kiln.txt); nothing cleared",
+  "pstree of kiln pane (worker python 3723790, engine 3723817)",
+  "sha256 of kiln state file"
+ ],
+ "runtime_effects": "none: no stop, no start, no restart, no state write, no model prompt, no timer armed, no arm directory created",
+ "state_now": {
+  "acp_sessions_sha256": "3275a20b6b4071629cfcaf9368c07168d19a4a9d6417f5de6dd56972fa4a552b",
+  "pretrial_sha256": "3275a20b6b4071629cfcaf9368c07168d19a4a9d6417f5de6dd56972fa4a552b",
+  "sessionId": "ses_f3504dd29ffePm32V9ivpic8Cv",
+  "r9_timers": 0,
+  "/var/home/bmosher/r9-arms": "absent"
+ },
+ "restoration_needed": false,
+ "files_written": {
+  "exec/pre-show.json": "ddcbc2a986281657c27f05b553370843ee1af718cb750d6254efb70142a95217",
+  "exec/outbox-classification.txt": "b3a00ec77abf5e1fd00e60e578d756eacc88364b6e4a515052b7dea4f5229e8f",
+  "exec/outbox-kiln.txt": "9709b2fe04e3cedfb0efd3346612a46adb26e4119d7dfb468aebaf89c452972d"
+ },
+ "for_brian": "The test did not run. My permission settings blocked the step that restarts Kiln, and you did not approve it before the time ran out. Nothing on Kiln was changed."
+}
