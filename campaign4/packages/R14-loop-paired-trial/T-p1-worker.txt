@@ -1,0 +1,14 @@
+R14 trial, arm T, phase 1 of 2: INSPECTION ONLY. Do not change any file under /var/home/bmosher/r14-arms/T/igw or /var/home/bmosher/r14-arms/T/tests in this phase.
+
+Working copy: /var/home/bmosher/r14-arms/T (a snapshot of a Python project; your only work area). Do not read ~/inference-gateway, its git history, or any campaign4 package directory other than running the collect.py command below.
+
+Problem: tests/test_drain_on_disconnect.py fails. Run it exactly as:
+  cd /var/home/bmosher/r14-arms/T && python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py
+Reproduce the failures, find the cause in the code, and decide how you would fix it. The test file is fixed and must not be edited.
+You may write any notes you like in /var/home/bmosher/r14-arms/T/notes/ ; they stay available in phase 2.
+Before running collect.py: write a summary of at most 300 words for a future conversation that will do the repair (what you found, what you would change) to /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/evidence/T-summary.txt . Do not put it anywhere under /var/home/bmosher/r14-arms/T.
+
+Before claiming, run exactly:
+  python /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/collect.py T 1
+Then file the claim with the agent-loop claim command that the loop appends below this task, using exactly these artifacts:
+  --artifact test_output=packages/R14-loop-paired-trial/evidence/T-p1/test.out --artifact notes_index=packages/R14-loop-paired-trial/evidence/T-p1/notes-index.json --artifact manifest=packages/R14-loop-paired-trial/evidence/T-p1/manifest.txt --artifact summary=packages/R14-loop-paired-trial/evidence/T-summary.txt

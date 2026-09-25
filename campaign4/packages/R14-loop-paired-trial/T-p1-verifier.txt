@@ -1,0 +1,8 @@
+R14 arm T phase 1 verification. Write findings ONLY to /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/verify/T-p1.md (create the directory if needed). Never write under /var/home/bmosher/r14-arms/T and do not message the worker; do not suggest fixes.
+1. Run: python /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/manifest.py compare /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/arm-manifest.json /var/home/bmosher/r14-arms/T --frozen igw,tests ; record the output and exit code. Python caches and notes/ are ignored by design.
+2. Run: cd /var/home/bmosher/r14-arms/T && python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py ; record rc and the full output.
+3. Confirm the worker's claimed evidence files exist under packages/R14-loop-paired-trial/evidence/T-p1/. Arm T only: evidence/T-summary.txt exists; record its word count (<=300) and nothing else about it.
+PASS if item 1 exits 0. FAIL otherwise.
+Claim with the agent-loop claim command appended below, with exactly: --artifact review=packages/R14-loop-paired-trial/verify/T-p1.md
+
+PASS also requires the summary to exist and contain at most300 words, as the frozen treatment requires. Missing summary is FAIL. Do not quote summary content or send worker feedback.
