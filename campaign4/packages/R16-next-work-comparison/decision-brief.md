@@ -18,7 +18,7 @@ R15 also found R14's check was unit-level only.
 ## Lead 2 (rejected): 6c0ae79, "stop funnelling the team onto one box"
 A new module plus 4 test files: a feature task, not a recoverable diagnosis.
 
-## Design changes for the next pair (everything else as R14: loop phases, /new, kiln, corvid, order coin)
+## Design changes for the next pair (otherwise as R14)
 1. **No note-taking instruction in either arm.** Both keep every ordinary file, including any notes they choose to write; nothing is withheld. But neither is told to write notes, which matches real Claude Code/Pi work, where compaction arrives unannounced. The treatment arm alone gets its automatic <=300-word self-summary delivered at phase 2 (produced inside phase 1's budget, as before). Whether each arm wrote notes spontaneously is recorded. If the control writes a diagnosis note anyway, the pair counts as confounded and is reported as such, not as a null.
 2. **Phase 1:** 10 min, diagnose only, no edits. **Phase 2:** 5 min, repair. The shorter budget makes rediscovery visible.
 
