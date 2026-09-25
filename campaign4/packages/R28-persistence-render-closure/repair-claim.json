@@ -1,0 +1,91 @@
+{
+ "qid": "R28-render-repair-1",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T20:32:21.207467+00:00",
+ "diagnosis": "offline/render.sh took only '> ' lines after 'Common body'; task-pair-B/C.md say 'Common body as Pair A, with --docs fixtures/docs-X' and have none, so B/C bodies were empty and the equality check was vacuous.",
+ "fix": "repair/render.sh expands the declared reference (Pair A body with --docs fixtures/docs-A -> the declared docs-B/C; no other change) and refuses to dispatch unless each body is nonempty and has goal, failed step, allowed command, scope and the correct docs (and no other docs).",
+ "run": "repair/run: same pre-nudge 47f69dfd CLI, all effects stubbed, six dispatches rc 0; texts 1210 (C) / 1703 (T) bytes for every pair",
+ "checks": {
+  "all_ok": true,
+  "per_text": {
+   "A-C": {
+    "ok": true,
+    "packet_count": 0,
+    "nudge_hits": [],
+    "sha256": "4efe46299eea4f4f23ceea4c57dea387b78eda8bf58d90ff8fbc83c8dec7d099"
+   },
+   "A-T": {
+    "ok": true,
+    "packet_count": 1,
+    "nudge_hits": [],
+    "sha256": "23ec8e435c8014f5f9aef14fe7b59c00b98df9f55955513a8f4e61d080fa194f"
+   },
+   "B-C": {
+    "ok": true,
+    "packet_count": 0,
+    "nudge_hits": [],
+    "sha256": "1d8f12d34320b4a22d375e8e35c3896be6e47c4578f96d2a1fda53931b643dec"
+   },
+   "B-T": {
+    "ok": true,
+    "packet_count": 1,
+    "nudge_hits": [],
+    "sha256": "9763a628c0b7c0b9de3bc14b64422e0a44c35ebb1f7d06a229443f3a93111bc5"
+   },
+   "C-C": {
+    "ok": true,
+    "packet_count": 0,
+    "nudge_hits": [],
+    "sha256": "5496fb82eade8023d2c33d44564e8b3ea0348353b25f6ce6c40249075794331a"
+   },
+   "C-T": {
+    "ok": true,
+    "packet_count": 1,
+    "nudge_hits": [],
+    "sha256": "5acc36f77b7fa8fe9232a33d8eb0c0133798eb78b0d4867ce907700845c29aeb"
+   }
+  },
+  "equal_after_substitutions": {
+   "A": true,
+   "B": true,
+   "C": true
+  }
+ },
+ "negatives": {
+  "empty B body": "repair/neg-B.txt rc 1, no dispatch, 0 texts",
+  "empty A body": "repair/neg-A.txt rc 1, no dispatch, 0 texts",
+  "old run2 texts through new checks.py": "repair/old-run2-check.txt all_ok False, rc 1"
+ },
+ "preserved": "repair/pre-repair-hashes.txt: offline/render.sh and all R27 files verified unchanged after the repair",
+ "files_sha256": {
+  "repair/checks.py": "fdd9e982f54b480b073fd0bd49ccf1bf2b79ee00e0b10014267879434a8fe5d6",
+  "repair/neg-A.txt": "011a64189b1c745b17c4ac1a1b1586d9e681fff027d3e96df5127129e9e291e6",
+  "repair/neg-B.txt": "09b7fb091ec0dbff602a44398e9e2c13704a8536ccd5eb072abfa6d02582f3a7",
+  "repair/old-run2-check.txt": "146d575a373b2e1b3aec3b529080bd4d053f180ef5249c4f5afd0ba7241dc049",
+  "repair/old-run2-copy/checks.json": "465b6ec418a7283abc9fab633001c747785b6b79181fe9b68042d5ca83157aa6",
+  "repair/old-run2-copy/commands.txt": "ce09cd4b8680d316c1c9a2fc8220343408939d5a2feb7d91788fcedaade53638",
+  "repair/old-run2-copy/isolated-config.json": "19af9f3b85944f4f836f31b28c85d6d5748286ebb3229740ff7c642346ec41cc",
+  "repair/old-run2-copy/stub-calls.json": "371341ba984bd0b383aa282afec4e1d4cc7d5c694697be767f79c04d884d55bb",
+  "repair/old-run2-copy/texts/R27-A-C.txt": "d350bab3990bcec59a54f34c9315d2549c2f3aa29f9bcc68809d6fd75c460fca",
+  "repair/old-run2-copy/texts/R27-A-T.txt": "79d08a4cd9b1667d35c609405bc6e258c835cdecc506ba986020176762b6ab86",
+  "repair/old-run2-copy/texts/R27-B-C.txt": "218f416e71bd37458e069c54cd7f0c5aaedeb6e3ddccc4a69419993aa725042e",
+  "repair/old-run2-copy/texts/R27-B-T.txt": "3d2e7a1932d137e9c3e937136d7fa30ed1607da4ef946920237b82578ac66c68",
+  "repair/old-run2-copy/texts/R27-C-C.txt": "973d4f73c0eb1d5b2ff8ddace201863e0c34ec63ec2679ee0a2ef68bef22a776",
+  "repair/old-run2-copy/texts/R27-C-T.txt": "01cbd5663d9f248726250f9df9d3fd41be9a9d5cfaa2a408b126fb1863de7423",
+  "repair/pre-repair-hashes.txt": "d9853e386c431364696aba758dbaf29accb4da7c25e0d7c5b856e32cfaf5def6",
+  "repair/render.sh": "d72eb0f2d9881e8d84c52b465c86cb4c6d708d7c19888815a3ce948bfbd8c940",
+  "repair/run-root.txt": "c95ec01bb0de10dcd9498e7b18243641ec2ddfa6fc0300da245af59b383f4756",
+  "repair/run/checks.json": "796f4831a362b8913d963701e2054c471d30ba547b88bac9a5168f80d059b935",
+  "repair/run/commands.txt": "8acb3177acdfa32a06256784d7877ae4a15ba6d4e78ff02418bdf70de4b1d247",
+  "repair/run/isolated-config.json": "1d3313049c160f80ec5dbd9e3dad81a44034917d5f8fc1f65ac7a1f8a89dcbaf",
+  "repair/run/stub-calls.json": "371341ba984bd0b383aa282afec4e1d4cc7d5c694697be767f79c04d884d55bb",
+  "repair/run/texts/R27-A-C.txt": "4efe46299eea4f4f23ceea4c57dea387b78eda8bf58d90ff8fbc83c8dec7d099",
+  "repair/run/texts/R27-A-T.txt": "23ec8e435c8014f5f9aef14fe7b59c00b98df9f55955513a8f4e61d080fa194f",
+  "repair/run/texts/R27-B-C.txt": "1d8f12d34320b4a22d375e8e35c3896be6e47c4578f96d2a1fda53931b643dec",
+  "repair/run/texts/R27-B-T.txt": "9763a628c0b7c0b9de3bc14b64422e0a44c35ebb1f7d06a229443f3a93111bc5",
+  "repair/run/texts/R27-C-C.txt": "5496fb82eade8023d2c33d44564e8b3ea0348353b25f6ce6c40249075794331a",
+  "repair/run/texts/R27-C-T.txt": "5acc36f77b7fa8fe9232a33d8eb0c0133798eb78b0d4867ce907700845c29aeb"
+ },
+ "not_done": "no participants, no real socket/systemd/production effect, no new task content"
+}
