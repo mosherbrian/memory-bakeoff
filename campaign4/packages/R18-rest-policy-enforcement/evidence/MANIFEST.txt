@@ -1,0 +1,16 @@
+R18-repair-1 deliverables (offline only, no live install):
+candidate/research-gap-check — R11 base + R18 bounds (<=7200s, entered<=now),
+  structured next_step + question-bound receipt (objective strip-validated),
+  latest-row-governs.
+candidate/RECEIPT-SCHEMA.md; candidate service/timer unchanged copies.
+candidate/migration-example/REST.append.jsonl + receipts/r18-review-1.json.
+tests/test_r18_rest_policy.py — 16 tests + subtests (bounds, receipts, sentinels, clocks).
+tests/test_r11_retained_adapted.py — 7 adapted retained fixtures; 1 labeled changed behavior
+  (latest-invalid-overrides-old-valid; R11 kept older valid row).
+tests/mutants_r18.py — runnable planted-fault harness vs candidate, 5/5 killed.
+evidence/test.out, evidence/r18-mutant-sweep.txt, evidence/HASHES.txt.
+INSTALL.md — held install/rollback; activation only on Tern exact-byte release.
+Base pin: inputs/research-gap-check digest matches release.json 518581b9...
+A receipt proves a recorded commitment, NOT executed work.
+Residuals: full R11 base mutant sweep not rerun (out of scope; base untouched);
+no real timer witness/unit install (held). Verifier Plants unshared counterexample.

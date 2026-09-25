@@ -1,0 +1,371 @@
+#!/usr/bin/env python3
+"""R5: own the gap between research packages. One short run per timer tick.
+
+If the top open research question has no bound executing loop package and no
+valid timed rest for 30 min, open ONE planning-gap incident owned by Tern
+(escalation ledger row + wake). If still unresolved 15 min later, escalate to
+Claude through notify-claude. Calendar sampling adds up to one tick (5 min) to
+each threshold.
+
+Inputs (read only): RESEARCH-PRIORITIES.json, `agent-loop status --json`,
+REST.jsonl, and the question_id bindings in packages/*/*.json records that
+carry question_id plus package_id or qid. Package names are never parsed.
+
+Own state: one small JSON file holding each open gap's start and delivery
+state, so a restart keeps the original clock. Incident history lives only in
+the existing escalation ledger. Every override is an env var so the tests can
+run against a sandbox and a controllable clock (GAP_NOW).
+"""
+import fcntl, glob, hashlib, json, os, subprocess, sys, time
+from datetime import datetime, timezone
+
+H = os.path.expanduser("~")
+C4 = os.environ.get("GAP_CAMPAIGN", f"{H}/memory-bake-off/campaign4")
+PRIORITIES = os.environ.get("GAP_PRIORITIES", f"{C4}/RESEARCH-PRIORITIES.json")
+REST = os.environ.get("GAP_REST", f"{C4}/REST.jsonl")
+# R11: explicit research streams. Absent file = R5 behaviour (top unresolved question).
+STREAMS = os.environ.get("GAP_STREAMS", f"{C4}/RESEARCH-STREAMS.json")
+PACKAGES = os.environ.get("GAP_PACKAGES", f"{C4}/packages")
+STATUS_CMD = os.environ.get("GAP_STATUS_CMD", f"{H}/.local/bin/agent-loop status --config {H}/.config/agent-loop/campaign4.json --json")
+STATE = os.environ.get("GAP_STATE", f"{H}/.local/state/research-gap/state.json")
+AD = f"{H}/.config/agent-deck"
+ESCALATIONS = os.environ.get("GAP_ESCALATIONS", f"{AD}/escalations")
+RESOLVE = os.environ.get("GAP_RESOLVE", f"{AD}/escalation-resolve")
+NOTIFY = os.environ.get("GAP_NOTIFY", f"{AD}/notify-claude")
+WAKE = os.environ.get("GAP_WAKE", f"{AD}/wake")
+LEDGER = os.environ.get("GAP_LEDGER", f"{H}/.local/share/agent-deck/escalations.jsonl")
+DIRECTOR = os.environ.get("GAP_DIRECTOR", "tern")
+OPEN_S = int(os.environ.get("GAP_OPEN_MIN", "30")) * 60
+ESC_S = int(os.environ.get("GAP_ESC_MIN", "15")) * 60
+NOW = float(os.environ.get("GAP_NOW") or time.time())
+KIND = "research-gap"
+EXECUTING_STEPS = {"worker", "verify"}  # agent-loop steps where a seat is doing the work; held, blocked,
+# decision, timed-out, closed or any unknown step do not suppress the gap (a decision wait may use a timed rest)
+RESOLVED = {"answered", "dropped"}  # the only statuses that close; open, active, absent or unknown stay unresolved
+REST_FIELDS = ("question_id", "reason", "owner", "entered_at", "revisit_at", "next_step")
+REST_MAX_S = 7200
+STEP_KINDS = {"search", "design", "review", "execute", "decision"}
+SENTINELS = {"", "wait", "waiting", "no-successor", "none", "tbd", "todo", "n/a", "na"}
+RECEIPTS = os.environ.get("GAP_RECEIPTS", os.environ.get("GAP_CAMPAIGN", f"{H}/memory-bake-off/campaign4"))
+
+
+def iso(t):
+    return datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def ts(s):
+    """UTC instant -> epoch, or None. Requires an explicit offset or Z."""
+    try:
+        d = datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+        return d.timestamp() if d.tzinfo else None
+    except ValueError:
+        return None
+
+
+def top_and_resolved():
+    d = json.load(open(PRIORITIES))
+    items = [i for i in d["items"] if i.get("status") not in RESOLVED]
+    top = min(items, key=lambda i: i["rank"])["id"] if items else None
+    return top, {i["id"] for i in d["items"] if i.get("status") in RESOLVED}
+
+
+def bindings():
+    """qid -> (set of question_ids, set of stream_ids), from package records only."""
+    b = {}
+    for f in glob.glob(f"{PACKAGES}/*/*.json"):
+        try:
+            r = json.load(open(f))
+        except (OSError, ValueError):
+            continue
+        if not isinstance(r, dict) or not r.get("question_id"):
+            continue
+        for k in ("package_id", "qid"):
+            if r.get(k):
+                qs, ss = b.setdefault(r[k], (set(), set()))
+                qs.add(r["question_id"])
+                if r.get("stream_id"):
+                    ss.add(r["stream_id"])
+    return b
+
+
+def load_streams():
+    """("legacy", ...) when there is no registry; ("bad", problem) when it
+    cannot be trusted; else ("registry", active {q: sid}, retired {q: row},
+    every registered {q: sid})."""
+    if not os.path.exists(STREAMS):
+        return ("legacy", {}, {}, {}, None)
+    try:
+        d = json.load(open(STREAMS))
+        assert d.get("schema_version") == 1, "schema_version must be 1"
+        rows = d["streams"]
+        assert isinstance(rows, list), "streams must be a list"
+        sids, qids = set(), set()
+        active, retired, known = {}, {}, {}
+        for r in rows:
+            sid, q, st = r["stream_id"], r["question_id"], r["status"]
+            assert isinstance(sid, str) and sid and isinstance(q, str) and q, "stream_id and question_id are required"
+            assert st in ("active", "inactive", "retired"), f"stream {sid}: unknown status {st!r}"
+            assert sid not in sids and q not in qids, f"stream {sid}: duplicate stream_id or question_id"
+            sids.add(sid); qids.add(q); known[q] = sid
+            if st == "active":
+                active[q] = sid
+            if st == "retired":
+                assert all(r.get(k) for k in ("retired_at", "by", "reason")), f"stream {sid}: retirement needs retired_at, by, reason"
+                retired[q] = r
+        return ("registry", active, retired, known, None)
+    except Exception as e:
+        return ("bad", {}, {}, {}, f"stream registry {STREAMS} unusable ({e.__class__.__name__}: {e}); existing incidents kept")
+
+
+def live_packages():
+    out = subprocess.run(STATUS_CMD, shell=True, capture_output=True, text=True, timeout=60)
+    if out.returncode != 0:
+        raise RuntimeError(f"status rc={out.returncode}: {out.stderr.strip()[:200]}")
+    return [p["qid"] for p in json.loads(out.stdout)["packages"] if p.get("step") in EXECUTING_STEPS]
+
+
+def rest_for(q):
+    """(valid rest row or None, list of problems). Missing file = no rest.
+
+    R18: rest must satisfy 0 < revisit-entered <= 7200s, entered_at <= NOW
+    (future-entered fails closed), and carry a structured next_step with a
+    matching question-bound receipt. A newer invalid row never revives an
+    older valid row: only the latest row per question governs; if it is
+    invalid the question has no rest and the existing gap clock continues.
+    """
+    if not os.path.exists(REST):
+        return None, []
+    latest, bad = None, []
+    for n, line in enumerate(open(REST), 1):
+        if not line.strip():
+            continue
+        try:
+            r = json.loads(line)
+        except ValueError:
+            bad.append(f"REST.jsonl line {n}: not JSON")
+            continue
+        if not isinstance(r, dict) or r.get("question_id") != q:
+            continue
+        latest = (n, r)
+    if latest is None:
+        return None, bad
+    n, r = latest
+    miss = [f for f in REST_FIELDS if not r.get(f)]
+    e, v = ts(r.get("entered_at")), ts(r.get("revisit_at"))
+    if miss or e is None or v is None:
+        bad.append(f"REST.jsonl line {n}: invalid ({'missing ' + ','.join(miss) if miss else 'bad UTC times'})")
+        return None, bad
+    if e > NOW:
+        bad.append(f"REST.jsonl line {n}: invalid (entered_at in the future)")
+        return None, bad
+    if v <= e:
+        bad.append(f"REST.jsonl line {n}: invalid (bad UTC times)")
+        return None, bad
+    if v - e > REST_MAX_S:
+        bad.append(f"REST.jsonl line {n}: invalid (rest window {int(v - e)}s exceeds 7200s)")
+        return None, bad
+    prob = validate_step(q, r.get("next_step"), v)
+    if prob:
+        bad.append(f"REST.jsonl line {n}: invalid ({prob})")
+        return None, bad
+    if NOW < v:
+        return r, bad
+    return None, bad + [f"rest expired at {r['revisit_at']}"]
+
+
+def validate_step(q, step, revisit_ts):
+    """Return problem string or None. Checks structured next_step + receipt."""
+    if not isinstance(step, dict):
+        return "prose-only rest: structured next_step required"
+    for f in ("action_id", "kind", "owner", "deadline", "objective", "receipt_path"):
+        if not step.get(f):
+            return f"missing next_step.{f}"
+    if step["kind"] not in STEP_KINDS:
+        return f"bad next_step.kind {step['kind']!r}"
+    if str(step["action_id"]).strip().lower() in SENTINELS:
+        return "sentinel next_step.action_id refused"
+    if str(step["owner"]).strip().lower() in SENTINELS:
+        return "sentinel next_step.owner refused"
+    if str(step["objective"]).strip().lower() in SENTINELS:
+        return "sentinel next_step.objective refused"
+    d = ts(step["deadline"])
+    if d is None:
+        return "bad next_step.deadline time"
+    if d > revisit_ts:
+        return "next_step.deadline later than revisit_at"
+    rp = step["receipt_path"]
+    base = os.environ.get("GAP_CAMPAIGN", C4)
+    path = rp if os.path.isabs(rp) else os.path.join(base, rp)
+    try:
+        rec = json.load(open(path))
+    except (OSError, ValueError) as ex:
+        return f"receipt unreadable ({ex.__class__.__name__})"
+    if not isinstance(rec, dict):
+        return "receipt not an object"
+    if rec.get("question_id") != q:
+        return "receipt wrong-question"
+    got_action = rec.get("action_id", rec.get("action"))
+    if got_action != step["action_id"]:
+        return "receipt wrong-action"
+    if rec.get("owner") != step["owner"]:
+        return "receipt wrong-owner"
+    if rec.get("deadline") != step["deadline"]:
+        return "receipt wrong-deadline"
+    if not str(rec.get("objective") or "").strip():
+        return "receipt missing objective"
+    if str(rec.get("objective")).strip().lower() in SENTINELS:
+        return "receipt sentinel objective refused"
+    return None
+
+
+def key(text):
+    return hashlib.md5(f"{KIND}\n{text.strip()}".encode()).hexdigest()[:12]
+
+
+def ledger_has(k):
+    try:
+        return any(json.loads(l).get("key") == k for l in open(LEDGER) if l.strip())
+    except (OSError, ValueError):
+        return False
+
+
+def run(argv, text=None):
+    try:
+        return subprocess.run(argv, input=text, capture_output=True, text=True, timeout=60).returncode
+    except (OSError, subprocess.TimeoutExpired):
+        return -1
+
+
+def save(state):
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    tmp = STATE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(state, f, indent=1, sort_keys=True)
+    os.replace(tmp, STATE)
+
+
+def load():
+    if not os.path.exists(STATE):
+        return {"gaps": {}}, None
+    try:
+        s = json.load(open(STATE))
+        assert isinstance(s.get("gaps"), dict)
+        return s, None
+    except Exception as e:  # keep the bad bytes; start clean but say so
+        aside = f"{STATE}.corrupt-{int(NOW)}"
+        os.replace(STATE, aside)
+        return {"gaps": {}}, f"gap state unreadable ({e.__class__.__name__}); kept as {aside}; clocks restart now"
+
+
+def main():
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    lock = open(STATE + ".lock", "w")
+    fcntl.flock(lock, fcntl.LOCK_EX)
+    state, problem = load()
+    if problem:
+        run([NOTIFY, KIND], f"[research-gap-check] UNKNOWN: {problem}")
+
+    unknown = []
+    try:
+        top, resolved = top_and_resolved()
+    except Exception as e:
+        top, resolved = None, None
+        unknown.append(f"priorities unreadable: {e.__class__.__name__}: {e}")
+    try:
+        live = live_packages()
+    except Exception as e:
+        live = None
+        unknown.append(f"agent-loop status failed: {e}")
+    b = bindings()
+    mode, active, retired, known, sproblem = load_streams()
+    if sproblem:
+        unknown.append(sproblem)
+
+    # The top question plus any question that already has an open incident.
+    if resolved is None:
+        state["gaps"].setdefault("UNKNOWN", None)  # cannot even tell which question is on top
+    elif "UNKNOWN" in state["gaps"]:  # readable again: the gap carries over to the real top question
+        u = state["gaps"].pop("UNKNOWN")
+        if u and top and top not in state["gaps"]:
+            state["gaps"][top] = u
+    state["gaps"] = {k: v for k, v in state["gaps"].items() if v is not None or k == "UNKNOWN"}
+    known = {**state.get("watched", {}), **known}
+    # Every question that was ever an active stream stays watched until an
+    # explicit retirement record: removing it, or setting it inactive, while it
+    # is quiet must not make it vanish.
+    watched = state.setdefault("watched", {})
+    for q, sid in active.items():
+        watched[q] = sid
+    for q in retired:
+        watched.pop(q, None)
+    qs = set(state["gaps"]) | set(watched) | ({top} if top and mode != "registry" else set())
+    report = []
+    for q in sorted(qs):
+        g = state["gaps"].get(q)
+        if q in retired:
+            if g:  # an explicit retirement record resolves only this stream
+                r = retired[q]
+                close(g, q, f"stream {r['stream_id']} retired {r['retired_at']} by {r['by']}: {r['reason']}")
+                del state["gaps"][q]
+            continue
+        if resolved is not None and q in resolved:
+            if g:  # explicitly answered or dropped by a recorded decision
+                close(g, q, "question answered or dropped in RESEARCH-PRIORITIES.json")
+                del state["gaps"][q]
+            continue
+        why = list(unknown)
+        linked, contra = [], []
+        for p in live or []:
+            qids, pstreams = b.get(p, (set(), set()))
+            if (len(qids) > 1 and q in qids) or (qids == {q} and pstreams and pstreams != {known.get(q)}):
+                contra.append(p)
+            elif qids == {q}:
+                linked.append(p)
+        if contra:
+            why.append(f"contradictory question_id binding for {','.join(contra)} (UNKNOWN, not active work)")
+        rest, bad = rest_for(q) if q != "UNKNOWN" else (None, [])
+        if not why and (linked or rest):
+            if g:
+                close(g, q, f"executing {','.join(linked)}" if linked else f"valid rest until {rest['revisit_at']}")
+                del state["gaps"][q]
+            report.append(f"{q}: ok ({'package ' + ','.join(linked) if linked else 'rest to ' + rest['revisit_at']})")
+            continue
+        if q in state["watched"] and q not in active:
+            why.append(f"{q} is not an active registered stream, but its incident stays open until resolved or its stream is retired")
+        elif mode != "registry" and resolved is not None and q != top:
+            why.append(f"{q} is no longer the top question (or is missing), but its incident stays open until resolved")
+        why += bad + ([] if live is None else ["no bound executing package"]) + ([] if rest else ["no valid timed rest"])
+        if not g:
+            g = state["gaps"][q] = {"start": NOW, "incident": f"GAP-{q}-{iso(NOW)}"}
+        age = NOW - g["start"]
+        if age >= OPEN_S and not g.get("tern_key"):
+            text = (f"[research-gap-check] {g['incident']} owner {DIRECTOR}: {'stream ' + known[q] + ' question' if q in known else 'top question'} {q} has had no executing package "
+                    f"and no valid timed rest since {iso(g['start'])}. Reasons: {'; '.join(why)}. "
+                    f"Release a package bound by question_id, or append a timed rest row to REST.jsonl "
+                    f"(question_id, reason, owner, entered_at, revisit_at, next_action). "
+                    f"Claude is told if unresolved by {iso(NOW + ESC_S)}. An ack is not a resolution.")
+            if run([ESCALATIONS, "--add", KIND, "--source", "research-gap-check"], text) == 0:
+                g.update(tern_key=key(text), tern_at=NOW, tern_text=text)
+        if g.get("tern_key") and not g.get("tern_woken"):
+            g["tern_woken"] = run([WAKE, DIRECTOR, g["tern_text"]]) in (0, 3)  # 3 = queued; retried next tick otherwise
+        if g.get("tern_at") and NOW - g["tern_at"] >= ESC_S and not g.get("claude_key"):
+            text = (f"[research-gap-check] {g['incident']} ESCALATED: {DIRECTOR} has not released a package or a timed rest "
+                    f"for {q} since the notice at {iso(g['tern_at'])} (gap since {iso(g['start'])}). Reasons: {'; '.join(why)}.")
+            run([NOTIFY, KIND], text)
+            if ledger_has(key(text)):  # the ledger row is the delivery record, not the channel's rc
+                g.update(claude_key=key(text), claude_at=NOW)
+        stage = "escalated" if g.get("claude_key") else "tern notified" if g.get("tern_key") else f"gap {int(age // 60)}m"
+        report.append(f"{q}: {stage} ({g['incident']})")
+    save(state)
+    print(f"{iso(NOW)} " + ("; ".join(report) or "no open question"))
+    return 0
+
+
+def close(g, q, note):
+    for k in (g.get("tern_key"), g.get("claude_key")):
+        if k:
+            run([RESOLVE, k, g["incident"], f"research-gap closed: {note}"])
+
+
+if __name__ == "__main__":
+    sys.exit(main())
