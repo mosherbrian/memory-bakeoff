@@ -80,6 +80,10 @@ either arm** (both answers state non-execution), and all six arms are plans, so
   disposition records and did not wait past the bound; the final operator
   identities, active minutes and any deviations are not yet filed and are not
   claimed here.
+  > **RECONCILED (same bound):** this ABSENT/PENDING statement is superseded.
+  > `execution-claim.json` was filed 2026-09-25T21:42:17Z and the director intake
+  > verified 70/70 hashes; six explicit session replies are present. See the
+  > Addendum below. The original text is preserved above, not deleted.
 - All six dispositions: S-C/S-T/V-T/V-C/L-T `ACCEPTED_ARM`, L-C
   `ACCEPTED_COMPLETED_RESEARCH_NEGATIVE`. Tern owns the terminal research result
   and concrete next step.
