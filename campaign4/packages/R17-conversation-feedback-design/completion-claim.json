@@ -1,0 +1,32 @@
+{
+ "qid": "R17-design-1",
+ "question_id": "Q-WORK-BENEFIT",
+ "stream_id": "A",
+ "author": "claude",
+ "outcome": "COMPLETE",
+ "at": "2026-09-25T18:02:42.552623+00:00",
+ "contract_sha256": "b442e2f8279b6bdc2311c6a6a43b20b32b5433ceb5e8a28545c0c4e980486ec5",
+ "files_sha256": {
+  "cases.json": "755a2c03bb802be7d008e5dcc77661218a41411f899ce39bc2a8d2fef8a4c12a",
+  "checks.py": "549edd8f62b85d31b94a7d8a8ee209e5435ec772eca4f34a8b0e29eafb17be88",
+  "design.md": "cb14e776eb67abf60077624ae9b2429f9d7caaca0b7e89132e80e59fa8903b55",
+  "examples/lb-bad.md": "fb9f65c574951dcf8410a0de99f5cc6bd94e7d4ce131d41fabdb714136f12e38",
+  "examples/lb-ok.md": "a52168897dde1a17fbccb09a10c2df58d06bfdd40a78ce37eed7e7b7cb8fce51",
+  "examples/lb-vacuous.md": "1d973a806aa6f6088834b546320f1e49439edf3c6119e5c7384edf0e622a59b4",
+  "examples/pid-bad.md": "7301b36bae802a170cc5da1b48cfbd243ff7c855b49fb1f1cd4cdc057cdb4efe",
+  "examples/pid-ok.md": "31cd563a497fdde6a5113b1aa552c7d827b5177b42798769ea92efafe27f5d1b",
+  "examples/pid-vacuous.md": "f8f01685d07d2c1e3391cb985addbe9bcca68db474b2893a57b1697bef590ac7",
+  "examples/py-bad.md": "aed22412953c8c0e2dc333706d8bb96e0cd32ca8339c1a5a0b71846225197cd1",
+  "examples/py-ok.md": "cd605f6ab9941226754926d70c93f674168d6f00d5f10767f32337e0742ca657",
+  "examples/py-vacuous.md": "94014d2a6026ba74304e618db1903ca9074591bdbcf4fe49802aedb2792ce96f",
+  "examples/selfcheck.txt": "d4b28f18bc2b222bf93c4292a62930da97559ba4042f603edf473c28af7da5dc",
+  "memory-packet.md": "8d210a2fa12a1b5ba8d8753d47193df130b7e9cd0c8aee2a4c268d632c857e96",
+  "manifest.json": "a11a7e2326a6b95dc222d34426996d7eb74424a66edd36db6de813ec5a0d7ab9"
+ },
+ "rules_selected": "3 of the 4 named files: R-PY and R-LB with Brian's verbatim source lines; R-PID labelled as Claude-authored, hook-enforced, weaker authority, qualified scope. Poller-paging not used (no inert useful deliverable).",
+ "cases": 6,
+ "checks_selfcheck": "9/9 hand examples classified as intended (examples/selfcheck.txt): conforming -> usable, no violation; violating -> usable, violation; vacuous -> not usable, violation null. One check bug found and fixed during authoring (pkill not counted as a stop step), recorded here.",
+ "leakage": "no rule text in kiln-loaded instruction files; rules present on disk (memory dir, campaign4) -> execution boundary plus contamination scan; model prior and kiln's prior exposure to python3 usage disclosed",
+ "not_done": "no participant trial, no kiln prompt, no execution, no historical scripts, no network/Signal",
+ "incidental": "my safety hook blocked two shell writes because the example text contains a banned command pattern; those files were written with the file tool instead, nothing was run"
+}
