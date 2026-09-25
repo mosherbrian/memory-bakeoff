@@ -1,0 +1,641 @@
+diff --git a/cmd/agent-loop/loop.go b/cmd/agent-loop/loop.go
+index 2fdd5b8..264484e 100644
+--- a/cmd/agent-loop/loop.go
++++ b/cmd/agent-loop/loop.go
+@@ -184,13 +184,14 @@ func runDecide(args []string) int {
+ 	kind := fs.String("kind", "", "successor_opened | question_answered | budget_spent | blocked")
+ 	ref := fs.String("ref", "", "decision reference")
+ 	reason := fs.String("reason", "", "reason")
++	stamp := fs.String("stamp", "", "momentum stamp file (relative to artifacts_dir); required for stamped packages")
+ 	fs.Parse(args)
+ 	l, done, err := openLocked(*cfg)
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+ 	defer done()
+-	if err := l.Decide(*qid, *kind, *ref, *reason); err != nil {
++	if err := l.DecideStamped(*qid, *kind, *ref, *reason, *stamp); err != nil {
+ 		return fail(err)
+ 	}
+ 	fmt.Println(*qid, "closed:", *kind)
+diff --git a/internal/loop/decision.go b/internal/loop/decision.go
+index ab7c576..b25e765 100644
+--- a/internal/loop/decision.go
++++ b/internal/loop/decision.go
+@@ -166,6 +166,9 @@ func (c *Config) validateDecision() []string {
+ 	default:
+ 		bad = append(bad, fmt.Sprintf("decision_policy %q: want \"\" or \"required\"", c.DecisionPolicy))
+ 	}
++	if c.MomentumStamp != "" && c.MomentumStamp != "required" {
++		bad = append(bad, fmt.Sprintf("momentum_stamp %q: want \"\" or \"required\"", c.MomentumStamp))
++	}
+ 	return bad
+ }
+ 
+diff --git a/internal/loop/loop.go b/internal/loop/loop.go
+index 01ff7dd..e39516d 100644
+--- a/internal/loop/loop.go
++++ b/internal/loop/loop.go
+@@ -60,6 +60,8 @@ type Config struct {
+ 	DecisionLadder     []Rung   `json:"decision_ladder"`     // default: director at the deadline, duty +300 s
+ 	DecisionResponders []string `json:"decision_responders"` // who may acknowledge an overdue decision (once, <= 15 min)
+ 	DecisionPolicy     string   `json:"decision_policy"`     // "required": a campaign; the full three-rung policy must be configured
++	// R20: "required" = packages dispatched from now on carry the momentum stamp (momentum.go); "" = off.
++	MomentumStamp string `json:"momentum_stamp"`
+ 
+ 	Path string      `json:"-"`
+ 	Run  host.Runner `json:"-"` // tests inject; nil = real subprocesses
+@@ -160,6 +162,7 @@ type Pkg struct {
+ 	Notes        []string             `json:"notes,omitempty"`
+ 	Timeout      *StepTimeout         `json:"timeout,omitempty"`  // set when a step deadline passed
+ 	Decision     *DecisionDue         `json:"decision,omitempty"` // P13: set on entry into the decision step
++	Stamp        bool                 `json:"stamp,omitempty"`    // R20: fixed at dispatch; older packages keep the old contract
+ }
+ 
+ // OnPass is a director-authorized disposition that closes the package
+@@ -421,7 +424,15 @@ func (l *Loop) ClaimCommand(qid, step string) string {
+ }
+ 
+ func (l *Loop) instructions(p *Pkg, step string) string {
+-	return fmt.Sprintf("\n\n---\nagent-loop package %s, %s step.\nWhen you are done, file your claim with this exact command "+
++	stamp := ""
++	if p.Stamp {
++		role, exec := "worker", p.WorkExec
++		if step == "verify" {
++			role, exec = "verifier", p.VerifyExec
++		}
++		stamp = l.stampText(p, role, exec)
++	}
++	return stamp + fmt.Sprintf("\n\n---\nagent-loop package %s, %s step.\nWhen you are done, file your claim with this exact command "+
+ 		"(PATH is relative to %s; list every file you produced or reviewed):\n  %s\n"+
+ 		"Then end your turn. The loop sees the end of your turn and the claim; do not wake anyone.",
+ 		p.QID, step, l.Cfg.ArtifactsDir, l.ClaimCommand(p.QID, step))
+@@ -536,7 +547,7 @@ func (l *Loop) Dispatch(r Request) (*Pkg, error) {
+ 	}
+ 	p := &Pkg{QID: qid, Worker: r.Worker, Verifier: r.Verifier, WorkerTask: r.WorkerTask, VerifyTask: r.VerifyTask,
+ 		WorkAction: qid + "-w1", WorkExec: "ex-" + qid + "-w1", VerifyAction: qid + "-v1", VerifyExec: "ex-" + qid + "-v1",
+-		DurationS: r.DurationS, VerifyS: r.VerifyS, OnPass: r.OnPass, Inputs: inputs, After: r.After}
++		DurationS: r.DurationS, VerifyS: r.VerifyS, OnPass: r.OnPass, Inputs: inputs, After: r.After, Stamp: l.stampRequired()}
+ 	l.bindPrincipals(p)
+ 	if err := l.authorities(p, "verifier", "director"); err != nil { // admit is the reader (verifier) role
+ 		return nil, err
+@@ -810,6 +821,11 @@ func (l *Loop) blocked(p *Pkg, err error) (string, error) {
+ }
+ 
+ func (l *Loop) finishWorker(p *Pkg, end, launch *py.Dict) (string, error) {
++	if claim := readJSON(host.ClaimPathFor(l.Cfg.ClaimsDir, p.WorkExec)); claim != nil {
++		if f := l.stampFault(p, claim, "worker", p.WorkExec); f != nil { // before any transition
++			return l.blocked(p, f)
++		}
++	}
+ 	if why := l.inputsChanged(p); why != "" {
+ 		code, detail, _ := strings.Cut(why, ": ")
+ 		return l.blocked(p, &host.Fault{Code: code, Detail: detail + " changed during the work; verifier not dispatched", Owner: "cairn"})
+@@ -864,6 +880,9 @@ func (l *Loop) finishVerify(p *Pkg, end, launch *py.Dict) (string, error) {
+ 	if claim == nil {
+ 		return l.blocked(p, &host.Fault{Code: "E_CLAIM_MALFORMED", Detail: "verifier claim is not a JSON object", Owner: "cairn"})
+ 	}
++	if f := l.stampFault(p, claim, "verifier", p.VerifyExec); f != nil { // before any transition
++		return l.blocked(p, f)
++	}
+ 	outcome := claim.Get("outcome")
+ 	if py.Eq(outcome, "completed") && p.OnPass != nil {
+ 		if err := l.authorities(p, "director"); err != nil {
+@@ -915,17 +934,42 @@ func (l *Loop) finishVerify(p *Pkg, end, launch *py.Dict) (string, error) {
+ 	if err := l.openDecision(l.Pkg(p.QID), l.now()); err != nil { // P13: deadline + timer; a failed arm is recovered by the checks
+ 		fmt.Fprintln(os.Stderr, "agent-loop: decision timer for", p.QID, "not armed:", err)
+ 	}
+-	l.send(l.Cfg.Director, fmt.Sprintf("[agent-loop] %s: verifier %s. Claim: %s. Decide with: %s decide --config %s --qid %s --kind successor_opened|question_answered|budget_spent|blocked --ref REF --reason TEXT",
+-		p.QID, p.Verdict, host.ClaimPathFor(l.Cfg.ClaimsDir, p.VerifyExec), l.Cfg.Bin, l.Cfg.Path, p.QID), "decision", p.QID)
++	stampArg, stampHelp := "", ""
++	if p.Stamp {
++		stampArg = " --stamp PATH"
++		stampHelp = strings.Replace(l.stampText(p, "director", "decide"), "name it in the claim as --artifact "+StampArtifact+"=PATH", "pass it to decide as --stamp PATH", 1) +
++			" For question_answered or budget_spent you may give \"terminal\": {\"reason\": \"...\"} instead of next; blocked needs a concrete recovery next step."
++	}
++	l.send(l.Cfg.Director, fmt.Sprintf("[agent-loop] %s: verifier %s. Claim: %s. Decide with: %s decide --config %s --qid %s --kind successor_opened|question_answered|budget_spent|blocked --ref REF --reason TEXT%s%s",
++		p.QID, p.Verdict, host.ClaimPathFor(l.Cfg.ClaimsDir, p.VerifyExec), l.Cfg.Bin, l.Cfg.Path, p.QID, stampArg, stampHelp), "decision", p.QID)
+ 	return "verifier " + p.Verdict + "; decision requested from " + l.Cfg.Director, nil
+ }
+ 
+-// Decide records the director's disposition.
++// Decide records the director's disposition (unstamped packages).
+ func (l *Loop) Decide(qid, kind, ref, reason string) error {
++	return l.DecideStamped(qid, kind, ref, reason, "")
++}
++
++// DecideStamped records the director's disposition; a stamped package needs a
++// valid director stamp (path relative to artifacts_dir), checked before any
++// mutation, so a refused decision leaves the decision open and its ladder running.
++func (l *Loop) DecideStamped(qid, kind, ref, reason, stamp string) error {
+ 	p := l.Pkg(qid)
+ 	if p == nil {
+ 		return fmt.Errorf("no package %s", qid)
+ 	}
++	if p.Stamp {
++		if stamp == "" {
++			return &host.Fault{Code: "E_STAMP_MISSING", Detail: "this package needs --stamp on decide", Owner: l.Cfg.Director}
++		}
++		b, err := os.ReadFile(filepath.Join(l.Cfg.ArtifactsDir, stamp))
++		if err != nil {
++			return &host.Fault{Code: "E_STAMP_MISSING", Detail: "stamp unreadable: " + err.Error(), Owner: l.Cfg.Director}
++		}
++		if bad := l.ValidateStamp(p, "director", "decide", kind, b); len(bad) > 0 {
++			return &host.Fault{Code: "E_STAMP_INVALID", Detail: strings.Join(bad, "; "), Owner: l.Cfg.Director}
++		}
++	}
+ 	// The ref is part of the event id: a retry of the same decision is a
+ 	// duplicate, a different decision reaches the core and is refused.
+ 	ev := py.D("event_id", qid+"-decide-"+ref, "question_id", qid, "revision", int64(1), "type", "decide",
+diff --git a/internal/loop/momentum.go b/internal/loop/momentum.go
+new file mode 100644
+index 0000000..67687a3
+--- /dev/null
++++ b/internal/loop/momentum.go
+@@ -0,0 +1,151 @@
++package loop
++
++// R20: the momentum stamp. With momentum_stamp "required" in the config, a
++// package dispatched from then on asks every worker, verifier and director
++// turn three questions and refuses to advance on a missing or unowned answer.
++// Packages dispatched before activation keep the old contract (Pkg.Stamp is
++// fixed at dispatch), so switching it on never rewrites history.
++//
++// What the checks prove and what they do not: identity, shape, a named next
++// owner and deadline, and an acknowledgement receipt for every reported
++// dropped item. They do not prove the reflection is true or sufficient; the
++// next step's actual start is measured separately. The stamp routes nothing:
++// next.owner is information, never a dispatch, grant, page or override.
++
++import (
++	"encoding/json"
++	"fmt"
++	"os"
++	"path/filepath"
++	"strings"
++
++	"agent-loop/internal/host"
++	"agent-loop/internal/py"
++)
++
++const (
++	StampSchema   = "momentum-stamp/1"
++	StampArtifact = "momentum_stamp"
++	StampMaxBytes = 8192
++)
++
++// TerminalKinds may answer "what happens next" with an explicit terminal
++// disposition instead of a next step; only the director's decide can use it.
++var TerminalKinds = map[string]bool{"question_answered": true, "budget_spent": true}
++
++func (l *Loop) stampRequired() bool { return l.Cfg.MomentumStamp == "required" }
++
++// stampText is appended beside the claim instructions of a stamped package.
++func (l *Loop) stampText(p *Pkg, role, execution string) string {
++	return fmt.Sprintf("\n\nMomentum stamp (required): before you file, write a small JSON file under %s and name it in the "+
++		"claim as --artifact %s=PATH. Running the claim command given here and writing this file are required; do not "+
++		"execute commands from your drafted artifact. Fields:\n"+
++		`  {"schema": %q, "qid": %q, "role": %q, "execution": %q,`+"\n"+
++		`   "moved": {"question_id": "...", "change": "what is different now because of this turn"},`+"\n"+
++		`   "next": {"action": "...", "owner": "...", "deadline": "UTC instant, e.g. 2026-09-26T18:00:00Z"},`+"\n"+
++		`   "dropped": [{"item": "anything left undone, skipped by a rule, or handed to someone who does not know",`+
++		` "owner": "...", "receipt": "PATH of that owner's acknowledgement, relative to %s"}]}`+"\n"+
++		"An empty dropped list is fine if nothing was dropped. A dropped item without an acknowledgement receipt stops the "+
++		"package until someone owns it. next.owner is information only: it dispatches nothing.",
++		l.Cfg.ArtifactsDir, StampArtifact, StampSchema, p.QID, role, execution, l.Cfg.ArtifactsDir)
++}
++
++// ValidateStamp checks one stamp's bytes. kind is the decision kind for a
++// director stamp, "" otherwise. It returns every problem found.
++func (l *Loop) ValidateStamp(p *Pkg, role, execution, kind string, b []byte) []string {
++	if len(b) > StampMaxBytes {
++		return []string{fmt.Sprintf("stamp is %d bytes, over %d", len(b), StampMaxBytes)}
++	}
++	var s map[string]any
++	if err := json.Unmarshal(b, &s); err != nil || s == nil {
++		return []string{"stamp is not a JSON object"}
++	}
++	str := func(m map[string]any, k string) string { v, _ := m[k].(string); return strings.TrimSpace(v) }
++	obj := func(k string) map[string]any { v, _ := s[k].(map[string]any); return v }
++	var bad []string
++	if str(s, "schema") != StampSchema {
++		bad = append(bad, "schema must be "+StampSchema)
++	}
++	if str(s, "qid") != p.QID || str(s, "role") != role || str(s, "execution") != execution {
++		bad = append(bad, fmt.Sprintf("identity must be qid %s, role %s, execution %s", p.QID, role, execution))
++	}
++	if m := obj("moved"); m == nil || str(m, "question_id") == "" || str(m, "change") == "" {
++		bad = append(bad, "moved needs question_id and change")
++	}
++	next, term := obj("next"), obj("terminal")
++	switch {
++	case next != nil:
++		if str(next, "action") == "" || str(next, "owner") == "" {
++			bad = append(bad, "next needs action and owner")
++		}
++		if _, ok := py.Instant(str(next, "deadline")); !ok || str(next, "deadline") == "" {
++			bad = append(bad, "next.deadline must be a UTC instant")
++		}
++	case term != nil && role == "director" && TerminalKinds[kind] && str(term, "reason") != "":
++		// an honest terminal answer: director-owned, no invented next job
++	case term != nil:
++		bad = append(bad, "a terminal disposition is only for the director deciding question_answered or budget_spent, with a reason")
++	default:
++		bad = append(bad, "next (action, owner, deadline) is required")
++	}
++	dropped, ok := s["dropped"].([]any)
++	if s["dropped"] != nil && !ok {
++		bad = append(bad, "dropped must be a list")
++	}
++	for i, d := range dropped {
++		m, _ := d.(map[string]any)
++		if m == nil || str(m, "item") == "" || str(m, "owner") == "" {
++			bad = append(bad, fmt.Sprintf("dropped[%d] needs item and owner", i))
++			continue
++		}
++		if why := l.receiptProblem(p, m, str); why != "" {
++			bad = append(bad, fmt.Sprintf("dropped item %q is unowned: %s", str(m, "item"), why))
++		}
++	}
++	return bad
++}
++
++// receiptProblem: naming an owner is not proof they took the item; their
++// acknowledgement receipt is.
++func (l *Loop) receiptProblem(p *Pkg, m map[string]any, str func(map[string]any, string) string) string {
++	rel := str(m, "receipt")
++	if rel == "" {
++		return "no acknowledgement receipt"
++	}
++	if filepath.IsAbs(rel) || strings.Contains(filepath.Clean(rel), "..") {
++		return "receipt must be a path inside artifacts_dir"
++	}
++	b, err := os.ReadFile(filepath.Join(l.Cfg.ArtifactsDir, rel))
++	if err != nil || len(b) > StampMaxBytes {
++		return "receipt unreadable"
++	}
++	var r map[string]any
++	if json.Unmarshal(b, &r) != nil {
++		return "receipt is not JSON"
++	}
++	if ack, _ := r["ack"].(bool); !ack || str(r, "qid") != p.QID || str(r, "item") != str(m, "item") || str(r, "owner") != str(m, "owner") {
++		return "receipt does not acknowledge this item for this package and owner"
++	}
++	return ""
++}
++
++// stampFault checks the stamp named in a filed claim before the package
++// advances. nil means advance. The claim is kept either way: an honest
++// failed or incomplete record is never discarded, only stopped here.
++func (l *Loop) stampFault(p *Pkg, claim *py.Dict, role, execution string) *host.Fault {
++	if !p.Stamp {
++		return nil
++	}
++	spec := py.AsDict(py.AsDict(claim.GetOr("artifacts", py.NewDict())).Get(StampArtifact))
++	if spec == nil {
++		return &host.Fault{Code: "E_STAMP_MISSING", Detail: "no " + StampArtifact + " artifact in the " + role + " claim", Owner: l.Cfg.Director}
++	}
++	b, err := os.ReadFile(filepath.Join(l.Cfg.ArtifactsDir, py.S(spec.Get("path"))))
++	if err != nil {
++		return &host.Fault{Code: "E_STAMP_MISSING", Detail: "stamp unreadable: " + err.Error(), Owner: l.Cfg.Director}
++	}
++	if bad := l.ValidateStamp(p, role, execution, "", b); len(bad) > 0 {
++		return &host.Fault{Code: "E_STAMP_INVALID", Detail: strings.Join(bad, "; "), Owner: l.Cfg.Director}
++	}
++	return nil
++}
+diff --git a/internal/loop/momentum_r20_test.go b/internal/loop/momentum_r20_test.go
+new file mode 100644
+index 0000000..e16eb2d
+--- /dev/null
++++ b/internal/loop/momentum_r20_test.go
+@@ -0,0 +1,288 @@
++package loop
++
++import (
++	"encoding/json"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++)
++
++func stampJSON(qid, role, exec string, mut func(m map[string]any)) string {
++	m := map[string]any{"schema": StampSchema, "qid": qid, "role": role, "execution": exec,
++		"moved":   map[string]any{"question_id": "Q-WORK-BENEFIT", "change": "wrote the thing"},
++		"next":    map[string]any{"action": "review it", "owner": "corvid", "deadline": "2026-09-26T18:00:00Z"},
++		"dropped": []any{}}
++	if mut != nil {
++		mut(m)
++	}
++	b, _ := json.Marshal(m)
++	return string(b)
++}
++
++// stamped: a rig whose config requires the stamp, with P1 dispatched.
++func stamped(t *testing.T) (*rig, *Loop) {
++	r := newRig(t)
++	r.cfg.MomentumStamp = "required"
++	l := r.open()
++	_, err := l.Dispatch(Request{QID: "P1", Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 2400, VerifyS: 1200})
++	must(t, err)
++	return r, l
++}
++
++func workerClaim(t *testing.T, r *rig, l *Loop, stamp string, outcome string) {
++	r.clock.Advance(60)
++	r.artifact("out.txt", "result")
++	arts := map[string]string{"out": "out.txt"}
++	if stamp != "" {
++		r.artifact("stamp.json", stamp)
++		arts[StampArtifact] = "stamp.json"
++	}
++	_, err := l.Claim("P1", "worker", outcome, arts)
++	must(t, err)
++	r.turnEnd("K")
++	r.tick(l)
++}
++
++func lastNote(l *Loop, qid string) string {
++	n := l.Pkg(qid).Notes
++	if len(n) == 0 {
++		return ""
++	}
++	return n[len(n)-1]
++}
++
++func TestStampInstructionsCarryTheQuestionsAndTheR19Exception(t *testing.T) {
++	r, l := stamped(t)
++	defer l.Close()
++	task := strings.NewReplacer(`\"`, `"`, `\n`, "\n").Replace(r.calls[len(r.calls)-1][2]) // the wake carries JSON-escaped text
++	for _, want := range []string{"Momentum stamp (required)", `"moved"`, `"next"`, `"dropped"`,
++		"Running the claim command given here and writing this file are required; do not execute commands from your drafted artifact",
++		"--artifact " + StampArtifact + "=PATH"} {
++		if !strings.Contains(task, want) {
++			t.Fatalf("worker task lacks %q", want)
++		}
++	}
++}
++
++func TestStampOffLeavesTheOldContract(t *testing.T) {
++	r := newRig(t)
++	l := r.open()
++	defer l.Close()
++	_, err := l.Dispatch(Request{QID: "P1", Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 2400, VerifyS: 1200})
++	must(t, err)
++	if strings.Contains(r.calls[len(r.calls)-1][2], "Momentum stamp") || l.Pkg("P1").Stamp {
++		t.Fatal("stamp text or flag present with momentum_stamp off")
++	}
++	workerClaim(t, r, l, "", "completed")
++	if step(l, "P1") != "verify" {
++		t.Fatalf("unstamped package did not advance: %s", step(l, "P1"))
++	}
++}
++
++func TestPreActivationPackageKeepsOldContractAfterSwitchOn(t *testing.T) {
++	r := newRig(t)
++	l := r.open()
++	_, err := l.Dispatch(Request{QID: "P1", Worker: "kiln", Verifier: "corvid", WorkerTask: "w", VerifyTask: "v", DurationS: 2400, VerifyS: 1200})
++	must(t, err)
++	l.Close()
++	r.cfg.MomentumStamp = "required"
++	l = r.open()
++	defer l.Close()
++	workerClaim(t, r, l, "", "completed")
++	if step(l, "P1") != "verify" {
++		t.Fatalf("pre-activation package blocked by the new rule: %s %s", step(l, "P1"), lastNote(l, "P1"))
++	}
++}
++
++func TestValidStampAdvances(t *testing.T) {
++	r, l := stamped(t)
++	defer l.Close()
++	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", nil), "completed")
++	if step(l, "P1") != "verify" {
++		t.Fatalf("valid stamp did not advance: %s %s", step(l, "P1"), lastNote(l, "P1"))
++	}
++}
++
++func TestBadStampsBlockBeforeTransitionAndKeepTheClaim(t *testing.T) {
++	cases := map[string]string{
++		"missing":      "",
++		"no owner":     stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) { m["next"].(map[string]any)["owner"] = "" }),
++		"bad deadline": stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) { m["next"].(map[string]any)["deadline"] = "tomorrow" }),
++		"no next":      stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) { delete(m, "next") }),
++		"worker terminal": stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
++			delete(m, "next")
++			m["terminal"] = map[string]any{"reason": "done"}
++		}),
++		"forged identity": stampJSON("P9", "worker", "ex-P1-w1", nil),
++		"wrong role":      stampJSON("P1", "verifier", "ex-P1-w1", nil),
++		"unowned drop": stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
++			m["dropped"] = []any{map[string]any{"item": "copy to evidence", "owner": "tern"}}
++		}),
++		"not json": "{nope",
++		"oversized": stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) { // otherwise valid
++			m["moved"].(map[string]any)["change"] = strings.Repeat("x", StampMaxBytes)
++		}),
++	}
++	for name, s := range cases {
++		t.Run(name, func(t *testing.T) {
++			r, l := stamped(t)
++			defer l.Close()
++			wakesBefore := len(r.wakes())
++			workerClaim(t, r, l, s, "completed")
++			if step(l, "P1") != "blocked" || !strings.Contains(lastNote(l, "P1"), "E_STAMP_") {
++				t.Fatalf("not blocked on the stamp: %s %q", step(l, "P1"), lastNote(l, "P1"))
++			}
++			w := r.wakes()
++			if len(w) != wakesBefore+1 || !strings.HasPrefix(w[len(w)-1], "tern: ") {
++				t.Fatalf("the director (owner) was not told once: %v", w[wakesBefore:])
++			}
++			if _, err := os.Stat(filepath.Join(r.cfg.ClaimsDir, "ex-P1-w1.json")); err != nil {
++				t.Fatal("the claim was not kept")
++			}
++			r.tick(l) // replay: no second transition or notice
++			if len(r.wakes()) != wakesBefore+1 || step(l, "P1") != "blocked" {
++				t.Fatal("a replayed tick acted again")
++			}
++		})
++	}
++}
++
++func TestDroppedItemWithAcknowledgementAdvancesAndForgedAckDoesNot(t *testing.T) {
++	for _, tc := range []struct {
++		name, ack string
++		ok        bool
++	}{
++		{"acked", `{"ack": true, "qid": "P1", "item": "copy to evidence", "owner": "tern"}`, true},
++		{"other owner", `{"ack": true, "qid": "P1", "item": "copy to evidence", "owner": "cairn"}`, false},
++		{"not acked", `{"ack": false, "qid": "P1", "item": "copy to evidence", "owner": "tern"}`, false},
++		{"other package", `{"ack": true, "qid": "P7", "item": "copy to evidence", "owner": "tern"}`, false},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			r, l := stamped(t)
++			defer l.Close()
++			r.artifact("ack.json", tc.ack)
++			workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
++				m["dropped"] = []any{map[string]any{"item": "copy to evidence", "owner": "tern", "receipt": "ack.json"}}
++			}), "completed")
++			if (step(l, "P1") == "verify") != tc.ok {
++				t.Fatalf("step %s, want advance=%v (%s)", step(l, "P1"), tc.ok, lastNote(l, "P1"))
++			}
++		})
++	}
++}
++
++func TestReceiptOutsideArtifactsIsRefused(t *testing.T) {
++	r, l := stamped(t)
++	defer l.Close()
++	// a VALID acknowledgement, but outside artifacts_dir: only the path rule refuses it
++	os.WriteFile(filepath.Join(filepath.Dir(r.cfg.ArtifactsDir), "ack.json"), []byte(`{"ack": true, "qid": "P1", "item": "x", "owner": "tern"}`), 0o644)
++	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", func(m map[string]any) {
++		m["dropped"] = []any{map[string]any{"item": "x", "owner": "tern", "receipt": "../ack.json"}}
++	}), "completed")
++	if step(l, "P1") != "blocked" {
++		t.Fatal("a receipt path outside artifacts_dir was accepted")
++	}
++}
++
++func TestHonestFailedWorkWithAValidStampIsNotBlockedByTheStamp(t *testing.T) {
++	r, l := stamped(t)
++	defer l.Close()
++	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", nil), "failed")
++	if strings.Contains(lastNote(l, "P1"), "E_STAMP_") {
++		t.Fatalf("a valid stamp on a failed claim was treated as a stamp fault: %q", lastNote(l, "P1"))
++	}
++}
++
++// toDecision drives a stamped P1 to the decision step with valid stamps.
++func toDecision(t *testing.T) (*rig, *Loop) {
++	r, l := stamped(t)
++	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", nil), "completed")
++	r.clock.Advance(60)
++	r.artifact("review.md", "ok")
++	r.artifact("vstamp.json", stampJSON("P1", "verifier", "ex-P1-v1", nil))
++	_, err := l.Claim("P1", "verify", "completed", map[string]string{"review": "review.md", StampArtifact: "vstamp.json"})
++	must(t, err)
++	r.turnEnd("C")
++	r.tick(l)
++	if step(l, "P1") != "decision" {
++		t.Fatalf("did not reach decision: %s %s", step(l, "P1"), lastNote(l, "P1"))
++	}
++	return r, l
++}
++
++func TestVerifierWithoutStampBlocks(t *testing.T) {
++	r, l := stamped(t)
++	defer l.Close()
++	workerClaim(t, r, l, stampJSON("P1", "worker", "ex-P1-w1", nil), "completed")
++	r.clock.Advance(60)
++	r.artifact("review.md", "ok")
++	_, err := l.Claim("P1", "verify", "completed", map[string]string{"review": "review.md"})
++	must(t, err)
++	r.turnEnd("C")
++	r.tick(l)
++	if step(l, "P1") != "blocked" || !strings.Contains(lastNote(l, "P1"), "E_STAMP_MISSING") {
++		t.Fatalf("verifier without stamp advanced: %s %s", step(l, "P1"), lastNote(l, "P1"))
++	}
++}
++
++func TestDirectorNoticeAsksForTheStamp(t *testing.T) {
++	r, l := toDecision(t)
++	defer l.Close()
++	var notice string
++	for _, c := range r.calls {
++		if filepath.Base(c[0]) == "wake" && c[1] == "T" {
++			notice = c[2]
++		}
++	}
++	if !strings.Contains(notice, "--stamp PATH") || !strings.Contains(notice, `"terminal"`) {
++		t.Fatalf("director notice lacks the stamp request: %q", notice)
++	}
++}
++
++func TestDecideNeedsAValidStampBeforeAnyMutation(t *testing.T) {
++	r, l := toDecision(t)
++	defer l.Close()
++	if err := l.DecideStamped("P1", "successor_opened", "t-1", "r", ""); err == nil || step(l, "P1") != "decision" {
++		t.Fatalf("decide without a stamp: err=%v step=%s", err, step(l, "P1"))
++	}
++	r.artifact("dterm.json", stampJSON("P1", "director", "decide", func(m map[string]any) {
++		delete(m, "next")
++		m["terminal"] = map[string]any{"reason": "answered"}
++	}))
++	if err := l.DecideStamped("P1", "successor_opened", "t-2", "r", "dterm.json"); err == nil || step(l, "P1") != "decision" {
++		t.Fatal("a terminal stamp was accepted for successor_opened")
++	}
++	if err := l.DecideStamped("P1", "question_answered", "t-3", "r", "dterm.json"); err != nil || step(l, "P1") != "closed" {
++		t.Fatalf("honest terminal answer refused: %v", err)
++	}
++}
++
++func TestBlockedDecisionNeedsARecoveryStep(t *testing.T) {
++	r, l := toDecision(t)
++	defer l.Close()
++	r.artifact("dterm.json", stampJSON("P1", "director", "decide", func(m map[string]any) {
++		delete(m, "next")
++		m["terminal"] = map[string]any{"reason": "stuck"}
++	}))
++	if err := l.DecideStamped("P1", "blocked", "t-1", "r", "dterm.json"); err == nil {
++		t.Fatal("blocked accepted without a concrete recovery next step")
++	}
++	r.artifact("dnext.json", stampJSON("P1", "director", "decide", nil))
++	if err := l.DecideStamped("P1", "blocked", "t-2", "r", "dnext.json"); err != nil {
++		t.Fatalf("blocked with a recovery step refused: %v", err)
++	}
++}
++
++func TestConfigRejectsUnknownStampValue(t *testing.T) {
++	c := &Config{MomentumStamp: "yes"}
++	found := false
++	for _, b := range c.validateDecision() {
++		if strings.Contains(b, "momentum_stamp") {
++			found = true
++		}
++	}
++	if !found {
++		t.Fatal("momentum_stamp \"yes\" accepted")
++	}
++}
+diff --git a/tools/mutants_r20.py b/tools/mutants_r20.py
+new file mode 100644
+index 0000000..83705e5
+--- /dev/null
++++ b/tools/mutants_r20.py
+@@ -0,0 +1,35 @@
++#!/usr/bin/env python3
++"""R20 planted faults for the momentum stamp. Each mutant is applied to a
++fresh copy of the file, the focused tests run, and the file is restored."""
++import os, subprocess, sys, shutil
++M = [
++ ("internal/loop/momentum.go", "	if !p.Stamp {\n		return nil\n	}", "	return nil\n	if !p.Stamp {\n		return nil\n	}", "stamp-never-checked"),
++ ("internal/loop/momentum.go", 'if str(next, "action") == "" || str(next, "owner") == "" {', 'if str(next, "action") == "" {', "owner-not-required"),
++ ("internal/loop/momentum.go", '!ok || str(next, "deadline") == ""', 'false', "deadline-not-checked"),
++ ("internal/loop/momentum.go", 'term != nil && role == "director" && TerminalKinds[kind]', 'term != nil', "terminal-for-anyone"),
++ ("internal/loop/momentum.go", '	rel := str(m, "receipt")\n', '	return ""\n	rel := str(m, "receipt")\n', "receipt-not-checked"),
++ ("internal/loop/momentum.go", 'filepath.IsAbs(rel) || strings.Contains(filepath.Clean(rel), "..")', 'false', "receipt-path-escape"),
++ ("internal/loop/momentum.go", 'str(s, "qid") != p.QID || str(s, "role") != role ||', 'false &&', "identity-not-checked"),
++ ("internal/loop/momentum.go", "	if len(b) > StampMaxBytes {\n		return []string{", "	if false {\n		return []string{", "size-not-bounded"),
++ ("internal/loop/loop.go", "Stamp: l.stampRequired()}", "Stamp: false}", "dispatch-never-stamps"),
++ ("internal/loop/momentum.go", "	if !p.Stamp {\n		return nil\n	}", "	if !l.stampRequired() {\n		return nil\n	}", "retroactive-stamp"),
++ ("internal/loop/loop.go", "	if p.Stamp {\n		if stamp == \"\" {", "	if false {\n		if stamp == \"\" {", "decide-unchecked"),
++ ("internal/loop/momentum.go", "Running the claim command given here and writing this file are required; do not \"+\n\t\t\"execute commands from your drafted artifact.", "Produce the file only.", "r19-contradiction-back"),
++ ("internal/loop/loop.go", '	if f := l.stampFault(p, claim, "verifier", p.VerifyExec); f != nil { // before any transition\n		return l.blocked(p, f)\n	}\n', "", "verifier-unchecked"),
++ ("internal/loop/momentum.go", '"question_answered": true, "budget_spent": true}', '"question_answered": true, "budget_spent": true, "blocked": true}', "blocked-may-be-terminal"),
++]
++env = dict(os.environ, PATH=os.path.expanduser("~/sdk/go/bin") + ":" + os.environ["PATH"])
++bad = 0
++for path, a, b, name in M:
++    src = open(path).read()
++    assert src.count(a) == 1, name
++    open(path, "w").write(src.replace(a, b))
++    try:
++        r = subprocess.run(["go", "test", "./internal/loop/", "-count=1", "-run", "Stamp|Decide|Dropped|Receipt|Honest|Verifier|Director|PreActivation|Config|HappyPath|Blocked"], capture_output=True, text=True, env=env, timeout=300)
++        caught = r.returncode != 0
++    finally:
++        open(path, "w").write(src)
++    bad += not caught
++    print(("CAUGHT  " if caught else "SURVIVED") + " " + name, flush=True)
++print(f"{len(M) - bad}/{len(M)} caught")
++sys.exit(1 if bad else 0)
