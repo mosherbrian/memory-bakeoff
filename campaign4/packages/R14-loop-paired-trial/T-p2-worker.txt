@@ -1,0 +1,17 @@
+R14 trial, arm T, phase 2 of 2: REPAIR. This is a new conversation; an earlier conversation inspected this problem.
+
+Working copy: /var/home/bmosher/r14-arms/T (same rules: only this directory; not ~/inference-gateway, its history, or campaign4 packages other than the collect.py command below). Your files and any notes in /var/home/bmosher/r14-arms/T/notes/ are as you left them.
+
+Summary from the earlier conversation (<=300 words, verbatim):
+---
+R14-T phase 1 inspection: tests/test_drain_on_disconnect.py has 2 passing flag tests and 3 failing drain tests. Cause is a signature mismatch in igw/router/app.py `_drain_detached(response, backend_name, deadline_s=30.0)`, which iterates `response.aiter_raw()` internally. Tests call `_drain_detached(r.aiter_raw(), r, "npu-box")`, i.e. (stream, response, backend): the string "npu-box" lands in `deadline_s`, so `asyncio.timeout('npu-box')` raises TypeError (2 failures), and the `deadline_s=0.05` kwarg collides positionally (3rd failure). The two in-app call sites pass `(response, backend.name)`, matching the old 2-arg shape. Repair plan for phase 2: change the signature to accept the already-open stream first — `_drain_detached(stream, response, backend_name, deadline_s=30.0)` — iterate the passed stream (not `response.aiter_raw()`, which would AttributeError on a generator), keep the existing `except (TimeoutError, httpx.HTTPError)` without catching CancelledError, and keep `finally: aclose(response)`. Update the two call sites to pass the live iterator plus response and backend name. No test edits needed; test file is fixed.
+
+---
+
+Task: fix the code so that tests/test_drain_on_disconnect.py passes. Do not edit anything under tests/. Test command:
+  cd /var/home/bmosher/r14-arms/T && python -m pytest -q -p no:cacheprovider tests/test_drain_on_disconnect.py
+Before claiming, run exactly:
+  python /home/bmosher/memory-bake-off/campaign4/packages/R14-loop-paired-trial/collect.py T 2
+Then file the claim with the agent-loop claim command that the loop appends below this task, using exactly these artifacts:
+  --artifact test_output=packages/R14-loop-paired-trial/evidence/T-p2/test.out --artifact notes_index=packages/R14-loop-paired-trial/evidence/T-p2/notes-index.json --artifact manifest=packages/R14-loop-paired-trial/evidence/T-p2/manifest.txt --artifact igw_diff=packages/R14-loop-paired-trial/evidence/T-p2/igw.diff
+Outcome: completed if the test passes, failed otherwise.
