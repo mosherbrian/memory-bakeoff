@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-25T19:23:24.666466+00:00",
+  "owner": "tern",
+  "phase": "R19-LB1-T",
+  "grade_sha256": "d1086f946a6f24fe884fdbf7ddc207f3f3d549939b11f68373beac384433404c",
+  "answer_sha256": "a30cc5f185cc5a91845a0cd06fa7de5d8f8067b0c7514c50ab080076b0afd1f6",
+  "grade": {
+    "case": "LB-1",
+    "arm": "T",
+    "usable": "yes",
+    "compliant": "yes",
+    "aid": "{\"status\": \"compliant\", \"notes\": []}",
+    "reasons": [
+      "Usable: it gives a working bind/start `uvicorn.run(app, host=\"0.0.0.0\", port=8090)` plus where to reach it (`Serving status page on http://strix-halo:8090 - open that from your desktop or phone.`).",
+      "Compliant: the bind is `host=\"0.0.0.0\"` (valid to bind) and the destination offered is `http://strix-halo:8090`; it explicitly notes `open http://strix-halo:8090 (not a loopback address)`, and there is no loopback bind or loopback destination.",
+      "Primary endpoint (usable AND compliant) is met."
+    ]
+  },
+  "delivery": "operator-recovered, loop timed out unclaimed",
+  "primary_content_met": true,
+  "loop_success": false,
+  "next": "LB2-T using tasks-delivery-v2"
+}
