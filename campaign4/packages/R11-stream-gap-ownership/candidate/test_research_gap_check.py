@@ -46,9 +46,20 @@ class Gap(unittest.TestCase):
     def live(self, pkgs):
         json.dump({"packages": [{"qid": q, "step": s} for q, s in pkgs]}, open(f"{self.d}/status.json", "w"))
 
-    def bind(self, pkg, q, name="dispatch-receipt.json"):
+    def bind(self, pkg, q, name="dispatch-receipt.json", stream=None):
         os.makedirs(f"{self.d}/c4/packages/{pkg}", exist_ok=True)
-        json.dump({"package_id": pkg, "question_id": q}, open(f"{self.d}/c4/packages/{pkg}/{name}", "w"))
+        rec = {"package_id": pkg, "question_id": q} | ({"stream_id": stream} if stream else {})
+        json.dump(rec, open(f"{self.d}/c4/packages/{pkg}/{name}", "w"))
+
+    def streams(self, rows=None, raw=None):
+        with open(f"{self.d}/c4/RESEARCH-STREAMS.json", "w") as f:
+            f.write(raw if raw is not None else json.dumps({"schema_version": 1, "streams": rows}))
+
+    AB = [{"stream_id": "A", "question_id": "Q-A", "status": "active"},
+          {"stream_id": "B", "question_id": "Q-B", "status": "active"}]
+
+    def by_q(self, q):
+        return [r for r in self.raised() if f"question {q} " in r["text"] or f"GAP-{q}-" in r["text"]]
 
     def rest(self, *rows):
         with open(f"{self.d}/c4/REST.jsonl", "a") as f:
@@ -250,6 +261,111 @@ class Gap(unittest.TestCase):
         self.prio([("Q-A", 1, "answered"), ("Q-B", 2)])
         self.check(T0 + 50 * M)
         self.assertEqual(len([r for r in self.ledger() if "resolve" in r]), 2)
+
+    # -- R11: explicit streams ----------------------------------------------------
+    def test_r11_one_active_one_stalled(self):
+        self.streams(self.AB); self.bind("PA", "Q-A", stream="A"); self.live([("PA", "worker")])
+        for t in (T0, T0 + 30 * M, T0 + 45 * M):
+            out = self.check(t)
+        self.assertIn("Q-A: ok (package PA)", out)
+        self.assertEqual(len(self.by_q("Q-A")), 0)
+        self.assertEqual(len(self.by_q("Q-B")), 2, "stalled lower-ranked stream B gets notice and escalation")
+        self.assertIn("stream B question Q-B", self.by_q("Q-B")[0]["text"])
+
+    def test_r11_inactive_stream_not_tracked(self):
+        self.streams([self.AB[0], dict(self.AB[1], status="inactive")])
+        self.check(T0); self.check(T0 + 30 * M)
+        self.assertEqual(len(self.by_q("Q-B")), 0)
+        self.assertEqual(len(self.by_q("Q-A")), 1)
+
+    def test_r11_independent_rest_and_expiry(self):
+        self.streams(self.AB)
+        self.rest({"question_id": "Q-B", "reason": "r", "owner": "tern", "entered_at": iso(T0 - 60), "revisit_at": iso(T0 + 20 * M), "next_action": "n"})
+        self.check(T0); self.check(T0 + 20 * M); self.check(T0 + 30 * M)
+        self.assertEqual(len(self.by_q("Q-A")), 1)
+        self.assertEqual(len(self.by_q("Q-B")), 0, "B rested until +20m; its own clock starts at that tick")
+        self.check(T0 + 49 * M)
+        self.assertEqual(len(self.by_q("Q-B")), 0)
+        self.check(T0 + 50 * M)
+        self.assertEqual(len(self.by_q("Q-B")), 1)
+
+    def test_r11_cross_binding_is_unknown(self):
+        self.streams(self.AB); self.bind("PX", "Q-B", stream="A"); self.live([("PX", "worker")])
+        self.check(T0); self.check(T0 + 30 * M)
+        self.assertEqual(len(self.by_q("Q-B")), 1)
+        self.assertIn("contradictory", self.by_q("Q-B")[0]["text"])
+
+    def test_r11_package_for_A_does_not_quiet_B(self):
+        self.streams(self.AB); self.bind("PA", "Q-A"); self.live([("PA", "verify")])
+        self.check(T0); self.check(T0 + 30 * M)
+        self.assertEqual(len(self.by_q("Q-B")), 1)
+        self.assertEqual(len(self.by_q("Q-A")), 0)
+
+    def test_r11_removed_stream_keeps_incident(self):
+        self.streams(self.AB)
+        self.check(T0); self.check(T0 + 30 * M)
+        self.streams([self.AB[0]])  # B dropped with no retirement record
+        self.bind("PA", "Q-A"); self.live([("PA", "worker")])
+        out = self.check(T0 + 45 * M)
+        self.assertIn("Q-B: escalated", out)
+        self.assertNotIn("Q-B", " ".join(r["resolve"] for r in self.ledger() if "resolve" in r))
+
+    def test_r11_retirement_resolves_only_that_stream(self):
+        self.streams(self.AB)
+        self.check(T0); self.check(T0 + 30 * M)
+        self.streams([self.AB[0], dict(self.AB[1], status="retired", retired_at=iso(T0 + 31 * M), by="tern", reason="dropped")])
+        out = self.check(T0 + 35 * M)
+        self.assertNotIn("Q-B:", out)
+        self.assertIn("Q-A: tern notified", out)
+        res = {r["resolve"] for r in self.ledger() if "resolve" in r}
+        self.assertEqual(res, {r["key"] for r in self.by_q("Q-B")})
+
+    def test_r11_retirement_without_fields_is_bad_registry(self):
+        self.streams(self.AB)
+        self.check(T0); self.check(T0 + 30 * M)
+        self.streams([self.AB[0], dict(self.AB[1], status="retired")])
+        out = self.check(T0 + 45 * M)
+        self.assertIn("Q-B: escalated", out)
+        self.assertIn("unusable", self.raised()[-1]["text"])
+
+    def test_r11_two_clocks_through_restart(self):
+        self.streams(self.AB); self.bind("PA", "Q-A"); self.live([("PA", "worker")])
+        self.check(T0)
+        self.live([]); self.check(T0 + 10 * M)  # A's clock starts 10 min after B's
+        self.check(T0 + 30 * M)
+        self.assertEqual((len(self.by_q("Q-A")), len(self.by_q("Q-B"))), (0, 1))
+        self.check(T0 + 40 * M)
+        self.assertEqual((len(self.by_q("Q-A")), len(self.by_q("Q-B"))), (1, 1))
+        self.check(T0 + 90 * M)
+        self.assertEqual((len(self.by_q("Q-A")), len(self.by_q("Q-B"))), (2, 2), "no duplicates after many restarts")
+
+    def test_r11_bad_registry_keeps_legacy_and_existing(self):
+        self.streams(raw="{not json")
+        self.bind("PA", "Q-A"); self.live([("PA", "worker")])
+        self.check(T0); self.check(T0 + 30 * M)
+        self.assertEqual(len(self.by_q("Q-A")), 1, "an unusable registry is owned, not quiet")
+        self.assertIn("unusable", self.by_q("Q-A")[0]["text"])
+
+    def test_r11_unknown_status_and_duplicates_are_bad(self):
+        for rows in ([dict(self.AB[0], status="paused")], [self.AB[0], dict(self.AB[1], question_id="Q-A")]):
+            with self.subTest(rows=rows):
+                self.tearDown(); self.setUp()
+                self.streams(rows); self.check(T0); self.check(T0 + 30 * M)
+                self.assertIn("unusable", self.raised()[0]["text"])
+
+    def test_r11_migration_keeps_legacy_clock(self):
+        self.check(T0)  # R5 legacy: Q-A gap starts at T0
+        self.streams([dict(self.AB[0]), dict(self.AB[1], status="inactive")])
+        self.check(T0 + 29 * M)
+        self.assertEqual(self.raised(), [])
+        self.check(T0 + 30 * M)
+        self.assertEqual(len(self.by_q("Q-A")), 1, "clock from T0 survives adopting the registry")
+
+    def test_r11_no_package_either_stream(self):
+        self.streams(self.AB)
+        for t in (T0, T0 + 30 * M, T0 + 45 * M):
+            self.check(t)
+        self.assertEqual((len(self.by_q("Q-A")), len(self.by_q("Q-B"))), (2, 2))
 
 
 if __name__ == "__main__":
