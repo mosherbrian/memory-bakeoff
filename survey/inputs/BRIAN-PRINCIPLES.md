@@ -104,3 +104,7 @@ The four proposed improvements above are responsibilities to investigate, **not 
 
 
 **Binding GPU resource rule,26September2026:** no fleet test run may use the local llama-swap port8080 `gpu` group until Claude ships the booking mechanism. Claude builds the reflector tonight, then booking. Booking must pause Cairn, move ClawdBot to the NPU, exclude night jobs, expire automatically and label each run clean/disturbed. No manual substitute or unbooked smoke test. This does not stop CPU-only data preparation, source review or ordinary authorized work. Booking is resource permission, not Letta-run or training approval. [Execution dependency](../delivery/GPU-BOOKING.md).
+
+##26September — reflector shipped; labeling endpoint wait resolved
+
+Claude supplied the one-file nightly reflector for immediate source/CPU test review. Cairn is authorized to label D4 candidates with already-loaded gufo as normal worker use, not a GPU test. Tern or Corvid independently spot-checks a random10% and records agreement; teacher agreement is not gold truth. No new endpoint or hosted teacher call required. Letta remains prepare-only until Brian gives explicit go-ahead; GPU booking precedes any local-GPU test, not this CPU work or authorized labeling.

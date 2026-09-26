@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-09-26T21:15:55.295955+00:00",
+  "batch": "01",
+  "teacher": "gufo; normal Cairn inference",
+  "records": 40,
+  "source_fields_preserved": true,
+  "label_file_mode": "0600",
+  "relation_counts": {
+    "coexists": 22,
+    "narrows": 6,
+    "unrelated": 8,
+    "replaces": 1,
+    "unresolved": 3
+  },
+  "screening_positive": 32,
+  "screening_negative": 8,
+  "sample": {
+    "method": "random.Random(c86-spotcheck-01).sample(batch01,4), drawn and frontier-labeled before viewing teacher output",
+    "n": 4,
+    "relation_agreement": 3,
+    "screening_agreement": 4,
+    "frontier_screening_positive": 4,
+    "disagreement": "One gufo coexists versus frontier unresolved; missing intervening context. Both route to adjudication."
+  },
+  "sha256": {
+    "pairs-batch-01.jsonl": "2357e4f402a7fc04d29625a9dab27f1604c7566d8a7500801418cf409203db70",
+    "labels-batch-01.jsonl": "91e994d9bad3e1115b4bb9cab6c9db2a30ada4143f9dc44a0f273b747cda80c2",
+    "frontier-labels-01.jsonl": "3f4a3cd936e7c658d4c182566c01b7c300a37fcf5c4db22686388aa362a37432"
+  },
+  "limitations": [
+    "Agreement is not correctness, recall, calibration or gold.",
+    "Random sample contains no screening negatives; missed-positive rate is not estimated.",
+    "Source label field remains null; gufo labels are a separate provisional layer.",
+    "Sampled pair records are not independent conversations; no confidence interval claimed."
+  ]
+}

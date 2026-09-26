@@ -1,0 +1,56 @@
+{
+  "source_sha256": "5272126283094d36e65a3f3bd35da4610b00f8402b03de0573604d4b5c328345",
+  "mode": "isolated CPU fixtures; no model or network; no live mutations",
+  "tests": [
+    {
+      "test": "absent_quote_rejected",
+      "reproduced": true,
+      "detail": "Basic fabricated quote rejected."
+    },
+    {
+      "test": "quote_crosses_message_boundary",
+      "reproduced": true,
+      "detail": "Joined corpus accepts a quote present in no individual user message."
+    },
+    {
+      "test": "collector_drops_scope_and_source",
+      "reproduced": true,
+      "detail": "Different project sources are pooled without cwd, session or message identifiers."
+    },
+    {
+      "test": "whole_worktree_committed",
+      "reproduced": true,
+      "detail": "Reflector commit captured a pre-existing unrelated memory edit."
+    },
+    {
+      "test": "undo_reverts_unrelated_edit",
+      "reproduced": true,
+      "detail": "Undo reverted the unrelated edit captured by git add -A."
+    },
+    {
+      "test": "same_date_manifest_loses_skill_undo",
+      "reproduced": true,
+      "detail": "Second same-date run overwrote manifest; undo left first-run skill installed."
+    },
+    {
+      "test": "commit_rejection_reports_success",
+      "reproduced": true,
+      "detail": "Rejected commit leaves published edits, applied count, and successful process exit."
+    },
+    {
+      "test": "no_index_budget_in_apply",
+      "reproduced": true,
+      "detail": "Reflector writes and commits beyond the deployed 190-line Stop-hook threshold."
+    },
+    {
+      "test": "update_follows_symlink",
+      "reproduced": true,
+      "detail": "basename filtering does not prevent a memory symlink update outside the memory directory."
+    },
+    {
+      "test": "undo_conflict_exit_zero",
+      "reproduced": true,
+      "detail": "Conflicted revert leaves an unmerged repository but undo returns success."
+    }
+  ]
+}

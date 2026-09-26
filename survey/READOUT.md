@@ -1,5 +1,7 @@
 # Delivery readout — fleet pilot, continuous work
 
+**c86 delivery:** [Reflector review](delivery/c86-reflector-review.md) reproduces writer/undo/index/scope defects in temporary fixtures; recommend changes in the shipped file before unattended writes. Cairn gufo labeling authorized and resumed;10% independent spot-check in progress. No live mutation/model test.
+
 **D4 refinement:** current all-file candidate snapshot verified: zero conversation/exact-text crossings; labels0; heldout9 pairs/2 control messages. Controls follow their own group, not necessarily the matched pair. No evaluation-readiness claim. [Disposition](delivery/c85-laya-grouping-disposition.md). GPU rule unchanged.
 
 **Resource update:** reflector first tonight, then Claude's GPU booking. No fleet test on local llama-swap8080 `gpu` until booking exists; local Letta/Pi pilots and Laya GPU work inherit that dependency. CPU preparation/source checks continue. Clean/disturbed disposition must accompany runs. [Contract](delivery/GPU-BOOKING.md).
@@ -106,3 +108,5 @@ Coverage now121 items, separating the MemHarness paper from the still-unlocated 
 
 
 **Cycle72 started:** Corvid, Kiln and Cairn each returned started for the bounded EvoMemBench methods/control question. Cycle71 reports are incorporated and closed. COVERAGE marks depth in progress; CAPABILITY-MATRIX records no justified rating change yet. Actual dependency rest through 18:36 UTC; [commission](panel-cycle72.md), [receipt](receipts/c72-panel-in-progress-20260926.json). No probe/install and no gate on the current recommendation.
+
+**c86 batch01 verified:**40 provisional gufo labels preserve source/splits. Independent random10% check: relation3/4, screening4/4; sample has no negatives, so no recall claim. [Agreement](delivery/c86-label-agreement.md). Batches02–05 dispatched; all remaining16 frontier reference judgments recorded before teacher results. Labels are not gold; no training.
