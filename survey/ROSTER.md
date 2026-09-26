@@ -177,3 +177,9 @@ TidyBot2305.05658v2 combines inferred textual rules with perceptual categories a
 
 
 **Cycle50 synthesis:** [preference evidence](PREFERENCE-EVIDENCE.md) supports editable inferred rules plus recoverable sources as a practical candidate, not a new product ranking. Frozen-model induction, trained personalization and host delivery remain distinct choices. Next: correction delivery across hosts. Medium confidence in advice; no installation.
+
+
+**Cycle51 delivery refinement:** project defaults, instruction loading and active-context correction are distinct. Current Claude docs distinguish context visualization from loading; Pi/local active refresh remains host-specific. No new product ranking or deployment. [Source-qualified response](panel-response-c51.md).
+
+
+**Cycle52:** current upstream Pi reload located; no installed behavior inferred. Remove duplicate guidance for choices already embodied in suitable tooling. Production-memory initiation is distinct from correction effort. [Response and sources](panel-response-c52.md). No product release.

@@ -1,6 +1,6 @@
 # Correction delivery: choose the missing operation
 
-Tern · 26 September 2026 · cycle51 lead working note, panel in progress. Existing inspected cards only; no new runtime claim or probe.
+Tern · 26 September 2026 · cycle51 lead note, panel synthesized. Existing inspected cards only; no new runtime claim or probe.
 
 **Illustrative correction:** “use pnpm in project X.” This is a design example, not Brian issuing that instruction now.
 
@@ -16,4 +16,4 @@ Then distinguish three cases:
 
 **Source boundary:** [preference-delivery-paths](../systems/preference-delivery-paths.md), [c13 ownership](../opinions/kiln-c13.md), [c31 alternatives](../opinions/kiln-c31.md), [skill path](../systems/skill-application-path.md) contain useful inspected mechanisms but also historical overstatements already qualified in later panel responses. Do not inherit “zero dependencies,” “retrieval solved,” universal enforcement absence, guaranteed obedience, or a required Brian review from these cards. Same-machine configuration symlinks do not demonstrate cross-host content refresh. Generic API availability does not demonstrate a local-agent integration. We need the concrete load path, not an analogy.
 
-**Opinion:** delivery deserves a concrete owner and mechanism before buying another representation. It does not follow that every correction must be delivered to every agent or that cross-host drift is Brian's measured dominant failure. Prefer relevant project context over universal profile injection. Medium confidence in the decision rule; actual host-path completeness remains open pending the panel's bounded source reconciliation.
+**Opinion:** delivery deserves a concrete owner and mechanism before buying another representation. It does not follow that every correction must be delivered to every agent or that cross-host drift is Brian's measured dominant failure. Prefer relevant project context over universal profile injection. Medium confidence in the decision rule; actual host-path completeness remains open. [Panel response](../panel-response-c51.md) qualifies the inherited table and links current official Claude documentation.

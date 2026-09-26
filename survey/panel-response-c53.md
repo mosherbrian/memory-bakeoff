@@ -1,0 +1,13 @@
+# Cycle53 — reviewable corrections without a universal approval gate
+
+Tern · 26 September 2026 · **partial: Corvid and Cairn read; Kiln pending**.
+
+**Corvid:** accept localized, reversible review as a useful option for consequential or ambiguous changes. Do not convert it into an obligation to ask Brian before every consequential edit: existing authorization and the actual ambiguity matter. A diff can show an unflagged change; highlighting only selected conflicts creates a narrower attention surface. Neither display guarantees detection. Mechanical changes can also be consequential, so “mechanical” is not an automatic exemption from judgment. [Opinion](opinions/corvid-c53.md).
+
+**Methods qualification:** in the primary paper, nine participants *said* conflict identification was better; this is not a 9/12 detector-accuracy score. Post-task workload differences were not significant, which does not establish equivalence or zero review cost. Task time was longer, while completion-rate differences were not significant. More edits are an interaction measure, not by themselves better final specifications. [Independent methods note](reading/tern-c53-correction-interface.md).
+
+**Provisional advice:** preserve a way to inspect affected guidance and undo local changes. Use it where the user needs to settle meaning or where existing review is warranted; do not create a new per-memory approval ritual. Medium confidence; the full-cycle synthesis waits for the other two pieces. No deployment or behavior change authorized by this recommendation.
+
+**Cairn:** accept that this study measures actual correction interaction rather than only simulated feedback. Four qualifications change the inference: the baseline failure statement is **18 cases involving 10 participants**, not 10 of 18 cases; the paper describes a similar model class, not a demonstrated identical model/policy; non-significant workload differences do not establish flat workload; supplied scenarios and compensation do not establish that participants were disinterested. Longer average time is a real cost here, not automatically “small” or “cheap enough” for Brian. Keep elapsed task time distinct from attention or real-stakes correction cost. A useful interface option follows; mandatory per-item approval does not. The author list also includes Ian Arawjo. [Reader piece](reading/c53-semantic-commit.md), [primary PDF](https://glassmanlab.seas.harvard.edu/papers/semantic_commit.pdf).
+
+**Still pending:** Kiln's mechanism/facility assessment. The live cycle53 dependency remains valid through14:15Z; no duplicate assignment.

@@ -1,4 +1,4 @@
-# Question register — cycle 50
+# Question register — cycle 52
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–50 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 asks how a corrected instruction reaches the relevant host and affects use; shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
+Cycles1–52 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 distinguishes project defaults, actual host loading and active-session correction. Cycle52 located current Pi reload and distinguished production memory initiation from correction effort. Cycle53 reads Semantic Commit’s participant comparison of updating specifications. Shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -193,3 +193,15 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle50 decision:** existing agent-maintained guidance can hold useful inferred rules; preserve supporting history and authority distinctions. The literature does not price Brian’s correction effort or identify his dominant delivery failure. Next compare the smallest correction-delivery arrangement with its best rival; no new logging obligation. [Evidence](PREFERENCE-EVIDENCE.md), [panel response](panel-response-c50.md).
+
+
+**Cycle51 decision:** encode deterministic project choices in suitable existing tooling when worthwhile, and establish scoped host loading before adding a refresh service. No direct sharing-versus-handoff comparison in the selected studies. Current Claude docs narrow the inherited reload claim; no installed behavior measured. [Response](panel-response-c51.md).
+
+
+**Cycle52 partial — Corvid:** Q5 removes duplicate maintained guidance when a deterministic choice is already reliably encoded. Tool/default maintenance remains; useful rationale and recoverable history are not discarded. Kiln/Cairn still pending; cycle not complete. [Response](panel-response-c52.md).
+
+
+**Cycle52 source update:** current Pi upstream explicitly provides `/reload` for changed instructions; a missing-refresh-service recommendation is premature. Installed version and mode remain untested. [Source note](reading/tern-c52-pi-reload.md).
+
+
+**Cycle52 complete:** all panel pieces received. Avoid duplicate guidance and inspect existing refresh facilities before adding plumbing. A production-trace audit does not supply a labor ledger. Next: a located participant editing study, Semantic Commit, for Q9/Q4. [Response](panel-response-c52.md).

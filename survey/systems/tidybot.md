@@ -1,12 +1,12 @@
 # System card: TidyBot (examples → summary → grounded action)
 
-**kiln · 2026-09-26 · sources: paper full methods 2305.05658v2 (§§1–4, 6, limitations) + author repo jimmyyhwu/tidybot (benchmark/ notebooks per method, robot/ drivers, server/; read-only clone, nothing executed). Quoting ROLES.md: "install cost, failure modes, maintenance, fit for Brian's stack". Roadmap inputs + principles as context.**
+**kiln · 2026-09-26 · sources: paper full methods 2305.05658v2 (§§1–4, 6, limitations) + author repo jimmyyhwu/tidybot (benchmark/ per-method notebooks + scenarios.yml, server/ camera/controller/detector + preferences/*.yml; read-only clone, nothing executed). Quoting ROLES.md: "install cost, failure modes, maintenance, fit for Brian's stack". Roadmap inputs + principles as context.**
 
 ## Capture, persistence, rule use, grounding, action
 
-- **Example capture:** 4–10 textual placements per user per scenario ("yellow shirts → drawer"); benchmark scenarios stored in scenarios.yml; robot runs take fresh examples per session.
+- **Example capture:** 4–10 textual placements per user per scenario; benchmark scenarios in scenarios.yml; server preferences/*.yml per scenario.
 - **Summary persistence:** the LLM summary text *is* the artifact — regenerated per user, not versioned, not accumulated across sessions. No long-term store, no cross-user learning.
-- **Rule use:** summary → unseen-object placements (LLM completion) + noun extraction → CLIP category set → per-object receptacle/primitive selection in a until-floor-clear loop.
+- **Rule use:** summary → unseen-object placements + noun extraction → CLIP category set → per-object receptacle/primitive selection in an until-floor-clear loop.
 - **Perceptual grounding:** ViLD localization (92.5%), CLIP over summary categories (95.5% vs 52–71% with human object lists — the summary *shrinks* the label space, a genuine mechanism), hard-coded receptacle positions, ArUco pose.
 - **Action:** pick/place/toss primitives (96.2% execution); 85.0% end-to-end real-world, 91.2% benchmark unseen.
 
