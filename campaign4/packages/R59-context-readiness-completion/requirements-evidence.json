@@ -1,0 +1,134 @@
+[
+ {
+  "id": "1a",
+  "requirement": "parent project dir exists, memory absent -> zero calls, HOLD, evidence kept",
+  "planned_test": "t_parent_only",
+  "actual": null
+ },
+ {
+  "id": "1b",
+  "requirement": "memory path exists -> zero calls, HOLD",
+  "planned_test": "t_memory_exists",
+  "actual": null
+ },
+ {
+  "id": "1c",
+  "requirement": "canonical cwd/project/memory realpaths recorded",
+  "planned_test": "t_clean_R (bundle paths.json)",
+  "actual": null
+ },
+ {
+  "id": "2a",
+  "requirement": "R54 events.py run on every available transcript incl. failure paths; outputs persisted",
+  "planned_test": "t_clean_R, t_s2_fail",
+  "actual": null
+ },
+ {
+  "id": "2b",
+  "requirement": "events unresolved/unsupported/denied surfaced as HOLD",
+  "planned_test": "t_events_flag",
+  "actual": null
+ },
+ {
+  "id": "2c",
+  "requirement": "events.py invocation/output failure -> evaluator HOLD",
+  "planned_test": "t_events_fail",
+  "actual": null
+ },
+ {
+  "id": "2d",
+  "requirement": "R51 gate and R57 grade outputs preserved",
+  "planned_test": "t_clean_R",
+  "actual": null
+ },
+ {
+  "id": "3a",
+  "requirement": "stub saves fake memory in s1; after-s1 == before-s2 manifests and contents",
+  "planned_test": "t_clean_R",
+  "actual": null
+ },
+ {
+  "id": "3b",
+  "requirement": "no-save absence (ABSENT) distinct from empty dir",
+  "planned_test": "t_clean_N vs t_empty_dir",
+  "actual": null
+ },
+ {
+  "id": "3c",
+  "requirement": "D: memory absent before its only call",
+  "planned_test": "t_clean_D",
+  "actual": null
+ },
+ {
+  "id": "3d",
+  "requirement": "changed boundary manifest detected (DIFFERENT) without repair",
+  "planned_test": "t_boundary_change",
+  "actual": null
+ },
+ {
+  "id": "4a",
+  "requirement": "s1 nonzero -> no s2",
+  "planned_test": "t_s1_fail",
+  "actual": null
+ },
+ {
+  "id": "4b",
+  "requirement": "s2 nonzero with wrapper 0 -> HOLD",
+  "planned_test": "t_s2_fail",
+  "actual": null
+ },
+ {
+  "id": "4c",
+  "requirement": "missing child exit metadata -> HOLD",
+  "planned_test": "t_missing_meta",
+  "actual": null
+ },
+ {
+  "id": "4d",
+  "requirement": "timeout (124) and kill (137) wrapper statuses -> HOLD",
+  "planned_test": "t_timeout, t_kill",
+  "actual": null
+ },
+ {
+  "id": "4e",
+  "requirement": "D failure one call -> HOLD",
+  "planned_test": "t_D_fail",
+  "actual": null
+ },
+ {
+  "id": "4f",
+  "requirement": "gate 1/2/3/5 -> HOLD; clean gate no hold",
+  "planned_test": "t_gate1,t_gate2,t_gate3,t_gate5,t_clean_R",
+  "actual": null
+ },
+ {
+  "id": "4g",
+  "requirement": "manual grader flag visible",
+  "planned_test": "t_clean_R (stub report missing -> manual)",
+  "actual": null
+ },
+ {
+  "id": "4h",
+  "requirement": "test seams offline-only; live path cannot select them",
+  "planned_test": "t_seam_guard",
+  "actual": null
+ },
+ {
+  "id": "5a",
+  "requirement": "every stop path freezes simulator, prompts/transcripts/meta, snapshots; missing labelled",
+  "planned_test": "t_s1_fail, t_parent_only",
+  "actual": null
+ },
+ {
+  "id": "5b",
+  "requirement": "atomic immutable bundle, arm-claim hashes verified, no temp leftovers",
+  "planned_test": "verify step",
+  "actual": null
+ },
+ {
+  "id": "5c",
+  "requirement": "duplicate label refused BEFORE any call",
+  "planned_test": "t_duplicate",
+  "actual": null
+ }
+]
