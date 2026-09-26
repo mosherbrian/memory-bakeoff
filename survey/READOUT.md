@@ -1,5 +1,7 @@
 # Delivery readout — fleet pilot, continuous work
 
+**D4 complete:**973 message/control and197 pair annotations verified;98 independent message references and20 pair references reported. Procedure total corrected to60. Scope ambiguity and sparse pair evaluation remain; no training-ready gold claim. [Final handoff](delivery/c86-label-handoff.md). Cairn prepared queue closed; next delivery wait is Claude’s corrected reflector source.
+
 **c87 ENGRAFT:** watch as a durable-fact research candidate; no gufo drop-in loader found. Author free-chat35/98 verified in later result files; headline sentence recall is a different endpoint. Added coverage/matrix row and a one-write,20-fact post-booking [probe design](proposals/engraft-durable-facts-pilot.md); no deployment/training, no change to existing-host recommendation.
 
 **c86 Letta trial complete: INCONCLUSIVE.** The approved local-backend Letta/native Pi comparison stopped during session4 at the shared token allowance, before later-use tests.44 successful requests,510,871 input/5,624 output tokens, $0 added purchases; existing ChatGPT quota consumed. No Go, local GPU or Letta Cloud. No memory-benefit verdict and no rerun. The result records the initial per-arm accounting mistake and10,871-token in-flight overshoot. [Result, versions and hashes](delivery/letta-c86/RESULT.md).
@@ -114,3 +116,7 @@ Coverage now121 items, separating the MemHarness paper from the still-unlocated 
 **Letta go-ahead acted on:** approved paired trial executing with local Letta state and hosted ChatGPT OAuth, no Go/GPU use. [Frozen version/hash/cost manifest](delivery/letta-c86/pre-run-manifest.json). Results pending, no benefit claim.
 
 **D4 latest:** first240 message/control records preserved; random24 reference agreement correction19/24, repetition22/23 (one abstention), preference16/24, procedure19/24. Next240 commissioned; next24 references sealed. [Agreement](delivery/c86-message-agreement.md). No training.
+
+**D4 latest:**480 message/control records now checked;05–08 totals match. Independent24 agreement correction21/23, repetition22/22, preference19/24, procedure18/24; abstentions/scoping limits retained.09–12 active,24 references sealed. [Report](delivery/c86-message-agreement-05-08.md). No training.
+
+**D4 latest:**720 message/control records checked.09–12 agreement correction24/24, repetition23/24, preference14/24, procedure18/24; provisional scope-policy differences remain. Final253 records13–17 active;26 references sealed. [Report](delivery/c86-message-agreement-09-12.md). No training.

@@ -167,3 +167,7 @@ Ratings: **yes** = the named capability is supported within the note's stated sc
 **Other evidence-only readings:** The Algorithmic Self-Portrait production audit; agent-memory survey taxonomy; Type-Safe Is Not Error-Free robustness study. Their reports inform ratings but are not evaluated memory facilities; unassessed proposals inside them are not silently marked explored methods.
 
 D4 labeling update:40 provisional gufo records checked, random4 frontier agreement3/4 relation and4/4 screening. No gold/recall/benefit claim or rating promotion; remaining pair labels executing. [Details](delivery/c86-label-agreement.md).
+
+**D4 annotation update:**All973 message annotations checked alongside197 pairs; independent reference agreement reported by field, with annotation-scope ambiguity. No classifier training/evaluation occurred; no capability rating change. [Latest agreement](delivery/c86-message-agreement-05-08.md).
+
+**D4 queue complete:**98 message and20 pair reference checks published; annotation-scope disagreements prevent treating the corpus as gold. No Laya capability rating change or training. [Handoff](delivery/c86-label-handoff.md).

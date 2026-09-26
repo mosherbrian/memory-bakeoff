@@ -9,7 +9,7 @@ Owner Tern. Brian's latest correction supersedes quiet support mode: fleet keeps
 | D1 / 1 | Seven-day fleet baseline — Tern; Corvid challenges definitions | Baseline extracted; attribution and eligible-idle coverage incomplete | Counts of attributable manual interventions, gap alarms, idle minutes and recurring failure classes, with coverage/missingness and reproducible extraction |
 | D2 / 2 | Fleet Letta-versus-native trial — Kiln practical path; Tern final protocol | Complete, inconclusive at shared token allowance; no rerun | One bounded matched trial, existing ACP/local backend/model path, pre-stated pass/fail and cost; no install/run before approval |
 | D3 / 3 | Reflector review and tests — Tern with Kiln | Shipped writer reviewed; ten CPU fixture observations reproduced; await corrected revision | Review and run relevant local tests on delivered pieces; feedback tied to publish/revert/scope/size behavior |
-| D4 / 4 | Local Laya distillation data — Cairn on local gufo | 197 pairs provisionally labelled/spot-checked; first240 message/control labels active | Provenance-bearing correction/supersession pairs, split/label status explicit; authorized gufo labels plus independent frontier references; no external upload or invented gold |
+| D4 / 4 | Local Laya distillation data — Cairn on local gufo | Complete:973 messages +197 pairs; independent references reported; no training | Provenance-bearing correction/supersession pairs, split/label status explicit; authorized gufo labels plus independent frontier references; no external upload or invented gold |
 
 Boundary: gufo labelling and independent spot-checks are authorized; training and additional experiments are not. The one approved Letta run is closed; do not restart it. Continue independently useful work. No repeat of the completed c67 probe. Daily digest and Monday scoreboard remain Claude's delivery responsibilities.
 
@@ -26,3 +26,9 @@ A rest can name only an actual external wait after ready independent work is exh
 **D4 latest:** first240 message/control records preserved; random24 reference agreement correction19/24, repetition22/23 (one abstention), preference16/24, procedure19/24. Next240 commissioned; next24 references sealed. [Agreement](c86-message-agreement.md). No training.
 
 **D5 / sponsor ENGRAFT candidate:** source/gufo compatibility assessment and proposed20-fact experiment complete. Deferred execution until booking plus approval; no port or install commissioned. [Assessment](../systems/engraft.md), [protocol](../proposals/engraft-durable-facts-pilot.md). Existing D3/D4 delivery priorities stay ahead.
+
+**D4 latest:**480 message/control records now checked;05–08 totals match. Independent24 agreement correction21/23, repetition22/22, preference19/24, procedure18/24; abstentions/scoping limits retained.09–12 active,24 references sealed. [Report](c86-message-agreement-05-08.md). No training.
+
+**D4 latest:**720 message/control records checked.09–12 agreement correction24/24, repetition23/24, preference14/24, procedure18/24; provisional scope-policy differences remain. Final253 records13–17 active;26 references sealed. [Report](c86-message-agreement-09-12.md). No training.
+
+**D4 terminal:** prepared queue closed. [Final handoff](c86-label-handoff.md) contains source checks and agreement/definition limits. No further Cairn labeling commissioned. D3 waits for Claude’s corrected reflector revision; D2 trial closed inconclusive; D5 design complete, execution deferred.
