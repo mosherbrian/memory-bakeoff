@@ -1,0 +1,21 @@
+{
+ "status": "ISOLATION_UNKNOWN_FOR_HOOKS",
+ "observed": [
+  "O1 no user CLAUDE.md",
+  "O2 home CLAUDE.md not ancestor of /tmp/c4x",
+  "O3 init: no mcp/user plugins/skills; own memory path only",
+  "O4 user hooks/plugins configured but absent from 14 transcripts"
+ ],
+ "assumptions": [
+  "A1 hook runs would appear in stream-json",
+  "A2 no undocumented injection"
+ ],
+ "proven": {
+  "user_claude_md_excluded": true,
+  "ancestor_instructions_excluded": true,
+  "user_plugins_mcp_excluded": "observed",
+  "user_hooks_excluded": "UNKNOWN",
+  "real_memory": "per-cwd; tool access scanned"
+ },
+ "proposed_qualification": "1-call canary hook test, separate release, no real-settings edits"
+}
