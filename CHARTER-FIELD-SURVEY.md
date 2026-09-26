@@ -37,6 +37,13 @@ A research panel, not an audit line (see survey/ROLES.md): Tern is the lead synt
 - A knowledgeable outsider would find the memo credible and well sourced.
 - Each position can be traced to its evidence.
 
+## Required inputs: the lost Phase 2 roadmap (Brian, 2026-09-26)
+Brian asked the team to remember the old roadmap. It was agreed on 2026-09-02, lost when a ChatGPT branch was orphaned, and never followed for about 90 generations:
+- survey/inputs/PHASE2_ROADMAP.md (from github mosherbrian/memory-bakeoff research/PHASE2_ROADMAP.md): the target layered architecture (lossless canonical history -> explicit state/lifecycle projection -> semantic/causal retrieval -> bounded working-memory synthesis -> one context composer), phases A-H, and the "what not to do" list.
+- survey/inputs/PHASE2_ROADMAP_RECONCILIATION.md: status through Gen124. Phase B (field refresh) is the bottleneck; C (roster refresh) not done; D (admission) built but idle; E (external benchmarks) partly run; F (architecture synthesis) never started; G partly built, with a negative result.
+This survey IS roadmap phases B + C + F: field refresh, roster refresh, architecture synthesis. FIELD-MAP must cover the roadmap's target layers, and POSITION-MEMO must state, layer by layer, whether the target architecture still holds. The roadmap's seven longitudinal failure classes (stale_persistence, configuration_collapse, failed_procedure_adoption, late_history_corruption, false_persistence, missing_required_truth, unsupported_evidence) are a starting lens for judging systems.
+Durability rule (the lesson of the loss): this charter, the roadmap copies and the survey files live in the repo and are pushed to GitHub. Nothing lives only in a chat.
+
 ## Decisions (2026-09-26)
 1. Scope: agent memory in general (all agent types, not only coding and ops). The position memo still says what applies to Brian's setup.
 2. Audience: Brian first; the team at work second. Positions should be shareable with the team.
