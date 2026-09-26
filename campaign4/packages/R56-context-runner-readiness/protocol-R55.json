@@ -1,0 +1,49 @@
+{
+ "package": "R55",
+ "targets": [
+  "24576",
+  "12288"
+ ],
+ "synthetic_values": true,
+ "arms": {
+  "N": "session1-N.txt then session2.md",
+  "I": "session1-I.txt then session2.md",
+  "R": "session1-R-<T>.txt then session2.md",
+  "D": "single call templates/D-<T>.md"
+ },
+ "order": [
+  "24576-N",
+  "12288-R",
+  "24576-I",
+  "12288-N",
+  "24576-R",
+  "12288-I",
+  "D-12288",
+  "D-24576"
+ ],
+ "calls": 14,
+ "primary": "target_autonomous (grade.py)",
+ "outcomes": [
+  "target_autonomous",
+  "asked_no_run",
+  "assumption_then_run",
+  "wrong_context",
+  "no_run",
+  "technical_failure"
+ ],
+ "report_fields": [
+  "STATUS",
+  "CONTEXT_USED",
+  "THROUGHPUT",
+  "ASSUMPTION",
+  "QUESTION"
+ ],
+ "comparison": "R vs I within each T; N and D descriptive",
+ "no_screening": "no behavioural qualification; only deterministic wiring/stub checks before any call",
+ "permissions_note": "S2 allow list must include Bash(./bench.sh:*) (argument form); otherwise unchanged",
+ "sources": [
+  "/var/home/bmosher/.claude/projects/-var-home-bmosher/memory/feedback_measure_speedups_at_realistic_length.md",
+  "/var/home/bmosher/.claude/projects/-var-home-bmosher/memory/feedback_benchmark_traps.md",
+  "/var/home/bmosher/memory-bake-off/campaign4/SPONSOR-WORKFLOW-PRIORITY-20260925.json"
+ ]
+}
