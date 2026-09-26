@@ -1,0 +1,1 @@
+- [Benchmark at 12288 context](benchmark-context-length-12288.md) — measure model throughput at 12288 tokens; short-context speedups mislead
