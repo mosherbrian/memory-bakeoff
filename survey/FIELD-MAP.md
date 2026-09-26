@@ -169,3 +169,6 @@ The [panel synthesis](panel-response-c8.md) keeps three distinct questions: was 
 ## Cycle 11: scope is decided somewhere
 
 [Primary representation note](reading/tern-c11-memory-representation.md) adds SEAL, Titans distinctions and MemStrata’s deterministic assertion path. A deterministic state transition still depends on correctly extracted identity and scope; weight adaptation still needs a correction strategy. StateMem/StateMemBench methods are now read: LLM state proposals, deterministic recheck propagation, and a transcript-consuming answer wrapper; its grading pool is hidden from the answering agent. **Medium-confidence synthesis**, no ranked-bet change or product adoption. [Panel response](panel-response-c11.md).
+
+
+**Cycle12 synthesis:** [A/B/C alternatives](ALTERNATIVES.md) separates automatic capture/upkeep from native, integrated and learned representations. A learned controller may edit an external store; native files may be agent-authored. No architecture wins by being labeled automatic. Native cross-host refresh remains an integration question. Medium confidence in the responsibility distinction; no new product winner or installation.

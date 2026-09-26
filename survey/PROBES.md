@@ -33,3 +33,5 @@ Any later experiment gets one entry naming the question, cost/time, observation,
 **Cycle10 — reading only.** ReaLMem/Mem2ActBench methods and MemOS local-plugin docs sharpen Q9/Q4. Memo adds current-context qualification of inferred habits. No calls, installation, configuration or provider changes.
 
 **Cycle11 — primary methods only.** SEAL/MemStrata and Titans architecture sharpen Q3/Q4. No ranked-bet change; no calls, installation, parameter training or runtime edits. Panel deepening remains research, not repair.
+
+**Cycle12:** no probes or participant calls. Primary clarification methods and panel comparison changed Q5/Q6/Q9 and made native delivery gaps explicit; ranked bets unchanged.
