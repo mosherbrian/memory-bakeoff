@@ -1,5 +1,7 @@
 # Reuse inventory — cycle 1, 26 September 2026
 
+**For the current explored/remaining inventory, use [COVERAGE.md](COVERAGE.md), maintained within every cycle from cycle65.** This file preserves the initial reuse assessment.
+
 Tern. This is a reading inventory, not a re-verification exercise. Confidence below is in the stated, scoped takeaway. Published sources were selectively scanned at abstract, project, or documentation level; no paper reproduction was performed. Method-level follow-up is identified in the question register.
 
 **Required sponsor input, v0.2:** [Brian's principles](inputs/BRIAN-PRINCIPLES.md) answer Q1 directly: procedural re-learning first, preference repetition second. This governs priority, not a measured task-frequency claim. The five-part principle adds artifact evidence and executive interpretation to the architectural reading; its corollary separates context selection from history retention. The file's reconstructed SKILL.state performance context is a discovery lead, not verified evidence used by this survey.

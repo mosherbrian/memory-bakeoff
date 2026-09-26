@@ -323,3 +323,9 @@ TidyBot2305.05658v2 combines inferred textual rules with perceptual categories a
 
 
 **Cycle63:** Lost in the Middle v3 separates supplied evidence from effective use. Position controls support a composition concern in the tested models/tasks; no current-host incidence, fixed prompt recipe or service requirement follows. [Synthesis](panel-response-c63.md).
+
+
+**Cycle64:** RULER v3 broadens context diagnostics beyond simple lookup; effective length is model/task/threshold-dependent. No runtime cap, decomposition requirement or memory-update strategy validated. [Response](panel-response-c64.md).
+
+
+**Cycle65 synthesis and coverage:** task-led assembly can reuse host facilities and executive judgment without a separate composition stage. Preserve dependencies and expand as needed; historical controls do not supply a universal cap or edge recipe. [Response](panel-response-c65.md). The single current inventory is now [COVERAGE.md](COVERAGE.md), including dated intake deferrals and unresolved identities.

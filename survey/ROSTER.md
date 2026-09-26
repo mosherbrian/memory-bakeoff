@@ -1,5 +1,7 @@
 # Mechanism-based roster refresh — cycle 18
 
+**Current coverage index (cycle65 onward): [COVERAGE.md](COVERAGE.md).** This roster preserves dated decisions; the coverage table reconciles subsequent reads and identity resolutions, including items once deferred below.
+
 Tern · 26 September 2026 · **Phase C, reading shortlist only.** Nothing here admits a new contestant or releases a benchmark. Confidence is in the relevance of the question, not product efficacy. Required context: [roadmap](inputs/PHASE2_ROADMAP.md), [reconciliation](inputs/PHASE2_ROADMAP_RECONCILIATION.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md). Old “not located” findings remain dated uncertainty, not declarations of current nonexistence.
 
 ## Brian's role examples: re-evaluation candidates
@@ -216,3 +218,12 @@ TidyBot2305.05658v2 combines inferred textual rules with perceptual categories a
 
 
 **Cycle63:** Lost in the Middle v3 separates supplied evidence from effective use. Position controls support a composition concern in the tested models/tasks; no current-host incidence, fixed prompt recipe or service requirement follows. [Synthesis](panel-response-c63.md).
+
+
+**Cycle64:** RULER v3 broadens context diagnostics beyond simple lookup; effective length is model/task/threshold-dependent. No runtime cap, decomposition requirement or memory-update strategy validated. [Response](panel-response-c64.md).
+
+
+**Cycle65:** [COVERAGE.md](COVERAGE.md) supersedes this roster as the current explored/remaining index, while preserving its decision history. Already-read Voyager, MemGPT/Letta, StateMem, MemStrata and EvoMem are not re-queued from old rows. Next bounded identity checks: MemHarness, Attestor, STALE and the separate Gen125 EvoMemBench lead; no admission, install or execution implied.
+
+
+**Sponsor addition during cycle66:** Jev/Laya is a real memory-operation candidate and **cycle67, the next practical slot after cycle66**, ahead of the remaining backlog. [Initial card](systems/jev-laya.md), [commission](panel-cycle67.md), [draft Mac probe](proposals/jev-laya-mac-probe.md). Laya installed on Mac per Brian; generic clarity ranking previously failed. Explore narrow high-volume typed decisions versus scope/authority judgment. Opinion/design only; no experiment, Mac calls, install or hook changes.

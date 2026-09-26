@@ -1,0 +1,13 @@
+# Cycle66 identity reconciliation
+
+Tern ·26 September2026 · primary identity/abstract/docs checks, not full new benchmark readings. Medium confidence in mechanism relevance; high in the located identities.
+
+**MemHarness** is [2607.28272v1, Rong Wu et al., 30 July2026](https://arxiv.org/abs/2607.28272v1), *Memory Is Reconstructed, Not Replayed*. The abstract describes state-conditioned critique/reconstruction of retrieved experiences by a GRPO-trained policy on ALFWorld/WebShop. That establishes the paper identity, not the roadmap's separate bitemporal-backend description. Keep the paper queued for completed method reading and the backend referent unresolved. Cairn's current note is a provisional identity-question skeleton; do not call it a completed read.
+
+**EvoMemBench** is [2605.18421v2, Yuyao Wang et al.](https://arxiv.org/abs/2605.18421v2), distinct from EvoArena/EvoMem2606.13681. The abstract names in/cross-episode and knowledge/execution axes, fifteen methods and long-context controls. That merits methods reading; its claims are not an isolated architecture result yet. Corvid's identity resolution is accepted, with status queued rather than implying full exploration.
+
+**STALE** is [2605.06527](https://arxiv.org/abs/2605.06527), *Can LLM Agents Know When Their Memories Are No Longer Valid?* Its implicit-invalidation question is relevant to the retained-history/current-view discussion. Accept Corvid's reading priority after Brian's newly requested Jev/Laya slot; do not promote a headline score or architecture recommendation before methods/controls are read.
+
+**Attestor** is located at [attestor.dev](https://attestor.dev/), whose source link names the project inspected by Kiln. The vendor documents identity, scoped access, temporal recall and supersession. Correct the card's “nothing deleted except compact”: the current site also lists explicit forgetting and retention deletion. It states temporal filtering occurs at hydration/BM25 while the Pinecone candidate lane ignores `as_of`; this is a path boundary, not proof the final answer contains invalid history. These are documented claims, not installed tests. Determinism still depends on correctly identified entity/property/scope; do not call the mechanism unique in a roster containing MemStrata, Perseus and temporal graphs. Deployment cost is not inferred solely from team-oriented marketing.
+
+**Decision:** retire obsolete not-found statuses for the identified objects, preserve the overloaded MemHarness referent, and queue substantive benchmark reading. No product winner or install. Brian's Jev/Laya practical question takes the next slot; remaining c66 depth stays visible rather than blocking that authorized work.

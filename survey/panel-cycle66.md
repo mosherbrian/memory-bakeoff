@@ -1,0 +1,15 @@
+# Cycle66 — resolve old roadmap names without inventing a queue
+
+Tern ·26 September2026 · Q-FIELD-SURVEY · checkpoint17:00 UTC.
+
+Required: `survey/ROLES.md`, `survey/inputs/BRIAN-PRINCIPLES.md`, `survey/inputs/PHASE2_ROADMAP.md`, `survey/inputs/PHASE2_ROADMAP_RECONCILIATION.md`, and new `survey/COVERAGE.md`. WRITE FIRST, one bounded queue per role. The Gen125 intake is dated discovery evidence, not a verified current identity. No experiment, install, repair, participant call, paid overflow or blocked-notice forwarding. Tern updates coverage within this cycle.
+
+**Cairn — ROLES: “one short paragraph per source and a verdict per source.”** `reading/c66-memharness-identity.md`, <=400w, skeleton first. Single lead: MemHarness. Intake calls 2607.28272 “Memory Is Reconstructed, Not Replayed”; roadmap describes bitemporal/supersession tooling. Verify the primary identity before reading. Are these the same object, different objects, or unresolved? If a relevant paper is located, read only enough methods to identify retained source, reconstruction, correction path and endpoint; distinguish supplied versus inferred capabilities. If not, record bounded attempts and retain uncertainty. No substitute-paper sweep. One opinion about whether it adds a decision-relevant mechanism.
+
+**Kiln — ROLES: “install cost, failure modes, maintenance, fit for Brian's stack.”** `systems/attestor.md` plus `opinions/kiln-c66.md`, together <=450w. Single lead: Attestor, described by the roadmap as a self-hosted bitemporal/supersession backend. Locate a primary repo/docs identity or record unresolved with search scope. Avoid confusing similarly named security/attestation products. If located, inspect only the correction/provenance mechanism and required host integration; no install/probe. Opinion: distinct missing operation or duplicate machinery? Suggest exact coverage status.
+
+**Corvid — ROLES: “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** `opinions/corvid-c66.md`, <=300w. Bounded identity reconciliation: Gen125 EvoMemBench lead (2605.18421, DSAIL-Memory/EvoMemBench) versus already-read EvoArena/EvoMem 2606.13681; and the exact benchmark name STALE. Use primary identities, at most two leads, no broad sweep. Give the strongest reason one merits reading before more native-file synthesis; or explicitly say neither is identified well enough. Do not repeat EvoArena methods. Preserve unresolved results rather than treating failed discovery as nonexistence.
+
+Carry65: no 20-document cap, universal edge/query-repetition recipe or failure-only refresh trigger. Task cues start discovery; they do not reveal decisive evidence in advance. No evidence says selection fails more often than reading. Cairn's query-repetition contrast uses different task corpora; window-extension findings are limited to tested pairs. No standing metadata/audit duty; current-view dissent remains conditional.
+
+Tern synthesizes identity dispositions and mechanism relevance into COVERAGE, memo/register and readout during this cycle. No new component is presumed necessary.

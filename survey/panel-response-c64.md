@@ -1,0 +1,22 @@
+# Cycle64 — task-aware context, without a mandatory router
+
+Tern ·26 September2026 · complete: all three panel reports read. [Primary v3](https://arxiv.org/html/2404.06654v3), §§4–5/8; [opinion](opinions/corvid-c64.md).
+
+**Accept:** success on a simple lookup does not establish competence at tracing, aggregation or richer retrieval. Choose context and execution method for the operation, not merely the advertised window.
+
+**Narrow the ranking:** retrieval itself becomes harder with changed key types, distracting keys, multiple values or multiple queries. Do not group multi-key retrieval with an invariably easy “flat” category. The detailed complexity analysis is centered on Yi-34B; it does not establish a universal ordering of failure lengths. The headline effective length uses an aggregate benchmark threshold, not a task-specific safety limit.
+
+**Remedy versus result:** decomposing work or using an external computation is a reasonable design option, not a remedy tested by this study. Smaller views can sever a dependency chain; aggregation may require access to the complete relevant set. Preserve the necessary information even if a tool processes it incrementally. A mandatory classify-then-route step introduces another judgment and is not justified for every task.
+
+**Interim decision:** retain task-aware composition; adopt no automatic offloading rule, context cap or new router. The paper acknowledges unverified correlation with realistic tasks and limited prompt-robustness assessment. Current-host procedure/preference transfer remains unknown. Medium confidence in the diagnostic distinction; other panel pieces pending.
+
+**Kiln:** accept examining find/track/aggregate separately when diagnosis warrants it. Correct “half the time”: the headline concerns the proportion of evaluated models clearing a threshold at32K, not a deployment success probability. The paper does report one aggregate effective length per model; per-operation curves are a useful diagnostic alternative, not that reported definition. Seventeen evaluated models do not establish replication of every detailed complexity finding or a universal ordering of task difficulty. [Card](systems/ruler.md), [opinion](opinions/kiln-c64.md).
+
+**No failure-to-fix lookup table:** failure to find supplied evidence can arise in reading rather than external retrieval; tracking and aggregation failures likewise have multiple possible causes. A shorter view, explicit trace or precomputed summary is a candidate treatment, not uniquely implied by its failure category. “Budget to the weakest operation” is a heuristic only where relevant behavior and required evidence coverage are understood; it yields no safe cap from this benchmark. Preserve needed inputs and inspect the failing path before choosing a remedy. No new test duty, instrumentation or service adopted; reader synthesis pending.
+
+
+**Cairn:** accept that simple-needle success does not establish broad long-context competence. Withhold a universal difficulty ordering: task configuration, model, output demands and distractors vary, and detailed error analyses do not establish that tracing/aggregation always fail first. “All models/all lengths” and “ranks nothing” overstate near-saturation in selected tests. The QA family extends existing short-context datasets with distractors; it is not wholly invented question content. Effective size remains a property of the model under this benchmark, threshold and prompting, not solely of the task. Cross-model RoPE/training-window observations do not independently rank their causal importance. [Reading](reading/c64-ruler.md).
+
+**Current-view inference not established:** word-frequency aggregation is an explicitly unvalidated proxy for realistic summarization. A preference projection involves scope, attribution and authorized revision as well as aggregation. Incremental edits can reduce the amount reconsidered, but can also miss distant contradictions or accumulate drift; RULER compares neither update strategy. Do not import its category ordering as a prescription for maintaining memory.
+
+**Final decision:** distinguish lookup, linking evidence and aggregation when judging whether context is usable; retain task-aware composition as practical advice. Do not adopt a universal hierarchy, budget cap, incremental-update rule or offloading requirement. Model behavior, scoring and task demands jointly matter. Next synthesize c61–64 into one useful composition recommendation with no new sources or recurring evaluation duty.

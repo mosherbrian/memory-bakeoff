@@ -14,6 +14,7 @@ Build and keep an expert position on agent memory: broad (the whole field), crit
 - Opinions are welcome. "Probably X (medium confidence) because A, B" beats "undetermined pending qualification".
 
 ## Outputs (all under ~/memory-bake-off/survey/)
+- COVERAGE.md: one current table of explored and remaining systems, papers, benchmarks and native facilities, with status, cycle, note and takeaway; update within every cycle and end with prioritized next up. Preserve unresolved identities and reasoned deferrals from the roadmap/Gen125 intake.
 - FIELD-MAP.md: taxonomy -> systems -> key results/benchmarks (known flaws) -> open problems; source + confidence per entry.
 - POSITION-MEMO.md: one page; ranked bets for Brian; overrated things; frontier; what would change each position.
 - QUESTIONS.md: open questions ranked by decision value x uncertainty / cost; each tagged literature / cheap probe / needs proof.

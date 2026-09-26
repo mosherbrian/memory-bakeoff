@@ -1,4 +1,4 @@
-# Question register — cycle 63
+# Question register — cycle 64
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -257,3 +257,16 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle63 complete:** composition includes usable presentation and ordering, not only delivery. No universal cap/edge/repetition rule; failures persisting across placements do not localize the defect to retrieval. Next RULER v3 for task complexity versus claimed/effective context, with model-era limits. [Response](panel-response-c63.md).
+
+**Cycle64 partial — Corvid:** task-aware composition is useful, but retrieval is not one uniformly easy category. Decomposition/tool offloading remain candidate remedies, not tested RULER interventions or mandatory routing steps. Preserve full dependency/evidence coverage. [Response](panel-response-c64.md).
+
+**Cycle64 partial — Kiln:** distinguish the reported aggregate effective length from proposed per-operation diagnostics. A failure category does not identify its cause or remedy; weakest-operation budgeting yields no safe runtime cap without relevant evidence. No new testing duty or service. [Response](panel-response-c64.md).
+
+
+**Cycle64 complete:** distinguish context operations without importing a universal difficulty hierarchy or RULER threshold. Word-frequency aggregation does not establish a current-view update strategy; incremental editing versus rebuild remains untested here. Next existing-evidence composition synthesis. [Response](panel-response-c64.md).
+
+
+**Cycle65 complete:** task-led context assembly needs no new routing stage, fixed document cap or standing audit. Selection versus reading failures remain unlocalized without relevant evidence; current views remain conditional. [Response](panel-response-c65.md). [COVERAGE](COVERAGE.md) now consolidates explored and remaining items and becomes an in-cycle output. Next resolve bounded roadmap identity gaps.
+
+
+**Cycle66 sponsor priority / cycle67 next:** which memory operations are cheap-classifier-shaped rather than judgment-shaped? Jev/Laya joins the real candidate roster. Inspect checkpoints, label quality, independent evidence, calibration versus selective risk, and full gating cost; compare deterministic code and executive judgment. [Candidate](systems/jev-laya.md), [probe draft](proposals/jev-laya-mac-probe.md). Initial opinion: a local offline relevance diagnostic may merit Brian's approval; no approval sought or execution authorized yet. Existing source/model/host boundaries remain.
