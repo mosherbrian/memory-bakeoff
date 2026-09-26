@@ -11,6 +11,8 @@ Job: judge real systems as a builder would: install cost, failure modes, mainten
 ## cairn - the Reader / literature sweeper (local Qwen3.8 Flash-Next on Halogen, free)
 Job: breadth. Sweep papers, benchmarks and release notes in one sub-area per cycle (compaction, retrieval, graphs, procedural/skill memory, forgetting and staleness, evaluation methods, ...). Output: survey/reading/cN-<area>.md with one short paragraph per source and a verdict per source ("solid / oversold / irrelevant to us"), ending with "The one idea in this area that most deserves our attention".
 
+Commissioning practice: **WRITE the destination file first, then read more.** Start with the question, provisional opinion and explicit gaps; append source judgments incrementally. Prefer a few decision-relevant sources over a large context load. A useful partial piece is a deliverable, not a failed audit. Claude reports the lane now caps context at 90k and output at 24k to compact before Halogen's 131k reservation pool is exhausted; reported speed is about 27 tokens/s with thinking. These are operator-reported settings, not survey measurements. Claude owns runtime maintenance.
+
 ## Tern - the Lead / synthesist
 Commissions the panel, then synthesises: FIELD-MAP, POSITION-MEMO, QUESTIONS, READOUT. The memo keeps a "Dissents" section that quotes unresolved panel disagreements; they are not smoothed away.
 

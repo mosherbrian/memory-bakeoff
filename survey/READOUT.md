@@ -1,17 +1,15 @@
-# Survey readout — cycle 1, v0.2: Brian answered the priority question
+# Survey readout — cycle 1, v0.4: panel complete, procedural bet sharper
 
 **26 September 2026 · Tern · Explore · phases B, C, F**
 
-**What changed:** Brian ranks **re-learning procedures first, repeating preferences second**. Q1 is closed; its proposed ranking-discovery exercise is withdrawn. Both principles lead the [memo](POSITION-MEMO.md). The [map](FIELD-MAP.md) tests all five layers against them, with artifacts as evidence and executive reasoning as interpreter. Prompt selection must not silently delete history.
+**Position:** reusable procedures first, scoped preferences second. Brian's principles lead the [memo](POSITION-MEMO.md); the [map](FIELD-MAP.md#five-roles-mapped-onto-the-five-roadmap-layers) maps his five roles onto the roadmap layers. SKILL.state, Perseus and pi-lcm/transcripts remain role candidates, with their local findings and limitations preserved in the [roster](ROSTER.md).
 
-**Top three open questions:**
+**What changed:** Cairn's [reading](reading/c1-procedural-memory.md) completes the three-person panel. Its strongest idea sharpens the procedural bet: connect a procedure to an outcome check and its tested environment, then assess current applicability. Tern accepts this at **medium confidence**, without assuming checks are free or universally sufficient.
 
-1. Which avoids procedural re-learning best: runbooks, executable skills, automatic extraction, or episodic reconstruction?
-2. What captures and applies scoped preferences with least correction and upkeep?
-3. What evidence makes a previously successful procedure applicable now?
+**Disagreement retained:** Corvid favors episode reconstruction; Kiln favors executable skills. Tern favors reusable procedures for stable repetition, with source history for changed conditions. The representation winner remains **low–medium confidence**. [Responses](panel-response-c1.md).
 
-**Opinions and confidence:** Corvid favors episode reconstruction; Kiln favors executable skills. Both are [answered](panel-response-c1.md). My bet is reusable evidence-linked procedures for stable repetition, with history for exceptions. Priority confidence is now **high** from Brian's answer; mechanism choice remains **low–medium**.
+**Evidence limits:** workflow QA is not live procedure reuse; evolving derived notes does not prove history corruption; R53 was a ceiling null. Abstract-level reading has not resolved comparative benefit. No product is promoted on those inferences.
 
-**Next:** all three panelists received priority steering; unfinished broad reading is replaced, not stacked. Cairn's reading is still pending. Tern synthesizes Q5/Q9/Q3; the **19:00 UTC** reminder now preserves Brian's answer. Polished memo due **29 September**.
+**Next:** Tern owns Q5/Q9/Q3 synthesis, starting with the evidence and applicability-check distinction in AgentRunbook-C methods. No panel assignment remains pending. Progress wake **19:00 UTC**; polished memo **29 September**. Future Cairn commissions say **write the file first, then read more**; Claude's reported lane fix is recorded in ROLES.
 
-**Limits:** no new participant calls, installs, or campaign packages. The reconstructed SKILL.state performance claim is unverified. Claude owns commits/pushes on `fleet/team-corpus` and confirms v0.1 plus stream retirement published as `efe29eb5`. The v0.2 working files are ready for his normal cycle-end publication; no further Brian approval is requested from Tern.
+No experiment, install or campaign restart. Claude owns commits/pushes on `fleet/team-corpus`; Tern writes survey files and notifies him.

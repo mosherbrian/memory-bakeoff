@@ -1,4 +1,4 @@
-# Question register — cycle 1, v0.2
+# Question register — cycle 1, v0.4
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -10,9 +10,9 @@
 
 | Rank / stable ID | Decision question | V × U / C | Route, next action, owner |
 |---|---|---|---|
-| **1 · Q5** | Which procedural memory best prevents re-learning: explicit runbooks, executable skills, automatically extracted procedures, or reconstructing episodes on demand? | 5 × 4 / 1 = **20** | **Literature first.** Cairn's current sweep and Corvid/Kiln's compact amendments; reuse known failed/successful procedure examples. Count authoring/upkeep, applicability and repeated discovery—not only recall. **Tern** synthesizes; no new experiment. |
+| **1 · Q5** | Which procedural memory best prevents re-learning: explicit runbooks, executable skills, automatically extracted procedures, or reconstructing episodes on demand? | 5 × 4 / 1 = **20** | **Literature first.** All three panel pieces received; compare their rival representations using known failed/successful procedure examples. Count authoring/upkeep, applicability and repeated discovery—not only recall. **Tern** synthesizes; no new experiment. |
 | **2 · Q9** | What captures and reliably applies Brian's preferences with minimal repeated correction and little maintenance? | 5 × 3 / 1 = **15** | **Answerable by a cheap probe, reuse first.** Start with R68 and existing native-memory behavior; compare scoped explicit notes with automatic capture conceptually before proposing a run. **Tern**, Kiln practical input. Capture/delivery winner unknown. |
-| **3 · Q3** | How should outcome evidence, version/scope, and corrections distinguish an applicable successful procedure from a failed or obsolete one, without erasing the past? | 4 × 4 / 2 = **8** | **Literature.** Read lifecycle/skill evidence through failed_procedure_adoption, configuration_collapse and false_persistence. Separate remembered success from a current artifact-backed check. **Tern**, Cairn sources. |
+| **3 · Q3** | How should outcome evidence, version/scope, and corrections distinguish an applicable successful procedure from a failed or obsolete one, without erasing the past? | 4 × 4 / 2 = **8** | **Literature.** Test Cairn’s procedure + outcome check + environment idea against lifecycle/skill evidence. Inspect what checks establish and cost, and how changed prerequisites invalidate reuse. Start with AgentRunbook-C methods: distinguish evidence gathering for QA from executing a remembered procedure. **Tern** owns this next reading; no further Cairn assignment is pending. |
 | **4 · Q2** | Which responsibilities need explicit components, and which can native history/full context plus executive reasoning already supply? | 4 × 4 / 3 = **5.3** | **Answerable by a cheap probe, after reuse.** Use the roadmap, Gen45 limits, panel rivals and the mechanism roster. The intended comparison now concerns procedural/preference benefit; do not build five services by default. **Tern**. |
 | **5 · Q4** | For local models, does useful procedural/preference context pay for its inference, search and maintenance cost? | 3 × 3 / 2 = **4.5** | **Answerable by a cheap probe, reuse first.** Inspect existing model/context/cumulative-work measurements before proposing runs on Strix Halo. **Tern**; current performance tradeoff unknown. |
 | **6 · Q6** | Does an integrated/graph/reflective memory service add useful procedure or preference handling over native facilities? | 3 × 3 / 3 = **3** | **Literature.** Read products for a distinct missing mechanism, not generic sophistication. Kiln's watch-list feeds **Tern's** decision; no installs. |
@@ -21,10 +21,12 @@
 
 The top three changed because Brian supplied the missing decision criterion. Confidence in their relevance is **high**; confidence in the winning mechanisms remains **low–medium**. A literature route is not a claim that the question is already answered.
 
+**Role-specific reading, v0.3:** Q5 includes SKILL.state's structured execution-state idea without treating it as an already learned skill; Q3 reopens Perseus's lifecycle/valid-time paths, retaining Gen29/30's version-specific failures and successes; Q2 includes pi-lcm or transcripts as history substrates, separating storage recovery, search ranking and compaction. The [roster](ROSTER.md#brians-role-examples-re-evaluation-candidates) names each candidate, existing evidence, confidence and next question. Brian's role examples do not predetermine product selection or justify another experimental queue.
+
 ## Settled distinctions for this position
 
 - **Memory is more than retrieval storage:** notes, procedures, summaries, temporal views and learned modules differ. **High**, [field map](FIELD-MAP.md); answered by literature at the taxonomy level.
-- **Reading a memory is not proof of marginal work value:** R53 had relevant reads with no advantage. **High locally**, [R53](inputs/R53-acceptance.json); answered by existing evidence.
+- **Reading a memory is not proof of marginal work value:** R53 had relevant reads with no advantage at a success ceiling (N/I/R all 3/3); this is not evidence of failed application. **High locally**, [R53](inputs/R53-acceptance.json); answered by existing evidence.
 - **Saved preferences can help a memory-dependent task:** R68 provides a narrow positive result, not a curation-versus-capture comparison. **High locally, limited transfer**, [R68](inputs/R68-acceptance.json).
 - **Prompt compression is not history deletion:** Brian's explicit principle; whether any particular product preserves this distinction remains a source-level question. **High as design requirement**, [principles](inputs/BRIAN-PRINCIPLES.md).
 
@@ -36,4 +38,4 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Next decision point
 
-Tern incorporates the priority-steered panel pieces and turns existing procedure/preference evidence into a practical recommendation. No more investigation is needed to establish Q1's stated ranking. Progress wake **26 September 19:00 UTC**; first polished memo **29 September**; stable position target **14 October**. No participant probe is dispatched. The reconstructed SKILL.state performance claim in the input remains unverified and is not used as evidence of a gain.
+All cycle-1 panel pieces are incorporated. Tern next distinguishes workflow-QA evidence from actual procedure reuse, then weighs applicability checks and upkeep against repeated reconstruction. No more investigation is needed to establish Q1's stated ranking. Progress wake **26 September 19:00 UTC**; first polished memo **29 September**; stable position target **14 October**. No participant probe is dispatched. The reconstructed SKILL.state performance claim in the input remains unverified and is not used as evidence of a gain.

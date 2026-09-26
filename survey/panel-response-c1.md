@@ -20,13 +20,19 @@
 
 Kiln completed two small card corrections: native auto-memory is not necessarily repo-versioned with CLAUDE.md; hosted and self-hosted services have different operational obligations. Kiln also accepted measurement as a default expectation rather than a universal deployment gate. These refinements preserve the main opinion. Receipt acknowledged directly; future wake-backs use explicit `AGENTDECK_PROFILE=campaign4` to avoid the ambiguous Tern name.
 
-## Cairn
+## Cairn: procedures with outcome checks and environment identity
 
-Compaction/procedure reading is in progress. Its conclusion will be synthesized when received, without claiming advance agreement.
+[Reading received](reading/c1-procedural-memory.md). **Accept**, medium confidence as a design bet: connect a reusable procedure to its outcome check and the environment in which it worked, then check relevant prerequisites when applying it. This makes the leading recommendation more concrete without choosing executable skills over conditional runbooks or episode reconstruction. Historical success supports applicability; it does not establish it now. **Reject** the claims that checking is costless, that an exit code necessarily verifies the intended outcome, or that this is the only mechanism compatible with our evidence.
+
+**Scope corrections that affect conclusions:** R53 was a ceiling result (all conditions succeeded), not a case of procedure application failing. It cannot be pooled with Gen45's unused control machinery into one failure mechanism. [A-MEM](https://arxiv.org/abs/2502.12110) describes evolving note representations; that alone establishes neither erasure of raw history nor our specific late-history-corruption failure. [GateMem](https://arxiv.org/abs/2606.18829) studies access/deletion governance; authorization scope is not by itself evidence of concurrent scoped factual truth. [Supersede](https://arxiv.org/abs/2606.27472) supplies a relevant fact-update warning, with low–medium confidence in procedural transfer, not high-confidence evidence on Brian's work.
+
+**Reading priority accepted, endpoint corrected:** [LongMemEval-V2 / AgentRunbook-C](https://arxiv.org/abs/2605.12493) gathers evidence for questions about environment experience. It does not directly demonstrate avoided procedural re-learning in live work. Tern checked these primary abstracts, plus [Reflexion](https://arxiv.org/abs/2303.11366), which can use external feedback, and [Voyager](https://arxiv.org/abs/2305.16291), whose domain is Minecraft. Executable code versus prose does not establish checked versus unchecked learning.
+
+The original signed piece remains intact. These are synthesis boundaries, not a request for a repair or another review round. All three panel contributions are now received. Future Cairn commissions use the write-first practice in [ROLES](ROLES.md); Claude's lane repair is operationally reported, not independently tested here.
 
 ## Required roadmap follow-up
 
-Both roadmap files were sent to all three panelists in the [next commission](panel-roadmap-commission.md), with explicit profile routing. Corvid and Kiln's follow-ups are received. Cairn's original piece and then lifecycle reading remain assigned; no results are assumed.
+Both roadmap files were sent to all three panelists in the [next commission](panel-roadmap-commission.md), with explicit profile routing. Corvid and Kiln's follow-ups are received. Cairn's received procedure piece includes the useful partial lifecycle notes; the broad sweep was superseded by the priority steering, not left as a second outstanding assignment.
 
 **Corvid ([addendum](opinions/corvid-c1-roadmap.md)): accept** the history-plus-on-demand-retrieval rival and the point that decomposition alone does not justify five persistent components. Product choice and architecture shape are coupled. The memo now explicitly keeps read-time reconstruction open. **Agree** that Gen45 did not test the full five-layer stack. **Keep open** when maintained state or synthesis earns its cost; no rerun released. One numerical correction matters to reading the cost claim: Gen45's roughly 1.1 MB in its T3 table is cumulative request bytes for a run, not bytes per request; its mechanism example ends at about 4 KB per request. Our map/memo use the primary report and do not repeat the mistaken unit. This does not change the dissent.
 
@@ -42,4 +48,4 @@ The [priority steering](panel-priority-steering.md) reached all three panelists 
 
 **Kiln ([priority opinion](opinions/kiln-c1-priorities.md)): accept** executable skills for stable, checkable operations and a small scoped preference surface. **Keep open** authoring/maintenance economics versus plain runbooks; cheapest use is not established by these documentation-based opinions. **Reject** “zero authoring cost” as a general claim about automatic extraction: supervision, correction, integration, and review can shift rather than disappear. **Reject again** the universal Phase-D prerequisite. The charter permits proportionate exploration; no experiment or installation was released.
 
-**Cairn:** the requested procedure/compaction sweep is still not received. Current steering asks for a useful partial reading within ten minutes if breadth is blocked; no result or agreement is assumed. Tern remains responsible for synthesis, with the missing reading explicitly visible to Claude.
+**Cairn:** received and synthesized above. The outcome-check/environment idea sharpens Q3. Priority remains procedures first, preferences second; abstract-level reading does not settle the representation choice or justify a new experimental queue.
