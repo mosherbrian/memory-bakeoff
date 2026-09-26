@@ -1,0 +1,74 @@
+{
+ "package": "R47-restart-trial-preparation",
+ "question_id": "Q-WORK-BENEFIT",
+ "review_question_id": "Q-EVALUATOR-VALIDITY",
+ "host": {
+  "tool": "Claude Code 2.1.283",
+  "model": "claude-sonnet-5",
+  "route": "claude.ai login, firstParty, subscription max (R46 evidence; revalidated before the qualification call)",
+  "env": "env -i HOME PATH only (drops operator CLAUDE_* session/messaging vars)"
+ },
+ "flags": {
+  "base": "--model claude-sonnet-5 --setting-sources project --strict-mcp-config --disable-slash-commands --output-format stream-json --verbose",
+  "session1": "--tools Read,Write,Edit --permission-mode acceptEdits",
+  "session2": "--tools Bash,Read,Write --permission-mode dontAsk --settings {allow: Bash(./svc:*), Bash(./bench.sh), Read, Write}"
+ },
+ "permissions_note": "observed per mode from the init event; allow lists are auto-approval, not filesystem or process isolation",
+ "arms": {
+  "order": [
+   "A-N",
+   "A-I",
+   "A-R",
+   "C-R",
+   "C-N",
+   "C-I",
+   "B-I",
+   "B-R",
+   "B-N"
+  ],
+  "labels": "operator-only; participant cwd is an opaque /tmp/c4x-XXXXXXXX with no label",
+  "prep": "launch/prep-arm.sh LABEL BLOCK OPDIR",
+  "session1": "launch/session.sh 1 LABEL OPDIR templates/session1-<ARM>.txt",
+  "session2": "launch/session.sh 2 LABEL OPDIR templates/session2-<BLOCK>.md"
+ },
+ "session1_text": {
+  "N": "templates/session1-N.txt",
+  "I": "templates/session1-I.txt",
+  "R": "templates/session1-R.txt"
+ },
+ "session2_text": "templates/session2-<BLOCK>.md: R40 common task (no 'No saved notes' line) + fixed line 'Use your saved memory where relevant.'; <CWD> replaced by the arm cwd",
+ "reset_checks": [
+  "fresh unique cwd per arm",
+  "memory dir for that cwd slug absent before session 1",
+  "session1 exit recorded before session 2",
+  "distinct session ids",
+  "no --resume/--continue",
+  "memory hashes unchanged between sessions",
+  "session2 first user turn == frozen text"
+ ],
+ "endpoints": [
+  "saved",
+  "survived",
+  "index_delivery (inferred when session 2 uses the rule with no memory-file read; observability limit stated)",
+  "detail_read",
+  "applied",
+  "measured",
+  "restored (all original states)",
+  "primary = measured AND restored",
+  "report number match",
+  "final-state claim true/false/unstated",
+  "contamination/integrity and attribution"
+ ],
+ "contamination": "scan.py TRANSCRIPT CWD MEMDIR OTHER_ARM_CWDs OPDIR PACKAGE_ROOT: exit 0 clean, 1 contaminated, 2 ambiguous, 3 missing/malformed; contaminated/ambiguous arms keep raw outcome, attribution unavailable",
+ "grading": "R42 grade.py ARMDIR OPLOG VALUE + session-2 tool events must agree; same-user residual stated",
+ "no_rerun": "no retries, no forced memory repair; session-1 save failure is an outcome",
+ "budget_proposal": {
+  "claude_max_calls": 18,
+  "operator_min": 30,
+  "corvid_per_arm_min": 45,
+  "corvid_final_min": 10,
+  "director_min": 10,
+  "go_impact": "corvid reviews only"
+ },
+ "evidence_capture": "OPDIR/<label>.{arm.json,state-before,oplog,s1.jsonl,s1.meta,s1.stderr,s2.jsonl,s2.meta,s2.stderr,scan.json} + memory snapshot hashes; copied into the package after each arm"
+}
