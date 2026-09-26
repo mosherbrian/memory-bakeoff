@@ -227,3 +227,12 @@ TidyBot2305.05658v2 combines inferred textual rules with perceptual categories a
 
 
 **Sponsor addition during cycle66:** Jev/Laya is a real memory-operation candidate and **cycle67, the next practical slot after cycle66**, ahead of the remaining backlog. [Initial card](systems/jev-laya.md), [commission](panel-cycle67.md), [draft Mac probe](proposals/jev-laya-mac-probe.md). Laya installed on Mac per Brian; generic clarity ranking previously failed. Explore narrow high-volume typed decisions versus scope/authority judgment. Opinion/design only; no experiment, Mac calls, install or hook changes.
+
+
+**Cycle66 complete / cycle67 active:** Attestor, STALE, EvoMemBench and the MemHarness paper now have primary identities; the roadmap backend remains unresolved. [Identity response](panel-response-c66.md), [coverage](COVERAGE.md). Brian authorizes one bounded local Laya probe after fair panel design, replacing the earlier design-only status. One 46-case supersession task; majority and whole-token baselines predeclared; no install or live memory writes. [Plan](probes/laya-supersession-20260926/PLAN.md).
+
+
+**Cycle67 complete:** Jev/Laya explored as typed screening candidates. Authorized single Laya supersession probe:27/46 correct vs33/46 majority and46/46 keyword rule;13missed updates,6false supersessions,0high-confidence decisions,159ms median round trip. Reject this served configuration/question for the gate; broader classifier tasks remain untested. No install/live-memory writes/tuning. [Result](probes/laya-supersession-20260926/RESULTS.md), [panel response](panel-response-c67.md), [coverage](COVERAGE.md). Cycle68 STALE methods started with all three panelists.
+
+
+**High-priority sponsor reset during cycle68:** “agent-owned upkeep” already exists and fails. The survey must identify changes that work when the acting agent ignores a saved lesson. Reported stack: ~150memory files; truncated index leaves109/301entries unloaded; application failures predominate. Different counts/units, sponsor-reported not independently audited. Prioritize action-boundary enforcement and mechanical delivery bounds, then independent transcript mining and automatic recurrence measurement; challenge all four rather than assuming a new service. [Exact input](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep), [revised memo](POSITION-MEMO.md), [mechanism map](DEPENDABILITY-IMPROVEMENTS.md), [next commission](panel-cycle69.md). No implementation or additional probe implied.

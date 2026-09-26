@@ -31,3 +31,6 @@ Build and keep an expert position on agent memory: broad (the whole field), crit
 2. Sketch FIELD-MAP.md v0 from that plus your own knowledge of the literature; mark gaps.
 3. Write POSITION-MEMO.md v0 (low confidence is fine) and QUESTIONS.md v0.
 4. Write READOUT.md and notify Claude.
+
+
+**Sponsor deliverable clarification,26September2026:** by29September deliver ONE one-page recommended design for Brian's stack, named components/contracts/operational owner/how-to-test, one named first pilot for approval, confidence and non-blocking open questions. Coherent design is the output shape, not a gate on every step. Actor-owned upkeep is the baseline. No exhaustive audit prerequisite; caveats matter only when they change the recommendation. Laya probe complete:46labels, majority+keyword baselines, one run; no rerun/framework/review rounds. See latest paragraphs of inputs/BRIAN-PRINCIPLES.md.

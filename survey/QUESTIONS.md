@@ -270,3 +270,24 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle66 sponsor priority / cycle67 next:** which memory operations are cheap-classifier-shaped rather than judgment-shaped? Jev/Laya joins the real candidate roster. Inspect checkpoints, label quality, independent evidence, calibration versus selective risk, and full gating cost; compare deterministic code and executive judgment. [Candidate](systems/jev-laya.md), [probe draft](proposals/jev-laya-mac-probe.md). Initial opinion: a local offline relevance diagnostic may merit Brian's approval; no approval sought or execution authorized yet. Existing source/model/host boundaries remain.
+
+
+**Cycle66 complete / cycle67 active:** Attestor, STALE, EvoMemBench and the MemHarness paper now have primary identities; the roadmap backend remains unresolved. [Identity response](panel-response-c66.md), [coverage](COVERAGE.md). Brian authorizes one bounded local Laya probe after fair panel design, replacing the earlier design-only status. One 46-case supersession task; majority and whole-token baselines predeclared; no install or live memory writes. [Plan](probes/laya-supersession-20260926/PLAN.md).
+
+
+**Cycle67 complete:** Jev/Laya explored as typed screening candidates. Authorized single Laya supersession probe:27/46 correct vs33/46 majority and46/46 keyword rule;13missed updates,6false supersessions,0high-confidence decisions,159ms median round trip. Reject this served configuration/question for the gate; broader classifier tasks remain untested. No install/live-memory writes/tuning. [Result](probes/laya-supersession-20260926/RESULTS.md), [panel response](panel-response-c67.md), [coverage](COVERAGE.md). Cycle68 STALE methods started with all three panelists.
+
+
+**High-priority sponsor reset during cycle68:** “agent-owned upkeep” already exists and fails. The survey must identify changes that work when the acting agent ignores a saved lesson. Reported stack: ~150memory files; truncated index leaves109/301entries unloaded; application failures predominate. Different counts/units, sponsor-reported not independently audited. Prioritize action-boundary enforcement and mechanical delivery bounds, then independent transcript mining and automatic recurrence measurement; challenge all four rather than assuming a new service. [Exact input](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep), [revised memo](POSITION-MEMO.md), [mechanism map](DEPENDABILITY-IMPROVEMENTS.md), [next commission](panel-cycle69.md). No implementation or additional probe implied.
+
+
+**Sponsor constraint, cycle69:** no build recommendation before one coherent design names components, contracts, owners and tests. Prefer an existing product or one existing extension mechanism over script/patch accretion; compare ReMe/Hindsight/Pi reflection/claude-mem with composed host facilities on this basis. Same [principles entry](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep), [design requirements](DEPENDABILITY-IMPROVEMENTS.md), [active panel brief](panel-cycle69.md). Research steering only; no implementation.
+
+
+**Cycle68 complete:** implicit invalidation and stale-premise use deserve attention, but LightMem diagnostics do not isolate one universal cause; CUPMem is positive bundled-system evidence, not proof of a required write-time component. [Panel/source reconciliation](panel-response-c68.md), [coverage](COVERAGE.md). Carry a relevant stale-premise case into the named pilot's proposed tests, not a new review gate. Cycle69 independent-controls/product comparison remains active; one opinionated page due29September with non-blocking unknowns.
+
+
+**Cycle69 complete:** enforcement-first remains the recommended first-pilot direction; source-read cc-safety-net is the concrete candidate. Metric separates prevented attempts, completed violations and repeated corrections; no fabricated independent poller or per-rule Brian approval. [Synthesis](panel-response-c69.md), [initial mechanism card](systems/cc-safety-net.md). Next bounded slot compares actual rulebook/host contracts with claude-mem delivery, to choose one design—not to add a review gate. No new probe or install.
+
+
+**Cycle70 complete:** claude-mem supplies automatic capture/injection and actor-invoked search, but README-level gaps do not establish absent caps/invalidation or native-equivalent truncation. ReMe paper utility pruning is not a verified current-product feature. The [one-page design](RECOMMENDED-DESIGN.md) and enforcement-first pilot stand, medium confidence. Next read actual product injection bounds/trigger behavior; no deployment or further classifier run. [Response](panel-response-c70.md).

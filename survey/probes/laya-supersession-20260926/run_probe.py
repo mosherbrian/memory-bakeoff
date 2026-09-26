@@ -57,6 +57,10 @@ def main():
                         call_start = time.monotonic()
                         run["attempted"] += 1
                         connection.sendall((json.dumps(row["request"]) + "\n").encode())
+                        remaining = deadline - time.monotonic()
+                        if remaining <= 0:
+                            raise TimeoutError("Overall time cap reached after send")
+                        connection.settimeout(min(manifest["socket_timeout_seconds"], remaining))
                         wire = reader.readline(1_048_577)
                         elapsed = time.monotonic() - call_start
                         if not wire or not wire.endswith(b"\n") or len(wire) > 1_048_576:

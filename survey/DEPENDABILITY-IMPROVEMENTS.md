@@ -1,0 +1,35 @@
+# Improvements beyond agent-owned notes
+
+Tern ·26September2026 · sponsor reset during cycle68. **The baseline already has agent-owned memory upkeep. The proposed improvement must change what happens when the acting agent forgets or ignores the lesson.** [Sponsor input](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep).
+
+Brian/Claude report capture largely works, index truncation prevents109/301 entries loading, and application fails most. Treat these as sponsor observations, not a new survey audit. No new production changes are made here.
+
+| Candidate improvement | What runs without actor diligence | Field material already located | Remaining dependency / next question |
+|---|---|---|---|
+| Enforce a checkable direction at the action boundary | A covered tool call consumes a default or is checked before execution even when the actor ignores its memory | [Host skill/enforcement inspection](systems/skill-application-path.md); [LATM](systems/latm.md) and [Code as Policies](systems/code-as-policies.md) establish executable artifacts, not complete host enforcement | Which hooks/wrappers actually intercept Brian's host paths? A hint/default may be overridden; an optional helper may be bypassed. Check scope, false blocks and equivalent execution routes. Neither string matching nor a generated tool proves semantic compliance. |
+| Mine transcripts on an independent schedule | A scheduler starts extraction even if the actor never marks a correction or writes a note | [pi-reflect](systems/pi-reflect.md) exposes headless/scheduled reflection and candidate edits; [ReMe](systems/reme.md) has capture and dream triggers; Letta reflection is another inspected route | Extraction still needs fallible interpretation; transcript gaps and failed jobs need visible handling. Since capture mostly works, what missed recurring signal would this recover? Writing additional notes is not itself the outcome. Current product code is distinct from paper results. |
+| Deliver relevant guidance automatically and keep the index within its actual load budget | Loader-side budget check catches truncation; host adapter selects/injects material without waiting for the actor to open an index | [Hindsight host injection](systems/hindsight-host-source.md), [Pi instruction loading/reload](systems/pi-instruction-delivery.md), [AutoGuide selection controls](reading/c39-autoguide.md) | Budget checks can be deterministic; relevance selection remains fallible. Verify installed load unit/cap and the rendered prefix, not an assumed cap from documentation. Retain excluded records and expose overflow; neither injection nor retrieval proves application. |
+| Count repeated corrections from transcripts weekly | Scheduled measurement does not require the actor to notice or report its own recurrence | [pi-reflect](systems/pi-reflect.md) reports correction/recidivism metrics; [PAIR](reading/c54-pair.md) supplies reports of corrections not persisting, not a validated automatic recurrence counter | Define repeated same-scope correction versus quotation, new task or changed direction. Count with source links and coverage/missing-data indicators; normalize for activity where useful. A low count could mean silence or missed extraction. Validate the estimator's errors before treating a trend as improvement; no Brian labeling ritual. |
+
+**These four rows are responsibilities, not four scripts or services to build.** They are source-inspection leads and proposed mechanisms, not four proven products. The next comparison is against today's agent-maintained files, with concrete action outcomes. An independent scheduler removes dependence on the actor remembering to start work; a deterministic action-boundary guard can remove discretion for the property it actually checks. Neither makes an entire workflow reliable.
+
+**Priority:** first investigate application enforcement and the known delivery truncation. Transcript mining and measurement follow as separate functions; don't sell more capture as a remedy for already-captured lessons being ignored. Keep source history and corrections recoverable, but they are supporting infrastructure, not the claimed improvement.
+
+**A proposal must answer:** what happens if the actor ignores the memory, which host path is covered, what can still fail, and what evidence would distinguish improvement from more notes? The measurement should observe actions or independently identifiable repeats, not the actor's claim that it used a memory. No installs, jobs or additional probes commissioned here.
+
+
+## Shape of the one-page recommendation due29September
+
+Brian's fleet-loop-v1 experience rules out accumulating uncharacterized patches. A candidate must be describable as **one operational design**, with each component listed once and every boundary accounted for:
+
+| Required field | What a concrete recommendation must state |
+|---|---|
+| Named component and version/configuration | Existing product, host mechanism or bounded extension; distinguish supplied behavior from custom code. |
+| Contract | Inputs and source authority, output or controlled action, scope, trigger, invariants, and behavior on unavailable/stale/ambiguous input. |
+| Owner | A named operational role responsible for configuration, failures and upgrades; distinguish it from upstream authorship. No implied Brian-as-librarian assignment. |
+| Tests | Concrete acceptance cases for the promised behavior and its failure boundaries, with execution status stated. Examples: ignored reminder still blocked on a covered action path; oversized index rejected or bounded by the actual loader contract; quoted correction not counted as recurrence. These are design acceptance requirements, not tests already run or a new per-record audit. |
+| Whole-design boundary | Host adapters and interfaces, the single intended extension/configuration point, failure visibility, update/recovery path, and what remains deliberately outside coverage. |
+
+Choose one design and one named first pilot by29September, with confidence. Fill these fields at the level needed to understand and approve the pilot; state unverified assumptions and proposed tests without making them a new approval gate. Open questions do not block the recommendation. Caveats that would not change the choice get a short note, not another review round.
+
+**Adopt versus compose:** compare ReMe, Hindsight, Pi reflection and claude-mem as complete operational candidates against one bounded extension of an existing mechanism (Claude Code hooks configuration, cc-safety-net rulebook or Pi extension). Use current cards as leads, not guarantees of product completeness. Count unavoidable custom glue, duplicated policy/configuration, cross-host interfaces, operational ownership and upgrade/test burden. Favor an existing coherent route when it removes more integration work; fewer files or an all-in-one label alone is not sufficient. No product is assumed to enforce command preferences simply because it captures or injects memory.

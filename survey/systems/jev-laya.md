@@ -32,3 +32,8 @@ Read-only inspection of `/home/bmosher/laya/rank-check.py` and `rank-scores.json
 High volume may amortize a fixed question, but scoring every item on every event remains proportional to the number and size of those items. Batching does not remove data preparation, scope selection, calibration, fallback or labeling cost. Do not use an ordinal score where a clear few-way decision suffices.
 
 The [draft first probe](../proposals/jev-laya-mac-probe.md) is for panel criticism and Brian's later approval, not execution.
+
+
+## Cycle67 — authorized LAN probe completed
+
+[Predeclared46-case result](../probes/laya-supersession-20260926/RESULTS.md): served Laya got27/46 versus33/46 always-no and46/46 whole-token rule; missed all13 true updates and falsely accepted6different-property records. Fixed high-confidence band accepted none. Median159ms round trip,46calls total, no tuning. Checkpoint/temperature unknown; replies contain extra confidence/action fields not used in scoring. **Watch broader classifier hypothesis; reject this configuration/question as a supersession gate.** No live memory changes and no Jev run.
