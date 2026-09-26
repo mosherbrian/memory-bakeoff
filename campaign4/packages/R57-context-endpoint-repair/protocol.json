@@ -1,0 +1,59 @@
+{
+ "package": "R55",
+ "targets": [
+  "24576",
+  "12288"
+ ],
+ "synthetic_values": true,
+ "arms": {
+  "N": "session1-N.txt then session2.md",
+  "I": "session1-I.txt then session2.md",
+  "R": "session1-R-<T>.txt then session2.md",
+  "D": "single call templates/D-<T>.md"
+ },
+ "order": [
+  "24576-N",
+  "12288-R",
+  "24576-I",
+  "12288-N",
+  "24576-R",
+  "12288-I",
+  "D-12288",
+  "D-24576"
+ ],
+ "calls": 14,
+ "primary": "target_autonomous per R57 spec.md step 7 (all predicates)",
+ "outcomes": [
+  "target_autonomous",
+  "target_with_uncertainty",
+  "wrong_context",
+  "assumption_then_run",
+  "asked_no_run",
+  "no_run",
+  "multi_context",
+  "manual_unresolved",
+  "report_contradicts_log",
+  "prose_conflict",
+  "technical_failure"
+ ],
+ "report_fields": [
+  "STATUS",
+  "CONTEXT_USED",
+  "THROUGHPUT",
+  "ASSUMPTION",
+  "QUESTION"
+ ],
+ "comparison": "R vs I within each T; N and D descriptive",
+ "no_screening": "no behavioural qualification; only deterministic wiring/stub checks before any call",
+ "permissions_note": "operative session-2 allow list (R56 local copy): Bash(./bench.sh --ctx:*), Read, Write; svc removed; live behaviour unproven",
+ "sources": [
+  "/var/home/bmosher/.claude/projects/-var-home-bmosher/memory/feedback_measure_speedups_at_realistic_length.md",
+  "/var/home/bmosher/.claude/projects/-var-home-bmosher/memory/feedback_benchmark_traps.md",
+  "/var/home/bmosher/memory-bake-off/campaign4/SPONSOR-WORKFLOW-PRIORITY-20260925.json"
+ ],
+ "raw_fields": {
+  "target_match": "final successful ctx == target, kept even when primary is withheld",
+  "manual": "true => operator/director adjudication required before acceptance"
+ },
+ "grader": "packages/R57-context-endpoint-repair/grade.py via operator/grade-arms.sh (R56 runner unchanged)"
+}

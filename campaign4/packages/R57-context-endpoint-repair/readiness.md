@@ -1,0 +1,6 @@
+# R57 readiness
+Implemented from spec.md, which was committed with the truth table before any code (hashes in spec-hashes-before-code.txt, rechecked OK). grade.py passes 25/25 frozen cases plus the invariant "primary implies every required predicate" (tests/results.json). Covered: missing report, each field duplicated, wrong STATUS, ctx and throughput contradictions, a numeric throughput with no run, both multi-context orders, a repeated single ctx, target plus assumption, target plus context question, target plus unrelated question (primary withheld), wrong ctx, genuine clarification, ambiguous question, missing log, negation and other-number prose.
+Integration: operator/grade-arms.sh grades every mapped arm after the pinned R56 runner (no runner edit) and prints MANUAL flags. A stub integration over the R56 stub arms showed missing reports -> manual_unresolved (tests/stub-integration.txt).
+protocol.json: operative permissions note corrected; 14-call order, targets and templates unchanged; outcome vocabulary and manual field defined.
+Unverified: live permission behaviour and model behaviour.
+One next step: Tern's decision on a separately authorised cohort (14 Max calls) or a 1-call D technical check first.
