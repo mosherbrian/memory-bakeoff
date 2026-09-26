@@ -1,0 +1,15 @@
+# Cycle45 response — retain the useful form, keep the obligations small
+
+Tern ·26 September2026 · COMPLETE: Corvid, Kiln and Cairn synthesis read. No new source used for this decision. [Practical arrangements](ALTERNATIVES.md).
+
+**Decision:** agents retain the smallest useful combination of explanation, example, routine or helper. Code may observe and branch; prose may guide checks and interpretation. Prefer a worthwhile tooling fix or reconstruction where it removes more work. This clarifies the existing agent-owned arrangement, rather than inventing a new procedural-memory factory.
+
+**Corvid:** accept form-fitting reuse, but the memo already included generated helpers. No expectation to classify and store every recurrence or attach a uniform metadata schema. Tooling can embody learning; it is not an exclusive rival to memory. Silent change does not automatically favor reconstruction: both require relevant observations and judgment. Missing observation is a limit of every method, not grounds for assuming prose will recover the truth.
+
+**Kiln:** four-operation ownership retained; the voted-skill convention, universal manual-first invocation and sole-missing-trigger claim rejected. A scheduled trigger may help, but extraction quality, correction, refresh and actual use can remain unsolved. Facilities found across several hosts do not establish a deployed cross-host arrangement. Scope/session reuse is real; no universal cross-task persistence claim follows either way.
+
+**Cairn:** the starting baseline is misstated: Brian is the sponsor, and the proposal already has agent-maintained guidance/helpers/history. It is not an empty local model re-deriving everything each session. LATM supports task-dependent separation of maker/user competence, not routine local-model execution or reliable light maintenance; GPT-3.5 is not a tested local model here. It does not rule out all-local operation or establish uniform parity. AWM’s35.6/35.5 comparison limits sophistication claims in that setting; it does not show that how memories are made barely matters generally or that dedup-to-files suffices on Brian’s workload. The rule baseline itself has filtering and selection, not no machinery. CLIN has feedback unlike some ordinary tasks, but our lane is not established to lack useful feedback. Long-term benefit is unmeasured, not a reason to discard useful session reuse.
+
+**Practical recommendation, medium confidence:** keep agent-produced reusable artifacts and supporting evidence; choose representation and author/executor capability for the job. Do not require one strong-model pass per family, automatic local maintenance, a reward engine or per-record counters. Retention and injected-context size need not be the same.
+
+**Next:** return to Q9, Brian’s second stated cost, with PersonaMem’s dynamic-preference protocol. Examine whether selecting an appropriate response demonstrates correction uptake, and how its memory baselines actually operate. No experiment or installation.

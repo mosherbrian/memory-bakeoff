@@ -241,3 +241,28 @@ The [panel synthesis](panel-response-c8.md) keeps three distinct questions: was 
 
 
 **Cycle41 — adaptive textual abstractions:** CLIN combines per-trial updates, target-conditioned meta-memory and controller selection. Working/broken-stove variation is relevant to prerequisites; gallium illustrates selection failure despite an alternative in memory. Causal syntax is not identified causality or calibrated confidence. [Methods](reading/tern-c41-adaptation-units.md), [synthesis](panel-response-c41.md). Medium practical transfer confidence.
+
+
+## Cycle42 — workflow guidance and action tools
+
+Workflows occupy procedural memory and working-context delivery; callable variants also alter action execution. Observation between steps is a separate responsibility from retaining the routine. Medium confidence for Brian; [panel/source qualifications](panel-response-c42.md), [system card](systems/agent-workflow-memory.md).
+
+
+## Cycle43 — tools as reusable artifacts
+
+Generated callable artifacts can store reusable computation; tool generation, label supply, test construction, dispatch and argument translation are separate responsibilities. Direct dispatch measurement exists here, with narrow family-level scope. Medium practical confidence; [synthesis](panel-response-c43.md), [primary/code reading](reading/tern-c43-tool-cost-boundary.md).
+
+
+## Cycle44 — reactive code and session reuse
+
+Reactive generated code couples observations and actions; session history and generated-function scope provide reuse. Distinguish those mechanisms from lossless cross-session history and measured continual learning. Medium practical confidence; [source/synthesis](panel-response-c44.md), [card](systems/code-as-policies.md).
+
+
+## Cycle45 — practical procedural synthesis
+
+Explanations, worked episodes, parameterized workflows and generated/reactive helpers are possible learned artifacts, not required pipeline stages. Retaining them, finding them and executing them are distinct responsibilities. Medium confidence. [Decision](panel-response-c45.md), [arrangement](ALTERNATIVES.md).
+
+
+## Cycle46 — preference use versus recall
+
+Original PersonaMem separates questions about recall, currency, evolution, reasons and recommendations; its candidate-ranking endpoint is not a correction-burden test. This connects retrieval, current views and executive interpretation without choosing where currency must be implemented. High confidence in the endpoint boundary; medium transfer. [Primary-method note](reading/tern-c46-preference-endpoints.md), [panel response](panel-response-c46.md).

@@ -134,3 +134,28 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 
 
 **Cycle41 CLIN:** watch as a learning/control architecture; uncertainty wording is a design aid, not a recommended fixed schema or archive size. Simulator feedback/reset facilities and raw-source recovery require separate consideration. [Card](systems/clin.md), [qualified decision](panel-response-c41.md).
+
+
+## Cycle42 — workflow guidance and action tools
+
+Agent Workflow Memory: borrow parameterized guidance where useful, watch benchmark induction loop. No established host integration or product winner; callable-wrapper limitations do not reject adaptive tools. Medium confidence for Brian; [panel/source qualifications](panel-response-c42.md), [system card](systems/agent-workflow-memory.md).
+
+
+## Cycle43 — tools as reusable artifacts
+
+LATM: borrow the maker/user distinction where useful; watch the factory. Prototype notebooks and algorithmic evaluation do not establish host integration or complete economics. Generated helpers need not be hand-authored or excluded from processing fresh observations. Medium practical confidence; [synthesis](panel-response-c43.md), [primary/code reading](reading/tern-c43-tool-cost-boundary.md).
+
+
+## Cycle44 — reactive code and session reuse
+
+Code as Policies: borrow reactive helper patterns where useful; robotics stack not a proposed fleet installation. Explicit session/function reuse corrects the zero-accumulation reading. Long-term maintenance and software benefit remain open. Medium practical confidence; [source/synthesis](panel-response-c44.md), [card](systems/code-as-policies.md).
+
+
+## Cycle45 — practical procedural synthesis
+
+No product promoted by the procedural synthesis. Existing facilities remain the base; author/user separation, extraction and trigger automation are chosen for a concrete burden, not inferred as universal necessities. Medium confidence. [Decision](panel-response-c45.md), [arrangement](ALTERNATIVES.md).
+
+
+## Cycle46 — preference use versus recall
+
+Original PersonaMem (2504.14225v2) is an evaluation resource, not a deployable preference facility. Its RAG/Mem0 comparison does not establish a current product winner; internal memory updates occur despite fixed synthetic histories. Separate PersonaMem-v2 (2512.06688v1) is the next research-framework read. High confidence in the endpoint boundary; medium transfer. [Primary-method note](reading/tern-c46-preference-endpoints.md), [panel response](panel-response-c46.md).

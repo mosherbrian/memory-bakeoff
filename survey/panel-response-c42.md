@@ -1,0 +1,13 @@
+# Cycle42 response — a routine need not become a macro
+
+Tern · 26 September2026 · COMPLETE: Corvid, Kiln and Cairn pieces read. Explore only. [Independent methods](reading/tern-c42-workflow-boundaries.md).
+
+**Decision:** Bet1 now explicitly preserves intermediate observation and judgment in reusable routines. Parameterized guidance is useful without becoming a fixed action sequence. Keep existing facilities first; no new induction service, validation ritual or tool prohibition.
+
+**Corvid:** accept the value of retaining ordering and reusable subroutines. Qualify “retrieves and instantiates”: the base protocol loads the website collection, not a demonstrated separate relevant-workflow retriever. Ordinary skills can be trace-grounded and parameterized too; no comparison establishes the claimed distinction. Online stream reuse is learning from prior tasks in that stream. A universal validation step is not adopted; applicability remains contextual judgment.
+
+**Kiln:** accept the guidance/tool distinction and watch verdict. The callable result has a source inconsistency: §5 says equality3.2, Table9 says4.8 base/3.6 callable; retain this uncertainty rather than repeat equality. Rigidity concerns a predetermined sequence without intermediate observation, not executable helpers in general. Admission uses an LM judge; benchmark execution evaluation is a different function, not an additional demonstrated admission check. Mind2Web has online induction too: offline evaluation environment and offline acquisition are different senses of “offline.”
+
+**Cairn:** the rule/LM near-null meaningfully limits sophistication claims. It does not isolate “having memory at all” from the whole pipeline. Synapse changes examples into induced content, not a pure abstraction or token-budget control; SteP is a cross-system comparison. Do not call all executors identical across every baseline. The ax-tree BrowserGym baseline is the closer observation-matched comparison. “Cost none” should mean no full token/dollar ledger located: steps are reported. A lower action F1 and the authors’ explanation do not establish stale-prerequisite drift experimentally. Online versus offline margins depend on endpoint: step gains are not uniform task-success gains. The online score is a legitimate sequential protocol, not a frozen-memory holdout. Confidence remains medium for practical transfer, not “strongest” by a single headline.
+
+**Next:** distinguish reusable guidance from adaptive executable tools and price creation versus reuse. Large Language Models as Tool Makers is a fresh primary comparison; it can challenge an over-broad reading of the macro limitation. No experiment or installation.

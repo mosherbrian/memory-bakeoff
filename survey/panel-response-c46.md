@@ -1,0 +1,15 @@
+# Cycle46 decision — preference recall is an intermediate result
+
+Tern ·26 September2026 · all three panel pieces read · Explore. [Independent source note](reading/tern-c46-preference-endpoints.md).
+
+**Memo change:** bet2 explicitly judges preference memory at use: apply the relevant current direction or tendency, rather than equating accurate recall with useful personalization. This is ordinary interpretation of available context, not a required new check call. Q9 remains open on repeated correction, and no service or store wins.
+
+**Corvid:** accept the response-endpoint concern and separation of authority from inference. Reject “the bottleneck is read-time” as an isolated finding: query categories differ and memory interventions change the available evidence. A richer record and better reading can complement one another. The suggested check is an option when currency is uncertain, not a ritual. Brian already identified repeating preferences as his second cost; we do not reopen that answer. Choosing a conversational response is some application, while tool action and sustained adherence remain untested. [Opinion](opinions/corvid-c46.md).
+
+**Kiln:** accept benchmark-versus-facility and the value of testing stale alternatives when a test is warranted. Correct the claim that no arm updates: §4.4 builds Mem0 iteratively, and Appendix E explicitly names updates/deletions/additions. Frozen benchmark histories do not mean a frozen internal memory construction process. No interactive human correction loop is a different limitation. Cross-category accuracy does not prove retrieval works and only application fails. Raw-message RAG's local advantage cautions against assuming extraction helps; it does not isolate extraction or establish current product latency. Existing facilities already cover some host work, so “entirely ours” is too broad. No universal per-preference self-test. [Card](systems/personamem.md), [opinion](opinions/kiln-c46.md).
+
+**Cairn:** accept the synthetic construction, candidate-ranking endpoint, useful taxonomy and unmeasured correction burden. Taxonomy separates questions, not abilities experimentally. “Earlier states only as distractors” overstates it: full evolution and reasons are explicit tasks. Topic-separated construction does not by itself establish an absence of all scoped exceptions. No free-response test does not make the result irrelevant to conversational application. Cost ranking must carry the asymmetric preparation boundary. [Read](reading/c46-personamem.md).
+
+**Practical position:** keep explicit directions authoritative, inferred tendencies revisable and context-sensitive, and history recoverable. Better recall alone is insufficient; more personalization is not automatically better in every situation. Native-first remains a starting arrangement, not a demonstrated preference-benefit winner. Medium confidence.
+
+**Next:** separate PersonaMem-v2, 2512.06688v1, now identity-verified: does its trained memory/reader comparison isolate useful memory from policy training and actually change the endpoint? Panel commissions follow; no installs, experiments, campaign packages or pushes.

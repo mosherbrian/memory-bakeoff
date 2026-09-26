@@ -1,4 +1,4 @@
-# Question register — cycle 41
+# Question register — cycle 46
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–41 are synthesized. CLIN adds changed-capability examples and a documented selection failure despite useful alternatives in memory. Q3/Q5 now separate generalization, safe revision and correct use. Cycle42 examines Agent Workflow Memory and reusable action sequences. Tern owns synthesis; no rollout or campaign4 package.
+Cycles1–46 are synthesized. Q9 now explicitly separates current-preference recall, suitable response selection, authority and repeated correction. Original PersonaMem does not isolate a read-time bottleneck or measure correction burden. Cycle47 reads the separate PersonaMem-v2 trained-memory framework, distinguishing reader training from useful memory. No new experiment, rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -160,3 +160,24 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle41 complete:** conditional principles can generalize across capability variations, without proving changed-rule resilience or guaranteed selection. Source recovery is separate from current-memory rewriting. Reward improvements are not success percentages; full-system gains are not memory-only effects. [Response](panel-response-c41.md).
+
+
+**Cycle42 complete:** workflow guidance and callable execution are separate interventions. Near-equal induction outcomes limit sophistication claims; online adaptation and frozen holdout answer different questions. No blanket macro ban or compulsory validation routine. [Response](panel-response-c42.md).
+
+
+**Cycle43 interim:** Q4 separates a creation-plus-reuse cost model from measured pipeline cost. Q5 now has direct tool-dispatch accuracy in a narrow task-family setting; earlier missing-selection-metric claims remain source-scoped. Generated helpers need not exclude environmental observations, and no human-only authorship rule follows. Reader full synthesis pending. [Methods](reading/tern-c43-tool-cost-boundary.md).
+
+
+**Cycle43 complete:** agent-generated helpers remain in scope; smaller users still need competence. Creation is represented symbolically in LATM, not fully measured. Verification is model-authored against supplied labels, not wholly self-labeled. Next distinguish reactive execution from persistent procedural memory. [Response](panel-response-c43.md).
+
+
+**Cycle44 complete:** generated helpers can observe and branch. Code as Policies explicitly retains session context and generated functions; long-term maintenance value is unestablished, not zero accumulation. Next practical synthesis without a mandatory component stack. [Response](panel-response-c44.md).
+
+
+**Cycle45 interim:** the practical arrangement explicitly includes conditional explanations, examples, parameterized routines and generated/reactive helpers. These are choices, not mandatory pipeline stages. Trigger automation is one possible missing operation, not an established sole gap. Reader synthesis pending. [Response](panel-response-c45.md).
+
+
+**Cycle45 complete:** practical advice is representation-flexible and agent-owned. Strong-author/local-user division and simple extraction remain conditional, not benchmark-established fleet defaults. Trigger automation is not the sole proven gap. Next Q9 preference application and correction evidence. [Response](panel-response-c45.md).
+
+
+**Cycle46 decision:** preference recall is an intermediate result; relevant current guidance must inform a suitable response. No mandatory extra check follows. Original PersonaMem uses synthetic histories and candidate ranking, including its generative setting; memory baselines differ and timing boundaries are asymmetric. Q9 stays open on repeated correction. [Source note](reading/tern-c46-preference-endpoints.md), [panel decision](panel-response-c46.md).
