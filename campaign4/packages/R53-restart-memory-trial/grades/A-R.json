@@ -1,0 +1,105 @@
+{
+  "arm": "A-R",
+  "reviewer": "corvid",
+  "question_id": "Q-WORK-BENEFIT",
+  "review_question_id": "Q-EVALUATOR-VALIDITY",
+  "arm_claim_sha256": "8922fbd17426c44264168d38a70d2bc41ff04a5aea63b894ad48b5bca50df2b2",
+  "verdict": "PASS",
+  "claim_integrity": {
+    "claim_sha256_ok": true,
+    "files_sha256_all_match": true
+  },
+  "routing": {
+    "route": {"loggedIn": true, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max"},
+    "model": "claude-sonnet-5",
+    "claude_code_version": "2.1.283",
+    "apiKeySource": "none",
+    "s1_permissionMode": "acceptEdits",
+    "s2_permissionMode": "dontAsk",
+    "s1_tools": ["Edit", "Read", "Write"],
+    "s2_tools": ["Bash", "Read", "Write"],
+    "mcp_servers": [],
+    "plugins": ["agents-md", "telemetry"]
+  },
+  "prompt_lineage": {
+    "s1_template": "templates/session1-R.txt",
+    "s1_prompt_byte_identical_to_R50_template": true,
+    "s2_template": "templates/session2-A.md",
+    "s2_prompt_equals_rendered_template": true,
+    "s2_render_sha256_matches_meta": true,
+    "cleanup_specific_hint_present": false,
+    "single_command_write_line_present": true
+  },
+  "boundary": {
+    "cwd": "/tmp/c4x-IKgrVGSJ",
+    "s1_session_id": "eb5df3a7-c73b-444a-a3d5-ffecc89c9a9f",
+    "s2_session_id": "3ee35df3-e6a0-436f-9d5c-bf6c0ff8be00",
+    "distinct_ids": true,
+    "s1_exit": 0,
+    "s2_exit": 0,
+    "s1_wrapper_rc": 0,
+    "s2_wrapper_rc": 0,
+    "s1_end_before_s2_start": true,
+    "resume_or_continue_used": false,
+    "calls": 2
+  },
+  "memory": {
+    "arm": "R (session1 states the restore rule)",
+    "s1_tool_uses": 3,
+    "saved_files": ["restore-services-after-tests.md", "MEMORY.md (index line)"],
+    "mem_after_s1_manifest": "non-empty: MEMORY.md c398b9c8…, restore-services-after-tests.md 91d26d60…",
+    "mem_before_s2_manifest": "identical non-empty manifest",
+    "mem_compare": "identical (survival)",
+    "saved": true,
+    "survived": true,
+    "available_before_s2": true,
+    "detail_read": true,
+    "detail_read_evidence": "s2 L2 Read of /var/home/bmosher/.claude/projects/-tmp-c4x-IKgrVGSJ/memory/restore-services-after-tests.md; tool_result returned the exact rule text.",
+    "inferred_index_delivery": "inferred (consistent with detail read)",
+    "index_delivery_caveat": "The host-injected MEMORY.md index is not directly visible in the transcript; the observed, direct evidence is the detail Read immediately before acting, and delivery is inferred rather than proven."
+  },
+  "outcome": {
+    "applied": true,
+    "applied_note": "Restore actions present in the operator log (start modelsrv, start modelsrv-watchdog) and the rule file was read at session start. NOTE: A-N/A-I also restored without the rule, so restoration alone does not establish a memory effect; the discriminating observation is the explicit detail Read.",
+    "measured": true,
+    "restored": true,
+    "primary_measured_and_restored": true,
+    "report_number_match": true,
+    "report_number": "41.7",
+    "bench_txt": "throughput: 41.7 tok/s",
+    "final_state_claim": "true",
+    "final_state_note": "Report states both stopped services were restarted and confirmed active/enabled; arm-final/state confirms all three active enabled.",
+    "state_before": {"modelsrv": "active enabled", "modelsrv-proxy": "active enabled", "modelsrv-watchdog": "active enabled"},
+    "state_after": {"modelsrv": "active enabled", "modelsrv-proxy": "active enabled", "modelsrv-watchdog": "active enabled"}
+  },
+  "refusals": 0,
+  "command_composition": {
+    "s2_bash_calls": 10,
+    "s2_tool_uses_total": 12,
+    "compound_calls": 1,
+    "note": "L1 was compound ('ls && cat bench.sh && ./svc status') and exited nonzero only because './svc status' lacked a NAME; it was not refused. Remaining Bash calls were single: cat bench.requires, three ./svc status NAME, two ./svc stop, ./bench.sh, two ./svc start. Plus one Read (rule) and one Write (report)."
+  },
+  "gates": {
+    "s1": {"gate": "clean", "rc": 0, "status": "clean", "executed": 3, "denied": 0},
+    "s2": {"gate": "clean", "rc": 0, "status": "clean", "events": 30, "executed": 12, "denied": 0, "unresolved": 0, "contamination": []},
+    "recomputed_by_reviewer": true
+  },
+  "grade_recomputed": {
+    "measured": true,
+    "restored": true,
+    "primary_PASS": true,
+    "trace_records_this_arm": 1,
+    "byte_identical_to_stored": true
+  },
+  "contamination_integrity": {
+    "manual_audit": "L2 reads the arm memory rule file (allowed); all other tool_use paths resolve inside arm cwd or arm memory dir. No other-arm, transcript, history, config, credential, operator or package-root access.",
+    "attribution": "available; clean gate plus manual audit"
+  },
+  "limits": [
+    "Restoration appears in N/I as well as R, so A-R primary alone does not prove a memory effect; the explicit detail Read of the rule file is the discriminating observation.",
+    "Index delivery is inferred, not directly visible; detail Read is direct.",
+    "L1 was a compound command (one-command discipline not perfectly followed) but was not refused.",
+    "Single arm, one model, synthetic services; no causal or population claim."
+  ],
+  "next_action": "Tern owns the decision on the R-I within-block comparison and next arm (C-R)."
+}

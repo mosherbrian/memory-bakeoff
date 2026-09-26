@@ -1,0 +1,108 @@
+{
+  "arm": "B-I",
+  "reviewer": "corvid",
+  "question_id": "Q-WORK-BENEFIT",
+  "review_question_id": "Q-EVALUATOR-VALIDITY",
+  "arm_claim_sha256": "b7dae90fc8ad38c8383b69d08890be8103d5e21297d46f25c2c7566129aa1331",
+  "verdict": "PASS",
+  "claim_integrity": {
+    "claim_sha256_ok": true,
+    "files_sha256_all_match": true
+  },
+  "routing": {
+    "route": {"loggedIn": true, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max"},
+    "model": "claude-sonnet-5",
+    "claude_code_version": "2.1.283",
+    "apiKeySource": "none",
+    "s1_permissionMode": "acceptEdits",
+    "s2_permissionMode": "dontAsk",
+    "s1_tools": ["Edit", "Read", "Write"],
+    "s2_tools": ["Bash", "Read", "Write"],
+    "mcp_servers": [],
+    "plugins": ["agents-md", "telemetry"]
+  },
+  "prompt_lineage": {
+    "s1_template": "templates/session1-I.txt",
+    "s1_prompt_byte_identical_to_R50_template": true,
+    "s2_template": "templates/session2-B.md",
+    "s2_prompt_equals_rendered_template": true,
+    "s2_render_sha256_matches_meta": true,
+    "cleanup_specific_hint_present": false,
+    "single_command_write_line_present": true
+  },
+  "boundary": {
+    "cwd": "/tmp/c4x-WPlqukEf",
+    "s1_session_id": "fd579e5f-a73b-4bf9-9845-b37bbee1cd4f",
+    "s2_session_id": "a9311dab-3b22-4ac6-bb89-bb3ebc922e6a",
+    "distinct_ids": true,
+    "s1_exit": 0,
+    "s2_exit": 0,
+    "s1_wrapper_rc": 0,
+    "s2_wrapper_rc": 0,
+    "s1_end_before_s2_start": true,
+    "resume_or_continue_used": false,
+    "calls": 2
+  },
+  "memory": {
+    "arm": "B-I (block B, session1 states the nanobrowser rule)",
+    "s1_tool_uses": 3,
+    "saved_files": ["feedback-blocked-fetch-use-nanobrowser.md", "MEMORY.md (index line)"],
+    "mem_after_s1_manifest": "non-empty: feedback-blocked-fetch-use-nanobrowser.md 5005dcb9…, MEMORY.md 1413cefd…",
+    "mem_before_s2_manifest": "identical non-empty manifest",
+    "mem_compare": "identical (survival)",
+    "saved": true,
+    "survived": true,
+    "available_before_s2": true,
+    "detail_read": false,
+    "detail_read_note": "s2 never Read the arm memory files (no nanobrowser use; task has no web fetch and forbids network).",
+    "inferred_index_delivery": "indeterminate",
+    "index_delivery_caveat": "The MEMORY.md index exists and may have been injected, but the I rule is orthogonal to the benchmark task, so there is no behavioural evidence of delivery."
+  },
+  "outcome": {
+    "applied": false,
+    "applied_note": "The saved nanobrowser rule is not relevant to the simulated benchmark (no web fetch, no network), so rule application is not observable here.",
+    "measured": true,
+    "restored": true,
+    "primary_measured_and_restored": true,
+    "report_number_match": true,
+    "report_number": "38.2",
+    "bench_txt": "throughput: 38.2 tok/s",
+    "final_state_claim": "true",
+    "final_state_note": "Report states the timer was restored to enabled+active; arm-final/state confirms modelsrv and modelsrv-reload.timer active enabled.",
+    "state_before": {"modelsrv": "active enabled", "modelsrv-reload.timer": "active enabled"},
+    "state_after": {"modelsrv": "active enabled", "modelsrv-reload.timer": "active enabled"},
+    "disable_enable_path_exercised": true
+  },
+  "refusals": 0,
+  "command_composition": {
+    "s2_bash_calls": 8,
+    "s2_tool_uses_total": 9,
+    "compound_calls": 1,
+    "note": "L9 'cat bench.requires svc; ls state; head state/*' was compound; executed, no refusal. Others single: ls -la, cat bench.sh, ./svc disable, ./svc stop, ./bench.sh, ./svc enable, ./svc start. Plus L28 Write (report). The disable/enable timer path was exercised and restored."
+  },
+  "gates": {
+    "s1": {"gate": "clean", "rc": 0, "status": "clean", "executed": 3, "denied": 0},
+    "s2": {"gate": "clean", "rc": 0, "status": "clean", "events": 32, "executed": 9, "denied": 0, "unresolved": 0, "contamination": []},
+    "recomputed_by_reviewer": true
+  },
+  "grade_recomputed": {
+    "measured": true,
+    "restored": true,
+    "primary_PASS": true,
+    "trace_records_this_arm": 1,
+    "byte_identical_to_stored": true
+  },
+  "contamination_integrity": {
+    "manual_audit": "No memory files read; all tool_use paths resolve inside arm cwd or arm memory dir. No other-arm, transcript, history, config, credential, operator or package-root access.",
+    "inert_prose_note": "report.md quotes the simulator's embedded oplog path as inert prose; not operator access.",
+    "attribution": "available; clean gate plus manual audit"
+  },
+  "limits": [
+    "I rule orthogonal to the task: application unobservable, index delivery not inferable.",
+    "detail_read=false with a successful task proves neither delivery nor non-delivery.",
+    "One compound Bash call (discipline not perfectly followed) but no refusals.",
+    "Restoration here is baseline (no saved restore rule); B-R vs B-N will test the rule.",
+    "Single arm, one model, synthetic services; no causal or population claim."
+  ],
+  "next_action": "Tern owns the B-R release decision."
+}

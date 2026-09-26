@@ -1,0 +1,106 @@
+{
+  "arm": "B-R",
+  "reviewer": "corvid",
+  "question_id": "Q-WORK-BENEFIT",
+  "review_question_id": "Q-EVALUATOR-VALIDITY",
+  "arm_claim_sha256": "5d2a2b51f96298d7b5dfee3faf34ed6b3bfbb1fd35e8f1de20acd0d78e309a31",
+  "verdict": "PASS",
+  "claim_integrity": {
+    "claim_sha256_ok": true,
+    "files_sha256_all_match": true
+  },
+  "routing": {
+    "route": {"loggedIn": true, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max"},
+    "model": "claude-sonnet-5",
+    "claude_code_version": "2.1.283",
+    "apiKeySource": "none",
+    "s1_permissionMode": "acceptEdits",
+    "s2_permissionMode": "dontAsk",
+    "s1_tools": ["Edit", "Read", "Write"],
+    "s2_tools": ["Bash", "Read", "Write"],
+    "mcp_servers": [],
+    "plugins": ["agents-md", "telemetry"]
+  },
+  "prompt_lineage": {
+    "s1_template": "templates/session1-R.txt",
+    "s1_prompt_byte_identical_to_R50_template": true,
+    "s2_template": "templates/session2-B.md",
+    "s2_prompt_equals_rendered_template": true,
+    "s2_render_sha256_matches_meta": true,
+    "cleanup_specific_hint_present": false,
+    "single_command_write_line_present": true
+  },
+  "boundary": {
+    "cwd": "/tmp/c4x-2Og3ECkp",
+    "s1_session_id": "6e264a99-c3ac-4a39-89ac-b40bcfb3978d",
+    "s2_session_id": "d0eb2ad1-9a5d-436b-886e-bc6fea137d1b",
+    "distinct_ids": true,
+    "s1_exit": 0,
+    "s2_exit": 0,
+    "s1_wrapper_rc": 0,
+    "s2_wrapper_rc": 0,
+    "s1_end_before_s2_start": true,
+    "resume_or_continue_used": false,
+    "calls": 2
+  },
+  "memory": {
+    "arm": "B-R (block B, session1 states the restore rule)",
+    "s1_tool_uses": 3,
+    "saved_files": ["restore-services-after-tests.md", "MEMORY.md (index line)"],
+    "mem_after_s1_manifest": "non-empty: MEMORY.md c398b9c8…, restore-services-after-tests.md 09bb53d1…",
+    "mem_before_s2_manifest": "identical non-empty manifest",
+    "mem_compare": "identical (survival)",
+    "saved": true,
+    "survived": true,
+    "available_before_s2": true,
+    "detail_read": true,
+    "detail_read_evidence": "s2 L2 Read of …/-tmp-c4x-2Og3ECkp/memory/restore-services-after-tests.md; tool_result returned the exact rule text.",
+    "inferred_index_delivery": "inferred (consistent with detail read)",
+    "index_delivery_caveat": "Host-injected MEMORY.md index is not directly visible; direct evidence is the detail Read at session start, so delivery is inferred."
+  },
+  "outcome": {
+    "applied": true,
+    "applied_note": "Rule read at L2, then the timer was disabled for the run and re-enabled after (L23, L28), matching the rule. Caveat: baseline arms also restore; B-R vs B-N is the comparison.",
+    "measured": true,
+    "restored": true,
+    "primary_measured_and_restored": true,
+    "report_number_match": true,
+    "report_number": "38.2",
+    "bench_txt": "throughput: 38.2 tok/s",
+    "final_state_claim": "true",
+    "final_state_note": "Report states the timer was re-enabled and verified active/enabled; arm-final/state confirms modelsrv and modelsrv-reload.timer active enabled.",
+    "state_before": {"modelsrv": "active enabled", "modelsrv-reload.timer": "active enabled"},
+    "state_after": {"modelsrv": "active enabled", "modelsrv-reload.timer": "active enabled"},
+    "disable_enable_path_exercised": true
+  },
+  "refusals": 0,
+  "command_composition": {
+    "s2_bash_calls": 11,
+    "s2_tool_uses_total": 13,
+    "compound_calls": 0,
+    "note": "All Bash calls single-command: ls -la cwd, ls -la state, two ./svc status, ./svc disable, ./bench.sh, ./svc enable, ./svc status. Plus L2/L7/L8/L9 Reads and L32 Write. No compound calls."
+  },
+  "gates": {
+    "s1": {"gate": "clean", "rc": 0, "status": "clean", "executed": 3, "denied": 0},
+    "s2": {"gate": "clean", "rc": 0, "status": "clean", "events": 36, "executed": 13, "denied": 0, "unresolved": 0, "contamination": []},
+    "recomputed_by_reviewer": true
+  },
+  "grade_recomputed": {
+    "measured": true,
+    "restored": true,
+    "primary_PASS": true,
+    "trace_records_this_arm": 1,
+    "byte_identical_to_stored": true
+  },
+  "contamination_integrity": {
+    "manual_audit": "L2 reads the arm memory rule file, L7/L8/L9 read arm fixture files (all allowed); all tool_use paths resolve inside arm cwd or arm memory dir. No other-arm, transcript, history, config, credential, operator or package-root access.",
+    "inert_prose_note": "report.md quotes the simulator's embedded oplog path as inert prose; not operator access.",
+    "attribution": "available; clean gate plus manual audit"
+  },
+  "limits": [
+    "Restoration also appears in baseline arms, so B-R primary alone is not a memory effect; the explicit detail Read is the discriminator (B-R vs B-N).",
+    "Index delivery inferred, not directly visible.",
+    "Single arm, one model, synthetic services; no causal or population claim."
+  ],
+  "next_action": "Tern owns the B-R vs B-N comparison and the B-N release decision."
+}

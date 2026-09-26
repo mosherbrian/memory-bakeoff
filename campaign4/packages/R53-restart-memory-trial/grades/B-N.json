@@ -1,0 +1,106 @@
+{
+  "arm": "B-N",
+  "reviewer": "corvid",
+  "question_id": "Q-WORK-BENEFIT",
+  "review_question_id": "Q-EVALUATOR-VALIDITY",
+  "arm_claim_sha256": "6b3349391d717272eb0c479e689504e9cdc94ec181db86109281e352af0fcb4d",
+  "verdict": "PASS",
+  "claim_integrity": {
+    "claim_sha256_ok": true,
+    "files_sha256_all_match": true
+  },
+  "routing": {
+    "route": {"loggedIn": true, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max"},
+    "model": "claude-sonnet-5",
+    "claude_code_version": "2.1.283",
+    "apiKeySource": "none",
+    "s1_permissionMode": "acceptEdits",
+    "s2_permissionMode": "dontAsk",
+    "s1_tools": ["Edit", "Read", "Write"],
+    "s2_tools": ["Bash", "Read", "Write"],
+    "mcp_servers": [],
+    "plugins": ["agents-md", "telemetry"]
+  },
+  "prompt_lineage": {
+    "s1_template": "templates/session1-N.txt",
+    "s1_prompt_byte_identical_to_R50_template": true,
+    "s2_template": "templates/session2-B.md",
+    "s2_prompt_equals_rendered_template": true,
+    "s2_render_sha256_matches_meta": true,
+    "cleanup_specific_hint_present": false,
+    "single_command_write_line_present": true
+  },
+  "boundary": {
+    "cwd": "/tmp/c4x-9D91d88H",
+    "s1_session_id": "e492c9f2-2657-4fd7-a86a-7e2738cd0b2e",
+    "s2_session_id": "600bc714-e0ff-47ca-acad-b1171441469f",
+    "distinct_ids": true,
+    "s1_exit": 0,
+    "s2_exit": 0,
+    "s1_wrapper_rc": 0,
+    "s2_wrapper_rc": 0,
+    "s1_end_before_s2_start": true,
+    "resume_or_continue_used": false,
+    "calls": 2
+  },
+  "memory": {
+    "arm": "B-N (block B, neutral session1, nothing saved)",
+    "s1_tool_uses": 0,
+    "mem_after_s1": "empty directory, 0-byte manifest",
+    "mem_before_s2": "empty directory, 0-byte manifest",
+    "mem_compare": "identical emptiness",
+    "saved": false,
+    "survived": "not applicable (nothing saved; unchanged absence)",
+    "available_before_s2": false,
+    "detail_read": false,
+    "detail_read_note": "s2 L1 attempted Read of …/-tmp-c4x-9D91d88H/memory/MEMORY.md and errored (file absent); no memory content available.",
+    "inferred_index_delivery": false,
+    "index_delivery_caveat": "No memory existed, so no index line could be injected."
+  },
+  "outcome": {
+    "applied": false,
+    "applied_note": "N arm has no saved rule. The model disabled then re-enabled the timer on its own baseline competence; not application of saved memory.",
+    "measured": true,
+    "restored": true,
+    "primary_measured_and_restored": true,
+    "report_number_match": true,
+    "report_number": "38.2",
+    "bench_txt": "throughput: 38.2 tok/s",
+    "final_state_claim": "true",
+    "final_state_note": "Report states the timer was re-enabled to active/enabled; arm-final/state confirms modelsrv and modelsrv-reload.timer active enabled.",
+    "state_before": {"modelsrv": "active enabled", "modelsrv-reload.timer": "active enabled"},
+    "state_after": {"modelsrv": "active enabled", "modelsrv-reload.timer": "active enabled"},
+    "disable_enable_path_exercised": true
+  },
+  "refusals": 0,
+  "command_composition": {
+    "s2_bash_calls": 5,
+    "s2_tool_uses_total": 7,
+    "compound_calls": 2,
+    "note": "L3 'ls -la && cat bench.sh' and L9 'cat bench.requires svc; ls state; head state/*' were compound; both executed, no refusals. Others single: ./svc disable, ./bench.sh, ./svc enable. Plus L1 Read (memory, errored) and L20 Write."
+  },
+  "gates": {
+    "s1": {"gate": "clean", "rc": 0, "status": "clean", "executed": 0, "denied": 0},
+    "s2": {"gate": "clean", "rc": 0, "status": "clean", "events": 24, "executed": 7, "denied": 0, "unresolved": 0, "contamination": []},
+    "recomputed_by_reviewer": true
+  },
+  "grade_recomputed": {
+    "measured": true,
+    "restored": true,
+    "primary_PASS": true,
+    "trace_records_this_arm": 1,
+    "byte_identical_to_stored": true
+  },
+  "contamination_integrity": {
+    "manual_audit": "L1 read attempt on the (absent) arm memory file; all tool_use paths resolve inside arm cwd or arm memory dir. No other-arm, transcript, history, config, credential, operator or package-root access.",
+    "inert_prose_note": "report.md quotes the simulator's embedded oplog path as inert prose; not operator access.",
+    "attribution": "available; clean gate plus manual audit"
+  },
+  "limits": [
+    "N control re-enabled the timer with no saved rule: B-N primary success is baseline competence, so B-R vs B-N is not discriminative on work outcome — B-R's explicit detail Read is the discriminator.",
+    "The attempted memory Read failed because memory was absent; retrieval is untested here.",
+    "Two compound Bash calls (discipline not perfectly followed) but no refusals.",
+    "Single arm, one model, synthetic services; no causal or population claim."
+  ],
+  "next_action": "All nine arms complete. Tern owns the aggregate/final corvid recomputation and any next research work."
+}

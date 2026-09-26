@@ -1,0 +1,104 @@
+{
+  "arm": "A-N",
+  "reviewer": "corvid",
+  "question_id": "Q-WORK-BENEFIT",
+  "review_question_id": "Q-EVALUATOR-VALIDITY",
+  "arm_claim_sha256": "e885dadde455d1eda3bc0ffe5b20e6c03a47146a1edf41bbc75e576f58ff56f3",
+  "verdict": "PASS",
+  "claim_integrity": {
+    "claim_sha256_ok": true,
+    "files_sha256_all_match": true,
+    "preparation_prepared_pins_match": true,
+    "preparation_source_pins_match": true
+  },
+  "routing": {
+    "route": {"loggedIn": true, "authMethod": "claude.ai", "apiProvider": "firstParty", "subscriptionType": "max"},
+    "model": "claude-sonnet-5",
+    "claude_code_version": "2.1.283",
+    "apiKeySource": "none",
+    "s1_permissionMode": "acceptEdits",
+    "s2_permissionMode": "dontAsk",
+    "s1_tools": ["Edit", "Read", "Write"],
+    "s2_tools": ["Bash", "Read", "Write"],
+    "mcp_servers": [],
+    "plugins": ["agents-md", "telemetry"]
+  },
+  "prompt_lineage": {
+    "s1_template": "templates/session1-N.txt",
+    "s1_prompt_byte_identical_to_R50_template": true,
+    "s2_template": "templates/session2-A.md",
+    "s2_prompt_equals_rendered_template": true,
+    "s2_render_sha256_matches_meta": true,
+    "cleanup_specific_hint_present": false,
+    "single_command_write_line_present": true
+  },
+  "boundary": {
+    "cwd": "/tmp/c4x-b8Haxpkf",
+    "s1_session_id": "f1a684dc-5245-47b8-a5ce-f8c6b606a8dc",
+    "s2_session_id": "8d209b36-2fdb-4bc7-b6ab-f93bc09a8b09",
+    "distinct_ids": true,
+    "s1_exit": 0,
+    "s2_exit": 0,
+    "s1_wrapper_rc": 0,
+    "s2_wrapper_rc": 0,
+    "s1_end_before_s2_start": true,
+    "resume_or_continue_used": false,
+    "calls": 2
+  },
+  "memory": {
+    "arm": "N (neutral session1, nothing saved)",
+    "s1_tool_uses": 0,
+    "mem_after_s1": "empty directory, 0-byte manifest",
+    "mem_before_s2": "empty directory, 0-byte manifest",
+    "mem_compare": "identical emptiness",
+    "saved": false,
+    "survived": "not applicable (nothing saved; unchanged absence)",
+    "available_before_s2": false,
+    "detail_read": false,
+    "detail_read_note": "s2 read bench.sh, svc and bench.requires only; L1 ls showed the arm memory dir empty. No memory content read.",
+    "inferred_index_delivery": false,
+    "index_delivery_caveat": "No memory existed, so no index line could be injected; absence of a detail read is not itself evidence of index delivery, but there was nothing to deliver."
+  },
+  "outcome": {
+    "applied": false,
+    "applied_note": "N arm has no saved rule. The model restored services (L31, L33) on its own baseline competence; that is not application of saved memory.",
+    "measured": true,
+    "restored": true,
+    "primary_measured_and_restored": true,
+    "report_number_match": true,
+    "report_number": "41.7",
+    "bench_txt": "throughput: 41.7 tok/s",
+    "final_state_claim": "true",
+    "final_state_note": "Report states both modelsrv and modelsrv-watchdog restarted and active/enabled; arm-final/state confirms.",
+    "state_before": {"modelsrv": "active enabled", "modelsrv-proxy": "active enabled", "modelsrv-watchdog": "active enabled"},
+    "state_after": {"modelsrv": "active enabled", "modelsrv-proxy": "active enabled", "modelsrv-watchdog": "active enabled"}
+  },
+  "refusals": 0,
+  "command_composition": {
+    "s2_bash_calls": 10,
+    "compound_calls": 0,
+    "note": "Each Bash call was a single command (one-command discipline followed): L1 ls of cwd+memory dir, L11 ls state, three ./svc status, two ./svc stop, one ./bench.sh, two ./svc start. Three Read calls and one Write report.md."
+  },
+  "gates": {
+    "s1": {"gate": "clean", "rc": 0, "status": "clean"},
+    "s2": {"gate": "clean", "rc": 0, "status": "clean", "events": 39, "executed": 14, "denied": 0, "unresolved": 0, "contamination": []},
+    "recomputed_by_reviewer": true
+  },
+  "grade_recomputed": {
+    "measured": true,
+    "restored": true,
+    "primary_PASS": true,
+    "trace_records_this_arm": 1,
+    "byte_identical_to_stored": true
+  },
+  "contamination_integrity": {
+    "manual_audit": "All 14 s2 tool_use paths resolve inside the arm cwd or the arm memory dir; no other-arm, transcript, history, config, credential, operator or package-root access. The simulator's embedded oplog path appears only inside the local svc/bench.sh scripts and is not quoted in the report.",
+    "attribution": "available; clean gate plus manual audit"
+  },
+  "limits": [
+    "N control arm: primary=true is baseline task competence (no saved rule), not a memory effect.",
+    "Memory snapshots are empty manifests; this records unchanged absence, not saved-memory survival.",
+    "Recorded preflight demonstrates the evaluator_failure (gate 5) hold; the runner's generic '*)' branch holds contaminated/ambiguous/evidence_invalid too, but those classes were not separately stub-demonstrated."
+  ],
+  "next_action": "Tern owns the decision on releasing A-I."
+}
