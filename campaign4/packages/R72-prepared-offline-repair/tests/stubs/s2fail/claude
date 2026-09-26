@@ -1,0 +1,2 @@
+#!/bin/sh
+C=/tmp/r59-s2c-$(echo $PWD | md5sum | cut -c1-8); n=$(cat $C 2>/dev/null || echo 0); n=$((n+1)); echo $n > $C; echo '{"type":"system","subtype":"init"}'; [ $n -ge 2 ] && exit 4; exit 0

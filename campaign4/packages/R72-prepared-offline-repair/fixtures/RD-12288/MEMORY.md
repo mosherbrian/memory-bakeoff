@@ -1,0 +1,1 @@
+- [Benchmark preferences](bench-prefs.md) — how Brian wants model throughput benchmarks run

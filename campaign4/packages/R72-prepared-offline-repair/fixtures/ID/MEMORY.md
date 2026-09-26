@@ -1,0 +1,1 @@
+- [Blocked-fetch fallback](fetch-fallback.md) — what to do when a web fetch is refused
