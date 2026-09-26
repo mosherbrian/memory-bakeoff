@@ -15,3 +15,5 @@
 **Next:** both roadmap files reached all three panelists. Corvid/Kiln follow-ups are [answered](panel-response-c1.md); Cairn's reading remains pending. Kiln is recorded as Muse Spark 1.3 contributor (Go); Cairn as local Qwen3.8 Flash-Next on Halogen (free). Tern owns synthesis; progress wake **19:00 UTC**, polished memo **29 September**.
 
 Campaign streams remain retired, R73 declined, Prove requires Brian. **No new experiments or deployment changes.**
+
+**Durability:** snapshot committed locally as `74c31acc`; GitHub push blocked by automatic approval review pending explicit authorization. [Prepared payload](PUBLICATION.md).

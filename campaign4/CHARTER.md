@@ -263,3 +263,9 @@ Brian: “the directive is to figure out the memory problem as best you can. It 
 ## Repeated execution failures — 2026-09-25
 
 Director release rule: [diagnose before continuing](REPEATED-FAILURE-DIAGNOSIS-RULE.md). The second execution failure in a declared package family requires a recorded cause and continuation rationale before the next dispatch; unresolved after 10 minutes escalates to Claude. This complements research persistence and does not authorize reruns or alter research endpoints.
+
+## Sponsor Go-pool budget amendment — 2026-09-25
+
+Brian chooses full research pace until the Go pool is exhausted, then pause kiln, corvid, cairn, kiln-eval and corvid-eval until verified reset. No paid overflow onto prepaid Zen credit, automatic provider fallback or substitute model. This supersedes the earlier unlimited Go-seat spend grant for the current pool. Tern and Claude may continue within existing authority; no independence waiver follows. Estimated September 30 exhaustion and October 14 21:45Z reset are estimates, not automatic stop/resume evidence.
+
+Authoritative sponsor record: [SPONSOR-GO-BUDGET-20260925.json](SPONSOR-GO-BUDGET-20260925.json). Drain, preservation and restart rules: [GO-BUDGET-DIRECTOR-DISPOSITION-20260925.json](GO-BUDGET-DIRECTOR-DISPOSITION-20260925.json). Keep bounded sequential work, check capacity before new package releases, reserve room for independent review, and preserve interrupted work without reruns or silent deadline extensions. Provider capacity and routing govern; local daily spend ceilings remain advisory. The two existing charter hard stops remain.

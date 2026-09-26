@@ -1,6 +1,6 @@
 # Mechanism-based roster refresh — v0.1
 
-Tern · 26 September 2026 · **Phase C, reading shortlist only.** Nothing here admits a new contestant or releases a benchmark. Confidence is in the relevance of the question, not product efficacy. Required context: [roadmap](inputs/PHASE2_ROADMAP.md), [reconciliation](inputs/PHASE2_ROADMAP_RECONCILIATION.md), and [Gen125 intake](../implementer/repo/research/PHASE2_CANDIDATE_INTAKE.md). Old “not located” findings remain dated uncertainty, not declarations of current nonexistence.
+Tern · 26 September 2026 · **Phase C, reading shortlist only.** Nothing here admits a new contestant or releases a benchmark. Confidence is in the relevance of the question, not product efficacy. Required context: [roadmap](inputs/PHASE2_ROADMAP.md), [reconciliation](inputs/PHASE2_ROADMAP_RECONCILIATION.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md). Old “not located” findings remain dated uncertainty, not declarations of current nonexistence.
 
 ## Small next reading batch
 
@@ -17,9 +17,9 @@ Every row competes against using existing native facilities. A richer design sho
 ## Explicit deferrals
 
 - **A-MEM and Hindsight:** keep in the field map. Defer additional product work until note evolution or reflection answers a distinct question above. The full extraction/LLM paths must not be judged by raw-adapter results. **Medium confidence in deferral.** [A-MEM](https://arxiv.org/abs/2502.12110), [Hindsight](https://arxiv.org/abs/2512.12818).
-- **Mem0 and Perseus:** reuse existing profile-specific results; reconsider only for an identified mechanism/profile change, not because they remain in an old queue. **Medium confidence in deferral.** [Bake-off](../implementer/repo/research/ROUND1_FINAL_READOUT.md), [roadmap](inputs/PHASE2_ROADMAP.md).
+- **Mem0 and Perseus:** reuse existing profile-specific results; reconsider only for an identified mechanism/profile change, not because they remain in an old queue. **Medium confidence in deferral.** [Bake-off](inputs/ROUND1_FINAL_READOUT.md), [roadmap](inputs/PHASE2_ROADMAP.md).
 - **Habitus:** historical conditional candidate; no new distinct question established in this cycle. **Low confidence**, hold for a concrete identity/use case. [Roadmap](inputs/PHASE2_ROADMAP.md).
-- **MemHarness, Attestor, EvoMem:** preserve as discovery leads. The old intake contains unresolved or potentially overloaded names; no capability or availability judgment is made here. **Unknown**, identity/source check before comparison. [Gen125 intake](../implementer/repo/research/PHASE2_CANDIDATE_INTAKE.md).
+- **MemHarness, Attestor, EvoMem:** preserve as discovery leads. The old intake contains unresolved or potentially overloaded names; no capability or availability judgment is made here. **Unknown**, identity/source check before comparison. [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md).
 
 ## Phase B benchmark refresh coverage
 
@@ -34,4 +34,4 @@ Every row competes against using existing native facilities. A richer design sho
 | STALE | Unresolved name in prior intake. Clarify identity rather than silently omit or invent a citation. |
 | Agent Memory Leaderboard | Candidate-discovery infrastructure, not a contestant. Read protocol/model assumptions; do not import a winner or merge its scores with ours. |
 
-These statuses are **high confidence as this survey's reading inventory**, not validation of the leads' claims. Existing [Gen125 refresh](../implementer/repo/research/PHASE2_FIELD_REFRESH_2026-09.md) prevents rediscovering them; it also contains provisional assertions that should not be copied as current fact. This roster is deliberately a reading agenda, not an empirical admission queue.
+These statuses are **high confidence as this survey's reading inventory**, not validation of the leads' claims. Existing [Gen125 refresh](inputs/PHASE2_FIELD_REFRESH_2026-09.md) prevents rediscovering them; it also contains provisional assertions that should not be copied as current fact. This roster is deliberately a reading agenda, not an empirical admission queue.
