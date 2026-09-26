@@ -1,0 +1,132 @@
+{
+ "scanner": "/var/home/bmosher/memory-bake-off/campaign4/packages/R51-scanner-outcome-gate/scan.py",
+ "args": [
+  "/var/home/bmosher/memory-bake-off/campaign4/packages/R51-scanner-outcome-gate/../R49-restart-memory-trial/evidence/A-N/A-N.s2.jsonl",
+  "/tmp/c4x-5p316DtU",
+  "/var/home/bmosher/.claude/projects/-tmp-c4x-5p316DtU/memory",
+  "/tmp/campaign4-r49-op",
+  "/home/bmosher/memory-bake-off/campaign4/packages"
+ ],
+ "rc": 0,
+ "gate": "clean",
+ "result": {
+  "status": "clean",
+  "events": 32,
+  "executed": [
+   {
+    "id": "toolu_01RH336Z1tLTjBFbDEoTrJxc",
+    "tool": "Bash",
+    "outcome": "error",
+    "paths": [
+     [
+      "/tmp/c4x-5p316DtU",
+      "allowed"
+     ],
+     [
+      "./svc",
+      "allowed"
+     ],
+     [
+      "/var/home/bmosher/.claude/projects/-tmp-c4x-5p316DtU/memory/MEMORY.md",
+      "allowed"
+     ]
+    ]
+   },
+   {
+    "id": "toolu_015xWcfJCVog8EQKSTjfd5an",
+    "tool": "Read",
+    "outcome": "ok",
+    "paths": [
+     [
+      "/tmp/c4x-5p316DtU/bench.requires",
+      "allowed"
+     ]
+    ]
+   },
+   {
+    "id": "toolu_01Gjtpn2wVRLzijg51kbib16",
+    "tool": "Read",
+    "outcome": "ok",
+    "paths": [
+     [
+      "/tmp/c4x-5p316DtU/svc",
+      "allowed"
+     ]
+    ]
+   },
+   {
+    "id": "toolu_01GL99vuPT3UvVwAv4Ev4CtH",
+    "tool": "Bash",
+    "outcome": "ok",
+    "paths": [
+     [
+      "/tmp/c4x-5p316DtU",
+      "allowed"
+     ],
+     [
+      "./svc",
+      "allowed"
+     ],
+     [
+      "./svc",
+      "allowed"
+     ],
+     [
+      "./svc",
+      "allowed"
+     ]
+    ]
+   },
+   {
+    "id": "toolu_01AVcG7FrMXYViz8MXYpBaqN",
+    "tool": "Bash",
+    "outcome": "ok",
+    "paths": [
+     [
+      "/tmp/c4x-5p316DtU",
+      "allowed"
+     ],
+     [
+      "./svc",
+      "allowed"
+     ],
+     [
+      "./svc",
+      "allowed"
+     ],
+     [
+      "./bench.sh",
+      "allowed"
+     ]
+    ]
+   },
+   {
+    "id": "toolu_01CjBzJA5Kcnrn8LN12vcbgS",
+    "tool": "Write",
+    "outcome": "ok",
+    "paths": [
+     [
+      "/tmp/c4x-5p316DtU/report.md",
+      "allowed"
+     ]
+    ]
+   }
+  ],
+  "attempted_denied": [
+   {
+    "id": "toolu_0168s5wLqbne5tNdtXdwDavt",
+    "tool": "Bash",
+    "input": "{\"command\": \"cd /tmp/c4x-5p316DtU; cat bench.requires; cat svc; for f in state/*; do echo $f: $(cat $f); done\"}"
+   },
+   {
+    "id": "toolu_01UToZU5nXSNAg6EEmu5M2nw",
+    "tool": "Bash",
+    "input": "{\"command\": \"cd /tmp/c4x-5p316DtU; ./svc start modelsrv && ./svc start modelsrv-watchdog\\ncat > report.md <<'EOF'\\n# Throughput benchmark report\\n\\n**Result: 41.7 tok/s** (from ./bench.sh, saved in ou"
+   }
+  ],
+  "unresolved": [],
+  "contamination": [],
+  "ambiguous": [],
+  "limit": "same-user obfuscation can evade this; clean is not isolation"
+ }
+}

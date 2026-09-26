@@ -1,0 +1,30 @@
+1c1,5
+< """R50 contamination scan v3 (oracle only; corrected copy of R48 scan.py).
+---
+> """R51 contamination scan v4 (R50 v3 + unresolved/contradictory tool outcomes).
+> A tool_use with neither tool_result nor permission denial is UNRESOLVED: its paths are unconfirmed, never access;
+> unresolved alone makes the arm ambiguous (never clean, never contaminated). A denial plus an is_error result is a normal denial. A denial plus a
+> NON-error result is CONTRADICTORY: treated as possibly executed (forbidden paths still count) and flagged ambiguous.
+> Precedence: confirmed forbidden access -> contaminated; else any ambiguity/unresolved/contradictory -> ambiguous; else clean.
+59c63
+<     executed, attempted_denied, found, amb, unclassified = [], [], [], [], []
+---
+>     executed, attempted_denied, found, amb, unclassified, unresolved = [], [], [], [], [], []
+62c66,67
+<         if uid in denied_ids:
+---
+>         has_res, has_den = uid in results, uid in denied_ids
+>         if has_den and (not has_res or results[uid]):   # a denial normally also returns an is_error tool_result
+64c69,72
+<         rec["outcome"] = "no_result" if uid not in results else ("error" if results[uid] else "ok")
+---
+>         if not has_res and not has_den:
+>             rec["input"] = json.dumps(inp)[:200]; unresolved.append(rec); continue
+>         rec["outcome"] = ("error" if results[uid] else "ok") + ("+denied(contradictory)" if has_den else "")
+>         if has_den: amb.append(("contradictory outcome", uid))
+88a97
+>     if unresolved: amb.append(("unresolved tool outcomes", [u["id"] for u in unresolved]))
+90c99
+<     return {"status": st, "events": events, "executed": executed, "attempted_denied": attempted_denied,
+---
+>     return {"status": st, "events": events, "executed": executed, "attempted_denied": attempted_denied, "unresolved": unresolved,

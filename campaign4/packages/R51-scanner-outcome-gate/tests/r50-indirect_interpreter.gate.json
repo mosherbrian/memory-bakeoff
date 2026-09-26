@@ -1,0 +1,34 @@
+{
+ "scanner": "/var/home/bmosher/memory-bake-off/campaign4/packages/R51-scanner-outcome-gate/scan.py",
+ "args": [
+  "/var/home/bmosher/memory-bake-off/campaign4/packages/R51-scanner-outcome-gate/../R50-restart-instrument-repair/scan-tests/indirect_interpreter.jsonl",
+  "/tmp/r50t/arm1",
+  "/var/home/bmosher/.claude/projects/-tmp-r50t-arm1/memory",
+  "/tmp/r50t/arm2",
+  "/tmp/r50t/ops"
+ ],
+ "rc": 2,
+ "gate": "ambiguous",
+ "result": {
+  "status": "ambiguous",
+  "events": 4,
+  "executed": [
+   {
+    "id": "k",
+    "tool": "Bash",
+    "outcome": "ok",
+    "paths": []
+   }
+  ],
+  "attempted_denied": [],
+  "unresolved": [],
+  "contamination": [],
+  "ambiguous": [
+   [
+    "indirect",
+    "python3 -c 'print(1)'"
+   ]
+  ],
+  "limit": "same-user obfuscation can evade this; clean is not isolation"
+ }
+}

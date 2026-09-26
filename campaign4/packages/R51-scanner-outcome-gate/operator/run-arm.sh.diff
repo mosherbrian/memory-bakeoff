@@ -1,0 +1,7 @@
+44,45c44,46
+< python $L48/scan.py $OP/$L.s2.jsonl $W $M $(ls -d /tmp/c4x-* | grep -v "^$W$" | tr '\n' ' ') $OP $PK > $T/scan-s2.json 2>&1; echo "scan_rc=$?" >> $T/scan-s2.json
+< python $L48/scan.py $OP/$L.s1.jsonl $W $M $(ls -d /tmp/c4x-* | grep -v "^$W$" | tr '\n' ' ') $OP $PK > $T/scan-s1.json 2>&1; echo "scan_rc=$?" >> $T/scan-s1.json
+---
+> python $PK/R51-scanner-outcome-gate/operator/scan_gate.py $T/scan-gate-s2.json -- $OP/$L.s2.jsonl $W $M $(ls -d /tmp/c4x-* | grep -v "^$W$" | tr '\n' ' ') $OP $PK; G2=$?
+> python $PK/R51-scanner-outcome-gate/operator/scan_gate.py $T/scan-gate-s1.json -- $OP/$L.s1.jsonl $W $M $(ls -d /tmp/c4x-* | grep -v "^$W$" | tr '\n' ' ') $OP $PK; G1=$?
+> [ $G1 = 5 ] || [ $G2 = 5 ] && { mv $T $R/evidence/$L; fail "scanner evaluator_failure (gate 5); arm held, not graded as clean or contaminated"; }

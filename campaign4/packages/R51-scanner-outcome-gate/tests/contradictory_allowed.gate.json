@@ -1,0 +1,39 @@
+{
+ "scanner": "/var/home/bmosher/memory-bake-off/campaign4/packages/R51-scanner-outcome-gate/scan.py",
+ "args": [
+  "/var/home/bmosher/memory-bake-off/campaign4/packages/R51-scanner-outcome-gate/tests/contradictory_allowed.jsonl",
+  "/tmp/r51t/arm1",
+  "/var/home/bmosher/.claude/projects/-tmp-r51t-arm1/memory",
+  "/tmp/r51t/arm2",
+  "/tmp/r51t/ops"
+ ],
+ "rc": 2,
+ "gate": "ambiguous",
+ "result": {
+  "status": "ambiguous",
+  "events": 5,
+  "executed": [
+   {
+    "id": "a",
+    "tool": "Read",
+    "outcome": "ok+denied(contradictory)",
+    "paths": [
+     [
+      "state/x",
+      "allowed"
+     ]
+    ]
+   }
+  ],
+  "attempted_denied": [],
+  "unresolved": [],
+  "contamination": [],
+  "ambiguous": [
+   [
+    "contradictory outcome",
+    "a"
+   ]
+  ],
+  "limit": "same-user obfuscation can evade this; clean is not isolation"
+ }
+}
