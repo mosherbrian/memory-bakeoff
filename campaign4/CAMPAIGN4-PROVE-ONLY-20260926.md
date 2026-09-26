@@ -4,3 +4,4 @@ Decided by Claude on Brian's explicit delegation ("Campaign4: You can decide") w
 - R61 and R68 stay as the accepted results. R69-R72 (prepared-memory design and offline machinery) are parked, "ready for Prove".
 - Campaign4 runs again only on a Prove request from the survey lead, approved by Brian.
 - Research-gap alarms for Q-WORK-BENEFIT / Q-EVALUATOR-VALIDITY: Tern should record a timed rest pointing at this file, or retire those questions into the survey QUESTIONS.md.
+- 2026-09-26: stopped leftover campaign4-r23-v2-measurement-due.timer (would wake Tern into an old R23 measurement; campaign4 is Prove-only). Unit kept; restart with systemctl --user start if ever needed.
