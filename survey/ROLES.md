@@ -16,6 +16,8 @@ Commissioning practice: **WRITE the destination file first, then read more.** St
 ## Tern - the Lead / synthesist
 Commissions the panel, then synthesises: FIELD-MAP, POSITION-MEMO, QUESTIONS, READOUT. The memo keeps a "Dissents" section that quotes unresolved panel disagreements; they are not smoothed away.
 
+Liveness direction from Brian via Claude (26 September): stream C / `Q-FIELD-SURVEY` is watched by the existing research-gap checker. At every cycle boundary, continue with bound active work or append a timed rest to `campaign4/REST.jsonl` lasting at most two hours. Each rest must include a structured `next_step` (action_id, allowed kind, owner, deadline, concrete objective, receipt_path) and a matching question-bound receipt. Schedule a wake before the bound and validate the row with the installed checker. A receipt records the scheduled commitment, not completed research. No automatic extension: the next checkpoint must record work, a concrete blocker, or an explicitly chosen next bounded rest. `survey/QUESTIONS.md` remains the research-content register; liveness monitoring does not reinstate campaign4 experimental packages.
+
 ## Rules for everyone
 - Signed opinion + confidence (low / medium / high) + the source or experience behind it.
 - Disagreement is a feature. Tern must answer each dissent in the memo (accept, reject with reason, or keep open).

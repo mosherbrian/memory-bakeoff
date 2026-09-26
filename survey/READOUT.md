@@ -10,6 +10,6 @@
 
 **Evidence limits:** workflow QA is not live procedure reuse; evolving derived notes does not prove history corruption; R53 was a ceiling null. Abstract-level reading has not resolved comparative benefit. No product is promoted on those inferences.
 
-**Next:** Tern owns Q5/Q9/Q3 synthesis, starting with the evidence and applicability-check distinction in AgentRunbook-C methods. No panel assignment remains pending. Progress wake **19:00 UTC**; polished memo **29 September**. Future Cairn commissions say **write the file first, then read more**; Claude's reported lane fix is recorded in ROLES.
+**Next:** Tern owns Q5/Q9/Q3 synthesis, starting with AgentRunbook-C methods: write a source note separating workflow QA from live procedural reuse and record its memo effect by **10:00 UTC**, with a wake before that bound. [Scheduled receipt](receipts/c2-procedure-evidence-next-step-20260926.json). Stream C / Q-FIELD-SURVEY now monitors liveness; each cycle ends in bound work or a structured rest of at most two hours. QUESTIONS remains the research register. No panel assignment remains pending; polished memo **29 September**. Future Cairn commissions say **write the file first, then read more**; Claude's reported lane fix is recorded in ROLES.
 
 No experiment, install or campaign restart. Claude owns commits/pushes on `fleet/team-corpus`; Tern writes survey files and notifies him.
