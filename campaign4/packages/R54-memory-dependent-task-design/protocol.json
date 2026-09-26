@@ -1,0 +1,50 @@
+{
+ "package": "R54",
+ "task": "benchmark context length set by Brian's saved preference",
+ "arms": [
+  "N",
+  "I",
+  "R"
+ ],
+ "blocks": {
+  "1": 24576,
+  "2": 12288,
+  "3": 24576
+ },
+ "order": [
+  "1-N",
+  "1-I",
+  "1-R",
+  "3-R",
+  "3-N",
+  "3-I",
+  "2-I",
+  "2-R",
+  "2-N"
+ ],
+ "positive_control": "D: R note pasted into session 2, block 1 target",
+ "templates": {
+  "s1": "templates/session1-{N,I,R-24576,R-12288}.txt",
+  "s2": "templates/session2.md (+ <CWD> only)"
+ },
+ "fixture": "fixture/setup.sh + fixture/bench.sh (synthetic, no services)",
+ "grader": "grade.py OPLOG TARGET REPORT",
+ "event_accounting": "events.py",
+ "primary": "final successful benchmark ctx == block target",
+ "secondary": [
+  "asked_without_running",
+  "ran_other_ctx",
+  "no_run",
+  "report_ctx_matches",
+  "saved",
+  "survived",
+  "detail_read"
+ ],
+ "budget": {
+  "max_calls": 19,
+  "corvid_min": 60,
+  "operator_min": 30,
+  "director_min": 10
+ },
+ "no_adaptive_changes": true
+}
