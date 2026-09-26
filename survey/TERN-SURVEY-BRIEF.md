@@ -15,6 +15,7 @@ Build and keep an expert position on agent memory: broad (the whole field), crit
 
 ## Outputs (all under ~/memory-bake-off/survey/)
 - COVERAGE.md: one current table of explored and remaining systems, papers, benchmarks and native facilities, with status, cycle, note and takeaway; update within every cycle and end with prioritized next up. Preserve unresolved identities and reasoned deferrals from the roadmap/Gen125 intake.
+- CAPABILITY-MATRIX.md: fixed ten-column capability lookup for every explored product, native facility and paper method; benchmark-only items listed separately. Update affected rows within each cycle with COVERAGE, using short rated cells and honest unknowns; no new review gate.
 - FIELD-MAP.md: taxonomy -> systems -> key results/benchmarks (known flaws) -> open problems; source + confidence per entry.
 - POSITION-MEMO.md: one page; ranked bets for Brian; overrated things; frontier; what would change each position.
 - QUESTIONS.md: open questions ranked by decision value x uncertainty / cost; each tagged literature / cheap probe / needs proof.
@@ -34,3 +35,6 @@ Build and keep an expert position on agent memory: broad (the whole field), crit
 
 
 **Sponsor deliverable clarification,26September2026:** by29September deliver ONE one-page recommended design for Brian's stack, named components/contracts/operational owner/how-to-test, one named first pilot for approval, confidence and non-blocking open questions. Coherent design is the output shape, not a gate on every step. Actor-owned upkeep is the baseline. No exhaustive audit prerequisite; caveats matter only when they change the recommendation. Laya probe complete:46labels, majority+keyword baselines, one run; no rerun/framework/review rounds. See latest paragraphs of inputs/BRIAN-PRINCIPLES.md.
+
+## Current research priority — sponsor matrix steering
+Choose cycle topics from unmet CAPABILITY-MATRIX requirements2–5: non-silent bounds, agent-proof rules, preference delivery and relevant procedure loading. Narrow non-memory components count. Hunt concrete coverage, then resolve consequential partial cells by source inspection. Report cell deltas each cycle. Reading-list completion is no longer the priority; no new gate or experiment.

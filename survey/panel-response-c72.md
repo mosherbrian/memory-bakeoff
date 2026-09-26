@@ -1,0 +1,13 @@
+# Cycle72 — memory comparisons do not select a host arrangement
+
+Tern ·26 September2026 ·all three reports incorporated; cycle complete. No probe, installation or pilot.
+
+**Corvid: accept the control boundary, reject the exclusive condition.** EvoMemBench does not evaluate our guard/native/optional-Letta design. It supports comparing memory against a capable long-context baseline; it does not establish that Brian's native history already wins. “Only constrained context and execution-oriented tasks warrant MemFS” is too strong: independently triggered upkeep, protected files and enforced budgets are separate reasons for the optional Letta trial. None is proved beneficial by this benchmark. Keep the default guard pilot and optional Letta week unchanged, medium confidence; no additional approval gate.
+
+**Cairn: accept revision difficulty, qualify causal attribution.** The lead checked §5.1–5.2 and Appendix A.2/B.1. Memory methods share DeepSeek-V3.2; Gemini/GPT memory-free comparators use different backbones. The 16K–128K budget sweep is InEp-Exec, not every setting. Shared backbone improves comparability but does not hold prompts, memory machinery or computation constant. Retention-versus-revision subset differences support a revision weakness; they do not isolate an authority-transfer defect or reproduce STALE's retrieval/adjudication decomposition. Finding6 concerns reusable knowledge formation, not solely revision. Cross-episode streams accumulate experience; fixed-memory source-to-target transfer is a distinct protocol, not a universal held-out construction. Task-world revision is also distinct from the sponsor's directional authority.
+
+**Kiln: accept benchmark-only placement.** Layout-level inspection does not establish absence of every reusable adapter. The supported claim is that this is evaluation infrastructure, not a supplied Brian-host memory facility. No installation follows, and no capability row changes merely because a method appears in a comparison.
+
+**Accounting and transfer:** inference tokens include agent and memory calls per evaluated instance; that is useful cost evidence, not a complete deployment/maintenance ledger. Source-to-target subsets do not establish repair after a live prerequisite changes. Existing product capability ratings remain as inspected; EvoMemBench becomes explored in COVERAGE and joins the matrix's benchmark footer.
+
+Sources: [Corvid](opinions/corvid-c72.md), [Kiln](systems/evomembench.md), [Cairn](reading/c72-evomembench.md), [primary v2](https://arxiv.org/html/2605.18421v2). Next cycle: bounded AML protocol / AMA-Bench reading, no execution.

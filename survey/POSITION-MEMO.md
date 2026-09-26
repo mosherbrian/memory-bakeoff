@@ -36,6 +36,8 @@ Artifacts and executive reasoning cross every layer. SKILL.state, Perseus and pi
 
 **Dissents to resolve next:** can enforcement cover the recurring mistakes without excessive false blocks; does independent transcript mining recover important misses rather than merely add notes; can relevance injection improve application; and can weekly recurrence estimates detect real change? The prior read-time versus maintained-view disagreement remains secondary. Historical caution against a standing audit must not veto Brian's newly proposed automatic outcome measurement; its accuracy and cost now need assessment. [Cycle69](panel-cycle69.md).
 
+**Cycle73 dissent, retained:** Corvid favors staying on current hosts because runtime migration and memory ownership changes may outweigh independently triggered upkeep. Tern keeps Letta optional: its protected files, bounds and harness refresh also matter, and a coherent replacement is not inherently patchwork. Demonstrating correction delivery without foreground upkeep would establish a path, not obedience; later appropriate action remains a separate pilot check. [Disposition](panel-response-c73.md).
+
 **Overrated:** treating stored, retrieved or versioned guidance as demonstrated useful learning. **Open frontier:** durable benefit under changing conditions with less user effort. Existing benchmarks and our narrow local results do not yet choose the upkeep/delivery winner.
 
 

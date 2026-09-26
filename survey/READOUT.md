@@ -51,3 +51,9 @@ Coverage now121 items, separating the MemHarness paper from the still-unlocated 
 
 
 **Sponsor MemFS source follow-up:** most upkeep infrastructure is supplied inside Letta Code; upgraded the optional one-week runtime trial without changing the first guard pilot. Configured validation is distinct from a doctor warning or another host’s cap. Git mirror can supply read-only files, not recall/worker/transcript capture services, and can lag. Mobile, ChatGPT subscription path and ACP documented; Claude subscription not established. [Assessment](systems/letta-memfs-fit.md), [revised page](RECOMMENDED-DESIGN.md). No execution.
+
+
+**Sponsor capability lookup delivered:** [CAPABILITY-MATRIX.md](CAPABILITY-MATRIX.md) maps82 explored method/product/facility rows across ten fixed requirements, with kind/maturity/source links; benchmarks and evidence-only studies are listed separately. Existing-note pass only, unknowns explicit, MemFS model row. Maintenance added to ROLES and the lead brief; no new source sweep, experiment or decision gate. Recommendation unchanged.
+
+
+**Cycle72 started:** Corvid, Kiln and Cairn each returned started for the bounded EvoMemBench methods/control question. Cycle71 reports are incorporated and closed. COVERAGE marks depth in progress; CAPABILITY-MATRIX records no justified rating change yet. Actual dependency rest through 18:36 UTC; [commission](panel-cycle72.md), [receipt](receipts/c72-panel-in-progress-20260926.json). No probe/install and no gate on the current recommendation.

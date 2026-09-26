@@ -1,11 +1,11 @@
 # Recommended design: guard actions; trial coherent memory separately
 
-**Tern ·26 September2026 · Confidence: medium.** Default: **one project-scoped cc-safety-net rulebook on Claude Code**, retaining native guidance/history. Brian is not ready to switch runtimes. **Letta Code is now the preferred optional memory-runtime trial:** most desired upkeep infrastructure is present, but correct application remains unproven. [Assessment and sources](systems/letta-memfs-fit.md).
+**Tern ·26 September2026 · Confidence: medium.** Default: **one project-scoped cc-safety-net rulebook on Claude Code**, retaining native guidance/history. Brian is not ready to switch runtimes. **Letta Code is now the preferred optional memory-runtime trial:** most desired upkeep infrastructure is present, but correct application remains unproven. [Assessment and sources](systems/letta-memfs-fit.md). [All-candidate capability matrix](CAPABILITY-MATRIX.md).
 
 | Component | Contract | Proposed owner | Test |
 |---|---|---|---|
 | cc-safety-net + project rulebook | Deny covered prohibited calls; preserve built-ins. Bad configuration can leave rules inactive. | Claude: deployment/config; upstream: product | Fixtures, actual-host allow/deny pair, isolated malformed-config case. |
-| Existing native guidance/index | Scoped judgment guidance, recoverable detail; repair oversized index during setup. Future growth remains unchecked. | Claude | Actual loaded prefix/limit and retrieval of omitted detail. |
+| Existing native guidance/index | Scoped judgment guidance, recoverable detail; repair oversized index during setup. Current docs report post-write overflow errors; repair remains actor-dependent, installed path unverified. | Claude | Actual loaded prefix/limit and retrieval of omitted detail. |
 | Existing logs/transcripts | Separate blocked attempts, completed violations and repeated corrections. | Claude | Reconcile known cases with outcomes; no new ledger/scorer. |
 
 **First pilot — “Python command preference, one project.”** On approved scope, deny direct `python3` with a reason to use `python`; never rewrite automatically. Test `python3 -m pytest`/`python3 script.py` denied, `python script.py`/quoted mention allowed, project scope and intended interpreter verified. Check wrapper/absolute-path boundaries. Observe one normal session for false blocks and recovery; roll back the pilot rule if unacceptable, preserving existing protection. Passing proves mechanism/usability, not fewer repeated preferences. [Guard source](systems/cc-safety-net.md).
@@ -18,4 +18,4 @@
 
 **Switch conditions:** mobile browser/cloud state and official ACP are documented, usability untested. Letta documents ChatGPT Plus/Pro subscription login; Anthropic API keys, no Claude subscription path found. Test same-agent mobile/ACP continuity and actual billing; subscription access is not a zero-cost claim. [Current-source details](systems/letta-memfs-fit.md).
 
-**Status:** proposals only, no installation/repair/trial. Brian approves pilot scope. Open questions—installed versions, bypasses, model/cost ceiling and cross-host refresh—remain listed, not new review gates. Default native path still lacks an automatic growth bound; neither option guarantees judgment compliance.
+**Status:** proposals only, no installation/repair/trial. Brian approves pilot scope. Open questions—installed versions, bypasses, model/cost ceiling and cross-host refresh—remain listed, not new review gates. Default native path lacks an enforced growth bound; documented write errors do not reject overflow; neither option guarantees judgment compliance.

@@ -1,0 +1,15 @@
+# Cycle72 — EvoMemBench: does its evidence discriminate the current design?
+
+Tern ·26 September2026 ·question_id **Q-FIELD-SURVEY**. Cycle71 is complete; this is the next queued Phase-B reading, not a new deployment gate. No experiment, installation, training, Laya rerun or protected holdout use.
+
+Required context: ROLES.md (signed opinions; write destination first), inputs/BRIAN-PRINCIPLES.md latest sponsor constraints, inputs/PHASE2_ROADMAP.md and PHASE2_ROADMAP_RECONCILIATION.md, RECOMMENDED-DESIGN.md, COVERAGE.md, CAPABILITY-MATRIX.md. Independent upkeep is the needed improvement, actor-owned notes the baseline. Optional Letta week remains optional; the guard pilot remains default. Update relevant capability claims from evidence, not apparent feature similarity. Keep paper, benchmark and product identities separate.
+
+**Primary queued identity:** EvoMemBench, arXiv2605.18421v2, Yuyao Wang et al., distinct from EvoArena/EvoMem2606.13681. Verify title/edition before methods; if source identity fails, report the bounded failure, no substitute sweep. Existing identity note: reading/tern-c66-identities.md.
+
+**Cairn — reading/c72-evomembench.md, <=400 words.** One primary paper, methods/controls only. What is retained across in/cross-episode tasks? What distinguishes knowledge from execution? Does a same-executor memory-on/off or representation control isolate procedural value? Who provides feedback/labels, what is held out, and is changed-environment reuse tested? Name cost accounting and the strongest action-changing limitation. Separate author evaluation from independent realistic benefit. One discriminating result maximum in the recommendation. No second queue.
+
+**Kiln — systems/evomembench.md plus opinions/kiln-c72.md, <=450 words total.** Inspect the paper-linked official repo/README or explicit protocol, bounded to the execution path. What artifacts, executor APIs, feedback and reset rules must a host supply? Is there a reusable method/facility or only an evaluation harness? Can any existing capability-matrix cell change, and which? Do not install or run. Give a signed practical verdict and cost/ownership boundary.
+
+**Corvid — opinions/corvid-c72.md, <=250 words.** Strongest rival to claiming procedural-memory benchmark gains justify our guard/native/optional-MemFS arrangement. Use existing evidence plus this same primary if needed, no sweep. State which matched comparison would actually change the choice, whether this source supplies it, and one operation that could disappear. Preserve real disagreement without creating a review gate or treating unmeasured as disproven.
+
+**Tern:** source-check the queued identity and integrate the reports. COVERAGE receives depth/status changes; CAPABILITY-MATRIX receives only actual method/facility findings. A pure benchmark stays in its footer, not a fabricated product row. Recommendation may remain unchanged with a reason. No new obligation imposed on Brian. Go pool: no paid overflow; report quota exhaustion rather than fail over.
