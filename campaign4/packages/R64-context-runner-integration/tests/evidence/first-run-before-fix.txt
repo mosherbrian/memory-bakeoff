@@ -1,0 +1,34 @@
+T1 24576-N rc=0 calls=2 cand=asked_no_run mem_after_s1=ABSENT hold=[HOLD awaiting adjudication;]
+T1 12288-R rc=0 calls=2 cand=candidate_primary mem_after_s1=58bcc782c125 hold=[HOLD awaiting adjudication;]
+T1 24576-I rc=0 calls=2 cand=asked_no_run mem_after_s1=ABSENT hold=[HOLD awaiting adjudication;]
+T1 12288-N rc=0 calls=2 cand=asked_no_run mem_after_s1=ABSENT hold=[HOLD awaiting adjudication;]
+T1 24576-R rc=0 calls=2 cand=candidate_primary mem_after_s1=e54c06f36239 hold=[HOLD awaiting adjudication;]
+T1 12288-I rc=0 calls=2 cand=asked_no_run mem_after_s1=ABSENT hold=[HOLD awaiting adjudication;]
+T1 D-12288 rc=0 calls=1 cand=candidate_primary mem_after_s1=- hold=[HOLD awaiting adjudication;]
+T1 D-24576 rc=0 calls=1 cand=candidate_primary mem_after_s1=- hold=[HOLD awaiting adjudication;]
+T2 approve R: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T3 no receipt: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T3 reject: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T3 source indeterminate: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T3 irrelevant ask: HOLD False None asked_no_run | question not established as a relevant missing-parameter clarification
+T3 relevant ask approved: FINAL False asked_no_run asked_no_run | reviewer approved
+T4 receipt wrong label: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T4 receipt wrong claim hash: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T4 receipt for other arm: HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T2 bundles unchanged after finalization: yes
+T5 tampered log: HOLD_EVIDENCE False None None | pins changed ['log'] extra []
+T5 tampered report.md: HOLD_EVIDENCE False None None | pins changed ['report.md'] extra []
+T5 tampered arm.s2.jsonl: HOLD_EVIDENCE False None None | pins changed ['arm.s2.jsonl'] extra []
+T5 tampered mem-after-s1.manifest: HOLD_EVIDENCE False None None | pins changed ['mem-after-s1.manifest'] extra []
+T5 tampered candidate-r63.json: HOLD_EVIDENCE False None None | pins changed ['candidate-r63.json'] extra []
+T5 tampered operator-meta.json: HOLD_EVIDENCE False None None | pins changed ['operator-meta.json'] extra []
+T6 s1fail calls=1 hold=[HOLD session1 child=3 wrapper=0; no session2;] -> HOLD_EVIDENCE False None None | operator-meta or candidate missing/malformed
+T6 s2fail calls=2 hold=[HOLD session2 child=4 wrapper=0;HOLD candidate invalid_evidence;HOLD awaiting adjudication;] -> HOLD_INTEGRITY False None invalid_evidence | prior execution/scanner/memory/events HOLD cannot be overridden
+T6 gate1 calls=2 hold=[HOLD gate s1=1;HOLD gate s2=1;HOLD awaiting adjudication;] -> HOLD_INTEGRITY False None asked_no_run | prior execution/scanner/memory/events HOLD cannot be overridden
+T6 evfail calls=2 hold=[HOLD awaiting adjudication;HOLD events s1: evaluator failure;HOLD events s2: evaluator failure;] -> HOLD_INTEGRITY False None asked_no_run | prior execution/scanner/memory/events HOLD cannot be overridden
+T6 mutate calls=2 hold=[HOLD memory changed between sessions;HOLD awaiting adjudication;] -> HOLD_EVIDENCE False None None | recomputed candidate differs from frozen candidate
+T7 existing project rc=1 calls=0
+T7 duplicate rc=4 new_opdirs=0
+T7 live seam rc=3 seam refused: test variables set in live mode
+T7 real-claude stub rc=3 seam refused: stub is real claude
+T7 refinalize no overwrite: rc=4
