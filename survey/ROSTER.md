@@ -122,3 +122,15 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 
 
 **Cycle37 ExpeL:** watch as a research mechanism for agent-owned candidate extraction and experience reuse. No demonstrated fleet adapter or total-cost advantage; votes are not outcome verification. [Card](systems/expel.md), [lead qualifications](panel-response-c37.md).
+
+
+**Cycle38 AutoManual:** watch the research loop; consider scope/examples where they remove ambiguity, without retrofitting every skill. Benchmark adapters and machine feedback are not fleet integration; rule logs are not automatically a recoverable archive. [Card](systems/automanual.md), [qualifications](panel-response-c38.md).
+
+
+**Cycle39 AutoGuide:** watch the research selection mechanism; no located adapter or deployment recommendation. Trigger prose is not itself the matching runtime. Context matching is model-mediated, not just exact-key lookup. [Card](systems/autoguide.md), [lead qualifications](panel-response-c39.md).
+
+
+**Cycle40 shortlist unchanged, advice clarified:** existing facilities plus agent upkeep remain the base; ReMe, Pi reflection, Hindsight and Letta are alternatives for specific missing operations. Research manual/selector loops are mechanism references, not installed recommendations. [Arrangement and ownership](ALTERNATIVES.md).
+
+
+**Cycle41 CLIN:** watch as a learning/control architecture; uncertainty wording is a design aid, not a recommended fixed schema or archive size. Simulator feedback/reset facilities and raw-source recovery require separate consideration. [Card](systems/clin.md), [qualified decision](panel-response-c41.md).

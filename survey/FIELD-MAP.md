@@ -229,3 +229,15 @@ The [panel synthesis](panel-response-c8.md) keeps three distinct questions: was 
 
 
 **Cycle37 — cross-task external learning:** ExpeL joins abstract insights with concrete demonstrations while leaving model weights unchanged. Candidate authorship, example selection and deployment remain distinct operations; this strengthens external learning without settling lifecycle under drift. [Methods](reading/tern-c37-insights-and-examples.md), [qualified synthesis](panel-response-c37.md). Medium applied confidence.
+
+
+**Cycle38 — agent-built manuals:** AutoManual adds typed rules, examples, update logs and error-conditioned maintenance to the procedural branch. Separate the reasoning about guidance from the mechanism enforcing an action. Preservation of complete evidence and source versions is not implied by the delivered manual. [Methods](reading/tern-c38-rule-management.md), [synthesis](panel-response-c38.md). Medium applied confidence.
+
+
+**Cycle39 — context-conditioned guidance:** AutoGuide explicitly separates state description, context matching, guideline selection and action. The combined method has positive task outcomes; direct selection correctness and full operating cost remain separate. No match omits guidance but still permits action. [Methods](reading/tern-c39-context-selection.md), [qualified synthesis](panel-response-c39.md). Medium applied confidence.
+
+
+**Cycle40 synthesis — functions before products:** acquisition, guidance content, selection and application can be implemented in several host arrangements. The recent procedural papers strengthen agent-owned learning without choosing a fleet product or universal record schema. Five roadmap responsibilities remain a decomposition, not five required services. [Practical decision](ALTERNATIVES.md). Medium confidence.
+
+
+**Cycle41 — adaptive textual abstractions:** CLIN combines per-trial updates, target-conditioned meta-memory and controller selection. Working/broken-stove variation is relevant to prerequisites; gallium illustrates selection failure despite an alternative in memory. Causal syntax is not identified causality or calibrated confidence. [Methods](reading/tern-c41-adaptation-units.md), [synthesis](panel-response-c41.md). Medium practical transfer confidence.

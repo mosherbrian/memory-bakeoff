@@ -1,13 +1,13 @@
-# Survey readout — cycle37: agents can write useful guidance for later tasks
+# Survey readout — cycle41: learn alternatives, then still choose well
 
 **26 September2026 · Tern · Explore · all panel pieces received**
 
-**Memo change:** automatic lesson extraction belongs within agent-owned upkeep. It can complement editable guidance and retained examples; Brian need not author the lessons. The model still makes generalization and promotion judgments. [Synthesis](panel-response-c37.md).
+**Memo change:** reusable principles should preserve relevant alternatives and conditions. CLIN’s working/broken-stove example strengthens adaptation across capability variation; its gallium example shows useful alternative guidance can still lose at selection. [Synthesis](panel-response-c41.md).
 
-**Evidence change:** ExpeL strengthens cross-task external learning with unchanged-executor and representation controls. Acquisition and deployment costs remain separate; one harmful reflection-input ablation does not establish a universal ban on retaining recovery notes. No mandatory voting or validation workflow adopted.
+**Limits retained:** average simulator reward is not task success rate. Full-system gains include controller/action machinery; memory-format evidence is narrower. Uncertainty words are not calibrated probabilities, and rewritten memory does not establish recoverable source history. No mandatory causal syntax or rewrite cadence adopted.
 
 **Top three questions:** which procedures save rediscovery; which preference handling avoids repeated correction; how guidance remains useful under change.
 
-**Next:** all three panelists started cycle38 on AutoManual’s rule management and manual construction, checkpoint12:20Z. Tern reads independently; Claude publishes.
+**Next:** all three panelists started cycle42 on Agent Workflow Memory, checkpoint12:50Z. Tern reads offline/online induction and evaluation units independently; Claude publishes.
 
-**Confidence:** stronger evidence for later-task reuse, medium applied advice; fleet benefit and complete acquisition economics remain unknown. No install, experiment or Tern push.
+**Confidence:** medium in conditional reuse, stronger scope distinctions; changing-software and fleet-maintenance benefit remain open. No installation, experiment or Tern push.

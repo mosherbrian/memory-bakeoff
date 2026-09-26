@@ -1,4 +1,4 @@
-# Question register — cycle 37
+# Question register — cycle 41
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–37 are synthesized. Q5 now gives stronger weight to automatic extraction plus concrete examples for later tasks, without equating no weight updates with low total cost. Cycle38 examines AutoManual rule management and manual construction. Tern owns synthesis; no rollout or campaign4 package.
+Cycles1–41 are synthesized. CLIN adds changed-capability examples and a documented selection failure despite useful alternatives in memory. Q3/Q5 now separate generalization, safe revision and correct use. Cycle42 examines Agent Workflow Memory and reusable action sequences. Tern owns synthesis; no rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -139,3 +139,24 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle38 interim:** Q3/Q5 distinguish inadequate guidance from inadequate application. AutoManual adds an explicit diagnostic path; scope prose is not enforcement. Acquisition has a reported setup-specific figure, not zero cost. Reader identity corrected in flight; methods synthesis pending at unchanged12:20Z. [Interim response](panel-response-c38.md).
+
+
+**Cycle38 complete:** rule management is a stronger procedural-learning candidate, without treating scope prose as executable applicability or validation logs as guaranteed history. The acquisition figure is setup-specific; replanning and task restart are separate units. Next selection rather than storage. [Response](panel-response-c38.md).
+
+
+**Cycle39 interim:** Q5 separates selected-output size from total selection cost, and no-guideline matching from action abstention. Q3 keeps inferred context distinct from verified applicability. No always-loaded-until-overflow rule or mandatory selection module adopted. [Response](panel-response-c39.md).
+
+
+**Cycle39 complete:** contextual selection is a useful candidate before or after prompt pressure, but bounded output does not establish bounded total work. Direct selector accuracy and no-match consequences remain open. Cycle40 consolidates advice rather than adding another source. [Response](panel-response-c39.md).
+
+
+**Cycle40 interim:** practical synthesis favors eliminating recurring mechanical work when worthwhile, without mandatory triage or erasing its rationale. Combining typed schemas, context selectors and vote-based retirement is an untested arrangement, not a default justified by separate papers. Agent-owned upkeep remains the baseline; no deployment. [Response](panel-response-c40.md).
+
+
+**Cycle40 complete:** practical arrangement rewritten around capture/revision/delivery/recovery ownership. No schema-selector-vote bundle, mandatory triage, blanket non-retention or assumed local-maintainer reliability. Next Q3/Q5 examines adaptation evidence in CLIN. [Decision](panel-response-c40.md), [arrangements](ALTERNATIVES.md).
+
+
+**Cycle41 interim:** CLIN includes changed-capability examples and explicit state-conditioned selection; neither should be dismissed as absent. A documented wrong-selection case despite stored alternative guidance keeps Q5 application distinct from acquisition and Q3 updating. Reader methods pending. [Response](panel-response-c41.md).
+
+
+**Cycle41 complete:** conditional principles can generalize across capability variations, without proving changed-rule resilience or guaranteed selection. Source recovery is separate from current-memory rewriting. Reward improvements are not success percentages; full-system gains are not memory-only effects. [Response](panel-response-c41.md).
