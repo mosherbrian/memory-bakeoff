@@ -4,7 +4,7 @@
  "launch": {
   "session1": "launch/session1.sh",
   "session2": "launch/session2.sh",
-  "env": "minimal: HOME, PATH, MODEL"
+  "env": "env -i HOME=/var/home/bmosher PATH=... MODEL (drops the operator's CLAUDE_* variables)"
  },
  "tasks": {
   "A": "tasks/A-common.md",
@@ -33,7 +33,9 @@
  "contamination_scan": [
   "Read of any *.jsonl",
   "paths of other arms",
-  "operator files"
+  "operator files",
+  "~/.claude/history.jsonl",
+  "~/.claude/projects/* outside the arm's own slug"
  ],
  "contaminated_arm_rule": "keep raw outcome, flag, attribution unavailable, stays in denominator",
  "endpoints": [
@@ -47,7 +49,8 @@
  "unverified": [
   "auto-memory on under --setting-sources project",
   "index injection visible in stream-json",
-  "Read not path-confined without --restricted"
+  "Read not path-confined without --restricted",
+  "--setting-sources project stops plugin hooks and all memory injectors other than the arm's own auto-memory"
  ],
  "readiness": {
   "design_acceptable": "pending review",
