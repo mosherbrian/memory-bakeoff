@@ -1,0 +1,57 @@
+{
+ "package": "R45-restart-isolation-repair",
+ "repairs": "R44 F1, F2, F3 (review 23c9b4f3...), index delivery, inherited context",
+ "launch": {
+  "session1": "launch/session1.sh",
+  "session2": "launch/session2.sh",
+  "env": "minimal: HOME, PATH, MODEL"
+ },
+ "tasks": {
+  "A": "tasks/A-common.md",
+  "B": "tasks/B-common.md",
+  "C": "tasks/C-common.md"
+ },
+ "session1_templates": "R44 templates/session1-{N,I,R}.txt (hashed in R44 claim)",
+ "order": [
+  "A-N",
+  "A-I",
+  "A-R",
+  "C-R",
+  "C-N",
+  "C-I",
+  "B-I",
+  "B-R",
+  "B-N"
+ ],
+ "restart_checks": [
+  "session1 exit recorded before session2",
+  "distinct session ids",
+  "no --resume/--continue",
+  "session2 first user turn == frozen task text",
+  "no shared message text between transcripts"
+ ],
+ "contamination_scan": [
+  "Read of any *.jsonl",
+  "paths of other arms",
+  "operator files"
+ ],
+ "contaminated_arm_rule": "keep raw outcome, flag, attribution unavailable, stays in denominator",
+ "endpoints": [
+  "saved",
+  "survived",
+  "index_delivered (may be unobservable)",
+  "detail_read",
+  "applied",
+  "primary = measured AND restored"
+ ],
+ "unverified": [
+  "auto-memory on under --setting-sources project",
+  "index injection visible in stream-json",
+  "Read not path-confined without --restricted"
+ ],
+ "readiness": {
+  "design_acceptable": "pending review",
+  "execution_ready": false,
+  "smallest_step": "one operator smoke of both launch scripts in a throwaway N arm; ~2 Max-plan model calls; operator 15 + corvid 5 + Tern 5 min"
+ }
+}
