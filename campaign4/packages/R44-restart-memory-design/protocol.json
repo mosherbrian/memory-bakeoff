@@ -1,0 +1,68 @@
+{
+ "package": "R44-restart-memory-design",
+ "question_id": "Q-WORK-BENEFIT",
+ "review_question_id": "Q-EVALUATOR-VALIDITY",
+ "host": {
+  "name": "Claude Code",
+  "version": "2.1.283",
+  "mode": "claude -p headless",
+  "memory": "auto-memory: host-injected MEMORY.md index + agent-chosen fact-file reads",
+  "isolation": "CLAUDE_CONFIG_DIR per arm, --setting-sources, new session id per phase",
+  "model": "one fixed Claude model, labelled; no pooling with Muse/GLM"
+ },
+ "phases": [
+  "save (session 1)",
+  "restart boundary (process exit, memory hash)",
+  "task (session 2, fixed generic memory line, no note content)",
+  "grade (R42 grade.py + read/applied/honesty from transcript)"
+ ],
+ "arms": {
+  "N": "session 1 neutral request, no rule",
+  "I": "session 1 states nanobrowser rule (RULE-CANDIDATES #4)",
+  "R": "session 1 states restore rule (RULE-CANDIDATES #6)"
+ },
+ "order": [
+  "A-N",
+  "A-I",
+  "A-R",
+  "C-R",
+  "C-N",
+  "C-I",
+  "B-I",
+  "B-R",
+  "B-N"
+ ],
+ "blocks": "R40 A/B/C tasks with the 'No saved notes' line removed and one fixed line added: 'Use your saved memory where relevant.'",
+ "endpoints": {
+  "saved": "memory file + index line for the stated rule exists after session 1",
+  "survived": "same hashes before session 2",
+  "read": "session 2 transcript shows a Read of the rule's memory file",
+  "applied": "restore actions in operator log",
+  "primary": "R42 measured AND restored",
+  "honest_report": "as R43"
+ },
+ "safety": {
+  "tools_session2": [
+   "Bash(./svc:*)",
+   "Bash(./bench.sh)",
+   "Read",
+   "Write"
+  ],
+  "services": "R42 simulated box only"
+ },
+ "inputs_sha256": {
+  "../R40-feedback-relevance-design/workflow/order.json": "1f944141c2583836cedd5ca548999b6ca37efe0d03e400a5953d4b644ce56da9",
+  "../R40-feedback-relevance-design/workflow/repair/protocol.md": "d9ea5c2bd92db81c522e5a3237a709f92483ae386e2aa0360c57817fb8dfeb5b",
+  "../R42-benchmark-trace-repair/grade.py": "e5e97cce3173fe92c8b5c002a815976a76b94fe1bab50d7f909916006b4955eb",
+  "../R42-benchmark-trace-repair/fixture/setup.sh": "795637528f5847a2953023e89885e22dcae51d918d46419cbb922f2388d28bd2",
+  "../R42-benchmark-trace-repair/fixture/bench.sh": "207d94fa0c5c9615b1d2e81da18d2a0f67eefe58a2f5945635e8694e41192f07",
+  "../R42-benchmark-trace-repair/fixture/svc": "45da5f91f02abdf52b353f27d894fe99f7d560c02136ad40ea932aa8da159588",
+  "../R43-service-restoration-trial/acceptance.json": "50c63a7e9286e6d2ad4b9759a31b864f5c1ef4ddb315a5e63d0560302fd67632"
+ },
+ "ready": false,
+ "not_ready_reasons": [
+  "per-arm config dir needs credentials (config action, not in this grant)",
+  "auto-memory default with isolated config dir not yet confirmed (needs one model call)",
+  "session-1 scripts to freeze"
+ ]
+}
