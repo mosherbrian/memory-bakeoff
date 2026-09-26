@@ -46,7 +46,8 @@ LATM/FRIDAY capacity asymmetry; **GPT-3.5 is still not a local model** (c58 corr
 
 **Costs — the rare one:** "around **$2,500** in total" for toolset construction (GPT-4 calls
 across the four steps); answer-time cost argued cheaper than GPT-4 use; no per-reuse ledger.
-First acquisition price-tag in this cycle's family since LATM's $14 — the range, not a recipe.
+First acquisition price-tag in this cycle's family (LATM's creation cost went uncharged in its
+table; the ~$14 estimate belongs to AutoManual, c38) — the range, not a recipe.
 
 **Verdict: CRAFT is the best-supervised tool-acquisition read in the panel — labels gate
 admission twice (solution correctness, then abstraction re-solve), evaluation is held-out, the

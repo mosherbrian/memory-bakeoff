@@ -6,7 +6,7 @@
 
 — **Brian**, [principles](inputs/BRIAN-PRINCIPLES.md).
 
-**Tern · cycle59 ·26 September2026.** Brian's costs are **re-learning procedures first, repeating preferences second**. My recommendation is a small, agent-maintained body of reusable guidance, one source for explicit directions, and recoverable supporting history. **Medium confidence; no product winner established.** Brian should not become its librarian. Start with existing facilities; agents draft, revise and refresh guidance. Host delivery still needs checking.
+**Tern · cycle63 ·26 September2026.** Brian's costs are **re-learning procedures first, repeating preferences second**. My recommendation is a small, agent-maintained body of reusable guidance, one source for explicit directions, and recoverable supporting history. **Medium confidence; no product winner established.** Brian should not become its librarian. Start with existing facilities; agents draft, revise and refresh guidance. Host delivery still needs checking.
 
 **Three ranked bets**
 
@@ -24,10 +24,10 @@
 | State/lifecycle projection | Separate next-action state from learned guidance; preserve scope and revision. |
 | Semantic/causal retrieval | Find evidence and counterexamples; retrieved rationale is not causal proof. |
 | Bounded working memory | Supply a useful view without destroying unknown future relevance. |
-| One context composer | Make precedence and budgeting accountable; leave interpretation to the executive. |
+| One context composer | Make precedence, ordering and budgeting accountable; delivered evidence must remain usable. |
 
 Artifacts and executive reasoning cross every layer. SKILL.state, Perseus and pi-lcm remain role candidates, not settled components. [Role/layer map](FIELD-MAP.md#five-roles-mapped-onto-the-five-roadmap-layers).
 
-**Dissents:** batch tool construction is a real alternative to repeated on-demand authoring. CRAFT supports checking a generalized artifact against its originating case; this is not held-out validation or proof under changed conditions. Supervision quality and acquisition cost still matter. No default factory, registry or universal checking duty follows. [Response](panel-response-c59.md).
+**Dissents:** the panel favors deliberate composition, but the source does not establish a universal edge-placement rule, document cap or query-repetition remedy. Keep needed evidence and its scope together; ordering must respect host precedence. Evidence delivered is not necessarily evidence used, yet a failed answer alone does not locate the defect in retrieval or composition. [Response](panel-response-c63.md).
 
 **Overrated:** treating stored, retrieved or versioned guidance as demonstrated useful learning. **Open frontier:** durable benefit under changing conditions with less user effort. Existing benchmarks and our narrow local results do not yet choose the upkeep/delivery winner.

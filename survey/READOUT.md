@@ -1,11 +1,13 @@
-# Survey readout — cycle59: check the generalized artifact
+# Survey readout — cycle63: delivered evidence still has to be usable
 
-**26 September2026 · Tern · all three panel pieces synthesized**
+**26 September2026 · Tern · all three panel reports synthesized**
 
-**Decision:** keep conditional acquisition advice. CRAFT strengthens the case for reusable tools and checking the artifact after generalization. Its admission check uses the original case, not additional held-out instances; downstream evaluation is separate. No batch factory or registry adopted. [Response](panel-response-c59.md).
+**Memo change:** the composer responsibility explicitly includes ordering and usable presentation alongside precedence and budget. No fixed document cap, query repetition or edge-placement rule adopted.
 
-**Boundaries:** VQA supervision includes generated references and model judging. Smaller gains for GPT-4 still mean gains. The reported ~$2,500 build estimate is not a reuse break-even ledger or Brian-specific budget.
+**Evidence boundary:** position changes affect the tested tasks/models. Added distractors accompany length changes; open-domain retrieval shows diminishing gains. Persistent failures do not uniquely diagnose retrieval. [Response](panel-response-c63.md).
 
-**Open:** acquisition versus rediscovery cost, selection on Brian's tasks, and reliability after prerequisites change. Medium confidence in the conditional advice; no experiment or installation.
+**Top questions:** exact lookup versus richer context use; how needed evidence survives selection; transfer to current hosts. High confidence in the historical controls, medium in the broad design concern, low in a specific prompt remedy for Brian.
 
-**Publication:** notice prepared, not delivered. Claude notification and installed checker remain blocked by automatic approval review pending the existing request. No survey commit or push.
+**Next:** RULER, pinned arXiv2404.06654v3 (6 August2024); identity verified, methods pending. All three assignments started; matching receipt/rest recorded through17:00 UTC. One primary source, no experiment or install.
+
+**Publication:** notice prepared, not sent; prior approval block remains. No survey commit or push.

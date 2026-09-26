@@ -1,4 +1,4 @@
-# Question register — cycle 59
+# Question register — cycle 63
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -228,3 +228,32 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle59 complete:** batch acquisition remains conditional. Generalization is followed by original-case regression checking; held-out evaluation, supervision provenance and lifecycle recovery are separate. No registry or universal validation duty adopted. [Response](panel-response-c59.md).
+
+**Cycle60 partial — Kiln:** recurrence informs acquisition but does not justify a universal second-use threshold. Artifact form and failure recovery remain task-dependent; no mandatory promotion ladder or automatic demotion after failure. Memo unchanged pending the remaining synthesis. [Response](panel-response-c60.md).
+
+
+**Cycle60 interim — Corvid:** on-demand helper creation is the practical starting point where it helps the current task; retain selectively. Repetition alone does not establish savings, stability alone does not establish batch break-even, and no cheap checker does not automatically favor reconstruction. Reader synthesis pending. [Response](panel-response-c60.md).
+
+
+**Cycle60 complete:** on-demand creation is the practical starting point, with bounded practice an explicit dissent for capability gaps. No evidence here puts Brian’s local executors on a proven high-gain side or resolves total-cost break-even. Next existing-evidence synthesis addresses when read-time currency resolution needs a maintained current view. [Response](panel-response-c60.md).
+
+**Cycle61 partial — Kiln:** a marked current view can save repeated interpretation, but file layout is not semantic enforcement and versioning alone is not guaranteed retention. Avoid a universal edit/archive ceremony; direction authority cannot be created by agent labeling. Memo unchanged pending the other positions. [Response](panel-response-c61.md).
+
+**Cycle61 partial — Corvid:** retain the read-time-resolution rival without equating a recoverable current view with lost history. Supersession interpretation and upkeep remain on either path; re-observation does not establish unobserved properties, and same-scope conflicts do not universally require sponsor escalation. Existing two-option advice stands pending the reader synthesis. [Response](panel-response-c61.md).
+
+
+**Cycle61 complete:** keep read-time resolution and recoverable current views conditional. Cross-benchmark evidence does not establish a universal projection requirement; observation can feed a maintained view. Failed corrections warrant diagnosis, not blanket projection removal. Next synthesize the five roadmap responsibilities versus added components. [Response](panel-response-c61.md).
+
+**Cycle62 partial — Corvid:** retained evidence, observation and executive use of existing facilities are a plausible minimal arrangement. Read-time interpretation can avoid a maintained projection, but observation does not replace task commitments and executive ownership does not remove retrieval/context facilities. Host count or history size alone does not select an integrated runtime. No new component nominated. [Response](panel-response-c62.md).
+
+**Cycle62 partial — Kiln:** scheduled capture is a candidate for an observed capture-trigger gap, not an established sole missing operation. Existing hooks/adapters and installed coverage must be distinguished. Lexical search, captured history and per-host assembly provide partial facilities without proving all five responsibilities fulfilled. No addition released. [Response](panel-response-c62.md).
+
+
+**Cycle62 complete:** no new component selected; facility coverage remains a hypothesis, not a five-layer validation. LongMemEval does not supply the claimed supersession-pipeline comparison; ReMe counters do not bound working memory. Next examine context placement and use with a focused primary read. [Response](panel-response-c62.md).
+
+**Cycle63 partial — Corvid:** supplied evidence and effective use remain distinct. Consider placement and budget without a universal edge-ordering rule, instruction-precedence change or separate composer service. Shortening must preserve needed evidence. [Response](panel-response-c63.md).
+
+**Cycle63 partial — Kiln:** no20-document cap or query-repetition convention adopted. Saturating gains do not identify a universal optimum, and suggested reranking/truncation should not be reported as tested remedies. [Response](panel-response-c63.md).
+
+
+**Cycle63 complete:** composition includes usable presentation and ordering, not only delivery. No universal cap/edge/repetition rule; failures persisting across placements do not localize the defect to retrieval. Next RULER v3 for task complexity versus claimed/effective context, with model-era limits. [Response](panel-response-c63.md).

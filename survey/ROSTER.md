@@ -204,3 +204,15 @@ TidyBot2305.05658v2 combines inferred textual rules with perceptual categories a
 
 
 **Cycle59 complete:** batch acquisition remains conditional. Generalization is followed by original-case regression checking; held-out evaluation, supervision provenance and lifecycle recovery are separate. No registry or universal validation duty adopted. [Response](panel-response-c59.md).
+
+
+**Cycle60:** acquisition choices remain conditional: actual-task authoring first, practice/batch when justified. Neither CRAFT executor comparisons nor FRIDAY endpoints establish a universal capacity-gap or interface-discovery rule. No facility selected. [Synthesis](panel-response-c60.md).
+
+
+**Cycle61:** currency decisions may occur at read time or in a recoverable current projection; current-state observation is compatible with both. No new service or required record format established. Panel default disagreement preserved. [Response](panel-response-c61.md).
+
+
+**Cycle62:** existing facilities remain the practical starting point without a proven complete architecture. Scheduled capture stays a candidate for a concrete trigger gap. Retirement counters are lifecycle signals, not a working-memory budget. No added component or universal footer adopted. [Response](panel-response-c62.md).
+
+
+**Cycle63:** Lost in the Middle v3 separates supplied evidence from effective use. Position controls support a composition concern in the tested models/tasks; no current-host incidence, fixed prompt recipe or service requirement follows. [Synthesis](panel-response-c63.md).
