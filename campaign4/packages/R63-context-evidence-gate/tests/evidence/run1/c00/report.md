@@ -1,0 +1,6 @@
+I guessed the context; I have no saved preference.
+STATUS: RAN
+CONTEXT_USED: 24576
+THROUGHPUT: 25.0
+CONTEXT_SOURCE: MEMORY
+QUESTION: NONE

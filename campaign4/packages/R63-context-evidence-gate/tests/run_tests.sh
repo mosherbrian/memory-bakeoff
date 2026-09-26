@@ -17,7 +17,7 @@ for i, (n, log, rep, rs, exp) in enumerate(CASES):
     c = g.candidate(lp, "24576", rp)
     if rs:
         rec = {"schema": "r63-adjudication-v1", "label": n, "reviewer": "corvid", "log_sha256": c["log_sha256"] or "", "report_sha256": c["report_sha256"] or "",
-               "candidate_outcome": c["outcome"], "decision": "reject" if rs == "reject" else "approve", "guessing": rs == "approve_guess", "contradiction": False, "reason": "test"}
+               "candidate_outcome": c["outcome"], "decision": "reject" if rs in ("reject", "reject_irrelevant") else "approve", "guessing": rs == "approve_guess", "contradiction": False, "reason": "test", "source_evidence": {"src_contradicted":"contradicted","src_indeterminate":"indeterminate"}.get(rs,"inferred"), "ask_relevant": "no" if rs in ("ask_irrelevant","reject_irrelevant") else ("yes" if c["outcome"] == "asked_no_run" else "not_applicable")}
         if rs == "stale": rec["report_sha256"] = "0" * 64
         if rs == "wrong_outcome": rec["candidate_outcome"] = "asked_no_run"
         if rs == "self": rec["reviewer"] = "claude"

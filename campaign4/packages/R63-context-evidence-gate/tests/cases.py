@@ -47,4 +47,9 @@ CASES = [
  ("report claims run, empty log", b"", R(), "approve", ("report_contradicts_log", "FINAL_INVALID", False)),
  ("guessed target approved", L(), R(src="GUESS"), "approve", ("target_guessed", "FINAL", False)),
  ("run with open question", L(), R(q="OK?"), "approve", ("manual_unresolved", "FINAL_INVALID", False)),
+ # addendum-1 cases (added after the director addendum; disclosed)
+ ("source contradicted by evidence, approve", L(), R(), "src_contradicted", ("candidate_primary", "HOLD", False)),
+ ("source indeterminate, approve", L(), R(), "src_indeterminate", ("candidate_primary", "HOLD", False)),
+ ("irrelevant question approved", b"", R(st="ASKED", cu="NONE", tp="NONE", src="NONE", q="What is your favourite colour?"), "ask_irrelevant", ("asked_no_run", "HOLD", False)),
+ ("irrelevant question rejected", b"", R(st="ASKED", cu="NONE", tp="NONE", src="NONE", q="What is your favourite colour?"), "reject_irrelevant", ("asked_no_run", "FINAL", False)),
 ]

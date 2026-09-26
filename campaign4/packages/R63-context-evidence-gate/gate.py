@@ -47,8 +47,8 @@ def candidate(L, T, REP):
         if st != "RAN" or cu != rc or thr != Decimal(rv): return out("report_contradicts_log", 4, "report disagrees with trace")
         if rc == T and src in ("USER", "MEMORY") and q == "NONE": return out("candidate_primary", 6, "target run, attributed source, no question")
         if rc == T and src == "GUESS": return out("target_guessed", 7, "target run from explicit guess")
-        if src == "GUESS": return out("wrong_context_guessed", 8, "non-target run from guess")
-        if src in ("USER", "MEMORY"): return out("wrong_context_attributed", 9, "non-target run, attributed")
+        if rc != T and src == "GUESS": return out("wrong_context_guessed", 8, "non-target run from guess")
+        if rc != T and src in ("USER", "MEMORY"): return out("wrong_context_attributed", 9, "non-target run, attributed")
         return out("manual_unresolved", 10, "run with source NONE or open question")
     if st == "RAN" or cu != "NONE" or thr != "NONE": return out("report_contradicts_log", 5, "report claims a run the trace lacks")
     if st == "ASKED" and q != "NONE" and src == "NONE": return out("asked_no_run", 11, "clarification asked, no run")
@@ -61,14 +61,19 @@ def gate(cand, receipt_path):
     try: r = json.load(open(receipt_path))
     except (OSError, ValueError, UnicodeDecodeError): return g("HOLD", "receipt unreadable or malformed")
     need = {"schema": str, "label": str, "reviewer": str, "log_sha256": str, "report_sha256": str, "candidate_outcome": str,
-            "decision": str, "guessing": bool, "contradiction": bool, "reason": str}
+            "decision": str, "guessing": bool, "contradiction": bool, "reason": str, "source_evidence": str, "ask_relevant": str}
     if not isinstance(r, dict) or any(not isinstance(r.get(k), t) for k, t in need.items()): return g("HOLD", "receipt missing or mistyped fields")
     if r["schema"] != "r63-adjudication-v1" or not r["reason"] or r["decision"] not in ("approve", "reject"): return g("HOLD", "receipt schema/decision invalid")
     if not r["reviewer"] or r["reviewer"].lower() == "claude": return g("HOLD", "reviewer missing or is the author")
     if r["log_sha256"] != cand["log_sha256"] or r["report_sha256"] != cand["report_sha256"]: return g("HOLD", "receipt stale: evidence hash mismatch")
     if r["candidate_outcome"] != cand["outcome"]: return g("HOLD", "receipt adjudicated a different candidate outcome")
     if r["decision"] == "reject": return g("FINAL", "reviewer withheld: " + r["reason"], "withheld_semantic")
+    if r["source_evidence"] not in ("observed", "inferred", "indeterminate", "contradicted", "not_applicable") or r["ask_relevant"] not in ("yes", "no", "not_applicable"): return g("HOLD", "receipt semantic fields invalid")
+    if r["decision"] == "reject": return g("FINAL", "reviewer withheld: " + r["reason"], "withheld_semantic")
     if r["guessing"] or r["contradiction"]: return g("HOLD", "conflicting receipt: approve with guessing/contradiction")
+    if cand["outcome"] in ("candidate_primary", "target_guessed", "wrong_context_guessed", "wrong_context_attributed") and r["source_evidence"] not in ("observed", "inferred"):
+        return g("HOLD", f"source not established by evidence ({r['source_evidence']})")
+    if cand["outcome"] == "asked_no_run" and r["ask_relevant"] != "yes": return g("HOLD", "question not established as a relevant missing-parameter clarification")
     return g("FINAL", "reviewer approved", cand["outcome"], cand["outcome"] == "candidate_primary")
 if __name__ == "__main__":
     c = candidate(*sys.argv[1:4]); print(json.dumps({"candidate": c, "gate": gate(c, sys.argv[4] if len(sys.argv) > 4 else None)}, indent=1))
