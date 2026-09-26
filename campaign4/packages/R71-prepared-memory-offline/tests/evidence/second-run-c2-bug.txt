@@ -1,0 +1,28 @@
+X1 24576-RD rdread calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X1 12288-ID ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X1 12288-N ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X1 12288-RD rdread calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X1 24576-ID ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X1 24576-N ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X2 12288-RD rdnoread calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=NONE_OBSERVED | reviewer approved
+X3 12288-ID guessok calls=1 cand=target_guessed disp=[HOLD awaiting adjudication;] -> rc=0 HOLD False None A4=NONE_OBSERVED | conflicting receipt: approve with guessing/contradiction
+X4 24576-ID guesswrong calls=1 cand=wrong_context_guessed disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False wrong_context_guessed A4=NONE_OBSERVED | reviewer approved
+X5 24576-RD rduser calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 HOLD False None A4=None | source USER unsupported in prepared arm
+X6 12288-ID idmemory calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 HOLD False None A4=None | attribution unresolved: target claimed without relevant memory
+X8a 24576-N ncompound calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X8b 24576-N with C2 receipt -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X10 event receipt stale -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X10 event receipt wrongarm -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X10 event receipt missing -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X9a 12288-RD rdcompound calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X9b 12288-RD compound with C2 receipt -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X10r 12288-N redirect calls=1 cand=asked_no_run disp=[HOLD gate s2=2;HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+X10 redirect with receipt -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+X7 leaked ID index calls=0 disp=[HOLD fidelity abort: target on participant-visible surface (content MEMORY.md); zero calls;]
+X11 leak-run bundle finalize -> rc=0 HOLD_EVIDENCE False None A4=None | dependency changed /var/home/bmosher/memory-bake-off/campaign4/package
+X12 no receipt -> rc=0 HOLD False None A4=OBSERVED | no adjudication receipt
+X12 then valid -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X12 refinalize -> rc=4 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X12 duplicate rc=4
+X12 live refused rc=3 live refused: no R71 live release
+X12 live seam refused rc=3 seam refused: test variables set in live mode

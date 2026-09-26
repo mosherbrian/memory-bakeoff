@@ -5,7 +5,7 @@
 # STUB_BIN is set, DRY=1, and STUB_BIN/claude is not the real claude; otherwise any seam variable aborts before any call.
 set -u; LABEL=$1
 PK=/var/home/bmosher/memory-bake-off/campaign4/packages
-R56=$PK/R56-context-runner-readiness; R64=$PK/R67-identity-boundary-validation; G63=$PK/R63-context-evidence-gate/gate.py
+R56=$PK/R56-context-runner-readiness; R64=$PK/R71-prepared-memory-offline; G63=$PK/R63-context-evidence-gate/gate.py
 EV54=$PK/R54-memory-dependent-task-design/events.py
 SEAMS="${TEST_PRECREATE:-}${TEST_MUTATE_BETWEEN:-}${TEST_PROJECTS:-}${TEST_TIMEOUT:-}${GATE:-}${EVENTS:-}${OPROOT:-}${EVIDENCE_DIR:-}"
 if [ -n "${STUB_BIN:-}" ]; then
@@ -16,13 +16,14 @@ else
 fi
 PROJECTS=${TEST_PROJECTS:-/var/home/bmosher/.claude/projects}; TO=${TEST_TIMEOUT:-timeout}
 GATE=${GATE:-$R56/scanner/operator/scan_gate.py}; EVENTS=${EVENTS:-$EV54}
-OPROOT=${OPROOT:-/tmp/campaign4-r67-op}; EVD=${EVIDENCE_DIR:-$R64/evidence}
-case $LABEL in D-*) KIND=D; T=${LABEL#D-};; *-N|*-I|*-R) KIND=${LABEL#*-}; T=${LABEL%-*};; *) echo "bad label"; exit 2;; esac
+OPROOT=${OPROOT:-/tmp/campaign4-r71-op}; EVD=${EVIDENCE_DIR:-$R64/evidence}
+case $LABEL in *-RD|*-ID|*-N) KIND=${LABEL#*-}; T=${LABEL%-*};; *) echo "bad label"; exit 2;; esac   # R71: prepared-memory kinds only, one session
+[ -z "${STUB_BIN:-}" ] && [ "${R71_LIVE_RELEASE:-}" = "" ] && { echo "live refused: no R71 live release"; exit 3; }
 case $T in 24576|12288) ;; *) echo "bad target"; exit 2;; esac
 # duplicate label: refuse before any side effect or call
 [ -e $EVD/$LABEL ] && { echo "duplicate label $LABEL: bundle exists; zero calls"; exit 4; }
 mkdir -p $OPROOT; HX() { python -c "import secrets;print(secrets.token_hex(6))"; }
-OP=$OPROOT/o-$(HX); mkdir $OP; W=/tmp/c4x-$(HX); [ -e $W ] && exit 1
+OP=$OPROOT/o-$(HX); mkdir $OP; REGEN=0; W=/tmp/c4x-$(HX); while echo "$W" | grep -q "$T"; do REGEN=$((REGEN+1)); W=/tmp/c4x-$(HX); done; echo $REGEN > $OP/cwd-regenerations; [ -e $W ] && exit 1
 echo 0 > $OP/calls
 sh $R64/fixture/setup.sh $W $OP/log
 PROJ=$PROJECTS/$(echo $W | sed 's#[/.]#-#g'); M=$PROJ/memory
@@ -46,7 +47,26 @@ if [ -e "$PROJ" ] || [ -e "$M" ]; then hold "project or memory path exists befor
 LAUNCH=$R64/launch; if [ -n "${STUB_BIN:-}" ]; then mkdir -p $OP/stublaunch; sed "s#PATH=/var/home/bmosher/.local/bin#PATH=$STUB_BIN#" $R64/launch/common.sh > $OP/stublaunch/common.sh; cp $R64/launch/session.sh $OP/stublaunch/; LAUNCH=$OP/stublaunch; fi
 exitof() { v=$(sed -n 's/^exit=//p' $OP/arm.s$1.meta 2>/dev/null); [ -n "$v" ] && echo $v || echo MISSING; }
 snap before-s1
-if [ $KIND != D ]; then
+# R71: seed the frozen prepared fixture (not natural saving), then zero-call fidelity preflight
+FX=$R64/fixtures; case $KIND in RD) SRC=$FX/RD-$T;; ID) SRC=$FX/ID;; N) SRC=;; esac
+[ -n "$SRC" ] && { mkdir -p $M; cp -a $SRC/. $M/; }
+S2=$R64/templates/session2.md; sed "s#<CWD>#$W#g" $S2 > $OP/rendered-prompt.txt
+LEAK=$(python - "$T" "$W" "$PROJ" "$M" "$OP/rendered-prompt.txt" "$W/bench.sh" "$KIND" <<'PYL'
+import os,sys
+T,W,PROJ,M,PR,B,K=sys.argv[1:8]; bad=[]
+for name,val in (("cwd",W),("project",PROJ)):
+    if T in val: bad.append(name)
+for f in (PR,B):
+    if T in open(f).read(): bad.append(os.path.basename(f))
+if os.path.isdir(M):
+    for fn in sorted(os.listdir(M)):
+        if T in fn: bad.append("filename "+fn)
+        if not (K=="RD" and fn=="bench-prefs.md") and T in open(os.path.join(M,fn)).read(): bad.append("content "+fn)
+print(";".join(bad))
+PYL
+)
+[ -n "$LEAK" ] && { hold "fidelity abort: target on participant-visible surface ($LEAK); zero calls"; snap before-s2; finish; exit 1; }
+if false; then
   S1=$R64/templates/session1-$KIND.txt; [ $KIND = R ] && S1=$R64/templates/session1-R-$T.txt
   $TO -k 15 180 sh $LAUNCH/session.sh 1 arm $OP $S1; W1=$?; echo "wrapper_rc=$W1" >> $OP/arm.s1.meta; echo 1 > $OP/calls
   C1=$(exitof 1); snap after-s1
@@ -54,7 +74,7 @@ if [ $KIND != D ]; then
   [ -n "${STUB_BIN:-}" ] && [ -n "${TEST_MUTATE_BETWEEN:-}" ] && { mkdir -p $M; echo x > $M/injected.md; }   # offline-only
   snap before-s2; cmp -s $OP/mem-after-s1.manifest $OP/mem-before-s2.manifest && echo same > $OP/mem-compare || { echo DIFFERENT > $OP/mem-compare; hold "memory changed between sessions"; }
   S2=$R64/templates/session2.md
-else snap before-s2; S2=$R64/templates/D-$T.md; fi
+fi; snap before-s2
 $TO -k 15 600 sh $LAUNCH/session.sh 2 arm $OP $S2; W2=$?; echo "wrapper_rc=$W2" >> $OP/arm.s2.meta
 echo $(( $(cat $OP/calls) + 1 )) > $OP/calls; C2=$(exitof 2); snap after-s2
 if [ "$W2" != 0 ] || [ "$C2" != 0 ]; then hold "session2 child=$C2 wrapper=$W2"; fi
