@@ -1,0 +1,2 @@
+#!/bin/sh
+echo '{"type":"system","subtype":"init"}'; M=/tmp/r59-fp/$(echo $PWD | sed 's#[/.]#-#g')/memory; C=$M/../.s1done; if [ ! -e $C ]; then mkdir -p $M; printf 'fact\\n' > $M/fact.md; printf -- '- [f](fact.md)\\n' > $M/MEMORY.md; touch $C; fi; exit 0

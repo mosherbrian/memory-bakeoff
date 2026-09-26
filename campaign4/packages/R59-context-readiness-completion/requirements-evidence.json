@@ -3,132 +3,154 @@
   "id": "1a",
   "requirement": "parent project dir exists, memory absent -> zero calls, HOLD, evidence kept",
   "planned_test": "t_parent_only",
-  "actual": null
+  "actual": "parent_only: rc=1 calls=0, HOLD 'project or memory path exists before any call'; bundle frozen (paths.json, disposition, arm-final)",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "1b",
   "requirement": "memory path exists -> zero calls, HOLD",
   "planned_test": "t_memory_exists",
-  "actual": null
+  "actual": "memory_exists: rc=1 calls=0, same HOLD; bundle frozen",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "1c",
   "requirement": "canonical cwd/project/memory realpaths recorded",
   "planned_test": "t_clean_R (bundle paths.json)",
-  "actual": null
+  "actual": "clean_R paths.json records cwd/project/memory and their realpaths (no symlinks exercised in /tmp)",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "2a",
   "requirement": "R54 events.py run on every available transcript incl. failure paths; outputs persisted",
   "planned_test": "t_clean_R, t_s2_fail",
-  "actual": null
+  "actual": "events-s1/s2.json + .err present in every bundle with a transcript (clean_R, s2_fail, s1_fail s1 only, D one); stub transcripts have 0 tool uses, so only trivial transcripts exercised",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "2b",
   "requirement": "events unresolved/unsupported/denied surfaced as HOLD",
   "planned_test": "t_events_flag",
-  "actual": null
+  "actual": "events_flag: HOLD 'events s1/s2: unresolved/unsupported/denied memory events (manual)'",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "2c",
   "requirement": "events.py invocation/output failure -> evaluator HOLD",
   "planned_test": "t_events_fail",
-  "actual": null
+  "actual": "events_fail: HOLD 'events s1/s2: evaluator failure'",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "2d",
   "requirement": "R51 gate and R57 grade outputs preserved",
   "planned_test": "t_clean_R",
-  "actual": null
+  "actual": "clean_R bundle has scan-gate-s1/s2.json and grade-r57.json",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "3a",
   "requirement": "stub saves fake memory in s1; after-s1 == before-s2 manifests and contents",
   "planned_test": "t_clean_R",
-  "actual": null
+  "actual": "clean_R: stub wrote fact.md+MEMORY.md in s1; mem-after-s1.manifest has 2 hashes; diff -r mem-after-s1 mem-before-s2 identical; mem-compare=same",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "3b",
   "requirement": "no-save absence (ABSENT) distinct from empty dir",
   "planned_test": "t_clean_N vs t_empty_dir",
-  "actual": null
+  "actual": "clean_N manifest=ABSENT; empty_dir manifest=EMPTY_DIR",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "3c",
   "requirement": "D: memory absent before its only call",
   "planned_test": "t_clean_D",
-  "actual": null
+  "actual": "clean_D: calls=1, mem-before-s2.manifest=ABSENT before its only call",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "3d",
   "requirement": "changed boundary manifest detected (DIFFERENT) without repair",
   "planned_test": "t_boundary_change",
-  "actual": null
+  "actual": "boundary_change: mem-compare=DIFFERENT, HOLD 'memory changed between sessions', run continued without repair",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4a",
   "requirement": "s1 nonzero -> no s2",
   "planned_test": "t_s1_fail",
-  "actual": null
+  "actual": "s1_fail: calls=1, HOLD 'session1 child=3 wrapper=0; no session2', no s2 files",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4b",
   "requirement": "s2 nonzero with wrapper 0 -> HOLD",
   "planned_test": "t_s2_fail",
-  "actual": null
+  "actual": "s2_fail: HOLD 'session2 child=4 wrapper=0'",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4c",
   "requirement": "missing child exit metadata -> HOLD",
   "planned_test": "t_missing_meta",
-  "actual": null
+  "actual": "missing_meta: HOLD 'session1 child=MISSING wrapper=0'",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4d",
   "requirement": "timeout (124) and kill (137) wrapper statuses -> HOLD",
   "planned_test": "t_timeout, t_kill",
-  "actual": null
+  "actual": "timeout: HOLD child=MISSING wrapper=124; kill: wrapper=137; both no session2",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4e",
   "requirement": "D failure one call -> HOLD",
   "planned_test": "t_D_fail",
-  "actual": null
+  "actual": "D_fail: calls=1, HOLD 'session2 child=6 wrapper=0'",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4f",
   "requirement": "gate 1/2/3/5 -> HOLD; clean gate no hold",
   "planned_test": "t_gate1,t_gate2,t_gate3,t_gate5,t_clean_R",
-  "actual": null
+  "actual": "gate1/2/3/5: HOLD 'gate s1=N' and 'gate s2=N'; clean_R has no gate HOLD",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4g",
   "requirement": "manual grader flag visible",
   "planned_test": "t_clean_R (stub report missing -> manual)",
-  "actual": null
+  "actual": "every graded run: grade-r57 manual=True -> HOLD 'R57 manual adjudication' (stub writes no report)",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "4h",
   "requirement": "test seams offline-only; live path cannot select them",
   "planned_test": "t_seam_guard",
-  "actual": null
+  "actual": "seam_live_refused rc=3 (seam var without STUB_BIN); seam_realclaude_refused rc=3 (STUB_BIN=real claude dir)",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "5a",
   "requirement": "every stop path freezes simulator, prompts/transcripts/meta, snapshots; missing labelled",
   "planned_test": "t_s1_fail, t_parent_only",
-  "actual": null
+  "actual": "s1_fail/parent_only/missing_meta bundles contain arm-final simulator copy, available prompts/transcripts/meta/snapshots; arm-claim 'missing' lists absent standard files",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "5b",
   "requirement": "atomic immutable bundle, arm-claim hashes verified, no temp leftovers",
   "planned_test": "verify step",
-  "actual": null
+  "actual": "bundle_integrity: 19 bundles, 0 hash mismatches, 0 .tmp leftovers",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  },
  {
   "id": "5c",
   "requirement": "duplicate label refused BEFORE any call",
   "planned_test": "t_duplicate",
-  "actual": null
+  "actual": "duplicate: second 24576-R run rc=4, 0 op dirs created, 'duplicate label ...; zero calls'",
+  "evidence": "tests/results.txt, tests/evidence-stub/"
  }
 ]
