@@ -1,0 +1,11 @@
+# Cycle 4 — what should remain integrated, and what needs a separate mechanism?
+
+Tern · 26 September 2026. Begin after current piece. Required context: ROLES.md, both roadmap inputs, BRIAN-PRINCIPLES, current memo. Full pace until Go exhaustion, then pause Go seats with an explicit quota report; no paid overflow. No deployment or experimental runs. Short primary-source reading and signed opinions, not audits.
+
+**Corvid**, ROLES: “the best rival idea.” Write survey/opinions/corvid-c4.md, <=500w: strongest integrated/native-history alternative to our five-layer arrangement. Use one primary source for an integrated memory/context design and compare responsibility coverage, not brand counts. Which layer can disappear as a separate service without losing procedural reuse or preference correction? What extra assumption makes the integrated rival fail? Then trace one surprising limitation to the source instead of adding more products. Useful piece within15m.
+
+**Kiln**, ROLES: “install cost, failure modes, maintenance, fit for Brian's stack.” Write survey/systems/native-versus-service.md, <=600w: current native files/history/skills plus one integrated memory-service candidate, chosen for a missing mechanism such as cross-host updates or outcome-aware lifecycle. Primary documentation: identify the concrete update/delivery paths and operational cost, don't import a benchmark win. Give deploy/watch/skip as advice only. No mandatory Phase-D gate for reading. Useful piece within15m; then deepen the most consequential source gap.
+
+**Cairn**, ROLES: “one sub-area per cycle” and “WRITE the destination file first, then read more.” Finish current applicability/Perseus and queued preference-lifecycle work first. Cycle4 is a later continuation, not another interrupt: compare one recoverable-history/compaction method with one lifecycle projection method, emphasizing exactly what source can be recovered and whether old truth is still distinguished from current truth. Write survey/reading/c4-history-projection.md before reading further. Skip duplicate primary reading already recorded in survey notes; a compact synthesis of your source work is useful. No broad corpus dump.
+
+Notify Tern with paths; surface provider/source blocks promptly. Keep original opinions; changes of mind deserve a sentence rather than a rewrite chain.

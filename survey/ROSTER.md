@@ -42,7 +42,7 @@ Every row competes against using existing native facilities. Brian's [priority a
 | StateMemBench / StateMem | Prior search was incomplete; identity and public artifacts remain unverified in this survey. Do not equate “not located then” with unavailable now. |
 | EvoMemBench / EvoArena | Prior refresh records long-context comparisons; read actual task and model controls before accepting the generalization. |
 | GateMem | Prior governance lead; assess shared-principal access/deletion separately from retrieval and history retention. |
-| Supersede / FAMA | Prior update-penalty lead; inspect the metric before deciding whether it measures the failure class we care about. |
+| Supersede; Memora / FAMA | Identities separated: Supersede studies bounded notes and fact updates; [Memora/FAMA](https://arxiv.org/html/2604.20006v1) evaluates current versus obsolete memory. [Methods note](reading/tern-c3-preference-evidence.md). |
 | STALE | Unresolved name in prior intake. Clarify identity rather than silently omit or invent a citation. |
 | Agent Memory Leaderboard | Candidate-discovery infrastructure, not a contestant. Read protocol/model assumptions; do not import a winner or merge its scores with ours. |
 
@@ -51,4 +51,8 @@ These statuses are **high confidence as this survey's reading inventory**, not v
 
 ## Cycle 2 procedural evidence additions
 
-[AFTER, Skill-Evo4GUI and BASM](reading/tern-c2-outcome-evidence.md) are now primary-method readings, not merely discovery leads. They strengthen the case for scoped procedure reuse while leaving discovery, upkeep and transfer gaps. They are literature comparators, not proposed installations. [Native Claude Code](opinions/kiln-c2.md) remains the practical reference for explicit instructions, selective procedures and auto-capture; current official documentation is not an installed-behavior test. Perseus current-source work is with Cairn; Gen29/30 findings stand until a specific source resolves them.
+[AFTER, Skill-Evo4GUI and BASM](reading/tern-c2-outcome-evidence.md) are now primary-method readings, not merely discovery leads. They strengthen the case for scoped procedure reuse while leaving discovery, upkeep and transfer gaps. They are literature comparators, not proposed installations. [Native Claude Code](opinions/kiln-c2.md) remains the practical reference for explicit instructions, selective procedures and auto-capture; current official documentation is not an installed-behavior test. Cairn’s [Perseus source card](systems/perseus.md) is received. The archived v2.23.2 finding stands; current Vault releases/source are on a vendor-reported hold. Its separate live-integration claims are not transferred into a verified deployment verdict; see [Tern’s limits](reading/tern-c4-integrated-memory.md).
+
+## Cycle 4 integrated comparator
+
+MemGPT now has a [full-method history/context reading](reading/tern-c4-integrated-memory.md), strengthening the integrated alternative. Zep’s documented temporal extraction and delivery path make it a concrete comparison, not an admitted winner. Native Pi instruction loading is documented upstream; this survey has not verified Brian’s installed host path or adherence. Current preference-delivery work is with Kiln; Corvid is examining whether a separate lifecycle projection is actually necessary.

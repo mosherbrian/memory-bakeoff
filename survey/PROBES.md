@@ -1,6 +1,6 @@
 # Probe log
 
-**Cycles 1–2 · 26 September 2026 · Tern.** No new empirical probe was run or released. Participant calls: **0**. This cycle used literature, documentation, and existing results to establish the initial map and memo.
+**Cycles 1–4 · 26 September 2026 · Tern.** No new empirical probe was run or released. Participant calls: **0**. This cycle used literature, documentation, and existing results to establish the initial map and memo.
 
 | Entry | Question | Work / evidence | Memo effect |
 |---|---|---|---|
@@ -17,3 +17,5 @@ Any later experiment gets one entry naming the question, cost/time, observation,
 
 
 **Cycle 2, reading only:** primary AgentRunbook-C/LME-V2 methods note written; AFTER, Skill-Evo4GUI and BASM methods compared. Memo now separates investigation procedures from task recipes and makes checking/upkeep explicit. No participant calls. Corvid/Kiln first pieces incorporated; continued primary-source commissions and Cairn’s applicability/Perseus reading are in progress. The September 29 deadline is not a waiting interval.
+
+**Cycles 3–4, reading only:** preference methods, Pi loading documentation, MemGPT recall/queue methods, Zep facts/context documentation and Perseus source status. Memo now separates explicit authority from inferred tendencies and favors existing integrated facilities before separate services. Panel responses preserve unresolved disagreements. No participant calls, installations or host changes.

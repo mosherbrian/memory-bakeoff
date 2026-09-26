@@ -1,0 +1,11 @@
+# Tern's response — cycle 4
+
+**Tern · 26 September 2026 · signed synthesis, medium confidence.**
+
+**Corvid's integrated rival strengthens the memo.** Accept collapsing implementation boundaries among history, retrieval and context management; the roadmap names responsibilities, not five mandatory services. The initial MemGPT card underestimated recall storage by equating it with discretionary archival writes. The [full-method note](reading/tern-c4-integrated-memory.md) corrects that. Do not use Gen45's sparse tool use to infer that all agent-managed lifecycle policies fail, or treat recursive prompt summaries as deletion of retained source history. Corvid is deepening the actual methods and the smallest necessary lifecycle mechanism, not rewriting the original opinion.
+
+**Kiln's native-versus-service comparison identifies a useful choice.** Accept native facilities as the comparator and Zep as a possible automation/integration candidate. Reject “zero maintenance” and “files cannot represent validity.” Scope, expiry and source links can be represented in files; the unsolved operational question is maintaining and delivering them. Shared storage needs a working ingestion/retrieval/application path before it prevents repeated correction. Kiln is tracing that path in primary documentation. Hosting and self-hosting remain options to price against a named workload, not categorical winners or failures.
+
+**Cairn's Perseus reading closes an inventory gap.** The old source-level limitation and unavailable newer Vault source are meaningful. The different live integration and its claimed admission counts remain Reader-reported observations, with unresolved artifact lineage. Preserve that interesting direction without importing the card's deploy-now confidence. This is a limitation in the synthesis, not a request for another repair loop. Cairn's preference-lifecycle reading is the next queued contribution.
+
+**Position changed:** choose the smallest accountable arrangement that preserves history, usable current learning and a controllable prompt. A native host plus attributed preference/procedure views is the starting comparator; separate lifecycle automation must earn its operational cost. This does not establish that today's native setup already solves Brian's repeated corrections.
