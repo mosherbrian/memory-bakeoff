@@ -56,3 +56,9 @@ These statuses are **high confidence as this survey's reading inventory**, not v
 ## Cycle 4 integrated comparator
 
 MemGPT now has a [full-method history/context reading](reading/tern-c4-integrated-memory.md), strengthening the integrated alternative. Zep’s documented temporal extraction and delivery path make it a concrete comparison, not an admitted winner. Native Pi instruction loading is documented upstream; this survey has not verified Brian’s installed host path or adherence. Current preference-delivery work is with Kiln; Corvid is examining whether a separate lifecycle projection is actually necessary.
+
+## Cycle 5: current reusable-learning mechanisms
+
+[Letta/MemFS](opinions/corvid-c5.md) is now a concrete integrated comparator, not just the original MemGPT paper: versioned files and selective context are relevant; backend/version and prompt-versus-runtime distinctions remain in [Tern’s response](panel-response-c5.md). Native Claude Code’s [recorded run/verify recipes](systems/procedure-maintenance.md) supply a practical documented update path. These are **watch/read and practical patterns, medium confidence**, not measured winners or deployment authorization. Capture/TrustMem add preference-update and transition-learning evidence in [Cairn’s reading](reading/c3-preference-lifecycle.md); their clarification assumptions do not justify repeatedly reconfirming Brian’s explicit directions.
+
+**Cycle6 additions:** ReasoningBank (append-based, self-judged learning) and ReMe (adaptive reuse/pool refinement) now have [primary-method notes](reading/tern-c6-automatic-upkeep.md). Both are relevant reading comparators for Q5/Q3; no installation recommended. Sleep-time Compute is a preparation mechanism, with a file-overlap SWE endpoint, not a demonstrated procedure-maintenance winner.

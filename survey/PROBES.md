@@ -19,3 +19,7 @@ Any later experiment gets one entry naming the question, cost/time, observation,
 **Cycle 2, reading only:** primary AgentRunbook-C/LME-V2 methods note written; AFTER, Skill-Evo4GUI and BASM methods compared. Memo now separates investigation procedures from task recipes and makes checking/upkeep explicit. No participant calls. Corvid/Kiln first pieces incorporated; continued primary-source commissions and Cairn’s applicability/Perseus reading are in progress. The September 29 deadline is not a waiting interval.
 
 **Cycles 3–4, reading only:** preference methods, Pi loading documentation, MemGPT recall/queue methods, Zep facts/context documentation and Perseus source status. Memo now separates explicit authority from inferred tendencies and favors existing integrated facilities before separate services. Panel responses preserve unresolved disagreements. No participant calls, installations or host changes.
+
+**Cycle 5 begun, reading only:** [MemoryArena methods](reading/tern-c5-memory-action.md) separate interdependent action carryover from independent procedure transfer. No product ranking imported. Corvid/Kiln started current Letta/procedure-maintenance primary-source pieces; Cairn continuation queued behind preference-lifecycle work. Zero participant calls.
+
+**Cycle6, reading only:** ReasoningBank, ReMe and Sleep-time Compute methods compared. Memo explicitly assigns routine upkeep to agents and separates retained failures from endorsed lessons. No new empirical result, deployment or participant call.
