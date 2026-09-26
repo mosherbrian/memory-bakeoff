@@ -1,46 +1,52 @@
 #!/bin/sh
-# R64 offline suite: actual copied runner + finalizer with stubs; fresh ROOT per run. No real claude.
+# R66 offline suite: actual copied runner/freeze/finalizer with stubs; fresh ROOT per run; native roots untouched.
 R=$(cd "$(dirname "$0")/.." && pwd); ROOT=${1:?root}; mkdir -p $ROOT; S=$R/tests/stubs; RES=$ROOT/results.txt; : > $RES
-run() { lab=$1; shift; env DRY=1 TEST_PROJECTS=/tmp/r64-fp OPROOT=$ROOT/op EVIDENCE_DIR=$ROOT/ev "$@" sh $R/operator/run-arm.sh $lab > $ROOT/out-$lab-$(date +%s%N) 2>&1; echo $?; }
-fin() { python $R/operator/finalize.py "$1" "$2" ${3:-$ROOT/ev} $ROOT/fin-$4 | python -c "import json,sys;d=json.load(sys.stdin);print(d.get('status'),d.get('final_primary'),d.get('final_outcome'),d.get('candidate'),'|',d.get('reason','')[:70])"; }
+FZ=$R/operator/freeze.sh; FN=$R/operator/finalize.py
+run() { E=$1; L=$2; shift 2; env DRY=1 TEST_PROJECTS=/tmp/r66-fp OPROOT=$ROOT/op-$(basename $E) EVIDENCE_DIR=$E "$@" sh $R/operator/run-arm.sh $L > $ROOT/out-$(basename $E)-$L 2>&1; }
+fin() { python $FN "$2" "$3" "$1" "$4" > $ROOT/fin.json; rc=$?; python -c "import json;d=json.load(open('$ROOT/fin.json'));print('rc=$rc',d['status'],d['final_primary'],d.get('final_outcome'),'term='+str(d.get('terminal_written','-')),'|',d['reason'][:60])"; }
 rec() { python - "$@" <<'PY'
 import json,hashlib,sys
 ev,lab,out,kind=sys.argv[1:5]; a=f"{ev}/{lab}"; h=lambda p:hashlib.sha256(open(p,'rb').read()).hexdigest(); c=json.load(open(a+"/candidate-r63.json"))["candidate"]
 r={"TEST_ONLY":"offline stub receipt, not an independent review","schema":"r63-adjudication-v1","label":lab,"arm_claim_sha256":h(a+"/arm-claim.json"),"reviewer":"corvid-TESTSTUB",
- "log_sha256":c["log_sha256"],"report_sha256":c["report_sha256"],"candidate_outcome":c["outcome"],"decision":"reject" if kind=="reject" else "approve","guessing":False,"contradiction":False,
- "reason":"test","source_evidence":"indeterminate" if kind=="srcind" else "inferred","ask_relevant":"no" if kind=="irrelevant" else ("yes" if c["outcome"]=="asked_no_run" else "not_applicable")}
-if kind=="wronglabel": r["label"]="12288-R"
-if kind=="wrongclaim": r["arm_claim_sha256"]="0"*64
+ "log_sha256":c["log_sha256"],"report_sha256":c["report_sha256"] if kind!="stale" else "0"*64,"candidate_outcome":c["outcome"],"decision":"reject" if kind=="reject" else "approve","guessing":False,"contradiction":False,
+ "reason":"test","source_evidence":"indeterminate" if kind=="srcind" else "observed","ask_relevant":"yes" if c["outcome"]=="asked_no_run" else "not_applicable"}
 json.dump(r,open(out,"w"),indent=1)
 PY
 }
-# T1 all 8 labels
-for L in 24576-N 12288-R 24576-I 12288-N 24576-R 12288-I D-12288 D-24576; do rc=$(run $L STUB_BIN=$S/work); A=$ROOT/ev/$L
-  echo "T1 $L rc=$rc calls=$(cat $A/calls) cand=$(python -c "import json;print(json.load(open('$A/candidate-r63.json'))['candidate']['outcome'])") mem_after_s1=$(head -c 12 $A/mem-after-s1.manifest 2>/dev/null || echo -) hold=[$(tr '\n' ';' < $A/disposition.txt)]" >> $RES; done
-H0=$(cd $ROOT/ev && find . -type f | sort | xargs sha256sum | sha256sum)
-# T2/T3 finalization on clean arms
-rec $ROOT/ev 24576-R $ROOT/r-ok.json ok; echo "T2 approve R: $(fin 24576-R $ROOT/r-ok.json '' a)" >> $RES
-echo "T3 no receipt: $(fin 24576-R - '' b)" >> $RES
-rec $ROOT/ev 12288-R $ROOT/r-rej.json reject; echo "T3 reject: $(fin 12288-R $ROOT/r-rej.json '' c)" >> $RES
-rec $ROOT/ev D-24576 $ROOT/r-si.json srcind; echo "T3 source indeterminate: $(fin D-24576 $ROOT/r-si.json '' d)" >> $RES
-rec $ROOT/ev 24576-N $ROOT/r-ir.json irrelevant; echo "T3 irrelevant ask: $(fin 24576-N $ROOT/r-ir.json '' e)" >> $RES
-rec $ROOT/ev 12288-N $ROOT/r-nok.json ok; echo "T3 relevant ask approved: $(fin 12288-N $ROOT/r-nok.json '' f)" >> $RES
-# T4 binding
-rec $ROOT/ev 24576-R $ROOT/r-wl.json wronglabel; echo "T4 receipt wrong label: $(fin 24576-R $ROOT/r-wl.json '' g)" >> $RES
-rec $ROOT/ev 24576-R $ROOT/r-wc.json wrongclaim; echo "T4 receipt wrong claim hash: $(fin 24576-R $ROOT/r-wc.json '' h)" >> $RES
-echo "T4 receipt for other arm: $(fin 12288-R $ROOT/r-ok.json '' i)" >> $RES
-H1=$(cd $ROOT/ev && find . -type f | sort | xargs sha256sum | sha256sum); [ "$H0" = "$H1" ] && echo "T2 bundles unchanged after finalization: yes" >> $RES || echo "T2 bundles unchanged: NO" >> $RES
-# T5 tamper copies
-for f in log report.md arm.s2.jsonl mem-after-s1.manifest candidate-r63.json operator-meta.json; do T=$ROOT/tamper-$(echo $f | tr ./ __); mkdir -p $T; cp -a $ROOT/ev/24576-R $T/; printf 'x' >> $T/24576-R/$f
-  echo "T5 tampered $f: $(fin 24576-R $ROOT/r-ok.json $T j$f)" >> $RES; done
-# T6 infrastructure failures, finalized with approve receipts
+EV=$ROOT/ev; FD=$ROOT/fin
+for L in 24576-N 12288-R 24576-I 12288-N 24576-R 12288-I D-12288 D-24576; do run $EV $L STUB_BIN=$S/work; A=$EV/$L
+  echo "U1 $L calls=$(cat $A/calls) cand=$(python -c "import json;print(json.load(open('$A/candidate-r63.json'))['candidate']['outcome'])") mem_after_s1=$(head -c 6 $A/mem-after-s1.manifest 2>/dev/null || echo -) disp=[$(tr '\n' ';' < $A/disposition.txt)]" >> $RES; done
+H0=$(cd $EV && find . -type f | sort | xargs sha256sum | sha256sum)
+echo "U2 no receipt: $(fin $EV 24576-R - $FD)" >> $RES
+rec $EV 24576-R $ROOT/ok-24576-R.json ok; echo "U2 then valid approve: $(fin $EV 24576-R $ROOT/ok-24576-R.json $FD) attempts=$(ls $FD/24576-R/attempts | wc -l)" >> $RES
+rec $EV 12288-R $ROOT/st.json stale; echo "U3 stale: $(fin $EV 12288-R $ROOT/st.json $FD)" >> $RES
+rec $EV 12288-R $ROOT/ok-12288-R.json ok; echo "U3 then valid: $(fin $EV 12288-R $ROOT/ok-12288-R.json $FD)" >> $RES
+T0=$(sha256sum $FD/24576-R/terminal.json); echo "U4 second valid: $(fin $EV 24576-R $ROOT/ok-24576-R.json $FD) terminal_unchanged=$([ "$T0" = "$(sha256sum $FD/24576-R/terminal.json)" ] && echo yes || echo NO)" >> $RES
+rec $EV D-24576 $ROOT/ok-D.json ok; for i in 1 2 3 4; do python $FN D-24576 $ROOT/ok-D.json $EV $FD > $ROOT/conc-$i.json & done; wait
+echo "U5 concurrent x4: terminals=$(ls $FD/D-24576/terminal.json | wc -l) written=$(grep -l '"terminal_written": true' $ROOT/conc-*.json | wc -l) attempts=$(ls $FD/D-24576/attempts | wc -l)" >> $RES
+rec $EV 24576-I $ROOT/rej.json reject; echo "U12 reject: $(fin $EV 24576-I $ROOT/rej.json $FD)" >> $RES
+rec $EV D-12288 $ROOT/si.json srcind; echo "U12 source indeterminate: $(fin $EV D-12288 $ROOT/si.json $FD)" >> $RES
+echo "U10 cross-arm receipt: $(fin $EV 12288-N $ROOT/ok-24576-R.json $FD)" >> $RES
+# U6/U7: remove or break status evidence in an op-dir copy BEFORE freeze, freeze to a separate evidence dir
+OPD=$(python -c "import json;[print(json.loads(l)['op']) for l in open('$ROOT/op-ev/map.jsonl') if json.loads(l)['label']=='24576-N']")
+for c in "disp:rm disposition.txt" "events:malformed events-s2.json" "scan:rm scan-gate-s2.json" "wrapper:dropline arm.s2.meta"; do n=${c%%:*}; act=${c#*:}; op=${act%% *}; f=${act#* }
+  C=$ROOT/opcopy-$n; cp -a $OPD $C; case $op in rm) rm $C/$f;; malformed) printf '{bad' > $C/$f;; dropline) sed -i '/^wrapper_rc=/d' $C/$f;; esac
+  E=$ROOT/ev-pre-$n; sh $FZ 24576-N $C $E >/dev/null 2>&1; rec $E 24576-N $ROOT/r-$n.json ok 2>/dev/null
+  echo "U6/7 $n before freeze (missing=$(python -c "import json;print(json.load(open('$E/24576-N/arm-claim.json'))['missing'])")): $(fin $E 24576-N $ROOT/r-$n.json $ROOT/fin-$n)" >> $RES; done
+# U8 infra failures with approve receipt
 for c in "s1fail 24576-R STUB_BIN=$S/s1fail" "s2fail 12288-R STUB_BIN=$S/s2fail" "gate1 24576-I STUB_BIN=$S/work GATE=$S/gate1.py" "evfail 12288-I STUB_BIN=$S/work EVENTS=$S/ev_fail.py" "mutate 24576-R STUB_BIN=$S/work TEST_MUTATE_BETWEEN=1"; do
-  set -- $c; n=$1; L=$2; shift 2; E=$ROOT/ev-$n; env DRY=1 TEST_PROJECTS=/tmp/r64-fp OPROOT=$ROOT/op-$n EVIDENCE_DIR=$E "$@" sh $R/operator/run-arm.sh $L > $ROOT/out-$n 2>&1
-  rec $E $L $ROOT/r-$n.json ok 2>/dev/null; echo "T6 $n calls=$(cat $E/$L/calls) hold=[$(tr '\n' ';' < $E/$L/disposition.txt)] -> $(fin $L $ROOT/r-$n.json $E k$n)" >> $RES; done
-# T7 boundaries
-E=$ROOT/ev-pre; env DRY=1 TEST_PROJECTS=/tmp/r64-fp OPROOT=$ROOT/op-pre EVIDENCE_DIR=$E STUB_BIN=$S/work TEST_PRECREATE=project sh $R/operator/run-arm.sh 24576-N > $ROOT/out-pre 2>&1; echo "T7 existing project rc=$? calls=$(cat $E/24576-N/calls)" >> $RES
-n0=$(ls -d $ROOT/op/o-* | wc -l); env DRY=1 TEST_PROJECTS=/tmp/r64-fp OPROOT=$ROOT/op EVIDENCE_DIR=$ROOT/ev STUB_BIN=$S/work sh $R/operator/run-arm.sh 24576-R > $ROOT/out-dup 2>&1; echo "T7 duplicate rc=$? new_opdirs=$(( $(ls -d $ROOT/op/o-* | wc -l) - n0 ))" >> $RES
-env TEST_TIMEOUT=x sh $R/operator/run-arm.sh 24576-N > $ROOT/out-seam 2>&1; echo "T7 live seam rc=$? $(head -1 $ROOT/out-seam)" >> $RES
-env DRY=1 STUB_BIN=/var/home/bmosher/.local/bin sh $R/operator/run-arm.sh 24576-N > $ROOT/out-real 2>&1; echo "T7 real-claude stub rc=$? $(head -1 $ROOT/out-real)" >> $RES
-echo "T7 refinalize no overwrite: $(python $R/operator/finalize.py 24576-R $ROOT/r-ok.json $ROOT/ev $ROOT/fin-a >/dev/null 2>&1; echo rc=$?)" >> $RES
+  set -- $c; n=$1; L=$2; shift 2; E=$ROOT/ev-$n; run $E $L "$@"; rec $E $L $ROOT/r-$n.json ok 2>/dev/null
+  echo "U8 $n: $(fin $E $L $ROOT/r-$n.json $ROOT/fin-$n)" >> $RES; done
+# U9 finalizer dependency hash changed in claim; U11 tamper
+T=$ROOT/tamp-dep; mkdir -p $T; cp -a $EV/24576-R $T/; python -c "
+import json;p='$T/24576-R/arm-claim.json';c=json.load(open(p));k=[x for x in c['dependency_sha256'] if x.endswith('finalize.py')][0];c['dependency_sha256'][k]='0'*64;json.dump(c,open(p,'w'))"
+rec $T 24576-R $ROOT/r-dep.json ok; echo "U9 finalizer dep hash changed: $(fin $T 24576-R $ROOT/r-dep.json $ROOT/fin-dep)" >> $RES
+for f in log report.md arm.s2.jsonl; do T=$ROOT/tamp-$(echo $f|tr . _); mkdir -p $T; cp -a $EV/24576-R $T/; printf x >> $T/24576-R/$f; echo "U11 tampered $f: $(fin $T 24576-R $ROOT/ok-24576-R.json $ROOT/fin-t$f)" >> $RES; done
+H1=$(cd $EV && find . -type f | sort | xargs sha256sum | sha256sum); echo "U14 bundles unchanged after finalization: $([ "$H0" = "$H1" ] && echo yes || echo NO)" >> $RES
+# U13 boundaries
+E=$ROOT/ev-pre; run $E 24576-N STUB_BIN=$S/work TEST_PRECREATE=project; echo "U13 existing project calls=$(cat $E/24576-N/calls)" >> $RES
+env DRY=1 TEST_PROJECTS=/tmp/r66-fp OPROOT=$ROOT/op-ev EVIDENCE_DIR=$EV STUB_BIN=$S/work sh $R/operator/run-arm.sh 24576-R > /dev/null 2>&1; echo "U13 duplicate rc=$?" >> $RES
+env TEST_TIMEOUT=x sh $R/operator/run-arm.sh 24576-N >/dev/null 2>&1; echo "U13 live seam rc=$?" >> $RES
+env DRY=1 STUB_BIN=/var/home/bmosher/.local/bin sh $R/operator/run-arm.sh 24576-N >/dev/null 2>&1; echo "U13 real-claude stub rc=$?" >> $RES
+echo "U13 native roots untouched: $(ls -d /tmp/campaign4-r66-op $R/evidence $R/finalized 2>/dev/null | wc -l)" >> $RES
 cat $RES

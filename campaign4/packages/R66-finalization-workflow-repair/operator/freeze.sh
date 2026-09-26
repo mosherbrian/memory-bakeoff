@@ -11,10 +11,10 @@ d, L = sys.argv[1], sys.argv[2]; PK = "/var/home/bmosher/memory-bake-off/campaig
 h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
 fs = {os.path.relpath(os.path.join(r, f), d): h(os.path.join(r, f)) for r, _, fl in os.walk(d) for f in fl if f != "arm-claim.json"}
 std = ["paths.json", "calls", "log", "arm.s1.meta", "arm.s1.jsonl", "arm.s2.meta", "arm.s2.jsonl", "arm.s1.prompt.txt", "arm.s2.prompt.txt",
-       "candidate-r63.json", "operator-meta.json", "report.md", "events-s1.json", "events-s2.json", "scan-gate-s1.json", "scan-gate-s2.json", "mem-before-s1.manifest",
+       "candidate-r63.json", "operator-meta.json", "report.md", "disposition.txt", "mem-compare", "events-s1.json", "events-s2.json", "scan-gate-s1.json", "scan-gate-s2.json", "mem-before-s1.manifest",
        "mem-after-s1.manifest", "mem-before-s2.manifest", "mem-after-s2.manifest"]
-R64 = f"{PK}/R64-context-runner-integration"
-deps = [f"{R64}/{p}" for p in ("operator/run-arm.sh", "operator/freeze.sh", "launch/common.sh", "launch/session.sh", "fixture/bench.sh", "fixture/setup.sh",
+R64 = f"{PK}/R66-finalization-workflow-repair"
+deps = [f"{R64}/{p}" for p in ("operator/run-arm.sh", "operator/freeze.sh", "operator/finalize.py", "launch/common.sh", "launch/session.sh", "fixture/bench.sh", "fixture/setup.sh",
         "templates/session1-N.txt", "templates/session1-I.txt", "templates/session1-R-12288.txt", "templates/session1-R-24576.txt",
         "templates/session2.md", "templates/D-12288.md", "templates/D-24576.md")] + [f"{PK}/R56-context-runner-readiness/scanner/{p}" for p in ("scan.py", "operator/scan_gate.py")] + [
         f"{PK}/R63-context-evidence-gate/gate.py", f"{PK}/R54-memory-dependent-task-design/events.py"]
