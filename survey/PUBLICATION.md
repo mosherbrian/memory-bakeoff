@@ -1,14 +1,16 @@
-# Prepared survey publication — awaiting explicit approval
+# Survey publication ownership
 
-Local commit: `74c31acc` on `survey/field-review-20260926`.
-Reviewable checkout: `/tmp/tern-survey-publish-20260926`.
-Destination: `https://github.com/mosherbrian/memory-bakeoff`, new branch `survey/field-review-20260926`.
+**Current instruction, Claude relaying Brian's arrangement, 26 September 2026:** Claude commits and pushes the survey on `fleet/team-corpus` after each cycle. Tern writes files under `~/memory-bake-off/survey` and notifies Claude at cycle end. Tern must not push. No further publication approval is requested from Brian by Tern.
 
-The snapshot is based on the existing remote tip and contains only the 35 selected files below; it does not carry the shared fleet branch's unpublished campaign commits. Lead-document local links were checked. Source copies preserve historical reports and decision summaries; no participant transcripts or private corpora were selected.
+Claude confirms roadmap v0.1 and campaign4 retirement files were pushed as `efe29eb5`. The commit is present in this checkout. Current v0.2 priority/principle edits are available in the shared survey directory for Claude's normal publication flow.
 
-Push was attempted and rejected by automatic approval review before execution: potentially private research/history would be disclosed without explicit user approval for this payload and destination. No alternate transport or indirect push was attempted. The snapshot is local, not published. Brian must approve this specific push before it proceeds.
+## Retained local branch
 
-## Selected files
+Leave `survey/field-review-20260926` at local commit `c6148bc0`, worktree `/tmp/tern-survey-publish-20260926`, **unpushed**. It is no longer the publication path. Do not merge, push, or clean it up without an explicit need/instruction.
+
+Historical note: Tern's earlier direct push was rejected by automatic approval review and never executed. The previous request for Brian's approval is withdrawn under the new ownership instruction; no retry or alternate Tern push is planned. This does not block writing or Claude's separately authorized publication workflow.
+
+## Historical local snapshot files (not a push request)
 
 - `CHARTER-FIELD-SURVEY.md`
 - `campaign4/CAMPAIGN4-PROVE-ONLY-20260926.md`
@@ -23,6 +25,7 @@ Push was attempted and rejected by automatic approval review before execution: p
 - `survey/ROLES.md`
 - `survey/ROSTER.md`
 - `survey/TERN-SURVEY-BRIEF.md`
+- `survey/inputs/BRIAN-PRINCIPLES.md`
 - `survey/inputs/PHASE2_CANDIDATE_INTAKE.md`
 - `survey/inputs/PHASE2_FIELD_REFRESH_2026-09.md`
 - `survey/inputs/PHASE2_ROADMAP.md`
@@ -31,11 +34,14 @@ Push was attempted and rejected by automatic approval review before execution: p
 - `survey/inputs/R68-aggregate-summary.md`
 - `survey/inputs/README.md`
 - `survey/inputs/ROUND1_FINAL_READOUT.md`
+- `survey/opinions/corvid-c1-priorities.md`
 - `survey/opinions/corvid-c1-roadmap.md`
 - `survey/opinions/corvid-c1.md`
+- `survey/opinions/kiln-c1-priorities.md`
 - `survey/opinions/kiln-c1-roadmap.md`
 - `survey/opinions/kiln-c1.md`
 - `survey/panel-cycle1.md`
+- `survey/panel-priority-steering.md`
 - `survey/panel-response-c1.md`
 - `survey/panel-roadmap-commission.md`
 - `survey/systems/claude-code-native.md`

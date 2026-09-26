@@ -1,10 +1,44 @@
-# Agent memory — field map v0
+# Agent memory — field map v0.3
 
-**Tern · cycle 1, v0.1 · 26 September 2026.** A selective map across agent types, with recommendations applied to Brian in the [position memo](POSITION-MEMO.md). This survey implements the recovered roadmap's **B (field refresh), C (roster refresh), and F (architecture synthesis)**. It is not a systematic review or a product leaderboard. Reading depth is mostly abstracts, project descriptions, official documentation, and our existing results; performance claims below are deliberately narrow.
+**Tern · cycle 1, v0.3 · 26 September 2026.** A selective map across agent types, with recommendations applied to Brian in the [position memo](POSITION-MEMO.md). This survey implements the recovered roadmap's **B (field refresh), C (roster refresh), and F (architecture synthesis)**. Brian's declared priorities are **procedural re-learning first, repeated preferences second**; the field remains broad while the recommendations now weight those needs. It is not a systematic review or a product leaderboard. Reading depth is mostly abstracts, project descriptions, official documentation, and our existing results; performance claims below are deliberately narrow.
 
 **Confidence key:** **High** = directly supported mechanism or scoped observation; **Medium** = plausible synthesis with limited transfer evidence; **Low** = a research bet or thin coverage; **Unknown** = not established. A mechanism can be well documented while its benefit on Brian's work is unknown. The broad [agent-memory survey](https://arxiv.org/abs/2512.13564) is a useful orientation; the decomposition below is Tern's synthesis, **medium confidence**.
 
 ## The object being designed
+
+### Brian's governing distinctions
+
+> State tells the agent what to do now. Memory tells it what it has learned. History lets it reconstruct what happened. Artifacts establish what is true. Executive reasoning decides what it means.
+>
+> Don't delete the past just because you stop putting it in every prompt.
+
+Source: [Brian's principles and priority answer](inputs/BRIAN-PRINCIPLES.md). **High confidence as sponsor requirements.** This is not a claim that any system already implements them. The input's reconstructed SKILL.state performance description is unverified and is not used to justify a measured gain here.
+
+| Role | What it contributes | Boundary to preserve |
+|---|---|---|
+| **State** | Current objective, plan, pending action and completion status. | A plan or stored status is not proof an action succeeded. |
+| **Memory** | Learned procedures, outcomes, preferences, exceptions and scope. | “Worked before” is conditional knowledge, not a fresh measurement or universally valid instruction. |
+| **History** | Recoverable original events and prior versions, including failures and branch context. | Omission from the active prompt does not delete or rewrite the record. |
+| **Artifacts** | Source files, configuration, test/benchmark output, receipts and other evidence tied to a producing environment/time. | A claim is only as broad as its evidence: a passing check establishes that checked result, not every intended property. |
+| **Executive reasoning** | Interpret the goal, select applicable learning, resolve conflicts, decide uncertainty and what to verify next. | Retrieval/composition prepares evidence; it does not itself establish meaning, applicability or success. |
+
+This role mapping is Tern's interpretation, **medium confidence**, of Brian's explicit principles. Artifacts and executive reasoning are cross-cutting roles in the design, not two automatically required services appended to a stack.
+
+### Five roles mapped onto the five roadmap layers
+
+Brian's [gloss](inputs/BRIAN-PRINCIPLES.md) names **examples of roles, not selected components**. Layer numbers below are L1 history, L2 state/lifecycle projection, L3 retrieval, L4 working synthesis, L5 context composition. The mapping is many-to-many; five roles do not imply a one-to-one correspondence with five layers. **High confidence in Brian's intent; medium in this architectural interpretation.**
+
+| Brian's role and example | Primary roadmap connection | Supporting connections / distinction |
+|---|---|---|
+| **State — structured execution state, e.g. SKILL.state** | **L2** represents current task/procedure progress; **L4** supplies its bounded working view. | **L5** presents state with skill/instructions and observations. This is execution state, not the whole durable memory lifecycle. State's structure does not itself prove its factual contents. |
+| **Memory — lifecycle-aware learned knowledge, e.g. Perseus** | **L2** manages correction, supersession, scope and status; **L3** recalls applicable learning. | **L4/L5** select and deliver procedures/preferences. “Smart memory” must preserve failed alternatives without recommending them as successful and must keep revised preferences correctly scoped. A product may span several layers. |
+| **History — pi-lcm's context database, transcripts, or both** | **L1** retains recoverable source events and branches. | **L3** recovers details omitted from **L4/L5**. Having the record, finding it, and delivering it are separate capabilities; lossless storage does not establish good retrieval. |
+| **Artifacts — actual files/configs/logs/outputs** | **Evidence outside the five-layer pipeline**, referenced or versioned through **L1** and used to check **L2** claims. | **L3** locates evidence; **L4/L5** carry pointers or relevant observations. A remembered description of a file is not the file; a historical log proves an observed past outcome, not automatically current applicability. |
+| **Executive reasoning — the model/agent** | **Consumes L5** and interprets all supplied state, memory, history and artifacts. | Decides applicability, uncertainty, tool actions and verification; actions emit **L1** events and may update **L2** views. The composer is not the executive, and a model's interpretation does not replace artifact evidence. |
+
+**Concrete example, not an experiment:** to repeat a model benchmark, structured state tracks the current step; memory supplies the scoped successful recipe, failure lessons and Brian's preference; history preserves the original attempts; configs/logs establish what actually ran; the executive decides whether today's setup satisfies the recipe's prerequisites. This is why procedure and preference utility weight all candidate roles, rather than turning the survey into a competition between five brand names. **Medium-confidence design interpretation.**
+
+**Candidate boundaries:** [SKILL.state v3](https://arxiv.org/abs/2608.26263v3) describes a skill specification, mutable execution state and latest observation as per-step inputs. Its primary abstract was read; gain magnitude and archival behavior are not established here. Gen45 is a separate local composed-window pilot, not a SKILL.state reproduction. For Perseus, [Gen29](inputs/PERSEUS_VAULT_GEN29_LONGITUDINAL.md) and [Gen30](inputs/PERSEUS_VAULT_GEN30_MCP_VALID_TIME_ABLATION.md) constrain the tested v2.23.2 write paths, not every future release. For pi-lcm, distinguish [history/compaction role](inputs/PI-LCM-TWO-ROLES-20260918.md) from [retrieval displacement](inputs/PI-LCM-HIST-RETRIEVAL-DISPLACEMENT.md). Detailed re-evaluation questions and confidence are in the [role-candidate roster](ROSTER.md#brians-role-examples-re-evaluation-candidates).
 
 Think of memory as a chain of decisions: what to capture, how to represent and revise it, what to select, how to deliver it, and whether it changes an action usefully. Storage, delivery, use, and benefit are distinct. R53 separates reading from benefit; R68 separates saved availability from observed tool retrieval. **High confidence in these distinctions; medium that this is the most useful design decomposition.** [R53](inputs/R53-acceptance.json), [R68](inputs/R68-acceptance.json).
 
@@ -23,6 +57,18 @@ Required inputs: [the 2 September roadmap](inputs/PHASE2_ROADMAP.md) and [the re
 | **One context composer** | Own precedence, budget, recent verbatim context, working view, and targeted recall at the final model boundary. | Prefer an existing host composition point; multiple memory providers can feed it. | **Holds as an ownership rule, medium confidence**, not as a requirement for another service or evidence that our old composer won. |
 
 The roadmap's product nominations were hypotheses at the time. These layer judgments are Tern's design synthesis; current product claims belong in the [roster refresh](ROSTER.md). A single product might implement several layers, while a thin composition might reuse native facilities. The decision among integrated product, composed systems, thin state layer, and research reproduction remains open.
+
+**Conceptual test against the principles (not an empirical run):**
+
+| Layer | What must be true for it to fit | Verdict / remaining work |
+|---|---|---|
+| History | Removing a procedure from today's prompt still leaves its original attempt, outcome and provenance recoverable. | **Retain.** Scope deliberate deletion separately from context selection. |
+| State/lifecycle | Task progress, learned procedure validity, and artifact-backed world facts are distinguishable. A failed attempt can remain available without being recommended. | **Clarify.** Do not combine “what to do now” with an unqualified store of supposed truth. |
+| Retrieval | A skill/preference can bring its prerequisites, outcome evidence and failed alternatives, rather than only a matching text fragment. | **Retain, refocus** on procedure/preference applicability; read-time reconstruction remains a rival to maintained projections. |
+| Working synthesis | Compression preserves actionable constraints and evidence pointers while keeping the omitted past recoverable. | **Retain conditionally.** A summary that becomes the only record fails the corollary. |
+| Composer | Inputs are identified as instructions, state, learned memory, history or artifacts; the executive receives relevant uncertainty and provenance. | **Retain, clarify boundary.** Selecting text is not executive interpretation or validation. |
+
+Confidence in these conceptual judgments is **medium**. Two illustrative checks sharpen them: a recipe that succeeded on an old configuration should prompt an applicability check rather than reuse its success label as current evidence; a preference omitted by compaction should remain recoverable without replaying the whole past in every prompt. These are design examples, not new observations. Under Brian's priorities, **failed_procedure_adoption** and configuration/scope collapse become especially decision-relevant; stale or corrected preferences remain a separate use case. All seven classes below stay visible without claiming measured frequencies for Brian.
 
 **The negative that changes the bet:** [Gen45](inputs/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md) ran four invented tasks, three samples per arm, with one local model. Stock Pi passed 12/12 verifiers; the composed-window/control arm passed 7/12 and used more cumulative context. Per-request growth was bounded, but some runs looped. No control transitions were accepted; Pi compaction did not trigger. This is **high-confidence evidence about that implementation**, not a clean ablation of all five layers. It lowers confidence in aggressive context restriction and model-maintained control state, not in keeping recoverable source history.
 
@@ -86,4 +132,4 @@ R68's successful relevant-memory runs involved no successful memory-read tool ca
 
 The panel adds a live disagreement: [Corvid](opinions/corvid-c1.md) favors automatic capture plus lifecycle handling; [Kiln](opinions/kiln-c1.md) favors native notes and handoffs. Both are **medium-confidence opinions**, not independently demonstrated efficacy. [Tern's response](panel-response-c1.md) accepts the missing comparison, lowers confidence in the initial ordering, and keeps the rival visible.
 
-The [question register](QUESTIONS.md) prioritizes Brian's failure mix, minimum useful memory, and update safety. Literature follow-up should inspect methods for MemoryArena/LongMemEval-V2 and compare compaction with explicit procedural retention. Current Pi behavior, local inference costs, shared-memory ownership, multimodal memory, and long-horizon forgetting remain under-covered. They are gaps in this map, not justification for restarting campaign4. Panel disagreements will be preserved in the memo rather than converted into a new audit queue.
+The [question register](QUESTIONS.md) now treats Brian's priority ranking as answered and puts **procedural reuse, preference application, and artifact-backed applicability** first. Compare explicit skills/runbooks with episodic reconstruction and automatic extraction; inspect whether studies measure doing the work rather than merely recalling a workflow. Current Pi behavior, local inference costs, shared-memory ownership, multimodal memory, and long-horizon forgetting remain under-covered. They are gaps in this map, not justification for restarting campaign4. Panel disagreements will be preserved in the memo rather than converted into a new audit queue.

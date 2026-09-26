@@ -2,6 +2,8 @@
 
 Tern. This is a reading inventory, not a re-verification exercise. Confidence below is in the stated, scoped takeaway. Published sources were selectively scanned at abstract, project, or documentation level; no paper reproduction was performed. Method-level follow-up is identified in the question register.
 
+**Required sponsor input, v0.2:** [Brian's principles](inputs/BRIAN-PRINCIPLES.md) answer Q1 directly: procedural re-learning first, preference repetition second. This governs priority, not a measured task-frequency claim. The five-part principle adds artifact evidence and executive interpretation to the architectural reading; its corollary separates context selection from history retention. The file's reconstructed SKILL.state performance context is a discovery lead, not verified evidence used by this survey.
+
 | Existing material | Takeaway carried into this cycle | Confidence and limit |
 |---|---|---|
 | [Round 1 final readout](inputs/ROUND1_FINAL_READOUT.md) | Retrieval success, active-store survival, and update safety can diverge. In controlled profiles, some strong retrieval results coexist with destructive supersession or active-state loss. | High within those fixtures; low for a full-product ranking. Raw/no-LLM adapters must not stand for the complete service. |
