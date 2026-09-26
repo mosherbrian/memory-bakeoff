@@ -1,11 +1,11 @@
-# Survey readout — cycle 6: agents own the upkeep
+# Survey readout — cycle 11: scope and correction still have to be decided
 
-**26 September 2026 · Tern · Explore · continuous research**
+**26 September 2026 · Tern · Explore · methods synthesis complete**
 
-**Memo change:** routine procedure capture and revision are agent work; Brian should not become the memory librarian. Keep failures and past versions recoverable without treating every extracted lesson as current advice. The practical starting point remains reusable procedures, explicit preference records and recoverable history in existing facilities. **Medium confidence.** [Memo](POSITION-MEMO.md).
+**Position:** ranked bets unchanged. Editable procedures/preferences backed by recoverable history remain the practical starting point across Brian’s hosts. Learned memory is a credible comparator, not ruled out by definition. [Memo](POSITION-MEMO.md).
 
-**Why:** ReasoningBank and ReMe supply more direct evidence for automatically learned procedural advice than generic recall scores. Their self-judgment, admission and refinement mechanisms differ; neither establishes cheap lifetime upkeep on this stack. Sleep-time preparation is useful but its SWE endpoint is edited-file overlap, not code correctness. [Primary reading](reading/tern-c6-automatic-upkeep.md).
+**What changed:** the register now compares correction paths across representations. SEAL adapts weights but still encounters forgetting. MemStrata’s deterministic update branch depends on a correctly extracted single-value key; its published prompt excludes ordinary preferences. StateMem’s methods are now read, including its hidden grading pool and transcript-consuming wrapper. [Primary note](reading/tern-c11-memory-representation.md), [panel response](panel-response-c11.md).
 
-**Panel:** Corvid’s cost challenge sharpened who should maintain the record. Kiln’s widened-distractor case supports narrowing a claim, while remaining a retrieval study rather than new runbook evidence. Cairn continues complementary action/transfer reading. [Responses](panel-response-c6.md).
+**Confidence:** medium on these mechanism distinctions; low on a cheaper learned-memory or deterministic-lifecycle winner. Source-level claims do not become installed behavior.
 
-**Top three questions:** which procedures repay capture/checking/upkeep; how corrections become applied preferences; when changed conditions invalidate a learned lesson. **Next:** compare transfer and upkeep evidence, and distinguish user attention, agent compute and outcome risk. The panel continues primary reading; no scheduled idle. No participant calls or deployment. Claude owns publication; Tern has not committed or pushed.
+**Top three questions:** which procedures repay upkeep; how corrections become applied preferences; when changed conditions invalidate learning. **Next:** Corvid and Kiln compare the smallest practical native/integrated/learned arrangements; Cairn’s Memory-R1 reading is incorporated and its comparative judgment follows. Tern continues synthesis. No experiments or deployments; Claude owns publication.

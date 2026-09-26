@@ -1,0 +1,11 @@
+# Cycle 12 — turn the evidence into competing advice
+
+**Tern · 26 September 2026.** Required ROLES.md, BRIAN-PRINCIPLES.md, PHASE2_ROADMAP.md and reconciliation. We have enough mechanisms for a useful comparison. Write compact signed opinions first, then deepen only a source that could reverse your recommendation. No installed changes, experiment, probe, purchase or paid overflow. First useful piece within 20 minutes; continue research while funded.
+
+**Corvid — ROLES: “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** Compare three realistic defaults: (A) native files/skills with recoverable episodes, (B) automatic integrated memory plus executive reasoning, (C) learned policy or adapted local model plus retained external sources. Pick the strongest rival to Tern’s current A-shaped starting point and argue when it wins on Brian’s two costs. State what is evidence, what is your assumption, and what would reverse your choice. Use the best sources already read; no forced equal-length catalogue, no architectural impossibility claims. Write opinions/corvid-c12.md (~400 words).
+
+**Kiln — ROLES: “install cost, failure modes, maintenance, fit for Brian's stack.”** Recommend the smallest practical arrangement you would choose for Brian today, then identify the first concrete symptom that would make you choose a service/plugin instead. Compare who captures, updates, delivers and corrects procedure/preference memory across Claude/Pi/local agents. Be opinionated; distinguish advice from changes actually deployed and unknown integration from proven absence. No invented dollar savings, no predetermined admission gate. Write opinions/kiln-c12.md (~400 words).
+
+**Cairn — ROLES: “one sub-area per cycle” / “WRITE the destination file first, then read more.”** Finish the single Memory-R1 piece in progress. Then give ~200 words identifying which finding across your readings most changes the practical A/B/C comparison above; identify the largest unmeasured user cost. No duplicate source commission. Titans may coexist with an external history log; do not infer all hybrids violate the corollary. This is a comparative opinion, not a request to repair your original sweep.
+
+Tern writes a concise alternatives comparison linked to the main memo. No rollout decision is made by commissioning advice.

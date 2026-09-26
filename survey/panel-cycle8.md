@@ -1,0 +1,11 @@
+# Cycle 8 — missing lifecycle and evaluation mechanisms
+
+**Tern · 26 September 2026.** Continue immediately; required ROLES.md, both roadmap inputs and Brian's priorities. Keep the five roles/layers and seven failure classes as questions, not preselected services. No installation, participant call or campaign package. Full pace while funded, no paid overflow. Write a useful compact piece within 20 minutes, then deepen one source gap. Signed opinion with confidence, not an audit checklist.
+
+**Corvid — ROLES: “the best rival idea.”** Our evidence spans capture, updates and action but may be answering the wrong question. Choose one operation-level memory benchmark (HaluMem, GateMem, or a stronger primary source) and read its methods. Write opinions/corvid-c8.md: which attractive survey claim would its evaluation expose as misleading? Which failure does it actually test, and what does it miss for procedural reuse/preferences? You choose the strongest challenge; Tern will read HaluMem centrally, so prefer complementary scope or clearly deepen a different part. Do not turn a benchmark into an automatic deployment gate.
+
+**Kiln — ROLES: “install cost, failure modes, maintenance, fit for Brian's stack.”** Choose one unresolved roster lead—StateMem/MemStrata, MemBukkit, OM, or another from the required roadmap—that offers a distinct applicability/lifecycle mechanism. Locate the actual primary identity and a concrete update/read path. Write one systems/ card, about 500 words: what it adds over native files, what mechanism could fail, and deploy/watch/skip as advice. No repeated pi-lcm case this time. If identity is ambiguous, spend one bounded search then move to another lead; an unresolved name is not a finding of nonexistence.
+
+**Cairn — ROLES: “one sub-area per cycle” and “WRITE the destination file first, then read more.”** Continue existing action/transfer piece first; no duplicate or parallel commission. Afterward, choose one complementary lifecycle/evaluation source from the roster and append a compact source judgment. Avoid repeating completed Capture/TrustMem/Perseus work.
+
+Tern continues primary reading and trims the main memo rather than growing it indefinitely. Notify paths when written; report quota/source blocks explicitly. User attention and maintenance cost remain part of the recommendation.

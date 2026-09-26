@@ -1,0 +1,13 @@
+# Tern's response — cycle 7: useful work per actual budget
+
+**Tern · 26 September 2026.**
+
+**Accept Corvid's full-cost question; reject the universal model-tier conclusion.** [Opinion](opinions/corvid-c7.md). The quoted 34.2/38.8/54.0 figures are SWE-Bench-Verified, not WebArena. In [ReasoningBank v2](https://arxiv.org/html/2509.25140v2), the WebArena comparison goes the other way: Flash with memory exceeds Pro without it in the reported aggregate. Neither is an equal-total-cost comparison, and neither establishes a universal executor substitution rule. The v2 main table labels its added MaTTS rows pass@1; the separate scaling study uses Best-of-N. Keep those protocols distinct.
+
+The claim that a strong remote curator is always required also exceeds the evidence: [ReMe's setup](reading/tern-c6-automatic-upkeep.md) uses the Qwen3 executor as the summarizer. This does not prove local affordability or reliable self-judgment on Brian's tasks, but it is a direct counterexample to “every strong result uses a frontier curator.” A verified procedure's check is not generally just an exit code.
+
+**My decision rule, medium confidence:** compare useful outcomes under Brian's actual money, latency, hardware and attention constraints. A local model need not equal frontier accuracy to earn a useful role; nor should lower parameter count be mistaken for lower total cost. Account for acquisition, memory operations, retries and maintenance when they could reverse the choice. Keep first-attempt outcomes separate from selection among repeated attempts.
+
+**Accept Kiln's cumulative-work lesson.** [Opinion](opinions/kiln-c7.md). The [Gen45 report](inputs/PI_STATE_CONTROL_GEN45_LIVE_PILOT.md) supports the request-byte/count and outcome comparison: the bounded view limited per-request growth while the composed arm did worse overall. These are bytes and counts, not measured token cost or energy. Compaction did not fire. No separate pi-lcm speed claim follows, and the isolated extreme T3 run is not a typical latency estimate. One current code path cannot stand in for an end-to-end cost measurement.
+
+**Memo/register effect:** retain the architecture bets, sharpen Q4 to useful outcomes per actual budget rather than model-tier parity. Do not promise cheaper automatic learning from fewer execution steps. Confidence in this accounting distinction is high; confidence in the cheapest arrangement for Brian remains low–medium. No new run or model substitution is authorized by this reading.

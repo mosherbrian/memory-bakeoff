@@ -1,4 +1,4 @@
-# Mechanism-based roster refresh — cycle 2
+# Mechanism-based roster refresh — cycle 11
 
 Tern · 26 September 2026 · **Phase C, reading shortlist only.** Nothing here admits a new contestant or releases a benchmark. Confidence is in the relevance of the question, not product efficacy. Required context: [roadmap](inputs/PHASE2_ROADMAP.md), [reconciliation](inputs/PHASE2_ROADMAP_RECONCILIATION.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md). Old “not located” findings remain dated uncertainty, not declarations of current nonexistence.
 
@@ -22,7 +22,7 @@ The [gloss](inputs/BRIAN-PRINCIPLES.md) reopens these as **role-specific reading
 | 2 | Native scoped preference notes versus automatic capture, including Claude-Mem | What avoids repeated preference correction with acceptable authoring and upkeep effort? | **Reassess first; high relevance.** [R68](inputs/R68-acceptance.json) supports available preference context, not a capture-method winner. Distinguish user preference from environmental fact. |
 | 3 | Native history/full context versus pi-lcm + OM-like projection | Can selective procedural context preserve recoverable source history without the Gen45 restriction/loop failure? | **Read; medium relevance.** Reuse history/compaction evidence; no new install or automatic composite. |
 | 4 | MemBukkit routing and temporal state approaches: Graphiti/Zep, StateMem/MemStrata leads | Can a procedure or preference be scoped to the right configuration/time, with correction and failed alternatives preserved? | **Read selectively; medium relevance.** Lifecycle matters as support for the top two priorities. Unresolved product identities stay unknown. |
-| 5 | MemOS as an integrated architecture comparator | Can an integrated design cover these needs with less maintenance than a custom composite? | **Watch/read; low–medium relevance.** Current code, local practicality and procedural/preference behavior require primary-source inspection. |
+| 5 | MemOS as an integrated architecture comparator | Can an integrated design cover these needs with less maintenance than a custom composite? | **Watch/read; low–medium relevance.** [Local plugin card](systems/memos.md) and [provider boundary](reading/tern-c10-preference-and-action.md) now inspected at documentation level; installed value and all-local inference remain unverified. |
 
 Every row competes against using existing native facilities. Brian's [priority answer](inputs/BRIAN-PRINCIPLES.md) changes the reading order, not the observed capability of a product. The [priority steering](panel-priority-steering.md) replaces unfinished broad assignments: assess procedures/preferences first, with artifact evidence and executive applicability checks. No Phase-D admission or installation follows from a reading shortlist.
 
@@ -38,10 +38,10 @@ Every row competes against using existing native facilities. Brian's [priority a
 | Roadmap lead | Survey status / next question |
 |---|---|
 | LongMemEval-V2 | Methods and ablations read; [note](reading/tern-c2-procedure-evidence.md) distinguishes investigation scaffolding and environment-experience QA from live procedure reuse. |
-| HaluMem | Prior card/Gen125 summary available; inspect extraction/update/QA attribution and judge assumptions in primary source. Reader follow-up can cover it. |
-| StateMemBench / StateMem | Prior search was incomplete; identity and public artifacts remain unverified in this survey. Do not equate “not located then” with unavailable now. |
-| EvoMemBench / EvoArena | Prior refresh records long-context comparisons; read actual task and model controls before accepting the generalization. |
-| GateMem | Prior governance lead; assess shared-principal access/deletion separately from retrieval and history retention. |
+| HaluMem | Primary methods read; [diagnostic note](reading/tern-c8-halumem.md) records retrieval/interface and omission limits. |
+| StateMemBench / StateMem | Primary identity now located: [Can Agent Memory Systems Track Evolving State?](https://arxiv.org/abs/2608.19652). [Methods now read](reading/tern-c11-memory-representation.md); closed-pool scoring maps free-form answers, and wrapper overhead must include its supplied transcript. Previous not-found is retired, not treated as an absence result. |
+| EvoMemBench / EvoArena | EvoArena 2606.13681 methods now read: versioned executable chains plus preference QA; [metric/uptake limits](reading/tern-c9-longitudinal-evidence.md). Do not conflate with other EvoMemBench identities. |
+| GateMem | Primary methods read; [scope response](panel-response-c8.md) separates multi-principal governance from factual supersession and physical erasure. |
 | Supersede; Memora / FAMA | Identities separated: Supersede studies bounded notes and fact updates; [Memora/FAMA](https://arxiv.org/html/2604.20006v1) evaluates current versus obsolete memory. [Methods note](reading/tern-c3-preference-evidence.md). |
 | STALE | Unresolved name in prior intake. Clarify identity rather than silently omit or invent a citation. |
 | Agent Memory Leaderboard | Candidate-discovery infrastructure, not a contestant. Read protocol/model assumptions; do not import a winner or merge its scores with ours. |
@@ -62,3 +62,15 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 [Letta/MemFS](opinions/corvid-c5.md) is now a concrete integrated comparator, not just the original MemGPT paper: versioned files and selective context are relevant; backend/version and prompt-versus-runtime distinctions remain in [Tern’s response](panel-response-c5.md). Native Claude Code’s [recorded run/verify recipes](systems/procedure-maintenance.md) supply a practical documented update path. These are **watch/read and practical patterns, medium confidence**, not measured winners or deployment authorization. Capture/TrustMem add preference-update and transition-learning evidence in [Cairn’s reading](reading/c3-preference-lifecycle.md); their clarification assumptions do not justify repeatedly reconfirming Brian’s explicit directions.
 
 **Cycle6 additions:** ReasoningBank (append-based, self-judged learning) and ReMe (adaptive reuse/pool refinement) now have [primary-method notes](reading/tern-c6-automatic-upkeep.md). Both are relevant reading comparators for Q5/Q3; no installation recommended. Sleep-time Compute is a preparation mechanism, with a file-overlap SWE endpoint, not a demonstrated procedure-maintenance winner.
+
+## Cycle 8: lifecycle and diagnostic coverage
+
+[MemBukkit](systems/membukkit.md) is now a local-code mechanism reading: automated similarity-based supersession with explicit links is relevant, but upstream correspondence and comparative value remain unverified. **Watch; medium relevance, low deployment confidence.** [OM and SKILL.state](panel-response-c8.md) sharpen preservation versus discovery and current-state validity. HaluMem/GateMem are diagnostic comparators, not procedure-benefit rankings. No new installation or experiment.
+
+**Cycle9 additions:** Ground Truth First and RealMem are simulated longitudinal comparators; EvoArena evaluates evolving tasks. [Methods](reading/tern-c9-longitudinal-evidence.md). ReaLMem 2609.19167 is a distinct multimodal personal-archive lead, methods now read in [cycle10](reading/tern-c10-preference-and-action.md); authentic archives, offline preference-ranking limits. No architecture winner follows from a benchmark name or duration label.
+
+**Cycle10:** MemOS local plugin is **watch** as an integrated comparator; do not combine paper abstractions, cloud features and local-plugin guarantees. ReaLMem and Mem2ActBench are now primary-method comparators with [scope limits](reading/tern-c10-preference-and-action.md). No vendor score adopted as our own result.
+
+**Cycle11:** [MemStrata card](systems/memstrata.md), [scoped method reading](reading/tern-c11-memory-representation.md): deterministic single-value supersession is relevant; the published extraction prompt excludes ordinary preferences, so preference fit remains uncertain. SEAL is a learned-adaptation comparator, not a demonstrated replacement for attributed records. Titans’ architectural persistence differs from durable cross-host user memory. All **watch/read**, no install.
+
+**Cycle11 completed:** StateMem methods and SEAL correction limits are incorporated. Memory-R1 adds a learned-controller/external-store comparator; Titans adds architectural memory. [Primary distinctions](reading/tern-c11-memory-representation.md). None is an installed product recommendation. The panel now compares the smallest practical arrangements rather than adding another candidate list.

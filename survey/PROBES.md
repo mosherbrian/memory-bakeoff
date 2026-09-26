@@ -23,3 +23,13 @@ Any later experiment gets one entry naming the question, cost/time, observation,
 **Cycle 5 begun, reading only:** [MemoryArena methods](reading/tern-c5-memory-action.md) separate interdependent action carryover from independent procedure transfer. No product ranking imported. Corvid/Kiln started current Letta/procedure-maintenance primary-source pieces; Cairn continuation queued behind preference-lifecycle work. Zero participant calls.
 
 **Cycle6, reading only:** ReasoningBank, ReMe and Sleep-time Compute methods compared. Memo explicitly assigns routine upkeep to agents and separates retained failures from endorsed lessons. No new empirical result, deployment or participant call.
+
+**Cycle7, reading only:** ReasoningBank v2 protocol/table comparison plus Gen45 cost records. Q4 now targets useful outcomes within actual resource constraints, not universal frontier parity. Bytes/steps are not dollars or energy. No model change or participant call.
+
+**Cycle8 — literature/local-source reading only.** HaluMem, GateMem, local MemBukkit and archived OM sharpen Q3 (retention/findability/applicability). No calls, installation or benchmark run. Memo history bet clarified; no product winner selected.
+
+**Cycle9 — primary reading only.** Ground Truth First/RealMem/EvoArena and native recipe documentation change Q3/Q5 and the memo’s revision policy. No participant calls, runtime changes or installation.
+
+**Cycle10 — reading only.** ReaLMem/Mem2ActBench methods and MemOS local-plugin docs sharpen Q9/Q4. Memo adds current-context qualification of inferred habits. No calls, installation, configuration or provider changes.
+
+**Cycle11 — primary methods only.** SEAL/MemStrata and Titans architecture sharpen Q3/Q4. No ranked-bet change; no calls, installation, parameter training or runtime edits. Panel deepening remains research, not repair.
