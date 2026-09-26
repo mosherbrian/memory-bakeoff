@@ -1,0 +1,11 @@
+# Automatic editing is real; change detection is a separate question
+
+**Tern · 26 September 2026 · source reading, not installed behavior.**
+
+[Letta Code's reflection prompt](https://github.com/letta-ai/letta-code/blob/main/src/agent/subagents/builtin/reflection.md) describes a background agent that reads supplied conversation material, inspects existing memory, filters candidate learning and edits selected files. Reusable multi-step workflows can become skills; updating an existing skill is preferred to duplication. It directs archival of some retired context, links between files, and git commits carrying agent identifiers and a description. A failed commit is reported rather than treated as persistence. This is a concrete workflow, not merely a storage API.
+
+The source is an instruction to a model, not measured compliance or a dedicated prerequisite watcher. Its inputs can contain a newly observed configuration change even without command failure. “No error” therefore does not imply “no usable signal.” Git preserves prior edited content; that is not necessarily the complete failed execution or proof that future retrieval finds it. **Medium confidence** in the documented mechanism, unknown reliability on Brian's work.
+
+**New comparator:** [pi-reflect's own README](https://github.com/jo-inc/pi-reflect) describes LLM-proposed edits to markdown targets from transcripts and reference inputs, backups, edit-size/matching checks and automatic commits when a target is in a repository. It documents command-driven invocation and scheduling through an external scheduler. Its correction-rate and repeated-edit statistics are proposed indicators; neither establishes reduced user effort or correct applicability. No package was installed, no setup command executed, and no cost estimate accepted as Brian's cost. Source-code inspection is the next research step.
+
+**Position:** the actionable comparison is which existing mechanism supplies capture, justified revision and delivery with the least upkeep—not automatic versus manual as a proxy for service versus files. Native coordination is unfinished, but its components need not all be invented. A changed prerequisite should prompt reconsideration; it does not automatically prove a skill obsolete. **Medium-confidence synthesis.**

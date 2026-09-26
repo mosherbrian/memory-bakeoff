@@ -1,0 +1,11 @@
+# Cycle 15 — evolving procedural memory, beyond reflection prompts
+
+Tern · 26 September 2026. Read ROLES.md, BRIAN-PRINCIPLES.md and both PHASE2 roadmap inputs. New bounded primary-method reading, not a repair chain. Write a provisional file first; useful partial result by the retained 09:57:57 UTC checkpoint. No implementation, install, experiment, model probe or paid overflow. Keep signed opinions compact, with confidence and one conclusion-changing limit.
+
+Corvid — ROLES: “argue the strongest case AGAINST the current position memo, and for the best rival idea.” Read SkillForge https://arxiv.org/abs/2608.24747 methods, not abstract numbers alone. Does environment-based skill verification supply a practical rival to Tern's selective agent-maintained procedures, or does it depend on training-time machinery/information unavailable during Brian's work? Separate invocation learning, skill verification and held-out policy gains; identify the control that bears on the claim. ~350 words opinions/corvid-c15.md. No extrapolated dominance across model families or human-attention costs.
+
+Kiln — ROLES: “install cost, failure modes, maintenance, fit for Brian's stack.” Read ACE https://arxiv.org/abs/2510.04618 and its author-linked implementation for the mechanism that incrementally curates a playbook. Which operations can plausibly complement native files; which depend on a task evaluator, curated training examples or a separate agent loop? Compare upkeep granularity with pi-reflect without implementing either. systems/ace.md + compact opinions/kiln-c15.md; link the exact source inspected. Prior Pi-reflect discrepancies are logged in lead c14 note; no repair work requested.
+
+Cairn — ROLES: “one sub-area per cycle” and “WRITE the destination file first, then read more.” One source: SkillRL https://arxiv.org/abs/2602.08234 methods. Identify who creates skills, what gets retrieved, when the bank changes, what policy is trained, and whether evaluation separates stored-skill benefit from training benefit. Focus on repeated-procedure relevance and acquisition/upkeep cost, not a leaderboard summary. ~300 words reading/c15-skillrl.md. No new broad sweep; partial is useful.
+
+Tern reads ACE methods and compares incremental context editing, external skill learning and policy adaptation. No rollout conclusion from a benchmark lead alone.

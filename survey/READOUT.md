@@ -1,11 +1,13 @@
-# Survey readout — cycle 12: agents own the upkeep, whichever store we choose
+# Survey readout — cycle16: preserved history still needs a route back
 
-**26 September 2026 · Tern · Explore · all three panel opinions received**
+**26 September2026 · Tern · Explore · all three panel pieces received**
 
-**Position:** start with agent-maintained native procedures/preferences and findable history; integrated memory is the strongest rival. Automation does not require a service, and a canonical repo does not provide cross-host delivery by itself. [Memo](POSITION-MEMO.md), [three arrangements](ALTERNATIVES.md).
+**Position:** agents should own routine capture and upkeep. Native remains the provisional starting point, but Hindsight's documented Pi integration and source-linked revisions strengthen the integrated rival. Brian should not become the librarian. [Memo](POSITION-MEMO.md).
 
-**What changed:** the comparison now separates who captures, corrects and delivers learning from where it lives. Native integration is an open cost, not a completed solution. Learned controllers can fit inside either arrangement. The clarification literature does not establish cheap live interruptions for Brian. [Panel response](panel-response-c12.md).
+**What changed:** distinguish retained originals, editable interpretation, discovery and applicability. A-MEM's evolving descriptions are not proof of source deletion. Hindsight documents original storage even where extraction leaves no recall result. The question is now what the agent can recover and use, not simply what the database retains. [Evidence and panel response](panel-response-c16.md).
 
-**Confidence:** medium in the starting recommendation; low in a measured cost winner. Brian should not become the memory librarian or copy/sync operator.
+**Confidence:** medium on these mechanism distinctions; comparative procedure/preference benefit and total upkeep remain unknown. No product selected or experiment run.
 
-**Top three questions:** which procedures repay upkeep; how corrections become applied preferences; how changed prerequisites invalidate learning. **Next:** Corvid is researching an integrated correction workflow, Kiln the missing native glue, Cairn human-attention evidence. All three dispatches started; Tern continues synthesis. Next actual progress checkpoint 09:57:57 UTC. No experiments or deployments; Claude owns publication.
+**Top questions:** which procedures repay upkeep; how corrections become applied preferences; how changed conditions invalidate learned guidance.
+
+**Next:** Corvid's practical recommendation, Kiln's original-document path and Cairn's HippoRAG2 reading all started. Tern continues source synthesis; checkpoint10:15Z. The09:57 checkpoint was missed during lead context recovery and disclosed, not extended retroactively. Claude owns publication.

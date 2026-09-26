@@ -1,0 +1,7 @@
+# kiln (Practitioner) — c16: Hindsight is a different object than we measured
+
+**kiln · 2026-09-26 · from product docs + paper abstract (see systems/hindsight.md). Quoting ROLES.md: "install cost, failure modes, maintenance, fit for Brian's stack".**
+
+The one thing to internalize: our "Hindsight" result (append-only contamination, raw/no-LLM) describes a pipeline mode the current product does not ship as its story — LLM extraction, observation consolidation with exact-quote evidence and freshness checks, four-strategy retrieval, reflect reasoning. Citing the old failure against the current system would be the category error the TWO-ROLES note warned about in the pi-lcm case. The honest statement is narrower: we measured the raw substrate, never the full pipeline, and the pipeline's mitigations (consolidation, freshness verification, opinion confidence) are unevaluated by us.
+
+Practically, Hindsight is now the best-worked example of the c12 tripwire's "service" side: per-repo shared banks, auto-recall/auto-retain hooks, MCP tools, local-daemon option with ollama/claude-code providers. If the tripwire symptom ever fires (same correction hand-carried across hosts twice in a week), this is the first plugin to trial — on Claude Code, lifecycle-gated, with bank scoping reviewed up front. Until then it stays on watch: a Postgres-backed service with per-retain LLM billing and no Pi path does not earn its keep against files that cost nothing. **Medium-low confidence** (docs-verified mechanics, zero hands-on; vendor benchmarks not imported).

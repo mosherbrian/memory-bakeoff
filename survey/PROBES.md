@@ -35,3 +35,9 @@ Any later experiment gets one entry naming the question, cost/time, observation,
 **Cycle11 — primary methods only.** SEAL/MemStrata and Titans architecture sharpen Q3/Q4. No ranked-bet change; no calls, installation, parameter training or runtime edits. Panel deepening remains research, not repair.
 
 **Cycle12:** no probes or participant calls. Primary clarification methods and panel comparison changed Q5/Q6/Q9 and made native delivery gaps explicit; ranked bets unchanged.
+
+**Cycle13:** primary source reading only; no code executed from upstream projects. Letta reflection and Pi reflection documentation refine Q6; no deployment.
+
+**Cycle14:** code/paper reading only; no upstream code executed, no live model probe, no installation. Static Pi-reflect concerns recorded without a repair chain.
+
+**Cycle15:** papers/source reading only, no training/probe/install. Comparative controls refined Q5/Q4; no counters or canonical-format change deployed.

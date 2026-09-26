@@ -1,4 +1,4 @@
-# Mechanism-based roster refresh — cycle 11
+# Mechanism-based roster refresh — cycle 16
 
 Tern · 26 September 2026 · **Phase C, reading shortlist only.** Nothing here admits a new contestant or releases a benchmark. Confidence is in the relevance of the question, not product efficacy. Required context: [roadmap](inputs/PHASE2_ROADMAP.md), [reconciliation](inputs/PHASE2_ROADMAP_RECONCILIATION.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md). Old “not located” findings remain dated uncertainty, not declarations of current nonexistence.
 
@@ -28,7 +28,7 @@ Every row competes against using existing native facilities. Brian's [priority a
 
 ## Explicit deferrals
 
-- **A-MEM and Hindsight:** keep in the field map. Defer additional product work until note evolution or reflection answers a distinct question above. The full extraction/LLM paths must not be judged by raw-adapter results. **Medium confidence in deferral.** [A-MEM](https://arxiv.org/abs/2502.12110), [Hindsight](https://arxiv.org/abs/2512.12818).
+- **Hindsight: watch, medium relevance / installed fit unknown.** Paper methods and current observation/integration docs now read; source-linked revisions and documented Pi support strengthen the integrated comparator. [Evidence and limits](reading/tern-c16-hindsight.md). Full extraction/LLM paths must not be judged by old raw-adapter results. **A-MEM: watch/read, medium mechanism confidence.** [Full methods](reading/tern-c16-amem.md) now distinguish source content from derived updates, with positive QA ablation evidence and unresolved procedural transfer.
 - **Mem0:** reuse existing profile-specific results; reconsider only for an identified mechanism/profile change, not because it remains in an old queue. **Medium confidence in deferral.** Perseus is now explicitly reopened for role-specific reading above, while its tested limitations remain attached. [Bake-off](inputs/ROUND1_FINAL_READOUT.md), [roadmap](inputs/PHASE2_ROADMAP.md).
 - **Habitus:** historical conditional candidate; no new distinct question established in this cycle. **Low confidence**, hold for a concrete identity/use case. [Roadmap](inputs/PHASE2_ROADMAP.md).
 - **MemHarness, Attestor, EvoMem:** preserve as discovery leads. The old intake contains unresolved or potentially overloaded names; no capability or availability judgment is made here. **Unknown**, identity/source check before comparison. [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md).
@@ -77,3 +77,12 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 
 
 **Cycle12 synthesis:** [A/B/C alternatives](ALTERNATIVES.md) separates automatic capture/upkeep from native, integrated and learned representations. A learned controller may edit an external store; native files may be agent-authored. No architecture wins by being labeled automatic. Native cross-host refresh remains an integration question. Medium confidence in the responsibility distinction; no new product winner or installation.
+
+
+**Cycle13 update:** Letta reflection is a concrete background revision workflow; pi-reflect is a native-files comparator (README read, implementation pending). Both belong under agent-authored learning and context maintenance, not a new roadmap layer. [Source note](reading/tern-c13-upkeep.md). Confidence medium in documented facilities, low in comparative user benefit.
+
+
+**Cycle14 update:** pi-reflect implementation read: invoked native edits are real; complete outcome evidence, successful versioning and next-host loading must not be inferred from the target file alone. [Lead source limits](reading/tern-c14-pi-reflect.md). PAHF feedback methods read, with simulated users and separate no-feedback test phases; [methods](reading/tern-c14-feedback-and-learning.md). ACE/SkillRL/SkillForge are newly selected method readings, not yet ranked winners.
+
+
+**Cycle15 methods read:** ACE incremental playbooks, SkillRL co-evolving bank/policy and SkillForge explicit invocation/outcome tracking are now [compared](reading/tern-c15-skill-learning.md), with [ACE controls](reading/tern-c15-ace.md). Source mechanisms strengthen agent-maintained procedure candidates; no portable cost winner. Medium confidence in the distinctions. Hindsight/A-MEM full methods are next, not yet completed.

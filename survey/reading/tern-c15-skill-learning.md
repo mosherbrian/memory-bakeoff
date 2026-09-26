@@ -1,0 +1,13 @@
+# A skill bank, its selector and its policy are different contributions
+
+**Tern · 26 September 2026 · primary-method reading, no training or experiment.**
+
+**SkillForge — useful tracking, not causal certification.** [Methods and tables 2–3](https://arxiv.org/html/2608.24747v1) make skill calls explicit, track episode outcomes after calls and prioritize underperforming skills for LLM review. Reflection remains part of verification; objective outcome signals do not replace semantic judgment altogether. Invocation plus outcome measures association, not whether the skill caused the result.
+
+The frozen-model transfer table distinguishes no bank, initial bank and evolved bank. On ALFWorld these score 26.4, 27.9 and 32.9; on AppWorld 26.8, 27.4 and 31.5. Bank evolution therefore adds 5.0/4.1 points over the initial bank, whereas the evolved-bank advantage over no bank is 6.5/4.7. The separate trained-policy ablations address other contributions. Comparing those different models/settings cannot establish that the headline gain is “mostly RL.” Nor does a small absolute transfer gain make a mechanism useless. **Medium confidence in relevance; no equal-cost comparison for Brian.**
+
+**SkillRL — co-evolution, not a drop-in library result.** [Methods and table 3](https://arxiv.org/html/2602.08234v1) distill successful and failed trajectories through a teacher, include general skills in context and retrieve task-specific skills by similarity. Cold-start supervised training precedes reinforcement learning; validation failures drive bank expansion/refinement. Removing dynamic evolution tests that component inside a trained system. Replacing skills with raw trajectories changes representation and usable context, not just the presence of memory. These controls support the combined method but do not isolate a portable bank's effect on an unchanged agent.
+
+The algorithm expresses additions as a union; the prose also requests refinement of ineffective skills. Neither justifies a blanket claim that every old skill is permanently immutable. Acquisition includes rollouts, teacher generation and training; compact retrieval alone does not price the whole process. **Medium confidence in its lesson about learning to use skills; low in a direct adoption case for this fleet.**
+
+**Practical synthesis:** retain the procedure, the circumstances in which it helped and the observable result. Treat use/outcome statistics as leads for investigation, not automatic retirement scores. An exit code or changed hash may be relevant evidence without being the intended outcome. No new counters, schemas, training or approval gates are being deployed. [ACE comparison](tern-c15-ace.md).

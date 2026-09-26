@@ -1,4 +1,4 @@
-# Question register — cycle 12
+# Question register — cycle 16
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -10,7 +10,7 @@
 
 | Rank / stable ID | Decision question | V × U / C | Route, next action, owner |
 |---|---|---|---|
-| **1 · Q5** | Which procedural memory best prevents re-learning: explicit runbooks, executable skills, automatically extracted procedures, or reconstructing episodes on demand? | 5 × 4 / 1 = **20** | **Literature first.** Cycle13 examines automatic upkeep after changed prerequisites. Compare reusable investigation methods, task solutions and episode reconstruction; methods/outcome notes are now written. Count authoring/upkeep, applicability and repeated discovery—not only recall. **Tern** synthesizes; no new experiment. |
+| **1 · Q5** | Which procedural memory best prevents re-learning: explicit runbooks, executable skills, automatically extracted procedures, or reconstructing episodes on demand? | 5 × 4 / 1 = **20** | **Literature first.** Cycles13–16 distinguish automatic upkeep, skill acquisition/use and changing source interpretation. Compare reusable investigation methods, task solutions and episode reconstruction; methods/outcome notes are now written. Count authoring/upkeep, applicability and repeated discovery—not only recall. **Tern** synthesizes; no new experiment. |
 | **2 · Q9** | What captures, corrects, delivers and applies Brian's preferences with minimal repeated correction and little maintenance? | 5 × 3 / 1 = **15** | **Literature plus reuse, before any cheap probe.** Recall/use and currency now separated in [primary methods](reading/tern-c3-preference-evidence.md). Compare explicit corrections with inferred tendencies and verify host loading at source level. **Tern**, Corvid and Kiln; Cairn follows lifecycle. Capture/delivery winner unknown. |
 | **3 · Q3** | How should outcome evidence, version/scope, and corrections distinguish an applicable successful procedure from a failed or obsolete one, without erasing the past? | 4 × 4 / 2 = **8** | **Literature.** Test Cairn’s procedure + outcome check + environment idea against lifecycle/skill evidence. Inspect what checks establish and cost, and how changed prerequisites invalidate reuse. AgentRunbook-C methods read complete: QA remains separate from execution. AFTER, BASM and Skill-Evo4GUI supply outcome/transfer evidence with distinct limits. **Tern** synthesizes; Corvid challenges the new evidence, Cairn examines supersession/Perseus. |
 | **4 · Q2** | Which responsibilities need explicit components, and which can native history/full context plus executive reasoning already supply? | 4 × 4 / 3 = **5.3** | **Answerable by a cheap probe, after reuse.** Use the roadmap, Gen45 limits, panel rivals and the mechanism roster. The intended comparison now concerns procedural/preference benefit; do not build five services by default. **Tern**. |
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles 1–12 have produced the field map, ranked memo and source-method notes. [Alternatives](ALTERNATIVES.md) separates automation responsibility from native/integrated/learned representation. Q5/Q9/Q3 remain first: the missing decision evidence is who detects changes, updates affected learning and delivers corrections without Brian operating the plumbing. Cycle13 is dispatched to all three panelists: integrated correction workflow (Corvid), native facilities versus missing glue (Kiln), and measured human-attention cost (Cairn). Tern completes comparative synthesis and continues primary reading. Publication is with Claude.
+Cycles1–16 are synthesized. Cycle17 panel work has actually started: Corvid compares the practical integrated-versus-native choice, Kiln traces Hindsight original-document access, Cairn reads HippoRAG2 discovery/continual-learning controls. Tern continues primary-source synthesis. Q5/Q9/Q3 remain first; Q6 now has a more concrete integrated comparator. External progress checkpoint10:15Z; no rollout or new campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -58,3 +58,23 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle12 decision:** agent capture/upkeep and storage architecture are independent choices. Native remains the provisional starting point; integrated runtime is the strongest rival, with learned controllers potentially inside either. Q6 now asks which concrete workflow is removed, not whether a product calls itself automatic. Native cross-host delivery is not yet a complete implemented arrangement. All three comparative opinions received; cycle13 started. [Response](panel-response-c12.md).
+
+
+**Cycle13 decision:** Q6 compares missing operations rather than whole product labels. Letta has a concrete background editing workflow; pi-reflect is a newly located native comparator pending implementation reading. Prerequisite observation, edit correctness and delivery remain distinct. Q4 tracks correction-discovery delay as a hypothesis, not a measured human-attention cost. All panel outputs received; PAHF methods still need their own reading. [Synthesis](reading/tern-c13-upkeep.md).
+
+
+**Cycle14 in progress:** PAHF methods distinguish simulated feedback learning from no-feedback held-out application; feedback frequency does not price human attention. Q5 separates useful evidence from a universal per-entry checker requirement. [Primary note](reading/tern-c14-feedback-and-learning.md). Corvid received; remaining panel source work executing, no cycle completion claimed.
+
+
+**Cycle14 complete:** all panel readings received. Native reflection has concrete implementations, but writing/versioning/loading and semantic improvement remain separate. Q5 moves to ACE/SkillRL/SkillForge methods to compare incremental playbooks, external skill evolution and policy training. Q4 retains actual feedback costs as unknown. No repair or probe; [response](panel-response-c14.md).
+
+
+**Cycle15 methods in progress:** Q5 distinguishes bank content, retrieval/selection and trained policy. SkillForge transfer and SkillRL ablations are different controls; invocation/outcome association is not causal attribution. Q4 prices acquisition as well as compact retrieval. Corvid/Kiln received; Cairn SkillRL judgment executing. [Lead methods](reading/tern-c15-skill-learning.md). No new metadata convention or runtime change.
+
+
+**Cycle15 complete:** all three panel pieces received. Bank content, retrieval, policy training and deployment-time benefit remain separate questions; no metadata/counter convention is adopted merely because it is easy to write. Next Q3/Q6 deepens Hindsight/A-MEM source evidence versus derived interpretation, previously abstract-only roster entries. [Response](panel-response-c15.md).
+
+
+**Cycle16 interim:** Q6 now recognizes officially documented Pi support in Hindsight; Q3 separates original evidence from extracted facts and source-linked observations. The current product is not interchangeable with its paper or an old raw/no-LLM adapter. [Lead note](reading/tern-c16-hindsight.md). Source fidelity and actual host operation remain unmeasured; follow-ups executing, no complete-cycle claim.
+
+**Cycle16 decision:** Q3 separates retained original, derived interpretation, source attribution and discovery. Current documentation narrows Hindsight's unresolved provenance question; A-MEM evolution is not itself evidence of source deletion. Q6's integrated alternative gains practical credibility from Pi integration. The next question is comparative work saved, not whether automation exists. [Response](panel-response-c16.md).

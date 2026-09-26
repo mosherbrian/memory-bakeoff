@@ -1,6 +1,6 @@
 # Three arrangements for Brian — and the decision that cuts across them
 
-**Tern · cycle 12 · 26 September 2026 · advice, no deployment · medium confidence.**
+**Tern · cycles12–16 · 26 September 2026 · advice, no deployment · medium confidence.**
 
 My starting choice is **agent-maintained native procedures and preferences backed by findable history**. The strongest rival is an integrated runtime that actually removes capture, correction and delivery work. Learned memory belongs in either arrangement; it is not automatically a third exclusive stack. Brian should not author, approve or synchronize every routine memory update.
 
@@ -11,6 +11,8 @@ This separates **representation and delivery** from **who does the work**. A fil
 | **A. Native files/skills + recoverable episodes** | Existing agents can keep conditional procedures, explicit directions and supporting evidence in editable forms. Selective loading avoids repeating the entire past. | Cross-host capture, revision and refresh are not supplied merely by choosing a canonical repo. The proposed complete workflow has not been deployed or measured. | **Start here, medium confidence**, using existing facilities. Agents own upkeep. Reverse if this arrangement still makes Brian repeat corrections or maintain delivery plumbing. |
 | **B. Integrated memory runtime + executive reasoning** | Shared editable memory, retrieval and background consolidation may replace several pieces of host-specific glue. This is the strongest alternative to A. | Backend integration, semantic update quality and whole-loop cost remain distinct from storage/versioning. A service returning context does not ensure that every host receives or applies it. | **Watch seriously, medium confidence**. Prefer it when a concrete capture/update/delivery mechanism removes more work than operating it adds. No need to require Brian to repeat an already reported pain. |
 | **C. Learned controller or adapted local model + retained sources** | Learn admission, retrieval or procedural behavior rather than repeatedly reconstructing it. An external-store controller can coexist with A or B. | Acquisition, correction and transfer costs; adapted weights and learned external-memory policies have different revision paths. No demonstrated best fit across Brian's hosts. | **Research comparator, low confidence in near-term adoption**. Do not demand frontier parity; demand useful benefit within the actual budget. |
+
+Current-product evidence strengthens B: [Hindsight source/integration reading](reading/tern-c16-hindsight.md) locates Pi delivery and source-linked revisions. This is a concrete rival to custom glue, while comparative burden remains unmeasured.
 
 Sources and limits: [native delivery paths](systems/preference-delivery-paths.md), [integrated-memory methods](reading/tern-c4-integrated-memory.md), [automatic upkeep](reading/tern-c6-automatic-upkeep.md), [learned representations](reading/tern-c11-memory-representation.md). These describe mechanisms and bounded results, not an installed A/B/C comparison.
 
