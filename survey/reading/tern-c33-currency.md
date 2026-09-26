@@ -14,7 +14,7 @@ The proposed design keeps conversation rounds as values, enriches search keys wi
 
 [OSS main.py, inspected current main](https://github.com/mem0ai/mem0/blob/main/mem0/memory/main.py): `history(memory_id)` reads the history DB; `_update_memory` records previous/new text and UPDATE; `_delete_memory` removes the vector entry and records its previous text with DELETE. `reset` resets the history DB too. These are inspected code paths, not a runtime durability test or a guarantee of complete original-conversation retention.
 
-The [extraction prompt](https://github.com/mem0ai/mem0/blob/main/mem0/configs/prompts.py) uses `linked_memory_ids` for related topics, continuation and revisions. That name alone does not establish a supersession chain. Kiln is supplying exact product sources for its additional history/chain claims; they remain qualified until distinguished.
+The [extraction prompt](https://github.com/mem0ai/mem0/blob/main/mem0/configs/prompts.py) uses `linked_memory_ids` for related topics, continuation and revisions. That name alone does not establish a supersession chain. Kiln subsequently withdrew the supersession-chain reading after source inspection. Related links and an edit log remain distinct mechanisms.
 
 **Judgment:** current mutable records and retained edit history can coexist. “Base memory physically removes a fact” must identify the surface and version; it cannot stand in for a whole-product losslessness verdict. High confidence in inspected methods, deployment behavior unmeasured.
 

@@ -1,4 +1,4 @@
-# Question register — cycle 32
+# Question register — cycle 37
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–32 are synthesized. Mem0's raw adapter, research update loop and current additive documentation are distinct. Cycle33 compares read-time currency with explicit updates and source history; all three panelists started. Tern owns synthesis, checkpoint11:40Z. No rollout or campaign4 package.
+Cycles1–37 are synthesized. Q5 now gives stronger weight to automatic extraction plus concrete examples for later tasks, without equating no weight updates with low total cost. Cycle38 examines AutoManual rule management and manual construction. Tern owns synthesis; no rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -121,3 +121,21 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 **Cycle32 interim:** Q6 now distinguishes Mem0 raw infer=False evidence, the paper's automatic operation selection, and current additive-extraction documentation. A managed endpoint does not establish automatic correction or host insertion. [Lead source note](reading/tern-c32-mem0-profiles.md). Reader still working; no complete-cycle claim.
 
 **Cycle32 complete:** Q6 includes a justified Mem0 profile/version reconsideration, not a generic rerun. Q3 asks whether retained observations plus read-time selection can supply currency without destructive revision. [Response](panel-response-c32.md).
+
+**Cycle33 in progress:** current OSS Mem0 code retains update/delete history separately from vector entries; a related-memory link is not automatically supersession. Q3 compares where currency is resolved, not whether every product needs another service. Cairn original LongMemEval reading remains active at the unchanged11:40Z checkpoint. Lead source note: [currency](reading/tern-c33-currency.md). Cycle34 broadens to sensor-grounded refresh; only actual dispatches count.
+
+**Cycle34 interim:** Q3/Q5 now include fresh observation as an alternative to resolving old state descriptions. This strengthens the existing method-versus-current-conditions distinction without adopting universal checks. DynaMem is a field-map expansion into physical-action memory, not a product candidate for Brian. [Qualified panel response](panel-response-c34.md).
+
+**Cycle33 complete:** Q3 treats read-time reconciliation and maintained current views as alternatives or complements. Original LongMemEval does not compare their full upkeep costs; current Mem0 OSS logs prior values separately from vector updates/deletes. Q5 broadens next to observation-grounded state refresh, keeping learned methods distinct. [Response](panel-response-c33.md).
+
+**Cycle34 complete:** Q3/Q5 add environment-grounded refresh as a conditional alternative to reconciling stale descriptions. Robotics supplies a mechanism/control example, not measured software transfer. Next Q2/Q5 compares reflective experience with planning and prospective behavior. [Response](panel-response-c34.md).
+
+**Cycle35 complete:** Q2/Q5 distinguish retained observations, derived reflections and future plans. Generative Agents supplies interview-time access ablations and observational social behavior, not a measure of Brian's work benefit. Next compare failure feedback with additional attempts using Reflexion, not another abstract-level sweep. [Response](panel-response-c35.md).
+
+**Cycle36 complete:** Q5 distinguishes within-task recovery from longer-lived guidance. Q4 counts internal attempts behind a final-submission metric; Q3 keeps feedback quality separate from whether a test was self-authored. Exact coding trial cap is unresolved rather than invented. Next ExpeL supplies a cross-task candidate. [Response](panel-response-c36.md).
+
+
+**Cycle37 complete:** automatic candidate authorship complements editable guidance. Q4 keeps acquisition and deployment budgets separate; Q3 keeps changed-condition validity open. No universal vote rule, recovery-note exclusion or validation gate adopted. [Response](panel-response-c37.md).
+
+
+**Cycle38 interim:** Q3/Q5 distinguish inadequate guidance from inadequate application. AutoManual adds an explicit diagnostic path; scope prose is not enforcement. Acquisition has a reported setup-specific figure, not zero cost. Reader identity corrected in flight; methods synthesis pending at unchanged12:20Z. [Interim response](panel-response-c38.md).

@@ -1,0 +1,13 @@
+# Cycle38 — can agents build and maintain the manual?
+
+Tern ·26 September2026 · Explore · checkpoint **12:20Z**. Cycle37 panel received. Required: ROLES.md, inputs/BRIAN-PRINCIPLES.md, inputs/PHASE2_ROADMAP.md and inputs/PHASE2_ROADMAP_RECONCILIATION.md. WRITE first, compact signed confidence and source links. No install, experiment, repair, paid overflow or campaign package.
+
+Primary identity verified: **AutoManual**, Chen et al., NeurIPS2024, https://arxiv.org/abs/2405.16247 (v4); author repo https://github.com/minghchen/automanual. Compare agent-built rules/manuals with ExpeL insights and our selected agent-maintained guidance; do not compare headline numbers across unmatched settings.
+
+**Corvid — ROLES “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** opinions/corvid-c38.md <=300 words. Strongest case for agent-built manuals as the default producer of procedural guidance. What work is removed, moved, or still required? Read actual mechanism/control, one recommendation and reversal. C37 accepted candidate authorship; decisions move to a model, not vanish; cost unestablished; no blanket cross-task plus changed-condition validation obligation for every lesson.
+
+**Kiln — ROLES “install cost, failure modes, maintenance, fit for Brian’s stack.”** systems/automanual.md plus opinions/kiln-c38.md <=150 words. Bounded author-repo/paper read: rule schema, revision/deletion, failure evidence, final manual artifact, host/environment dependencies. Inspect how old evidence survives rule changes, distinguishing unreported from absent. Prototype vs adapter; no install. C37 adding reflections harmed one extraction arm; not proof all recovery notes must be quarantined, or votes verify truth. Publication age does not establish maintenance status.
+
+**Cairn — ROLES “one short paragraph per source and a verdict per source.”** reading/c38-automanual.md <=400 words WRITE FIRST. One primary methods/control read: separate building from evaluation, Planner/Builder/Formulator contribution, same-executor/manual controls, supplied demonstrations/environment knowledge/rewards, smaller-model transfer, acquisition cost and changed-environment meaning. What does case-conditioned prompting actually isolate? C37 marginal correction: full-vs-retrieval-only HotpotQA +8 not +3 (ALFWorld +4); +3 is versus insight-only. Appendix C has hardware, D/E settings, but no located full acquisition ledger. Same-task adaptation remains learning; single-attempt holdout is useful evidence, not a universal admission rule. No correction-only turn.
+
+**Tern:** publish c37; independently read rule-management and adaptation controls. Keep Brian’s procedural re-learning priority and proportional rigor.

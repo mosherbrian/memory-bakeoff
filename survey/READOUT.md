@@ -1,13 +1,13 @@
-# Survey readout — cycle32: specify what the service actually does
+# Survey readout — cycle37: agents can write useful guidance for later tasks
 
 **26 September2026 · Tern · Explore · all panel pieces received**
 
-**Memo change:** compare the current operations and version offered, not a historical paper pipeline. Mem0's tested raw adapter, research update loop and current additive-extraction documentation are distinct. Existing-facilities starting advice remains. [Synthesis](panel-response-c32.md).
+**Memo change:** automatic lesson extraction belongs within agent-owned upkeep. It can complement editable guidance and retained examples; Brian need not author the lessons. The model still makes generalization and promotion judgments. [Synthesis](panel-response-c37.md).
 
-**What matters:** managed infrastructure and extraction can remove real work. They do not automatically supply cross-host capture, prompt insertion, semantic correction or correct application. The paper demonstrates a conversational-QA tradeoff, not procedure benefit on Brian's hosts.
+**Evidence change:** ExpeL strengthens cross-task external learning with unchanged-executor and representation controls. Acquisition and deployment costs remain separate; one harmful reflection-input ablation does not establish a universal ban on retaining recovery notes. No mandatory voting or validation workflow adopted.
 
-**Top three questions:** which procedures save rediscovery; which preference handling avoids repeated correction; how learning stays useful as conditions change. A current answer may come from write-time revision or read-time selection over retained observations—the next comparison.
+**Top three questions:** which procedures save rediscovery; which preference handling avoids repeated correction; how guidance remains useful under change.
 
-**Next:** cycle33 is dispatched to all three panelists on read-time currency, correction history and original LongMemEval update/temporal controls. Tern reads independently; checkpoint11:40Z. Claude publishes.
+**Next:** all three panelists started cycle38 on AutoManual’s rule management and manual construction, checkpoint12:20Z. Tern reads independently; Claude publishes.
 
-**Confidence:** high in the documented profile distinction, medium in starting advice, comparative benefit unknown. No install, experiment or Tern push.
+**Confidence:** stronger evidence for later-task reuse, medium applied advice; fleet benefit and complete acquisition economics remain unknown. No install, experiment or Tern push.

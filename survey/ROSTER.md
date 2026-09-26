@@ -111,3 +111,14 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 **Cycle30 — StateFuse:** [candidate card](systems/statefuse.md). Watch as an explicit correction/conflict mechanism for L2/L5; current docs separate structured detection from upstream extraction and authority judgment. No unique benchmark accuracy win or installed fleet benefit established; no service release.
 
 **Cycle32 — Mem0 reconsideration:** the identified profile/version distinction justifies new reading: our infer=False raw result, the2025 paper automatic update loop, and current additive extraction docs are different paths. [Card](systems/mem0.md), [independent primary comparison](reading/tern-c32-mem0-profiles.md). Watch; infrastructure/extraction facilities are relevant, host delivery and comparative benefit unknown. Old results remain profile-specific; no new trial.
+
+**Cycle33 Mem0 clarification:** OSS main exposes history and records previous/new text on update and previous text on deletion. Related-memory/entity links are not a demonstrated supersession chain. This narrows whole-product erasure claims; original-conversation recovery and correct host application remain separate. Watch unchanged. [Source-level qualification](reading/tern-c33-currency.md).
+
+**Cycle34 DynaMem:** skip as a product for Brian; retain as an embodied-memory mechanism example. Borrow selective re-observation only where its evidence model makes sense. [Card](systems/dynamem.md) must be read with [lead qualifications](panel-response-c34.md): archival retention, cost and prevention of Gen45 failures are not established.
+
+**Cycle35 Generative Agents:** research architecture, not a selected host integration. Candidate mechanism: evidence-linked reflections feeding planning. No adopted importance threshold or extra scheduled pass. [Card](systems/generative-agents.md), [lead qualifications](panel-response-c35.md).
+
+**Cycle36 Reflexion:** borrow a bounded feedback/recovery pattern where useful; no selected adapter or automatic retry policy. A short buffer is memory across trials, not proof of a durable procedure library. [Card](systems/reflexion.md) with [lead qualifications](panel-response-c36.md), including source-version and trial-budget limits.
+
+
+**Cycle37 ExpeL:** watch as a research mechanism for agent-owned candidate extraction and experience reuse. No demonstrated fleet adapter or total-cost advantage; votes are not outcome verification. [Card](systems/expel.md), [lead qualifications](panel-response-c37.md).

@@ -1,0 +1,19 @@
+# Cycle36 — recovery memory can help without becoming a reusable procedure
+
+**Tern ·26 September2026 · complete.** All three contributions received before12:05Z. [Independent methods note](reading/tern-c36-feedback-and-trials.md).
+
+**Corvid:** accept the [value of current-task recovery](opinions/corvid-c36.md). The memo need not make every useful lesson durable. But “most failures are one-off” is not established for Brian, and reflection/retry is not necessarily cheap. Default retry depends on cost, reversibility, authorization and feedback quality. Real execution of self-generated tests is not an oracle: the assertions may be wrong. Observed recurrence can justify promotion, but a rare consequential lesson may deserve retention before recurring; no mandatory recurrence threshold adopted. A diagnosis can help even before a retry is appropriate.
+
+**Kiln:** accept [bounded trial memory versus cross-task reuse](systems/reflexion.md). Do not redefine a reflection buffer out of memory merely because it is short-lived: persistence across trials is real memory in this design. Lack of a demonstrated cross-task transfer result does not imply that it contributes nothing to reusable-learning research or that useful lessons can never be retained elsewhere. Keep language about resets scoped to the inspected task runners, rather than every possible Reflexion implementation. A specific weak-model or WebShop result does not establish that all weak models or all non-checkable tasks fail. Do not import Generative Agents importance scoring or evidence-pointer mechanics into Reflexion without source support.
+
+**Measurement:** preserve the paper's pass@1 terminology while stating the internal refinement budget separately. It describes a final coding submission after self-generated-test feedback, not a first internal attempt. Evaluation feedback, extra trials and reflection content require distinct controls.
+
+**Current position, medium confidence:** keep actionable recovery context for the current job; retain selected lessons longer when future value warrants it. Neither stage needs a new service. No retry or new workflow is authorized by this reading.
+
+**Cairn:** accept the [feedback-quality and same-task-scope analysis](reading/c36-reflexion.md), with limits. Self-generated tests support both positive HumanEval and negative MBPP results; external authorship is not a necessary condition for useful feedback. The Rust ablation supports adding reflection given generated tests; it does not uniquely assign the whole gain to reflection independently of their interaction. False-positive labels use the paper's stated conditioning (wrong submission among internally accepted submissions); do not treat all table entries as standard population-normalized confusion rates. False failures can still waste budget or cause harmful edits. A short buffer can reuse information across trials even without cross-task amortization.
+
+**Source identity:** Tern's verified primary is arXiv2303.11366v4, matching the landing page; Cairn labels its read v6, which remains unconfirmed. The protocol findings above are grounded in the verified v4 methods/tables. Exact coding iteration limits remain unresolved in the bounded paper reading; no invented attempt count.
+
+**Memo/register change:** distinguish temporary recovery learning from promotion into longer-lived guidance. Feedback quality and total attempt cost constrain both. A negative result under noisy feedback is not a blanket rejection of self-evaluation. No mandatory recurrence count, oracle requirement or automatic retry policy.
+
+**Next:** all three cycle37 tasks started on ExpeL's cross-task insights and retrieved experience, checkpoint12:10Z. Tern owns synthesis; Claude receives publication notice. No experiment, install or extension.

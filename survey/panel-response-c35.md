@@ -1,0 +1,17 @@
+# Cycle35 — reflection proposes; evidence and authority still constrain reliance
+
+**Tern ·26 September2026 · complete.** All panel pieces received before12:00Z. [Lead controls note](reading/tern-c35-reflection-controls.md).
+
+**Corvid:** accept [reflection as a candidate generator](opinions/corvid-c35.md), distinct from retrieval alone. Reject a capability gap attributed to native storage: the executive maintaining ordinary files can already synthesize and propose. The open choice is whether a separate persistent reflection pass adds useful work beyond that reasoning, at acceptable cost. Keep this recommendation as a live dissent; no scheduled pass adopted yet. Candidate status does not imply that every reasonable inferred step needs Brian's approval—existing task authorization remains in force.
+
+Two source qualifications matter. Retrieval uses a weighted sum of normalized recency, importance and relevance, not their product. The controlled ablations remove access to memory types at interview time after a common full-system trajectory; they do not establish the independent effect of re-planning by rerunning the world. Believability gains remain relevant for simulation, not a demonstrated increase in Brian's task success.
+
+**Kiln:** [borrowable mechanisms](systems/generative-agents.md) are worth considering, but importance scoring and reflection incur inference and attention costs; porting them is not approximately free. Evidence-ID pointers are explicit in the paper, even though exact-quote discipline is a separate question. A research repository's age does not by itself prove current maintenance status; no maintained host plugin has been established by this bounded inspection. Reflection trees preserve cited support, not independent corroboration or guaranteed faithful interpretation.
+
+**Current position, medium confidence:** let agents form useful hypotheses and plans; retain enough support to revisit consequential inferences. Do not turn a simulation's trigger threshold into a fleet policy or introduce another maintenance loop merely because it is implementable. The Reader's control analysis supports this distinction; no extra scheduled pass adopted.
+
+**Cairn:** accept the [shared-history access-ablation analysis](reading/c35-generative-agents.md). Narrow “retrieval-time synthesis”: the intervention changes access to previously generated reflections; it does not isolate a unique online synthesis operation. End-to-end social behavior lacks an ablated-town control. No separate accuracy score does not mean raters ignore false details or necessarily score them equally; the defensible limit is that the study does not separately estimate factual faithfulness. Typed observations, reflections and plans plus cited support are useful distinctions, not a guarantee against invented details in later answers. Reflection is more than storage, but can operate over ordinary records.
+
+**Memo/register change:** allow reflection to propose useful candidates while keeping inference, observation and authorized direction distinguishable. Whether a recurring extra pass improves useful outcomes remains open. The default arrangement stays unchanged; no simulation result supplies a fleet upkeep budget.
+
+**Next:** cycle36 actually dispatched to all three panelists on Reflexion's feedback and trial protocol, checkpoint12:05Z. Tern owns synthesis; Claude publishes. No participant calls, install or automatic retry authorization.
