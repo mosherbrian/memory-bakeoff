@@ -1,0 +1,54 @@
+U1 24576-N calls=2 cand=asked_no_run mem_after_s1=ABSENT disp=[HOLD awaiting adjudication;]
+U1 12288-R calls=2 cand=candidate_primary mem_after_s1=58bcc7 disp=[HOLD awaiting adjudication;]
+U1 24576-I calls=2 cand=asked_no_run mem_after_s1=ABSENT disp=[HOLD awaiting adjudication;]
+U1 12288-N calls=2 cand=asked_no_run mem_after_s1=ABSENT disp=[HOLD awaiting adjudication;]
+U1 24576-R calls=2 cand=candidate_primary mem_after_s1=e54c06 disp=[HOLD awaiting adjudication;]
+U1 12288-I calls=2 cand=asked_no_run mem_after_s1=ABSENT disp=[HOLD awaiting adjudication;]
+U1 D-12288 calls=1 cand=candidate_primary mem_after_s1=- disp=[HOLD awaiting adjudication;]
+U1 D-24576 calls=1 cand=candidate_primary mem_after_s1=- disp=[HOLD awaiting adjudication;]
+U2 no receipt: rc=0 HOLD False None term=- | no adjudication receipt
+U2 then valid approve: rc=0 FINAL True candidate_primary term=True | reviewer approved attempts=2
+U3 stale: rc=0 HOLD False None term=- | receipt stale: evidence hash mismatch
+U3 then valid: rc=0 FINAL True candidate_primary term=True | reviewer approved
+U4 second valid: rc=4 FINAL True candidate_primary term=False | reviewer approved terminal_unchanged=yes
+U5 concurrent x4: terminals=1 written=1 attempts=4
+U12 reject: rc=0 FINAL False withheld_semantic term=True | reviewer withheld: test
+U12 source indeterminate: rc=0 HOLD False None term=- | source not established by evidence (indeterminate)
+U10 cross-arm receipt: rc=0 HOLD False None term=- | receipt not bound to this arm
+U6/7 disp before freeze (missing=['disposition.txt']): rc=0 HOLD_EVIDENCE False None term=- | required evidence missing at freeze ['disposition.txt']
+U6/7 events before freeze (missing=[]): rc=0 HOLD_EVIDENCE False None term=- | events-s2.json malformed JSON
+U6/7 scan before freeze (missing=['scan-gate-s2.json']): rc=0 HOLD_EVIDENCE False None term=- | required evidence missing at freeze ['scan-gate-s2.json']
+U6/7 wrapper before freeze (missing=[]): rc=0 HOLD_EVIDENCE False None term=- | s2 exit/wrapper status absent
+U8 s1fail: rc=0 HOLD_EVIDENCE False None term=- | required evidence missing at freeze ['report.md', 'candidate
+U8 s2fail: rc=0 HOLD_EVIDENCE False None term=- | required evidence missing at freeze ['report.md']
+U8 gate1: rc=0 HOLD_EVIDENCE False None term=- | required evidence missing at freeze ['scan-gate-s2.json', 's
+U8 evfail: rc=0 HOLD_EVIDENCE False None term=- | events-s1.json malformed JSON
+U8 mutate: rc=0 HOLD_INTEGRITY False None term=- | memory changed between sessions
+U9 finalizer dep hash changed: rc=0 HOLD_EVIDENCE False None term=- | finalizer not pinned in arm closure or changed since freeze
+U11 tampered log: rc=0 HOLD_EVIDENCE False None term=- | pinned file changed log
+U11 tampered report.md: rc=0 HOLD_EVIDENCE False None term=- | pinned file changed report.md
+U11 tampered arm.s2.jsonl: rc=0 HOLD_EVIDENCE False None term=- | pinned file changed arm.s2.jsonl
+U14 bundles unchanged after finalization: yes
+U13 existing project calls=0
+U13 duplicate rc=4
+U13 live seam rc=3
+U13 real-claude stub rc=3
+U13 native roots untouched: 0
+V1 24576-N approve: rc=0 FINAL False asked_no_run term=True | reviewer approved
+V1 12288-R approve: rc=0 FINAL True candidate_primary term=True | reviewer approved
+V1 24576-I approve: rc=0 FINAL False asked_no_run term=True | reviewer approved
+V1 12288-N approve: rc=0 FINAL False asked_no_run term=True | reviewer approved
+V1 24576-R approve: rc=0 FINAL True candidate_primary term=True | reviewer approved
+V1 12288-I approve: rc=0 FINAL False asked_no_run term=True | reviewer approved
+V1 D-12288 approve: rc=0 FINAL True candidate_primary term=True | reviewer approved
+V1 D-24576 approve: rc=0 FINAL True candidate_primary term=True | reviewer approved
+V2 project_wrong: rc=0 HOLD_EVIDENCE False None term=- | paths.json project/memory mapping wrong
+V2 cwd_not_c4x: rc=0 HOLD_EVIDENCE False None term=- | paths.json cwd not an opaque c4x dir
+V2 paths_not_json: rc=0 HOLD_EVIDENCE False None term=- | paths.json malformed JSON
+V2 sid_missing: rc=0 HOLD_EVIDENCE False None term=- | s1 session_id missing or duplicated
+V2 sid_not_uuid: rc=0 HOLD_EVIDENCE False None term=- | s2 session_id not a canonical UUID
+V2 sid_duplicate: rc=0 HOLD_EVIDENCE False None term=- | s1 and s2 share a session id
+V2 meta_sessions_mismatch: rc=0 HOLD_EVIDENCE False None term=- | operator-meta sessions disagree with session meta
+V2 manifest_malformed: rc=0 HOLD_EVIDENCE False None term=- | mem-after-s1 manifest malformed
+V2 manifest_vs_snapshot: rc=0 HOLD_EVIDENCE False None term=- | mem-after-s1 manifest does not match snapshot
+V2 same_flag_diff_manifests: rc=0 HOLD_EVIDENCE False None term=- | mem-compare flag disagrees with manifests

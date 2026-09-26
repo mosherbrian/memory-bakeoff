@@ -2,7 +2,7 @@
 # Offline test stub: s1 prompt (contains "Quick note") saves memory only for the R note; s2/D runs bench at a number found in
 # memory or a direct "Saved note", else asks. Writes a transcript line and report.md in the R62 schema. Never calls a model.
 for a; do P=$a; done; echo '{"type":"system","subtype":"init"}'
-M=/tmp/r66-fp/$(echo $PWD | sed 's#[/.]#-#g')/memory
+M=/tmp/r67-fp/$(echo $PWD | sed 's#[/.]#-#g')/memory
 case "$P" in
 *"Quick note"*) N=$(printf '%s' "$P" | grep -o '[0-9]\{5\}' | head -1); if [ -n "$N" ]; then mkdir -p $M; printf 'benchmark at %s\n' $N > $M/ctx.md; printf -- '- [ctx](ctx.md) %s\n' $N > $M/MEMORY.md; fi; exit 0;;
 esac

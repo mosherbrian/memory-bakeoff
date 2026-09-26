@@ -1,11 +1,11 @@
 #!/bin/sh
-# R66 runner: copy of R64 runner (paths only changed). R64 launch (copy of R56), R62 templates/fixture, R63 gate candidate, R51 scanner,
+# R67 runner: copy of R66 runner (paths only changed). R64 launch (copy of R56), R62 templates/fixture, R63 gate candidate, R51 scanner,
 # R54 events.py. sh run-arm.sh LABEL   LABEL in {24576,12288}-{N,I,R} or D-{24576,12288}.
 # Offline test seams (STUB_BIN, TEST_PROJECTS, TEST_PRECREATE, TEST_MUTATE_BETWEEN, TEST_TIMEOUT, GATE, EVENTS, OPROOT, EVIDENCE_DIR) are honoured ONLY when
 # STUB_BIN is set, DRY=1, and STUB_BIN/claude is not the real claude; otherwise any seam variable aborts before any call.
 set -u; LABEL=$1
 PK=/var/home/bmosher/memory-bake-off/campaign4/packages
-R56=$PK/R56-context-runner-readiness; R64=$PK/R66-finalization-workflow-repair; G63=$PK/R63-context-evidence-gate/gate.py
+R56=$PK/R56-context-runner-readiness; R64=$PK/R67-identity-boundary-validation; G63=$PK/R63-context-evidence-gate/gate.py
 EV54=$PK/R54-memory-dependent-task-design/events.py
 SEAMS="${TEST_PRECREATE:-}${TEST_MUTATE_BETWEEN:-}${TEST_PROJECTS:-}${TEST_TIMEOUT:-}${GATE:-}${EVENTS:-}${OPROOT:-}${EVIDENCE_DIR:-}"
 if [ -n "${STUB_BIN:-}" ]; then
@@ -16,7 +16,7 @@ else
 fi
 PROJECTS=${TEST_PROJECTS:-/var/home/bmosher/.claude/projects}; TO=${TEST_TIMEOUT:-timeout}
 GATE=${GATE:-$R56/scanner/operator/scan_gate.py}; EVENTS=${EVENTS:-$EV54}
-OPROOT=${OPROOT:-/tmp/campaign4-r66-op}; EVD=${EVIDENCE_DIR:-$R64/evidence}
+OPROOT=${OPROOT:-/tmp/campaign4-r67-op}; EVD=${EVIDENCE_DIR:-$R64/evidence}
 case $LABEL in D-*) KIND=D; T=${LABEL#D-};; *-N|*-I|*-R) KIND=${LABEL#*-}; T=${LABEL%-*};; *) echo "bad label"; exit 2;; esac
 case $T in 24576|12288) ;; *) echo "bad target"; exit 2;; esac
 # duplicate label: refuse before any side effect or call
