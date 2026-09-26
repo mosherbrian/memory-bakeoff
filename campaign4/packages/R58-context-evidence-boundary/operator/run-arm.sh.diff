@@ -1,0 +1,32 @@
+2c2,3
+< # R56 context-trial runner (offline-validated; no live release). sh run-arm.sh LABEL   LABEL in {24576,12288}-{N,I,R} or D-{24576,12288}
+---
+> # R58 context-trial runner = R56 runner + memory snapshots, all child/wrapper checks, authoritative R57 grade, immutable bundle.
+> # R56 components (launcher, templates, fixture, scanner) are used unchanged from the R56 package. sh run-arm.sh LABEL   LABEL in {24576,12288}-{N,I,R} or D-{24576,12288}
+6,7c7,8
+< set -u; LABEL=$1; R=/var/home/bmosher/memory-bake-off/campaign4/packages/R56-context-runner-readiness
+< OPROOT=${OPROOT:-/tmp/campaign4-r56-op}; mkdir -p $OPROOT; GATE=${GATE:-$R/scanner/operator/scan_gate.py}
+---
+> set -u; LABEL=$1; R=/var/home/bmosher/memory-bake-off/campaign4/packages/R56-context-runner-readiness; R58=/var/home/bmosher/memory-bake-off/campaign4/packages/R58-context-evidence-boundary; G57=/var/home/bmosher/memory-bake-off/campaign4/packages/R57-context-endpoint-repair/grade.py
+> OPROOT=${OPROOT:-/tmp/campaign4-r58-op}; mkdir -p $OPROOT; GATE=${GATE:-$R/scanner/operator/scan_gate.py}
+18a20,21
+> snap() { d=$OP/mem-$1; mkdir -p $d; if [ -d "$M" ]; then cp -a "$M/." $d/; (cd $d && find . -type f | sort | xargs -r sha256sum) > $d.manifest; else echo ABSENT > $d.manifest; fi; }
+> snap before-s1
+23c26,28
+<   C1=$(sed -n 's/^exit=//p' $OP/arm.s1.meta); [ "$W1" = 0 ] && [ "$C1" = 0 ] || { echo "session1 exit=$C1 wrapper=$W1" > $OP/HOLD; echo $calls > $OP/calls; exit 1; }
+---
+>   C1=$(sed -n 's/^exit=//p' $OP/arm.s1.meta); snap after-s1
+>   [ "$W1" = 0 ] && [ "$C1" = 0 ] || { echo "session1 exit=$C1 wrapper=$W1; no session2" > $OP/HOLD; echo $calls > $OP/calls; sh $R58/operator/freeze.sh $LABEL $OP; exit 1; }
+>   snap before-s2; cmp -s $OP/mem-after-s1.manifest $OP/mem-before-s2.manifest && echo same > $OP/mem-compare || echo DIFFERENT > $OP/mem-compare
+26c31,32
+< timeout -k 15 600 sh $LAUNCH/session.sh 2 arm $OP $S2; W2=$?; echo "wrapper_rc=$W2" >> $OP/arm.s2.meta; calls=$((calls+1)); echo $calls > $OP/calls
+---
+> timeout -k 15 600 sh $LAUNCH/session.sh 2 arm $OP $S2; W2=$?; echo "wrapper_rc=$W2" >> $OP/arm.s2.meta; calls=$((calls+1)); echo $calls > $OP/calls; snap after-s2
+> C2=$(sed -n 's/^exit=//p' $OP/arm.s2.meta); [ "$W2" = 0 ] && [ "$C2" = 0 ] || echo "HOLD session2 exit=$C2 wrapper=$W2" >> $OP/disposition.txt
+30c36,39
+< python $R/grade.py $OP/log $T $W/report.md > $OP/grade.json 2>&1
+---
+> python $G57 $OP/log $T $W/report.md > $OP/grade-r57.json 2>&1   # authoritative (R57); manual=true requires adjudication
+> python -c "import json,sys;d=json.load(open('$OP/grade-r57.json'));sys.exit(0 if not d['manual'] else 1)" || echo "HOLD manual adjudication (R57 manual=true)" >> $OP/disposition.txt
+> cp -a $W $OP/arm-final
+> sh $R58/operator/freeze.sh $LABEL $OP
