@@ -1,6 +1,6 @@
 # Probe log
 
-**Cycle 1 · 26 September 2026 · Tern.** No new empirical probe was run or released. Participant calls: **0**. This cycle used literature, documentation, and existing results to establish the initial map and memo.
+**Cycles 1–2 · 26 September 2026 · Tern.** No new empirical probe was run or released. Participant calls: **0**. This cycle used literature, documentation, and existing results to establish the initial map and memo.
 
 | Entry | Question | Work / evidence | Memo effect |
 |---|---|---|---|
@@ -14,3 +14,6 @@
 **Q1 sampling proposal withdrawn:** Brian directly answered the ranking—procedural re-learning first, repeated preferences second. This is stakeholder input, not an experiment. [Principles](inputs/BRIAN-PRINCIPLES.md) changed the memo's lead bets and the question order. Existing procedure/preference episodes may inform the choice of remedy for Q5/Q9, but will not be used to demand evidence for Brian's stated priority.
 
 Any later experiment gets one entry naming the question, cost/time, observation, uncertainty, and exact memo line changed (or “no change, because…”). Prove needs Brian's approval. Campaign4 repair/qualification work is not a standing commitment.
+
+
+**Cycle 2, reading only:** primary AgentRunbook-C/LME-V2 methods note written; AFTER, Skill-Evo4GUI and BASM methods compared. Memo now separates investigation procedures from task recipes and makes checking/upkeep explicit. No participant calls. Corvid/Kiln first pieces incorporated; continued primary-source commissions and Cairn’s applicability/Perseus reading are in progress. The September 29 deadline is not a waiting interval.
