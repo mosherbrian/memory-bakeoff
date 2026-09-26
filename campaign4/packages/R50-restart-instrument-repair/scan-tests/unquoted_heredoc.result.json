@@ -1,0 +1,21 @@
+{
+ "status": "ambiguous",
+ "events": 4,
+ "executed": [
+  {
+   "id": "j",
+   "tool": "Bash",
+   "outcome": "ok",
+   "paths": []
+  }
+ ],
+ "attempted_denied": [],
+ "contamination": [],
+ "ambiguous": [
+  [
+   "unquoted heredoc",
+   "cat > report.md <<EOF\n$(cat /tmp/r50t/ops/map.json)\nEOF"
+  ]
+ ],
+ "limit": "same-user obfuscation can evade this; clean is not isolation"
+}

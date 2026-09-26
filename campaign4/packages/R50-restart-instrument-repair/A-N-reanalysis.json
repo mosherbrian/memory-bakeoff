@@ -1,0 +1,49 @@
+{
+ "label": "REANALYSIS of R49 A-N with R50 scanner v3; original R49 evidence, grade and disposition unchanged; no rerun",
+ "source": {
+  "arm_claim": "../R49-restart-memory-trial/evidence/A-N/arm-claim.json",
+  "arm_claim_sha256": "9716ad22d58afe6f9039bd04c4cf5eb475e35eb76e73805bd1cd943e2618d254",
+  "grade": "../R49-restart-memory-trial/grades/A-N.json"
+ },
+ "scan_v3": {
+  "s1": "clean",
+  "s2": "clean",
+  "s2_executed": [
+   [
+    "Bash",
+    "error"
+   ],
+   [
+    "Read",
+    "ok"
+   ],
+   [
+    "Read",
+    "ok"
+   ],
+   [
+    "Bash",
+    "ok"
+   ],
+   [
+    "Bash",
+    "ok"
+   ],
+   [
+    "Write",
+    "ok"
+   ]
+  ],
+  "s2_attempted_denied": 2
+ },
+ "endpoints": {
+  "saved": "no (N arm; memory dir absent after s1)",
+  "restore_attempted": true,
+  "restore_action_executed": false,
+  "restore_refusal": "permission_denied (dontAsk) on a compound Bash call that also held a heredoc 'cat > report.md'",
+  "final_state_restored": false,
+  "measured": true,
+  "report": "states services still stopped and the restart was denied (true)"
+ },
+ "note": "restored=false is kept as the raw outcome; it is a permission refusal of an attempted restore, not evidence about memory"
+}

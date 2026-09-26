@@ -1,0 +1,6 @@
+1a2
+> # R50 copy of R48 session.sh: also records the exact argv (prompt as its sha256) before launch.
+9a11,13
+> PH=$(printf '%s' "$TXT" | sha256sum | cut -c1-64)
+> if [ "$N" = 1 ]; then echo "argv=$ENVI claude -p --session-id $SID $BASE $S1_TOOLS <prompt sha256:$PH>" >> $OP/$L.s$N.meta
+> else echo "argv=$ENVI claude -p --session-id $SID $BASE $S2_TOOLS --settings $S2_SETTINGS <prompt sha256:$PH>" >> $OP/$L.s$N.meta; fi

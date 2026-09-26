@@ -1,0 +1,6 @@
+# R47 frozen launch settings (sourced). Claude Code 2.1.283, Max route (claude.ai, firstParty), no ANTHROPIC_* vars.
+ENVI="env -i HOME=/var/home/bmosher PATH=/home/bmosher/memory-bake-off/campaign4/packages/R50-restart-instrument-repair/stub/bin:/usr/bin:/bin"
+BASE="--model claude-sonnet-5 --setting-sources project --strict-mcp-config --disable-slash-commands --output-format stream-json --verbose"
+S1_TOOLS='--tools Read,Write,Edit --permission-mode acceptEdits'
+S2_TOOLS='--tools Bash,Read,Write --permission-mode dontAsk'
+S2_SETTINGS='{"permissions":{"allow":["Bash(./svc:*)","Bash(./bench.sh)","Read","Write"]}}'
