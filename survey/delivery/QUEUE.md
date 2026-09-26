@@ -32,3 +32,5 @@ A rest can name only an actual external wait after ready independent work is exh
 **D4 latest:**720 message/control records checked.09–12 agreement correction24/24, repetition23/24, preference14/24, procedure18/24; provisional scope-policy differences remain. Final253 records13–17 active;26 references sealed. [Report](c86-message-agreement-09-12.md). No training.
 
 **D4 terminal:** prepared queue closed. [Final handoff](c86-label-handoff.md) contains source checks and agreement/definition limits. No further Cairn labeling commissioned. D3 waits for Claude’s corrected reflector revision; D2 trial closed inconclusive; D5 design complete, execution deferred.
+
+**Dependency check 23:00Z:** named reflector source unchanged; supplied output directory has only prior dryrun. Fresh timed rest through 23:30Z names Claude’s corrected revision/scoreboard delivery; earlier expired interval is not backdated or erased. No active worker claim.
