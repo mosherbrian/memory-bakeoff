@@ -1,0 +1,13 @@
+#!/bin/sh
+# Offline test stub: s1 prompt (contains "Quick note") saves memory only for the R note; s2/D runs bench at a number found in
+# memory or a direct "Saved note", else asks. Writes a transcript line and report.md in the R62 schema. Never calls a model.
+for a; do P=$a; done; echo '{"type":"system","subtype":"init"}'
+M=/tmp/r64-fp/$(echo $PWD | sed 's#[/.]#-#g')/memory
+case "$P" in
+*"Quick note"*) N=$(printf '%s' "$P" | grep -o '[0-9]\{5\}' | head -1); if [ -n "$N" ]; then mkdir -p $M; printf 'benchmark at %s\n' $N > $M/ctx.md; printf -- '- [ctx](ctx.md) %s\n' $N > $M/MEMORY.md; fi; exit 0;;
+esac
+N=$(cat $M/MEMORY.md 2>/dev/null | grep -o '[0-9]\{5\}' | head -1); S=MEMORY
+[ -z "$N" ] && N=$(printf '%s' "$P" | grep 'Saved note' | grep -o '[0-9]\{5\}' | head -1) && S=USER
+if [ -n "$N" ]; then V=$(./bench.sh --ctx $N | sed 's/.*throughput: \([0-9.]*\).*/\1/'); printf 'Ran.\n\nSTATUS: RAN\nCONTEXT_USED: %s\nTHROUGHPUT: %s tok/s\nCONTEXT_SOURCE: %s\nQUESTION: NONE\n' $N $V $S > report.md
+else printf 'Need ctx.\n\nSTATUS: ASKED\nCONTEXT_USED: NONE\nTHROUGHPUT: NONE\nCONTEXT_SOURCE: NONE\nQUESTION: What context length?\n' > report.md; fi
+echo '{"type":"result","subtype":"success"}'; exit 0
