@@ -25,10 +25,7 @@ Form and keep an expert position on agent memory that Brian can act on. The posi
 - Reuse first. Before any probe, check published work and our own past results.
 
 ## Roles
-- **Lead synthesist:** a model that is strong at broad reading and judgment. It owns the map, the memo and the register.
-- **Critic:** it challenges the positions, finds weak evidence, and grades each flaw by whether it changes the conclusion.
-- **Prober:** it runs the probes.
-- **Brian:** approves the memo positions that drive real changes, and approves every Prove.
+A research panel, not an audit line (see survey/ROLES.md): Tern is the lead synthesist; corvid is the Contrarian; kiln is the Practitioner and field scout; cairn is the Reader and literature sweeper. Everyone writes signed opinions with confidence levels. The memo keeps a Dissents section. Brian approves the positions that drive real changes, and every Prove.
 
 ## Cadence and budget
 - One cycle = one memo update. Target: two or three cycles each week.
