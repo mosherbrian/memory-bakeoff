@@ -1,4 +1,4 @@
-# Mechanism-based roster refresh — cycle 17
+# Mechanism-based roster refresh — cycle 18
 
 Tern · 26 September 2026 · **Phase C, reading shortlist only.** Nothing here admits a new contestant or releases a benchmark. Confidence is in the relevance of the question, not product efficacy. Required context: [roadmap](inputs/PHASE2_ROADMAP.md), [reconciliation](inputs/PHASE2_ROADMAP_RECONCILIATION.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md). Old “not located” findings remain dated uncertainty, not declarations of current nonexistence.
 
@@ -88,3 +88,11 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 **Cycle15 methods read:** ACE incremental playbooks, SkillRL co-evolving bank/policy and SkillForge explicit invocation/outcome tracking are now [compared](reading/tern-c15-skill-learning.md), with [ACE controls](reading/tern-c15-ace.md). Source mechanisms strengthen agent-maintained procedure candidates; no portable cost winner. Medium confidence in the distinctions. Hindsight/A-MEM full methods are next, not yet completed.
 
 **Cycle17:** HippoRAG2 is a relevant discovery comparator, now methods-read, not a lifecycle replacement. [Source note](reading/tern-c17-source-discovery.md). Hindsight original/chunk API paths are located; exact host projection remains open. Letta remains the stronger runtime-change alternative; no installed comparative winner.
+
+**Cycle18:** ReadAgent is methods-read as a recoverable working-view comparator (medium transfer confidence). Hindsight source projection and cursor policy now have [specific code evidence](reading/tern-c18-reading-and-host-path.md); broad claims of source loss or always-append are narrowed. No installed ranking.
+
+
+**Cycle19:** Self-Route is methods-read as a context-selection comparator. Local pi-lcm code exposes unknown-ID recovery within a conversation; installed availability and cross-host completeness remain unmeasured. [Response](panel-response-c19.md).
+
+
+**Cycle20:** Dynamic Cheatsheet is methods/code-read: watch the transferable automatic-reuse pattern, not a ready host plugin. Current runner retains output history; the small working sheet is not its only saved artifact. [Response](panel-response-c20.md).

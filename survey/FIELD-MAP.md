@@ -188,3 +188,11 @@ The [panel synthesis](panel-response-c8.md) keeps three distinct questions: was 
 **Cycle16 complete:** all panel sources received. A-MEM distinguishes original content from evolving interpretation; Hindsight documents source-linked revisions and Pi integration. Source retention does not guarantee that recall can find the source. [Panel response](panel-response-c16.md), [A-MEM methods](reading/tern-c16-amem.md), [Hindsight follow-up](reading/tern-c16-hindsight.md). These sharpen L1/L2/L3 without demanding separate services. Confidence medium; no source-corruption or product-benefit experiment.
 
 **Cycle17:** [Source discovery methods](reading/tern-c17-source-discovery.md) adds HippoRAG2 graph-to-passage retrieval, without treating associative QA as preference revision. Hindsight API can return source chunks alongside facts; source exposure is not limited to a separate document tool. Same-ID updates replace content, so retained does not imply append-only. Hindsight leads the integrated-service shortlist for existing hosts, medium fit confidence; no deployment. [Dissent and response](panel-response-c17.md).
+
+**Cycle18:** direct reading, gist-guided original-page expansion and indexed retrieval are competing/composable ways to supply the executive. [ReadAgent and host-source methods](reading/tern-c18-reading-and-host-path.md) distinguish per-document controls and amortized work from corpus-wide retrieval and live procedure reuse. Hindsight shared recall projects to text; append has replacement fallbacks. These are source-level properties, not observed loss or a repair release. [Panel response](panel-response-c18.md).
+
+
+**Cycle19:** L3/L4 can cooperate through cheap retrieval followed by fuller reading. L1 retention, L3 discovery and artifact-based applicability are separate properties; no new service follows automatically. [Response](panel-response-c19.md).
+
+
+**Cycle20:** A compact self-curated working sheet can serve L2/L4 without a new service. L1 source retention remains a separate implementation property; working-view rewriting does not prove source deletion. [Response](panel-response-c20.md).

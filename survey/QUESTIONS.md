@@ -1,4 +1,4 @@
-# Question register — cycle 17
+# Question register — cycle 21
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–17 are synthesized. Cycle18 compares full-context/interactive-reading alternatives and the concrete Hindsight host source path. Corvid argues the strongest full-context rival, Kiln inspects recall projection, Cairn reads ReadAgent. Tern synthesizes costs and applicability. Q5/Q9/Q3 remain first. No rollout or new campaign4 package.
+Cycles1–21 are synthesized. Provisional advice is now usable; automatic reuse is credible without mandatory new infrastructure. Q5/Q9/Q3 remain first. Cycle22 asks which existing mechanisms select, load and apply procedures, rather than merely store them. All panel roles started; Tern synthesizes. Context-route choice and total cost remain open. No rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -80,3 +80,14 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 **Cycle16 decision:** Q3 separates retained original, derived interpretation, source attribution and discovery. Current documentation narrows Hindsight's unresolved provenance question; A-MEM evolution is not itself evidence of source deletion. Q6's integrated alternative gains practical credibility from Pi integration. The next question is comparative work saved, not whether automation exists. [Response](panel-response-c16.md).
 
 **Cycle17 decision:** Q6 now names Hindsight as the first service candidate for existing hosts, Letta when changing runtimes is acceptable. This is comparative advice, not an installed benefit claim. Q3's backend-original-access uncertainty narrows to actual host exposure and retention policy. HippoRAG2 supports discovery, not measured correction behavior. [Response](panel-response-c17.md).
+
+**Cycle18 decision:** Q2/Q4 include bounded-corpus direct/gist-guided reading as a serious baseline. Q3 distinguishes the host's rendered memory from service evidence and append from replacement behavior. No architecture wins merely by avoiding embeddings or by storing sources. [Response](panel-response-c18.md).
+
+
+**Cycle19:** Q5 now distinguishes reusable method from present-state evidence; Q4 prices conditional context expansion beyond input tokens. [Response](panel-response-c19.md).
+
+
+**Cycle20:** Q5 retains automatic compact curation as a serious implementation choice; executable form and successful exit do not settle applicability. Q4 still lacks a measured acquisition/upkeep repayment curve. [Response](panel-response-c20.md).
+
+
+**Cycle21:** first-memo advice is ready. Close the conceptual need for manual authorship, retain comparative host/cost questions, and reject arbitrary incident quotas. [Response](panel-response-c21.md).
