@@ -1,4 +1,4 @@
-# Question register — cycle 23
+# Question register — cycle 27
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–23 are synthesized. Q5 compares proportionate tool fixes, reusable methods and reconstruction without repeat quotas. Q4 now deepens ReMe primary methods/software: affordable self-curation, failed experience, feedback privilege and total cost. All three panelists started cycle24; Tern reads independently. Q5/Q9/Q3 remain first; no rollout or campaign4 package.
+Cycles1–27 are synthesized. Q5 now compares useful provisional guidance with reconstruction when no affordable reliable checker exists. Cycle28 brings Q9/Q3 to source authority: what separates sponsor directions, assistant inference and external text when memory becomes durable? All three panelists started; Tern owns synthesis, checkpoint11:20Z. No rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -94,3 +94,16 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle22:** Q5 distinguishes availability, selection, loading, following and correct execution. Local bottleneck remains unmeasured; c23 compares fixing the recurring cause with remembering a workaround. [Response](panel-response-c22.md).
+
+
+**Cycle24:** Q4 separates small-model self-curation from end-to-end affordability, including acquisition and embeddings. Q6 now examines a files-first service that crosses the native/integrated distinction. [Response](panel-response-c24.md).
+
+**Cycle25:** Q6 no longer treats file-native and automated-service arrangements as exclusive. ReMe is a concrete overlap; compare operations and recovery. Q4 distinguishes an inference-latency row from pipeline cost and flags inconsistent embedding identity within v2. Next Q3/Q5 examines retirement policy, not a new tool installation. [Response](panel-response-c25.md).
+
+**Cycle26 interim:** Q3 now asks how retirement depends on the quality of its outcome signal. ReMe's cited predecessor supplies both helpful and harmful deletion cases and an actual reordered-task shift comparison; lack of per-entry causal credit is not a reason to reject operational policies outright. Rare-return and changed-prerequisite transfer remain open. [Primary reading](reading/tern-c26-deletion-evaluators.md). Panel synthesis pending; no cycle-completion claim.
+
+**Cycle26 complete:** operational retirement is not disqualified by missing per-entry causal credit, but noisy outcomes can harm policy decisions. Preserve a recoverable past without always loading it; no count threshold or mandatory per-use check adopted. Next question: useful learning under imperfect outcome evidence. [Response](panel-response-c26.md).
+
+**Cycle27 interim:** Q5 separates authority, confidence and practical usefulness. No affordable outcome checker does not force every task back to raw-episode reconstruction; provisional methods can still save work. Compare error consequences, reversibility and cost of revisiting evidence. Corvid's reconstruction default remains a substantive dissent, not a defect to repair. [Lead opinion](reading/tern-c27-provisional-guidance.md). Reader piece pending.
+
+**Cycle27 complete:** checker absence does not eliminate useful learning. Keep the uncertainty and its source visible; scale reliance to consequences. A fallible score is not authority. Retained/deleted quality reverses in one published condition; the purported richer-signal transplant is unsupported. Next compare source-role preservation and memory admission. [Response](panel-response-c27.md).

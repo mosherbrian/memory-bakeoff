@@ -1,6 +1,6 @@
 # Three arrangements for Brian — and the decision that cuts across them
 
-**Tern · cycles12–21 · 26 September 2026 · advice, no deployment · medium confidence.**
+**Tern · cycles12–25 · 26 September 2026 · advice, no deployment · medium confidence.**
 
 My starting choice is **agent-maintained native procedures and preferences backed by findable history**. The strongest rival is an integrated runtime that actually removes capture, correction and delivery work. Learned memory belongs in either arrangement; it is not automatically a third exclusive stack. Brian should not author, approve or synchronize every routine memory update.
 
@@ -21,3 +21,16 @@ Sources and limits: [native delivery paths](systems/preference-delivery-paths.md
 **What would change my choice:** evidence that one arrangement avoids repeated discovery and correction with less combined agent work and user attention. Diagnose whether a miss arose during capture, update, delivery, retrieval or application before selecting the remedy. No arbitrary incident quota or new approval ceremony is warranted. A changed prerequisite can justify revision even when commands exit successfully.
 
 **Panel disagreement remains real:** Corvid historically preferred integrated adoption sooner; his cycle21 practical native-first advice converges, while its contradictory adopt-now clause is being clarified; Kiln favors native delivery paths; Cairn favors a learned update policy with retained records. I accept their common concern about user attention. I do not accept that files inherently require manual upkeep, or that a theorem about a restricted observation set eliminates a storage architecture. [Signed opinions and response](panel-response-c12.md).
+
+## Cycle25: these arrangements overlap in actual products
+
+ReMe puts automatic capture/consolidation around editable files. A/B is therefore a description of packaging, not an exclusive architecture choice. Compare operations across the five axes in the [source note](reading/tern-c25-files-and-automation.md): representation, upkeep automation, host delivery, history/version recovery and total cost.
+
+| Candidate | Concrete reason to consider it | Unresolved for Brian |
+|---|---|---|
+| Existing native facilities | Reuse current files, skills and host capabilities with agent-owned upkeep. | Complete cross-host update/delivery burden. |
+| ReMe | File-compatible capture/consolidation and documented host adapters. | Current dream-loop quality, best-effort capture and version recovery; paper results do not validate this loop. |
+| Hindsight | Derived observations, source links and correction/freshness machinery. | Host exposure, extraction/update quality and combined burden. |
+| Letta | Integrated memory editing, versioning and runtime delivery. | Benefit against the cost of changing the runtime. |
+
+**Medium-confidence recommendation:** keep native as the provisional base, compare these candidates by the missing operation rather than service sophistication. No installation is implied. The paper-cost note does not establish that a local pipeline is free. Corvid's c25 axis objection is accepted; automatic-versioning language is not.

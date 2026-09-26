@@ -199,3 +199,12 @@ The [panel synthesis](panel-response-c8.md) keeps three distinct questions: was 
 
 
 **Cycle22:** L4/L5 may carry a tiny broadly relevant core without explicit retrieval, but context presence does not prove application. Host-enforced access and model-followed instruction are distinct. [Response](panel-response-c22.md).
+
+
+**Cycle24:** Storage format and automation are independent: a service may operate directly over editable files. Learned admission/utility policies are evidence-dependent decisions, not semantic truth supplied by deterministic arithmetic. [Response](panel-response-c24.md).
+
+**Cycle25 — ReMe, medium fit confidence:** editable-file representation can coexist with automated capture/consolidation and host adapters. Add it as the file-compatible automation comparator; current auto_dream is not validated by the paper’s distinct learning-loop results. Separate source retention, version history, delivery and upkeep cost. [Primary reading and comparison](reading/tern-c25-files-and-automation.md), [panel disposition](panel-response-c25.md). No install.
+
+**Cycle26 — lifecycle decision quality:** addition/deletion policies depend on their evaluators, not only their storage schema. Distinguish exclusion from current guidance, source retention, prior-guidance versioning, discovery and restoration. ReMe has a positive deletion ablation; its predecessor also reports evaluator-dependent harm and a separate reordered-task shift comparison. These support conditional operational policies, not universal thresholds or guaranteed rare-procedure protection. [Primary source reading](reading/tern-c26-deletion-evaluators.md), [panel synthesis](panel-response-c26.md). High confidence in source distinction; medium in design advice.
+
+**Cycle27 — supervision and practical usefulness:** outcome evaluation may be partial or noisy. Label-free curation, provisional procedures and episodic reconstruction are distinct alternatives; no reliable checker does not establish a universal reconstruction winner. Separate source authority from semantic confidence and practical benefit. [Panel decision](panel-response-c27.md), [lead opinion](reading/tern-c27-provisional-guidance.md). Medium confidence in advice; no deployment result.

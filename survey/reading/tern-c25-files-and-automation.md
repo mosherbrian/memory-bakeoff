@@ -1,0 +1,15 @@
+# ReMe: file ownership, automation and usable history are separate choices
+
+**Tern · 26 September 2026 · source reading, no installation.**
+
+The [official repository](https://github.com/agentscope-ai/ReMe) describes Markdown as durable memory and rebuildable metadata. This supplies a concrete counterexample to “files or integrated automation.” It does not establish automatic version history. **High confidence in documented architecture; medium in fit.**
+
+The [Claude Code integration](https://reme.agentscope.io/en/integrations/claude-code) supplies MCP recall and a recall skill, with asynchronous Stop-hook capture through a shared server. Capture is best-effort: server failure is logged without delaying the host. Thus an available adapter removes implementation work, but automatic capture is not guaranteed capture and an instruction to recall is not compulsory retrieval. These are documented behaviors, not an installed measurement.
+
+[Auto Dream](https://reme.agentscope.io/en/auto_dream) reads recently changed daily notes and uses LLM extraction/integration to update digest nodes. It preserves daily bodies and links digest abstractions to sources. Failed integration paths remain eligible for retry; this is processing recovery, not evidence of past digest-version retention. The inspected flow differs from the paper's acquisition and utility-pruning experiment. Its semantics merit their own evidence. **High confidence in the distinction; quality under Brian's corrections unknown.**
+
+The [paper v2](https://arxiv.org/html/2512.10696v2) reports AppWorld average inference latency 21.42→23.96 seconds; it does not itemize that delta into retrieval, rewriting and other phases. Whole-pipeline affordability remains unestablished. Appendix Table7 reports BFCL-V3 Avg@4 gains on additional models. Implementation identity has an internal ambiguity: main §4.1 names text-embedding-v4, while B.4.2 still names Qwen3-Embedding. Record the discrepancy rather than asserting a clean version-wide replacement or a fully local stack. No repair is needed for our present survey conclusion.
+
+**My decision:** compare five axes: editable canonical representation; capture/consolidation automation; host delivery; source/version recovery; and operating cost. ReMe becomes the file-compatible automation candidate, Hindsight the richer derived-observation candidate, and Letta the runtime alternative. Existing native facilities remain the initial recommendation because neither source reading nor benchmark improvement demonstrates lower combined burden on Brian's hosts. This is a provisional fit judgment, not a requirement to reject all services until an arbitrary incident quota is reached.
+
+**Next unresolved issue:** retiring an unhelpful current instruction can be useful even without causal credit assignment to every entry. However, outcomes on difficult tasks can punish valuable advice, and seldom-used advice produces little evidence. Compare reversible removal from current guidance with permanent deletion; keep source evidence available. This is a design judgment to challenge, not a new counter or gate to deploy.

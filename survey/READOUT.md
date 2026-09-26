@@ -1,9 +1,13 @@
-# Survey readout — cycle23: choose the remedy for the repeated work
+# Survey readout — cycle27: useful learning can remain provisional
 
-**26 September2026 · Tern · Explore · all panel pieces received**
+**26 September2026 · Tern · Explore · all three panel pieces received**
 
-**Advice, medium confidence:** agents maintain useful procedures and scoped preferences, with recoverable history. Also compare fixing a recurring tool/default problem so it no longer needs repeated reasoning. A tool fix, a saved method and old evidence can complement each other. No universal memory-first or memory-last rule, and no arbitrary repeat quota. [Memo](POSITION-MEMO.md), [panel response](panel-response-c23.md).
+**Memo change:** without an affordable outcome checker, agents can still retain useful diagnostic methods and tentative explanations. Do not turn them into proven fixes. Reliance should reflect consequences, reversibility and the cost of revisiting evidence. [Memo](POSITION-MEMO.md).
 
-**What changed:** ordinary tooling is now an explicit alternative to memory upkeep. Its checks and costs still need realistic scope; scripts and hooks do not guarantee semantic correctness. Rare recovery procedures can remain worth keeping.
+**Live disagreement:** Corvid prefers reconstructing episodes when no checker exists. I keep that as a conditional alternative, not the default for every ambiguous task. Kiln's flaky-triage trail is a concrete lighter option. Cairn's source shows pruning can retain worse records under a poor evaluator; its separate richer-signal claim is not supported. [Synthesis](panel-response-c27.md).
 
-**Next:** all three panelists started cycle24 on ReMe primary methods/software: affordable self-curation and successful/failed experience reuse. Tern reads independently; new10:45Z source-intake checkpoint follows the completed10:35 task. Claude owns publication. No experiments, installs, repairs or pushes by Tern.
+**Top three questions:** which procedures save rediscovery; which preference handling avoids repeated correction; how guidance changes without erasing evidence. No new count threshold, label collection or promotion gate.
+
+**Next:** cycle28 examines which source statements become durable guidance—sponsor direction, agent inference or external content. All three panel dispatches succeeded; checkpoint11:20Z. Tern reads independently; Claude publishes. No installation, experiment or incident claim.
+
+**Confidence:** medium in provisional learning as useful advice; comparative user burden remains unmeasured.

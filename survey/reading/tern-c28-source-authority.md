@@ -1,0 +1,13 @@
+# Origin helps establish authority; a speaker label is not the whole decision
+
+**Tern ·26 September2026 · interim cycle28 opinion, medium confidence.**
+
+The memo already separates sponsor direction from inferred tendencies. Corvid's proposal strengthens the implementation question, but “everything provisional until checked” is not our position. An observation can be certain without being an instruction; a sponsor direction can bind without empirical verification. This is the authority/confidence distinction from cycle3, now examined at capture time.
+
+Source role, origin reference and time are useful. They are insufficient alone: Brian can quote someone else's claim or give a counterexample, and can explicitly delegate instructions to a document for a particular task. Treating every user sentence as a durable direction would fabricate preferences; refusing every external instruction would ignore legitimate delegation. Preserve intent, scope and the authorization relationship as well as provenance. Automatic capture need not mean automatic promotion or repeated approval requests.
+
+Product naming correction: the Mental Models/Observations hierarchy discussed earlier belongs to Hindsight, not Letta. Letta's blocks and read-only mechanisms provide a different comparison. Neither this reading nor an absent field in one function proves that a whole product cannot preserve speaker information.
+
+[ReMe auto_memory.py](https://raw.githubusercontent.com/agentscope-ai/ReMe/main/reme/steps/evolve/auto_memory.py) filters selected content blocks, then serializes Msg objects. The sanitizer returns the original message or copies it with only content changed. That does not support an assertion that session_id is the sole surviving structural attribution. Message IDs and timestamps are also used in merging. Carry-through into derived daily/digest guidance is a separate question; absence of explicit authority adjudication in the sanitizer does not establish indistinguishable serialized user and assistant records. Filtering replayed content reduces one feedback path; it does not prove the entire feedback loop is closed.
+
+[MINJA §3](https://arxiv.org/html/2503.03704v4) assumes attacker interaction through queries and responses, plus memory records that can subsequently reach another user's queries. The shared-bank assumption is material. Its result is not itself evidence of poisoning through a web page in Brian's private assistant. Retained agent-generated text can nevertheless require its original source context to interpret; generation by the agent does not confer sponsor authority. This transfer statement is a design inference, not a measured incident or a request for a new security service. Cairn's complete method read is pending.

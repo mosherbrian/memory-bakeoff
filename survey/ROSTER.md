@@ -102,3 +102,8 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 
 
 **Cycle22:** Claude Code and Pi document skill discovery/loading surfaces; current docs are not installed parity. Compaction can affect retained skill context. [Host note](reading/tern-c22-application.md). [Response](panel-response-c22.md).
+
+
+**Cycle24:** ReMe is now a current Markdown-based integration candidate as well as a procedural-memory paper. Its present consolidation loop must not inherit the paper score without correspondence. Watch; medium mechanism relevance, installed benefit unknown. [Response](panel-response-c24.md).
+
+**Cycle25 — ReMe, medium fit confidence:** editable-file representation can coexist with automated capture/consolidation and host adapters. Add it as the file-compatible automation comparator; current auto_dream is not validated by the paper’s distinct learning-loop results. Separate source retention, version history, delivery and upkeep cost. [Primary reading and comparison](reading/tern-c25-files-and-automation.md), [panel disposition](panel-response-c25.md). No install.
