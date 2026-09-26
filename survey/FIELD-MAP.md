@@ -266,3 +266,21 @@ Explanations, worked episodes, parameterized workflows and generated/reactive he
 ## Cycle46 — preference use versus recall
 
 Original PersonaMem separates questions about recall, currency, evolution, reasons and recommendations; its candidate-ranking endpoint is not a correction-burden test. This connects retrieval, current views and executive interpretation without choosing where currency must be implemented. High confidence in the endpoint boundary; medium transfer. [Primary-method note](reading/tern-c46-preference-endpoints.md), [panel response](panel-response-c46.md).
+
+
+## Cycle47 — implicit memory and trained readers
+
+PersonaMem-v2 (2512.06688v1, separate from original PersonaMem) combines capped memory writing with answering by the same trained model. Open-ended scoring is included. Treat it as a research framework: useful combined-system evidence, unresolved component attribution and full lifecycle cost. Relevance to retrieval/current views/executive interpretation is medium; no host winner. [Primary read](reading/tern-c47-writer-reader-controls.md), [panel decision](panel-response-c47.md).
+
+
+## Cycle48 — PersonalWAB/PUMA action endpoints
+
+Real behavioral records feed generated tasks and a trained personalized-function agent. Component ablations exist; function validity and result quality differ. Temporal per-user holdout and simulated feedback do not measure human correction burden. Watch as research framework; no host facility or deployment winner. High confidence endpoint distinction, medium transfer. [Methods](reading/tern-c48-action-endpoints.md), [decision](panel-response-c48.md).
+
+
+## Cycle49 — TidyBot preference-rule induction
+
+TidyBot2305.05658v2 combines inferred textual rules with perceptual categories and supplied actions. Its same-model examples-versus-summary comparison supports generalization; text placements, human judgments of supplied preferences and physical outcomes remain separate. Borrow the pattern conditionally; robot system is not a software-host memory facility. High mechanism confidence, medium transfer. [Methods](reading/tern-c49-summary-grounding.md), [decision](panel-response-c49.md).
+
+
+**Cycle50 synthesis:** [preference evidence](PREFERENCE-EVIDENCE.md) supports editable inferred rules plus recoverable sources as a practical candidate, not a new product ranking. Frozen-model induction, trained personalization and host delivery remain distinct choices. Next: correction delivery across hosts. Medium confidence in advice; no installation.

@@ -1,13 +1,13 @@
-# Survey readout — cycle46: preference recall is an intermediate result
+# Survey readout — cycle50: useful inferred rules, without making Brian the librarian
 
-**26 September2026 · Tern · Explore · all panel pieces received**
+**26 September 2026 · Tern · Explore · all three panel pieces synthesized**
 
-**Memo change:** preference memory must help choose a suitable response using relevant current guidance. Accurate recall alone is insufficient; this does not require a new check call on every decision. [Decision](panel-response-c46.md), [source note](reading/tern-c46-preference-endpoints.md).
+**Advice:** agents can turn useful examples into editable scoped rules while keeping supporting history recoverable. Explicit directions retain their authority. This sharpens existing agent-owned upkeep; it does not establish a service winner or require Brian to teach, approve or narrate each preference. [Comparison](PREFERENCE-EVIDENCE.md), [dissents answered](panel-response-c50.md), [memo](POSITION-MEMO.md).
 
-**Evidence boundary:** original PersonaMem ranks candidate responses over synthetic histories, including its “generative” setting. It does not isolate a read-time bottleneck or measure repeated correction. Its Mem0 baseline does update; timing charges differ from RAG. No product winner follows.
+**Evidence:** same-model TidyBot controls support induced rules in its setting. Trained personalization remains a viable rival. No reviewed comparison here prices Brian's correction effort; retrieval and application remain separate problems.
 
-**Top three questions:** which procedural reuse saves work; which preference handling avoids repeated correction; how guidance survives changed conditions.
+**Top questions:** which procedural reuse saves work; which preference handling avoids repeated corrections; which delivery/upkeep operation is actually missing.
 
-**Next:** all three panelists started cycle47 on the separate PersonaMem-v2 paper2512.06688v1, checkpoint13:30Z. Tern reads writer/reader controls and endpoints. Claude publishes.
+**Next:** all three cycle51 commissions started; checkpoint14:00Z. Concrete scoped correction across Claude Code, Pi and local agents, versus configuration or selective handoff. Tern's [working note](reading/tern-c51-correction-delivery.md) is written; panel results pending. Dependency receipt and structured REST recorded.
 
-**Confidence:** high on endpoint boundaries, medium on practical advice. No installation, experiment or Tern push.
+**Confidence:** medium practical recommendation; host delivery unresolved. No experiment, install or Tern push. Claude notification and the installed checker remain blocked by automatic approval review pending the existing approval request; prepared notices are not delivered notices.

@@ -1,4 +1,4 @@
-# Question register — cycle 46
+# Question register — cycle 50
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–46 are synthesized. Q9 now explicitly separates current-preference recall, suitable response selection, authority and repeated correction. Original PersonaMem does not isolate a read-time bottleneck or measure correction burden. Cycle47 reads the separate PersonaMem-v2 trained-memory framework, distinguishing reader training from useful memory. No new experiment, rollout or campaign4 package.
+Cycles1–50 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 asks how a corrected instruction reaches the relevant host and affects use; shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -181,3 +181,15 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle46 decision:** preference recall is an intermediate result; relevant current guidance must inform a suitable response. No mandatory extra check follows. Original PersonaMem uses synthetic histories and candidate ranking, including its generative setting; memory baselines differ and timing boundaries are asymmetric. Q9 stays open on repeated correction. [Source note](reading/tern-c46-preference-endpoints.md), [panel decision](panel-response-c46.md).
+
+
+**Cycle47 decision:** preserve useful agent-inferred tendencies without converting ambiguous third-person/hypothetical content into sponsor identity. PersonaMem-v2 supports a trained combined system with a compact answer view; it does not isolate record-only gains or demonstrate total 16-fold savings. [Decision](panel-response-c47.md).
+
+
+**Cycle48 decision:** personalize the useful result, not merely the chosen function. PersonalWAB supplies executed functions and component ablations; neither fixed-policy attribution nor local-host latency is established. Prior behavior is evidence, not automatic authority. [Decision](panel-response-c48.md).
+
+
+**Cycle49 decision:** example-induced rules can generalize with an unchanged model in TidyBot; this provides a useful option before training, not a cross-paper ranking. Software-host transfer and reduced repeated correction remain unmeasured. [Decision](panel-response-c49.md).
+
+
+**Cycle50 decision:** existing agent-maintained guidance can hold useful inferred rules; preserve supporting history and authority distinctions. The literature does not price Brian’s correction effort or identify his dominant delivery failure. Next compare the smallest correction-delivery arrangement with its best rival; no new logging obligation. [Evidence](PREFERENCE-EVIDENCE.md), [panel response](panel-response-c50.md).
