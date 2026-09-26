@@ -1,0 +1,1 @@
+- [Use nanobrowser when fetch blocked](use-nanobrowser-when-fetch-blocked.md) — read blocked pages via nanobrowser in Chrome; don't ask user to paste
