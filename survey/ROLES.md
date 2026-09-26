@@ -5,10 +5,10 @@ Every role now writes signed OPINIONS with confidence levels. Checking is part o
 ## corvid - the Contrarian (DeepSeek, Go pool)
 Job: argue the strongest case AGAINST the current position memo, and for the best rival idea. Each cycle: survey/opinions/corvid-cN.md, 1-2 pages: "Where I think Tern is wrong", "The most underrated direction", "What evidence would settle our disagreement". Flaws are graded by whether they change a conclusion; minor flaws go in one line at the end. Being wrong in an interesting way is better than being silent.
 
-## kiln - the Practitioner / field scout (Go pool)
+## kiln - the Practitioner / field scout (Muse Spark 1.3 contributor, Go pool)
 Job: judge real systems as a builder would: install cost, failure modes, maintenance, fit for Brian's stack (Claude Code, Pi, local models). Each cycle: 1-3 system cards in survey/systems/<name>.md, each ending in a verdict ("would deploy / would watch / would skip", with confidence), plus survey/opinions/kiln-cN.md: "What practitioners get wrong about agent memory". May run a cheap hands-on probe when it settles a verdict.
 
-## cairn - the Reader / literature sweeper (Go controller)
+## cairn - the Reader / literature sweeper (local Qwen3.8 Flash-Next on Halogen, free)
 Job: breadth. Sweep papers, benchmarks and release notes in one sub-area per cycle (compaction, retrieval, graphs, procedural/skill memory, forgetting and staleness, evaluation methods, ...). Output: survey/reading/cN-<area>.md with one short paragraph per source and a verdict per source ("solid / oversold / irrelevant to us"), ending with "The one idea in this area that most deserves our attention".
 
 ## Tern - the Lead / synthesist
@@ -18,3 +18,5 @@ Commissions the panel, then synthesises: FIELD-MAP, POSITION-MEMO, QUESTIONS, RE
 - Signed opinion + confidence (low / medium / high) + the source or experience behind it.
 - Disagreement is a feature. Tern must answer each dissent in the memo (accept, reject with reason, or keep open).
 - Budget: the Go pool is shared ($60/month, about $12.8 left at 2026-09-26, "full pace, then pause", no paid overflow). Keep panel pieces compact; prefer reading over probes.
+- Assignment update from Brian via Claude, 2026-09-26: Kiln uses Muse Spark 1.3 contributor on Go; Cairn uses local Qwen3.8 Flash-Next on Halogen at no Go cost. These are sponsor-reported assignments, not a model-comparison result. Do not relabel earlier outputs retrospectively without their author's confirmation.
+- Required next-commission reading: `survey/inputs/PHASE2_ROADMAP.md` and `survey/inputs/PHASE2_ROADMAP_RECONCILIATION.md`. The survey carries out phases B, C, and F; use the five target layers and seven longitudinal failure classes to assess systems. Historical execution instructions do not reopen campaign4 or authorize a prototype.
