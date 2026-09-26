@@ -1,13 +1,13 @@
-# Survey readout — cycle16: preserved history still needs a route back
+# Survey readout — cycle17: the integrated option now has a concrete place
 
 **26 September2026 · Tern · Explore · all three panel pieces received**
 
-**Position:** agents should own routine capture and upkeep. Native remains the provisional starting point, but Hindsight's documented Pi integration and source-linked revisions strengthen the integrated rival. Brian should not become the librarian. [Memo](POSITION-MEMO.md).
+**Position change:** Hindsight is my first integrated-service candidate for the existing hosts; Letta is the stronger alternative if changing the agent runtime is acceptable. Native remains the provisional starting point. Corvid would adopt integrated preference memory now; that dissent stays open. Agents own routine upkeep in either arrangement. [Memo](POSITION-MEMO.md).
 
-**What changed:** distinguish retained originals, editable interpretation, discovery and applicability. A-MEM's evolving descriptions are not proof of source deletion. Hindsight documents original storage even where extraction leaves no recall result. The question is now what the agent can recover and use, not simply what the database retains. [Evidence and panel response](panel-response-c16.md).
+**What moved:** original documents and source chunks have documented recovery paths in Hindsight. Host projection and replacement policy are narrower questions than “does it preserve any source?” HippoRAG2 adds evidence for graph-assisted passage discovery, not for correcting changing procedures/preferences. [Methods](reading/tern-c17-source-discovery.md), [panel response](panel-response-c17.md).
 
-**Confidence:** medium on these mechanism distinctions; comparative procedure/preference benefit and total upkeep remain unknown. No product selected or experiment run.
+**Confidence:** medium in mechanism/fit; comparative user benefit and total upkeep remain unknown. No installation or experiment.
 
-**Top questions:** which procedures repay upkeep; how corrections become applied preferences; how changed conditions invalidate learned guidance.
+**Top questions:** which procedures repay upkeep; how corrections become applied preferences; how changed conditions invalidate learning.
 
-**Next:** Corvid's practical recommendation, Kiln's original-document path and Cairn's HippoRAG2 reading all started. Tern continues source synthesis; checkpoint10:15Z. The09:57 checkpoint was missed during lead context recovery and disclosed, not extended retroactively. Claude owns publication.
+**Next:** all three cycle18 commissions started—Corvid full-context rival, Kiln actual host source projection, Cairn ReadAgent. Tern compares selection and reasoning costs. Existing10:15Z checkpoint remains; Claude owns publication.
