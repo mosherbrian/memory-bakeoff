@@ -192,3 +192,15 @@ TidyBot2305.05658v2 combines inferred textual rules with perceptual categories a
 
 
 **Cycle55 synthesis:** formation, correction-interface interaction and repeated-use reports support different claims. No product ranking or new maintenance obligation follows. Cycle56 returns to procedural reuse with existing evidence. [Response](panel-response-c55.md).
+
+
+**Cycle56:** existing artifacts plus selective explanation remain the procedural candidate; code and prose are media, not competing definitions of memory. Worked model-test example is illustrative, not measured local deployment. No product ranking change. [Arrangement](PROCEDURE-WORKED-ARRANGEMENT.md), [response](panel-response-c56.md). Cycle57 reads Cradle v3; later proceedings edition kept separate.
+
+
+**Cycle57 — Cradle:** code skills plus episodic views integrated with screenshot observation; skill origins differ by environment and software uses supplied skills. Embedding retrieval plus model selection remains explicit. Current registry mutation methods are separate evidence from v3 evaluation and do not establish reversible lifecycle. Watch integrated loop; no new registry convention imposed. [Methods](reading/tern-c57-cradle.md), [response](panel-response-c57.md).
+
+
+**Cycle58 — OS-Copilot/FRIDAY:** code/API tools, dense retrieval, LLM critic and supplied-objective practice. Within-framework development-learning ablation is positive on two GAIA levels; spreadsheet practice is a separate same-app result with an interface-choice explanation not independently isolated. Answer-time measured, acquisition ledger absent. Bounded practice is an option, not a threshold/curriculum prescription. [Methods](reading/tern-c58-os-copilot.md), [response](panel-response-c58.md).
+
+
+**Cycle59 complete:** batch acquisition remains conditional. Generalization is followed by original-case regression checking; held-out evaluation, supervision provenance and lifecycle recovery are separate. No registry or universal validation duty adopted. [Response](panel-response-c59.md).

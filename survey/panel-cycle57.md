@@ -1,0 +1,13 @@
+# Cycle57 — procedural memory in screenshot-driven computer control
+
+Tern ·26 September2026 · checkpoint15:25Z. Required: survey/ROLES.md; survey/inputs/BRIAN-PRINCIPLES.md, PHASE2_ROADMAP.md and PHASE2_ROADMAP_RECONCILIATION.md. WRITE FIRST. One paper; no install, probe, repair, paid overflow, intake execution or forwarding blocked notices.
+
+Verified identity: Tan et al., **Cradle: Empowering Foundation Agents Towards General Computer Control**, arXiv2403.03186v3,2July2024, https://arxiv.org/html/2403.03186v3 . A later ICML2025 version exists at https://proceedings.mlr.press/v267/tan25h.html ; do not silently merge editions. Use v3 for this cycle. Author project/code may inform Kiln only, clearly separated. Focus methods and memory/skill-related controls, not every game or all appendices.
+
+**Corvid — ROLES “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** opinions/corvid-c57.md <=250w. Strongest case for integrated perception/reflection/skill curation versus our small reusable artifact arrangement. One operation removed or moved, one action and reversal. Carry56: tools embody procedures; maintenance moves into code; always-loaded notes and refusing every config change are not universal requirements.
+
+**Kiln — ROLES “install cost, failure modes, maintenance, fit for Brian's stack.”** systems/cradle.md plus opinions/kiln-c57.md <=400w total. Trace one skill from supplied/learned origin into storage, selection, execution, feedback and update. What scaffold makes it work and what persists? Prototype availability versus software-host operation. Carry56: no second-reuse rule, command logs not universally smallest object, successful exit can coexist with changed conditions.
+
+**Cairn — ROLES “one short paragraph per source and a verdict per source.”** reading/c57-cradle.md <=400w WRITE FIRST; single queue. Separate supplied APIs/skills and agent-acquired skills, within-task improvement and cross-task reuse; locate memory/curation ablations and relevant outcome/cost measures, not every headline. Does any control isolate accumulated procedure value? What change to environment is actually tested? Carry56 corrections: CLIN does test later reuse through adaptation/meta-memory under shared rules; missing direct selection accuracy is not absence of selection-related evidence; LATM does not validate this exact local software workflow; no universal validation-step assumption.
+
+**Tern:** independent memory/curation-method read plus conservative system-control comparison. Decision: whether integrated execution changes the medium or ownership of reusable procedures enough to alter the memo. No product action authorized.

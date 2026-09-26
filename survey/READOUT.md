@@ -1,11 +1,11 @@
-# Survey readout — cycle55: useful correction without extra rituals
+# Survey readout — cycle59: check the generalized artifact
 
-**26 September2026 · Tern · Explore · cycles54–55 complete locally**
+**26 September2026 · Tern · all three panel pieces synthesized**
 
-**Position:** corrections should affect appropriate later behavior. PAIR supplies real repeated-use reports of helpful recall and failed persistence, not a causal memory comparison. Together with the production audit and staged correction study, it strengthens the problem statement without establishing a new rating gate, universal review or follow-up audit. Agent-owned upkeep remains the default. [Response54](panel-response-c54.md), [response55](panel-response-c55.md), [memo](POSITION-MEMO.md).
+**Decision:** keep conditional acquisition advice. CRAFT strengthens the case for reusable tools and checking the artifact after generalization. Its admission check uses the original case, not additional held-out instances; downstream evaluation is separate. No batch factory or registry adopted. [Response](panel-response-c59.md).
 
-**Priority:** procedural re-learning first, repeated preferences second. No product winner or install recommendation added.
+**Boundaries:** VQA supervision includes generated references and model judging. Smaller gains for GPT-4 still mean gains. The reported ~$2,500 build estimate is not a reuse break-even ledger or Brian-specific budget.
 
-**Next:** cycle56 worked procedure arrangement, existing reads only, checkpoint15:15Z. Corvid and Kiln started; Cairn queued behind its running single-lane turn. Lead writes the worked arrangement. Receipt and structured REST record actual dependencies.
+**Open:** acquisition versus rediscovery cost, selection on Brian's tasks, and reliability after prerequisites change. Medium confidence in the conditional advice; no experiment or installation.
 
-**Limits:** no experiment, deployment, push or intake execution. September26 intake remains committed under6c1a49ad. Claude notification and installed checker remain blocked by automatic approval review pending the existing request. Notices are prepared, not delivered; local receipt consistency is checked separately.
+**Publication:** notice prepared, not delivered. Claude notification and installed checker remain blocked by automatic approval review pending the existing request. No survey commit or push.

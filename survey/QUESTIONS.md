@@ -1,4 +1,4 @@
-# Question register — cycle 55
+# Question register — cycle 59
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–55 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 distinguishes project defaults, actual host loading and active-session correction. Cycle52 located current Pi reload and distinguished production memory initiation from correction effort. Cycle53 adds a participant correction-workflow comparison; cycle54 adds real repeated-use reports of helpful recall and failed correction persistence, without isolating memory effects. Cycle55 separates these from production-memory formation evidence; no new review or follow-up duty follows. Cycle56 returns to a worked procedural arrangement using existing reads. Shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
+Cycles1–58 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 distinguishes project defaults, actual host loading and active-session correction. Cycle52 located current Pi reload and distinguished production memory initiation from correction effort. Cycle53 adds a participant correction-workflow comparison; cycle54 adds real repeated-use reports of helpful recall and failed correction persistence, without isolating memory effects. Cycle55 separates these from production-memory formation evidence; no new review or follow-up duty follows. Cycle56 supplies a worked procedural arrangement using existing reads; cycle57 distinguishes Cradle’s integrated execution from supplied and learned skills. Cycle58 supports bounded acquisition for a named gap; cycle59 examines CRAFT’s validation, abstraction and toolset controls. Shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -214,3 +214,17 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle55 decision:** the user evidence strengthens the importance of corrections surviving into relevant later use, but does not establish a new maintenance policy or lower-cost architecture. No universal review/checking duty. Cycle56 returns to Q5 with a worked minimal procedure arrangement. [Response](panel-response-c55.md).
+
+
+**Cycle56 decision:** Q5 has a concrete minimal arrangement: an existing procedural artifact plus selective explanation and recoverable source evidence. No second-reuse threshold, always-loaded note or universal validation ritual. [Worked arrangement](PROCEDURE-WORKED-ARRANGEMENT.md). Next read Cradle for integrated perception/curation in GUI execution; no experiment.
+
+
+**Cycle57 decision:** ranked bets unchanged because Cradle’s integrated execution does not isolate accumulated-skill value; supplied versus acquired content now explicit in Q5/Q6. Selection and fallible outcome interpretation remain. [Response](panel-response-c57.md). Next OS-Copilot/FRIDAY v2 acquisition/admission/cost controls; no runtime or registry adoption.
+
+
+**Cycle58 decision:** Q5 includes bounded practice for a missing competence, after existing tools/interface guidance are considered. FRIDAY has a useful acquisition ablation, but does not identify a universal package-discovery moderator, pure code-only effect or optimal practice budget. [Response](panel-response-c58.md). Next CRAFT validation-to-abstraction boundary and cost; no experiment released.
+
+**Cycle59 partial — Corvid:** Q5's conditional acquisition advice remains unchanged. CRAFT's post-abstraction check uses the originating case, not additional held-out instances; batch construction remains a candidate whose cost and supervision need comparison. [Response](panel-response-c59.md). No execution released.
+
+
+**Cycle59 complete:** batch acquisition remains conditional. Generalization is followed by original-case regression checking; held-out evaluation, supervision provenance and lifecycle recovery are separate. No registry or universal validation duty adopted. [Response](panel-response-c59.md).

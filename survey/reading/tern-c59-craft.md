@@ -1,0 +1,16 @@
+# CRAFT — independent validation and abstraction read
+
+Tern ·26 September2026 · cycle59 complete. Identity verified: Yuan et al., [CRAFT, arXiv2309.17428v2](https://arxiv.org/abs/2309.17428v2),13March2024, ICLR2024. Earlier provisional notes are preserved below; final interpretation follows.
+
+**Question:** what survives validation when a task-specific solution becomes a reusable tool? Distinguish correct output on supplied examples, generalized function behavior, tool selection and total acquisition cost. Compare supplied supervision with FRIDAY's critic rather than treating every “validated” tool as equivalent.
+
+**Provisional position:** pre-building tools may repay its cost for a recurring domain, but the abstraction step can change the object that was checked. Locate the exact order and controls. No experiment, install or source-code execution.
+
+**First primary pass, introduction/§2.1:** the paper does validate after abstraction. It first filters task-specific solutions using their outputs, then generalizes names/parameters, then has GPT-4 call the resulting function on the original problem; failures are discarded. Deduplication groups tools by name and argument count and uses GPT-4 to choose one. The authors estimate roughly$2,500 for constructing the released toolsets. [Primary v2](https://arxiv.org/html/2309.17428v2).
+
+**Interpretation:** the original-task regression check directly addresses one concern from our provisional framing; it does not establish behavior across every generalized input. Do not call the output check an independent verifier until its task-specific comparison procedure is read. The published acquisition estimate is useful and should remain separate from a per-tool or Brian-specific cost. Retrieval/abstraction controls and held-out evaluation still to read; panel active.
+
+**Corvid claim check, §§2.1–2.2/3.1 and Appendix B/C.2:** admission re-solves the original case after abstraction; no additional held-out per-tool validation is described. The three validation samples in the baseline section belong to LATM. Name/arity grouping plus model choice is not a proof of non-overlapping functionality. VQA construction uses LLaVA and generated COCO instruction/reference pairs; its evaluator prompt asks an LLM to compare predicted and reference meanings. Tabular/math construction instead samples benchmark training splits. Thus “label-grounded” does not establish equally independent supervision across domains. Retrieval may return no tools, in which case ordinary code generation proceeds; batch tools and on-demand solving coexist. [Primary methods and appendices](https://arxiv.org/html/2309.17428v2).
+
+
+**Final interpretation:** component controls support abstraction and multiple retrieval cues, with benefits for both GPT-3.5 and GPT-4. The latter result does not support “no benefit from self-authored tools.” The paper also reports poor open-source pilot results; successful local transfer remains unestablished. Manual repair is contemplated, although an automated correction/history loop is not documented. The construction estimate is not a break-even ledger. Preserve the original-case regression idea without universal admission or registry requirements. [Final panel response](../panel-response-c59.md).

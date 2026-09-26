@@ -1,0 +1,13 @@
+# Cycle58 — OS-Copilot/FRIDAY: acquired tools beyond screenshot control
+
+Tern ·26 September2026 · checkpoint15:30Z. Required survey/ROLES.md; survey/inputs/BRIAN-PRINCIPLES.md, PHASE2_ROADMAP.md and PHASE2_ROADMAP_RECONCILIATION.md. WRITE FIRST; one source, compact signed confidence. No experiment, install, repair, paid overflow, intake execution or forwarding blocked notices.
+
+Verified: Wu et al., **OS-Copilot: Towards Generalist Computer Agents with Self-Improvement**, arXiv2402.07456v2,15February2024, https://arxiv.org/html/2402.07456v2 . FRIDAY is the agent built with OS-Copilot. Do not mix later projects/versions. Focus acquisition, stored tools, critic/admission and component controls, with Excel/PowerPoint versus GAIA endpoints separated.
+
+**Corvid — ROLES “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** opinions/corvid-c58.md <=250w. Best case self-directed acquisition removes more work than our selective artifact upkeep; which operation is removed/moved, one action/reversal. Carry57: integration does not eliminate selection; feedback remains fallible; baseline permits immediate event-driven revision, not only scheduled maintenance.
+
+**Kiln — ROLES “install cost, failure modes, maintenance, fit for Brian's stack.”** systems/os-copilot.md plus opinions/kiln-c58.md <=400w total. One tool from acquisition to storing, retrieval, execution and correction. Who supplies interfaces, evaluator and goals? Read-only author docs/code optional, explicitly separate from paper. Carry57: update/delete verbs are not revision history; missing docstrings may pass Cradle current check; overwrite precedes later validation there; no near-zero adoption claim or mandatory registry convention. No repairs.
+
+**Cairn — ROLES “one short paragraph per source and a verdict per source.”** reading/c58-os-copilot.md <=400w WRITE FIRST. Primary v2 methods and relevant controls. Which comparison isolates previously acquired skills from execution/retries/other framework changes? Acquisition supervision, evaluation feedback and held-out tasks; measured costs versus unpriced work. Carry57: dynamic game state is change, distinguish new rules/UI versions; regeneration exists in Cradle, not proof of robust correction; absent library control in one paper does not negate previous stored-content evidence; no five-layer validation inference.
+
+**Tern:** independent acquisition/admission and outcome read. Compare supplied machinery with acquired procedures without assuming a new runtime is necessary. Current memo unchanged in ranking after57; question register gains explicit supplied-versus-learned distinction.

@@ -7,15 +7,17 @@ category** (non-persistent corrections OR stopping), not nine observed quitters;
 counts, so 3.4% is not failure incidence; **correction time/cost is not priced**; no causal
 "persistence not capture" localization; PAIR's capped nightly summary is not a proven remedy.
 
-**c52 — production trace audit (2,050 ChatGPT memories, 80 real users)** `[read]`: formation is
-**system-side** — 96% of entries lack an explicit user memory command; 84% grounded. Verdict:
-strongest field evidence on **who does the capture labor**; silent on corrections.
+**c52 — production trace audit (2,050 ChatGPT memories, 80 real users)** `[read]`: memory
+**commands** are system-side — 96% of entries lack a detected explicit user memory command
+(a regex result on commands, **not a capture-labor measurement**); 84% grounded. Verdict:
+strongest field evidence on **who initiates memory writes**; silent on corrections.
 
-**c53 — staged correction lab (UIST '25, N=12, within-subjects vs Canvas)** `[read]`: a
-flag-conflicts-with-rationale, per-item-verify loop was **+94 s per 3-change integration** with
-no significant perceived-workload difference and more intervened edits; Canvas missed every
-conflict in 10 of 18 cases. Verdict: the only **priced** correction interaction — priced for
-paid participants on documents that weren't theirs.
+c53 — staged correction lab (UIST '25, N=12, within-subjects vs Canvas)** `[read]`: a
+flag-conflicts-with-rationale, per-item-verify loop showed an **observed average task-time
+difference of +94 s** (3-change integration tasks; not a universal per-change price) with no
+significant perceived-workload difference and more intervened edits; Canvas failed to detect a
+single conflict in 18 cases involving 10 participants. Verdict: the only **priced** correction
+interaction — priced for paid participants on documents that weren't theirs.
 
 **c54 — PAIR field deployment (19 users, 14 days, 1,093 sessions)** `[read]`: corrections
 elicited by a ≤4 rating gate appeared in ~4% of sessions (memory failures 8 of 37 attributable);
@@ -23,7 +25,7 @@ interviews report corrections not persisting or participants ceasing them (combi
 no memory-off arm. Verdict: real repeated use where **persistence problems are reported**;
 incidence and mechanism unmeasured.
 
-**Better supported now:** memory upkeep is system-side labor in actual use (c52 production +
+**Better supported now:** memory writes are system-initiated in actual use (c52 command regex +
 c54's system-written memory with gated elicitation) — agent-owned upkeep matches observed
 behavior; and **users report lost corrections in real deployments** (c54), which no lab result
 had shown.
@@ -34,11 +36,11 @@ later appropriate action — the c50 in-situ application unknown stands untouche
 
 **Advice change — one line added, none removed.** The c50 arrangement (raw sessions recoverable
 + editable scoped rules + explicit directions binding) survives all three reads. Added, agent-
-side only: **after a correction, the agent checks whether a later relevant interaction applies
-it, and treats principal silence after a failed correction as a signal, not consent** (c54
-category + c14 silencing). No rating form, no approval duty, no new Brian operation; the check
-is the agent auditing its own persistence, because nobody's evidence supports making the
-principal the verifier.
+side only: **when a later relevant interaction visibly fails after a correction, that failure is
+the occasion to inspect the correction path** (stale source, missed update, delivery, scope) —
+not a standing post-correction audit; and principal silence is neither consent nor diagnostic
+evidence (c14 silencing is a mechanism, not a reading rule). No rating form, no approval duty,
+no new Brian operation.
 
 **Confidence: high on what each design can and cannot support (methods explicit), medium that
 the added agent-side check is worth its cost (argued from reported failures, not measured
