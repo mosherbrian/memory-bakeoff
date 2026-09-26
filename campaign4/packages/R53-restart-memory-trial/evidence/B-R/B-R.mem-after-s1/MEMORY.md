@@ -1,0 +1,1 @@
+- [Restore services after tests](restore-services-after-tests.md) — services stopped/disabled for a test must be started and re-enabled afterwards
