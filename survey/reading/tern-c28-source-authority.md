@@ -1,6 +1,6 @@
 # Origin helps establish authority; a speaker label is not the whole decision
 
-**Tern ·26 September2026 · interim cycle28 opinion, medium confidence.**
+**Tern ·26 September2026 · cycle28 opinion, medium confidence.**
 
 The memo already separates sponsor direction from inferred tendencies. Corvid's proposal strengthens the implementation question, but “everything provisional until checked” is not our position. An observation can be certain without being an instruction; a sponsor direction can bind without empirical verification. This is the authority/confidence distinction from cycle3, now examined at capture time.
 
@@ -10,4 +10,8 @@ Product naming correction: the Mental Models/Observations hierarchy discussed ea
 
 [ReMe auto_memory.py](https://raw.githubusercontent.com/agentscope-ai/ReMe/main/reme/steps/evolve/auto_memory.py) filters selected content blocks, then serializes Msg objects. The sanitizer returns the original message or copies it with only content changed. That does not support an assertion that session_id is the sole surviving structural attribution. Message IDs and timestamps are also used in merging. Carry-through into derived daily/digest guidance is a separate question; absence of explicit authority adjudication in the sanitizer does not establish indistinguishable serialized user and assistant records. Filtering replayed content reduces one feedback path; it does not prove the entire feedback loop is closed.
 
-[MINJA §3](https://arxiv.org/html/2503.03704v4) assumes attacker interaction through queries and responses, plus memory records that can subsequently reach another user's queries. The shared-bank assumption is material. Its result is not itself evidence of poisoning through a web page in Brian's private assistant. Retained agent-generated text can nevertheless require its original source context to interpret; generation by the agent does not confer sponsor authority. This transfer statement is a design inference, not a measured incident or a request for a new security service. Cairn's complete method read is pending.
+[MINJA §3](https://arxiv.org/html/2503.03704v4) assumes attacker interaction through queries and responses, plus memory records that can subsequently reach another user's queries. The shared-bank assumption is material. Its result is not itself evidence of poisoning through a web page in Brian's private assistant. Retained agent-generated text can nevertheless require its original source context to interpret; generation by the agent does not confer sponsor authority. This transfer statement is a design inference, not a measured incident or a request for a new security service. Cairn’s complete reading is now incorporated in the panel response.
+
+**Capture follow-up received:** [Kiln's addendum](../opinions/kiln-c28.md) traces full-Msg JSONL and speaker-labeled format_history into distillation. The original session_id-only claim is withdrawn. Source role is available to the distiller; reliable per-claim attribution in derived guidance remains unestablished. Treat that as an open behavior question, not demonstrated loss.
+
+**MINJA scope:** the [potential-defense section](https://arxiv.org/html/2503.03704v4#S5.SS4) reports mixed prompt-detection results. Those tests neither establish a general impossibility of later detection nor demonstrate provenance tags as a sufficient or exclusive defense. Extending the scenario to a private assistant reading external content requires a separate admission/retrieval path; it is not established merely by having memory.

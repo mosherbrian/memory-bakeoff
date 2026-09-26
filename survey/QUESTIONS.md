@@ -1,4 +1,4 @@
-# Question register — cycle 27
+# Question register — cycle 32
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–27 are synthesized. Q5 now compares useful provisional guidance with reconstruction when no affordable reliable checker exists. Cycle28 brings Q9/Q3 to source authority: what separates sponsor directions, assistant inference and external text when memory becomes durable? All three panelists started; Tern owns synthesis, checkpoint11:20Z. No rollout or campaign4 package.
+Cycles1–32 are synthesized. Mem0's raw adapter, research update loop and current additive documentation are distinct. Cycle33 compares read-time currency with explicit updates and source history; all three panelists started. Tern owns synthesis, checkpoint11:40Z. No rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -107,3 +107,17 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 **Cycle27 interim:** Q5 separates authority, confidence and practical usefulness. No affordable outcome checker does not force every task back to raw-episode reconstruction; provisional methods can still save work. Compare error consequences, reversibility and cost of revisiting evidence. Corvid's reconstruction default remains a substantive dissent, not a defect to repair. [Lead opinion](reading/tern-c27-provisional-guidance.md). Reader piece pending.
 
 **Cycle27 complete:** checker absence does not eliminate useful learning. Keep the uncertainty and its source visible; scale reliance to consequences. A fallible score is not authority. Retained/deleted quality reverses in one published condition; the purported richer-signal transplant is unsupported. Next compare source-role preservation and memory admission. [Response](panel-response-c27.md).
+
+**Cycle28 complete:** ReMe speaker information survives capture and reaches distillation; derived-claim attribution remains open. MINJA establishes an attack under specified admission/sharing conditions, not a measured risk rate on Brian’s hosts or a proof of source tags as defense. Next inspect positive sharing value and synchronization cost. [Response](panel-response-c28.md).
+
+**Cycle29 complete:** shared durable learning and selective handoff are complementary. A canonical repository is already a shared-memory arrangement; the unresolved comparison concerns capture, refresh, retrieval and application. Q3 now examines concurrent corrections and scope, with StateFuse as a new source rather than a chosen product. [Response](panel-response-c29.md).
+
+**Cycle30 interim:** Q3 separates preserving conflicting claims, detecting same-scope disagreement, and choosing an action. StateFuse ties strong flat baselines under matched policies; its compaction guarantee is current-view preservation, not full-history recovery. Corvid/Kiln received, Cairn reading. No routine sponsor escalation or conflict-service requirement adopted. [Lead methods](reading/tern-c30-conflict-preservation.md).
+
+**Cycle30 complete:** keep relevant disagreement visible without selecting a conflict service by default. Matched StateFuse controls do not establish a unique accuracy advantage; schema interpretation and source retention remain separate from deterministic merge. Next consolidate Q5/Q9/Q6 advice into practical arrangements. [Response](panel-response-c30.md).
+
+**Cycle31 complete:** starting advice is existing facilities with explicit agent upkeep, while comparing automation by the work it removes. No mandatory per-record counters, incident quotas or inferred user-cost winner. [Practical comparison](ALTERNATIVES.md), [panel response](panel-response-c31.md).
+
+**Cycle32 interim:** Q6 now distinguishes Mem0 raw infer=False evidence, the paper's automatic operation selection, and current additive-extraction documentation. A managed endpoint does not establish automatic correction or host insertion. [Lead source note](reading/tern-c32-mem0-profiles.md). Reader still working; no complete-cycle claim.
+
+**Cycle32 complete:** Q6 includes a justified Mem0 profile/version reconsideration, not a generic rerun. Q3 asks whether retained observations plus read-time selection can supply currency without destructive revision. [Response](panel-response-c32.md).

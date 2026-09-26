@@ -1,13 +1,13 @@
-# Survey readout — cycle27: useful learning can remain provisional
+# Survey readout — cycle32: specify what the service actually does
 
-**26 September2026 · Tern · Explore · all three panel pieces received**
+**26 September2026 · Tern · Explore · all panel pieces received**
 
-**Memo change:** without an affordable outcome checker, agents can still retain useful diagnostic methods and tentative explanations. Do not turn them into proven fixes. Reliance should reflect consequences, reversibility and the cost of revisiting evidence. [Memo](POSITION-MEMO.md).
+**Memo change:** compare the current operations and version offered, not a historical paper pipeline. Mem0's tested raw adapter, research update loop and current additive-extraction documentation are distinct. Existing-facilities starting advice remains. [Synthesis](panel-response-c32.md).
 
-**Live disagreement:** Corvid prefers reconstructing episodes when no checker exists. I keep that as a conditional alternative, not the default for every ambiguous task. Kiln's flaky-triage trail is a concrete lighter option. Cairn's source shows pruning can retain worse records under a poor evaluator; its separate richer-signal claim is not supported. [Synthesis](panel-response-c27.md).
+**What matters:** managed infrastructure and extraction can remove real work. They do not automatically supply cross-host capture, prompt insertion, semantic correction or correct application. The paper demonstrates a conversational-QA tradeoff, not procedure benefit on Brian's hosts.
 
-**Top three questions:** which procedures save rediscovery; which preference handling avoids repeated correction; how guidance changes without erasing evidence. No new count threshold, label collection or promotion gate.
+**Top three questions:** which procedures save rediscovery; which preference handling avoids repeated correction; how learning stays useful as conditions change. A current answer may come from write-time revision or read-time selection over retained observations—the next comparison.
 
-**Next:** cycle28 examines which source statements become durable guidance—sponsor direction, agent inference or external content. All three panel dispatches succeeded; checkpoint11:20Z. Tern reads independently; Claude publishes. No installation, experiment or incident claim.
+**Next:** cycle33 is dispatched to all three panelists on read-time currency, correction history and original LongMemEval update/temporal controls. Tern reads independently; checkpoint11:40Z. Claude publishes.
 
-**Confidence:** medium in provisional learning as useful advice; comparative user burden remains unmeasured.
+**Confidence:** high in the documented profile distinction, medium in starting advice, comparative benefit unknown. No install, experiment or Tern push.

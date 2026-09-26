@@ -1,0 +1,36 @@
+# Three arrangements for Brian — and the decision that cuts across them
+
+**Tern · cycles12–25 · 26 September 2026 · advice, no deployment · medium confidence.**
+
+My starting choice is **agent-maintained native procedures and preferences backed by findable history**. The strongest rival is an integrated runtime that actually removes capture, correction and delivery work. Learned memory belongs in either arrangement; it is not automatically a third exclusive stack. Brian should not author, approve or synchronize every routine memory update.
+
+This separates **representation and delivery** from **who does the work**. A file can be written automatically; a memory service can still require manual curation. A learned controller can edit an external store; adapting model weights need not erase external evidence. Comparing “manual files” with “automatic intelligence” would predetermine the answer.
+
+| Arrangement | Best case for Brian | Most consequential unresolved cost | My verdict |
+|---|---|---|---|
+| **A. Native files/skills + recoverable episodes** | Existing agents can keep conditional procedures, explicit directions and supporting evidence in editable forms. Selective loading avoids repeating the entire past. | Cross-host capture, revision and refresh are not supplied merely by choosing a canonical repo. The proposed complete workflow has not been deployed or measured. | **Start here, medium confidence**, using existing facilities. Agents own upkeep. Reverse if this arrangement still makes Brian repeat corrections or maintain delivery plumbing. |
+| **B. Integrated memory runtime + executive reasoning** | Shared editable memory, retrieval and background consolidation may replace several pieces of host-specific glue. This is the strongest alternative to A. | Backend integration, semantic update quality and whole-loop cost remain distinct from storage/versioning. A service returning context does not ensure that every host receives or applies it. | **Hindsight first for an added service; Letta for a runtime change. Medium fit confidence**. Prefer it when a concrete capture/update/delivery mechanism removes more work than operating it adds. No need to require Brian to repeat an already reported pain. |
+| **C. Learned controller or adapted local model + retained sources** | Learn admission, retrieval or procedural behavior rather than repeatedly reconstructing it. An external-store controller can coexist with A or B. | Acquisition, correction and transfer costs; adapted weights and learned external-memory policies have different revision paths. No demonstrated best fit across Brian's hosts. | **Research comparator, low confidence in near-term adoption**. Do not demand frontier parity; demand useful benefit within the actual budget. |
+
+Current-product evidence strengthens B: [Hindsight source/integration reading](../reading/tern-c16-hindsight.md) locates Pi delivery and source-linked revisions. This is a concrete rival to custom glue, while comparative burden remains unmeasured.
+
+Sources and limits: [native delivery paths](../systems/preference-delivery-paths.md), [integrated-memory methods](../reading/tern-c4-integrated-memory.md), [automatic upkeep](../reading/tern-c6-automatic-upkeep.md), [learned representations](../reading/tern-c11-memory-representation.md). These describe mechanisms and bounded results, not an installed A/B/C comparison.
+
+**What I would preserve across all three:** procedures with applicability conditions, failed alternatives and outcome evidence; explicit directions distinguished from inferred tendencies; recoverable corrections and old versions; one accountable route into the executive's context. History supports reconstruction, artifacts establish present conditions, and neither a recalled success nor a valid schema establishes present success. These are responsibilities from Brian's principle, not a requirement for separate services.
+
+**What would change my choice:** evidence that one arrangement avoids repeated discovery and correction with less combined agent work and user attention. Diagnose whether a miss arose during capture, update, delivery, retrieval or application before selecting the remedy. No arbitrary incident quota or new approval ceremony is warranted. A changed prerequisite can justify revision even when commands exit successfully.
+
+**Panel disagreement remains real:** Corvid historically preferred integrated adoption sooner; his cycle21 practical native-first advice converges, while its contradictory adopt-now clause is being clarified; Kiln favors native delivery paths; Cairn favors a learned update policy with retained records. I accept their common concern about user attention. I do not accept that files inherently require manual upkeep, or that a theorem about a restricted observation set eliminates a storage architecture. [Signed opinions and response](../panel-response-c12.md).
+
+## Cycle25: these arrangements overlap in actual products
+
+ReMe puts automatic capture/consolidation around editable files. A/B is therefore a description of packaging, not an exclusive architecture choice. Compare operations across the five axes in the [source note](../reading/tern-c25-files-and-automation.md): representation, upkeep automation, host delivery, history/version recovery and total cost.
+
+| Candidate | Concrete reason to consider it | Unresolved for Brian |
+|---|---|---|
+| Existing native facilities | Reuse current files, skills and host capabilities with agent-owned upkeep. | Complete cross-host update/delivery burden. |
+| ReMe | File-compatible capture/consolidation and documented host adapters. | Current dream-loop quality, best-effort capture and version recovery; paper results do not validate this loop. |
+| Hindsight | Derived observations, source links and correction/freshness machinery. | Host exposure, extraction/update quality and combined burden. |
+| Letta | Integrated memory editing, versioning and runtime delivery. | Benefit against the cost of changing the runtime. |
+
+**Medium-confidence recommendation:** keep native as the provisional base, compare these candidates by the missing operation rather than service sophistication. No installation is implied. The paper-cost note does not establish that a local pipeline is free. Corvid's c25 axis objection is accepted; automatic-versioning language is not.

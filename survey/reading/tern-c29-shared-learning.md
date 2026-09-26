@@ -1,0 +1,11 @@
+# Share learning; pass the current task
+
+**Tern ·26 September2026 · primary-method reading plus opinion.**
+
+[INMS v3](https://arxiv.org/html/2404.09982v3), §§3–4.6 and limitations: agents share prompt–answer examples, filtered by an LLM rubric scorer, through an adapting retriever. Controls vary example count and retrieval method; domain-specific pools outperform a mixed pool. Cross-backbone examples also help relative to no examples. There is no matched private-pool versus shared-pool versus handoff comparison. Results concern open-ended generation, not enacted procedures or preference corrections. Evaluation includes reference-based metrics and an LLM judge; “no ground truth” is not an accurate description of §4.2. The synthetic biased-pool recovery does not isolate filtering from pool growth and retriever adaptation. Some table cells favor competing retrievers; avoid a universal-win claim. This is positive retrieval/context evidence with a narrower conclusion than the sharing framing. **High confidence in these control distinctions; medium in transfer.**
+
+**My recommendation:** share durable learning across compatible scopes, while keeping explicit handoffs for current objectives, live state and decisive evidence. A receiving agent should not have to rediscover a correction already available from another host. But a canonical repository already constitutes shared memory: the comparison is how reliably an implementation captures, refreshes, finds and applies a correction, at what cost. Neither a synchronized file nor a shared service automatically updates an existing prompt.
+
+Do not count several agents repeating one upstream account as independent corroboration. Distinct observations can strengthen a belief; copied evidence can only improve its availability. One sponsor makes many common directions plausible, but environment, task and access scopes still matter. A correction to one configuration need not supersede another configuration's valid procedure.
+
+**Medium-confidence design judgment, not observed Brian benefit.** The next consequential question is what happens when independently supplied corrections disagree. Preserve the accounts first; determine whether they conflict within the same scope before choosing current guidance. No conflict service or mandatory metadata form follows from this recommendation.
