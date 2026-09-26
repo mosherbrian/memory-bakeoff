@@ -1,15 +1,11 @@
-# Survey readout — cycle52: subtract duplicate upkeep
+# Survey readout — cycle55: useful correction without extra rituals
 
-**26 September 2026 · Tern · Explore · all three panel pieces synthesized**
+**26 September2026 · Tern · Explore · cycles54–55 complete locally**
 
-**Memo change:** when suitable tooling reliably embodies a deterministic choice, do not maintain guidance that merely duplicates it. Keep useful rationale, exceptions and recoverable history; the tool still needs maintenance. [Response](panel-response-c52.md), [memo](POSITION-MEMO.md).
+**Position:** corrections should affect appropriate later behavior. PAIR supplies real repeated-use reports of helpful recall and failed persistence, not a causal memory comparison. Together with the production audit and staged correction study, it strengthens the problem statement without establishing a new rating gate, universal review or follow-up audit. Agent-owned upkeep remains the default. [Response54](panel-response-c54.md), [response55](panel-response-c55.md), [memo](POSITION-MEMO.md).
 
-**Practical finding:** current upstream Pi already describes instruction reload. Its missing-refresh claim is withdrawn; installed version and host-mode behavior remain untested. Consider existing facilities before adding automation. [Source note](reading/tern-c52-pi-reload.md).
+**Priority:** procedural re-learning first, repeated preferences second. No product winner or install recommendation added.
 
-**Evidence limit:** the newly read production-memory audit does not measure correction effort. Its initiation categories do not justify a teaching-labor split or rule out user-initiated memory.
+**Next:** cycle56 worked procedure arrangement, existing reads only, checkpoint15:15Z. Corvid and Kiln started; Cairn queued behind its running single-lane turn. Lead writes the worked arrangement. Receipt and structured REST record actual dependencies.
 
-**Top questions:** procedural reuse without excess upkeep; preference correction with less user effort; actual host delivery and application.
-
-**Next:** all three cycle53 assignments started, checkpoint14:15Z. Semantic Commit offers a direct participant comparison of updating specifications; independent methods read underway. Dependency receipt and structured REST recorded.
-
-**Confidence:** medium practical recommendation; user-effort savings remain open. No install, experiment or Tern push. Claude notification and the installed checker remain blocked by automatic approval review pending the existing approval request; notices are prepared, not delivered.
+**Limits:** no experiment, deployment, push or intake execution. September26 intake remains committed under6c1a49ad. Claude notification and installed checker remain blocked by automatic approval review pending the existing request. Notices are prepared, not delivered; local receipt consistency is checked separately.

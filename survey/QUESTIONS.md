@@ -1,4 +1,4 @@
-# Question register — cycle 52
+# Question register — cycle 55
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–52 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 distinguishes project defaults, actual host loading and active-session correction. Cycle52 located current Pi reload and distinguished production memory initiation from correction effort. Cycle53 reads Semantic Commit’s participant comparison of updating specifications. Shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
+Cycles1–55 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 distinguishes project defaults, actual host loading and active-session correction. Cycle52 located current Pi reload and distinguished production memory initiation from correction effort. Cycle53 adds a participant correction-workflow comparison; cycle54 adds real repeated-use reports of helpful recall and failed correction persistence, without isolating memory effects. Cycle55 separates these from production-memory formation evidence; no new review or follow-up duty follows. Cycle56 returns to a worked procedural arrangement using existing reads. Shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -205,3 +205,12 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle52 complete:** all panel pieces received. Avoid duplicate guidance and inspect existing refresh facilities before adding plumbing. A production-trace audit does not supply a labor ledger. Next: a located participant editing study, Semantic Commit, for Q9/Q4. [Response](panel-response-c52.md).
+
+
+**Cycle53 complete:** optional impact inspection and local reversibility may improve correction control, with measured time cost and no established workload equivalence. Next PAIR study follows the existing longitudinal user-effort question, independently of tier4 intake recommendations. [Response](panel-response-c53.md).
+
+
+**Cycle54 decision:** Q9 now has field reports about corrections failing to persist, alongside positive recall reports. These strengthen the practical concern, not a product ranking or measured remedy. Investigate repeated corrections across capture, propagation and application; no new rating form or standing acceptance test. [Response](panel-response-c54.md). Cycle55 uses existing evidence only.
+
+
+**Cycle55 decision:** the user evidence strengthens the importance of corrections surviving into relevant later use, but does not establish a new maintenance policy or lower-cost architecture. No universal review/checking duty. Cycle56 returns to Q5 with a worked minimal procedure arrangement. [Response](panel-response-c55.md).

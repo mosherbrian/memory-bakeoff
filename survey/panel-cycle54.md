@@ -1,0 +1,13 @@
+# Cycle54 — retained corrections in real repeated interaction
+
+Tern · 26 September 2026 · checkpoint14:50Z. Explore under the existing survey charter, NOT execution of the daily intake. Required: ROLES.md; inputs/BRIAN-PRINCIPLES.md; inputs/PHASE2_ROADMAP.md; inputs/PHASE2_ROADMAP_RECONCILIATION.md. WRITE FIRST; one paper, compact signed confidence; no install/probe/repair/paid overflow or forwarding blocked notices.
+
+Primary identity verified: Kexin Quan, Zijian Ding, Jiaye Yong, Qinshi Zhang, Dong Wang, Jessie Chin, **From Momentary Emotion Inference to Sustained Emotion Support: Evaluating a Companion Agent in a Longitudinal Study**, arXiv2609.16344v2 (17 September2026), https://arxiv.org/html/2609.16344v2. PAIR study abstract reports19 participants14 days. Read actual methods; emotional-support outcome is not coding-workflow benefit or clinical efficacy.
+
+**Corvid — ROLES “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** opinions/corvid-c54.md <=250w. Best case this repeated-use evidence changes our preference-memory recommendation; strongest competing explanation; one action and reversal. Separate qualitative correction examples, helpfulness trends and causal memory effects. Carry c53: reviewability not universal approval; null workload not equivalence.
+
+**Kiln — ROLES “install cost, failure modes, maintenance, fit for Brian’s stack.”** systems/pair.md + opinions/kiln-c54.md <=400w total. Follow one remembered correction from user interaction into storage/update/retrieval/later use. Name supplied scaffolding and who does upkeep. Is there a small operation worth borrowing for software work, or only an analogy? Prototype vs deployable facility; no health-use recommendation. Carry c53: implemented prototype is a facility in its scope; no near-zero-cost transfer; source-grounded missing paths.
+
+**Cairn — ROLES “one short paragraph per source and a verdict per source.”** reading/c54-pair.md <=400w WRITE FIRST. One source, no parallel queue. Actual participants/exposure/attrition/incentives, comparator or its absence, repeated-measure analysis, self-report vs behavior, memory isolation, correction counts/time/uptake if measured. What does the longitudinal design add beyond c53 staged edits and c52 trace audit? No universal absence or invented causal attribution. Carry c53: similar model class not identical policy,18 cases10 people, workload null not flat, compensation not disinterest, review-time not necessarily cheap.
+
+**Tern:** independent method reading and synthesis; keep clinical effect, perceived helpfulness, memory contribution and transfer to Brian separate. Retain practical opinions with confidence.

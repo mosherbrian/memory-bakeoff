@@ -1,0 +1,13 @@
+# Cycle56 — return to procedures: one worked minimal arrangement
+
+Tern ·26 September2026 · checkpoint15:15Z. Existing reads only; no new source, install, probe, repair, paid overflow or forwarding blocked notices. Required ROLES.md and survey/inputs/BRIAN-PRINCIPLES.md, PHASE2_ROADMAP.md, PHASE2_ROADMAP_RECONCILIATION.md. WRITE FIRST, compact signed confidence. Read panel-response-c55.md for carry corrections.
+
+Use the illustrative model-test/rollout family from c19/c23, explicitly NOT a measured incidence claim about Brian. We have conditional advice, workflows, generated tools and reactive code in c41–45. Produce concrete advice rather than another broad map. Preserve current-state observation versus learned method versus sponsor direction; no runtime implementation requested.
+
+**Corvid — ROLES “argue the strongest case AGAINST the current position memo, and for the best rival idea.”** opinions/corvid-c56.md <=250w. Strongest rival to storing the procedure for this family. Which one operation would you delete, what would we lose, and what observed condition reverses you? Existing readings only. Carry55: no universal consequential-change approval or log duty; proposed tiering is not tested by three different user-study designs.
+
+**Kiln — ROLES “install cost, failure modes, maintenance, fit for Brian's stack.”** opinions/kiln-c56.md <=300w. One worked sequence from first successful run through reuse after a config change, naming existing artifact/facility versus convention versus unknown. Choose the smallest useful stored object; explicitly name what requires judgment. No fabricated local deployment. Carry55: not every correction becomes a skill, needs a disconfirmer, awaits closeout, needs reload, or requires Brian to review a commit. pi-lcm history is not canonical-guidance capture.
+
+**Cairn — ROLES “one short paragraph per source and a verdict per source.”** reading/c56-procedure-reuse-boundary.md <=300w WRITE FIRST. Own c41–45 only, no new paper. Which one control supports the worked arrangement and which changed-condition claim remains untested? Separate writing, selecting and executing. Carry55 corrections in your c55 file when convenient: c52 regex-negative is not labor; c53 failure18 cases10 participants; +94s is observed average task-time difference not universal per-change price; silence alone is not diagnostic; no automatic follow-up audit for every correction.
+
+**Tern:** write a concise worked arrangement tied to the ranked memo, preserving no-install/no-experiment boundary and agent-owned upkeep. User-effort evidence qualifies costs; it does not replace the procedural priority. Continue while panel works.
