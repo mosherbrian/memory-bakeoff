@@ -1,17 +1,19 @@
 # Charter: agent-memory field survey and expert position
 
+**Binding GPU resource rule,26September2026:** no fleet test run may use the local llama-swap port8080 `gpu` group until Claude ships the booking mechanism. Claude builds the reflector tonight, then booking. Booking must pause Cairn, move ClawdBot to the NPU, exclude night jobs, expire automatically and label each run clean/disturbed. No manual substitute or unbooked smoke test. This does not stop CPU-only data preparation, source review or ordinary authorized work. Booking is resource permission, not Letta-run or training approval. [Contract](survey/delivery/GPU-BOOKING.md).
+
 **LATEST BINDING CORRECTION — continuous delivery,26September2026.** Quiet support mode is withdrawn. The fleet keeps running; no-idling stands. OptionB's pilot subject is the fleet. Priority: (1) baseline the last seven days of manual interventions, gap alarms, idle minutes and repeated failure classes from existing logs; (2) design the fleet Letta comparison and run only with Brian's go-ahead; (3) review/test Claude's reflector as pieces ship; (4) Cairn on local gufo prepares local frontier-labelled correction/supersession data. Use [delivery queue](survey/delivery/QUEUE.md); rest only for named external waits and continue independent ready work. The decision memo remains delivered; old personal-pilot and support-only passages below are superseded. No general literature loop resumes.
 
 
 Status: APPROVED by Brian 2026-09-26 (answers below). In force from 2026-09-26. Campaign4 moves to Prove mode only (see Decisions).
 
-## Binding sponsor change: decision now, then support mode (26 September2026)
+## Current delivery mandate (26 September2026)
 
-The decision memo date moves from29September to **today,26September2026**. Delivered: [one-page decision](survey/RECOMMENDED-DESIGN.md). September29 and October14 were ceilings, not reasons to continue reading. **October14 stabilization is replaced by measured pilot evidence:** assess the first two weeks from reflector launch (10October if launched today), using repeat corrections, later correct applications, wrong changes and cost, with the memo's stop criteria. No automatic extension or further survey cycles follow sparse evidence.
+The memo was delivered today. September29/October14 are ceilings, not reasons to wait. October14 is replaced by measured pilot evidence over the first two weeks of deployment. Quiet support mode was explicitly withdrawn by Brian; the fleet keeps running on delivery, with no-idling intact.
 
-The exploratory survey is now in **support mode**. No new reading unless a delivery is blocked on a named, specific question. Tern reviews Claude's reflector build and weekly scoreboard **when asked**; no self-directed sweep, ongoing panel queue or new audit gate. Claude builds today; daily digest starts tomorrow morning and the repeat scoreboard runs Mondays. Stage0 is approved and complete. Kiln's unfinished host-path check is an open handoff, not a publication blocker.
+The fleet is optionB's pilot subject. Ordered work: baseline seven days of manual interventions/gap alarms/idle/recurring failure; design and, with Brian's go-ahead, run the fleet Letta comparison; review/test reflector pieces as shipped; Cairn on local gufo prepares local frontier-labelled correction/supersession data. General literature sweeps stop; concrete delivery/source questions continue as needed. [Queue](survey/delivery/QUEUE.md), [baseline](survey/delivery/FLEET-BASELINE.md), [decision](survey/RECOMMENDED-DESIGN.md).
 
-This direction supersedes the full-pace/no-idling provisions and research-stall alarms below. Retire Q-FIELD-SURVEY from continuous execution monitoring; scientific unknowns remain in the register. Do not manufacture timed rests while waiting for optional support requests. Publication remains Claude's responsibility.
+Keep Q-FIELD-SURVEY active for delivery liveness. A rest names a real external wait, with a receipt and next action; it does not stop independent ready work. Never manufacture an idle interval or quietly retire the stream. Daily digest starts tomorrow morning; Monday scoreboard owned by Claude. Tern does not take over Claude's deployment or imply approval to run Letta.
 
 ## Purpose
 Form and keep an expert position on agent memory that Brian can act on. The position must be broad (the whole field, not one claim), critical (it separates solid results from hype), and applied (it says what fits Brian's setup: Claude Code, Pi, local models on Strix Halo, and admin, rollout and model-testing work).
@@ -66,5 +68,5 @@ Durability rule (the lesson of the loss): this charter, the roadmap copies and t
 - `survey/READOUT.md`, rewritten by the lead at the end of every cycle, with these parts: what changed in the memo; top 3 open questions; what is next; confidence changes. Plain language, at most one screen.
 - Claude publishes READOUT.md, the position memo and the field map as a private dashboard page for Brian, and refreshes it at each cycle end.
 - The lead sends Claude one line at each cycle end (notify-claude).
-- Historical research-stall rule suspended in support mode; updates follow requested support and pilot evidence.
-- **Historical no-idling direction, superseded by support mode above:** the survey runs continuously at full pace. A rest is only for a real external wait (Brian's answer, a panel piece in progress, provider quota), and it must name that wait. Never a self-chosen pause. Deadlines are latest dates, not a pace.
+- Delivery stall rule: no ready work may be left idle; structured queue and named dependency waits govern liveness.
+- **No idling, reaffirmed for delivery:** the survey runs continuously at full pace. A rest is only for a real external wait (Brian's answer, a panel piece in progress, provider quota), and it must name that wait. Never a self-chosen pause. Deadlines are latest dates, not a pace.

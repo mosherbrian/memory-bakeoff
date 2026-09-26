@@ -1,5 +1,8 @@
 # Option B — learning from corrections without certifying its own errors
 
+**Current resource constraint:** local-GPU screening/teacher experiments, evaluation or Laya fine-tuning must wait for Claude's shipped booking mechanism for llama-swap port8080 `gpu`. Booking does not authorize training or transcript egress. CPU-only candidate preparation continues. Reflector ships first, booking second; retain clean/disturbed run status. [Contract](delivery/GPU-BOOKING.md).
+
+
 Tern · cycle81 sponsor extension ·26 September2026. Proposed addition to the [cascade](OPTION-B-CASCADE.md); no labeling, training, sampling or model run. **Verdict: include the loop, with confidence medium in its structure and low in demonstrated local benefit.** It gives the screener a way to encounter misses and gives the judge/reflector reusable experience. It does not turn their decisions into independent truth.
 
 ## One design, two learning mechanisms

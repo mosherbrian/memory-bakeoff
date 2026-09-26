@@ -1,0 +1,49 @@
+{
+  "method": "Union conversations, previous match groups and normalized exact texts across messages, both pair sides and controls BEFORE splitting; greedy grouped70/15/15.",
+  "input_sha256": {
+    "refined_messages.jsonl": "c8396f4a6da5869ef912f9891f8937478e7c81052865e84370dfc550f53b9eff",
+    "refined_pairs.jsonl": "8c15938f57e0d1072ca786826b0eb83688bb56439d43f80eccdccb9507cde070",
+    "controls_unlabelled.jsonl": "4ff8ace606e5b1b34b8d29723197589b8434ddb1d5d96cf791350e3a093d2b36"
+  },
+  "split_groups": 31,
+  "records": {
+    "refined_messages.jsonl": {
+      "count": 954,
+      "splits": {
+        "calibration": 79,
+        "heldout": 93,
+        "train": 782
+      },
+      "sha256": "147285a391a33e98b195aafac1a1da910a2487c2ad059b946d9f5dc71182df0c"
+    },
+    "refined_pairs.jsonl": {
+      "count": 197,
+      "splits": {
+        "train": 183,
+        "calibration": 13,
+        "heldout": 1
+      },
+      "sha256": "81d41cac28c872bfecf2e20b73b484f54aa61be88771d274f4be6e17bef59f7e"
+    },
+    "controls_unlabelled.jsonl": {
+      "count": 19,
+      "splits": {
+        "train": 16,
+        "calibration": 3
+      },
+      "sha256": "7ed6deb99a9f27ea92adb1e8ab971a69a9737c9cec96fac91f413aebf87e1c0c"
+    }
+  },
+  "labels": 0,
+  "tests": {
+    "conversation_crossings": 0,
+    "exact_text_crossings": 0,
+    "previous_match_group_crossings": 0,
+    "non_split_fields_unchanged": true
+  },
+  "limitations": [
+    "Exact-text and recorded-group checks only; semantic/template/source-identity leakage not ruled out.",
+    "Groups reduce balancing freedom; no label stratification possible before independent labels.",
+    "Controls remain single-message candidates, not gold negative relation pairs."
+  ]
+}

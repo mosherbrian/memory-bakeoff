@@ -1,6 +1,6 @@
 # Agent memory: enforce what can be checked, preserve what requires judgment
 
-**Current decision, delivered26September2026:** [small nightly reflector over native files, with checked publication](RECOMMENDED-DESIGN.md). Stage0 is complete. Choose Corvid's smaller variant plus Brian's daily digest/Monday scoreboard; defer Vault/Ledger/training/fleet expansion. Two weeks of measured benefit, not a calendar research deadline, govern continuation. Survey is now support-only. Prior choices below are historical and superseded where they conflict.
+**Current decision:** [small reflector, fleet pilot, continuous delivery](RECOMMENDED-DESIGN.md). Stage0 complete; the fleet is the subject. Baseline existing logs now, prepare the approval-dependent Letta trial, review/test shipped reflector pieces and prepare local Laya data. Quiet support mode is withdrawn; keep working through the structured queue. Historical personal-pilot/support-only passages below are superseded.
 
 
 > State tells the agent what to do now. Memory tells it what it has learned. History lets it reconstruct what happened. Artifacts establish what is true. Executive reasoning decides what it means.

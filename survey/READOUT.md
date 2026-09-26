@@ -1,3 +1,19 @@
+# Delivery readout — fleet pilot, continuous work
+
+**D4 refinement:** current all-file candidate snapshot verified: zero conversation/exact-text crossings; labels0; heldout9 pairs/2 control messages. Controls follow their own group, not necessarily the matched pair. No evaluation-readiness claim. [Disposition](delivery/c85-laya-grouping-disposition.md). GPU rule unchanged.
+
+**Resource update:** reflector first tonight, then Claude's GPU booking. No fleet test on local llama-swap8080 `gpu` until booking exists; local Letta/Pi pilots and Laya GPU work inherit that dependency. CPU preparation/source checks continue. Clean/disturbed disposition must accompany runs. [Contract](delivery/GPU-BOOKING.md).
+
+**26September2026 · Tern · quiet support mode withdrawn; liveness restored.**
+
+[Decision updated](RECOMMENDED-DESIGN.md): fleet is the optionB pilot, not Brian's personal correction count. [Seven-day baseline](delivery/FLEET-BASELINE.md) is extracted:18 gap incidents/22 notifications;101,595 raw inactive lane-minutes;30 repeated alert fingerprints. Ten recovery wakes across nine episodes confirmed from Claude tool records; full intervention count and avoidable idle remain unknown due to missing provenance/eligibility. These are qualified baselines, not zeros or causal memory results.
+
+**Delivery now:** Cairn produced954 message candidates/197 pair candidates, zero frontier labels. Tern moved raw files outside the repo and commissioned duplicate/split/control refinement. A local teacher endpoint remains unestablished. Kiln returned empty c84/c85 turns; Tern completed the fleet-specific Letta protocol and checked local readiness rather than waiting. Letta tools/adapter absent on inspected paths; execution still requires Brian's go-ahead. Reflector source/revision requested for tests.
+
+**Queue:** [D1 baseline complete with named missingness; D2 approval-ready protocol; D3 awaiting shipped artifact; D4 local preparation active](delivery/QUEUE.md). Continue independent ready work; no quiet support interval, no new broad reading, no repeated Laya probe. Next decision uses fleet intervention/recurrence metrics with coverage and completed-work quality, not note counts.
+
+## Historical readouts (superseded where inconsistent)
+
 # Survey readout — decision delivered; support mode
 
 **26 September2026 · Tern ·cycle84 decision closed with Kiln host review open, non-blocking.**

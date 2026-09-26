@@ -399,7 +399,11 @@
         "status": "confirmed_explicit_Claude_nudge_by_Tern"
       }
     ],
-    "reviewed_confirmed_nudges": 1
+    "reviewed_confirmed_nudges": 1,
+    "confirmed_acknowledged_wake_calls_lower_bound": 10,
+    "distinct_recovery_episodes_lower_bound": 9,
+    "review": "survey/delivery/manual-intervention-review-20260926.json",
+    "dedup_note": "The previously inspected transcript nudge is the same event as the 17:49 Claude tool call, not an additional intervention."
   },
   "wakes": {
     "observed": 2340,
@@ -731,7 +735,16 @@
       "coax / notify-claude": 5
     },
     "repeated_episodes": 30,
-    "classes_repeated": 8
+    "classes_repeated": 8,
+    "operator_reported_episode_classes": {
+      "operator-test-stopped-fleet": 1,
+      "worker-upstream-turn-failure": 1,
+      "P12 progress/handoff stall": 3,
+      "tern-auth-compaction-recovery": 1,
+      "Survey unwanted pause": 3
+    },
+    "operator_reported_recurrences": 4,
+    "qualification": "Operator reasons support these classes; independent ready-work state/root cause not reconstructed."
   },
   "escalation_coverage": {
     "first_ledger_row": "2026-09-20T15:56:11+00:00",

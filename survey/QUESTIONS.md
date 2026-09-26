@@ -1,6 +1,6 @@
 # Question register — cycle 64
 
-**Current disposition,26 September2026:** decision delivered; support mode. Questions remain scientifically open, but the ranked reading agenda below is parked. Reopen a source question only when a named delivery is blocked. Review reflector/scoreboard when asked; no continuous panel queue. Two-week pilot evidence replaces29September/14October research horizons. [Decision](RECOMMENDED-DESIGN.md).
+**Current disposition:** decision delivered, continuous delivery. No-idling stands; scientific questions remain open, but new reading must serve a named delivery question. The [queue](delivery/QUEUE.md) prioritizes fleet metrics, Letta trial, reflector tests and local Laya data. Quiet support mode is withdrawn.
 
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.

@@ -1,5 +1,8 @@
 # Option B — correction and supersession cascade
 
+**Current resource constraint:** local-GPU screening/teacher experiments, evaluation or Laya fine-tuning must wait for Claude's shipped booking mechanism for llama-swap port8080 `gpu`. Booking does not authorize training or transcript egress. CPU-only candidate preparation continues. Reflector ships first, booking second; retain clean/disturbed run status. [Contract](delivery/GPU-BOOKING.md).
+
+
 Tern · cycle81 sponsor steering ·26September2026. **Proposed design, not an implemented system or an authorized experiment.** Fits Pi/Claude Code + skills + Perseus Context Engine. Claude is the proposed integration/model/operations owner; Brian is not assigned routine labeling or memory administration. [One-page recommendation](RECOMMENDED-DESIGN.md). c67 rejected the reported zero-shot base supersession configuration, not a task-fine-tuned Laya.
 
 ## Brian's proposed contracts

@@ -132,7 +132,7 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 | Jev / TypeSafe System One | Hosted typed-classifier system | explored | 66–67 | [Candidate and primary docs](systems/jev-laya.md) | Typed classification is a screening candidate, not calibrated correctness or authority; Jev itself not locally tested. |
 | Laya | Local typed-classifier system | explored | 66–67, 80 correction, 82–83 interfaces | [Candidate](systems/jev-laya.md), [corrected probe](probes/laya-supersession-20260926/RESULTS.md), [trained option B](systems/laya-correction-prefilter.md) | Zero-shot base supersession rejected27/46 vs rule46/46; task-trained correction filtering remains untested. |
 | Option B correction/supersession cascade | Proposed arrangement | deferred-with-reason | 81–84 design | [Contracts](OPTION-B-CASCADE.md), [learning loop](OPTION-B-LEARNING-LOOP.md) | Random unflagged exploration, guarded retraining and worked-example reuse proposed; requirements1/7 unimplemented. |
-| Laya trained local reflector prefilter (option B) | Proposed use of typed classifier | deferred-with-reason | 80 design | [Proposal](systems/laya-correction-prefilter.md) | Distillation and recall-first held-out comparison specified; data preparation, training and evaluation not commissioned. |
+| Laya trained local reflector prefilter (option B) | Proposed use of typed classifier | deferred-with-reason | 80 design | [Proposal](systems/laya-correction-prefilter.md) | Candidate preparation completed with exact-duplicate grouping; labels and adequate evaluation data pending; training and evaluation not authorized. |
 | fast-jev-compaction | Host hook / classifier application | explored | 67 | [Source inspection](systems/jev-laya-practical.md) | Two keep/drop questions, protections and batching verified; full-text archive claim unconfirmed in inspected source. |
 | invalidate | Memory-invalidation prototype | deferred-with-reason | 66 intake | [Inherited mechanism card](../team/EXTERNAL-CHEAP-CLASSIFIER-GATING-20260919.md), [candidate boundary](systems/jev-laya.md) | No benchmark established in the intake; defer integration reading until a narrow classifier task earns consideration. |
 | Type-Safe Is Not Error-Free (2609.26758v2) | Paper / typed-classifier robustness | explored | 67 | [Reading and correction](opinions/corvid-c67-addendum.md), [candidate](systems/jev-laya.md) | Choice name/definition reassignment exposes label sensitivity; does not directly test ordinary aligned Noul. |
@@ -151,12 +151,15 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 
 | Brian’s Claude stage0 native controls | Deployed host arrangement / index guard | explored | 84 deployment | [Deployment and scope](systems/claude-stage0-deployed.md), [design](RECOMMENDED-DESIGN.md) | Approved and deployed: split index, mechanical code-output check,190-line/24KB Stop guard and native action rules; repeat-correction benefit unmeasured. |
 
-| Selected small nightly reflector and checked publication | Proposed arrangement | deferred-with-reason | 84 decision | [Decision](RECOMMENDED-DESIGN.md) | Chosen for Claude’s build today; implementation and two-week benefit not yet demonstrated; larger cascade deferred. |
+| Selected small nightly reflector and checked publication | Proposed arrangement | deferred-with-reason | 84 decision | [Decision](RECOMMENDED-DESIGN.md) | Chosen for fleet pilot; baseline extracted, continuous delivery active; implementation benefit still unmeasured. |
 
-## Next up — support mode
+## Next up — continuous delivery
 
-1. **Decision delivered today:** [chosen small reflector](RECOMMENDED-DESIGN.md); Claude builds today. Digest tomorrow morning; Monday repeats scoreboard. Stage0 is complete.
-2. **On request:** review the actual reflector and publication path, or the scoreboard. Read a new source only for a named delivery blocker. Kiln84 host-path review remains open, non-blocking.
-3. **After two weeks:** apply the memo's continue/stop criteria. No benefit or insufficient evidence does not justify phase2 expansion. Vault/Ledger/training and fleet-wide sharing stay deferred.
+**Execution constraint:** reflector tonight, then GPU booking. Local-GPU tests wait for booking; CPU-only preparation continues. [Contract](delivery/GPU-BOOKING.md).
 
-The roadmap backlog remains visible above, not an executing queue. No automatic research cycles or new probes follow this decision.
+1. [Fleet baseline](delivery/FLEET-BASELINE.md) computed; use its coverage limits and resolve attribution in the existing delivery path.
+2. [Fleet Letta trial](proposals/letta-fleet-pilot.md): protocol revised, execution awaits Brian's go-ahead; no install/run yet.
+3. Review/test Claude's reflector as source/revisions ship; concrete artifact path requested.
+4. Local Laya joint grouping fixed; frontier labels await an authorized local teacher, and independent heldout coverage remains insufficient. No training or egress inferred. [Disposition](delivery/c85-laya-grouping-disposition.md).
+
+[Structured queue](delivery/QUEUE.md). Quiet support mode is withdrawn. Backlog papers are not automatic work; new reading must resolve a delivery question.

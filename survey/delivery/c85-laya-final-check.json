@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-09-26T20:27:23.364663+00:00",
+  "status": "current unlabelled candidate snapshot; not evaluation ready",
+  "records": {
+    "refined_messages.jsonl": {
+      "count": 954,
+      "splits": {
+        "heldout": 106,
+        "calibration": 102,
+        "train": 746
+      },
+      "sha256": "4c110c059c1e69d142c766c3afa25db87c208ae86bd032071d800ce0252e1f0f"
+    },
+    "refined_pairs.jsonl": {
+      "count": 197,
+      "splits": {
+        "train": 176,
+        "calibration": 12,
+        "heldout": 9
+      },
+      "sha256": "db1dd9309a06f8eb7d6de5a03c023179e7576e3be48fbc9ffc7db813932f4a5b"
+    },
+    "controls_unlabelled.jsonl": {
+      "count": 19,
+      "splits": {
+        "train": 13,
+        "heldout": 2,
+        "calibration": 4
+      },
+      "sha256": "8a06c7a4d885d0825e3a1d8fdfb4cecb7002ec376179d1b2e433981525fb8e76"
+    }
+  },
+  "groups": 35,
+  "labels": 0,
+  "checks": {
+    "conversation_crossings": 0,
+    "normalized_exact_text_crossings": 0,
+    "non_split_fields_unchanged": true
+  },
+  "limitations": [
+    "Controls follow own conversation/text group; matched-pair co-location is not guaranteed. No matched pair ID is retained.",
+    "Near-duplicate and paraphrase leakage not tested.",
+    "Nine heldout pairs and two unlabelled control messages do not support performance/calibration claims.",
+    "Snapshot hashes pin these splits; finalize_splits.py uses unsorted set iteration so cross-process reproduction is not established."
+  ]
+}
