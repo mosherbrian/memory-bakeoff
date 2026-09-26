@@ -1,8 +1,24 @@
+# Survey readout — decision delivered; support mode
+
+**26 September2026 · Tern ·cycle84 decision closed with Kiln host review open, non-blocking.**
+
+**Choice:** [Corvid's smaller variant, with the sponsor's digest/scoreboard](RECOMMENDED-DESIGN.md). Keep completed stage0. Claude builds one nightly reflector over transcripts and canonical files, with a final-artifact publication gate in the existing Context Engine path. Defer Vault, Ledger, trained screening, retraining and fleet-wide memory. This is a recommendation to build, not a claim the reflector already exists.
+
+**Must show within two weeks:** five corrections applied appropriately in later sessions; fewer same-scope repeats (25% rate-reduction target with stated exposure minimum); no unresolved published wrong-scope replacements. Costs, failures and wrong edits visible. No benefit means stop the additional automatic writer, not extend the survey. Stage0 remains. Daily digest starts tomorrow morning; scoreboard Mondays, owned by Claude.
+
+**Three open questions:** will corrected content reach the active consumer; will the judge avoid wrong-scope replacements; will upkeep reduce Brian's repeats rather than create more work? Kiln84 host-path files are absent at decision time. These questions are tested through the build, not another reading campaign. Medium design confidence; benefit unmeasured.
+
+**Now:** support mode, no new reading unless a named delivery is blocked. Review build/scoreboard when asked. Charter deadline changed to today;14October replaced by measured pilot evidence. Coverage and matrix distinguish completed stage0, chosen unbuilt reflector and deferred larger optionB. No new model call, install or deployment by Tern.
+
+## Historical readouts (superseded where inconsistent)
+
 # Survey readout — latest: option B under adversarial review
 
 **26 September2026 · Tern ·cycle84 provisional; panel commissioned**
 
-**Current judgment: keep the direction, change the guarantees and stage adoption.** Brian/Claude's [whole optionB](inputs/DESIGN-OPTION-B-20260926.md) now has a proposed arrangement row beside the [default guard/native recommendation](RECOMMENDED-DESIGN.md) in the [matrix](CAPABILITY-MATRIX.md). Neither row is a deployed-outcome claim. [Full provisional challenge and answers](OPTION-B-ADVERSARIAL-REVIEW.md).
+**Stage0 DONE — Brian approved.** Claude reports MEMORY.md reduced to123 lines/about17.7KB, with other entries reachable through MEM-*.md topic indexes. The existing Stop hook mechanically checks code-only output preferences and blocks index overflow above190 lines or24KB. Native deny rules and guard-selfkill cover the action rules; no new product or prompts to Brian. Ten sample replies tested. The current outcome is **repeat corrections from Brian**; improvement is not yet measured. [Deployment](systems/claude-stage0-deployed.md), [updated design](RECOMMENDED-DESIGN.md). This supersedes the proposed prompt checker and historical python3 execution guard.
+
+**Current judgment: keep the direction, change the guarantees and stage adoption.** Brian/Claude's [whole optionB](inputs/DESIGN-OPTION-B-20260926.md) now has a proposed arrangement row beside the [revised native-output/action recommendation](RECOMMENDED-DESIGN.md) in the [matrix](CAPABILITY-MATRIX.md). Stage0 is now reported deployed; neither row establishes independent outcome benefit. [Full provisional challenge and answers](OPTION-B-ADVERSARIAL-REVIEW.md).
 
 **Where it fails first:** the first source-demonstrated contract gap is final-view budget enforcement: ordinary rendering does not enforce `@budget strict`. Cross-host single-writer protection is also unestablished. Prefer one Brian project before the fleet; defer Vault until its distinct job is needed, patch valid time only if that job requires it, and do not count a mutable writer's hash log as independent evidence. These are opinionated choices, not new review gates. Panel source/host challenges can change them.
 
@@ -10,7 +26,9 @@
 
 **Panel so far:** Cairn confirms declared profiles, not enforcement; Tern locates the known Vault archive, while the wrapper no-expiry claim stays unestablished. Ledger integrity does not certify labels. Corvid agrees on change and personal-first, with a smaller no-phase2-services branch. Tern rejects treating LLM judgment as incompatible with independent upkeep or retention as incompatible with currency. [Response](panel-response-c84.md).
 
-**Status:** cycles82–83 closed; no ready-made cascade label set established. Cycle84 has one bounded task per panelist. No build, repair, training, deployment or additional model probe authorized by this review. Older entries below are chronological and retain their historical counts/status.
+**Letta constraint revised:** Brian will not switch runtimes for research. The [optional comparison](proposals/letta-fleet-pilot.md) is now one fleet-operated, local-backend seven-session experiment with a native baseline, explicit pass/fail and cost caps. No mobile/cloud requirement; Brian approval required before running. This supersedes the historical one-week entries below.
+
+**Status:** cycles82–83 closed; no ready-made cascade label set established. Cycle84 has one bounded task per panelist. Stage0 was separately approved and completed by Claude; this review authorizes no additional build, training, deployment or model probe. Older entries below are chronological and retain their historical counts/status.
 
 ## Earlier cycle readout
 

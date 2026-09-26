@@ -1,6 +1,17 @@
 # Charter: agent-memory field survey and expert position
 
+**LATEST BINDING CORRECTION — continuous delivery,26September2026.** Quiet support mode is withdrawn. The fleet keeps running; no-idling stands. OptionB's pilot subject is the fleet. Priority: (1) baseline the last seven days of manual interventions, gap alarms, idle minutes and repeated failure classes from existing logs; (2) design the fleet Letta comparison and run only with Brian's go-ahead; (3) review/test Claude's reflector as pieces ship; (4) Cairn on local gufo prepares local frontier-labelled correction/supersession data. Use [delivery queue](survey/delivery/QUEUE.md); rest only for named external waits and continue independent ready work. The decision memo remains delivered; old personal-pilot and support-only passages below are superseded. No general literature loop resumes.
+
+
 Status: APPROVED by Brian 2026-09-26 (answers below). In force from 2026-09-26. Campaign4 moves to Prove mode only (see Decisions).
+
+## Binding sponsor change: decision now, then support mode (26 September2026)
+
+The decision memo date moves from29September to **today,26September2026**. Delivered: [one-page decision](survey/RECOMMENDED-DESIGN.md). September29 and October14 were ceilings, not reasons to continue reading. **October14 stabilization is replaced by measured pilot evidence:** assess the first two weeks from reflector launch (10October if launched today), using repeat corrections, later correct applications, wrong changes and cost, with the memo's stop criteria. No automatic extension or further survey cycles follow sparse evidence.
+
+The exploratory survey is now in **support mode**. No new reading unless a delivery is blocked on a named, specific question. Tern reviews Claude's reflector build and weekly scoreboard **when asked**; no self-directed sweep, ongoing panel queue or new audit gate. Claude builds today; daily digest starts tomorrow morning and the repeat scoreboard runs Mondays. Stage0 is approved and complete. Kiln's unfinished host-path check is an open handoff, not a publication blocker.
+
+This direction supersedes the full-pace/no-idling provisions and research-stall alarms below. Retire Q-FIELD-SURVEY from continuous execution monitoring; scientific unknowns remain in the register. Do not manufacture timed rests while waiting for optional support requests. Publication remains Claude's responsibility.
 
 ## Purpose
 Form and keep an expert position on agent memory that Brian can act on. The position must be broad (the whole field, not one claim), critical (it separates solid results from hype), and applied (it says what fits Brian's setup: Claude Code, Pi, local models on Strix Halo, and admin, rollout and model-testing work).
@@ -12,7 +23,7 @@ Form and keep an expert position on agent memory that Brian can act on. The posi
 4. **Probe log.** Small experiments, each one linked to the register question it answers and to the memo line it changed.
 
 ## How work is done: three modes
-- **Explore (default, most of the effort).** Read widely, compare claims, and write positions. The main instrument is synthesis, not checksums. Output: map and memo changes.
+- **Explore (historical default; now suspended except a specific delivery blocker).** Read widely, compare claims, and write positions. The main instrument is synthesis, not checksums. Output: map and memo changes.
 - **Probe (when the map shows that a question is decisive and unanswered).** Cheap and fast: hours, not days. Rigor matches the stakes. A probe may be run by hand and read by a person. Output: one probe-log line and a memo change.
 - **Prove (rare).** Use the campaign4 machinery only when a claim will drive a deployment or rollout decision and a wrong answer costs real time or money. It needs Brian's approval.
 
@@ -48,12 +59,12 @@ Durability rule (the lesson of the loss): this charter, the roadmap copies and t
 1. Scope: agent memory in general (all agent types, not only coding and ops). The position memo still says what applies to Brian's setup.
 2. Audience: Brian first; the team at work second. Positions should be shareable with the team.
 3. Lead: Tern, with more reasoning effort ("brain-expanding") and proportional rigor ("chill pill"): higher effort, a fresh context, this charter in place of the campaign4 package loop, web and literature reading allowed.
-4. Horizon: first position memo by 2026-09-29; stable position by the Go reset on 2026-10-14. Brian wants ongoing, observable readouts all through.
+4. Horizon (superseded26September): memo delivered today; subsequent decisions follow two weeks of measured pilot evidence, not the29September/14October calendar ceilings.
 5. Campaign4 (decided by Claude on Brian's delegation): Prove mode only. No new repair or qualification packages. R73 is declined. The R71/R72 machinery is parked, ready for a Prove request. R68 stays as the accepted result.
 
 ## Readouts (observable all through)
 - `survey/READOUT.md`, rewritten by the lead at the end of every cycle, with these parts: what changed in the memo; top 3 open questions; what is next; confidence changes. Plain language, at most one screen.
 - Claude publishes READOUT.md, the position memo and the field map as a private dashboard page for Brian, and refreshes it at each cycle end.
 - The lead sends Claude one line at each cycle end (notify-claude).
-- Stall rule: no READOUT change in 24 hours means the survey is stalled, and Claude reports it.
-- **No idling (Brian, 2026-09-26):** the survey runs continuously at full pace. A rest is only for a real external wait (Brian's answer, a panel piece in progress, provider quota), and it must name that wait. Never a self-chosen pause. Deadlines are latest dates, not a pace.
+- Historical research-stall rule suspended in support mode; updates follow requested support and pilot evidence.
+- **Historical no-idling direction, superseded by support mode above:** the survey runs continuously at full pace. A rest is only for a real external wait (Brian's answer, a panel piece in progress, provider quota), and it must name that wait. Never a self-chosen pause. Deadlines are latest dates, not a pace.

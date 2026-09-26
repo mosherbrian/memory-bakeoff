@@ -1,6 +1,6 @@
 # Survey coverage
 
-Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in progress; design includes optional Letta pilot**. This is the reading and source-inspection inventory, not a deployment ranking or an execution queue. It consolidates [reading notes](reading/), [system cards](systems/), [ROSTER](ROSTER.md), [INVENTORY](INVENTORY.md), [FIELD-MAP](FIELD-MAP.md), the [roadmap](inputs/PHASE2_ROADMAP.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md).
+Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in progress; design includes approval-pending fleet Letta comparison**. This is the reading and source-inspection inventory, not a deployment ranking or an execution queue. It consolidates [reading notes](reading/), [system cards](systems/), [ROSTER](ROSTER.md), [INVENTORY](INVENTORY.md), [FIELD-MAP](FIELD-MAP.md), the [roadmap](inputs/PHASE2_ROADMAP.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md).
 
 **Capability lookup:** [CAPABILITY-MATRIX.md](CAPABILITY-MATRIX.md) maps the explored methods/products/facilities against the same ten requirements; maintained alongside this inventory each cycle.
 
@@ -136,7 +136,7 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 | fast-jev-compaction | Host hook / classifier application | explored | 67 | [Source inspection](systems/jev-laya-practical.md) | Two keep/drop questions, protections and batching verified; full-text archive claim unconfirmed in inspected source. |
 | invalidate | Memory-invalidation prototype | deferred-with-reason | 66 intake | [Inherited mechanism card](../team/EXTERNAL-CHEAP-CLASSIFIER-GATING-20260919.md), [candidate boundary](systems/jev-laya.md) | No benchmark established in the intake; defer integration reading until a narrow classifier task earns consideration. |
 | Type-Safe Is Not Error-Free (2609.26758v2) | Paper / typed-classifier robustness | explored | 67 | [Reading and correction](opinions/corvid-c67-addendum.md), [candidate](systems/jev-laya.md) | Choice name/definition reassignment exposes label sensitivity; does not directly test ordinary aligned Noul. |
-| cc-safety-net rulebook | Host enforcement mechanism | explored | 69–70, 74 | [Guard](systems/cc-safety-net.md), [protection](systems/rulebook-protection.md) | Optional config-path protection does not close same-user disabling paths; requirement3 partial, pilot remains unexecuted. |
+| cc-safety-net rulebook | Host enforcement mechanism | explored | 69–70, 74, 84 correction | [Guard](systems/cc-safety-net.md), [protection](systems/rulebook-protection.md) | Not running on Brian’s machine; staged work pilot felt too interruptive. Output-preference action-guard pilot withdrawn. |
 | Claude project-root CLAUDE.md loader (enabled main conversation) | Native instruction component | explored | 74 | [Loading contract](systems/claude-deterministic-rule-loading.md) | Startup and post-compaction delivery documented; narrow requirement4=yes, not obedience or all-host coverage. |
 | Claude unscoped and path-scoped rules | Native conditional loader | explored | 74 | [Loading contract](systems/claude-deterministic-rule-loading.md) | Launch/read-triggered injection; read prerequisites and source settings leave requirement5 partial. |
 | Claude subagent skills preload | Native agent-invocation loader | explored | 75 | [Preload scope](opinions/corvid-c75.md), [disposition](panel-response-c75.md) | Full listed skills delivered at startup; appropriate invocation and size/compaction boundaries keep requirement5 partial. |
@@ -149,11 +149,14 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 | Pi loaded canonical instructions across compaction | Native context separation | explored | 77 | [Trace](reading/c77-pi-compaction-boundary.md), [scope](panel-response-c77.md) | Loaded system instructions stay outside conversation summaries; neither fresh disk reload nor request-fit is guaranteed by this trace. |
 | Brian/Claude whole option-B design | Proposed arrangement | deferred-with-reason | 84 review | [Original](inputs/DESIGN-OPTION-B-20260926.md), [review](OPTION-B-ADVERSARIAL-REVIEW.md) | Corvid favors personal-first; profile source checked, no-expiry unresolved, host review pending. |
 
-## Next up
+| Brian’s Claude stage0 native controls | Deployed host arrangement / index guard | explored | 84 deployment | [Deployment and scope](systems/claude-stage0-deployed.md), [design](RECOMMENDED-DESIGN.md) | Approved and deployed: split index, mechanical code-output check,190-line/24KB Stop guard and native action rules; repeat-correction benefit unmeasured. |
 
-1. **Cycle84 — sponsor option-B adversarial review.** [Commission](panel-cycle84.md), [provisional review](OPTION-B-ADVERSARIAL-REVIEW.md): Corvid attacks, Kiln checks host paths, Cairn checks source claims. [Cycle83 closed](panel-response-c83.md); no execution.
-2. **Next cycle follows remaining2–5 cells:** prioritize a narrow component closing one gap, then top-candidate partial→yes/no evidence. No new benchmark chosen merely from the reading list.
-3. **September29 design:** default guard pilot and optional Letta week remain proposed, not running. Refine their boundaries with the source findings; unknowns are not an extra gate.
-4. **Backlog retained, lower priority:** conditional Habitus/Graphiti and unresolved roadmap memharness backend; reopen only for a concrete gap2–5. Option B now includes a proposed correction/supersession cascade; execution remains uncommissioned and the single c67 run remains complete.
+| Selected small nightly reflector and checked publication | Proposed arrangement | deferred-with-reason | 84 decision | [Decision](RECOMMENDED-DESIGN.md) | Chosen for Claude’s build today; implementation and two-week benefit not yet demonstrated; larger cascade deferred. |
 
-Sponsor matrix steering supersedes reading-list priority. No installs, repair, holdout use or new experiment follows from this queue. Each cycle names changed matrix cells, including no change with reason.
+## Next up — support mode
+
+1. **Decision delivered today:** [chosen small reflector](RECOMMENDED-DESIGN.md); Claude builds today. Digest tomorrow morning; Monday repeats scoreboard. Stage0 is complete.
+2. **On request:** review the actual reflector and publication path, or the scoreboard. Read a new source only for a named delivery blocker. Kiln84 host-path review remains open, non-blocking.
+3. **After two weeks:** apply the memo's continue/stop criteria. No benefit or insufficient evidence does not justify phase2 expansion. Vault/Ledger/training and fleet-wide sharing stay deferred.
+
+The roadmap backlog remains visible above, not an executing queue. No automatic research cycles or new probes follow this decision.

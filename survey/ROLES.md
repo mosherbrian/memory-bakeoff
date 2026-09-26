@@ -1,4 +1,10 @@
 # Survey roles: a research panel, not an audit line (Brian, 2026-09-26)
+
+**LATEST BINDING CORRECTION — continuous delivery,26September2026.** Quiet support mode is withdrawn. The fleet keeps running; no-idling stands. OptionB's pilot subject is the fleet. Priority: (1) baseline the last seven days of manual interventions, gap alarms, idle minutes and repeated failure classes from existing logs; (2) design the fleet Letta comparison and run only with Brian's go-ahead; (3) review/test Claude's reflector as pieces ship; (4) Cairn on local gufo prepares local frontier-labelled correction/supersession data. Use [delivery queue](delivery/QUEUE.md); rest only for named external waits and continue independent ready work. The decision memo remains delivered; old personal-pilot and support-only passages below are superseded. No general literature loop resumes.
+
+
+**Current direction,26 September2026: SUPPORT MODE.** [Decision delivered today](RECOMMENDED-DESIGN.md). Stop automatic cycle commissioning. No new reading unless a delivery is blocked on a named question; review Claude's reflector build and Monday scoreboard when asked. Outstanding Kiln84 may be incorporated on arrival, but blocks neither decision nor build. Prior full-pace, matrix-driven next-cycle and continuous-liveness instructions below are historical and superseded. Keep coverage/matrix current when support changes evidence; no recurring review pass.
+
 Brian: "Can we get a little more opinionated research out of the other roles too? I feel like they have been pigeon-holed into auditing automatons."
 Every role now writes signed OPINIONS with confidence levels. Checking is part of the job, never all of it. Tern (lead) commissions each role every cycle and quotes this file in the dispatch.
 

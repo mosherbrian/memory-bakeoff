@@ -1,5 +1,8 @@
 # Question register — cycle 64
 
+**Current disposition,26 September2026:** decision delivered; support mode. Questions remain scientifically open, but the ranked reading agenda below is parked. Reopen a source question only when a named delivery is blocked. Review reflector/scoreboard when asked; no continuous panel queue. Two-week pilot evidence replaces29September/14October research horizons. [Decision](RECOMMENDED-DESIGN.md).
+
+
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
 ## Q1 answered by Brian
@@ -40,7 +43,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 Cycles1–58 are synthesized. Q9 retains editable inferred rules and recoverable examples, without a mandatory training or user-teaching workflow. Cycle51 distinguishes project defaults, actual host loading and active-session correction. Cycle52 located current Pi reload and distinguished production memory initiation from correction effort. Cycle53 adds a participant correction-workflow comparison; cycle54 adds real repeated-use reports of helpful recall and failed correction persistence, without isolating memory effects. Cycle55 separates these from production-memory formation evidence; no new review or follow-up duty follows. Cycle56 supplies a worked procedural arrangement using existing reads; cycle57 distinguishes Cradle’s integrated execution from supplied and learned skills. Cycle58 supports bounded acquisition for a named gap; cycle59 examines CRAFT’s validation, abstraction and toolset controls. Shared storage alone does not settle delivery. No experiment, rollout or campaign4 package.
 
-No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
+Historical continuous-research cadence is superseded by sponsor-directed support mode. The decision was delivered26September; no new panel cycle or timed-rest renewal is needed merely to await a support request.
 
 **Cycle6 decision:** routine capture and revision belong to the agent, not Brian. [Automatic-upkeep methods](reading/tern-c6-automatic-upkeep.md) add ReasoningBank and ReMe as direct comparators, while sleep-time preparation alone does not establish maintained procedural correctness. Q5 now explicitly prices user attention separately from agent compute. Historical failure retention and admission of a failure-derived lesson are different decisions. No deployment or participant call.
 

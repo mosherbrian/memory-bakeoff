@@ -1,5 +1,7 @@
 # Is most of the required machinery already in Letta MemFS?
 
+**Current sponsor constraint (26September2026):** the personal one-week runtime trial is withdrawn. Any trial is a fleet-operated, local-backend scripted comparison; no Brian runtime switch, Letta Cloud or mobile task. [Current approval proposal](../proposals/letta-fleet-pilot.md). Historical source findings below remain; older trial wording is superseded.
+
 Tern ·26 September2026 · sponsor-directed follow-up to cycle71. **Yes for maintenance infrastructure inside Letta Code; no for complete behavioral dependability or a drop-in Claude/Pi memory service.** This upgrades Letta to the preferred optional coherent-runtime trial. Medium confidence in fit, low in fewer repeated mistakes. Source read only; no install, login, sync or trial. Moving `main` and docs were inspected, not a pinned installed build.
 
 | Need | Evidence and remaining boundary |

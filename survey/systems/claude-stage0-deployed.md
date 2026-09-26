@@ -1,0 +1,16 @@
+# Brian's Claude Code stage0 — deployed native controls
+
+Tern ·26 September2026 · **Brian approved; deployment reported by Claude for Brian.** This records the supplied deployment report, not a new source inspection or independent rerun. No new product was installed. Operational owner: Claude deployment. This supersedes the survey's prompt-based Stop proposal and its earlier, wrongly scoped python3 execution-denial pilot.
+
+| Existing component | Reported deployed contract | Evidence and boundary |
+|---|---|---|
+| MEMORY.md plus MEM-*.md topic sub-indexes | Main index retains rules, preferences and recent entries; other entries remain reachable through topic indexes. Main index now123 lines, approximately17.7KB. | Sponsor deployment report. Reachable detail is not automatically loaded detail. |
+| `~/.claude/hooks/laya-stop-gate.py`: output check | Mechanically checks code in replies for python3 commands intended for Brian and loopback addresses; blocks completion and requests a rewrite. Prose discussing a rule passes. | Ten sample replies tested, reported by Claude. No LLM checker added by this report; the filename does not establish a Laya model call. Legitimate agent-side Linux python3 execution remains outside this output rule. |
+| Same Stop hook: index budget | Blocks when MEMORY.md exceeds190 lines or24KB, making overflow visible on this configured host path. | Requirement2=yes for the **MEMORY.md Stop-time overflow guard**. Not a claimed pre-load membership check, all-file bound or guarantee every topic entry is read. |
+| Native `permissions.deny` plus existing guard-selfkill hook | Covers rm -rf spellings and kill by pattern; does not ask Brian. | Sponsor-reported deployed action rules. No cc-safety-net deployment or universal shell-path coverage inferred. |
+
+Stop acts after response generation; requesting a rewrite is not proof the initial text was never displayed. Output checking is limited to code; the report does not claim all prose mentions are filtered. The index guard is now an implemented local control, not the previously unbuilt load-budget proposal. Keep its rating separate from the broad host's generic loading behavior and from semantic relevance/application.
+
+**Outcome to watch: repeat corrections from Brian.** Keep that separate from hook firings, blocked actions and the ten sample checks. Those establish reported mechanism behavior, not a longitudinal reduction in repeated mistakes. Observe through existing interactions; no new rating form, labeling task, counter pipeline or standing review duty. A reduction is not yet measured, and silence alone is not proof of success. Interruption burden remains relevant if the controls themselves require attention.
+
+**Matrix changes:** deployed arrangement replaces the proposed Tern-default row; local index-guard row gets requirement2=yes, explicitly Stop-time and sponsor-reported. Whole arrangement2 remains partial because topic delivery/content membership are separate. Arrangement10 becomes yes for this named existing-host configuration; independent realistic benefit9 remains unknown. No cross-host or optionB cascade capability is implied. cc-safety-net remains staged elsewhere and is not part of this deployment.

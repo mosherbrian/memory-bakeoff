@@ -1,12 +1,15 @@
 # Option B — adversarial review of the sponsor candidate
 
-Tern ·26 September2026 ·cycle84 · **Provisional lead judgment; independent panel reviews commissioned.** Review target: [Brian/Claude's unchanged sketch](inputs/DESIGN-OPTION-B-20260926.md). Claude co-authored this candidate; its ratings and local incident counts are sponsor evidence, not independent validation. Prior source reads support the distinctions below. No implementation authorized.
+**Final decision delivered26September:** [choose the smaller reflector/publication variant](RECOMMENDED-DESIGN.md), retain the sponsor's digest/scoreboard, defer the larger bundle. Stage0 complete. Kiln host-path review remains open, not blocking. This closes exploratory selection; later support reviews the build and measured outcomes when asked.
+
+
+Tern ·26 September2026 ·cycle84 · **Provisional lead judgment; independent panel reviews commissioned.** Review target: [Brian/Claude's unchanged sketch](inputs/DESIGN-OPTION-B-20260926.md). Claude co-authored this candidate; its ratings and local incident counts are sponsor evidence, not independent validation. Prior source reads support the distinctions below. The optionB review authorizes no implementation; native stage0 was separately approved and is now reported complete.
 
 ## Verdict: keep the direction, change the claimed guarantees and rollout
 
 Keep current runtimes, recoverable source/history, mechanical enforcement, a separately triggered writer and staged adoption. This addresses Brian's request better than “agents should keep better notes.” But the sketch's strongest guarantees are not supplied by the named components as assembled. It also introduces multiple write authorities—Git preferences, Vault decisions, generated host views and rule configuration—despite saying “one writer.” One process can own them, but consistent recovery and the authority of each store still need a contract.
 
-**Do not adopt the full bundle as the first pilot.** Keep stage0's one-project guard/native repair as the recommended start. For optionB itself, use one personal project and one host first, then a second consumer to test cross-host delivery. Defer Vault, Ledger and retraining until a failure or measured workload gives them a job the smaller arrangement cannot do. Preserve the full proposal as a rival, rather than silently treating those later phases as approved.
+**Do not adopt the full bundle merely because stage0 is complete.** Brian approved the native repair and Claude reports it deployed: split index, mechanical code-output check, index budget guard and native action rules. The [deployment record](systems/claude-stage0-deployed.md) replaces the pending prompt-checker recommendation. cc-safety-net is not part of it. Watch repeat corrections from Brian before crediting outcome benefit. For optionB itself, use one personal project and one host first, then a second consumer to test cross-host delivery. Defer Vault, Ledger and retraining until a failure or measured workload gives them a job the smaller arrangement cannot do. Preserve the full proposal as a rival, rather than silently treating those later phases as approved.
 
 ## Answers to the open questions
 
@@ -31,7 +34,7 @@ Keep current runtimes, recoverable source/history, mechanical enforcement, a sep
 
 ## Comparison and research integrity
 
-The matrix now has two explicitly **proposed, derived-arrangement rows**: Tern's small guard/native pilot and this whole optionB. They use the same ten columns without borrowing a component's narrow yes as an end-to-end guarantee. OptionB offers more intended upkeep/currentness, with more unbuilt integration; the guard pilot covers less but its mechanical effect is better characterized. Neither has measured independent realistic benefit as assembled.
+The matrix now has two explicitly **derived-arrangement rows** (deployed stage0 and proposed optionB): Brian's completed native stage0 and this whole optionB. They use the same ten columns without borrowing a component's narrow yes as an end-to-end guarantee. OptionB offers more intended upkeep/currentness, with more unbuilt integration; stage0 covers less; its mechanical code-only checks have sample evidence but no measured reduction in repeat corrections. Neither has measured independent realistic benefit as assembled.
 
 **Does this conversation supersede or short-change research?** It legitimately supersedes the survey's prior assumption that agent-owned note upkeep is an improvement. Brian supplied the actual failure and a competing architecture; that is requirements discovery, not outcome evidence. It has improved relevance. It has also narrowed attention around Perseus/Laya and repeated interface checks, risking confirmation bias and under-investment in coherent alternatives. Some recent cycles refined caveats more than they changed the recommendation. The corrective action is a bounded adversarial comparison and a clear decision now—not indefinite new review gates or reopening every paper. Preserve the Letta single-product comparator and the simpler native design. Claude's input cannot count as an independent vote for Claude's design.
 
@@ -46,3 +49,6 @@ Corvid also chooses change, personal first, and proposes a smaller source/compil
 ## Panel update — Cairn received
 
 Per-model profiles exist as declared configuration; they do not repair the publication gate. The Vault archive recorded in our earlier card is present (Tern checked), contrary to any broader inference from absence in the separate wheel directory. Native approval and Pi-wrapper agent-confirm/expiry remain different contracts; the no-expiry implication is still unestablished. A protected Ledger can detect some tampering but cannot certify event truth/completeness or model labels. Matrix definitions remain unchanged: evidence integrity is not rule protection or design coherence. [Detailed disposition](panel-response-c84.md).
+
+
+**Sponsor Letta constraint update:** the coherent-runtime comparator is a [fleet-operated local experiment](proposals/letta-fleet-pilot.md), not asking Brian to use another runtime for a week. This comparison uses synthetic multi-session work and does not establish that production fleet memory should be the first rollout. No Cloud/mobile requirement or execution approval.

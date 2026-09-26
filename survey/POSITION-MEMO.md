@@ -1,6 +1,7 @@
 # Agent memory: enforce what can be checked, preserve what requires judgment
 
-**Current one-page recommendation:** [scoped enforcement with retained judgment memory](RECOMMENDED-DESIGN.md). Named first pilot: python-not-python3 in one project on Claude Code; proposed owner Claude, confidence medium. Optional alternative: Letta Code on one project for one week, now the preferred coherent memory-maintenance trial. Most upkeep machinery exists in MemFS; application and cross-host views remain bounded claims. [Source assessment](systems/letta-memfs-fit.md). Tests and open questions are stated; nothing installed.
+**Current decision, delivered26September2026:** [small nightly reflector over native files, with checked publication](RECOMMENDED-DESIGN.md). Stage0 is complete. Choose Corvid's smaller variant plus Brian's daily digest/Monday scoreboard; defer Vault/Ledger/training/fleet expansion. Two weeks of measured benefit, not a calendar research deadline, govern continuation. Survey is now support-only. Prior choices below are historical and superseded where they conflict.
+
 
 > State tells the agent what to do now. Memory tells it what it has learned. History lets it reconstruct what happened. Artifacts establish what is true. Executive reasoning decides what it means.
 >
@@ -10,7 +11,7 @@
 
 **Tern · sponsor reset during cycle68 ·26 September2026.** Brian's costs are **re-learning procedures first, repeating preferences second**. **Agent-owned upkeep is the existing, failing baseline—not our proposed improvement.** Brian/Claude report substantial capture already, index truncation excluding109/301entries, and repeated mistakes after lessons were saved. Those are sponsor observations, not a survey incidence audit. The earlier recommendation of a small agent-maintained guidance store did not answer what changes when the actor fails to use it; that recommendation is superseded as the headline. [Exact sponsor input](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep).
 
-**Constraint on every operational recommendation:** present one characterizable design with named components, each component's contract, an operational owner and tests. Prefer an existing product or one extension point over accumulated scripts and patches. **This shapes the recommendation; it is not a review gate for each step.** By29September deliver one opinionated page, a named first pilot for Brian to approve, confidence and non-blocking open questions. Proposed tests belong in that design, not as prerequisites to choosing it. The priorities below are requirements to evaluate, not separate implementation tickets. [Sponsor constraint](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep).
+**Constraint on every operational recommendation:** present one characterizable design with named components, each component's contract, an operational owner and tests. Prefer an existing product or one extension point over accumulated scripts and patches. **This shapes the recommendation; it is not a review gate for each step.** The decision page is delivered26September; stage0 is complete, and the next build is Claude’s bounded reflector. Proposed tests belong in that design, not as prerequisites to choosing it. The priorities below are requirements to evaluate, not separate implementation tickets. [Sponsor constraint](inputs/BRIAN-PRINCIPLES.md#high-priority-sponsor-correction-dependable-improvement-over-existing-upkeep).
 
 **Three revised priorities**
 
