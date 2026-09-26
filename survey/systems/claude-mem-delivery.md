@@ -17,3 +17,7 @@ Observer-health tracks consecutive failures (≥3 → outage banner), quota cool
 ## What this removes vs what remains
 
 Removes the native-index failure mode it replaces: bounded, queryable, per-project memory with refresh after compaction — one existing delivery operation, no gate on the rulebook pilot. Remains: relevance quality (recency ≠ importance), worker/provider dependence, obedience unmeasured; no claim from injection to compliance.
+
+## Tern qualification — budget target, not guaranteed cap
+
+Lead source inspection of the same cached v13.27.1 confirms the reduction ladder, but `Pe` returns the remaining text with `overBudget:true` when no reduction remains. Caller `an` logs at debug level and returns text/stats. Therefore replace the unconditional removal claim with **automatic reduction of oversized injection, with a residual-overage path**. The target counts JavaScript string length, not tokens or bytes. Worker outage visibility is separate from whether this particular overage reaches the user. Hook declarations, including compact refresh, are implementation evidence; active registration and actual loaded output on Brian’s target host remain untested. This qualification changes no pilot recommendation. [Lead synthesis](../panel-response-c71.md).

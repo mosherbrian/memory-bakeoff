@@ -1,0 +1,20 @@
+# Cycle71 — index repair versus a continuing delivery bound
+
+Tern ·26 September2026 · all three reports incorporated; cycle71 complete. No installation, repair or probe performed.
+
+**Corvid: accept the choice, qualify the mechanism.** Keep the scoped cc-safety-net pilot plus existing native guidance. One-time repair and an enduring growth bound are different operations. The recommendation supplies only the former as proposed pilot setup; a continuing bound check must not be described as already implemented.
+
+The sponsor-reported 109/301 must not become a verified count of unloaded memory entries: prior inspection distinguished lines, bytes and entries. Nor does splitting or renumbering an index automatically load the omitted notes. A short index must preserve discoverable pointers and the actual host loading/lookup path must work. Fitting the index addresses one delivery defect, not all relevance or application failures.
+
+**New source evidence qualifies the product comparison.** Kiln's source card and Cairn's documentation note are now available. The local cached v13.27.1 `scripts/context-generator.cjs` implements `Pe(..., n=1e4)`: remove full observations, remove last summary, halve session count, then halve observations. The lead read confirms that when no reduction remains it returns the text with `overBudget:true`; caller `an` logs reductions at debug level and returns text/stats. This is a 10,000-JavaScript-character target with a residual-overage path, not an unconditional byte/token/output cap. No runtime test was performed. `hooks/hooks.json` includes SessionStart `startup|resume|clear|compact`; source presence does not establish active registration on Brian's target host.
+
+Thus reject both “the product merely moves an entirely unchecked bound” and “the product removes oversized injection.” It supplies automatic reduction and refresh machinery, with residual and deployment limits. The documentation's illustrative token counts do not establish a hard cap; per-item cost visibility does not prove overage is visible to the end user. Recency/filter selection and actor-invoked detail fetch still differ from guaranteed delivery of the relevant correction.
+
+**Decision unchanged, medium confidence:** retain the named one-project guard pilot. Native index repair remains bounded setup, future growth an explicit open item. Product-managed delivery is a concrete comparator, not yet an outcome-backed replacement. No new script, approval gate or ongoing audit duty follows.
+
+Sources: [Corvid](opinions/corvid-c71.md), [Kiln card](systems/claude-mem-delivery.md), [Cairn docs reading](reading/c71-claude-mem-config.md). Cached implementation inspected read-only at `/var/home/bmosher/.claude/plugins/cache/thedotmack/claude-mem/13.27.1/`.
+
+
+**Cairn:** accept the automatic-index versus actor-invoked detail distinction for the documented disclosure path. The worked token/relevance example is illustrative, not an outcome experiment. Reject the slide from a roughly 1,000-token guideline to “bounded first tier” or “overage visible”: neither follows from those figures. Implementation evidence above supplies a different quantity and a residual-overage condition. Hook timeouts govern execution duration, not context size; an installation timeout example alone does not establish capture loss. “Automatic ends at the index” describes this disclosure path, not every automatic operation in the product. No measured appropriate-application benefit was found in the inspected documentation.
+
+**Sponsor addition within cycle71:** current Letta Code documentation supplies a concrete separate-background-upkeep candidate. The September29 page now includes the requested optional one-project, one-week Letta Code pilot, without replacing the default guard pilot. Background dreaming has configured step/compaction triggers; foreground writes remain possible, and current MCP delegation qualifies historical replacement-only language. [Current-source reconciliation](systems/letta-sleep-time-current.md). No runtime switch or trial authorized by this research update.

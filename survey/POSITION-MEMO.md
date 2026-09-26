@@ -1,6 +1,6 @@
 # Agent memory: enforce what can be checked, preserve what requires judgment
 
-**Current one-page recommendation:** [scoped enforcement with retained judgment memory](RECOMMENDED-DESIGN.md). Named first pilot: python-not-python3 in one project on Claude Code; proposed owner Claude, confidence medium. Tests and open questions are stated; nothing installed.
+**Current one-page recommendation:** [scoped enforcement with retained judgment memory](RECOMMENDED-DESIGN.md). Named first pilot: python-not-python3 in one project on Claude Code; proposed owner Claude, confidence medium. Optional alternative: Letta Code on one project for one week, now the preferred coherent memory-maintenance trial. Most upkeep machinery exists in MemFS; application and cross-host views remain bounded claims. [Source assessment](systems/letta-memfs-fit.md). Tests and open questions are stated; nothing installed.
 
 > State tells the agent what to do now. Memory tells it what it has learned. History lets it reconstruct what happened. Artifacts establish what is true. Executive reasoning decides what it means.
 >

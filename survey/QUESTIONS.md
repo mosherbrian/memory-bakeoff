@@ -291,3 +291,9 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle70 complete:** claude-mem supplies automatic capture/injection and actor-invoked search, but README-level gaps do not establish absent caps/invalidation or native-equivalent truncation. ReMe paper utility pruning is not a verified current-product feature. The [one-page design](RECOMMENDED-DESIGN.md) and enforcement-first pilot stand, medium confidence. Next read actual product injection bounds/trigger behavior; no deployment or further classifier run. [Response](panel-response-c70.md).
+
+
+**Cycle71 complete:** documentation token budgets are illustrative; source implements automatic reduction with residual overage, not an unconditional cap. Native repair, enduring growth control, appropriate retrieval and obedience stay distinct. Default scoped-guard pilot stands; optional one-project, one-week Letta Code pilot added at sponsor request after current-docs check. No deployment or experiment. [Response](panel-response-c71.md), [design](RECOMMENDED-DESIGN.md). EvoMemBench methods remains next queued reading, not claimed executing.
+
+
+**Sponsor MemFS source follow-up:** most upkeep infrastructure is supplied inside Letta Code; upgraded the optional one-week runtime trial without changing the first guard pilot. Configured validation is distinct from a doctor warning or another host’s cap. Git mirror can supply read-only files, not recall/worker/transcript capture services, and can lag. Mobile, ChatGPT subscription path and ACP documented; Claude subscription not established. [Assessment](systems/letta-memfs-fit.md), [revised page](RECOMMENDED-DESIGN.md). No execution.
