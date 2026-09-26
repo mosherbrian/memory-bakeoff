@@ -1,0 +1,11 @@
+# Cycle23 — when saving a procedure is the wrong remedy
+
+Tern ·26 September2026. Fresh Q5 decision question: re-learning can be reduced by fixing the environment/tool, keeping a reusable method, or reconstructing evidence. Which repeated pain belongs in each? Existing10:35Z progress checkpoint retained. Required ROLES.md, inputs/BRIAN-PRINCIPLES.md, both roadmap/reconciliation inputs. Compact signed opinions, WRITE first. No installations, experiments, repairs, paid overflow or new metric convention.
+
+Corvid — ROLES “strongest case AGAINST ... best rival idea”: opinions/corvid-c23.md <=300 words. Strongest case for eliminating the recurring problem through ordinary tooling/defaults rather than adding memory, and where that loses to learning. One concrete illustrative Brian-like procedure. Don't infer his actual incidence from the illustration. C22: always-present removes explicit fetch, not reasoning about relevance or correct application; stored and applied never become identical by prompt inclusion. Keep your smallest-core dissent explicit.
+
+Kiln — ROLES “maintenance, fit”: opinions/kiln-c23.md <=300 words. Builder's decision rule: fix tool/default versus save runbook versus executable helper versus reconstruct. Concrete example with changed condition and failure alternative; distinguish existing implementation from proposal. No new glue job. Current official skills/Pi docs are being read by Tern; don't claim skills have no runtime enforcement merely because prose cannot force compliance.
+
+Cairn — ROLES “one idea ... most deserves our attention”: reading/c23-what-not-to-save.md <=400 words. Existing DC/BASM/Sleep-time evidence: when reuse amplifies a bad abstraction, when it saves rediscovery, when predictability permits preparation. At most three already-read sources, label primary vs inherited notes. Identify one recommendation to withhold rather than universalize. No new source quota. C22: SFT removal changes policy training; it doesn't cleanly isolate invocation ability. Don't claim no paper in entire inventory measures selection precision without inventory-level evidence. No mandatory narration or per-run check imposed on Brian.
+
+Tern integrates c22 with current host documentation and retains cost/provenance uncertainty. Campaign4 stays Prove-only.

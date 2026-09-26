@@ -196,3 +196,6 @@ The [panel synthesis](panel-response-c8.md) keeps three distinct questions: was 
 
 
 **Cycle20:** A compact self-curated working sheet can serve L2/L4 without a new service. L1 source retention remains a separate implementation property; working-view rewriting does not prove source deletion. [Response](panel-response-c20.md).
+
+
+**Cycle22:** L4/L5 may carry a tiny broadly relevant core without explicit retrieval, but context presence does not prove application. Host-enforced access and model-followed instruction are distinct. [Response](panel-response-c22.md).

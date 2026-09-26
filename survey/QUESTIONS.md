@@ -1,4 +1,4 @@
-# Question register — cycle 21
+# Question register — cycle 23
 
 **Tern · 26 September 2026.** Phase B/C/F of the [roadmap](inputs/PHASE2_ROADMAP.md). Scores are rough decision value **V** × uncertainty **U** / cost **C**, each 1–5; they prioritize reading and possible cheap probes, not release experiments. Current ordering follows Brian's stated costs.
 
@@ -38,7 +38,7 @@ Use all seven [longitudinal failure classes](FIELD-MAP.md#roadmap-layers-and-the
 
 ## Current work and next decision
 
-Cycles1–21 are synthesized. Provisional advice is now usable; automatic reuse is credible without mandatory new infrastructure. Q5/Q9/Q3 remain first. Cycle22 asks which existing mechanisms select, load and apply procedures, rather than merely store them. All panel roles started; Tern synthesizes. Context-route choice and total cost remain open. No rollout or campaign4 package.
+Cycles1–23 are synthesized. Q5 compares proportionate tool fixes, reusable methods and reconstruction without repeat quotas. Q4 now deepens ReMe primary methods/software: affordable self-curation, failed experience, feedback privilege and total cost. All three panelists started cycle24; Tern reads independently. Q5/Q9/Q3 remain first; no rollout or campaign4 package.
 
 No self-chosen pause, scheduled restart or participant probe. A liveness rest can cover only the actual external panel dependency while independent research continues. First memo deadline September 29 does not delay a useful position; October 14 remains the stable-position target. Current publication is with Claude, not an excuse to stop researching.
 
@@ -91,3 +91,6 @@ No self-chosen pause, scheduled restart or participant probe. A liveness rest ca
 
 
 **Cycle21:** first-memo advice is ready. Close the conceptual need for manual authorship, retain comparative host/cost questions, and reject arbitrary incident quotas. [Response](panel-response-c21.md).
+
+
+**Cycle22:** Q5 distinguishes availability, selection, loading, following and correct execution. Local bottleneck remains unmeasured; c23 compares fixing the recurring cause with remembering a workaround. [Response](panel-response-c22.md).

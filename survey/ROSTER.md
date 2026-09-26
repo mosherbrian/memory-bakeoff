@@ -96,3 +96,9 @@ MemGPT now has a [full-method history/context reading](reading/tern-c4-integrate
 
 
 **Cycle20:** Dynamic Cheatsheet is methods/code-read: watch the transferable automatic-reuse pattern, not a ready host plugin. Current runner retains output history; the small working sheet is not its only saved artifact. [Response](panel-response-c20.md).
+
+
+**MemBukkit extraction clarification:** local source separates LLM-distilled facts/proposed turn indices from heuristic supersession linking. A valid pointer index does not prove that its source supports the fact. Watch verdict unchanged; [details](panel-response-c8.md).
+
+
+**Cycle22:** Claude Code and Pi document skill discovery/loading surfaces; current docs are not installed parity. Compaction can affect retained skill context. [Host note](reading/tern-c22-application.md). [Response](panel-response-c22.md).
