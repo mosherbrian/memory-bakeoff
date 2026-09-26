@@ -5,7 +5,7 @@
 # STUB_BIN is set, DRY=1, and STUB_BIN/claude is not the real claude; otherwise any seam variable aborts before any call.
 set -u; LABEL=$1
 PK=/var/home/bmosher/memory-bake-off/campaign4/packages
-R56=$PK/R56-context-runner-readiness; R64=$PK/R71-prepared-memory-offline; G63=$PK/R63-context-evidence-gate/gate.py
+R56=$PK/R56-context-runner-readiness; R64=$PK/R72-prepared-offline-repair; G63=$PK/R72-prepared-offline-repair/operator/gate_r72.py
 EV54=$PK/R54-memory-dependent-task-design/events.py
 SEAMS="${TEST_PRECREATE:-}${TEST_MUTATE_BETWEEN:-}${TEST_PROJECTS:-}${TEST_TIMEOUT:-}${GATE:-}${EVENTS:-}${OPROOT:-}${EVIDENCE_DIR:-}"
 if [ -n "${STUB_BIN:-}" ]; then
@@ -16,9 +16,10 @@ else
 fi
 PROJECTS=${TEST_PROJECTS:-/var/home/bmosher/.claude/projects}; TO=${TEST_TIMEOUT:-timeout}
 GATE=${GATE:-$R56/scanner/operator/scan_gate.py}; EVENTS=${EVENTS:-$EV54}
-OPROOT=${OPROOT:-/tmp/campaign4-r71-op}; EVD=${EVIDENCE_DIR:-$R64/evidence}
+OPROOT=${OPROOT:-/tmp/campaign4-r72-op}; EVD=${EVIDENCE_DIR:-$R64/evidence}
 case $LABEL in *-RD|*-ID|*-N) KIND=${LABEL#*-}; T=${LABEL%-*};; *) echo "bad label"; exit 2;; esac   # R71: prepared-memory kinds only, one session
-[ -z "${STUB_BIN:-}" ] && [ "${R71_LIVE_RELEASE:-}" = "" ] && { echo "live refused: no R71 live release"; exit 3; }
+[ -z "${STUB_BIN:-}" ] && [ "${R72_LIVE_RELEASE:-}" = "" ] && { echo "live refused: no R72 live release"; exit 3; }
+LAUNCHMODE=live; [ -n "${STUB_BIN:-}" ] && LAUNCHMODE=stub
 case $T in 24576|12288) ;; *) echo "bad target"; exit 2;; esac
 # duplicate label: refuse before any side effect or call
 [ -e $EVD/$LABEL ] && { echo "duplicate label $LABEL: bundle exists; zero calls"; exit 4; }
@@ -84,5 +85,5 @@ cp $W/report.md $OP/report.md 2>/dev/null
 python $G63 $OP/log $T $OP/report.md > $OP/candidate-r63.json 2> $OP/candidate-r63.err
 python -c "import json,sys;c=json.load(open('$OP/candidate-r63.json'))['candidate']['outcome'];sys.exit(1 if c in ('invalid_evidence','multi_context','schema_invalid','report_contradicts_log','manual_unresolved') else 0)" || hold "candidate $(python -c "import json;print(json.load(open('$OP/candidate-r63.json'))['candidate']['outcome'])" 2>/dev/null || echo FAILED)"
 hold "awaiting adjudication"
-python -c "import json,hashlib,re;h=lambda p:hashlib.sha256(open(p,'rb').read()).hexdigest();s=lambda n:(re.findall(r'^session_id=(.*)$',open('$OP/arm.s%d.meta'%n).read(),re.M) or [None])[0] if __import__('os').path.exists('$OP/arm.s%d.meta'%n) else None;json.dump({'label':'$LABEL','kind':'$KIND','target':'$T','sessions':{'s1':s(1),'s2':s(2)},'runner_sha256':h('$R64/operator/run-arm.sh'),'gate_sha256':h('$G63')},open('$OP/operator-meta.json','w'),indent=1)"
+python -c "import json,hashlib,re;h=lambda p:hashlib.sha256(open(p,'rb').read()).hexdigest();s=lambda n:(re.findall(r'^session_id=(.*)$',open('$OP/arm.s%d.meta'%n).read(),re.M) or [None])[0] if __import__('os').path.exists('$OP/arm.s%d.meta'%n) else None;json.dump({'label':'$LABEL','kind':'$KIND','target':'$T','sessions':{'s1':s(1),'s2':s(2)},'runner_sha256':h('$R64/operator/run-arm.sh'),'gate_sha256':h('$G63'),'launch':'$LAUNCHMODE'},open('$OP/operator-meta.json','w'),indent=1)"
 finish; echo "$LABEL $OP calls=$(cat $OP/calls)"

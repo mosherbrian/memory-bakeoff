@@ -1,0 +1,49 @@
+X1 24576-RD rdread calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X1 12288-ID ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X1 12288-N ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X1 12288-RD rdread calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X1 24576-ID ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X1 24576-N ask calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X2 12288-RD rdnoread calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=NONE_OBSERVED | reviewer approved
+Y2 12288-ID guessok receipt=guess cand=target_guessed -> rc=0 FINAL False target_guessed A4=NONE_OBSERVED | reviewer approved honest explicit guess (non-primary)
+Y3 24576-ID guesswrong receipt=guess cand=wrong_context_guessed -> rc=0 FINAL False wrong_context_guessed A4=NONE_OBSERVED | reviewer approved honest explicit guess (non-primary)
+Y4 24576-ID guessok receipt=guessfalse cand=target_guessed -> rc=0 HOLD False None A4=NONE_OBSERVED | GUESS receipt fields do not match the honest-guess rule
+X5 24576-RD rduser calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 HOLD False None A4=None | source USER unsupported in prepared arm
+X6 12288-ID idmemory calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 HOLD False None A4=None | attribution unresolved: target claimed without relevant memory
+X8a 24576-N ncompound calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X8b 24576-N with C2 receipt -> rc=0 FINAL False asked_no_run A4=NONE_OBSERVED | reviewer approved
+X10 event receipt stale -> rc=0 HOLD False None A4=None | event receipt not bound to this arm/transcript/events
+X10 event receipt wrongarm -> rc=0 HOLD False None A4=None | event receipt not bound to this arm/transcript/events
+X10 event receipt missing -> rc=0 HOLD False None A4=None | event receipt ids do not match flagged events
+X9a 12288-RD rdcompound calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+X9b 12288-RD compound with C2 receipt -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X10r 12288-N redirect calls=1 cand=asked_no_run disp=[HOLD gate s2=2;HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+X10 redirect with receipt -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+X7 leaked ID index calls=0 disp=[HOLD fidelity abort: target on participant-visible surface (content MEMORY.md); zero calls;]
+X11 leak-run bundle finalize -> rc=0 HOLD_EVIDENCE False None A4=None | dependency changed /var/home/bmosher/memory-bake-off/campaign4/package
+X12 no receipt -> rc=0 HOLD False None A4=OBSERVED | no adjudication receipt
+X12 then valid -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X12 refinalize -> rc=4 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+X12 duplicate rc=4
+X12 live refused rc=3 live refused: no R72 live release
+X12 live seam refused rc=3 seam refused: test variables set in live mode
+N-denial 12288-N denial calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'denied': 1}
+N-missing 12288-N missing calls=1 cand=asked_no_run disp=[HOLD gate s2=2;HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+N-foreign 12288-N foreign calls=1 cand=asked_no_run disp=[HOLD gate s2=2;HOLD awaiting adjudication;] -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+N-dupresult 12288-N dupresult calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;] -> rc=0 HOLD_EVIDENCE False None A4=None | duplicate tool_result id
+Y-readafter 12288-RD readafter calls=1 cand=candidate_primary disp=[HOLD awaiting adjudication;] -> rc=0 FINAL True candidate_primary A4=NONE_OBSERVED | reviewer approved
+Y-symlink 24576-ID symlink calls=1 cand=asked_no_run disp=[HOLD gate s2=2;HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+Y-symlink with C2 receipt -> rc=0 HOLD_INTEGRITY False None A4=None | scan s2 not clean
+Y-c2dup 24576-N ncompound calls=1 cand=asked_no_run disp=[HOLD awaiting adjudication;HOLD events s2: unresolved/unsupported/denied memory events (manual);] -> rc=0 HOLD_INTEGRITY False None A4=None | events s2 {'unsupported_shell': 1}
+Y-c2dup duplicate event id -> rc=0 HOLD False None A4=None | event receipt ids do not match flagged events
+V2 baseline_mismatch: rc=0 HOLD_EVIDENCE False None A4=None | before-session memory differs from the frozen prepared fixture
+V2 manifest_malformed: rc=0 HOLD_EVIDENCE False None A4=None | mem-before-s2 manifest malformed
+V2 fixture_missing: rc=0 HOLD_EVIDENCE False None A4=None | before-session memory differs from the frozen prepared fixture
+V2 paths_bad: rc=0 HOLD_EVIDENCE False None A4=None | paths.json project/memory mapping wrong
+V2 uuid_bad: rc=0 HOLD_EVIDENCE False None A4=None | s2 session_id not a canonical UUID
+V2 live_form: rc=0 HOLD_EVIDENCE False None A4=None | test root refused for live bundle
+V2 scanner_fail_plus_c2: rc=0 HOLD_INTEGRITY False None A4=None | integrity HOLD ['HOLD gate s2=1']
+Y-concurrency terminals=1 attempts=4
+Y-stale -> rc=0 HOLD False None A4=OBSERVED | receipt stale: evidence hash mismatch
+Y-stale then valid -> rc=0 FINAL True candidate_primary A4=OBSERVED | reviewer approved
+Y-stub bundle without test root -> HOLD_EVIDENCE | paths.json project/memory mapping wrong

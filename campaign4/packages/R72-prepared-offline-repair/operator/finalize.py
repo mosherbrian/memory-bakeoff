@@ -3,8 +3,8 @@ Implements requirements.md: closure incl. this file, required evidence without d
 R63 gate. Every call writes an immutable attempt; only FINAL/FINAL_INVALID creates the single terminal (atomic, exclusive)."""
 import hashlib, importlib.util, json, os, re, secrets, sys, uuid
 from datetime import datetime, timezone
-PK = "/var/home/bmosher/memory-bake-off/campaign4/packages"; ME = f"{PK}/R71-prepared-memory-offline/operator/finalize.py"; FX = f"{PK}/R71-prepared-memory-offline/fixtures"
-spec = importlib.util.spec_from_file_location("g63", f"{PK}/R63-context-evidence-gate/gate.py"); g63 = importlib.util.module_from_spec(spec); spec.loader.exec_module(g63)
+PK = "/var/home/bmosher/memory-bake-off/campaign4/packages"; ME = f"{PK}/R72-prepared-offline-repair/operator/finalize.py"; FX = f"{PK}/R72-prepared-offline-repair/fixtures"
+spec = importlib.util.spec_from_file_location("g63", f"{PK}/R72-prepared-offline-repair/operator/gate_r72.py"); g63 = importlib.util.module_from_spec(spec); spec.loader.exec_module(g63)
 h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
 COMMON = ["paths.json", "calls", "log", "report.md", "disposition.txt", "candidate-r63.json", "operator-meta.json", "arm.s2.meta", "arm.s2.jsonl",
           "scan-gate-s2.json", "events-s2.json", "mem-before-s1.manifest", "mem-before-s2.manifest", "mem-after-s2.manifest"]
@@ -108,7 +108,11 @@ def check(label, receipt, evd, ev_receipt=None):
     pj = js("paths.json"); keys = ("cwd", "cwd_real", "project", "project_real", "memory", "memory_real")
     if not isinstance(pj, dict) or any(not isinstance(pj.get(k), str) or not os.path.isabs(pj[k]) or os.path.normpath(pj[k]) != pj[k] for k in keys): raise E("paths.json schema invalid")
     if not re.fullmatch(r"/tmp/c4x-[0-9a-f]{12}", pj["cwd"]): raise E("paths.json cwd not an opaque c4x dir")
-    roots = {"/var/home/bmosher/.claude/projects"} | ({os.environ["R67_TEST_PROJECTS"]} if os.environ.get("R67_TEST_PROJECTS") else set())
+    roots = {"/var/home/bmosher/.claude/projects"}
+    if os.environ.get("R67_TEST_PROJECTS"):   # R72: test root only for stub-launched bundles outside the native evidence root
+        m0 = json.loads(rd("operator-meta.json"))
+        if m0.get("launch") != "stub" or os.path.realpath(evd) == os.path.realpath(f"{PK}/R72-prepared-offline-repair/evidence"): raise E("test root refused for live bundle")
+        roots.add(os.environ["R67_TEST_PROJECTS"])
     if os.path.dirname(pj["project"]) not in roots or os.path.basename(pj["project"]) != re.sub(r"[/.]", "-", pj["cwd"]) or pj["memory"] != pj["project"] + "/memory": raise E("paths.json project/memory mapping wrong")
     aa = js("arm.arm.json")
     if not isinstance(aa, dict) or aa.get("cwd") != pj["cwd"] or aa.get("memory") != pj["memory"]: raise E("arm.arm.json disagrees with paths.json")
@@ -178,5 +182,5 @@ def main(label, receipt, evd, fin, ev_receipt=None):
     print(json.dumps({**r, "attempt": ap}, indent=1)); return rc
 if __name__ == "__main__":
     L = sys.argv[1]; R = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] != "-" else None
-    sys.exit(main(L, R, sys.argv[3] if len(sys.argv) > 3 else f"{PK}/R71-prepared-memory-offline/evidence",
-                  sys.argv[4] if len(sys.argv) > 4 else f"{PK}/R71-prepared-memory-offline/finalized", sys.argv[5] if len(sys.argv) > 5 else None))
+    sys.exit(main(L, R, sys.argv[3] if len(sys.argv) > 3 else f"{PK}/R72-prepared-offline-repair/evidence",
+                  sys.argv[4] if len(sys.argv) > 4 else f"{PK}/R72-prepared-offline-repair/finalized", sys.argv[5] if len(sys.argv) > 5 else None))

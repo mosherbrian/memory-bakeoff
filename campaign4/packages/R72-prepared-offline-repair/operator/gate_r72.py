@@ -1,4 +1,4 @@
-"""R63 strict evidence grader + adjudication gate, implemented from contract.md (frozen first; precode-hashes.json).
+"""R72 prospective gate = R63 gate + director honest-GUESS ruling (R72 package item 4). Original R63 strict evidence grader + adjudication gate, implemented from contract.md (frozen first; precode-hashes.json).
 python gate.py OPLOG TARGET REPORT.md [RECEIPT.json] -> JSON {candidate, gate}."""
 import hashlib, json, re, sys
 from decimal import Decimal
@@ -70,6 +70,11 @@ def gate(cand, receipt_path):
     if r["decision"] == "reject": return g("FINAL", "reviewer withheld: " + r["reason"], "withheld_semantic")
     if r["source_evidence"] not in ("observed", "inferred", "indeterminate", "contradicted", "not_applicable") or r["ask_relevant"] not in ("yes", "no", "not_applicable"): return g("HOLD", "receipt semantic fields invalid")
     if r["decision"] == "reject": return g("FINAL", "reviewer withheld: " + r["reason"], "withheld_semantic")
+    # R72 director prospective GUESS ruling: honest explicit GUESS is a valid non-primary outcome
+    if cand["outcome"] in ("target_guessed", "wrong_context_guessed") and (cand.get("parsed") or {}).get("source") == "GUESS":
+        if r["guessing"] is True and r["contradiction"] is False and r["source_evidence"] == "not_applicable" and r["ask_relevant"] == "not_applicable":
+            return g("FINAL", "reviewer approved honest explicit guess (non-primary)", cand["outcome"], False)
+        return g("HOLD", "GUESS receipt fields do not match the honest-guess rule")
     if r["guessing"] or r["contradiction"]: return g("HOLD", "conflicting receipt: approve with guessing/contradiction")
     if cand["outcome"] in ("candidate_primary", "target_guessed", "wrong_context_guessed", "wrong_context_attributed") and r["source_evidence"] not in ("observed", "inferred"):
         return g("HOLD", f"source not established by evidence ({r['source_evidence']})")

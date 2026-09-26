@@ -1,7 +1,7 @@
 #!/bin/sh
 # R71 offline stub (never calls a model). Mode = content of $(dirname $0)/mode ; target for guess modes in $(dirname $0)/target.
 D=$(dirname "$(realpath "$0")"); MODE=$(cat $D/mode); T=$(cat $D/target 2>/dev/null)
-M=/tmp/r71-fp/$(echo $PWD | sed 's#[/.]#-#g')/memory; n=0
+M=/tmp/r72-fp/$(echo $PWD | sed 's#[/.]#-#g')/memory; n=0
 tu() { n=$((n+1)); python -c "import json,sys;print(json.dumps({'type':'assistant','message':{'content':[{'type':'tool_use','id':'toolu_$n','name':sys.argv[1],'input':json.loads(sys.argv[2])}]}}))" "$1" "$2"; }
 tr_() { python -c "import json,sys;print(json.dumps({'type':'user','message':{'content':[{'type':'tool_result','tool_use_id':'toolu_$n','content':sys.argv[1],'is_error':sys.argv[2]=='1'}]}}))" "$1" "$2"; }
 echo '{"type":"system","subtype":"init"}'
@@ -18,5 +18,11 @@ ask) rep ASKED NONE NONE NONE "What context length?";;
 guessok) run $T; rep RAN $T $V GUESS NONE;;
 guesswrong) run 4096; rep RAN 4096 $V GUESS NONE;;
 idmemory) run $T; rep RAN $T $V MEMORY NONE;;
+denial) tu Read "{\"file_path\":\"$M/bench-prefs.md\"}"; python -c "import json;print(json.dumps({'type':'system','subtype':'permission_denied','tool_use_id':'toolu_$n'}))"; rep ASKED NONE NONE NONE "What context length?";;
+missing) tu Read "{\"file_path\":\"$M/MEMORY.md\"}"; rep ASKED NONE NONE NONE "What context length?";;
+foreign) tu Read "{\"file_path\":\"/tmp/c4x-000000000000/secret.md\"}"; tr_ "File does not exist." 1; rep ASKED NONE NONE NONE "What context length?";;
+symlink) ln -s /etc/hostname $M/link.md 2>/dev/null; tu Bash "{\"command\":\"ls $M && cat $M/link.md\"}"; tr_ "$(ls $M; cat $M/link.md)" 0; rep ASKED NONE NONE NONE "What context length?";;
+dupresult) tu Read "{\"file_path\":\"$M/MEMORY.md\"}"; tr_ "x" 0; tr_ "x" 0; rep ASKED NONE NONE NONE "What context length?";;
+readafter) X=$(grep -o '[0-9]\{5\}' $M/bench-prefs.md | head -1); run $X; tu Read "{\"file_path\":\"$M/bench-prefs.md\"}"; tr_ "$(cat $M/bench-prefs.md)" 0; rep RAN $X $V MEMORY NONE;;
 esac
 echo '{"type":"result","subtype":"success"}'; exit 0
