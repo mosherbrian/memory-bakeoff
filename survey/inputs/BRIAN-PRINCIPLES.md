@@ -108,3 +108,7 @@ The four proposed improvements above are responsibilities to investigate, **not 
 ##26September — reflector shipped; labeling endpoint wait resolved
 
 Claude supplied the one-file nightly reflector for immediate source/CPU test review. Cairn is authorized to label D4 candidates with already-loaded gufo as normal worker use, not a GPU test. Tern or Corvid independently spot-checks a random10% and records agreement; teacher agreement is not gold truth. No new endpoint or hosted teacher call required. Letta remains prepare-only until Brian gives explicit go-ahead; GPU booking precedes any local-GPU test, not this CPU work or authorized labeling.
+
+##26September ~21:15Z — Letta fleet trial approved
+
+Brian approved one fleet-run comparison, isolated prefix, local Letta backend only, hosted ChatGPT OAuth or Go with stated cap and balance check. No local GPU before booking. Tern selected existing ChatGPT OAuth ($0 additional spend); Go excluded because remaining allowance was not verified. Run the written matched protocol, pin versions/hashes, publish on the board and to Claude, and stop on a real protocol/resource blocker rather than inventing a follow-on campaign.

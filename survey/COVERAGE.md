@@ -1,6 +1,6 @@
 # Survey coverage
 
-Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in progress; design includes approval-pending fleet Letta comparison**. This is the reading and source-inspection inventory, not a deployment ranking or an execution queue. It consolidates [reading notes](reading/), [system cards](systems/), [ROSTER](ROSTER.md), [INVENTORY](INVENTORY.md), [FIELD-MAP](FIELD-MAP.md), the [roadmap](inputs/PHASE2_ROADMAP.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md).
+Tern · updated 26 September 2026, **cycle87: sponsor ENGRAFT source/compatibility read; delivery continues**. This is the reading and source-inspection inventory, not a deployment ranking or an execution queue. It consolidates [reading notes](reading/), [system cards](systems/), [ROSTER](ROSTER.md), [INVENTORY](INVENTORY.md), [FIELD-MAP](FIELD-MAP.md), the [roadmap](inputs/PHASE2_ROADMAP.md), and [Gen125 intake](inputs/PHASE2_CANDIDATE_INTAKE.md).
 
 **Capability lookup:** [CAPABILITY-MATRIX.md](CAPABILITY-MATRIX.md) maps the explored methods/products/facilities against the same ten requirements; maintained alongside this inventory each cycle.
 
@@ -56,7 +56,7 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 | Know It, Act on It (2607.29433) | Benchmark / paper | explored | 3 | [Methods](reading/tern-c3-preference-evidence.md) | Paired recall and contextual response distinguish knowing from using preferences; updates/forgetting and tool actions are outside the test. |
 | LangMem | System lead | deferred-with-reason | Gen125 intake | [Inherited harness list](inputs/PHASE2_CANDIDATE_INTAKE.md) | Named as a MemConflict harness/comparator; no standalone mechanism reading selected over the prioritized procedure/preference work. |
 | LATM / LLMs as Tool Makers (2305.17126) | Paper / tool-generation method | explored | 43, 45, 56 | [Card](systems/latm.md), [lead boundaries](reading/tern-c43-tool-cost-boundary.md) | Strong author/cheaper tool user is evidenced on algorithmic families; validation plumbing and amortization must retain their limits. |
-| Letta / Letta Code / MemFS | System / host runtime | explored | 5–6, 13, 71, 74–75 | [Assessment](systems/letta-memfs-fit.md), [compile trace](reading/c75-letta-compile-boundary.md), [limits](panel-response-c75.md) | Commit constraints are real; local HEAD-based compilation is best-effort, so non-silent delivery remains partial; optional trial unchanged. |
+| Letta / Letta Code / MemFS | System / host runtime | explored | 5–6, 13, 71, 74–75,86 | [Trial result](delivery/letta-c86/RESULT.md), [Assessment](systems/letta-memfs-fit.md), [compile trace](reading/c75-letta-compile-boundary.md), [limits](panel-response-c75.md) | Scoped constraints remain; approved trial stopped at token allowance before later-use tests, so benefit remains unknown. |
 | LongMemEval (2410.10813) | Benchmark | explored | 1, 33, 61 | [Methods](reading/c33-longmemeval-updates.md), [lead note](reading/tern-c33-currency.md) | Timestamped raw sessions can support read-time currency; the study does not universally compare projection versus no projection. |
 | LongMemEval-V2 (2605.12493) | Benchmark | explored | 1–2, 5 | [Methods](reading/tern-c2-procedure-evidence.md) | Agent-trajectory questions remain fixed-reader QA; workflow-guided context gathering is not enacted task reuse. |
 | LoCoMo | Benchmark substrate | deferred-with-reason | 11, 32 (through evaluated papers) | [Mem0 endpoint boundary](reading/c32-mem0.md) | Covered as a substrate, not independently method-read; defer a standalone card until its construction changes a decision. |
@@ -132,7 +132,7 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 | Jev / TypeSafe System One | Hosted typed-classifier system | explored | 66–67 | [Candidate and primary docs](systems/jev-laya.md) | Typed classification is a screening candidate, not calibrated correctness or authority; Jev itself not locally tested. |
 | Laya | Local typed-classifier system | explored | 66–67, 80 correction, 82–83 interfaces | [Candidate](systems/jev-laya.md), [corrected probe](probes/laya-supersession-20260926/RESULTS.md), [trained option B](systems/laya-correction-prefilter.md) | Zero-shot base supersession rejected27/46 vs rule46/46; task-trained correction filtering remains untested. |
 | Option B correction/supersession cascade | Proposed arrangement | deferred-with-reason | 81–84 design | [Contracts](OPTION-B-CASCADE.md), [learning loop](OPTION-B-LEARNING-LOOP.md) | Random unflagged exploration, guarded retraining and worked-example reuse proposed; requirements1/7 unimplemented. |
-| Laya trained local reflector prefilter (option B) | Proposed use of typed classifier | deferred-with-reason | 80 design | [Proposal](systems/laya-correction-prefilter.md) | Candidate preparation completed with exact-duplicate grouping; First40 gufo labels spot-checked (relation3/4, screening4/4); further labeling active; no training authorization. |
+| Laya trained local reflector prefilter (option B) | Proposed use of typed classifier | deferred-with-reason | 80 design | [Proposal](systems/laya-correction-prefilter.md) | Candidate preparation completed with exact-duplicate grouping; 197 provisional pair labels spot-checked (relation9/20, screening13/20); message labelling active; no training authorization. |
 | fast-jev-compaction | Host hook / classifier application | explored | 67 | [Source inspection](systems/jev-laya-practical.md) | Two keep/drop questions, protections and batching verified; full-text archive claim unconfirmed in inspected source. |
 | invalidate | Memory-invalidation prototype | deferred-with-reason | 66 intake | [Inherited mechanism card](../team/EXTERNAL-CHEAP-CLASSIFIER-GATING-20260919.md), [candidate boundary](systems/jev-laya.md) | No benchmark established in the intake; defer integration reading until a narrow classifier task earns consideration. |
 | Type-Safe Is Not Error-Free (2609.26758v2) | Paper / typed-classifier robustness | explored | 67 | [Reading and correction](opinions/corvid-c67-addendum.md), [candidate](systems/jev-laya.md) | Choice name/definition reassignment exposes label sensitivity; does not directly test ordinary aligned Noul. |
@@ -148,19 +148,20 @@ Tern · updated 26 September 2026, **cycle83 complete; cycle84 sponsor review in
 | Claude InstructionsLoaded event | Native load-observability facility | explored | 78 | [Reading](reading/c78-instructions-loaded-boundary.md), [scope](panel-response-c78.md) | Loaded source paths observable; no blocking, omitted-item accounting or auto-memory tail coverage. |
 | Pi loaded canonical instructions across compaction | Native context separation | explored | 77 | [Trace](reading/c77-pi-compaction-boundary.md), [scope](panel-response-c77.md) | Loaded system instructions stay outside conversation summaries; neither fresh disk reload nor request-fit is guaranteed by this trace. |
 | Brian/Claude whole option-B design | Proposed arrangement | deferred-with-reason | 84 review | [Original](inputs/DESIGN-OPTION-B-20260926.md), [review](OPTION-B-ADVERSARIAL-REVIEW.md) | Corvid favors personal-first; profile source checked, no-expiry unresolved, host review pending. |
-
 | Brian’s Claude stage0 native controls | Deployed host arrangement / index guard | explored | 84 deployment | [Deployment and scope](systems/claude-stage0-deployed.md), [design](RECOMMENDED-DESIGN.md) | Approved and deployed: split index, mechanical code-output check,190-line/24KB Stop guard and native action rules; repeat-correction benefit unmeasured. |
-
 | Selected small nightly reflector and checked publication | Proposed arrangement | deferred-with-reason | 84 decision | [Decision](RECOMMENDED-DESIGN.md) | Chosen for fleet pilot; baseline extracted, continuous delivery active; implementation benefit still unmeasured. |
 | Claude nightly reflector (shipped26September) | Host upkeep job | explored | 86 delivery | [Review and CPU fixtures](delivery/c86-reflector-review.md) | Automatic Claude-only writer supplied; commit scope, undo, scope and publication defects reproduced before unattended use. |
+| ENGRAFT | N-gram table editing method | explored | 87 sponsor candidate | [Source and gufo compatibility](systems/engraft.md), [proposed probe](proposals/engraft-durable-facts-pilot.md) | Removable durable-fact overlay; free-chat35/98 author result; gufo loader absent in inspected path; post-booking probe only. |
 
 ## Next up — continuous delivery
 
 **Execution constraint:** reflector tonight, then GPU booking. Local-GPU tests wait for booking; CPU-only preparation continues. [Contract](delivery/GPU-BOOKING.md).
 
 1. [Fleet baseline](delivery/FLEET-BASELINE.md) computed; use its coverage limits and resolve attribution in the existing delivery path.
-2. [Fleet Letta trial](proposals/letta-fleet-pilot.md): protocol revised, execution awaits Brian's go-ahead; no install/run yet.
+2. [Fleet Letta trial](delivery/letta-c86/RESULT.md): complete, inconclusive before later-use tests; no rerun.
 3. Review/test Claude's reflector as source/revisions ship; first source reviewed with isolated fixtures; fixes remain with Claude.
-4. Local Laya joint grouping fixed; gufo labels authorized and first batch executing; independent frontier spot-check follows, and independent heldout coverage remains insufficient. No training or egress inferred. [Disposition](delivery/c85-laya-grouping-disposition.md).
+4. Local Laya joint grouping fixed; 197 gufo pair labels checked; message batches and independent spot-check active, and independent heldout coverage remains insufficient. No training or egress inferred. [Disposition](delivery/c85-laya-grouping-disposition.md).
 
 [Structured queue](delivery/QUEUE.md). Quiet support mode is withdrawn. Backlog papers are not automatic work; new reading must resolve a delivery question.
+
+ENGRAFT probe deferred until booking and execution approval; not an automatic next GPU task. No training or installation performed.

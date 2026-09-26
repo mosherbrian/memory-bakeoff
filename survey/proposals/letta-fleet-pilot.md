@@ -1,6 +1,6 @@
 # Approval proposal — one fleet-operated Letta memory trial
 
-Tern ·26 September2026 · **Design only; Brian's approval required before setup/model calls/execution.** Supersedes the personal one-week Letta proposal. Brian keeps his runtimes. One fleet operator (proposed: Claude) drives isolated seats; Tern freezes the task/score manifest and reports the comparison. No Letta Cloud, mobile trial, real-project edits, private transcript import, training or recurring campaign.
+Tern ·26 September2026 · **Approved by Brian via Claude,26September2026 ~21:15Z; single execution completed INCONCLUSIVE. [Result](../delivery/letta-c86/RESULT.md).** Supersedes the personal one-week Letta proposal. Brian keeps his runtimes. One fleet operator (proposed: Claude) drives isolated seats; Tern freezes the task/score manifest and reports the comparison. No Letta Cloud, mobile trial, real-project edits, private transcript import, training or recurring campaign.
 
 **New resource prerequisite:** if any trial arm or reflection worker uses local llama-swap port8080 `gpu`, wait for Claude's shipped booking mechanism and hold a valid reservation. Include setup/model smoke tests. Record booking ID/expiry and clean/disturbed outcome; disturbed results remain separate, with no automatic rerun. Local backend with remote OAuth/Go inference is not automatically GPU use. Brian's trial approval and existing cost caps remain required independently. [Booking contract](../delivery/GPU-BOOKING.md).
 
@@ -61,3 +61,11 @@ Record actual operator wakes/nudges separately from the scripted reminders above
 [Seven-day observational baseline](../delivery/FLEET-BASELINE.md) is context, **not the control arm**: the historical fleet had different tasks/models and incomplete manual-attribution logs. The paired native seat is the trial comparator.
 
 Read-only local check: agent-deck and Pi are on PATH; no letta/letta-code/letta-acp command, ~/.letta directory or Letta-named agent-deck adapter was found. This does not prove no installation elsewhere. Kiln’s c84 and c85 turns produced no text/artifact; cause unestablished. Tern completes the protocol rather than waiting. Official local/ACP support from the existing source notes remains design evidence, not local readiness. Brian’s go-ahead must cover bounded installation/setup as well as model execution; no setup has run. Keep the30-minute setup cap, existing model route/cost caps, and no new adapter implementation.
+
+## Approved execution receipt
+
+The isolated Letta0.33.2/native Pi0.87.1 comparison uses ChatGPT OAuth gpt-5.6-sol with low reasoning, local backend only and $0 additional spend. No Go debit or local GPU. [Frozen manifest and fixtures](../delivery/letta-c86/pre-run-manifest.json). Setup succeeded for both; exact provider request accounting includes background workers. Output tokens are observed rather than pre-capped by the provider; crossing the measured limit stops further requests and makes the run inconclusive. Original pass/fail thresholds remain unchanged. No automatic rerun.
+
+## Terminal receipt
+
+The one approved run ended26September21:45Z at the shared input allowance before later-use sessions. No rerun. [Result and deviations](../delivery/letta-c86/RESULT.md); no thresholds changed and no unmeasured score reported as zero.

@@ -1,18 +1,18 @@
 # Delivery readout — fleet pilot, continuous work
 
-**c86 delivery:** [Reflector review](delivery/c86-reflector-review.md) reproduces writer/undo/index/scope defects in temporary fixtures; recommend changes in the shipped file before unattended writes. Cairn gufo labeling authorized and resumed;10% independent spot-check in progress. No live mutation/model test.
+**c87 ENGRAFT:** watch as a durable-fact research candidate; no gufo drop-in loader found. Author free-chat35/98 verified in later result files; headline sentence recall is a different endpoint. Added coverage/matrix row and a one-write,20-fact post-booking [probe design](proposals/engraft-durable-facts-pilot.md); no deployment/training, no change to existing-host recommendation.
 
-**D4 refinement:** current all-file candidate snapshot verified: zero conversation/exact-text crossings; labels0; heldout9 pairs/2 control messages. Controls follow their own group, not necessarily the matched pair. No evaluation-readiness claim. [Disposition](delivery/c85-laya-grouping-disposition.md). GPU rule unchanged.
+**c86 Letta trial complete: INCONCLUSIVE.** The approved local-backend Letta/native Pi comparison stopped during session4 at the shared token allowance, before later-use tests.44 successful requests,510,871 input/5,624 output tokens, $0 added purchases; existing ChatGPT quota consumed. No Go, local GPU or Letta Cloud. No memory-benefit verdict and no rerun. The result records the initial per-arm accounting mistake and10,871-token in-flight overshoot. [Result, versions and hashes](delivery/letta-c86/RESULT.md).
 
-**Resource update:** reflector first tonight, then Claude's GPU booking. No fleet test on local llama-swap8080 `gpu` until booking exists; local Letta/Pi pilots and Laya GPU work inherit that dependency. CPU preparation/source checks continue. Clean/disturbed disposition must accompany runs. [Contract](delivery/GPU-BOOKING.md).
+**D3 reflector:** [Review and ten isolated CPU observations](delivery/c86-reflector-review.md) reproduce commit-scope, undo, publication-bound and scope defects. Changes belong in the shipped file before unattended writes; corrected revision awaited. No live production changes by Tern.
 
-**26September2026 · Tern · quiet support mode withdrawn; liveness restored.**
+**D4 labels:**197 pairs provisionally labelled by gufo;20 independent random references give relation agreement9/20 and screening13/20. These are disagreements to inspect, not accuracy against truth or a calibration result. First240 message/control records are now commissioned; the independent10% check continues. No training. [Full pair agreement](delivery/c86-label-agreement-all.md).
 
-[Decision updated](RECOMMENDED-DESIGN.md): fleet is the optionB pilot, not Brian's personal correction count. [Seven-day baseline](delivery/FLEET-BASELINE.md) is extracted:18 gap incidents/22 notifications;101,595 raw inactive lane-minutes;30 repeated alert fingerprints. Ten recovery wakes across nine episodes confirmed from Claude tool records; full intervention count and avoidable idle remain unknown due to missing provenance/eligibility. These are qualified baselines, not zeros or causal memory results.
+**Candidate integrity:** current all-file snapshot has zero conversation/exact-text crossings; near-duplicate leakage untested. Heldout9 pairs/2 controls is inadequate for a strong evaluation claim. Source gold labels remain null; teacher/reference fields are separate.
 
-**Delivery now:** Cairn produced954 message candidates/197 pair candidates, zero frontier labels. Tern moved raw files outside the repo and commissioned duplicate/split/control refinement. A local teacher endpoint remains unestablished. Kiln returned empty c84/c85 turns; Tern completed the fleet-specific Letta protocol and checked local readiness rather than waiting. Letta tools/adapter absent on inspected paths; execution still requires Brian's go-ahead. Reflector source/revision requested for tests.
+**Current decision:** keep existing hosts and the small reflector design. [Memo](RECOMMENDED-DESIGN.md), [seven-day baseline](delivery/FLEET-BASELINE.md), [delivery queue](delivery/QUEUE.md). Baseline manual-intervention totals and avoidable idle remain partly unobservable. Fleet work continues; no broad research loop or automatic trial rerun.
 
-**Queue:** [D1 baseline complete with named missingness; D2 approval-ready protocol; D3 awaiting shipped artifact; D4 local preparation active](delivery/QUEUE.md). Continue independent ready work; no quiet support interval, no new broad reading, no repeated Laya probe. Next decision uses fleet intervention/recurrence metrics with coverage and completed-work quality, not note counts.
+**GPU rule:** no local-GPU fleet tests before Claude ships booking. Ordinary authorized Cairn gufo labelling and CPU fixture work continue.
 
 ## Historical readouts (superseded where inconsistent)
 
@@ -110,3 +110,7 @@ Coverage now121 items, separating the MemHarness paper from the still-unlocated 
 **Cycle72 started:** Corvid, Kiln and Cairn each returned started for the bounded EvoMemBench methods/control question. Cycle71 reports are incorporated and closed. COVERAGE marks depth in progress; CAPABILITY-MATRIX records no justified rating change yet. Actual dependency rest through 18:36 UTC; [commission](panel-cycle72.md), [receipt](receipts/c72-panel-in-progress-20260926.json). No probe/install and no gate on the current recommendation.
 
 **c86 batch01 verified:**40 provisional gufo labels preserve source/splits. Independent random10% check: relation3/4, screening4/4; sample has no negatives, so no recall claim. [Agreement](delivery/c86-label-agreement.md). Batches02–05 dispatched; all remaining16 frontier reference judgments recorded before teacher results. Labels are not gold; no training.
+
+**Letta go-ahead acted on:** approved paired trial executing with local Letta state and hosted ChatGPT OAuth, no Go/GPU use. [Frozen version/hash/cost manifest](delivery/letta-c86/pre-run-manifest.json). Results pending, no benefit claim.
+
+**D4 latest:** first240 message/control records preserved; random24 reference agreement correction19/24, repetition22/23 (one abstention), preference16/24, procedure19/24. Next240 commissioned; next24 references sealed. [Agreement](delivery/c86-message-agreement.md). No training.

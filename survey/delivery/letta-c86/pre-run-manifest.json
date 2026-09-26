@@ -1,0 +1,70 @@
+{
+  "protocol": "survey/proposals/letta-fleet-pilot.md",
+  "arms": [
+    "L",
+    "N"
+  ],
+  "option_b": "omitted; shipped writer fails publication/recovery tests and lacks fleet transcripts",
+  "model": "gpt-5.6-sol",
+  "reasoning": "low",
+  "backend": "local only",
+  "auth": "existing ChatGPT OAuth",
+  "additional_spend_cap_usd": 0,
+  "go_pool": "not used; remaining balance unverified",
+  "requests_max_per_arm": 30,
+  "requests_max_total": 60,
+  "token_total_limit": {
+    "input": 500000,
+    "output": 40000,
+    "enforcement": "usage at completed response; no provider output maximum on Codex path"
+  },
+  "reflection": {
+    "trigger": "step-count",
+    "stepCount": 5,
+    "merge": "auto",
+    "model": "inherit"
+  },
+  "pass": {
+    "L_first_correct_min": 10,
+    "L_advantage_over_N_min": 2,
+    "L_reminder_reduction_min": 2,
+    "L_wrong_controls_max": 0,
+    "operator_repair": 0
+  },
+  "scored_tasks_started": false,
+  "prompt_sha256": "7900169dfa6bb2bae82779386c150d23863505afa30813aad9badc52b2e77bd3",
+  "tool_sha256": "39ce9f80ce69e2c65e4fab20c040e3256c2b4ec9d1ca7f638746517047a5f3cb",
+  "approved_by": "Brian via Claude 2026-09-26 ~21:15Z",
+  "setup_started_at": "2026-09-26T21:17:42Z",
+  "setup_completed_at": "2026-09-26T21:39:44.025666+00:00",
+  "versions": {
+    "letta-code": "0.33.2",
+    "letta-acp": "0.1.11",
+    "pi-coding-agent": "0.87.1"
+  },
+  "source_revision": "2394082e236318cad95de1dd783ab22965dde597",
+  "hashes": {
+    "prompts.json": "7900169dfa6bb2bae82779386c150d23863505afa30813aad9badc52b2e77bd3",
+    "prepare_trial.py": "aeaea07cfbdf95a81f0f8cb975c623d0a16dcd4de0dbc136f5c8cfd2a89cbb58",
+    "score.py": "a0c13396c26605fb824b8f85ff61f5e0a290acf9a9a6d28516e9089072bf41b3",
+    "launch.py": "20d60289ef2b3f0f0292862cd99666ac1c32ced51a9a96d137eda3e5d4db63b2",
+    "fetch-guard.mjs": "96ec1fbace08bbe7b8883b0de7866f8cd460f78eca5e3fe88ffa00bec7cac30d",
+    "run_trial.py": "c56115e57112bdefe2c0b35b46cacb8cc992452c1c1816fb6717930eafb7ce97",
+    "install/package-lock.json": "6d0fa621978040a24e98be59a09e3e3c178bb4f243e71cc1fbf0d29038c20f1f"
+  },
+  "route": "ChatGPT OAuth; no Go or local GPU calls",
+  "setup_successful_requests": {
+    "L": 2,
+    "N": 2
+  },
+  "setup_tokens": {
+    "input": 38529,
+    "output": 20
+  },
+  "notes": [
+    "Initial install scripts failed for absent make; headless install with scripts disabled passed both harnesses.",
+    "Isolated homes contain only copied trial auth and synthetic files; neither arm can read the other or evaluator artifacts.",
+    "Token counters enforce stop before the next request after observed threshold; provider does not supply a per-request output maximum on this route.",
+    "A completed setup response reports Letta step_count0; external request counters are authoritative."
+  ]
+}

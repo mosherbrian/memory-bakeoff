@@ -1,0 +1,27 @@
+# Proposed ENGRAFT probe —20 durable facts, one write
+
+Tern · cycle87 ·26September2026. **Design only. Worth a bounded research probe after GPU booking exists; execution/training not authorized by candidate intake.** Keep delivery/reflector work ahead of it. This does not replace Cairn or modify production weights. [Source assessment](../systems/engraft.md).
+
+**Question:** can one removable overlay recall durable fleet facts after complete context reset almost as reliably as a compact injected fact sheet, without corrupting unrelated work or resisting a current correction? Success earns further consideration, not adoption or a claim of end-to-end memory reliability.
+
+**Owner and implementation:** Tern owns frozen facts/score/report; Claude owns GPU booking and a sandbox runtime. Use supplied ENGRAFT training/evaluation entry points plus one experiment manifest, no new service or training pipeline. All fleet data local; no hosted corpus generation. First attempt uses the documented fork with identical base model/tokenizer/quantization across all arms. If a gufo overlay implementation is later supplied, it requires separately scoped compatibility evidence; do not write a port as part of this probe. Label fork results as fork-only.
+
+**Fact set:**20 non-secret stable fleet identity facts from existing canonical configuration/records, each with source hash, scope and as-of date. Include several facts sharing a host/subject (at least five two-fact groups), not20 unrelated easy names. Exclude live service state, ports/IPs, model versions, temporary task ownership and personal preferences. Operator verifies sources, not Brian labeling a new dataset. If20 defensibly stable facts cannot be found, report that mismatch rather than padding. Canonical source remains authority.
+
+**Freeze before learning:** generate a small local training usage corpus and separate development prompts. Independently write five conversational test formulations per fact (100 total), including indirect service/host mapping questions. Keep answers and test phrasing out of training and checkpoint/early-stop selection; group paraphrases by fact and inspect n-gram overlap after scoring, never filter inconvenient prompts out. Freeze accepted exact values/aliases and scoring predicates. Do not let the teacher see evaluation questions. No private-kernel timing assumed.
+
+| Arm | Model/runtime | Fact exposure at each fresh session |
+|---|---|---|
+| A | Base, no overlay | No fact sheet |
+| B | Same base, overlay | No fact sheet; normal user question only |
+| C | Same base, no overlay | All20 facts in compact canonical text |
+
+Same chat template, decoding and output allowance; no tools, external retrieval, prior conversation or persistent KV carryover. Clear relevant caches on overlay switches. All scored inference uses normal free routing; any pinned routing during training is recorded separately. Arm order counterbalanced; no prompt tuning after results.
+
+**One experiment, at most500 generations:**100 recall prompts ×3 arms;40 collateral prompts ×3 (unrelated small code tasks, unknown-host abstention, and same-subject/two-fact confusion);20 explicit scoped override prompts ×3; then20 previously frozen prompts with overlay removed to check rollback. Override tests supply a temporary synthetic revised value and require using it; never alter real fleet facts. Output allowance256 tokens each, truncations reported as failures/unfinished, not silently excluded. No command executes.
+
+**Pre-stated decision:** pursue only if B gets≥90/100 recall, improves over A by≥20 answers, stays within5 answers of C, and every fact is correct on≥4/5 phrasings; B loses no more than2/40 collateral successes relative to A and adds no incorrect unknown-host answer;≥19/20 override answers use current instruction. Original model hashes unchanged; after removing overlay,20 deterministic greedy outputs match the pre-overlay outputs (also record logits if available, but do not claim universal bitwise GPU determinism). Any failure rejects this proposed tier for now. Exhausted resource budget or unsupported loader produces inconclusive, not zero recall.
+
+**Cost and stop:** one booking, maximum6 GPU-hours total: setup/model conversion≤30min within booking, one training run≤4h, evaluation≤90min; CPU corpus/setup effort≤60min beforehand, no paid calls or new model download/purchase. Actual public-path speed is unknown; stop rather than extend or substitute private kernels. Record wall/GPU time by phase, energy if metered (otherwise unknown), memory/scratch peak, overlay size, corpus authoring minutes, inference latency and fact-context tokens saved versus C. Reserve enough disk for the source-preserving per-head conversion; insufficient disk/runtime support stops setup without touching production. No hyperparameter sweep, retry, second overlay or automatic port. A disturbed booking is marked inconclusive and still consumes this run's allowance.
+
+**Interpretation:** zero prompt cost is only useful if B approaches C on ordinary phrasing at tolerable write/latency cost. Do not infer a break-even from one run; publish the measured write cost and per-query difference so plausible reuse rates can be examined. Even a pass does not establish individual update/delete, supersession, protection or gufo compatibility. Removing the overlay is the only accepted rollback; retain fact text outside it.

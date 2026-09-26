@@ -1,0 +1,43 @@
+{
+  "protocol": "survey/proposals/letta-fleet-pilot.md",
+  "arms": [
+    "L",
+    "N"
+  ],
+  "option_b": "omitted; shipped writer fails publication/recovery tests and lacks fleet transcripts",
+  "model": "gpt-5.6-sol",
+  "reasoning": "low",
+  "backend": "local only",
+  "auth": "existing ChatGPT OAuth",
+  "additional_spend_cap_usd": 0,
+  "go_pool": "not used; remaining balance unverified",
+  "requests_max_per_arm": 30,
+  "requests_max_total": 60,
+  "token_total_limit": {
+    "input": 500000,
+    "output": 40000,
+    "enforcement": "usage at completed response; no provider output maximum on Codex path"
+  },
+  "reflection": {
+    "trigger": "step-count",
+    "stepCount": 5,
+    "merge": "auto",
+    "model": "inherit"
+  },
+  "pass": {
+    "L_first_correct_min": 10,
+    "L_advantage_over_N_min": 2,
+    "L_reminder_reduction_min": 2,
+    "L_wrong_controls_max": 0,
+    "operator_repair": 0
+  },
+  "scored_tasks_started": true,
+  "prompt_sha256": "7900169dfa6bb2bae82779386c150d23863505afa30813aad9badc52b2e77bd3",
+  "tool_sha256": "39ce9f80ce69e2c65e4fab20c040e3256c2b4ec9d1ca7f638746517047a5f3cb",
+  "start_utc": "2026-09-26T21:40:02Z",
+  "setup_completed": true,
+  "transport": "SSE forced for uniform per-request accounting",
+  "isolation": "bubblewrap separate homes and projects; other arm and scoring files not mounted",
+  "setup_successful_requests_per_arm": 2,
+  "source_commit": "2394082e236318cad95de1dd783ab22965dde597"
+}
