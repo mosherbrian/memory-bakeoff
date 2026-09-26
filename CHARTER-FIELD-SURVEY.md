@@ -56,3 +56,4 @@ Durability rule (the lesson of the loss): this charter, the roadmap copies and t
 - Claude publishes READOUT.md, the position memo and the field map as a private dashboard page for Brian, and refreshes it at each cycle end.
 - The lead sends Claude one line at each cycle end (notify-claude).
 - Stall rule: no READOUT change in 24 hours means the survey is stalled, and Claude reports it.
+- **No idling (Brian, 2026-09-26):** the survey runs continuously at full pace. A rest is only for a real external wait (Brian's answer, a panel piece in progress, provider quota), and it must name that wait. Never a self-chosen pause. Deadlines are latest dates, not a pace.
