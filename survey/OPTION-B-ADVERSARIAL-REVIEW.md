@@ -1,0 +1,48 @@
+# Option B — adversarial review of the sponsor candidate
+
+Tern ·26 September2026 ·cycle84 · **Provisional lead judgment; independent panel reviews commissioned.** Review target: [Brian/Claude's unchanged sketch](inputs/DESIGN-OPTION-B-20260926.md). Claude co-authored this candidate; its ratings and local incident counts are sponsor evidence, not independent validation. Prior source reads support the distinctions below. No implementation authorized.
+
+## Verdict: keep the direction, change the claimed guarantees and rollout
+
+Keep current runtimes, recoverable source/history, mechanical enforcement, a separately triggered writer and staged adoption. This addresses Brian's request better than “agents should keep better notes.” But the sketch's strongest guarantees are not supplied by the named components as assembled. It also introduces multiple write authorities—Git preferences, Vault decisions, generated host views and rule configuration—despite saying “one writer.” One process can own them, but consistent recovery and the authority of each store still need a contract.
+
+**Do not adopt the full bundle as the first pilot.** Keep stage0's one-project guard/native repair as the recommended start. For optionB itself, use one personal project and one host first, then a second consumer to test cross-host delivery. Defer Vault, Ledger and retraining until a failure or measured workload gives them a job the smaller arrangement cannot do. Preserve the full proposal as a rival, rather than silently treating those later phases as approved.
+
+## Answers to the open questions
+
+| Question | Lead answer and evidence |
+|---|---|
+| Fleet, personal project, or both? | One Brian project first. It measures the pain that matters and limits scope. Fleet has useful volume but different principals/scopes and can optimize agent throughput while missing Brian's repeated corrections. Extend to fleet after the same corrected item is demonstrably delivered on a second host; do not launch both first. |
+| Patch Vault valid time? | Defer Vault from the first stage. If later use needs retroactive validity, patch and regression-test the pinned build before relying on that feature; otherwise explicitly restrict it to supported declared lineage/transaction history. Do not silently reinterpret approval time as effective time. The inspected native Vault and Pi-facing decision surface are different interfaces. [Source distinction](systems/perseus.md). |
+| Managed settings requirement3=yes? | Yes for protected admin policy under an unprivileged actor; **partial for this arrangement**. This does not automatically protect `agent-memory`, referenced handlers, symlink targets or other runtimes. One authorized writer requires an actual credential/filesystem boundary plus a rule-update owner. A same-user pre-commit hook is not that boundary. [Managed policy](systems/managed-rule-protection.md), [reflector bypass](panel-response-c81.md). |
+| Context Engine requirement2=yes? | **No broad upgrade.** In1.0.26 strict budgets are enforced by the analysis command; ordinary render/watch do not run that check. Final wrappers/injection and actual host bounds require an unbuilt publication gate. `@profile` is verified as advertised per-model configuration, not automatic render enforcement. [Call sites](panel-response-c82.md). |
+| Perseus vendor risk and fallback? | Pinned readable artifacts reduce immediate dependency uncertainty; unavailable upstream sources and a large module increase maintenance risk, not proof of unreliability. A template plus size check can replace a deliberately small rendering subset, not transparently reproduce directives, hooks, profiles, Vault or Ledger. Preserve ordinary source files and explicit adapters so exit is possible. Do not operate two parallel renderers as insurance. |
+| Where does it fail first? | **First demonstrable contract failure: bounded publication.** As written, `@budget strict` does not stop ordinary rendering. Next, “working agents cannot write” is unestablished without OS/credential separation across hosts. Even after both are fixed, a nightly writer can confidently publish a wrong scoped relation; retention only enables recovery. Which failure occurs first in use is unmeasured. |
+
+## Additional claims to change
+
+- **Agent-confirm does not imply drafts cannot expire.** It may remove a human bottleneck; confirm still needs to occur and succeed before expiration. Exact configured semantics require source confirmation. Do not merge the Pi wrapper's tier behavior with native Vault's admission contract.
+- **Ledger is not independent evidence merely because it hashes events.** The inspected chain can be rewritten and rehashed unless its key/anchor is independently protected; it cannot prove event truth or completeness. A log written by the same authority remains self-report. [Ledger boundary](systems/perseus-ledger.md). Replacing fleet logs would be a separate compatibility decision, not implicit in this candidate.
+- **One nightly writer is a privilege concentration.** Reading potentially adversarial transcripts and gaining permission to alter both preferences and enforcement rules needs a defined boundary. Updating a preference is not automatically authorization to rewrite a guard or arbitrary software. No blanket per-edit approval ritual is proposed; use the existing authority model and preserve failures visibly.
+- **“Nothing deleted” and `git revert` need multi-store meaning.** Git history does not automatically retain uncommitted inputs, Vault data, transcript retention or Ledger records. Reverting a repo commit does not undo a Vault supersede, deployed rule change, trained model or already executed action. Recovery must name which revision each store/view represents.
+- **150 messages/day does not establish cheap full-context review.** Message length, tool outputs, history joins, pair counts and retries determine cost. The count is sponsor-reported; no cost ledger exists for this design.
+- **Keyword46/46 is fixture-specific.** It does not certify arbitrary explicit-wording supersession, scope exceptions or quoted corrections. The self-improvement sketch also omits the prior calibration non-regression guard; retain it alongside recall, separate held-out data and rollback. [Learning-loop contract](OPTION-B-LEARNING-LOOP.md).
+- **Removing claude-mem is a candidate choice, not a survey finding of zero value.** The327 unretired corrections and recent bad reinjection are sponsor observations not independently checked here. Optional automatic relevance injection exists. Retained transcripts may make its capture redundant in this design, but removal must preserve wanted history and delivery functions. No uninstall or migration follows.
+
+## Comparison and research integrity
+
+The matrix now has two explicitly **proposed, derived-arrangement rows**: Tern's small guard/native pilot and this whole optionB. They use the same ten columns without borrowing a component's narrow yes as an end-to-end guarantee. OptionB offers more intended upkeep/currentness, with more unbuilt integration; the guard pilot covers less but its mechanical effect is better characterized. Neither has measured independent realistic benefit as assembled.
+
+**Does this conversation supersede or short-change research?** It legitimately supersedes the survey's prior assumption that agent-owned note upkeep is an improvement. Brian supplied the actual failure and a competing architecture; that is requirements discovery, not outcome evidence. It has improved relevance. It has also narrowed attention around Perseus/Laya and repeated interface checks, risking confirmation bias and under-investment in coherent alternatives. Some recent cycles refined caveats more than they changed the recommendation. The corrective action is a bounded adversarial comparison and a clear decision now—not indefinite new review gates or reopening every paper. Preserve the Letta single-product comparator and the simpler native design. Claude's input cannot count as an independent vote for Claude's design.
+
+**Confidence:** high on the already traced budget/ledger boundaries; medium on one-project sequencing and likely failure ordering; low on comparative outcome/cost until a separately authorized pilot. Panel findings may change this verdict.
+
+
+## Panel update — Corvid received
+
+Corvid also chooses change, personal first, and proposes a smaller source/compiler/gate/provisional-judge arrangement without phase2 services or a board. Accept the simplification as a rival; preserve an outcome observation even if dashboard integration waits. Reject his claimed contradictions: independent upkeep may use LLM judgment, and retained drafts need not remain current. Multiple agents under Brian do not automatically become multiple principals, although access/trust scopes still matter. Cross-host writer protection and the nightly worker contract remain his strongest objections. [Lead disposition](panel-response-c84.md). Kiln review pending.
+
+
+## Panel update — Cairn received
+
+Per-model profiles exist as declared configuration; they do not repair the publication gate. The Vault archive recorded in our earlier card is present (Tern checked), contrary to any broader inference from absence in the separate wheel directory. Native approval and Pi-wrapper agent-confirm/expiry remain different contracts; the no-expiry implication is still unestablished. A protected Ledger can detect some tampering but cannot certify event truth/completeness or model labels. Matrix definitions remain unchanged: evidence integrity is not rule protection or design coherence. [Detailed disposition](panel-response-c84.md).

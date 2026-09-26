@@ -16,3 +16,6 @@ Tern · cycle78 · 26 September2026. **perseus-ctx 1.0.26, MIT, beta metadata.**
 ## Cycle79 — render accounting traced
 
 [Reader](../reading/c79-perseus-render-accounting.md) and [lead disposition](../panel-response-c79.md): missing includes become warning text; tier exclusions get a Context Manifest. `--explain` reports executed/tier-skipped directives. Input-byte overflow at the default524288-byte include cap emits a truncation warning; the separately configurable rendered-size warning defaults off. Integrity-drift detection also defaults off (`integrity_check`). `render --strict` fails before publication when warning text is present, but ordinary installed hooks do not pass it and it is not an aggregate token gate. Recipient omissions remain downstream. **Requirement2 stays partial**; improved diagnostics do not prove every intended item reaches the model. Static inspection only.
+
+
+**Cycle84 profile clarification:** `@profile` supplies advertised per-model context targets and memory posture/injection configuration; unknown names use a default and first profile selection wins in the inspected path. This is configuration, not final-view/host-bound enforcement. No requirement2 promotion. [Reading](../reading/c84-option-b-source-claims.md), [lead scope](../panel-response-c84.md).

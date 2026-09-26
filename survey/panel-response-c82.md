@@ -1,6 +1,6 @@
 # Cycle82 — publication gate and learning-loop primitives
 
-Tern ·26 September2026 · **Partial: Corvid and Kiln received; Cairn source findings pending.** Source/design only; no execution.
+Tern ·26 September2026 · **Complete: all three panel reports received.** Source/design only; no execution.
 
 ## Corvid: accept the simpler rival, repair its deciding condition
 
@@ -20,3 +20,14 @@ Accept the [call-site result](systems/perseus-publication-gate.md): the inspecte
 Two qualifications: do not classify every `@mimir`/`@memory`/`@focus` directive as outside analysis—the analyzer already resolves source directives. The demonstrated difference is the later output transformations, including separately injected memory and wrappers. Also, `_enforce_budgets` consumes a prepared report with budget statuses and attribution rows, not arbitrary final text. Calling it with stale report values would not check the new artifact. “Three-line-shaped” is not an established implementation estimate: budget units/host limits, final-artifact accounting, invalid/missing declarations and atomic failure behavior must be specified at that one extension boundary. Existing render warning rejection remains real and separate from size enforcement.
 
 **Design consequence:** retain a render-once → account/check final artifact → atomic publish contract inside the existing compiler boundary; preserve the old artifact on failed checks. This is a proposed extension, not a supplied1.0.26 capability or authorization to build. Even a bounded file does not prove host receipt or aggregate request fit. Context Engine requirement2 stays **partial**; option B's final-publication gate stays unimplemented. No new wrapper service proposed.
+
+
+## Cairn: supplied evaluation gate, unbuilt release loop
+
+Accept the [pinned interface read](reading/c82-laya-promotion-interface.md): labeled JSONL validation, extensible evaluators, ECE/sliced reports and baseline/threshold exit-code gates are supplied. Binary recall/precision, the local calibration-fitting path and deployment promotion/rollback are not supplied by that evaluated path. This is useful infrastructure, not a complete correction-learning system; Laya1/7 remain n-a as a standalone classifier and the assembled cascade remains unimplemented.
+
+Qualify five claims. (1) `answer_confidence` must not be assumed to mean P(flag); its exact field semantics and decision polarity are unresolved here. The custom metric must use the positive-class score and threshold matching serving. Tern's attempted direct source fetch failed; no independent field verification claimed. (2) An uncalibrated score can support an empirically validated threshold; fitting is needed for justified probability claims and the sponsor's calibration gate, not before a threshold can mean anything. (3) A Kaggle notebook is a supplied hosted route, not proof that fitting intrinsically needs egress or that porting is the only local route. (4) `--model` selects a model; immutable artifact/version pinning still requires identifying the resolved checkpoint. (5) The new pair task needs its own training/calibration/test labels: the46 c67 surface-derived fixtures neither price nor supply that label budget. Do not equate them.
+
+**Decision:** keep evaluation at Laya's supplied extension point and release ownership inside the one proposed cascade. Exit0 is an input to promotion, not sufficient by itself: the intended dataset, metric coverage, candidate model, calibration and serving threshold must be the evaluated release. Avoid a separately operated scorer framework. Do not promise few-line integration or atomic checkpoint-directory swapping without checking the serving mechanism. No training or deployment follows.
+
+**Cycle82 closed:** no capability rating changes. Context Engine2 stays partial (final-artifact publication gate missing); Laya's evaluation primitives are now source-documented, while requirements1/7 for option B remain proposed. Cycle83 targets the positive-class/metric boundary and label compatibility, with a simpler one-design rival. These are bounded design inputs, not additional approval gates.

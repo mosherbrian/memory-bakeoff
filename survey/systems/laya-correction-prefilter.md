@@ -27,3 +27,9 @@ Brian now proposes a three-stage supersession/correction cascade: Laya pair scre
 
 
 **Cycle81 learning-loop extension:** periodic retraining from provenance-tagged provisional and human-corrected examples; nightly random unflagged exploration; frozen gold promotion test separate from training/calibration and prompt retrieval; rollbackable model/temperature/threshold bundle. Judge and reflector learn from retrieved examples with weights fixed. [Survey evaluation](../OPTION-B-LEARNING-LOOP.md). Proposed only; no trained-task result or automatic promotion facility verified.
+
+
+**Cycle82 supplied primitives:** labeled JSONL, pluggable evaluators, sliced reports/ECE and threshold/baseline exit-code gating are source-documented. Custom binary recall/precision, local temperature-fitting integration and model promotion/rollback remain unbuilt. Do not threshold `answer_confidence` as P(flag) without field-semantics verification; calibration and empirical decision threshold are distinct. [Reading](../reading/c82-laya-promotion-interface.md), [lead corrections](../panel-response-c82.md).
+
+
+**Cycle83 field resolved at source:** `noul` supplies P(yes); `answer_confidence` is selected-class confidence. For yes=flag use noul at the chosen serving threshold; stock correctness uses0.5. Custom metrics reach CLI/baseline gates, but the binary recall computation still needs the provided Evaluator extension point. Metric acceptance threshold is not the flag probability threshold. [Source card](laya-binary-eval-contract.md), [qualifications](../panel-response-c83.md). No serving call or calibration result.

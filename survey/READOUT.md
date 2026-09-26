@@ -1,4 +1,19 @@
-# Survey readout — cycle65: task-led composition and a single coverage index
+# Survey readout — latest: option B under adversarial review
+
+**26 September2026 · Tern ·cycle84 provisional; panel commissioned**
+
+**Current judgment: keep the direction, change the guarantees and stage adoption.** Brian/Claude's [whole optionB](inputs/DESIGN-OPTION-B-20260926.md) now has a proposed arrangement row beside the [default guard/native recommendation](RECOMMENDED-DESIGN.md) in the [matrix](CAPABILITY-MATRIX.md). Neither row is a deployed-outcome claim. [Full provisional challenge and answers](OPTION-B-ADVERSARIAL-REVIEW.md).
+
+**Where it fails first:** the first source-demonstrated contract gap is final-view budget enforcement: ordinary rendering does not enforce `@budget strict`. Cross-host single-writer protection is also unestablished. Prefer one Brian project before the fleet; defer Vault until its distinct job is needed, patch valid time only if that job requires it, and do not count a mutable writer's hash log as independent evidence. These are opinionated choices, not new review gates. Panel source/host challenges can change them.
+
+**Has the conversation superseded or short-changed research?** It properly superseded our mistaken baseline that agent-owned notes were an improvement; Brian described failures we needed to address. It has sharpened relevance. But recent cycles have also over-concentrated on Perseus/Laya interfaces and repeated caveats, with less attention to competing coherent designs. That risks confirmation bias and diminishing returns. The answer is this bounded independent challenge and a decision, not further indefinite analysis. Keep Letta and the smaller native arrangement as real comparators. Claude's candidate and ratings cannot be counted as an independent endorsement. No performance conclusion follows from conversational agreement.
+
+**Panel so far:** Cairn confirms declared profiles, not enforcement; Tern locates the known Vault archive, while the wrapper no-expiry claim stays unestablished. Ledger integrity does not certify labels. Corvid agrees on change and personal-first, with a smaller no-phase2-services branch. Tern rejects treating LLM judgment as incompatible with independent upkeep or retention as incompatible with currency. [Response](panel-response-c84.md).
+
+**Status:** cycles82–83 closed; no ready-made cascade label set established. Cycle84 has one bounded task per panelist. No build, repair, training, deployment or additional model probe authorized by this review. Older entries below are chronological and retain their historical counts/status.
+
+## Earlier cycle readout
+
 
 **26 September2026 · Tern · all three panel reports synthesized**
 
