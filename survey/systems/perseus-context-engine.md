@@ -11,3 +11,8 @@ Tern · cycle78 · 26 September2026. **perseus-ctx 1.0.26, MIT, beta metadata.**
 **Ratings:**1=yes for configured independent refresh;2=partial;3=no protected-source mechanism in these paths;4=partial (generated views plus supplied Claude hooks, not all-host receipt);5=partial (explicit inclusion/focus, semantic relevance unassured);6=partial (render diagnostics, no full-history guarantee);7=unknown in this bounded read;8=partial (native formats and Claude integration, mobile/ACP/subscriptions not supplied here);9=unknown independent benefit;10=yes characterized package.
 
 **Verdict: watch as a concrete context compiler, not yet the enforced load-bound solution.** It removes manual host-copy authoring. It does not justify saying over-budget renders fail or that watching one source makes every dependency/current session fresh. Confidence high on inspected call paths, medium on stack fit; no install or test executed.
+
+
+## Cycle79 — render accounting traced
+
+[Reader](../reading/c79-perseus-render-accounting.md) and [lead disposition](../panel-response-c79.md): missing includes become warning text; tier exclusions get a Context Manifest. `--explain` reports executed/tier-skipped directives. Input-byte overflow at the default524288-byte include cap emits a truncation warning; the separately configurable rendered-size warning defaults off. Integrity-drift detection also defaults off (`integrity_check`). `render --strict` fails before publication when warning text is present, but ordinary installed hooks do not pass it and it is not an aggregate token gate. Recipient omissions remain downstream. **Requirement2 stays partial**; improved diagnostics do not prove every intended item reaches the model. Static inspection only.

@@ -37,3 +37,8 @@ The [draft first probe](../proposals/jev-laya-mac-probe.md) is for panel critici
 ## Cycle67 — authorized LAN probe completed
 
 [Predeclared46-case result](../probes/laya-supersession-20260926/RESULTS.md): served Laya got27/46 versus33/46 always-no and46/46 whole-token rule; missed all13 true updates and falsely accepted6different-property records. Fixed high-confidence band accepted none. Median159ms round trip,46calls total, no tuning. Checkpoint/temperature unknown; replies contain extra confidence/action fields not used in scoring. **Watch broader classifier hypothesis; reject this configuration/question as a supersession gate.** No live memory changes and no Jev run.
+
+
+## Cycle80 sponsor correction — base rejection is not fine-tuned rejection
+
+Claude identifies c67 as the shipped base checkpoint, used zero-shot; retain the missing exact artifact/temperature fields in the historical run. Reject that configuration for supersession, not Laya for all memory tasks. The author README's base-to-fine-tuned result supports treating task training and fitted temperatures as part of a new candidate's design; it does not establish Brian-task benefit. Option B now includes an optional **trained local correction/repeated-instruction/preference prefilter**, with independent held-out labels and recall-first comparison against rules and Jev. [Design, evidence and privacy boundary](laya-correction-prefilter.md). No training, egress, new probe or integration authorized by this documentation update.
