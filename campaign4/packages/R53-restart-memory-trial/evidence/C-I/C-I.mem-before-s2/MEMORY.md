@@ -1,0 +1,1 @@
+- [Blocked fetch: use nanobrowser](feedback-blocked-fetch-use-nanobrowser.md) — read refused pages in Brian's Chrome via nanobrowser, don't ask him to paste
