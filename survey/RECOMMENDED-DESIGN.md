@@ -18,4 +18,6 @@
 
 **Switch conditions:** mobile browser/cloud state and official ACP are documented, usability untested. Letta documents ChatGPT Plus/Pro subscription login; Anthropic API keys, no Claude subscription path found. Test same-agent mobile/ACP continuity and actual billing; subscription access is not a zero-cost claim. [Current-source details](systems/letta-memfs-fit.md).
 
+**Delivery comparators:** claude-mem supplies optional automatic prompt-matched narratives, not only actor-invoked search. Perseus Context Engine supplies host-file rendering and Claude hooks, but its strict budget check is a separate analyzer, not enforced by ordinary render/watch. Both remain options; neither source read establishes appropriate later application. [Verified boundaries](panel-response-c78.md).
+
 **Status:** proposals only, no installation/repair/trial. Brian approves pilot scope. Open questions—installed versions, bypasses, model/cost ceiling and cross-host refresh—remain listed, not new review gates. Default native path lacks an enforced growth bound; documented write errors do not reject overflow; neither option guarantees judgment compliance.
